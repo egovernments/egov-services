@@ -2,6 +2,7 @@ package org.egov.web.controller;
 
 import org.egov.Resources;
 import org.egov.domain.exception.InvalidOtpRequestException;
+import org.egov.domain.exception.UserNotFoundException;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.OtpRequestType;
 import org.egov.domain.service.OtpService;
@@ -58,6 +59,18 @@ public class OtpControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(resources.getFileContents("otpMandatoryFieldsErrorResponse.json")));
     }
+
+	@Test
+	public void test_should_return_error_response_when_user_not_found_for_sending_forgot_password_otp()
+			throws Exception {
+		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
+		doThrow(new UserNotFoundException()).when(otpService).sendOtp(expectedOtpRequest);
+
+		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(resources.getFileContents("otpRequestWithoutMandatoryFields.json")))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().json(resources.getFileContents("unknownMobileNumberErrorResponse.json")));
+	}
 
     @Test
     public void test_should_return_error_message_when_unhandled_exception_occurs() throws Exception {

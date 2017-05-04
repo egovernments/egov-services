@@ -81,6 +81,8 @@ public class EmployeeCriteria {
 
 	private Long departmentId;
 
+	private Long positionId;
+
 	private List<Long> employeeStatus;
 
 	private String sort;

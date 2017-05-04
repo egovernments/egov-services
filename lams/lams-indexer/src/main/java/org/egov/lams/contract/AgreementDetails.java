@@ -1,10 +1,12 @@
 package org.egov.lams.contract;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
+import org.egov.lams.model.Boundary;
 import org.egov.lams.model.City;
 import org.egov.lams.model.Location;
 
@@ -72,7 +74,7 @@ public class AgreementDetails {
 	public void setAgreement(Agreement agreement) {
 
 		this.agreementNumber = agreement.getAgreementNumber();
-		this.ackNumber= agreement.getAcknowledgementNumber();
+		this.ackNumber = agreement.getAcknowledgementNumber();
 		this.agreementDate = agreement.getAgreementDate();
 		this.tenderNumber = agreement.getTenderNumber();
 		this.tenderDate = agreement.getTenderDate();
@@ -89,11 +91,9 @@ public class AgreementDetails {
 		this.commencementDate = agreement.getCommencementDate();
 		this.expiryDate = agreement.getExpiryDate();
 		this.orderDetails = agreement.getOrderDetails();
-		// FIX ME renttype name
 		this.renttype = agreement.getRent();
 		this.tradeLicenseNumber = agreement.getTradelicenseNumber();
 		this.paymentCycle = agreement.getPaymentCycle().toString();
-		// FIX ME change rentincrement type to int
 		this.rentIncrementMethod = agreement.getRentIncrementMethod().getType();
 		this.orderNumber = agreement.getOrderNo();
 		this.orderDate = agreement.getOrderDate();
@@ -105,26 +105,24 @@ public class AgreementDetails {
 	}
 
 	public void setAsset(Asset asset) {
-
-		// FIXME asset
-		//TODO change all ward and zone number to name using boundary calls
-		Location location = asset.getLocationDetails();
-		//this.revZoneName = location.getZone().toString();
-		//this.adminWardName=location.getElectionWard().toString();
 		this.assetName = asset.getName();
 		this.assetCode = asset.getCode();
-		//this.revenueBlock = location.getBlock().toString();
-		//this.assetDrno = asset.getDoorNo();
-		//this.revenueWard = location.getElectionWard().toString();
 		this.assetCategory = asset.getCategory().getName();
 
 	}
 
+	public void setBoundaryDetails(Location location, Map<Long, Boundary> boundaryMap) {
+		// FIXME change all ward and zone number to name using boundary calls
+		// this.revZoneName = location.getZone().toString();
+		// this.adminWardName=location.getElectionWard().toString();
+		// this.revenueBlock = location.getBlock().toString();
+		// this.assetDrno = asset.getDoorNo();
+		// this.revenueWard = location.getElectionWard().toString();
+	}
+
 	public void setAllottee(Allottee allottee) {
 
-		// allottee
 		this.allotteeName = allottee.getName();
-		// FIX ME check data type
 		this.allotteeMobile = allottee.getMobileNumber().toString();
 		this.allotteeAadhaarNo = allottee.getAadhaarNumber();
 	}

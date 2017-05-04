@@ -25,7 +25,6 @@ public class OtpRequestErrorAdapter implements ErrorAdapter<OtpRequest> {
 	private static final String TYPE_INVALID_MESSAGE = "Request type (register, passwordreset) is mandatory";
 	private static final String TYPE_FIELD = "otp.type";
 
-
     @Override
     public ErrorResponse adapt(OtpRequest model) {
         final Error error = getError(model);

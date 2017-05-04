@@ -59,7 +59,7 @@ addOrUpdate(e,mode)
             "LeaveType":[tempInfo]
           },_this=this;
 
-            if(type == "Update") {
+            if(type == "update") {
         $.ajax({
               url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
               type: 'POST',

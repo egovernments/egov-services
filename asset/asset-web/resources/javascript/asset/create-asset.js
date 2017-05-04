@@ -237,6 +237,9 @@ class CreateAsset extends React.Component {
     super(props);
     this.state = {
         list: [],
+        tblSet: {
+          removeCustom: false
+        },
         assetSet: Object.assign({}, defaultAssetSetState),
         refSet: {
           tenantId: tenantId,
@@ -274,6 +277,7 @@ class CreateAsset extends React.Component {
     this.handleReferenceChange = this.handleReferenceChange.bind(this);
     this.handleRefSearch = this.handleRefSearch.bind(this);
     this.selectRef = this.selectRef.bind(this);
+    this.removeRow = this.removeRow.bind(this);
 
   }
   close() {
@@ -390,7 +394,10 @@ class CreateAsset extends React.Component {
         success: ""
       })
       var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
+      if(tempInfo && tempInfo.assetCategory)
+        tempInfo.assetCategory.tenantId = tenantId;
       delete tempInfo.assetReferenceName;
+
       if(tempInfo.assetAttributes && tempInfo.assetAttributes.length) {
         for(var i=0; i<tempInfo.assetAttributes.length;i++){
           if(tempInfo.assetAttributes[i].type == "Table") {
@@ -400,6 +407,7 @@ class CreateAsset extends React.Component {
         }
       }
 
+      //return console.log(tempInfo);
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -421,7 +429,7 @@ class CreateAsset extends React.Component {
                 }
             });
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${_this.state.assetSet.code}`;
             } else {
                 this.setState({
                     ...this.state,
@@ -684,6 +692,66 @@ class CreateAsset extends React.Component {
       }
   }
 
+  removeRow(e, type, name, index, assetIndex) {
+    /*e.preventDefault();
+    switch(type) {
+      case "custom":
+        this.setState({
+          tblSet: {
+            ...this.state.tblSet,
+            removeCustom: true
+          }
+        });
+        break;
+      case "old":
+        var assetAttributes = Object.assign([], this.state.assetSet.assetAttributes);
+        for(var i=0; i<assetAttributes.length; i++) {
+          if(assetAttributes[i].key == name) {
+            assetAttributes[i].value.splice(index, 1);
+            break;
+          }
+        }
+
+        this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            assetAttributes: assetAttributes
+          }
+        });
+
+        break;
+      case "new":
+        var _newRow = this.state.newRows[name];
+        _newRow.splice(index, 1);
+        this.setState({
+          newRows: {
+            ...this.state.newRows,
+            [name]: _newRow
+          }
+        })
+
+        var assetAttributes = Object.assign([], this.state.assetSet.assetAttributes);
+        for(var i=0; i<assetAttributes.length; i++) {
+          if(assetAttributes[i].key == name && assetAttributes[i].value[assetIndex]) {
+            assetAttributes[i].value.splice(assetIndex, 1);
+            break;
+          }
+        }
+
+        var _this = this;
+
+        setTimeout(function(){
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              assetAttributes: assetAttributes
+            }
+          })
+        }, 200);
+        break;
+    }*/
+  }
+
   addNewRow(e, name) {
     e.preventDefault();
     if(!this.state.newRows[name])
@@ -703,8 +771,8 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references} = this.state;
+    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1071,12 +1139,18 @@ class CreateAsset extends React.Component {
           }
         }
         return newRows[name].map(function(val, ind) {
-          return (<tr>{item.columns.map((itemOne, index) => {
+          return (<tr>
+              <td style={{"padding-top": "12px"}}>{len ? (len+ind+ ( tblSet.removeCustom ? 0 : 1)) : (ind+( tblSet.removeCustom ? 1 : 2))}</td>
+              {item.columns.map((itemOne, index) => {
               itemOne.parent = item.name;
               return (
-                <td>{checkFields(itemOne, ((len+ind) || (ind+1)), true)}</td>
+                <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
-            })}</tr>)
+            })}
+                {/*<td>
+                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "new", item.name, (len ? len : ind), len ? (len+ind) : (ind+1))}}>Remove</button>
+                </td>*/}
+              </tr>)
         })
       }
     }
@@ -1097,7 +1171,9 @@ class CreateAsset extends React.Component {
                     value: itm[key]
                   })
                 };
-                return (<tr>{_itms.map(function(_itm, ind2) {
+                return (<tr>
+                    <td style={{"padding-top": "12px"}}>{ind+1}</td>
+                    {_itms.map(function(_itm, ind2) {
                     for(var i=0; i<item.columns.length; i++) {
                       if(item.columns[i].name == _itm.key) {
                         var newItem = Object.assign({}, item.columns[i]);
@@ -1108,7 +1184,11 @@ class CreateAsset extends React.Component {
                         );
                       }
                     }
-                })}</tr>)
+                })}
+                    {/*<td>
+                      <button className="btn btn-close" onClick={(e) => {removeRow(e, "old", name, ind)}}>Remove</button>
+                    </td>*/}
+                    </tr>)
               }
             })
         })
@@ -1137,13 +1217,20 @@ class CreateAsset extends React.Component {
                 }
               });
           }
-          if(!rndr)
-  					return (<tr>{item.columns.map((itemOne, index) => {
+
+          if(!rndr && !tblSet.removeCustom)
+  					return (<tr>
+                <td  style={{"padding-top": "12px"}}>1</td>
+                {item.columns.map((itemOne, index) => {
                 itemOne.parent = item.name;
                 return (
                   <td>{checkFields(itemOne, 0, true)}</td>
                 )
-              })} </tr>)
+              })}
+                {/*<td>
+                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "custom")}}>Remove</button>
+                </td>*/}
+               </tr>)
 				}
 
         return (
@@ -1154,7 +1241,7 @@ class CreateAsset extends React.Component {
                       <h3 className="categoryType">{item.name}</h3>
                    </div>
                    <div className="col-md-4 text-right">
-                      <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
+                      
                    </div>
                 </div>
                 <div className="row">
@@ -1162,7 +1249,9 @@ class CreateAsset extends React.Component {
                       <table className="table table-bordered">
                          <thead>
                             <tr>
+                               <th>Sr. No.</th>
                                {tableColumns()}
+                               {/*<th>Action</th>*/}
                             </tr>
                          </thead>
                          <tbody>
@@ -1173,6 +1262,9 @@ class CreateAsset extends React.Component {
                       </table>
                    </div>
                 </div>
+             </div>
+             <div className="row text-right">
+                <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
              </div>
           </div>
         )

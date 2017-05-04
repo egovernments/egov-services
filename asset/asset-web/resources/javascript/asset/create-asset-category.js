@@ -499,6 +499,7 @@ class CreateAsset extends React.Component {
           if(customField.columns.length>0) {
               return customField.columns.map((item,index)=> {
                   return (<tr  key={index} className="text-center">
+                  <td>{index+1}</td>
                     <td  >
                   {item.name}
                     </td>
@@ -534,7 +535,7 @@ class CreateAsset extends React.Component {
                   */}
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index,column)}}></span></button>
+                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,column)}} ><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -542,6 +543,7 @@ class CreateAsset extends React.Component {
           if(assetFieldsDefination.length>0) {
               return assetFieldsDefination.map((item,index)=> {
                   return (<tr  key={index} className="text-center">
+                  <td>{index+1}</td>
                     <td  >
                   {item.name}
                     </td>
@@ -576,7 +578,7 @@ class CreateAsset extends React.Component {
                     </td>
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index)}}></span></button>
+                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} ><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -588,7 +590,7 @@ class CreateAsset extends React.Component {
     const showNoteMsg = function() {
       if(showMsg) {
         return (<p className="text-danger">Name and Data Type is mandatory.</p>)
-      } else 
+      } else
         return "";
     }
 
@@ -597,12 +599,11 @@ class CreateAsset extends React.Component {
       return (
         <div className="form-section">
           <h3 className="categoryType">Custom Fields</h3>
-          <button type="button" className="btn btn-default btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}><span className="glyphicon glyphicon-plus"></span></button>
-
           <div className="land-table table-responsive">
               <table className="table table-bordered">
                   <thead>
                   <tr>
+                    <th>Sl No.</th>
                      <th>Name</th>
                      <th>Data Type</th>
                      <th>RegEx format</th>
@@ -620,12 +621,13 @@ class CreateAsset extends React.Component {
 
                   <tbody>
                   {renderBody()}
-
                   </tbody>
-
               </table>
           </div>
-
+          <div className="row" style={{"padding-right": "18px"}}>
+            <button type="button" className="btn btn-primary btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+            <br/>
+          </div>
             {showCustomFieldAddForm()}
         </div>
 
@@ -755,11 +757,10 @@ class CreateAsset extends React.Component {
 
               {showNestedCustomFieldTable()}
               {showNoteMsg()}
-              {/*  <button type="button" className="btn btn-default" >reset</button>*/}
+              <div className="text-center">
                 <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}}>Add/Edit</button>
               </div>
-
-                  {/**/}
+              </div>
             </div>
           )
         }

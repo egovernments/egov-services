@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.repository;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class ElasticSearchService {
+public class ElasticSearchRepository {
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -19,7 +19,7 @@ public class ElasticSearchService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 	
-	public static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchService.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchRepository.class);
 	
 	public void saveAgreement(AgreementDetails agreementDetails){
 		// check for both index name and type name and id before confirming the url 

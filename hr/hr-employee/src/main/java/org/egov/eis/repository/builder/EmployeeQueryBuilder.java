@@ -59,9 +59,9 @@ public class EmployeeQueryBuilder {
 	
 	private static final String EMPLOYEE_IDS_QUERY = "SELECT distinct e.id AS id "
 			+ " FROM egeis_employee e"
-			+ " JOIN egeis_assignment a ON e.id = a.employeeId"
-			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = ?"
-			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = ?";
+			+ " JOIN egeis_assignment a ON e.id = a.employeeId AND a.tenantId = e.tenantId"
+			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = e.tenantId"
+			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId";
 
 	private static final String BASE_QUERY = "SELECT e.id AS e_id, e.code AS e_code,"
 			+ " e.employeeStatus AS e_employeeStatus, e.employeeTypeId AS e_employeeTypeId, e.bankId AS e_bankId,"
@@ -75,9 +75,9 @@ public class EmployeeQueryBuilder {
 			+ " hod.id AS hod_id, hod.departmentId AS hod_departmentId,"
 			+ " ej.jurisdictionId AS ej_jurisdictionId"
 			+ " FROM egeis_employee e"
-			+ " JOIN egeis_assignment a ON e.id = a.employeeId"
-			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = ?"
-			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = ?";
+			+ " JOIN egeis_assignment a ON e.id = a.employeeId AND a.tenantId = e.tenantId"
+			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = e.tenantId"
+			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId";
 
 	@SuppressWarnings("rawtypes")
 	public String getQueryForListOfEmployeeIds(EmployeeCriteria employeeCriteria, List preparedStatementValues) {
@@ -105,14 +105,11 @@ public class EmployeeQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			EmployeeCriteria employeeCriteria, List<Long> empIds) {
 
-		// Pushing 2 tenantIds for hod.tenantId & ej.tenantId
-		preparedStatementValues.add(employeeCriteria.getTenantId());
-		preparedStatementValues.add(employeeCriteria.getTenantId());
-
 		if (employeeCriteria.getId() == null && employeeCriteria.getCode() == null
 				&& employeeCriteria.getDepartmentId() == null && employeeCriteria.getIsPrimary() == null
-				&& employeeCriteria.getDesignationId() == null && employeeCriteria.getAsOnDate() == null
-				&& employeeCriteria.getEmployeeStatus() == null && employeeCriteria.getTenantId() == null)
+				&& employeeCriteria.getDesignationId() == null && employeeCriteria.getPositionId() == null
+				&& employeeCriteria.getAsOnDate() == null && employeeCriteria.getEmployeeStatus() == null
+				&& employeeCriteria.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -121,9 +118,6 @@ public class EmployeeQueryBuilder {
 		if (employeeCriteria.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" e.tenantId = ?");
-			preparedStatementValues.add(employeeCriteria.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" a.tenantId = ?");
 			preparedStatementValues.add(employeeCriteria.getTenantId());
 		}
 
@@ -151,6 +145,12 @@ public class EmployeeQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" a.designationId = ?");
 			preparedStatementValues.add(employeeCriteria.getDesignationId());
+		}
+
+		if (employeeCriteria.getPositionId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" a.positionId = ?");
+			preparedStatementValues.add(employeeCriteria.getPositionId());
 		}
 
 		if (employeeCriteria.getAsOnDate() != null) {

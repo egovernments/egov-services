@@ -25,7 +25,7 @@ class UpdateLeave extends React.Component {
                 "action": "",
                 "status": ""
             }
-        },leaveNumber:"",
+        },leaveNumber:"",employeeid:"",positionId:"",
         leaveList: [],
         buttons: []
     }
@@ -41,13 +41,8 @@ class UpdateLeave extends React.Component {
     var type = getUrlVars()["type"], _this = this;
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
-    var leaveNumber ;
 
-    //
-    // if(getUrlVars()["type"]==="update")
-    // {
-    //     $("input,select,textarea").prop("disabled", true);
-    //   }
+
       try {
         var _leaveSet = commonApiPost("hr-leave","leaveapplications","_search",{tenantId,stateId}).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
@@ -62,7 +57,8 @@ class UpdateLeave extends React.Component {
         _this.setState({
            leaveSet: _leaveSet,
            departmentId:this.getPrimaryAssigmentDep(employee,"department"),
-           leaveNumber:_leaveSet.applicationNumber
+           leaveNumber:_leaveSet.applicationNumber,
+           employeeid:employee.id
         })
 
       if(_leaveSet.status!="REJECTED"){
@@ -155,7 +151,7 @@ class UpdateLeave extends React.Component {
                      try{
                         var leaveType = _this.state.leaveSet.leaveType.id;
                         var asOnDate = _this.state.leaveSet.toDate;
-                        var employeeid =getUrlVars()["id"];
+                        var employeeid = _this.state.employeeid;
                         var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
                          _this.setState({
                              leaveSet:{
@@ -196,12 +192,10 @@ class UpdateLeave extends React.Component {
                   }
               }
 
-              if(_btns.length) {
-                _this.setState({
-                  buttons: _btns,
-                  owner:process.owner.id
-                })
-              }
+              _this.setState({
+                positionId:process.owner.id,
+                buttons: _btns.length ? _btns : []
+              })
           }
       } catch(e){
         console.log(e);
@@ -289,16 +283,26 @@ close(){
 
 handleProcess(e) {
   e.preventDefault();
-  var ID = e.target.id ;
+  var ID = e.target.id,  _this=this ;
   //Make your server calls here for these actions/buttons
   //Please test it, I have only wrote the code, not tested - Sourabh
+  try{
+    var employee = commonApiPost("hr-employee", "employees", "_search", {
+        tenantId,
+        positionId: _this.state.positionId
+    }).responseJSON["Employee"][0];
+  }catch(e){
+    console.log(e);
+  }
+
+    var owner = employee.name;
+
   if(ID==="Submit"){
     var employee;
-    var asOnDate = this.state.leaveSet.toDate;
-    var departmentId = this.state.departmentId;
-    var leaveNumber = this.state.leaveNumber;
-    var owner = this.state.owner;
-    var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
+    var asOnDate = _this.state.leaveSet.toDate;
+    var departmentId = _this.state.departmentId;
+    var leaveNumber = _this.state.leaveNumber;
+    var tempInfo=Object.assign({},_this.state.leaveSet) , type = getUrlVars()["type"];
     delete  tempInfo.name;
     delete tempInfo.code;
     var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
@@ -311,15 +315,15 @@ handleProcess(e) {
 
     if(!tempInfo.workflowDetails){
       tempInfo.workflowDetails = {action : ID,
-                                  assignee : employee.assignments && employee.assignments[0] ? employee.assignments[0].id : ""};
+                                  assignee : employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""};
     }
     var body={
         "RequestInfo":requestInfo,
         "LeaveApplication":tempInfo
-      },_this=this;
+      };
 
           $.ajax({
-                url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                url:baseUrl+"/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -329,8 +333,7 @@ handleProcess(e) {
                   'auth-token': authToken
                 },
                 success: function(res) {
-
-                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Reject&applicationNumber=${leaveNumber}&owner=${owner}`;
+                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
 
                 },
                 error: function(err) {
@@ -339,44 +342,44 @@ handleProcess(e) {
                 }
             });
   }else{
-    var employee;
-    var asOnDate = this.state.leaveSet.toDate;
-    var departmentId = this.state.departmentId;
-    var leaveNumber = this.state.leaveNumber;
-    var owner = this.state.owner;
-    var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
-    delete  tempInfo.name;
-    delete tempInfo.code;
-    if(!tempInfo.workflowDetails){
+      var employee;
+      var type;
+      var asOnDate = _this.state.leaveSet.toDate;
+      var departmentId = _this.state.departmentId;
+      var leaveNumber = _this.state.leaveNumber;
+      var tempInfo=Object.assign({},_this.state.leaveSet);
+      delete  tempInfo.name;
+      delete tempInfo.code;
+      if(!tempInfo.workflowDetails){
 
-      tempInfo.workflowDetails = {action : ID};
-    }
-    var body={
-        "RequestInfo":requestInfo,
-        "LeaveApplication":tempInfo
-      },_this=this;
+        tempInfo.workflowDetails = {action : ID};
+      }
+      var body={
+          "RequestInfo":requestInfo,
+          "LeaveApplication":tempInfo
+        };
 
-          $.ajax({
-                url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-                type: 'POST',
-                dataType: 'json',
-                data:JSON.stringify(body),
+            $.ajax({
+                  url:baseUrl+"/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                  type: 'POST',
+                  dataType: 'json',
+                  data:JSON.stringify(body),
 
-                contentType: 'application/json',
-                headers:{
-                  'auth-token': authToken
-                },
-                success: function(res) {
-
-                   window.location.href=`app/hr/leavemaster/ack-page.html?type=Approve&applicationNumber=${leaveNumber}&owner=${owner}`;
+                  contentType: 'application/json',
+                  headers:{
+                    'auth-token': authToken
+                  },
+                  success: function(res) {
 
 
-                },
-                error: function(err) {
-                    showError(err);
+                    window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
 
-                }
-            });
+                  },
+                  error: function(err) {
+                      showError(err);
+
+                  }
+              });
   }
 }
 

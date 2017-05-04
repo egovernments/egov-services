@@ -2,11 +2,11 @@ package org.egov.lams.consumers;
 
 import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.lams.adapter.AgreementAdaptor;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementDetails;
 import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.service.ElasticSearchService;
+import org.egov.lams.repository.ElasticSearchRepository;
+import org.egov.lams.service.AgreementAdaptorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ public class LamsIndexerConsumer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(LamsIndexerConsumer.class);
 
 	@Autowired
-	private ElasticSearchService elasticSearchRepository;
+	private ElasticSearchRepository elasticSearchRepository;
 
 	@Autowired
-	private AgreementAdaptor agreementAdapter;
+	private AgreementAdaptorService agreementAdapter;
 
 	@Autowired
 	private PropertiesManager PropertiesManager;

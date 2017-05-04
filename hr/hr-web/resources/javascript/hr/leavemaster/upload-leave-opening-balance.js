@@ -6,7 +6,7 @@ class UploadLeaveType extends React.Component{
         "id": "",
         "my_file_input":"",
         "tenantId": tenantId
-  },temp:[],dataType:[]}
+  },temp:[],dataType:[],employees:[],_leaveTypes:[]}
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
@@ -55,7 +55,7 @@ class UploadLeaveType extends React.Component{
                oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
           });
           var finalObject = [];
-          console.log("OJS",oJS);
+
           oJS.forEach(function(d){
             finalObject.push({"employee": d["Employee Code"],
                               "calendarYear":d["Calendar Year"],
@@ -63,7 +63,7 @@ class UploadLeaveType extends React.Component{
                               "noOfDays" : d["Number of days as on 1st Jan 2017"]
             });
           });
-          console.log(JSON.stringify(finalObject));
+
           _this.setState({
             LeaveType:{
               ..._this.state.LeaveType
@@ -86,12 +86,145 @@ addOrUpdate(e,mode)
 {
 
         e.preventDefault();
-        console.log(JSON.stringify(this.state.temp));
+        var serverObject = [];
         var tempInfo=Object.assign([],this.state.temp);
-        console.log(JSON.stringify(tempInfo));
+
+        try {
+            var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+        } catch(e) {
+            var _leaveTypes = [];
+        }
+        try {
+            var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
+        } catch(e) {
+            var _years = [];
+        }
+        try {
+        var  employees = getCommonMaster("hr-employee","employees","Employee").responseJSON["Employee"] || [];
+        } catch (e) {
+        var  employees = [];
+        }
+        var leaveArray =[],calendarYearArray=[],employeeArray=[];
+        var checkLeave = [],checkCalenderYear= [],checkEmployee=[];
+        _leaveTypes.forEach(function(d) {
+          checkLeave.push(d.name);
+        });
+
+        _leaveTypes.forEach(function(d) {
+          leaveArray.push({"name":d.name,
+                            "id":d.id});
+        });
+
+        _years.forEach(function(d) {
+          checkCalenderYear.push(d.name.toString());
+        });
+
+
+        _years.forEach(function(d) {
+          calendarYearArray.push({"name":d.name.toString(),
+                            "id":d.id});
+        });
+
+
+        employees.forEach(function(d) {
+          checkEmployee.push(d.code);
+        });
+
+
+        employees.forEach(function(d) {
+          employeeArray.push({"code":d.code,
+                            "id":d.id});
+        });
+
+
+        var finalErrorMessage="Invalid Details : ",post=0,neagativeDays="",invalidLeaveTypes="";
+        var i=0,invalidEmployees="",invalidCalendarYears="";
+        var leaveName,calendarYearName,employeeName,calenderName,noOfDays;
+        var searchName;
+        var leaveId = 0,employeeId=0,calenderId=0;
+        for(var k=0;k<tempInfo.length;k++){
+
+          var d = tempInfo[k];
+          noOfDays = parseInt(d.noOfDays)
+          leaveName = d.leaveType.id;
+          employeeName = d.employee;
+          calenderName = d.calendarYear;
+          var leaveValidate = checkLeave.indexOf(d.leaveType.id);
+          var employeeValidate = checkEmployee.indexOf(d.employee);
+          var calenderValidate = checkCalenderYear.indexOf(d.calendarYear);
+
+          if(noOfDays<0){
+            neagativeDays = neagativeDays.concat(" "+noOfDays+", ");
+            post=1;
+          }
+
+          if(leaveValidate<0){
+            invalidLeaveTypes = invalidLeaveTypes.concat(" "+leaveName+", ");
+            post =1;
+          }else{
+              for(var j=0;i<leaveArray.length;j++){
+                if(leaveName===leaveArray[j].name)
+                {
+                    leaveId = leaveArray[j].id;
+                    break;
+                }else{
+                  leaveId = 0;
+                }
+              }
+            }
+
+            if(employeeValidate<0){
+              invalidEmployees = invalidEmployees.concat(" "+employeeName+", ");
+              //showError("invalid Employee");
+              post =1;
+            }else{
+                for(var j=0;i<employeeArray.length;j++){
+                if(employeeName===employeeArray[j].code)
+                  {
+                      employeeId = employeeArray[j].id;
+
+                      break;
+                  }else{
+                    employeeId = 0;
+                  }
+                }
+              }
+
+              if(calenderValidate<0){
+                invalidCalendarYears = invalidCalendarYears.concat(" "+calenderName+", ");
+                post =1;
+              }else{
+                  for(var j=0;i<calendarYearArray.length;j++){
+                  if(calenderName===calendarYearArray[j].name)
+                    {
+                        calenderId = calendarYearArray[j].name;
+
+                        break;
+                    }else{
+                      calenderId = 0;
+                    }
+                  }
+                }
+          serverObject.push({"employee": employeeId,
+                            "calendarYear": calenderId,
+                            "leaveType":  { "id": leaveId},
+                            "noOfDays" : noOfDays,
+                            "tenantId": tenantId
+          });
+        }
+
+        if(post===0){
+
+        // try {
+        //   employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
+        // } catch (e) {
+        //   employees = [];
+        // }
+
+
         var body={
             "RequestInfo":requestInfo,
-            "LeaveOpeningBalance":tempInfo
+            "LeaveOpeningBalance":serverObject
           },_this=this;
 
           $.ajax({
@@ -120,7 +253,20 @@ addOrUpdate(e,mode)
 
                 }
             });
+          }else{
+            if(neagativeDays!="")
+            finalErrorMessage =  finalErrorMessage.concat(neagativeDays+" is not a valid days");
 
+            if(invalidLeaveTypes!="")
+            finalErrorMessage =   finalErrorMessage.concat(invalidLeaveTypes+" Leave types does not exist in system");
+
+            if(invalidEmployees!="")
+            finalErrorMessage =   finalErrorMessage.concat(invalidEmployees+"  Employees does not exist in system");
+
+            if(invalidCalendarYears!="")
+            finalErrorMessage =   finalErrorMessage.concat(invalidCalendarYears+" Calendar Years does not exist in system");
+            showError(finalErrorMessage);
+          }
   }
 
   render()

@@ -66,7 +66,7 @@ public class HODDepartmentRepository {
 	public static final String INSERT_HOD_DEPARTMENT_QUERY = "INSERT INTO egeis_hodDepartment"
 			+ " (id, assignmentId, departmentId, tenantId)" + " VALUES (NEXTVAL('seq_egeis_hodDepartment'),?,?,?)";
 
-	public static final String SELECT_BY_ASSIGNMENT_QUERY = "SELECT" + " departmentid" + " FROM egeis_hodDepartment"
+	public static final String SELECT_BY_ASSIGNMENT_QUERY = "SELECT id, departmentid, tenantId FROM egeis_hodDepartment"
 			+ " WHERE assignmentId = ? AND tenantId = ? ";
 
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_hodDepartment where "
@@ -118,7 +118,7 @@ public class HODDepartmentRepository {
 		});
 	}
 
-	public List<Long> findByAssignmentId(Long assignmentId, String tenantId) {
+	public List<HODDepartment> findByAssignmentId(Long assignmentId, String tenantId) {
 		try {
 			return jdbcTemplate.query(SELECT_BY_ASSIGNMENT_QUERY, new Object[] { assignmentId, tenantId },
 					assignmentHodRowMapper);

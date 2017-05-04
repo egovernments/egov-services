@@ -200,6 +200,9 @@ public class EmployeeService {
 
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
+		employee.getAssignments().forEach(assignment -> {
+			assignment.setHod(hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId));
+		});
 		employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setProbation(probationRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setJurisdictions(employeeJurisdictionRepository.findByEmployeeId(employeeId, tenantId));

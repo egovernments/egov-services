@@ -43,16 +43,21 @@ package org.egov.eis.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.egov.eis.model.HODDepartment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AssignmentHodRowMapper implements RowMapper<Long> {
+public class AssignmentHodRowMapper implements RowMapper<HODDepartment> {
 
 	@Override
-	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-		return (Long) rs.getObject("departmentid");
+	public HODDepartment mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		HODDepartment hodDepartment = new HODDepartment();
+		hodDepartment.setId((Long) rs.getObject("id"));
+		hodDepartment.setDepartment((Long) rs.getObject("departmentid"));
+		hodDepartment.setTenantId(rs.getString("tenantId"));
+		return hodDepartment;
 	}
 	
 }

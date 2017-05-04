@@ -499,6 +499,7 @@ class CreateAsset extends React.Component {
           if(customField.columns.length>0) {
               return customField.columns.map((item,index)=> {
                   return (<tr  key={index} className="text-center">
+                  <td>{index+1}</td>
                     <td  >
                   {item.name}
                     </td>
@@ -542,6 +543,7 @@ class CreateAsset extends React.Component {
           if(assetFieldsDefination.length>0) {
               return assetFieldsDefination.map((item,index)=> {
                   return (<tr  key={index} className="text-center">
+                  <td>{index+1}</td>
                     <td  >
                   {item.name}
                     </td>
@@ -601,6 +603,7 @@ class CreateAsset extends React.Component {
               <table className="table table-bordered">
                   <thead>
                   <tr>
+                    <th>Sl No.</th>
                      <th>Name</th>
                      <th>Data Type</th>
                      <th>RegEx format</th>

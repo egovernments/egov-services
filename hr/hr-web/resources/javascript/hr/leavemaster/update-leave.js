@@ -311,7 +311,7 @@ handleProcess(e) {
 
     if(!tempInfo.workflowDetails){
       tempInfo.workflowDetails = {action : ID,
-                                  assignee : employee.assignments && employee.assignments[0] ? employee.assignments[0].id : ""};
+                                  assignee : employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""};
     }
     var body={
         "RequestInfo":requestInfo,
@@ -330,7 +330,7 @@ handleProcess(e) {
                 },
                 success: function(res) {
 
-                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Reject&applicationNumber=${leaveNumber}&owner=${owner}`;
+                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${assignee}`;
 
                 },
                 error: function(err) {
@@ -339,44 +339,44 @@ handleProcess(e) {
                 }
             });
   }else{
-    var employee;
-    var asOnDate = this.state.leaveSet.toDate;
-    var departmentId = this.state.departmentId;
-    var leaveNumber = this.state.leaveNumber;
-    var owner = this.state.owner;
-    var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
-    delete  tempInfo.name;
-    delete tempInfo.code;
-    if(!tempInfo.workflowDetails){
+      var employee;
+      var type;
+      var asOnDate = this.state.leaveSet.toDate;
+      var departmentId = this.state.departmentId;
+      var leaveNumber = this.state.leaveNumber;
+      var owner = this.state.owner;
+      var tempInfo=Object.assign({},this.state.leaveSet);
+      delete  tempInfo.name;
+      delete tempInfo.code;
+      if(!tempInfo.workflowDetails){
 
-      tempInfo.workflowDetails = {action : ID};
-    }
-    var body={
-        "RequestInfo":requestInfo,
-        "LeaveApplication":tempInfo
-      },_this=this;
+        tempInfo.workflowDetails = {action : ID};
+      }
+      var body={
+          "RequestInfo":requestInfo,
+          "LeaveApplication":tempInfo
+        },_this=this;
 
-          $.ajax({
-                url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-                type: 'POST',
-                dataType: 'json',
-                data:JSON.stringify(body),
+            $.ajax({
+                  url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                  type: 'POST',
+                  dataType: 'json',
+                  data:JSON.stringify(body),
 
-                contentType: 'application/json',
-                headers:{
-                  'auth-token': authToken
-                },
-                success: function(res) {
+                  contentType: 'application/json',
+                  headers:{
+                    'auth-token': authToken
+                  },
+                  success: function(res) {
 
-                   window.location.href=`app/hr/leavemaster/ack-page.html?type=Approve&applicationNumber=${leaveNumber}&owner=${owner}`;
+                     window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
 
+                  },
+                  error: function(err) {
+                      showError(err);
 
-                },
-                error: function(err) {
-                    showError(err);
-
-                }
-            });
+                  }
+              });
   }
 }
 

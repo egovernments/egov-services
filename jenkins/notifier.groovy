@@ -22,7 +22,7 @@ def notifyBuild(buildStatus = 'STARTED') {
       body: '${JELLY_SCRIPT, template="html_gmail"}',
       recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
       replyTo: '$DEFAULT_REPLYTO',
-      subject: "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+      subject: subject,
       to: '$DEFAULT_RECIPIENTS'
     )
 }

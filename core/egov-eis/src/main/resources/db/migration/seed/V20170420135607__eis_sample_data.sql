@@ -118,7 +118,7 @@ INSERT INTO egeis_deptdesig (id, designation, department, outsourcedposts, sanct
 ---------------------END-----------------
 
 
-INSERT INTO egeis_employee (id, code, dateofappointment, dateofretirement, employeestatus, employeetype, version,tenantId) VALUES ((select id from public.eg_user where username ='narasappa' and tenantId='default'), 'E005', NULL, NULL, 'EMPLOYED', 3, 0,'default');
+INSERT INTO egeis_employee (id, code, dateofappointment, dateofretirement, employeestatus, employeetype, version,tenantId) VALUES ((select id from eg_user where username ='narasappa' and tenantId='default'), 'E005', NULL, NULL, 'EMPLOYED', 3, 0,'default');
 
 INSERT INTO eg_position (name, id, deptdesig, createddate, lastmodifieddate, createdby, lastmodifiedby, ispostoutsourced, version,tenantId) VALUES ('L-JUNIOR ENGINEER-1', nextval('SEQ_EG_POSITION'), 1, '2015-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, false, 0,'default');
 

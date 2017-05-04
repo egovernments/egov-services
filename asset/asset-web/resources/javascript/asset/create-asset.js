@@ -692,8 +692,8 @@ class CreateAsset extends React.Component {
       }
   }
 
-  removeRow(e, type, index) {
-    e.preventDefault();
+  removeRow(e, type, name, index, assetIndex) {
+    /*e.preventDefault();
     switch(type) {
       case "custom":
         this.setState({
@@ -704,12 +704,52 @@ class CreateAsset extends React.Component {
         });
         break;
       case "old":
-        console.log("2");
+        var assetAttributes = Object.assign([], this.state.assetSet.assetAttributes);
+        for(var i=0; i<assetAttributes.length; i++) {
+          if(assetAttributes[i].key == name) {
+            assetAttributes[i].value.splice(index, 1);
+            break;
+          }
+        }
+
+        this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            assetAttributes: assetAttributes
+          }
+        });
+
         break;
       case "new":
-        console.log("3");
+        var _newRow = this.state.newRows[name];
+        _newRow.splice(index, 1);
+        this.setState({
+          newRows: {
+            ...this.state.newRows,
+            [name]: _newRow
+          }
+        })
+
+        var assetAttributes = Object.assign([], this.state.assetSet.assetAttributes);
+        for(var i=0; i<assetAttributes.length; i++) {
+          if(assetAttributes[i].key == name && assetAttributes[i].value[assetIndex]) {
+            assetAttributes[i].value.splice(assetIndex, 1);
+            break;
+          }
+        }
+
+        var _this = this;
+
+        setTimeout(function(){
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              assetAttributes: assetAttributes
+            }
+          })
+        }, 200);
         break;
-    }
+    }*/
   }
 
   addNewRow(e, name) {
@@ -1100,16 +1140,16 @@ class CreateAsset extends React.Component {
         }
         return newRows[name].map(function(val, ind) {
           return (<tr>
-              <td style={{"padding-top": "12px"}}>{len ? (len+ind+1) : (ind+2)}</td>
+              <td style={{"padding-top": "12px"}}>{len ? (len+ind+ ( tblSet.removeCustom ? 0 : 1)) : (ind+( tblSet.removeCustom ? 1 : 2))}</td>
               {item.columns.map((itemOne, index) => {
               itemOne.parent = item.name;
               return (
                 <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
             })}
-                <td>
-                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "new", (len ? (len+ind) : (ind+1)))}}>Remove</button>
-                </td>
+                {/*<td>
+                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "new", item.name, (len ? len : ind), len ? (len+ind) : (ind+1))}}>Remove</button>
+                </td>*/}
               </tr>)
         })
       }
@@ -1145,9 +1185,9 @@ class CreateAsset extends React.Component {
                       }
                     }
                 })}
-                    <td>
-                      <button className="btn btn-close" onClick={(e) => {removeRow(e, "old", ind)}}>Remove</button>
-                    </td>
+                    {/*<td>
+                      <button className="btn btn-close" onClick={(e) => {removeRow(e, "old", name, ind)}}>Remove</button>
+                    </td>*/}
                     </tr>)
               }
             })
@@ -1187,9 +1227,9 @@ class CreateAsset extends React.Component {
                   <td>{checkFields(itemOne, 0, true)}</td>
                 )
               })}
-                <td>
+                {/*<td>
                   <button className="btn btn-close" onClick={(e) => {removeRow(e, "custom")}}>Remove</button>
-                </td>
+                </td>*/}
                </tr>)
 				}
 
@@ -1211,7 +1251,7 @@ class CreateAsset extends React.Component {
                             <tr>
                                <th>Sr. No.</th>
                                {tableColumns()}
-                               <th>Action</th>
+                               {/*<th>Action</th>*/}
                             </tr>
                          </thead>
                          <tbody>

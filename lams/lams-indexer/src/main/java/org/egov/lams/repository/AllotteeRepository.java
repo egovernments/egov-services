@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.repository;
 
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AllotteeResponse;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class AllotteeService {
+public class AllotteeRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(AllotteeService.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(AllotteeRepository.class);
 
 	@Autowired
 	private RestTemplate restTemplate;

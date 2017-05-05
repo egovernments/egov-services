@@ -65,7 +65,7 @@ try { recruitmentQuota = !localStorage.getItem("recruitmentQuota") || localStora
     console.log(e);
     recruitmentQuota = [];
 }
-try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
     console.log(e);
     assetCategories = [];
 }
@@ -117,19 +117,19 @@ try { depreciationMethod = !localStorage.getItem("depreciationMethod") || localS
     console.log(e);
     depreciationMethod = {};
 }
-try { assetAccount = !localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined" ? (localStorage.setItem("assetAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("assetAccount"))) : JSON.parse(localStorage.getItem("assetAccount")); } catch (e) {
+try { assetAccount = !localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined" ? (localStorage.setItem("assetAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("assetAccount"))) : JSON.parse(localStorage.getItem("assetAccount")); } catch (e) {
     console.log(e);
     assetAccount = [];
 }
-try { accumulatedDepreciationAccount = !localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined" ? (localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("accumulatedDepreciationAccount"))) : JSON.parse(localStorage.getItem("accumulatedDepreciationAccount")); } catch (e) {
+try { accumulatedDepreciationAccount = !localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined" ? (localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("accumulatedDepreciationAccount"))) : JSON.parse(localStorage.getItem("accumulatedDepreciationAccount")); } catch (e) {
     console.log(e);
     accumulatedDepreciationAccount = [];
 }
-try { revaluationReserveAccount = !localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined" ? (localStorage.setItem("revaluationReserveAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("revaluationReserveAccount"))) : JSON.parse(localStorage.getItem("revaluationReserveAccount")); } catch (e) {
+try { revaluationReserveAccount = !localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined" ? (localStorage.setItem("revaluationReserveAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("revaluationReserveAccount"))) : JSON.parse(localStorage.getItem("revaluationReserveAccount")); } catch (e) {
     console.log(e);
     revaluationReserveAccount = [];
 }
-try { depreciationExpenseAccount = !localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined" ? (localStorage.setItem("depreciationExpenseAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("depreciationExpenseAccount"))) : JSON.parse(localStorage.getItem("depreciationExpenseAccount")); } catch (e) {
+try { depreciationExpenseAccount = !localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined" ? (localStorage.setItem("depreciationExpenseAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("depreciationExpenseAccount"))) : JSON.parse(localStorage.getItem("depreciationExpenseAccount")); } catch (e) {
     console.log(e);
     depreciationExpenseAccount = [];
 }

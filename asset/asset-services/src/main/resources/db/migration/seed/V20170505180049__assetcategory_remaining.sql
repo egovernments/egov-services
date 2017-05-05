@@ -15,3 +15,4 @@ INSERT INTO egasset_assetcategory (id, name, code, assetcategorytype,customfield
 INSERT INTO egasset_assetcategory (id, name, code, assetcategorytype,customfields, tenantid, createdby, createddate, version) VALUES (nextval('seq_egasset_assetcategory'),'Roads','024','IMMOVABLE','{"assetFieldsDefination":[{"name":"Road type","type":"Select","isActive":true,"isMandatory":true,"values":"Black top road , concrete road","order":"1","columns":[]},{"name":"Length(m)","type":"Number","isActive":true,"isMandatory":false,"order":"2","columns":[]},{"name":"Width(m)","type":"Number","isActive":true,"isMandatory":false,"order":"3","columns":[]},{"name":"Area(Sq.m)","type":"Number","isActive":true,"isMandatory":false,"order":"4","columns":[]}]}','default',1 ,current_date,1);
                                                                                                                                                
 
+ALTER SEQUENCE seq_egasset_categorycode RESTART WITH 30;

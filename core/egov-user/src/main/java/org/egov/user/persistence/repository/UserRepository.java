@@ -44,8 +44,8 @@ public class UserRepository {
 		this.addressRepository = addressRepository;
 	}
 
-	public org.egov.user.domain.model.User findByUsername(String userName) {
-		final User entityUser = userJpaRepository.findByUsername(userName);
+	public org.egov.user.domain.model.User findByUsername(String userName, String tenantId) {
+		final User entityUser = userJpaRepository.findByUsernameAndTenantId(userName, tenantId);
 		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
@@ -57,8 +57,8 @@ public class UserRepository {
 		return userJpaRepository.isUserPresent(userName, tenantId) > 0;
 	}
 
-	public org.egov.user.domain.model.User findByEmailId(String emailId) {
-		final User entityUser = userJpaRepository.findByEmailId(emailId);
+	public org.egov.user.domain.model.User findByEmailId(String emailId, String tenantId) {
+		final User entityUser = userJpaRepository.findByEmailIdAndTenantId(emailId, tenantId);
 		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 

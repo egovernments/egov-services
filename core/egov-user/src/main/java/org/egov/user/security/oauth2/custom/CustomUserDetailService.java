@@ -27,7 +27,8 @@ public class CustomUserDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		User user = this.userService.getUserByUsername(username);
+//		TODO: Retrieve tenant id
+		User user = this.userService.getUserByUsername(username, null);
 		return new SecureUser(getUser(user));
 	}
 

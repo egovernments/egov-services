@@ -2,7 +2,6 @@ package org.egov.user.persistence.repository;
 
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.enums.BloodGroup;
 import org.egov.user.persistence.enums.Gender;
@@ -22,7 +21,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -84,7 +82,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_name() {
-		User user = userJpaRepository.findByUsername("greenfish424");
+		User user = userJpaRepository.findByUsernameAndTenantId("greenfish424", "ap.public");
 		assertThat(user.getId()).isEqualTo(2L);
 	}
 
@@ -95,7 +93,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_email() {
-		User user = userJpaRepository.findByEmailId("email3@gmail.com");
+		User user = userJpaRepository.findByEmailIdAndTenantId("email3@gmail.com", "ap.public");
 		assertThat(user.getId()).isEqualTo(3L);
 	}
 

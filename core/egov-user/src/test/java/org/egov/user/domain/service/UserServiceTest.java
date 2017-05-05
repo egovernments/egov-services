@@ -40,6 +40,7 @@ public class UserServiceTest {
 	private final List<Long> ID = Arrays.asList(1L, 2L);
 	private final String EMAIL = "email@gmail.com";
 	private final String USER_NAME = "userName";
+	private final String TENANT_ID = "tenantId";
 
 	@Before
 	public void before() {
@@ -47,19 +48,19 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void test_should_get_user_by_email() throws Exception {
-		when(userRepository.findByEmailId(EMAIL)).thenReturn(getUserObject());
+	public void test_should_get_user_by_email() {
+		when(userRepository.findByEmailId(EMAIL, TENANT_ID)).thenReturn(getUserObject());
 
-		User actualUser = userService.getUserByEmailId(EMAIL);
+		User actualUser = userService.getUserByEmailId(EMAIL, TENANT_ID);
 
 		assertThat(actualUser.getEmailId()).isEqualTo(EMAIL);
 	}
 
 	@Test
-	public void test_should_get_user_by_username() throws Exception {
-		when(userRepository.findByUsername(USER_NAME)).thenReturn(getUserObject());
+	public void test_should_get_user_by_username() {
+		when(userRepository.findByUsername(USER_NAME, TENANT_ID)).thenReturn(getUserObject());
 
-		User actualUser = userService.getUserByUsername(USER_NAME);
+		User actualUser = userService.getUserByUsername(USER_NAME, TENANT_ID);
 
 		assertThat(actualUser.getUsername()).isEqualTo(USER_NAME);
 	}
@@ -322,7 +323,7 @@ public class UserServiceTest {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
 		final User domainUser = mock(User.class);
-		when(userRepository.findByUsername(anyString())).thenReturn(domainUser);
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
 
@@ -335,7 +336,7 @@ public class UserServiceTest {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(false);
 		final User domainUser = mock(User.class);
-		when(userRepository.findByUsername(anyString())).thenReturn(domainUser);
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
 	}
@@ -344,7 +345,7 @@ public class UserServiceTest {
 	public void test_should_throw_exception_when_user_does_not_exist_when_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
-		when(userRepository.findByUsername(anyString())).thenReturn(null);
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(null);
 
 		userService.updatePasswordForNonLoggedInUser(request);
 	}
@@ -355,7 +356,7 @@ public class UserServiceTest {
 		when(request.getNewPassword()).thenReturn("newPassword");
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
 		final User domainUser = mock(User.class);
-		when(userRepository.findByUsername(anyString())).thenReturn(domainUser);
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
 
@@ -377,7 +378,7 @@ public class UserServiceTest {
 				.build();
 		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
 		final User domainUser = mock(User.class);
-		when(userRepository.findByUsername("mobileNumber")).thenReturn(domainUser);
+		when(userRepository.findByUsername("mobileNumber", "tenant")).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
 

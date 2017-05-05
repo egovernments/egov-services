@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum DepreciationMethod {
 	
-    STRAIGHT_LINE_METHOD("STRAIGHT_LINE_METHOD"), WRITTEN_DOWN_VALUE_METHOD("WRITTEN_DOWN_VALUE_METHOD");
+    STRAIGHT_LINE_METHOD("STRAIGHT_LINE_METHOD");
 
     private String value;
 

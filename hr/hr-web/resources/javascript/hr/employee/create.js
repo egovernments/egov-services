@@ -1910,7 +1910,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
-            } 
+            }
           }
           employee[object][editIndex] = employeeSubObject[object];
           updateTable("#" + tableName, modalName, object);
@@ -2052,7 +2052,7 @@ $("#createEmployeeForm").validate({
 
           if (response["status"] === 200) {
             //showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
-            window.location.href = "app/hr/common/employee-search.html";
+            window.location.href = "app/hr/common/employee-search.html?type=view";
           } else {
             showError(response["statusText"]);
             employee = Object.assign({}, __emp);

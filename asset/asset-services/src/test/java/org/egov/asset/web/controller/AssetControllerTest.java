@@ -59,6 +59,7 @@ public class AssetControllerTest {
 		mockMvc.perform(post("/assets/_search")
 	        		.param("code","000013")
 	        		.param("tenantId", "ap.kurnool")
+	        		.param("assetCategory", "1")
 	                .contentType(MediaType.APPLICATION_JSON)
 	                .content(getFileContents("requestinfowrapper.json")))
 	                .andExpect(status().isOk())

@@ -57,11 +57,11 @@ public class BankBranchService {
 
     private void setBankBranch(final BankBranch bankBranch) {
         if (bankBranch.getBank() != null) {
-            Bank bank = bankService.findOne(bankBranch.getBank().getId());
+            Bank bank = bankService.findOne(bankBranch.getBank());
             if (bank == null) {
                 throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
             }
-            bankBranch.setBank(bank);
+            bankBranch.setBank(bank.getId());
         }
     }
 

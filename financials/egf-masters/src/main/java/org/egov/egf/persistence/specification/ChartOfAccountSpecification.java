@@ -27,14 +27,14 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
         Path<Long> id = root.get(ChartOfAccount_.id);
         Path<String> glcode = root.get(ChartOfAccount_.glcode);
         Path<String> name = root.get(ChartOfAccount_.name);
-        Path<AccountCodePurpose> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
+        Path<Long> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
         Path<String> desciption = root.get(ChartOfAccount_.description);
         Path<Boolean> isActiveForPosting = root.get(ChartOfAccount_.isActiveForPosting);
         Path<String> tenantId = root.get(ChartOfAccount_.tenantId);
 
-        /*
-         * Path<ChartOfAccount> parentId = root.get(ChartOfAccount_.parentId);
-         */
+        
+//        Path<ChartOfAccount> parentId = root.get(ChartOfAccount_.parentId);
+         
         Path<Character> type = root.get(ChartOfAccount_.type);
         Path<Long> classification = root.get(ChartOfAccount_.classification);
         Path<Boolean> functionRequired = root.get(ChartOfAccount_.functionRequired);
@@ -95,6 +95,8 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 
             if (criteria.getTenantId() != null) {
                 predicates.add(criteriaBuilder.equal(tenantId, criteria.getTenantId()));
+//                predicates.add(criteriaBuilder.equal(pa, criteria.getTenantId()));
+
             }
 
             /*

@@ -1,9 +1,11 @@
 package org.egov.egf.persistence.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.egov.egf.domain.exception.InvalidDataException;
 import org.egov.egf.persistence.entity.AccountCodePurpose;
@@ -54,17 +56,17 @@ public class ChartOfAccountService {
     private void setChartOfAccount(final ChartOfAccount chartOfAccount) {
         if (chartOfAccount.getAccountCodePurpose() != null) {
             final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-                    .findOne(chartOfAccount.getAccountCodePurpose().getId());
+                    .findOne(chartOfAccount.getAccountCodePurpose());
             if (accountCodePurpose == null)
                 throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
                         " Invalid accountCodePurpose");
-            chartOfAccount.setAccountCodePurpose(accountCodePurpose);
+            chartOfAccount.setAccountCodePurpose(accountCodePurpose.getId());
         }
         if (chartOfAccount.getParentId() != null) {
-            final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
+            final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId());
             if (parentId == null)
                 throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-            chartOfAccount.setParentId(parentId);
+            chartOfAccount.setParentId(parentId.getId());
         }
     }
 
@@ -87,6 +89,25 @@ public class ChartOfAccountService {
     }
 
     public Page<ChartOfAccount> search(final ChartOfAccountContractRequest chartOfAccountContractRequest) {
+//        ChartOfAccountContract chartOfAccountContract = chartOfAccountContractRequest.getChartOfAccount();
+//        
+//        List<ChartOfAccount> chartOfAccounts = new ArrayList<ChartOfAccount>();
+//        final StringBuilder queryStr = new StringBuilder();
+//        
+//        queryStr.append("select coa.glcode,coa.parentid,coa.tenantid from egf_chartofaccount as coa where coa.tenantid =: tenantId and coa.parentid.tenantid =: tenantId");
+//        
+//        if(chartOfAccountContract.getGlcode() != null)
+//            queryStr.append("and coa.purposeId.id =: glcode and coa.purposeId.tenantid =: tenantId");
+//        
+//        final Query query = entityManager.createQuery(queryStr.toString());
+//        query.setParameter("tenantId", chartOfAccountContract.getTenantId());
+//
+//        if(chartOfAccountContract.getGlcode() != null)
+//            query.setParameter("glcode", chartOfAccountContract.getGlcode());
+//        
+//        chartOfAccounts = query.getResultList();
+        
+        
         final ChartOfAccountSpecification specification = new ChartOfAccountSpecification(
                 chartOfAccountContractRequest.getChartOfAccount());
         final Pageable page = new PageRequest(chartOfAccountContractRequest.getPage().getOffSet(),
@@ -165,5 +186,13 @@ public class ChartOfAccountService {
             model.map(parentId, chartOfAccount.getParentId());
         }
         return chartOfAccountContractRequest;
+    }
+
+    public ChartOfAccount getParentChartOfAccount(Long parentId, String tenantId) {
+        final ChartOfAccount chartOfAccount = chartOfAccountRepository.findByIdAndTenantId(parentId, tenantId);
+        if(chartOfAccount != null )
+            return chartOfAccount;
+        else
+            return null;
     }
 }

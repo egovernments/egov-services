@@ -1,7 +1,6 @@
 package org.egov.user.security;
 
 import org.egov.user.security.oauth2.custom.CustomTokenEnhancer;
-import org.egov.user.security.oauth2.custom.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +20,6 @@ import redis.clients.jedis.JedisShardInfo;
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-	private static String REALM = "PGR_REST_OAUTH_REALM";
-
 	@Value("${spring.redis.host}")
 	private String host;
 
@@ -40,9 +37,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Autowired
 	private TokenStore tokenStore;
-
-	@Autowired
-	private CustomUserDetailService userDetailService;
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -62,13 +56,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(tokenStore)
 				.authenticationManager(authenticationManager)
-				.tokenEnhancer(customTokenEnhancer)
-				.userDetailsService(userDetailService);
-	}
-
-	@Override
-	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-		oauthServer.realm(REALM + "/client");
+				.tokenEnhancer(customTokenEnhancer);
 	}
 
 	@Bean

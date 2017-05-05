@@ -32,16 +32,16 @@ public class AgreementRepository {
 
 	@Autowired
 	private AssetHelper assetHelper;
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	private AssetService assetService;
-	
+
 	@Autowired
 	private AllotteeService allotteeService;
-	
+
 	@Autowired
 	private AllotteeHelper allotteeHelper;
 
@@ -50,13 +50,22 @@ public class AgreementRepository {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
-	/**
-	 * Allottee criteria is on name or mobile number which is expected to return
-	 * 1 or 2 records. With this, we make the agreementQuery. so, the result set
-	 * also is like 1 or 2 records. Then, we get all the assets for given asset
-	 * criteria in a list and then filter agreement results based on the asset.
-	 */
+
+	public Agreement findAgreementById(String acknowledgementNumber) {
+
+		Agreement agreement = null;
+		String sql = AgreementQueryBuilder.agreementQuery;
+		Object[] preparedStatementValues = new Object[] { acknowledgementNumber };
+
+		try {
+			agreement = jdbcTemplate.queryForObject(sql, preparedStatementValues, Agreement.class);
+		} catch (DataAccessException e) {
+			logger.info("exception in getagreementbyid :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		return agreement;
+	}
+
 	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
@@ -89,7 +98,7 @@ public class AgreementRepository {
 		List<Agreement> agreements = null;
 		System.out.println("before calling get asset method");
 		List<Asset> assets = getAssets(agreementCriteria);
-		System.out.println("after calling get asset method : lengeth of result is"+ assets.size());
+		System.out.println("after calling get asset method : lengeth of result is" + assets.size());
 		if (assets.size() > 1000) // FIXME
 			throw new RuntimeException("Asset criteria is too big");
 		agreementCriteria.setAsset(assetHelper.getAssetIdList(assets));
@@ -97,7 +106,7 @@ public class AgreementRepository {
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
-			logger.info(e.getMessage(),e.getCause());
+			logger.info(e.getMessage(), e.getCause());
 			throw new RuntimeException(e.getMessage());
 		}
 		if (agreements.isEmpty())
@@ -181,19 +190,19 @@ public class AgreementRepository {
 	 * Allottee API
 	 */
 	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
-		//FIXME TODO urgent allottee helper has to be changed for post
-		//String queryString = allotteeHelper.getAllotteeParams(agreementCriteria);
+		// FIXME TODO urgent allottee helper has to be changed for post
+		// String queryString =
+		// allotteeHelper.getAllotteeParams(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
-		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria,new RequestInfo());
+		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria, new RequestInfo());
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
 			throw new RuntimeException("No allottee found for given criteria");
-		System.err.println("the result allottee response from allottee api call : "+allotteeResponse.getAllottee());
+		System.err.println("the result allottee response from allottee api call : " + allotteeResponse.getAllottee());
 		return allotteeResponse.getAllottee();
 	}
 
 	/*
-	 * method to return a list of Asset objects by calling AssetService
-	 * API
+	 * method to return a list of Asset objects by calling AssetService API
 	 */
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
 		System.out.println("inside get asset method");
@@ -202,7 +211,7 @@ public class AgreementRepository {
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
 		// FIXME empty response exception
-		System.err.println("the result asset response from asset api call : "+assetResponse.getAssets());
+		System.err.println("the result asset response from asset api call : " + assetResponse.getAssets());
 		return assetResponse.getAssets();
 	}
 }

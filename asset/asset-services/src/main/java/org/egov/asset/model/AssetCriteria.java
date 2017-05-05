@@ -21,6 +21,7 @@ public class AssetCriteria {
 	private List<Long> id;
 	private String name;
 	private String code;
+	@NotNull
 	private Long assetCategory;
 	private Long department;
 	private Status status;

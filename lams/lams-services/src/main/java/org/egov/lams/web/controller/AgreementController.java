@@ -111,8 +111,9 @@ public class AgreementController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		
-		if(!acknowledgementNumber.equals(agreementRequest.getAgreement().getAcknowledgementNumber())){
-			throw new RuntimeException("Invalid acknowledgementnumber, no agreement found for this value");
+		if (!acknowledgementNumber.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
+				&& agreementService.isAgreementExist(acknowledgementNumber)) {
+			throw new RuntimeException("acknowledgementnumber mismatch or no agreement found for this value");
 		}
 		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
 

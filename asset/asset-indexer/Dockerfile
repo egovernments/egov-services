@@ -7,7 +7,7 @@ MAINTAINER kaviyarasan<kaviyarasan.p@riflexions.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-asset-index-0.0.1-SNAPSHOT.jar /opt/egov/asset-index.jar
+COPY /target/egov-asset-indexer-0.0.1-SNAPSHOT.jar /opt/egov/asset-indexer.jar
 
 COPY start.sh /usr/bin/start.sh
 

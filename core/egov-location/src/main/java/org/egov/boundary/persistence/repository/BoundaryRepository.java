@@ -40,101 +40,96 @@
 
 package org.egov.boundary.persistence.repository;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import javax.persistence.EntityManager;
 
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.persistence.entity.HierarchyType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.LongType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Repository
-public interface BoundaryRepository extends JpaRepository<Boundary, Long> {
+@Service
+public class BoundaryRepository {
 
-	// @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-	Boundary findByName(String name);
+	private EntityManager entityManager;
 
-	List<Boundary> findByNameContainingIgnoreCase(String name);
+	@Autowired
+	public BoundaryRepository(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
-	List<Boundary> findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(
-			@Param("boundaryTypeId") Long boundaryTypeId, @Param("boundaryTypeTenantId") String boundaryTypeTenantId,
-			@Param("tenantId") String tenantId);
+	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
+			final String hierarchyTypeName, final String tenantId) {
+		Session currentSession = entityManager.unwrap(Session.class);
 
-	Boundary findBoundarieByBoundaryTypeAndBoundaryNum(@Param("boundaryType") BoundaryType boundaryType,
-			@Param("boundaryNum") Long boundaryNum);
+		String sql = "select b.* from eg_Boundary b where b.boundarytype="
+				+ "(select id from eg_boundary_Type t where upper(t.name)=upper(:boundaryTypeName) and t.hierarchyType="
+				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "
+				+ "and b.tenantid=:tenantId";
+		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE).addScalar("tenantId");
 
-	@Query("select b from Boundary b where b.isHistory=false AND b.boundaryType.id =:boundaryTypeId order by b.name")
-	List<Boundary> findActiveBoundariesByBoundaryTypeId(@Param("boundaryTypeId") Long boundaryTypeId);
+		createSQLQuery.setString("boundaryTypeName", boundaryTypeName);
+		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
+		createSQLQuery.setString("tenantId", tenantId);
+		createSQLQuery.setResultTransformer(Transformers.aliasToBean(Boundary.class));
 
-	@Query("select b from Boundary b where b.isHistory=false AND b.boundaryType.hierarchyType = :hierarchyType AND b.boundaryType.hierarchy = :hierarchyLevel AND ((b.toDate IS NULL AND b.fromDate <= :asOnDate) OR (b.toDate IS NOT NULL AND b.fromDate <= :asOnDate AND b.toDate >= :asOnDate)) order by b.name")
-	List<Boundary> findActiveBoundariesByHierarchyTypeAndLevelAndAsOnDate(
-			@Param("hierarchyType") HierarchyType hierarchyType, @Param("hierarchyLevel") Long hierarchyLevel,
-			@Param("asOnDate") Date asOnDate);
+		return createSQLQuery.list();
+	}
 
-	@Query("select b from Boundary b where b.isHistory=false AND b.parent is not null AND b.parent.id = :parentBoundaryId AND ((b.toDate IS NULL AND b.fromDate <= :asOnDate) OR (b.toDate IS NOT NULL AND b.fromDate <= :asOnDate AND b.toDate >= :asOnDate)) order by b.name")
-	List<Boundary> findActiveChildBoundariesByBoundaryIdAndAsOnDate(@Param("parentBoundaryId") Long parentBoundaryId,
-			@Param("asOnDate") Date asOnDate);
+	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
+			final String tenantId) {
+		Session currentSession = entityManager.unwrap(Session.class);
 
-	@Query("from Boundary BND where BND.isHistory=false AND BND.materializedPath like (select B.materializedPath from Boundary B where B.id=:parentId)||'%'")
-	List<Boundary> findActiveChildrenWithParent(@Param("parentId") Long parentId);
+		String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where bt.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
 
-	@Query("from Boundary BND where BND.isHistory=false AND BND.materializedPath in :mpath ")
-	List<Boundary> findActiveBoundariesForMpath(@Param("mpath") final Set<String> mpath);
+		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+				.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+				.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
 
-	@Query("select b from Boundary b where b.parent is not null AND b.parent.id = :parentBoundaryId AND ((b.toDate IS NULL AND b.fromDate <= :asOnDate) OR (b.toDate IS NOT NULL AND b.fromDate <= :asOnDate AND b.toDate >= :asOnDate)) order by b.name")
-	List<Boundary> findChildBoundariesByBoundaryIdAndAsOnDate(@Param("parentBoundaryId") Long parentBoundaryId,
-			@Param("asOnDate") Date asOnDate);
+		createSQLQuery.setLong("id", boundaryTypeId);
+		createSQLQuery.setString("tenantId", tenantId);
 
-	@Query("select b from Boundary b where b.isHistory=false AND b.boundaryNum = :boundaryNum AND b.boundaryType.name = :boundaryType AND upper(b.boundaryType.hierarchyType.code) = :hierarchyTypeCode AND ((b.toDate IS NULL AND b.fromDate <= :asOnDate) OR (b.toDate IS NOT NULL AND b.fromDate <= :asOnDate AND b.toDate >= :asOnDate))")
-	Boundary findActiveBoundaryByBndryNumAndTypeAndHierarchyTypeCodeAndAsOnDate(@Param("boundaryNum") Long boundaryNum,
-			@Param("boundaryType") String boundaryType, @Param("hierarchyTypeCode") String hierarchyTypeCode,
-			@Param("asOnDate") Date asOnDate);
+		return mapToBoundary(createSQLQuery.list());
+	}
 
-	@Query("select b from Boundary b where b.isHistory=false AND upper(b.boundaryType.name) = upper(:boundaryTypeName) AND upper(b.boundaryType.hierarchyType.name) = upper(:hierarchyTypeName) order by b.name")
-	List<Boundary> findActiveBoundariesByBndryTypeNameAndHierarchyTypeName(
-			@Param("boundaryTypeName") String boundaryTypeName, @Param("hierarchyTypeName") String hierarchyTypeName);
+	public List<Boundary> getBoundariesByIdAndTenantId(final Long id, final String tenantId) {
+		Session currentSession = entityManager.unwrap(Session.class);
 
-	@Query("select b from Boundary b where upper(b.boundaryType.name) = UPPER(:boundaryTypeName) AND upper(b.boundaryType.hierarchyType.name) = UPPER(:hierarchyTypeName) order by b.id")
-	List<Boundary> findBoundariesByBndryTypeNameAndHierarchyTypeName(@Param("boundaryTypeName") String boundaryTypeName,
-			@Param("hierarchyTypeName") String hierarchyTypeName);
+		String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where b.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
 
-	@Query("select b from Boundary b where upper(b.boundaryType.name) = UPPER(:boundaryTypeName) AND upper(b.boundaryType.hierarchyType.name) = UPPER(:hierarchyTypeName) order by b.id")
-	Boundary findBoundaryByBndryTypeNameAndHierarchyTypeName(@Param("boundaryTypeName") String boundaryTypeName,
-			@Param("hierarchyTypeName") String hierarchyTypeName);
+		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+				.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+				.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
 
-	@Query("select b from Boundary b where b.isHistory=false and UPPER(b.name) like UPPER(:boundaryName) and b.boundaryType.id=:boundaryTypeId order by b.boundaryNum asc")
-	List<Boundary> findByNameAndBoundaryTypeOrderByBoundaryNumAsc(@Param("boundaryName") String boundaryName,
-			@Param("boundaryTypeId") Long boundaryTypeId);
+		createSQLQuery.setLong("id", id);
+		createSQLQuery.setString("tenantId", tenantId);
+		return mapToBoundary(createSQLQuery.list());
+	}
 
-	@Query("select b from Boundary b where upper(b.boundaryType.name) = UPPER(:boundaryTypeName) AND upper(b.boundaryType.hierarchyType.name) = UPPER(:hierarchyTypeName) and b.boundaryType.tenantId = b.tenantId and b.boundaryType.hierarchyType.tenantId = b.boundaryType.tenantId and b.boundaryType.tenantId = :tenantId order by b.id")
-	List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(
-			@Param("boundaryTypeName") String boundaryTypeName, @Param("hierarchyTypeName") String hierarchyTypeName,
-			@Param("tenantId") String tenantId);
-
-	@Query("select b from Boundary b where b.boundaryType.name=:boundaryType and b.boundaryType.hierarchyType.name=:hierarchyType and b.boundaryType.hierarchy=:hierarchyLevel")
-	Boundary findByBoundaryTypeNameAndHierarchyTypeNameAndLevel(@Param("boundaryType") String boundaryType,
-			@Param("hierarchyType") String hierarchyType, @Param("hierarchyLevel") Long hierarchyLevel);
-
-	@Query("select b from Boundary b where b.isHistory=false AND upper(b.boundaryType.name) = upper(:boundaryTypeName) AND upper(b.boundaryType.hierarchyType.name) = upper(:hierarchyTypeName) AND UPPER(b.name) like UPPER(:name)||'%' order by b.id")
-	List<Boundary> findActiveBoundariesByNameAndBndryTypeNameAndHierarchyTypeName(
-			@Param("boundaryTypeName") String boundaryTypeName, @Param("hierarchyTypeName") String hierarchyTypeName,
-			@Param("name") String name);
-
-	@Query("from Boundary BND where BND.isHistory=false AND BND.parent.id=:parentId)")
-	List<Boundary> findActiveImmediateChildrenWithOutParent(@Param("parentId") Long parentId);
-
-	@Query("from Boundary BND where BND.parent is null")
-	List<Boundary> findAllParents();
-
-	List<Boundary> findByBoundaryTypeOrderByBoundaryNumAsc(BoundaryType boundaryType);
-
-	Boundary findByTenantIdAndBoundaryNum(String tenantId, String code);
-
-	Boundary findByTenantIdAndId(String tenantId, Long id);
-
-	List<Boundary> findAllByTenantId(String tenantId);
+	private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
+		List<Boundary> boundaryList = new ArrayList<Boundary>();
+		for (Object[] b : boundarylist) {
+			Boundary boundary = new Boundary();
+			boundary.setId(b[0] != null ? Long.valueOf(b[0].toString()) : null);
+			boundary.setName(b[1] != null ? b[1].toString() : "");
+			boundary.setBoundaryNum(b[2] != null ? Long.valueOf(b[2].toString()) : null);
+			boundary.setBoundaryType(new BoundaryType());
+			boundary.getBoundaryType().setId(b[3] != null ? Long.valueOf(b[3].toString()) : null);
+			boundary.getBoundaryType().setName(b[4] != null ? b[4].toString() : "");
+			boundary.setParent(new Boundary());
+			boundary.getParent().setId(b[5] != null ? Long.valueOf(b[5].toString()) : null);
+			boundary.setTenantId(b[6] != null ? b[6].toString() : "");
+			boundaryList.add(boundary);
+		}
+		return boundaryList;
+	}
 }

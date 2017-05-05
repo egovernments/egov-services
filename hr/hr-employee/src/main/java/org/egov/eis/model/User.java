@@ -48,7 +48,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.Gender;
 import org.egov.eis.model.enums.UserType;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -150,8 +149,7 @@ public class User {
 	@Size(max=100)
 	private String fatherOrHusbandName;
 
-	@Valid
-	private BloodGroup bloodGroup;
+	private String bloodGroup;
 
 	@Size(max=300)
 	private String identificationMark;

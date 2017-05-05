@@ -38,52 +38,17 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.enums;
+package org.egov.eis.web.validator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public class EnumValidator {
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-public enum BloodGroup {
-	A_POSITIVE("A+"), B_POSITIVE("B+"), AB_POSITIVE("AB+"), O_POSITIVE("O+"),
-	A_NEGATIVE("A-"), B_NEGATIVE("B-"), AB_NEGATIVE("AB-"), O_NEGATIVE("O-");
-
-	private String value;
-
-	BloodGroup(String value) {
-		this.value = value;
-	}
-
-	@Override
-	@JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
-
-	public static List<Map<String, String>> getBloodGroups() {
-		List<Map<String, String>> bloodGroups = new ArrayList<>();
-		for (BloodGroup obj : BloodGroup.values()) {
-			Map<String, String> bloodGroup = new HashMap<>();
-			bloodGroup.put("id", obj.toString());
-			bloodGroup.put("name", obj.value);
-			bloodGroups.add(bloodGroup);
-		}
-		return bloodGroups;
-	}
-
-	@JsonCreator
-	public static BloodGroup fromValue(String passedValue) {
-		for (BloodGroup obj : BloodGroup.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
+	public static <E extends Enum<E>> boolean isInEnum(String value, Class<E> enumClass) {
+		for (E e : enumClass.getEnumConstants()) {
+			if (e.name().equals(value)) {
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
+
 }

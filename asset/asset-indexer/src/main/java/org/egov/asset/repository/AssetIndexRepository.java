@@ -65,7 +65,7 @@ public class AssetIndexRepository {
 		
 		String url = applicationProperties.getBoundaryServiceHostName()
 				   + applicationProperties.getBoundaryServiceSearchPath()
-				   + "Boundary.tenantId="+asset.getTenantId()
+				   + "?Boundary.tenantId="+asset.getTenantId()
 				   + "&Boundary.id=";		
 		for (Long id : boundaryList) {
 			URI uri;

@@ -34,7 +34,7 @@ public class BankSpecification implements Specification<Bank> {
         Path<String> type = root.get(Bank_.type);
         Path<String> tenantId = root.get(Bank_.tenantId);
 
-        Expression<Set<BankBranch>> bankBranches = root.get(Bank_.bankBranches);
+//        Expression<Set<BankBranch>> bankBranches = root.get(Bank_.bankBranches);
         final List<Predicate> predicates = new ArrayList<>();
 
         if (criteria != null) {

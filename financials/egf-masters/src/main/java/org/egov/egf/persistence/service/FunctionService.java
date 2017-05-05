@@ -50,11 +50,11 @@ public class FunctionService {
 
     private void setFunction(final Function function) {
         if (function.getParentId() != null) {
-            Function parentId = functionService.findOne(function.getParentId().getId());
+            Function parentId = functionService.findOne(function.getParentId());
             if (parentId == null) {
                 throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
             }
-            function.setParentId(parentId);
+            function.setParentId(parentId.getId());
         }
     }
 

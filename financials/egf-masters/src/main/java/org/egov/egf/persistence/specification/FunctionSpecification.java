@@ -29,7 +29,7 @@ public class FunctionSpecification implements Specification<Function> {
         Path<Integer> level = root.get(Function_.level);
         Path<Boolean> active = root.get(Function_.active);
         Path<Boolean> isParent = root.get(Function_.isParent);
-        Path<Function> parentId = root.get(Function_.parentId);
+        Path<Long> parentId = root.get(Function_.parentId);
         Path<String> tenantId = root.get(Function_.tenantId);
         final List<Predicate> predicates = new ArrayList<>();
         if (criteria != null) {

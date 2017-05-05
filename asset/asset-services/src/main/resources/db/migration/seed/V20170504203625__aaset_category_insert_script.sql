@@ -25,6 +25,8 @@ INSERT INTO egasset_assetcategory (id, name, code, parentid, assetcategorytype, 
 
 INSERT INTO egasset_assetcategory (id, name, code, parentid, assetcategorytype, depreciationmethod, depreciationrate, assetaccount, accumulateddepreciationaccount, revaluationreserveaccount, depreciationexpenseaccount, unitofmeasurement, customfields, tenantid, createdby, createddate, lastmodifiedby, lastmodifieddate, isassetallow, version) VALUES (nextval('seq_egasset_assetcategory'), 'Shopping Complex', '015', NULL, 'IMMOVABLE', 'STRAIGHT_LINE_METHOD', NULL, NULL, NULL, NULL, NULL, NULL, '{"assetFieldsDefination":[{"name":"Shopping Complex Name","type":"Text","isActive":true,"isMandatory":true,"columns":[]},{"name":"Door No.","type":"Text","isActive":true,"isMandatory":false,"columns":[]},{"name":"Shopping Complex No.","type":"Text","isActive":true,"isMandatory":true,"columns":[]},{"name":"No. of Floors","type":"Number","isActive":true,"isMandatory":true,"columns":[]},{"name":"Total No. of Shops","type":"Number","isActive":true,"isMandatory":true,"columns":[]},{"name":"Floor Details","type":"Table","isActive":false,"isMandatory":false,"columns":[{"name":"Floor No.","type":"Text","isActive":true,"isMandatory":true,"columns":[]},{"name":"No. of Shops","type":"Text","isActive":true,"isMandatory":true,"columns":[]}]}]}', 'ap.kurnool', '1', '2017-05-04 11:47:21.451', '1', '2017-05-04 11:47:21.451', NULL, '1.0');
 
+ALTER SEQUENCE seq_egasset_categorycode RESTART WITH 16;
+
 
 
 

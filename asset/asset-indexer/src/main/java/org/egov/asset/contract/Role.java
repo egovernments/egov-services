@@ -14,6 +14,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Role {
+	
+	private Long id;
+	
     @JsonProperty("name")
     private String name;
     

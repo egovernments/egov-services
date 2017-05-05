@@ -100,7 +100,7 @@ public class Asset {
 	private Double accumulatedDepreciation;
 	private Long assetReference = null;
 	private String version;
-    private List<Attributes> assetAttributes = new ArrayList<Attributes>();
+    private List<Attributes> assetAttributes = new ArrayList<>();
     
 	
 }

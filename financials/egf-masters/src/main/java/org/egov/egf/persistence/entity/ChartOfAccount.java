@@ -119,10 +119,6 @@ public class ChartOfAccount extends AbstractAuditable {
     @Transient
     private Boolean isSubLedger;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chartOfAccount", targetEntity = ChartOfAccountDetail.class)
-    private Set<ChartOfAccountDetail> chartOfAccountDetails = new HashSet<ChartOfAccountDetail>();
-
     public Long getId() {
         return id;
     }
@@ -209,14 +205,6 @@ public class ChartOfAccount extends AbstractAuditable {
 
     public void setIsSubLedger(Boolean isSubLedger) {
         this.isSubLedger = isSubLedger;
-    }
-
-    public Set<ChartOfAccountDetail> getChartOfAccountDetails() {
-        return chartOfAccountDetails;
-    }
-
-    public void setChartOfAccountDetails(Set<ChartOfAccountDetail> chartOfAccountDetails) {
-        this.chartOfAccountDetails = chartOfAccountDetails;
     }
 
     public Long getAccountCodePurpose() {

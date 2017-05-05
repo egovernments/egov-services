@@ -3,9 +3,6 @@ package org.egov.asset.model;
 import java.util.Date;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -89,16 +86,14 @@ public class AssetIndex {
 		this.width = asset.getWidth();
 		this.totalArea = asset.getTotalArea();
 
-	//FIXME property is removed
-		/*	String property = null;
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			property = objectMapper.writeValueAsString(asset.getProperties());
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.properties = property;*/
+		// FIXME property is removed
+		/*
+		 * String property = null; try { ObjectMapper objectMapper = new
+		 * ObjectMapper(); property =
+		 * objectMapper.writeValueAsString(asset.getProperties()); } catch
+		 * (JsonProcessingException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } this.properties = property;
+		 */
 	}
 
 	public void setAssetDepartment(Department department) {
@@ -112,17 +107,35 @@ public class AssetIndex {
 	public void setAssetLocation(Location location, Map<Long, Boundary> map) {
 
 		this.locality = location.getLocality();
-		this.localityName = map.get(location.getLocality()).getName();
+		Boundary locationBoundary = map.get(location.getLocality());
+		if (locationBoundary != null)
+			this.localityName = locationBoundary.getName();
+
 		this.zone = location.getZone();
-		this.zoneName = map.get(location.getZone()).getName();
+		Boundary zoneBoundary = map.get(location.getLocality());
+		if (zoneBoundary != null)
+			this.zoneName = map.get(location.getZone()).getName();
+
 		this.revenueWard = location.getRevenueWard();
-		this.revenueWardName = map.get(location.getRevenueWard()).getName();
+		Boundary revenueWardBoundary = map.get(location.getLocality());
+		if (revenueWardBoundary != null)
+			this.revenueWardName = map.get(location.getRevenueWard()).getName();
+
 		this.block = location.getBlock();
-		this.blockName = map.get(location.getBlock()).getName();
+		Boundary blockBoundary = map.get(location.getLocality());
+		if (blockBoundary != null)
+			this.blockName = map.get(location.getBlock()).getName();
+
 		this.street = location.getStreet();
-		this.streetName = map.get(location.getStreet()).getName();
+		Boundary streetBoundary = map.get(location.getLocality());
+		if (streetBoundary != null)
+			this.streetName = map.get(location.getStreet()).getName();
+
 		this.electionWard = location.getElectionWard();
-		this.electionWardName = map.get(location.getElectionWard()).getName();
+		Boundary electionWardBoundary = map.get(location.getLocality());
+		if (electionWardBoundary != null)
+			this.electionWardName = map.get(location.getElectionWard()).getName();
+
 		this.doorNo = location.getDoorNo();
 		this.pinCode = location.getPinCode();
 

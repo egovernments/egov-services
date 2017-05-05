@@ -90,13 +90,13 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
-		System.err.println("user url: " + url);
-		System.err.println("userGetRequest: " + userGetRequest);
+		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("UserGetRequest : " + userGetRequest);
+
 		List<User> users = null;
 		try {
 			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
-			System.err.println("After User Search: " + users.get(0));
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
@@ -110,14 +110,15 @@ public class UserService {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
+		LOGGER.info("\n\n\n\n\n" + "User create url : " + url);
+		LOGGER.debug("UserRequest : " + userRequest);
+
 		UserResponse userResponse = null;
 		try {
-			System.err.println("Before User Create: " + userRequest.getUser());
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
-			System.err.println("After User Create: " + userResponse.getUser());
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
-			System.err.println("Following exception occurred: " + e.getResponseBodyAsString());
+			LOGGER.debug("Following exception occurred: " + e.getResponseBodyAsString());
 			UserErrorResponse userErrorResponse = null;
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -147,14 +148,15 @@ public class UserService {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ getUserUpdatePath(userId);
 
-		LOGGER.info("update url : " + url);
+		LOGGER.info("\n\n\n\n\n" + "User update url : " + url);
+		LOGGER.debug("UserRequest : " + userRequest);
 
 		UserResponse userResponse = null;
 		try {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
-			System.err.println("Following exception occurred: " + e.getResponseBodyAsString());
+			LOGGER.debug("Following exception occurred: " + e.getResponseBodyAsString());
 			UserErrorResponse userErrorResponse = null;
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -177,7 +179,6 @@ public class UserService {
 			e.printStackTrace();
 			return errorHandler.getResponseEntityForUnknownUserUpdationError(userRequest.getRequestInfo());
 		}
-		System.err.println(userResponse.getUser().get(0));
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
 	}
 

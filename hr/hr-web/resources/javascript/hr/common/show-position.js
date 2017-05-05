@@ -84,7 +84,7 @@ class ShowPosition extends React.Component {
     }
 
       return (<div>
-        <h3>{mode} Position </h3>
+          <h3>{titleCase(getUrlVars()["type"])} Position</h3>
         <table id="positionTable" className="table table-bordered">
             <thead>
                 <tr>

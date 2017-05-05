@@ -71,7 +71,7 @@ class ShowPosition extends React.Component {
                     <td data-label="department">{getNameById(assignments_department,item.deptdesig.department)}</td>
                     <td data-label="designation">{item.deptdesig.designation.name}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="isPostOutsourced">{item.isPostOutsourced?item.isPostOutsourced:"false"}</td>
+                    <td data-label="isPostOutsourced">{item.isPostOutsourced?"true":"false"}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
 
                     <td data-label="action">

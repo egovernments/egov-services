@@ -16,8 +16,9 @@ class PositionMaster extends React.Component{
                             "tenantId": ""
                         }
                     },
-                    "isPostOutsourced": "",
+                    "isPostOutsourced": "false",
                     "active": "true",
+                    "tenantId":tenantId
     },
       departmentsList:[],designationList:[]}
       this.handleChange=this.handleChange.bind(this);
@@ -156,7 +157,7 @@ handleChangeThreeLevel(e,pName,name,val)
 
             }
         });
-        
+
     } else {
       $.ajax({
             url:baseUrl+"/hr-masters/positions/_create?tenantId=" + tenantId,

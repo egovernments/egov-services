@@ -1,0 +1,20 @@
+{
+	"ResponseInfo": {
+		
+	},
+	
+	"documentTypes": [
+		{
+			"id": null,
+			"name": null,
+			"tenantId": "1",
+			"application": null
+		},
+		{
+			"id": null,
+			"name": null,
+			"tenantId": "1",
+			"application": null
+		}
+	]
+}

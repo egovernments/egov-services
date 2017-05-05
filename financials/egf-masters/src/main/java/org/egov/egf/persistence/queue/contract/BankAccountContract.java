@@ -46,7 +46,9 @@ import javax.validation.constraints.NotNull;
 import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,8 +70,10 @@ public class BankAccountContract extends AuditableContract implements java.io.Se
 
     private BankBranchContract bankBranch;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private ChartOfAccountContract chartOfAccount;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private FundContract fund;
 
     @NotNull

@@ -45,7 +45,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,7 +72,7 @@ public class FundsourceContract extends AuditableContract {
 
     @Length(min = 1, max = 25)
     private String type;
-
+    @JsonProperty(access = Access.WRITE_ONLY)
             private FundsourceContract fundSource;
 
     private BigDecimal llevel;

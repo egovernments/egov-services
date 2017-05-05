@@ -54,6 +54,9 @@ import org.egov.egf.persistence.entity.enums.BudgetAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -94,6 +97,7 @@ public class Function extends AbstractAuditable {
     @NotNull
     private Boolean isParent;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parentId")
     private Function parentId;

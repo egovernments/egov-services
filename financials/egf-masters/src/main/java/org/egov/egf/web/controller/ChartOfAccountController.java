@@ -166,11 +166,7 @@ public class ChartOfAccountController {
         for (ChartOfAccount b : allChartOfAccounts) {
            
             
-            chartOfAccountContract = new ChartOfAccountContract();
-//            if (b.getParentId() != null) {
-//                b.setParentId(chartOfAccountService.getParentChartOfAccount(b.getParentId().getId(),tenantId));
-//            }
-//            
+            chartOfAccountContract = new ChartOfAccountContract();   
             model.map(b, chartOfAccountContract);
             chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);
         }

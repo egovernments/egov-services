@@ -188,11 +188,4 @@ public class ChartOfAccountService {
         return chartOfAccountContractRequest;
     }
 
-    public ChartOfAccount getParentChartOfAccount(Long parentId, String tenantId) {
-        final ChartOfAccount chartOfAccount = chartOfAccountRepository.findByIdAndTenantId(parentId, tenantId);
-        if(chartOfAccount != null )
-            return chartOfAccount;
-        else
-            return null;
-    }
 }

@@ -30,7 +30,7 @@ class SearchAsset extends React.Component {
     e.preventDefault();
     try {
       //call api call
-      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
+      var list=commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}).responseJSON["Assets"];
       flag = 1;
       this.setState({
         isSearchClicked:true,

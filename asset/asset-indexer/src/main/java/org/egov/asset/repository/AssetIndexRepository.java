@@ -1,5 +1,7 @@
 package org.egov.asset.repository;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,12 +68,16 @@ public class AssetIndexRepository {
 				   + "Boundary.tenantId="+asset.getTenantId()
 				   + "&Boundary.id=";		
 		for (Long id : boundaryList) {
-			
-			Object[] object = new Object[]{};
+			URI uri;
 			try{
-				boundaryResponse = restTemplate.getForObject(url+id,BoundaryResponse.class,object);
+				uri = new URI(url+id);
+				LOGGER.info("the url is :: "+url+id + "the uri is "+uri);
+				boundaryResponse = restTemplate.getForObject(uri,BoundaryResponse.class);
 				Boundary boundary = boundaryResponse.getBoundarys().get(0);
 				BoundaryMap.put(boundary.getId(), boundary);
+			} catch (URISyntaxException uriSyntaxException) {
+				LOGGER.info("exception caught in asset for uri ::"+uriSyntaxException);
+				uriSyntaxException.printStackTrace();
 			}catch (Exception e) {
 				LOGGER.info("exception caught in asset repo boundary api call ::"+e);
 				e.printStackTrace();

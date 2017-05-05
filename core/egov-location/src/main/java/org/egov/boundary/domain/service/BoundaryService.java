@@ -64,8 +64,6 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.boot.model.source.internal.hbm.HibernateTypeSourceImpl;
-import org.hibernate.boot.model.source.spi.HibernateTypeSource;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.LongType;
 import org.opengis.feature.simple.SimpleFeature;
@@ -98,7 +96,7 @@ public class BoundaryService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	public BoundaryService(final BoundaryRepository boundaryRepository) {
 		this.boundaryRepository = boundaryRepository;
@@ -131,13 +129,16 @@ public class BoundaryService {
 		return boundaryRepository.findByBoundaryTypeOrderByBoundaryNumAsc(boundaryType);
 	}
 
-	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,final String tenantId) {
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,tenantId,tenantId);
+	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
+			final String tenantId) {
+		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,
+				tenantId, tenantId);
 	}
 
-	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId,final String tenantId) {
+	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId, final String tenantId) {
 
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,tenantId,tenantId);
+		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,
+				tenantId, tenantId);
 	}
 
 	public Boundary getBoundaryByTypeAndNo(final BoundaryType boundaryType, final Long boundaryNum) {
@@ -184,25 +185,23 @@ public class BoundaryService {
 	}
 
 	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
-																					  final String hierarchyTypeName, final String tenantId) {
+			final String hierarchyTypeName, final String tenantId) {
 		Session currentSession = entityManager.unwrap(Session.class);
-		
-		String sql="select b.* from eg_Boundary b where b.boundarytype="
+
+		String sql = "select b.* from eg_Boundary b where b.boundarytype="
 				+ "(select id from eg_boundary_Type t where upper(t.name)=upper(:boundaryTypeName) and t.hierarchyType="
-				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "+
-				"and b.tenantid=:tenantId";
-			SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name")
-				.addScalar("boundaryNum",LongType.INSTANCE)
-				.addScalar("tenantId");
-		
+				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "
+				+ "and b.tenantid=:tenantId";
+		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE).addScalar("tenantId");
+
 		createSQLQuery.setString("boundaryTypeName", boundaryTypeName);
 		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
 		createSQLQuery.setString("tenantId", tenantId);
-		//createSQLQuery.setsca
+		// createSQLQuery.setsca
 		createSQLQuery.setResultTransformer(Transformers.aliasToBean(Boundary.class));
 		List boundarylist = createSQLQuery.list();
-	
+
 		return boundarylist;
 	}
 
@@ -232,11 +231,11 @@ public class BoundaryService {
 
 		crossHierarchyService.getChildBoundaryNameAndBndryTypeAndHierarchyTypeAndTenantId("Locality", "Location",
 				"Administration", '%' + name + '%', tenantId).stream().forEach(location -> {
-			final Map<String, Object> res = new HashMap<>();
-			res.put("id", location.getId());
-			res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
-			list.add(res);
-		});
+					final Map<String, Object> res = new HashMap<>();
+					res.put("id", location.getId());
+					res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
+					list.add(res);
+				});
 		return list;
 	}
 
@@ -295,7 +294,7 @@ public class BoundaryService {
 						if (geom.contains(point)) {
 							LOG.debug("Found coordinates in shape file");
 							return getBoundaryByNumberAndType((Long) feature.getAttribute("bndrynum"),
-									(String) feature.getAttribute("bndrytype"),tenantId);
+									(String) feature.getAttribute("bndrytype"), tenantId);
 						}
 					}
 				} finally {
@@ -317,7 +316,8 @@ public class BoundaryService {
 			if (boundary == null) {
 				final BoundaryType cityBoundaryType = boundaryTypeService
 						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION");
-				return Optional.ofNullable(this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(),tenantId).get(0));
+				return Optional.ofNullable(
+						this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(), tenantId).get(0));
 			}
 			return Optional.of(boundary);
 		}
@@ -334,8 +334,19 @@ public class BoundaryService {
 		if (boundaryRequest.getBoundary().getTenantId() != null
 				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
 			if (boundaryRequest.getBoundary().getId() != null) {
-				boundaries.add(boundaryRepository.findByTenantIdAndId(boundaryRequest.getBoundary().getTenantId(),
-						boundaryRequest.getBoundary().getId()));
+				Session currentSession = entityManager.unwrap(Session.class);
+
+				String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where b.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
+
+				SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+						.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+						.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+						.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
+
+				createSQLQuery.setLong("id", boundaryRequest.getBoundary().getId());
+				createSQLQuery.setString("tenantId", boundaryRequest.getBoundary().getTenantId());
+				List boundarylist = createSQLQuery.list();
+				boundaries.addAll(mapToBoundary(boundarylist));
 			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
@@ -353,6 +364,24 @@ public class BoundaryService {
 			}
 		}
 		return boundaries;
+	}
+
+	private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
+		List<Boundary> boundaryList = new ArrayList<Boundary>();
+		for (Object[] b : boundarylist) {
+			Boundary boundary = new Boundary();
+			boundary.setId(b[0] != null ? Long.valueOf(b[0].toString()) : null);
+			boundary.setName(b[1] != null ? b[1].toString() : "");
+			boundary.setBoundaryNum(b[2] != null ? Long.valueOf(b[2].toString()) : null);
+			boundary.setBoundaryType(new BoundaryType());
+			boundary.getBoundaryType().setId(b[3] != null ? Long.valueOf(b[3].toString()) : null);
+			boundary.getBoundaryType().setName(b[4] != null ? b[4].toString() : "");
+			boundary.setParent(new Boundary());
+			boundary.getParent().setId(b[5] != null ? Long.valueOf(b[5].toString()) : null);
+			boundary.setTenantId(b[6] != null ? b[6].toString() : "");
+			boundaryList.add(boundary);
+		}
+		return boundaryList;
 	}
 
 }

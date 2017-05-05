@@ -45,10 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum BloodGroup {
 	A_POSITIVE("A+"), B_POSITIVE("B+"), AB_POSITIVE("AB+"), O_POSITIVE("O+"),
@@ -59,12 +56,6 @@ public enum BloodGroup {
 	BloodGroup(String value) {
 		this.value = value;
 	}
-
-	@Override
-	@JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
 
 	public static List<Map<String, String>> getBloodGroups() {
 		List<Map<String, String>> bloodGroups = new ArrayList<>();

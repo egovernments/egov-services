@@ -154,7 +154,7 @@ public class DataIntegrityValidatorForUpdateTest {
 		Employee employee = null;
 		try {
 			employee = getEmployee(employeeFileName);
-		} catch(Exception e) {
+		} catch(Exception e) {  
 			e.printStackTrace();
 			fail();
 		}

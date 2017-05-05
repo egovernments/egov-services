@@ -80,7 +80,8 @@ public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 		employee.setCategory((Long) rs.getObject("categoryid"));
 		employee.setPhysicallyDisabled((Boolean) rs.getObject("physicallydisabled"));
 		employee.setMedicalReportProduced((Boolean) rs.getObject("medicalReportproduced"));
-		employee.setMaritalStatus(MaritalStatus.fromValue(rs.getString("maritalStatus")));
+		employee.setMaritalStatus(
+				isEmpty(rs.getString("maritalStatus")) ? null : MaritalStatus.fromValue(rs.getString("maritalStatus")));
 		employee.setPassportNo(rs.getString("passportno"));
 		employee.setGpfNo(rs.getString("gpfno"));
 		employee.setBank((Long) rs.getObject("bankid"));

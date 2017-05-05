@@ -206,8 +206,8 @@ const defaultAssetSetState = {
         "name": ""
     },
 		"assetDetails": "",
-    "modeOfAcquisition": "ACQUIRED",
-    "status": "CWIP",
+    "modeOfAcquisition": "",
+    "status": "",
     "grossValue": "",
     "accumulatedDepreciation": "",
     "description": "",

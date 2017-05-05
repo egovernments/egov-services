@@ -50,7 +50,6 @@ import java.util.stream.Collectors;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.EmployeeRepository;
@@ -71,9 +70,11 @@ public abstract class EmployeeCommonValidator {
 	private EmployeeDocumentsRepository employeeDocumentsRepository;
 
 	protected void validateEmployee(Employee employee, Errors errors) {
+/*
 		String bloodGroup = employee.getUser().getBloodGroup();
 		if (!isEmpty(bloodGroup) && !EnumValidator.isInEnum(bloodGroup, BloodGroup.class))
 			errors.rejectValue("employee.user.bloodGroup", "invalid", "Invalid bloodGroup");
+*/
 
 		if (employee.getRetirementAge() != null && employee.getRetirementAge() > 100)
 			errors.rejectValue("employee.retirementAge", "invalid", "Invalid retirementAge");

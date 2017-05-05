@@ -97,10 +97,10 @@ public class Function extends AbstractAuditable {
     @NotNull
     private Boolean isParent;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentId")
-    private Function parentId;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "parentId")
+    private Long parentId;
 
      
     @Override

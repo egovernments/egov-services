@@ -85,19 +85,20 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
     @GeneratedValue(generator = SEQ_BANKACCOUNT, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "branchid", nullable = true)
-    private BankBranch bankBranch;
+//    @ManyToOne
+    @Column(name = "branchid")
+    private Long bankBranch;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne
-    @JoinColumn(name = "glcodeid")
-    private ChartOfAccount chartOfAccount;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne
+//    @JoinColumn(name = "glcodeid")
+    @Column(name="glcodeid")
+    private Long chartOfAccount;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne
-    @JoinColumn(name = "fundid")
-    private Fund fund;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne
+    @Column(name = "fundid")
+    private Long fund;
 
     @NotNull
     @Length(max=25)

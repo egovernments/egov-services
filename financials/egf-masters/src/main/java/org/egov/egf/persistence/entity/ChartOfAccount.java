@@ -43,6 +43,7 @@ package org.egov.egf.persistence.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -88,10 +89,10 @@ public class ChartOfAccount extends AbstractAuditable {
     @Length(max = 128, min = 5)
     private String name;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purposeId", nullable = true )
-    private AccountCodePurpose accountCodePurpose;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "purposeId")
+    private Long accountCodePurpose;
 
     @Length(max = 256)
     private String description;
@@ -99,10 +100,10 @@ public class ChartOfAccount extends AbstractAuditable {
     @NotNull
     private Boolean isActiveForPosting;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentId")
-    private ChartOfAccount parentId;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "parentId")
+    private Long parentId;
     @NotNull
     private Character type;
     @NotNull
@@ -146,14 +147,6 @@ public class ChartOfAccount extends AbstractAuditable {
         this.name = name;
     }
 
-    public AccountCodePurpose getAccountCodePurpose() {
-        return accountCodePurpose;
-    }
-
-    public void setAccountCodePurpose(AccountCodePurpose accountCodePurpose) {
-        this.accountCodePurpose = accountCodePurpose;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -168,14 +161,6 @@ public class ChartOfAccount extends AbstractAuditable {
 
     public void setIsActiveForPosting(Boolean isActiveForPosting) {
         this.isActiveForPosting = isActiveForPosting;
-    }
-
-    public ChartOfAccount getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(ChartOfAccount parentId) {
-        this.parentId = parentId;
     }
 
     public Character getType() {
@@ -232,6 +217,22 @@ public class ChartOfAccount extends AbstractAuditable {
 
     public void setChartOfAccountDetails(Set<ChartOfAccountDetail> chartOfAccountDetails) {
         this.chartOfAccountDetails = chartOfAccountDetails;
+    }
+
+    public Long getAccountCodePurpose() {
+        return accountCodePurpose;
+    }
+
+    public void setAccountCodePurpose(Long accountCodePurpose) {
+        this.accountCodePurpose = accountCodePurpose;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
 }

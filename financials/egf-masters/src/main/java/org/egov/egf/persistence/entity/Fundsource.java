@@ -41,23 +41,16 @@ package org.egov.egf.persistence.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -95,10 +88,10 @@ public class Fundsource extends AbstractAuditable {
     @Length(min = 1, max = 25)
     private String type;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentid")
-    private Fundsource fundSource;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "parentid")
+    private Long fundSource;
 
     private BigDecimal llevel;
     @NotNull

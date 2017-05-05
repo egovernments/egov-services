@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.HODDepartment;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeDocumentsRepository;
@@ -173,10 +174,11 @@ public class AssignmentServiceTest {
 		assertEquals(expectedDeletedDocumentsReferenceIds.size(), deletedDocumentsReferenceIds.size());
 	}
 
-	private List<Long> getHodsInDbForAssignment() {
-		List<Long> hodDepartmentIds = new ArrayList<>();
-		hodDepartmentIds.add(10L);
-		return hodDepartmentIds;
+	private List<HODDepartment> getHodsInDbForAssignment() {
+		List<HODDepartment> hodDepartments = new ArrayList<>();
+		HODDepartment hodDepartment = HODDepartment.builder().id(1L).department(5L).tenantId("").build();
+		hodDepartments.add(hodDepartment);
+		return hodDepartments;
 	}
 
 	private Employee getEmployee(String filePath) throws IOException {

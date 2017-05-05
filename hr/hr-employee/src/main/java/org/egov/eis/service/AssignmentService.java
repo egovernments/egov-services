@@ -94,7 +94,8 @@ public class AssignmentService {
 	}
 
 	private void updateHod(Assignment assignment, String tenantId) {
-		List<Long> hodsFromDb = hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId);
+		List<HODDepartment> hodDepartments = hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId);
+		List<Long> hodsFromDb = hodDepartments.stream().map(hod -> hod.getDepartment()).collect(Collectors.toList());
 		insertHodIfNotExistsInDb(assignment.getHod(), hodsFromDb, assignment.getId(), tenantId);
 		deleteHodsInDbThatAreNotInInput(assignment.getHod(), hodsFromDb, assignment.getId(), tenantId);
 	}

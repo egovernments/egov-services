@@ -1,6 +1,7 @@
 package org.egov.persistence.entity;
 
 import lombok.*;
+import org.egov.domain.model.Tenant;
 
 import javax.persistence.*;
 
@@ -10,7 +11,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
 @SequenceGenerator(name = Message.SEQ_MESSAGE, sequenceName = Message.SEQ_MESSAGE, allocationSize = 1)
 public class Message {
 
@@ -32,7 +32,19 @@ public class Message {
     @Column(name = "tenantid")
     private String tenantId;
 
+    public Message(org.egov.domain.model.Message domainMessage) {
+        this.locale = domainMessage.getLocale();
+        this.tenantId = domainMessage.getTenant().getTenantId();
+        this.message = domainMessage.getMessage();
+        this.code = domainMessage.getCode();
+    }
+
     public org.egov.domain.model.Message toDomain() {
-        return new org.egov.domain.model.Message(code,message,tenantId,locale);
+        return org.egov.domain.model.Message.builder()
+            .code(code)
+            .message(message)
+            .locale(locale)
+            .tenant(new Tenant(tenantId))
+            .build();
     }
 }

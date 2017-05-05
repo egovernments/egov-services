@@ -23,7 +23,7 @@ public class ComplaintWriteRepository {
 
 
     public ComplaintWriteRepository(ComplaintJpaRepository complaintJpaRepository,
-            ReceivingModeJpaRepository receivingModeRepository, ReceivingCenterJpaRepository receivingCenterRepository) {
+            ReceivingModeJpaRepository receivingModeRepository, ReceivingCenterJpaRepository receivingCenterRepository,ComplaintTypeJpaRepository complaintTypeJpaRepository) {
         this.complaintJpaRepository = complaintJpaRepository;
         this.receivingModeRepository = receivingModeRepository;
         this.receivingCenterRepository = receivingCenterRepository;

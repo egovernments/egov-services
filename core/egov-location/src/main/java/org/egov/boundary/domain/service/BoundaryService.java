@@ -50,6 +50,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
@@ -59,6 +62,12 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.boot.model.source.internal.hbm.HibernateTypeSourceImpl;
+import org.hibernate.boot.model.source.spi.HibernateTypeSource;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.LongType;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.slf4j.Logger;
@@ -87,6 +96,9 @@ public class BoundaryService {
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
 
+	@PersistenceContext
+	private EntityManager entityManager;
+	
 	@Autowired
 	public BoundaryService(final BoundaryRepository boundaryRepository) {
 		this.boundaryRepository = boundaryRepository;
@@ -173,8 +185,25 @@ public class BoundaryService {
 
 	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
 																					  final String hierarchyTypeName, final String tenantId) {
-		return boundaryRepository.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(boundaryTypeName,
-				hierarchyTypeName, tenantId);
+		Session currentSession = entityManager.unwrap(Session.class);
+		
+		String sql="select b.* from eg_Boundary b where b.boundarytype="
+				+ "(select id from eg_boundary_Type t where upper(t.name)=upper(:boundaryTypeName) and t.hierarchyType="
+				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "+
+				"and b.tenantid=:tenantId";
+			SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name")
+				.addScalar("boundaryNum",LongType.INSTANCE)
+				.addScalar("tenantId");
+		
+		createSQLQuery.setString("boundaryTypeName", boundaryTypeName);
+		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
+		createSQLQuery.setString("tenantId", tenantId);
+		//createSQLQuery.setsca
+		createSQLQuery.setResultTransformer(Transformers.aliasToBean(Boundary.class));
+		List boundarylist = createSQLQuery.list();
+	
+		return boundarylist;
 	}
 
 	public Boundary getBoundaryByBndryTypeNameAndHierarchyTypeName(final String boundaryTypeName,

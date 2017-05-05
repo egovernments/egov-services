@@ -44,10 +44,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
 import org.egov.boundary.web.contract.BoundaryTypeRequest;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +69,10 @@ public class BoundaryTypeService {
 
 	@Autowired
 	private HierarchyTypeService hierarchyTypeService;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
 
 	@Transactional
 	public BoundaryType createBoundaryType(BoundaryType boundaryType) {
@@ -105,7 +117,25 @@ public class BoundaryTypeService {
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,
 			final String tenantId) {
-		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId,tenantId);
+Session currentSession = entityManager.unwrap(Session.class);
+		
+		String sql="select t.* from eg_boundary_Type t where hierarchytype in "
+				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId  ";
+				
+			SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name")
+				.addScalar("hierarchy",LongType.INSTANCE)
+				.addScalar("code")
+				.addScalar("tenantId");
+		
+		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
+		createSQLQuery.setString("tenantId", tenantId);
+		//createSQLQuery.setsca
+		createSQLQuery.setResultTransformer(Transformers.aliasToBean(BoundaryType.class));
+		List boundarylist = createSQLQuery.list();
+		
+		
+		return boundarylist;
 	}
 
 	public BoundaryType getBoundaryTypeByParent(final Long parentId) {

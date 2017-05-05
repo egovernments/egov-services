@@ -154,6 +154,11 @@ public class BoundaryController {
             List<Boundary> boundaries = mapToContractBoundaryList(
                     boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(boundaryTypeId),
                             tenantId));
+            for(Boundary boundary:boundaries)
+            {
+            	boundary.setBoundaryType(null);
+            	boundary.setParent(null);
+            }
             boundaryResponse.setBoundarys(boundaries);
             return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
         } else

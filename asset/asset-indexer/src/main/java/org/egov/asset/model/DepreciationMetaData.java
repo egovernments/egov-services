@@ -1,4 +1,4 @@
-package org.egov.asset.contract;
+package org.egov.asset.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

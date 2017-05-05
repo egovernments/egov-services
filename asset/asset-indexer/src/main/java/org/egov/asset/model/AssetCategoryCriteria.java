@@ -1,4 +1,4 @@
-package org.egov.asset.contract;
+package org.egov.asset.model;
 
 import java.util.ArrayList;
 import java.util.List;

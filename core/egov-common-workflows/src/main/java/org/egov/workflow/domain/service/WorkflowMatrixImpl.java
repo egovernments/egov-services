@@ -72,7 +72,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
 				null, null,processInstance.getTenantId());
 		Position owner = processInstance.getAssignee();
-		if (processInstance.getAssignee() != null)
+		if (processInstance.getAssignee() != null && processInstance.getAssignee().getId() != null)
 			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()),
 					processInstanceRequest.getRequestInfo());
 

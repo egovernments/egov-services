@@ -7,10 +7,10 @@ swagger: '2.0'
 info:
   title: Asset API
   description: EGovAsset Management aims to improve the efficiency of the Asset Management operations in the ULB.This document covers.
-   </br>Create Asset Category
+   </br><h1>Create Asset Category
    </br>Get Asset Category
    </br>Create New Asset. 
-   </br>Get Asset.
+   </br>Get Asset.</h1>
   contact:
     name:  Ghanshyam rawat
     email: ghanshyam.rawat@riflexions.com
@@ -110,8 +110,7 @@ paths:
           in: query
           description: Door No of the asset.
           required: false
-          type: integer
-          format: int64
+          type: string
         - name: status
           in: query
           description: Asset status description.
@@ -153,7 +152,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
   
-  /assets/{code}/_update:
+  /assets/_update/{code}:
     post:
       summary: Update existing Asset.
       description: The asset master is the database of all the assets owned by the ULB. Each asset belongs to a category. The attributes of the asset category are inherited by the assets within that category. This API allow user to update the existing asset property.
@@ -184,7 +183,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /assets/assetsCategory/_create:
+  /assetCategories/_create:
     post:
       summary: Create AssetCategory
       description: To create a new Asset.
@@ -213,7 +212,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
   
-  /assets/assetsCategory/_search:
+  /assetCategories/_search:
      post:
       summary: Get Asset Category List.
       description: >
@@ -349,9 +348,32 @@ definitions:
       totalArea:
         type: string
         description: Total area of Land and Shop assets.
-      properties:
+      version:
         type: string
-        description: Additional information of the asset.Hold the data for dynamic custom field in JSON format. There key and value will be LABEL NAME and USER INPUT DATA respactively. 
+        description: version of the assetcategory against which asset is created.
+      assetReference:
+        description: Parent asset id for an asset.
+        type: integer
+        format: int64
+      assetAttributes:
+        type: array
+        items:
+         $ref: '#/definitions/Attributes'
+      
+  Attributes:
+    type: object
+    description: Additional information of the asset.Hold the data for dynamic custom field in JSON format. There key and value will be LABEL NAME and USER INPUT DATA respactively.
+    properties:
+      key:
+        type: string
+        description: LABEL Name or Table name.
+      type:
+        type: string
+        description: type of the field.
+      value:
+        type: object
+        description: value of the field(if data type is text the value will be string, if data type is multivaluelist then value will be list, if datatype is table then value will be the key value pair where key is  column name and value is column value). 
+        
   Department:
     type: object
     description: List of departments in the ULB
@@ -401,6 +423,9 @@ definitions:
         enum:
           - Straight Line Method
           - Written down Value method
+      isAssetAllow:
+        type: boolean
+        description: if value is true then we can add asset directly in this perticular category.
       assetAccount:
         type: integer
         format: int64
@@ -421,20 +446,22 @@ definitions:
         type: integer
         format: int64
         description: Options are from UOM.
+      version:
+        type: string
+        description: version of the asset category.
       depreciationRate:
         type: array
         description: Multiple rows can be specified for each  asset category, but there should not be an overlap in the rates for the same financial year.
         items:
           $ref: '#/definitions/DepreciationMetaData'
-      customFields:
+      assetFieldsDefination:
         type: array
         items:
-          $ref: '#/definitions/AssetCategoryCustomFields'
+          $ref: '#/definitions/AttributeDefination'
         description: Custom Fields.
     required:
       - assetCategoryType
       - name
-      - code
       - revaluationReserveAccount
  
  # need clarification about the DepreciationMetaData
@@ -458,10 +485,6 @@ definitions:
     description: Hold the asset location specific information.
     type: object
     properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique identifier of the asset location.
       locality:
         type: integer
         format: int64
@@ -487,15 +510,14 @@ definitions:
         format: int64
         description: Boundary election ward id.
       doorNo:
-        type: integer
-        format: int64
+        type: string
         description: Boundary door number.
       pinCode:      
         type: integer
         format: int32
         description: pin code of the location.
   
-  AssetCategoryCustomFields:
+  AttributeDefination:
     description: Hold the Asset dynamic fields details as list of json object.
     type: object
     properties:
@@ -504,7 +526,7 @@ definitions:
         description: name of the custom dynamic field (label name).
       type:
         type: string
-        description: type of the custom field.
+        description: type of the custom field. Valid types are ('string'[text box],'text'[text area],'number'[text box allow numbers only],'datetime'[calender],'singlevaluelist'[drop down for single value selection],'multivaluelist'[drop down for multi value selection],'checkbox','radio','table')
       isActive:
         type: boolean
         description: .
@@ -513,13 +535,22 @@ definitions:
         description: value will be true if field is mandatory otherwise false.
       values:
         type: string
-        description: .
+        description: comma seprated values we can pass if field type is selected as('singlevaluelist','multivaluelist','checkbox','radio').
       localText:
         type: string
         description: .
       regExFormate:      
         type: string
         description: .
+      url:      
+        type: string
+        description: configure if field type are ('singlevaluelist','multivaluelist','checkbox') and @values is null.
+      order:
+        type: string
+        description: order of the table column.
+      columns:
+         $ref: '#/definitions/AttributeDefination'
+        
 
   AssetRequest:
     properties:
@@ -648,4 +679,5 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
     type: object
+
 

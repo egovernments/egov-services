@@ -157,7 +157,7 @@ public class LeaveApplicationService {
             leaveApplication.setStatus(LeaveStatus.REJECTED);
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.CANCELLED);
-        else if ("Submit".contains(workFlowAction))
+        else if ("Submit".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.RESUBMITTED);
     }
 

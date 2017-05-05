@@ -3,7 +3,6 @@ package org.egov.web.contract;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Date;
 

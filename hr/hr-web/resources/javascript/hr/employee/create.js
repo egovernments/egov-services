@@ -1853,9 +1853,12 @@ function markEditIndex(index = -1, modalName = "", object = "") {
           //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
           // }
           if (key == "position") {
-            getPositions({
-              id: "assignments.department"
-            });
+            setTimeout(function(key, object){
+               getPositions({
+                id: "assignments.department"
+               });
+               $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+            }, 200, key, object);
           }
 
           if (key == "isPrimary") {
@@ -1871,6 +1874,14 @@ function markEditIndex(index = -1, modalName = "", object = "") {
               $('[data-hod="yes"]').prop("checked", true);
               $('[data-hod="no"]').prop("checked", false);
               $("#departments").show();
+              tempListBox = Object.assign([], employeeSubObject[object][key]);
+              $("#assignments\\.mainDepartments option:selected").removeAttr("selected");
+              var _val = [];
+              for(var i=0; i<employeeSubObject[object][key].length; i++) {
+                $("#assignments\\.mainDepartments option[value=" +  employeeSubObject[object][key][i].department + "]").attr("selected", true);
+                _val.push(employeeSubObject[object][key][i].department);
+              }
+              $("#assignments\\.mainDepartments").val(_val);
             } else {
               $('[data-hod="yes"]').prop("checked", false);
               $('[data-hod="no"]').prop("checked", true);
@@ -1893,6 +1904,14 @@ function commonAddAndUpdate(tableName, modalName, object) {
 
       if (validateDates(employee, object, employeeSubObject[object])) {
         if (editIndex != -1) {
+          if(object == "assignments") {
+            employeeSubObject[object]["hod"] = [];
+            if (tempListBox.length > 0) {
+              tempListBox.map(function(val) {
+                employeeSubObject[object]["hod"].push(val);
+              })
+            } 
+          }
           employee[object][editIndex] = employeeSubObject[object];
           updateTable("#" + tableName, modalName, object);
         } else {

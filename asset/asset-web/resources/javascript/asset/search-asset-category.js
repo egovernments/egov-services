@@ -15,7 +15,7 @@ class SearchAssetCategory extends React.Component {
     e.preventDefault();
     try {
       //call api call
-      var list = commonApiPost("asset-services","assetCategories","_search",this.state.searchSet).responseJSON["AssetCategory"];
+      var list = commonApiPost("asset-services","assetCategories","_search",{...this.state.searchSet,tenantId,pageSize:500}).responseJSON["AssetCategory"];
       flag = 1;
       this.setState({
         isSearchClicked:true,

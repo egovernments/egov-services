@@ -44,6 +44,7 @@ public class Complaint {
     private String childLocation;
     private String assignee;
     private String state;
+    private String citizenFeedback;
 
     public boolean isComplainantAbsent() {
         return complainant.isAbsent();

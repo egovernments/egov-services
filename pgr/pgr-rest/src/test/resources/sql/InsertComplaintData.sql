@@ -26,7 +26,7 @@ citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,la
 'FORWARDED','This is a huge problem','Near Temple',2,9,0,0,'2017-12-22T00:00:00.000',19,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00','ap.public');
 
 
- INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version,tenantid)values(3,'shyam@gmail.com','8923618856','Shyam',4,'Near School',0,'ap.public');
+ INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version,tenantid)values(3,'shyam@gmail.com','8923618856','kumar',4,'Near School',0,'ap.public');
  
  INSERT into egpgr_complainttype_category (id,name,description,version,tenantid) values(10,'Default','Default',0,'ap.public');
 

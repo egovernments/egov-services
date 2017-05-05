@@ -157,36 +157,36 @@ const makeAjaxUpload = function(file, cb) {
 }
 
 const uploadFiles = function(body, cb) {
-    if(body.Asset.properties && Object.keys(body.Asset.properties).length) {
-        var counter1 = Object.keys(body.Asset.properties).length;
+    if(body.Asset.assetAttributes && body.Asset.assetAttributes.length) {
+        var counter1 = body.Asset.assetAttributes.length;
         var breakout = 0;
-        for(var key in body.Asset.properties) {
-            if(body.Asset.properties[key].constructor == FileList) {
-                var counter = body.Asset.properties[key].length;
-                for(let j=0; j<body.Asset.properties[key].length; j++) {
-                    makeAjaxUpload(body.Asset.properties[key][j], function(err, res) {
-                        if (breakout == 1)
-                            return;
-                        else if (err) {
-                            cb(err);
-                            breakout = 1;
-                        } else {
-                            counter--;
-                            body.Asset.properties[key][j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
-                            if(counter == 0) {
-                                counter1--;
-                                if(counter1 == 0 && breakout == 0)
-                                    cb(null, body);
-                            }
+        for(let i=0; i<body.Asset.assetAttributes.length; i++) {
+          if(body.Asset.assetAttributes[i].type == "File") {
+            var counter = body.Asset.assetAttributes[i].value.length;
+            for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
+                makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        body.Asset.assetAttributes[i].value[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                cb(null, body);
                         }
-                    })
-                }
-            } else {
-                counter1--;
-                if(counter1 == 0 && breakout == 0) {
-                    cb(null, body);
-                }
+                    }
+                })
             }
+          } else {
+            counter1--;
+            if(counter1 == 0 && breakout == 0) {
+                cb(null, body);
+            }
+          }
         }
     } else {
         cb(null, body);
@@ -1014,6 +1014,37 @@ class CreateAsset extends React.Component {
       }
 		}
 
+    const showDatePicker = function(item, index, ifTable) {
+      if(ifTable) {
+        return (
+          <input  className="custom-date-picker" name={item.name} type="text" 
+            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+        )
+      } else {
+        var type = getUrlVars()["type"];
+        var _values;
+        if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
+          var textItem = assetAttributes.filter(function(val, ind) {
+            return (val.type == "Text" && item.name == val.key);
+          });
+
+          if(textItem && textItem[0])
+            _values = textItem[0].value;
+        }
+        return (<div className="col-sm-6" key={index}>
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                          <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
+                      </div>
+                      <div className="col-sm-6">
+                          <input  className="custom-date-picker" name={item.name} type="text" 
+                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                      </div>
+                  </div>
+              </div>)
+      }
+    }
+
 		const showSelect = function(item, index, multi, ifTable) {
       if(ifTable) {
         return (
@@ -1052,7 +1083,7 @@ class CreateAsset extends React.Component {
       }
 		}
 
-		const showRadioButton = function(item, index, ifTable) {
+		/*const showRadioButton = function(item, index, ifTable) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -1080,26 +1111,7 @@ class CreateAsset extends React.Component {
 					</div>
 				</div>
 			);
-		}
-
-    const showDatePicker = function(item, index, ifTable) {
-      if(ifTable) {
-        return (
-          <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
-        )
-      } else {
-        return (<div className="col-sm-6" key={index}>
-                  <div className="row">
-                      <div className="col-sm-6 label-text">
-                          <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
-                      </div>
-                      <div className="col-sm-6">
-                          <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
-                      </div>
-                  </div>
-              </div>)
-      }
-    }
+		}*/
 
     const showFile = function(item, index, ifTable) {
       if(ifTable) {

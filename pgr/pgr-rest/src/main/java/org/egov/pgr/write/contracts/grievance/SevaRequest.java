@@ -15,6 +15,7 @@ public class SevaRequest {
     private static final String SERVICE_REQUEST = "serviceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
     public static final String CITIZEN = "CITIZEN";
+    public static final String VALUES_CITIZENFEEDBACK ="citizenFeedback";
 
     private HashMap<String, Object> sevaRequestMap;
     private ObjectMapper objectMapper;
@@ -48,6 +49,7 @@ public class SevaRequest {
             .escalationDate(this.getServiceRequest().getEscalationDate())
             .workflowStateId(getStateId())
             .department(getDepartment())
+            .citizenFeedback( getCitizenFeedback())
             .tenantId(this.getServiceRequest().getTenantId())
             .build();
     }
@@ -61,6 +63,11 @@ public class SevaRequest {
         return getServiceRequest().getCrn();
     }
 
+    private String getCitizenFeedback() {
+	   	  return  this.getServiceRequest().getValues().get(VALUES_CITIZENFEEDBACK)==null?null:
+        this.getServiceRequest().getValues().get(VALUES_CITIZENFEEDBACK);
+ 	}
+    
     private Long getRequesterId() {
         return getRequestInfo().getUserInfo().getId();
     }

@@ -94,7 +94,7 @@ public class ServiceRequest {
     private String deviceId;
 
     private String accountId;
-
+    
     private Map<String, String> values = new HashMap<>();
 
     public ServiceRequest(Complaint complaint) {
@@ -116,6 +116,7 @@ public class ServiceRequest {
         email = complaint.getComplainant().getEmail();
         values = getAdditionalValues(complaint);
         tenantId = complaint.getTenantId();
+     
     }
 
     private Map<String, String> getAdditionalValues(Complaint complaint) {
@@ -128,6 +129,7 @@ public class ServiceRequest {
         addEntryIfPresent(map, "stateId", complaint.getState());
         addEntryIfPresent(map, "assigneeId", complaint.getAssignee());
         addEntryIfPresent(map, "departmentId", complaint.getDepartment());
+        addEntryIfPresent(map, "citizenFeedback",complaint.getCitizenFeedback());
         return map;
     }
 

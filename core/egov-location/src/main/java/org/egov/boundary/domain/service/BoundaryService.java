@@ -131,8 +131,22 @@ public class BoundaryService {
 
 	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
 			final String tenantId) {
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,
-				tenantId, tenantId);
+		List<Boundary> boundaries = new ArrayList<Boundary>();
+		Session currentSession = entityManager.unwrap(Session.class);
+
+		String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where bt.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
+
+		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+				.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+				.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
+
+		createSQLQuery.setLong("id", boundaryTypeId);
+		createSQLQuery.setString("tenantId", tenantId);
+		List boundarylist = createSQLQuery.list();
+		boundaries.addAll(mapToBoundary(boundarylist));
+
+		return boundaries;
 	}
 
 	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId, final String tenantId) {

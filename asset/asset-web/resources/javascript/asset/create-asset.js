@@ -674,7 +674,7 @@ class CreateAsset extends React.Component {
                   }
               }, 2000);
           }
-          
+
           if(asset.assetReference) {
             let res = getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference);
             if(res && res.responseJSON && res.responseJSON["Assets"] && res.responseJSON["Assets"][0]) {
@@ -761,7 +761,7 @@ class CreateAsset extends React.Component {
           [name]: [1]
         }
       })
-    else 
+    else
       this.setState({
         newRows: {
           ...this.state.newRows,
@@ -903,7 +903,7 @@ class CreateAsset extends React.Component {
               for(var i=0; i<customFields.length; i++) {
                 if(customFields[i].type != "Table") {
                   _custFields.push(customFields[i]);
-                } else 
+                } else
                   _tables.push(customFields[i]);
               }
 
@@ -997,7 +997,7 @@ class CreateAsset extends React.Component {
 
           if(textItem && textItem[0])
             _values = textItem[0].value;
-        } 
+        }
         return (
           <div className="col-sm-6" key={index}>
             <div className="row">
@@ -1017,7 +1017,7 @@ class CreateAsset extends React.Component {
     const showDatePicker = function(item, index, ifTable) {
       if(ifTable) {
         return (
-          <input  className="custom-date-picker" name={item.name} type="text" 
+          <input  className="custom-date-picker" name={item.name} type="text"
             defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
         )
       } else {
@@ -1037,7 +1037,7 @@ class CreateAsset extends React.Component {
                           <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                       </div>
                       <div className="col-sm-6">
-                          <input  className="custom-date-picker" name={item.name} type="text" 
+                          <input  className="custom-date-picker" name={item.name} type="text"
                             defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
                       </div>
                   </div>
@@ -1253,7 +1253,7 @@ class CreateAsset extends React.Component {
                       <h3 className="categoryType">{item.name}</h3>
                    </div>
                    <div className="col-md-4 text-right">
-                      
+
                    </div>
                 </div>
                 <div className="row">
@@ -1351,7 +1351,7 @@ class CreateAsset extends React.Component {
                         <td data-label="action">
                           <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>
                         </td>
-                      </tr>  
+                      </tr>
               );
         })
       }

@@ -50,6 +50,7 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
+import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.DepartmentalTestRepository;
 import org.egov.eis.repository.EducationalQualificationRepository;
@@ -196,6 +197,7 @@ public class EmployeeService {
 			throw new EmployeeIdNotFoundException(employeeId);
 
 		User user = userService.getUsers(ids, tenantId, requestInfo).get(0);
+		user.setBloodGroup(BloodGroup.fromValue(user.getBloodGroup()).toString());
 		employee.setUser(user);
 
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
@@ -212,7 +214,7 @@ public class EmployeeService {
 		employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
 		employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 
-		System.err.println("After Employee Search: " + employee);
+		LOGGER.debug("After Employee Search: " + employee);
 
 		return employee;
 	}

@@ -100,6 +100,12 @@ public class LeaveTypeQueryBuilder {
 			selectQuery.append(" active = ?");
 			preparedStatementValues.add(leaveTypeGetRequest.getActive());
 		}
+
+		if (leaveTypeGetRequest.getAccumulative() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" accumulative = ?");
+			preparedStatementValues.add(leaveTypeGetRequest.getAccumulative());
+		}
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, LeaveTypeGetRequest leaveTypeGetRequest) {

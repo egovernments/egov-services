@@ -40,6 +40,8 @@
 
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -197,7 +199,8 @@ public class EmployeeService {
 			throw new EmployeeIdNotFoundException(employeeId);
 
 		User user = userService.getUsers(ids, tenantId, requestInfo).get(0);
-		user.setBloodGroup(BloodGroup.fromValue(user.getBloodGroup()).toString());
+		user.setBloodGroup(
+				isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
 		employee.setUser(user);
 
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
@@ -224,7 +227,8 @@ public class EmployeeService {
 
 		ResponseEntity<?> responseEntity = null;
 
-		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
+		// FIXME : User service is expecting & sending dates in multiple
+		// formats. Fix a common standard
 		try {
 			responseEntity = userService.createUser(userRequest);
 
@@ -252,8 +256,8 @@ public class EmployeeService {
 		employeeRequestJson = mapper.writeValueAsString(employeeRequest);
 		LOGGER.info("employeeJson::" + employeeRequestJson);
 
-		employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(),
-				propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
+		employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
+				employeeRequestJson);
 
 		return employee;
 	}

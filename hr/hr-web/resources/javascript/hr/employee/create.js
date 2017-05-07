@@ -1328,15 +1328,14 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      if (currentState.id == "user.dob") {
+      if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
           var dateSplit = currentState.value.split("/");
-          var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-          var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-          var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-          var yearIn = date.getFullYear();
-          employee[splitResult[0]][splitResult[1]] =  monthIn  + "/" + day + "/" + yearIn;
-      } else
-      if (currentState.id == "user.active") {
+          //var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+          //var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+          //var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+          //var yearIn = date.getFullYear();
+          employee[splitResult[0]][splitResult[1]] =  dateSplit[1]  + "/" + dateSplit[0] + "/" + dateSplit[2];
+      } else if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
 
       } else if (currentState.type === "file") {

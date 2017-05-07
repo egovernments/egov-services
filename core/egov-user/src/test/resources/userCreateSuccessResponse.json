@@ -4,7 +4,8 @@
   "user": [
     {
       "name": "foo",
-      "userName": "userName"
+      "userName": "userName",
+      "dob": "04/08/1986"
     }
   ]
 }

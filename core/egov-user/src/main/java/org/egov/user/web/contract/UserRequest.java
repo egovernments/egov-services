@@ -56,7 +56,7 @@ public class UserRequest {
 	private Date createdDate;
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
 	private Date lastModifiedDate;
-	@JsonFormat(pattern = "MM/dd/YYYY")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dob;
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
 	private Date pwdExpiryDate;

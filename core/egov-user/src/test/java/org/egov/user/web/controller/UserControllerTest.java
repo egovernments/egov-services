@@ -11,6 +11,7 @@ import org.egov.user.web.contract.auth.Role;
 import org.egov.user.web.contract.auth.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,10 +24,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -89,9 +94,11 @@ public class UserControllerTest {
 	@Test
 	@WithMockUser
 	public void test_should_create_citizen() throws Exception {
+		final Date expectedDate = toDate(LocalDateTime.of(1986, 8, 4, 5, 30));
 		final org.egov.user.domain.model.User user = org.egov.user.domain.model.User.builder()
 				.username("userName")
 				.name("foo")
+				.dob(expectedDate)
 				.build();
 		when(userService.createCitizen(any())).thenReturn(user);
 
@@ -106,11 +113,15 @@ public class UserControllerTest {
 	@Test
 	@WithMockUser
 	public void test_should_create_user_without_otp_validation() throws Exception {
-		final org.egov.user.domain.model.User user = org.egov.user.domain.model.User.builder()
+		final Date expectedDate = toDate(LocalDateTime.of(1986, 8, 4, 5, 30));
+		final org.egov.user.domain.model.User expectedUser = org.egov.user.domain.model.User.builder()
 				.username("userName")
 				.name("foo")
+				.dob(expectedDate)
 				.build();
-		when(userService.createUser(any())).thenReturn(user);
+		final ArgumentCaptor<org.egov.user.domain.model.User> argumentCaptor =
+				ArgumentCaptor.forClass(org.egov.user.domain.model.User.class);
+		when(userService.createUser(argumentCaptor.capture())).thenReturn(expectedUser);
 
 		mockMvc.perform(post("/users/_createnovalidate")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -118,6 +129,11 @@ public class UserControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("userCreateSuccessResponse.json")));
+
+		final org.egov.user.domain.model.User actualUser = argumentCaptor.getValue();
+		assertEquals("foo", actualUser.getName());
+		assertEquals("userName", actualUser.getUsername());
+		assertEquals(expectedDate, actualUser.getDob());
 	}
 
 	@Test
@@ -156,6 +172,7 @@ public class UserControllerTest {
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
 		calendar.set(1990, Calendar.JULY, 1, 16, 41, 11);
 		Date date = calendar.getTime();
+		Date expectedDOB = toDate(LocalDateTime.of(1986, 8, 4, 5 ,30));
 
 		org.egov.user.domain.model.User user = org.egov.user.domain.model.User.builder()
 				.id(1L)
@@ -177,7 +194,7 @@ public class UserControllerTest {
 				.correspondenceAddress(getCorrespondenceAddress())
 				.active(true)
 				.roles(getListOfRoles())
-				.dob(date)
+				.dob(expectedDOB)
 				.passwordExpiryDate(date)
 				.locale("en_IN")
 				.type(UserType.CITIZEN)
@@ -309,5 +326,9 @@ public class UserControllerTest {
 		return new UserDetail(secureUser, actions);
 	}
 
+	private Date toDate(LocalDateTime localDateTime) {
+		final ZonedDateTime expectedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("Asia/Calcutta"));
+		return Date.from(expectedDateTime.toInstant());
+	}
 
 }

@@ -286,7 +286,7 @@ var employee = {
     locale: "",
     signature: "",
     fatherOrHusbandName: "",
-    bloodGroup: "",
+    bloodGroup: null,
     identificationMark: "",
     photo: "",
     type: "EMPLOYEE",

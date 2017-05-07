@@ -93,14 +93,19 @@ public class UserService {
 		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
 		LOGGER.debug("UserGetRequest : " + userGetRequest);
 
+		UserResponse userResponse = null;
 		List<User> users = null;
 		try {
-			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
+			userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 		}
+		
+		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("UserResponse : " + users);
+
 		return users;
 	}
 
@@ -141,6 +146,10 @@ public class UserService {
 			e.printStackTrace();
 			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(userRequest.getRequestInfo());
 		}
+		
+		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("UserResponse : " + userResponse);
+
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
 	}
 
@@ -179,6 +188,10 @@ public class UserService {
 			e.printStackTrace();
 			return errorHandler.getResponseEntityForUnknownUserUpdationError(userRequest.getRequestInfo());
 		}
+		
+		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("UserResponse : " + userResponse);
+
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
 	}
 

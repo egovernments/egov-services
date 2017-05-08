@@ -6,10 +6,48 @@ class UploadLeaveType extends React.Component{
         "id": "",
         "my_file_input":"",
         "tenantId": tenantId
-  },temp:[],dataType:[],employees:[],_leaveTypes:[]}
+  },temp:[],dataType:[],employees:[],_leaveTypes:[],_years:[]}
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
+    this.downloadExcel=this.downloadExcel.bind(this);
+  }
+
+
+
+  componentDidMount(){
+    if(window.opener && window.opener.document) {
+    var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+    if(logo_ele && logo_ele[0]) {
+        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+    }
+    try {
+        var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+    } catch(e) {
+        var _leaveTypes = [];
+    }
+    this.setState({
+      _leaveTypes : _leaveTypes
+    });
+    try {
+        var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
+    } catch(e) {
+        var _years = [];
+    }
+
+    this.setState({
+      _years : _years
+    });
+    try {
+    var  employees = getCommonMaster("hr-employee","employees","Employee").responseJSON["Employee"] || [];
+    } catch (e) {
+    var  employees = [];
+    }
+    this.setState({
+      employees : employees
+    });
+
   }
 
   handleChange(e,name)
@@ -34,11 +72,13 @@ class UploadLeaveType extends React.Component{
 
   }
 
+
   filePicked(oEvent) {
       // Get The File From The Input
       var oFile = oEvent.target.files[0];
       var sFilename = oFile.name;
       var _this = this, oJS;
+      var key = [];
       // Create A File Reader HTML5
       var reader = new FileReader();
 
@@ -52,18 +92,21 @@ class UploadLeaveType extends React.Component{
           cfb.SheetNames.forEach(function(sheetName) {
               // Obtain The Current Row As CSV
                 var sCSV = XLS.utils.make_csv(cfb.Sheets[sheetName]);
-               oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
+
+                oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
+
+                key = Object.keys(oJS[0]);
+
           });
           var finalObject = [];
-
           oJS.forEach(function(d){
-            finalObject.push({"employee": d["Employee Code"],
-                              "calendarYear":d["Calendar Year"],
-                              "leaveType":  { "id": d["Leave type"]},
-                              "noOfDays" : d["Number of days as on 1st Jan 2017"]
+
+            finalObject.push({"employee": d[key[0]],
+                              "calendarYear":d[key[4]],
+                              "leaveType":  { "id": d[key[3]]},
+                              "noOfDays" : d[key[5]]
             });
           });
-
           _this.setState({
             LeaveType:{
               ..._this.state.LeaveType
@@ -89,49 +132,35 @@ addOrUpdate(e,mode)
         var serverObject = [];
         var tempInfo=Object.assign([],this.state.temp);
 
-        try {
-            var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
-        } catch(e) {
-            var _leaveTypes = [];
-        }
-        try {
-            var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
-        } catch(e) {
-            var _years = [];
-        }
-        try {
-        var  employees = getCommonMaster("hr-employee","employees","Employee").responseJSON["Employee"] || [];
-        } catch (e) {
-        var  employees = [];
-        }
+
         var leaveArray =[],calendarYearArray=[],employeeArray=[];
         var checkLeave = [],checkCalenderYear= [],checkEmployee=[];
-        _leaveTypes.forEach(function(d) {
+        this.state._leaveTypes.forEach(function(d) {
           checkLeave.push(d.name);
         });
 
-        _leaveTypes.forEach(function(d) {
+        this.state._leaveTypes.forEach(function(d) {
           leaveArray.push({"name":d.name,
                             "id":d.id});
         });
 
-        _years.forEach(function(d) {
+        this.state._years.forEach(function(d) {
           checkCalenderYear.push(d.name.toString());
         });
 
 
-        _years.forEach(function(d) {
+        this.state._years.forEach(function(d) {
           calendarYearArray.push({"name":d.name.toString(),
                             "id":d.id});
         });
 
 
-        employees.forEach(function(d) {
+        this.state.employees.forEach(function(d) {
           checkEmployee.push(d.code);
         });
 
 
-        employees.forEach(function(d) {
+        this.state.employees.forEach(function(d) {
           employeeArray.push({"code":d.code,
                             "id":d.id});
         });
@@ -212,7 +241,7 @@ addOrUpdate(e,mode)
                             "tenantId": tenantId
           });
         }
-
+        console.log(serverObject);
         if(post===0){
 
         // try {
@@ -271,7 +300,7 @@ addOrUpdate(e,mode)
 
   render()
   {
-    let {handleChange,addOrUpdate,filePicked}=this;
+    let {handleChange,addOrUpdate,filePicked,downloadExcel}=this;
     let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
 
@@ -293,14 +322,13 @@ addOrUpdate(e,mode)
             </div>
           </div>
       </div>
-
-
                 <div className="text-center">
                     <button type="submit" className="btn btn-submit">Upload</button>  &nbsp;&nbsp;
                     <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
                 </div>
                 </fieldset>
                 </form>
+                <a href="resources/sample/LeaveOpeningBalance_Upload_template.xls" target="_blank">Download Sample Template</a>
       </div>
     );
   }

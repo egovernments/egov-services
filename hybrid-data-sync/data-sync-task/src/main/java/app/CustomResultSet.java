@@ -39,6 +39,9 @@ public class CustomResultSet {
             case "String":
                 value = this.rs.getString(columnLabel);
                 break;
+            case "Boolean":
+            	value = this.rs.getBoolean(columnLabel);
+            	break;
             default:
                 throw new SQLException(String.format("Column type: %s is not valid", type));
         }

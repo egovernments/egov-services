@@ -1,19 +1,19 @@
 spring:
     datasource:
       driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:5432/devdb
-      username: postgres
-      password: postgres
+      url: jdbc:postgresql://localhost:5432/test_scheduler_datasync
+      username: erp_owner
+      password: erp_owner
     profiles:
-      active: "ml-to-ms"
+      active: "ms-to-ml"
 
 flyway:
-  user: postgres
-  password: postgres
+  user: erp_owner
+  password: erp_owner
   outOfOrder: true
   table: data_sync_schema_version
   baseline-on-migrate: true
-  url: jdbc:postgresql://localhost:5432/devdb
+  url: jdbc:postgresql://localhost:5432/test_scheduler_datasync
   locations: db/migration/ddl,db/migration/seed
 
 state: ap
@@ -21,18 +21,24 @@ rateInSeconds: 5000
 
 ---
 source-schemas: kurnool
-destination-schema: public
+destination-schema: microservice
 
 spring:
   profiles: ml-to-ms
 sync:
   info:
-    - sourceTable: eg_boundary_type
-      destinationTable: eg_boundary_type
+    - sourceTable: bank
+      destinationTable: egf_bank
       columns:
         - source: id
           destination: id
           type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          Type: String
           shouldSource: True
           shouldSync: True
 
@@ -42,8 +48,14 @@ sync:
           shouldSource: True
           shouldSync: True
 
-    - sourceTable: eg_boundary
-      destinationTable: eg_boundary
+        - source: isactive
+          destination: active
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+    - sourceTable: bankbranch
+      destinationTable: egf_bankbranch
       columns:
         - source: id
           destination: id
@@ -51,37 +63,124 @@ sync:
           shouldSource: True
           shouldSync: True
 
-        - source: name
+        - source: branchcode
+          destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: branchname
           destination: name
-          type: String
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: bankid
+          destination: bankid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: branchaddress1
+          destination: address
+          Type: String
           shouldSource: True
           shouldSync: True
 
 ---
 source-schemas: microservice
-destination-schema: public
+destination-schema: fubar
 spring:
   profiles: ms-to-ml
 sync:
   info:
-    - sourceTable: eg_boundary_fubar
-      destinationTable: eg_boundary_type_fubar
+    - sourceTable: egf_bank
+      destinationTable: bank
       columns:
         - source: id
           destination: id
           type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
 
         - source: name
           destination: name
           Type: String
+          shouldSource: True
+          shouldSync: True
 
-    - sourceTable: eg_boundary_fubar
-      destinationTable: eg_boundary_fubar
+        - source: active
+          destination: isactive
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: tenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
+    - sourceTable: egf_bankbranch
+      destinationTable: bankbranch
       columns:
         - source: id
           destination: id
           type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: branchcode
+          Type: String
+          shouldSource: True
+          shouldSync: True
 
         - source: name
-          destination: name
-          type: String
+          destination: branchname
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: active
+          destination: isactive
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: bankid
+          destination: bankid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: address
+          destination: branchaddress1
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: tenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
+        - source: NA
+          destination: branchFax
+          Type: String
+          shouldSource: False
+          shouldSync: True
+          defaultValue: Test

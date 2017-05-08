@@ -2000,8 +2000,9 @@ function commonAddAndUpdate(tableName, modalName, object) {
       if (validateDates(employee, object, employeeSubObject[object])) {
         if (editIndex != -1) {
           if(object == "assignments") {
+            var hod_value = employeeSubObject[object]["hod"];
             employeeSubObject[object]["hod"] = [];
-            if (tempListBox.length > 0) {
+            if ([true, "true"].indexOf(hod_value) > -1 && tempListBox.length > 0) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
@@ -2012,8 +2013,9 @@ function commonAddAndUpdate(tableName, modalName, object) {
           updateTable("#" + tableName, modalName, object);
         } else {
           if (object == "assignments") {
+            var hod_value = employeeSubObject[object]["hod"];
             employeeSubObject[object]["hod"] = [];
-            if (tempListBox.length > 0) {
+            if ([true, "true"].indexOf(hod_value) > -1 && tempListBox.length > 0) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })

@@ -155,13 +155,13 @@ public class UserRepository {
 		user.setRoles(roles);
 	}
 
-	public org.egov.user.domain.model.User getUserById(final Long id) {
-		final User entityUser = userJpaRepository.findOne(id);
+	public org.egov.user.domain.model.User getUserById(final Long id, String tenantId) {
+		final User entityUser = userJpaRepository.findByIdAndTenantId(id, tenantId);
 		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
 	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
-		User oldUser = userJpaRepository.findOne(user.getId());
+		User oldUser = userJpaRepository.findByIdAndTenantId(user.getId(), user.getTenantId());
 		if (!isEmpty(user.getAadhaarNumber()))
 			oldUser.setAadhaarNumber(user.getAadhaarNumber());
 		if (!isEmpty(user.getAccountLocked()))

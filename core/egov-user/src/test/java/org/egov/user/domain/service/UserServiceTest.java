@@ -193,7 +193,7 @@ public class UserServiceTest {
 		final User expectedUser = User.builder().build();
 		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
 				.thenReturn(expectedUser);
-		when(userRepository.getUserById(any(Long.class))).thenReturn(user);
+		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
 		User returnedUser = userService.updateWithoutOtpValidation(1L, domainUser);
@@ -208,7 +208,7 @@ public class UserServiceTest {
 		final User expectedUser = User.builder().build();
 		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
 				.thenReturn(expectedUser);
-		when(userRepository.getUserById(any(Long.class))).thenReturn(user);
+		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
 		userService.updateWithoutOtpValidation(1L, domainUser);
@@ -228,7 +228,7 @@ public class UserServiceTest {
 	public void test_should_throw_error_when_user_not_exists_while_updating() throws Exception {
 		User domainUser = validDomainUser(false);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
-		when(userRepository.getUserById(any(Long.class))).thenReturn(null);
+		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(null);
 
 		userService.updateWithoutOtpValidation(1L, domainUser);
 	}
@@ -273,7 +273,7 @@ public class UserServiceTest {
 	@Test
 	public void test_should_validate_update_password_request() {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
-		when(userRepository.getUserById(any())).thenReturn(mock(User.class));
+		when(userRepository.getUserById(any(), anyString())).thenReturn(mock(User.class));
 		when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
 		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
@@ -285,7 +285,8 @@ public class UserServiceTest {
 	public void test_should_throw_exception_when_attempting_to_update_password_for_a_user_that_does_not_exist() {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePasswordRequest.getUserId()).thenReturn(123L);
-		when(userRepository.getUserById(123L)).thenReturn(null);
+		when(updatePasswordRequest.getTenantId()).thenReturn("tenantId");
+		when(userRepository.getUserById(123L, "tenantId")).thenReturn(null);
 
 		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 	}
@@ -298,7 +299,7 @@ public class UserServiceTest {
 		when(user.getPassword()).thenReturn("existingPasswordEncoded");
 		when(user.getPassword()).thenReturn("existingPasswordEncoded");
 		when(passwordEncoder.matches("wrongPassword", "existingPasswordEncoded")).thenReturn(false);
-		when(userRepository.getUserById(any())).thenReturn(user);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
 
 		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 	}
@@ -310,7 +311,7 @@ public class UserServiceTest {
 		final User domainUser = mock(User.class);
 		when(domainUser.getPassword()).thenReturn("existingPasswordEncoded");
 		when(passwordEncoder.matches("existingPassword", "existingPasswordEncoded")).thenReturn(true);
-		when(userRepository.getUserById(any())).thenReturn(domainUser);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 

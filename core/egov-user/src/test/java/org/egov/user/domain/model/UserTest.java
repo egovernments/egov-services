@@ -205,6 +205,17 @@ public class UserTest {
 		user.validateUserModification();
 	}
 
+	@Test(expected = InvalidUserUpdateException.class)
+	public void test_should_throw_validation_exception_for_update_when_tenant_id_is_absent() {
+		User user = User.builder()
+				.tenantId(null)
+				.build();
+
+		assertTrue(user.isTenantIdAbsent());
+
+		user.validateUserModification();
+	}
+
 	@Test
 	public void test_should_return_true_when_otp_reference_is_not_present_and_mandatory_flag_is_enabled() {
 		User user = User.builder()

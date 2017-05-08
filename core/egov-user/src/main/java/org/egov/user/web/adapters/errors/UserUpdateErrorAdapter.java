@@ -23,6 +23,10 @@ public class UserUpdateErrorAdapter implements ErrorAdapter<User> {
 	private static final String INVALID_CORRESPONDENCE_ADDRESS_MESSAGE =
 			"City max length (300), Address max length (300), PinCode max length(10)";
 
+	private static final String TENANT_MISSING_CODE = "core-user.TENANT_MANDATORY";
+	private static final String TENANT_FIELD = "tenantId";
+	private static final String TENANT_MISSING_MESSAGE = "Tenant is required";
+
 	public ErrorResponse adapt(User user) {
 		final Error error = getError(user);
 		return new ErrorResponse(null, error);
@@ -41,7 +45,18 @@ public class UserUpdateErrorAdapter implements ErrorAdapter<User> {
 		List<ErrorField> errorFields = new ArrayList<>();
 		addCorrespondenceAddressError(user, errorFields);
 		addPermanentAddressError(user, errorFields);
+		addTenantMandatoryError(user, errorFields);
 		return errorFields;
+	}
+
+	private void addTenantMandatoryError(User user, List<ErrorField> errorFields) {
+		if (user.isTenantIdAbsent()) {
+			errorFields.add(ErrorField.builder()
+					.code(TENANT_MISSING_CODE)
+					.field(TENANT_FIELD)
+					.message(TENANT_MISSING_MESSAGE)
+					.build());
+		}
 	}
 
 	private void addPermanentAddressError(User user, List<ErrorField> errorFields) {

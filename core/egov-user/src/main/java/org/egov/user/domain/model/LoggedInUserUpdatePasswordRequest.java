@@ -14,6 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @EqualsAndHashCode
 public class LoggedInUserUpdatePasswordRequest {
 	private Long userId;
+	private String tenantId;
 	private String existingPassword;
 	private String newPassword;
 

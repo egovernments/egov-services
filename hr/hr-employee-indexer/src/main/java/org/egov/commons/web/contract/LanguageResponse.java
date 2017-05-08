@@ -44,17 +44,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.commons.model.Language;
+import org.egov.commons.model.Religion;
+import org.egov.commons.web.contract.ReligionResponse.ReligionResponseBuilder;
 import org.egov.core.web.contract.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

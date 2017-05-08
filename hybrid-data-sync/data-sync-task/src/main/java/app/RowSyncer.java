@@ -36,7 +36,7 @@ public class RowSyncer {
 
     private String getDestinationSchema(String destinationSchema) {
         if (Objects.equals(sourceSchema, "microservice")) {
-            return String.format("%s", rs.get("tenantId")).split(".")[1];
+            return String.format("%s", rs.get("tenantid")).split("\\.")[1];
         }
         return destinationSchema;
     }
@@ -50,11 +50,11 @@ public class RowSyncer {
     }
 
     private void insert() throws SQLException {
-        Set<String> destinationColumns = columnValueMapper.getCommaSeparatedColumnNames();
+        List<String> destinationColumns = columnValueMapper.getCommaSeparatedColumnNames();
         List<String> destinationColumnValues = columnValueMapper.getCommaSeparatedColumnValues();
         if (Objects.equals(destinationSchema, "microservice")) {
             destinationColumns.add("tenantId");
-            destinationColumnValues.add(String.format("%s.%s", state, sourceSchema));
+            destinationColumnValues.add(String.format("'%s.%s'", state, sourceSchema));
         }
 
         String insertQuery = String.format("INSERT INTO %s.%s (%s) VALUES (%s)",
@@ -79,7 +79,9 @@ public class RowSyncer {
         );
 
         if (Objects.equals(destinationSchema, "microservice")) {
-            updateQuery = String.format("%s AND tenantId = '%s'", updateQuery, rs.get("tenantId"));
+            updateQuery = String.format("%s AND tenantId = '%s'",
+                    updateQuery,
+                    String.format("%s.%s", state, sourceSchema));
         }
 
         log.info(updateQuery);

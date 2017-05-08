@@ -1,5 +1,6 @@
 package org.egov.pgrrest.common.contract;
 
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Complainant;
 import org.egov.pgrrest.read.domain.model.Complaint;

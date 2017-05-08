@@ -3,6 +3,8 @@ package org.egov.pgrrest.common.contract;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.pgr.common.contract.AttributeEntry;
+import org.egov.pgr.common.contract.AttributeValues;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Complainant;
 import org.egov.pgrrest.read.domain.model.Complaint;

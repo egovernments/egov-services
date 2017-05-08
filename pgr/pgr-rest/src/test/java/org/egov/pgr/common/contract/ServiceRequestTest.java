@@ -1,8 +1,12 @@
 package org.egov.pgr.common.contract;
 
 import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.model.Complainant;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.common.model.UserType;
+import org.egov.pgr.read.domain.model.ComplaintLocation;
+import org.egov.pgr.read.domain.model.ComplaintType;
+import org.egov.pgr.read.domain.model.Coordinates;
 import org.junit.Test;
 
 import java.util.*;
@@ -365,6 +369,146 @@ public class ServiceRequestTest {
         Complaint complaint = serviceRequest.toDomainForUpdateRequest(getAuthenticatedUser());
 
         assertTrue(complaint.isModifyComplaint());
+    }
+
+    @Test
+    public void test_should_populate_attribute_values_field_in_service_request_from_domain_complaint() {
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+            .locationId("locationIdName")
+            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .build();
+        final Complainant complainant = Complainant.builder()
+            .address("complainantAddress")
+            .build();
+        final Complaint complaint = Complaint.builder()
+            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complainant(complainant)
+            .complaintLocation(complaintLocation)
+            .receivingMode("receivingModeName")
+            .complaintStatus("complaintStatusName")
+            .receivingCenter("receivingCenterName")
+            .complaintLocation(complaintLocation)
+            .childLocation("childLocationIdName")
+            .state("stateName")
+            .assignee("assigneeName")
+            .department("departmentName")
+            .citizenFeedback("citizenFeedback")
+            .build();
+
+        final ServiceRequest serviceRequest = new ServiceRequest(complaint);
+
+        assertNotNull(serviceRequest);
+        final List<AttributeEntry> attributeEntries = serviceRequest.getAttribValues();
+        assertEquals("receivingMode", attributeEntries.get(0).getKey());
+        assertEquals("receivingModeName", attributeEntries.get(0).getName());
+        assertEquals("complaintStatus", attributeEntries.get(1).getKey());
+        assertEquals("complaintStatusName", attributeEntries.get(1).getName());
+        assertEquals("receivingCenter", attributeEntries.get(2).getKey());
+        assertEquals("receivingCenterName", attributeEntries.get(2).getName());
+        assertEquals("locationId", attributeEntries.get(3).getKey());
+        assertEquals("locationIdName", attributeEntries.get(3).getName());
+        assertEquals("childLocationId", attributeEntries.get(4).getKey());
+        assertEquals("childLocationIdName", attributeEntries.get(4).getName());
+        assertEquals("stateId", attributeEntries.get(5).getKey());
+        assertEquals("stateName", attributeEntries.get(5).getName());
+        assertEquals("assigneeId", attributeEntries.get(6).getKey());
+        assertEquals("assigneeName", attributeEntries.get(6).getName());
+        assertEquals("departmentId", attributeEntries.get(7).getKey());
+        assertEquals("departmentName", attributeEntries.get(7).getName());
+        assertEquals("citizenFeedback", attributeEntries.get(8).getKey());
+        assertEquals("citizenFeedback", attributeEntries.get(8).getName());
+    }
+
+    @Test
+    public void test_should_populate_values_field_in_service_request_from_domain_complaint() {
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+            .locationId("locationId")
+            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .build();
+        final Complainant complainant = Complainant.builder()
+            .address("complainantAddress")
+            .build();
+        final Complaint complaint = Complaint.builder()
+            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complainant(complainant)
+            .complaintLocation(complaintLocation)
+            .receivingMode("receivingMode")
+            .complaintStatus("complaintStatus")
+            .receivingCenter("receivingCenter")
+            .complaintLocation(complaintLocation)
+            .childLocation("childLocation")
+            .state("state")
+            .assignee("assignee")
+            .department("department")
+            .citizenFeedback("citizenFeedback")
+            .build();
+
+        final ServiceRequest serviceRequest = new ServiceRequest(complaint);
+
+        assertNotNull(serviceRequest);
+        final Map<String, String> values = serviceRequest.getValues();
+        assertEquals("receivingMode", values.get("receivingMode"));
+        assertEquals("complaintStatus", values.get("complaintStatus"));
+        assertEquals("receivingCenter", values.get("receivingCenter"));
+        assertEquals("locationId", values.get("locationId"));
+        assertEquals("childLocation", values.get("childLocationId"));
+        assertEquals("state", values.get("stateId"));
+        assertEquals("assignee", values.get("assigneeId"));
+        assertEquals("department", values.get("departmentId"));
+        assertEquals("citizenFeedback", values.get("citizenFeedback"));
+    }
+
+    @Test
+    public void test_should_populate_values_field_with_non_null_values_from_domain_complaint() {
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .build();
+        final Complainant complainant = Complainant.builder()
+            .address("complainantAddress")
+            .build();
+        final Complaint complaint = Complaint.builder()
+            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complainant(complainant)
+            .receivingMode("receivingMode")
+            .complaintStatus("complaintStatus")
+            .complaintLocation(complaintLocation)
+            .build();
+
+        final ServiceRequest serviceRequest = new ServiceRequest(complaint);
+
+        final Map<String, String> values = serviceRequest.getValues();
+        final HashSet<String> expectedKeys = new HashSet<>();
+        expectedKeys.add("receivingMode");
+        expectedKeys.add("complaintStatus");
+        assertEquals(expectedKeys, values.keySet());
+    }
+
+    @Test
+    public void test_should_populate_attribute_values_field_with_non_null_values_from_domain_complaint() {
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .build();
+        final Complainant complainant = Complainant.builder()
+            .address("complainantAddress")
+            .build();
+        final Complaint complaint = Complaint.builder()
+            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complainant(complainant)
+            .receivingMode("receivingMode")
+            .complaintStatus("complaintStatus")
+            .complaintLocation(complaintLocation)
+            .build();
+
+        final ServiceRequest serviceRequest = new ServiceRequest(complaint);
+
+        final List<AttributeEntry> attributeEntries = serviceRequest.getAttribValues();
+        assertEquals(2, attributeEntries.size());
+        assertEquals("receivingMode", attributeEntries.get(0).getKey());
+        assertEquals("complaintStatus", attributeEntries.get(1).getKey());
     }
 
     private AuthenticatedUser getAuthenticatedUser() {

@@ -119,7 +119,29 @@ public class ServiceRequest {
         phone = complaint.getComplainant().getMobile();
         email = complaint.getComplainant().getEmail();
         values = getAdditionalValues(complaint);
+        attribValues = getAttributeValues(complaint);
         tenantId = complaint.getTenantId();
+    }
+
+    private List<AttributeEntry> getAttributeValues(Complaint complaint) {
+        final ArrayList<AttributeEntry> attributeEntries = new ArrayList<>();
+        attributeEntries.add(new AttributeEntry("receivingMode", complaint.getReceivingMode()));
+        attributeEntries.add(new AttributeEntry("complaintStatus", complaint.getComplaintStatus()));
+        addAttributeEntryIfPresent(attributeEntries, "receivingCenter", complaint.getReceivingCenter());
+        addAttributeEntryIfPresent(attributeEntries, "locationId", complaint.getComplaintLocation().getLocationId());
+        addAttributeEntryIfPresent(attributeEntries, "childLocationId", complaint.getChildLocation());
+        addAttributeEntryIfPresent(attributeEntries, "stateId", complaint.getState());
+        addAttributeEntryIfPresent(attributeEntries, "assigneeId", complaint.getAssignee());
+        addAttributeEntryIfPresent(attributeEntries, "departmentId", complaint.getDepartment());
+        addAttributeEntryIfPresent(attributeEntries, "citizenFeedback",complaint.getCitizenFeedback());
+        return attributeEntries;
+    }
+
+    private void addAttributeEntryIfPresent(ArrayList<AttributeEntry> attributeEntries, String key, String name) {
+        if (isEmpty(name)) {
+            return;
+        }
+        attributeEntries.add(new AttributeEntry(key, name));
     }
 
     private Map<String, String> getAdditionalValues(Complaint complaint) {

@@ -327,7 +327,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     $("#shopAssetDetailsBlock select").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Shop ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "market") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     // validation rules for shop agreement
     validationRules = {
         // assetCategory: {
@@ -374,7 +374,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     $("#marketAssetDetailsBlock textarea").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Market ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "kalyanamandapam") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Kalyana Mandapam") {
     // validation rules for shop agreement
     validationRules = {
         // kalyanamandapamName: {
@@ -421,7 +421,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Kalyanamandapam ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "parking_space") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Parking Space") {
     // validation rules for shop agreement
     validationRules = {
         // parkingSpaceName: {
@@ -473,7 +473,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     //append category text
     $(".categoryType").prepend("Parking Space ");
 
-} else if (decodeURIComponent(getUrlVars()["type"]) == "slaughter_house") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Slaughter House") {
     // validation rules for shop agreement
     validationRules = {
         // slaughterHouseName: {
@@ -520,7 +520,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     $("#slaughterHousesAssetDetailsBlock textarea").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Slaughter House ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "usfructs") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Usufruct") {
     // validation rules for shop agreement
     validationRules = {
         // usfructName: {
@@ -568,7 +568,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
 
     //append category text
     $(".categoryType").prepend("Usfructs ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "community") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Community Toilet Complex") {
     // validation rules for shop agreement
     validationRules = {
         // toiletComplexName: {
@@ -615,7 +615,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     $("#communityAssetDetailsBlock textarea").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Community ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Fish Tank") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Fish Tanks") {
     // validation rules for shop agreement
     validationRules = {
         // fishTankName: {
@@ -662,7 +662,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "land") {
     $("#fishTankAssetDetailsBlock textarea").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Fish Tank ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "park") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Parks") {
     // validation rules for shop agreement
     validationRules = {
         // park_name: {

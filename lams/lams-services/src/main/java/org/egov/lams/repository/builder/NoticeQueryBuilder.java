@@ -18,13 +18,15 @@ public class NoticeQueryBuilder {
 			+ " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
 			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, rentInWord)" + " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
-	public final static  String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
-	
-	public final static  String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
-	
+	public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
+
+	public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
+
+	public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
 
 	@SuppressWarnings("unchecked")
-	public static String getNoticeQuery(NoticeCriteria noticeCriteria,@SuppressWarnings("rawtypes") List preparedStatementValues) {
+	public static String getNoticeQuery(NoticeCriteria noticeCriteria,
+			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 
 		StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_notice notice");
 
@@ -105,10 +107,6 @@ public class NoticeQueryBuilder {
 			}
 		}
 		return query.append(")").toString();
-	}
-	
-	public static String findRentIncrementTypeQuery() {
-		return "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
 	}
 }
 

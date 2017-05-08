@@ -173,31 +173,31 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <excludes>
-                                        <exclude>org.egov.pgr.common.entity.*</exclude>
-                                        <exclude>org.egov.pgr.common.model.AuthenticatedUser</exclude>
-                                        <exclude>org.egov.pgr.read.web.contract.*</exclude>
-                                        <exclude>org.egov.pgr.PgrRestSpringBootApplication</exclude>
-                                        <exclude>org.egov.pgr.read.persistence.entity.*</exclude>
-                                        <exclude>org.egov.pgr.common.contract.*</exclude>
-                                        <exclude>org.egov.pgr.read.web.controller.*</exclude>
-                                        <exclude>org.egov.pgr.read.domain.service.*</exclude>
-                                        <exclude>org.egov.pgr.read.domain.model.*</exclude>
-                                        <exclude>org.egov.pgr.write.contracts.*</exclude>
-                                        <exclude>org.egov.pgr.write.repository.ComplaintWriteRepository</exclude>
-                                        <exclude>org.egov.pgr.read.web.resolver.AuthenticatedUserResolver</exclude>
-                                        <exclude>org.egov.pgr.read.domain.exception.UnauthorizedAccessException
+                                        <exclude>org.egov.pgrrest.common.entity.*</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.AuthenticatedUser</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
+                                        <exclude>org.egov.pgrrest.PgrRestSpringBootApplication</exclude>
+                                        <exclude>org.egov.pgrrest.read.persistence.entity.*</exclude>
+                                        <exclude>org.egov.pgrrest.common.contract.*</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.controller.*</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.service.*</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.model.*</exclude>
+                                        <exclude>org.egov.pgrrest.write.contracts.*</exclude>
+                                        <exclude>org.egov.pgrrest.write.repository.ComplaintWriteRepository</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.exception.UnauthorizedAccessException
                                         </exclude>
-                                        <exclude>org.egov.pgr.read.web.interceptor.CorrelationIdAwareRestTemplate
+                                        <exclude>org.egov.pgrrest.read.web.interceptor.CorrelationIdAwareRestTemplate
                                         </exclude>
-                                        <exclude>org.egov.pgr.read.persistence.repository.ComplaintTypeRepository
+                                        <exclude>org.egov.pgrrest.read.persistence.repository.ComplaintTypeRepository
                                         </exclude>
-                                        <exclude>org.egov.pgr.common.repository.UserRepository</exclude>
-                                        <exclude>org.egov.pgr.common.model.Role</exclude>
-                                        <exclude>org.egov.pgr.common.model.Role.RoleBuilder</exclude>
-                                        <exclude>org.egov.pgr.write.consumer.HashMapDeserializer</exclude>
-                                        <exclude>org.egov.pgr.common.model.ReceivingMode</exclude>
-                                        <exclude>org.egov.pgr.common.model.ReceivingCenter</exclude>
-                                        <exclude>org.egov.pgr.write.model.ComplaintRecord</exclude>
+                                        <exclude>org.egov.pgrrest.common.repository.UserRepository</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.Role</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.Role.RoleBuilder</exclude>
+                                        <exclude>org.egov.pgrrest.write.consumer.HashMapDeserializer</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.ReceivingMode</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.ReceivingCenter</exclude>
+                                        <exclude>org.egov.pgrrest.write.model.ComplaintRecord</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

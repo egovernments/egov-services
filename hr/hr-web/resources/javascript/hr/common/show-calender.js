@@ -18,18 +18,17 @@ class ShowCalender extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+       try {
+           var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
+       } catch(e) {
+           var _years = [];
+       }
+           this.setState({
+               list:_years
+           });
    }
 
-   componentWillMount{
-     try {
-         var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
-     } catch(e) {
-         var _years = [];
-     }
-         this.setState({
-             list:_years
-         });
-   }
+
 
   componentDidUpdate(prevProps, prevState)
   {

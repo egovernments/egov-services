@@ -58,7 +58,7 @@ class EmployeeSearch extends React.Component {
 
     // console.log("fired");
   }
-
+  
   componentWillMount()
   {
     var date = new Date();

@@ -26,8 +26,12 @@ public class RowColumnValueMapper {
         return colValMap;
     }
 
-    public Set<String> getCommaSeparatedColumnNames() {
-        return colValMap.keySet();
+    public List<String> getCommaSeparatedColumnNames() {
+        List<String> colNames = new ArrayList<>();
+        for (String colName : colValMap.keySet()) {
+            colNames.add(colName);
+        }
+        return colNames;
     }
 
     public List<String> getCommaSeparatedColumnValues() {

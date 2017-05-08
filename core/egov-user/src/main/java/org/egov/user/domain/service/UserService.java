@@ -73,7 +73,8 @@ public class UserService {
 
 	public void updatePasswordForLoggedInUser(LoggedInUserUpdatePasswordRequest updatePasswordRequest) {
 		updatePasswordRequest.validate();
-		final User user = userRepository.getUserById(updatePasswordRequest.getUserId());
+		final User user = userRepository
+				.getUserById(updatePasswordRequest.getUserId(), updatePasswordRequest.getTenantId());
 		validateUserPresent(user);
 		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
 		user.updatePassword(updatePasswordRequest.getNewPassword());
@@ -146,7 +147,7 @@ public class UserService {
 
 	private void validateUser(final Long id, final User user) {
 		validateDuplicateUserName(id, user);
-		if (userRepository.getUserById(id) == null) {
+		if (userRepository.getUserById(id, user.getTenantId()) == null) {
 			throw new UserNotFoundException(user);
 		}
 	}

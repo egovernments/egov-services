@@ -78,8 +78,10 @@ public class User {
 	}
 
 	public void validateUserModification() {
-		if(isPermanentAddressInvalid()
-				|| isCorrespondenceAddressInvalid()) {
+		if (isPermanentAddressInvalid()
+				|| isCorrespondenceAddressInvalid()
+				|| isTenantIdAbsent()
+				) {
 			throw new InvalidUserUpdateException(this);
 		}
 	}
@@ -169,7 +171,7 @@ public class User {
 	}
 
 	public void setDefaultPasswordExpiry(int expiryInDays) {
-		if(passwordExpiryDate == null) {
+		if (passwordExpiryDate == null) {
 			passwordExpiryDate = DateUtils.addDays(new Date(), expiryInDays);
 		}
 	}

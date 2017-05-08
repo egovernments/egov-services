@@ -309,13 +309,14 @@ public class UserRepositoryTest {
 	public void test_should_update_entity_user() {
 		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
-		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
+		when(userJpaRepository.findByIdAndTenantId(1L, "tenantId")).thenReturn(entityUser);
 		final User expectedUser = mock(User.class);
 		when(entityUser.toDomain(null, null)).thenReturn(expectedUser);
 		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
 				.roles(roles)
 				.id(1L)
+				.tenantId("tenantId")
 				.build();
 
 		User actualUser = userRepository.update(domainUser);
@@ -327,7 +328,7 @@ public class UserRepositoryTest {
 	public void test_should_update_addresses_when_updating_user() {
 		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
-		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
+		when(userJpaRepository.findByIdAndTenantId(1L, "tenant")).thenReturn(entityUser);
 		final User expectedUser = mock(User.class);
 		when(entityUser.toDomain(null, null)).thenReturn(expectedUser);
 		org.egov.user.domain.model.User domainUser = mock(User.class);
@@ -345,7 +346,7 @@ public class UserRepositoryTest {
 	public void test_should_throw_exception_when_updating_user_with_invalid_role_code() {
 		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
-		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
+		when(userJpaRepository.findByIdAndTenantId(1L, "tenantId")).thenReturn(entityUser);
 		final User expectedUser = mock(User.class);
 		when(entityUser.toDomain(null, null)).thenReturn(expectedUser);
 		final org.egov.user.domain.model.Role role1 = org.egov.user.domain.model.Role.builder()
@@ -371,9 +372,9 @@ public class UserRepositoryTest {
 		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		final User expectedUser = mock(User.class);
 		when(entityUser.toDomain(null, null)).thenReturn(expectedUser);
-		when(userJpaRepository.findOne(123L)).thenReturn(entityUser);
+		when(userJpaRepository.findByIdAndTenantId(123L, "tenantId")).thenReturn(entityUser);
 
-		User actualUser = userRepository.getUserById(123L);
+		User actualUser = userRepository.getUserById(123L, "tenantId");
 
 		assertEquals(expectedUser, actualUser);
 	}

@@ -10,7 +10,6 @@ class UploadLeaveType extends React.Component{
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
-    this.downloadExcel=this.downloadExcel.bind(this);
   }
 
 
@@ -300,7 +299,7 @@ addOrUpdate(e,mode)
 
   render()
   {
-    let {handleChange,addOrUpdate,filePicked,downloadExcel}=this;
+    let {handleChange,addOrUpdate,filePicked}=this;
     let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
 

@@ -225,7 +225,7 @@ public class EmployeeService {
 	public Employee createAsync(EmployeeRequest employeeRequest) throws JsonProcessingException {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
-				: BloodGroup.fromValue(userRequest.getUser().getBloodGroup()).toString());
+				: userRequest.getUser().getBloodGroup());
 
 		ResponseEntity<?> responseEntity = null;
 
@@ -304,7 +304,7 @@ public class EmployeeService {
 
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
-				: BloodGroup.fromValue(userRequest.getUser().getBloodGroup()).toString());
+				: userRequest.getUser().getBloodGroup());
 
 		ResponseEntity<?> responseEntity = null;
 

@@ -43,7 +43,7 @@ public class ComplaintJpaRepositoryTest {
         DateTime endDate = new DateTime(2016, 12, 21, 0, 0, 0, 0);
         DateTime lastModifiedDate = new DateTime(2016, 12, 21, 0, 0, 0, 0);
         DateTime escalationDate = new DateTime(2016, 12, 24, 0, 0, 0, 0);
-        int count=1; // changed to 1.. Need to fix insertcomplaintdata to get count 2
+        int count=2; 
        
 
         ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
@@ -52,11 +52,11 @@ public class ComplaintJpaRepositoryTest {
                 .locationId(1L)
                 .childLocationId(4L)
                 .userId(2L)
+                .name("kumar")
                 .startDate(startDate.toDate())
                 .endDate(endDate.toDate())
                 .escalationDate(escalationDate.toDate())
                 .assignmentId(1L)
-                .serviceCode("AODTDGCC")
                 .tenantId("ap.public")
                 .build();
 
@@ -87,10 +87,12 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(0).getDepartment()).isEqualTo(18L);
         assertThat(complaints.get(0).getAssignee()).isEqualTo(1L);
         assertThat(complaints.get(0).getCreatedBy()).isEqualTo(2L);
-        assertThat(complaints.size()).isEqualTo(count);
-       /* assertThat(complaints.get(1).getCrn()).isEqualTo("0009-2016-MN");
+        assertThat(complaints.get(0).getCitizenFeedback()).isEqualTo("FIVE");
+       
+   
+        assertThat(complaints.get(1).getCrn()).isEqualTo("0009-2016-MN");
         assertThat(complaints.get(1).getComplainant()).isNotNull();
-        assertThat(complaints.get(1).getComplainant().getName()).isEqualTo("Shyam");
+        assertThat(complaints.get(1).getComplainant().getName()).isEqualTo("kumar");
         assertThat(complaints.get(1).getComplainant().getMobile()).isEqualTo("8923618856");
         assertThat(complaints.get(1).getComplainant().getEmail()).isEqualTo("shyam@gmail.com");
         assertThat(complaints.get(1).getComplainant().getAddress()).isEqualTo("Near School");
@@ -101,8 +103,8 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(1).getCreatedDate()).isBetween(startDate.toDate(), endDate.toDate());
         assertTrue(DateUtils.truncatedEquals(complaints.get(1).getLastModifiedDate(),lastModifiedDate.toDate(),Calendar.SECOND));
         assertThat(complaints.get(1).getEscalationDate()).isBefore(escalationDate.toDate());
-        assertThat(complaints.get(1).getComplaintType().getName()).isEqualTo("Absenteesim of door_to_door garbage collector");
-        assertThat(complaints.get(1).getComplaintType().getCode()).isEqualTo("AODTDGCC");
+        assertThat(complaints.get(1).getComplaintType().getName()).isEqualTo("Absenteesim_of_sweepers");
+        assertThat(complaints.get(1).getComplaintType().getCode()).isEqualTo("AOSS");
         assertThat(complaints.get(1).getLandmarkDetails()).isEqualTo("Near Temple");
         assertThat(complaints.get(1).getReceivingMode().getId()).isEqualTo(5);
         assertThat(complaints.get(1).getReceivingCenter().getId()).isEqualTo(9);
@@ -111,6 +113,7 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(1).getDepartment()).isEqualTo(19L);
         assertThat(complaints.get(1).getAssignee()).isEqualTo(1L);
         assertThat(complaints.get(1).getCreatedBy()).isEqualTo(2L);
-*/
+        assertThat(complaints.get(1).getCitizenFeedback()).isEqualTo("FIVE");
+
     }
 }

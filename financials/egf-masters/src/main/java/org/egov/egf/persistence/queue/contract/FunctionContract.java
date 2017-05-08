@@ -43,7 +43,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,6 +80,7 @@ public class FunctionContract extends AuditableContract {
     @NotNull
     private Boolean isParent;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private FunctionContract parentId;
 
     public Long getId() {

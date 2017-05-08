@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.common.entity.Complaint;
 import org.egov.pgr.common.entity.ComplaintType;
 import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.entity.enums.CitizenFeedback;
 import org.egov.pgr.common.repository.ComplaintTypeJpaRepository;
 import org.egov.pgr.common.repository.ComplaintJpaRepository;
 import org.egov.pgr.common.repository.ReceivingCenterJpaRepository;
@@ -45,7 +46,7 @@ public class ComplaintWriteRepository {
         setEscalationDate(complaintRecord, complaint);
         setWorkflowDetails(complaintRecord, complaint);
         setDepartmentId(complaintRecord, complaint);
-
+        setCitizenFeedBack(complaintRecord,complaint);
         saveComplaint(complaint);
     }
 
@@ -55,6 +56,12 @@ public class ComplaintWriteRepository {
 
     private void setDepartmentId(ComplaintRecord complaintRecord, Complaint complaint) {
         complaint.setDepartment(complaintRecord.getDepartment());
+
+    }
+    
+    private void setCitizenFeedBack(ComplaintRecord complaintRecord, Complaint complaint) {
+        if(complaintRecord.getCitizenFeedback() !=null)
+            complaint.setCitizenFeedback(CitizenFeedback.valueOf(complaintRecord.getCitizenFeedback()));
 
     }
 

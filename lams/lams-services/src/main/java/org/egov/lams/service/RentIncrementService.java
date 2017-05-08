@@ -35,7 +35,7 @@ public class RentIncrementService {
 	
 	public RentIncrementType getRentIncrementById(Long rentID) {
 
-		String rentIncrementTypeqQuery = AgreementQueryBuilder.findRentIncrementTypeQuery();
+		String rentIncrementTypeqQuery = AgreementQueryBuilder.rentIncrementTypeQuery;
 		Object[] rentObj = new Object[] { rentID };
 		RentIncrementType rentIncrementType = null;
 

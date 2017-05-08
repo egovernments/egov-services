@@ -84,10 +84,11 @@ public class BankBranch extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_BANKBRANCH, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "bankid")
+//    @ManyToOne
+//    @JoinColumn(name = "bankid")
     @NotNull
-    private Bank bank;
+    @Column(name = "bankid")
+    private Long bank;
 
     @NotNull
     @Length(max = 50,min=1)

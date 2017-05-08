@@ -50,11 +50,11 @@ public class FundsourceService {
 
     private void setFundSource(final Fundsource fundsource) {
         if (fundsource.getFundSource() != null) {
-            Fundsource fundSource = fundsourceService.findOne(fundsource.getFundSource().getId());
+            Fundsource fundSource = fundsourceService.findOne(fundsource.getFundSource());
             if (fundSource == null) {
                 throw new InvalidDataException("fundSource", "fundSource.invalid", " Invalid fundSource");
             }
-            fundsource.setFundSource(fundSource);
+            fundsource.setFundSource(fundSource.getId());
         }
     }
 

@@ -44,16 +44,13 @@ package org.egov.asset.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -80,7 +77,6 @@ public class Asset {
 	
 	private Department department;
 	
-	@Valid
 	private AssetCategory assetCategory;
 	private String assetDetails;
 	private ModeOfAcquisition modeOfAcquisition;
@@ -100,9 +96,9 @@ public class Asset {
 	private String totalArea;
 	private Double grossValue;
 	private Double accumulatedDepreciation;
-	private Long assetRefrance = null;
+	private Long assetReference = null;
 	private String version;
-    private List<Attributes> assetAttributes = new ArrayList<Attributes>();
+    private List<Attributes> assetAttributes = new ArrayList<>();
     
 	
 }

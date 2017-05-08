@@ -11,6 +11,11 @@ public class AgreementQueryBuilder {
 
 	public static final Logger logger = LoggerFactory.getLogger(AgreementQueryBuilder.class);
 
+	public static String rentIncrementTypeQuery = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
+	
+	public static String agreementQuery = "SELECT * FROM eglams_agreement agreement WHERE agreement.acknowledgementnumber=?";
+	
+	
 	@SuppressWarnings("unchecked")
 	public static String agreementQueryBuilder(AgreementCriteria agreementsModel,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
@@ -154,9 +159,5 @@ public class AgreementQueryBuilder {
 			}
 		}
 		return query.append(")").toString();
-	}
-	
-	public static String findRentIncrementTypeQuery() {
-		return "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
 	}
 }

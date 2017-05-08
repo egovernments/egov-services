@@ -78,6 +78,7 @@ public class ChartOfAccountContract extends AuditableContract {
     @Length(max = 128, min = 5)
     private String name;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private AccountCodePurposeContract accountCodePurpose;
 
     @Length(max = 256)
@@ -86,6 +87,7 @@ public class ChartOfAccountContract extends AuditableContract {
     @NotNull
     private Boolean isActiveForPosting;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private ChartOfAccountContract parentId;
     @NotNull
     private Character type;

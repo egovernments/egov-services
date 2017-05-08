@@ -16,8 +16,9 @@ class PositionMaster extends React.Component{
                             "tenantId": ""
                         }
                     },
-                    "isPostOutsourced": "",
+                    "isPostOutsourced": "false",
                     "active": "true",
+                    "tenantId":tenantId
     },
       departmentsList:[],designationList:[]}
       this.handleChange=this.handleChange.bind(this);
@@ -122,7 +123,7 @@ handleChangeThreeLevel(e,pName,name,val)
       "Position":[tempInfo]
     },_this=this;
     if (type == "update") {
-                    $.ajax({
+        $.ajax({
            url:baseUrl+"/hr-masters/positions/" + this.state.positionSet.id + "/" + "_update?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
@@ -145,9 +146,9 @@ handleChangeThreeLevel(e,pName,name,val)
 
                             }
                           },
-                        "isPostOutsourced": "",
-                        "active": "",
-                        "tenantId": null
+                        "isPostOutsourced": "false",
+                        "active": "true",
+                        "tenantId": tenantId
                       },designationList:[],departmentsList:[]})
 
             },
@@ -156,6 +157,7 @@ handleChangeThreeLevel(e,pName,name,val)
 
             }
         });
+
     } else {
       $.ajax({
             url:baseUrl+"/hr-masters/positions/_create?tenantId=" + tenantId,
@@ -180,9 +182,9 @@ handleChangeThreeLevel(e,pName,name,val)
                             "tenantId": null
                             }
                           },
-                        "isPostOutsourced": "",
-                        "active": "",
-                        "tenantId": null
+                        "isPostOutsourced": "false",
+                        "active": "true",
+                        "tenantId": tenantId
                       },designationList:[],departmentsList:[]})
 
             },

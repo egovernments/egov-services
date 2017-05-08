@@ -15,7 +15,7 @@ class SearchAssetCategory extends React.Component {
     e.preventDefault();
     try {
       //call api call
-      var list = commonApiPost("asset-services","assetCategories","_search",this.state.searchSet).responseJSON["AssetCategory"];
+      var list = commonApiPost("asset-services","assetCategories","_search",{...this.state.searchSet,tenantId,pageSize:500}).responseJSON["AssetCategory"];
       flag = 1;
       this.setState({
         isSearchClicked:true,
@@ -31,6 +31,13 @@ class SearchAssetCategory extends React.Component {
   }
 
   componentDidMount() {
+    if(window.opener && window.opener.document) {
+      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+      if(logo_ele && logo_ele[0]) {
+        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+      }
+    }
+      
      this.setState({
       asset_category_type
     })

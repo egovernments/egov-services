@@ -56,10 +56,10 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.update.asset}")
 	private String updateAssetTopicName;
 	
-	@Value("${egov.services.boundary_service.searchpath}")
+	@Value("${egov.services.boundary_service.hostname}")
 	private String boundaryServiceHostName;
 	
-	@Value("${egov.services.boundary_service.hostname}")
+	@Value("${egov.services.boundary_service.searchpath}")
 	private String boundaryServiceSearchPath;
 	
 	@Value("${egov.services.asset.indexer.host}")

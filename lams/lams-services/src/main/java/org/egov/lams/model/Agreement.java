@@ -97,4 +97,6 @@ public class Agreement {
 	private Double collectedGoodWillAmount;
 	@NotNull
 	private Source source;
+	
+	private List<Demand> legacyDemands;
 }

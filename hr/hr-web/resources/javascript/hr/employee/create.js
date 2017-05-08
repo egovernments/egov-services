@@ -286,7 +286,7 @@ var employee = {
     locale: "",
     signature: "",
     fatherOrHusbandName: "",
-    bloodGroup: "",
+    bloodGroup: null,
     identificationMark: "",
     photo: "",
     type: "EMPLOYEE",
@@ -1328,15 +1328,14 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      if (currentState.id == "user.dob") {
+      if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
           var dateSplit = currentState.value.split("/");
-          var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-          var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-          var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-          var yearIn = date.getFullYear();
-          employee[splitResult[0]][splitResult[1]] =  monthIn  + "/" + day + "/" + yearIn;
-      } else
-      if (currentState.id == "user.active") {
+          //var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+          //var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+          //var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+          //var yearIn = date.getFullYear();
+          employee[splitResult[0]][splitResult[1]] =  dateSplit[1]  + "/" + dateSplit[0] + "/" + dateSplit[2];
+      } else if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
 
       } else if (currentState.type === "file") {
@@ -1910,7 +1909,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
-            } 
+            }
           }
           employee[object][editIndex] = employeeSubObject[object];
           updateTable("#" + tableName, modalName, object);
@@ -2026,7 +2025,7 @@ $("#createEmployeeForm").validate({
           }
       }
 
-      if(employee.user && employee.user.dob && getUrlVars()["type"] == "update") {
+      if(employee.user && employee.user.dob && getUrlVars()["type"] == "update" && employee.user.dob.indexOf("-") > -1) {
         var _date = employee.user.dob.split("-");
         employee.user.dob = _date[1] + "/" + _date[2] + "/" + _date[0];
       }
@@ -2052,7 +2051,7 @@ $("#createEmployeeForm").validate({
 
           if (response["status"] === 200) {
             //showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
-            window.location.href = "app/hr/common/employee-search.html";
+            window.location.href = "app/hr/common/employee-search.html?type=view";
           } else {
             showError(response["statusText"]);
             employee = Object.assign({}, __emp);

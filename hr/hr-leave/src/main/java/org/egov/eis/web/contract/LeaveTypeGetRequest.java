@@ -65,6 +65,8 @@ public class LeaveTypeGetRequest {
 
 	private Boolean active;
 
+	private Boolean accumulative;
+	
     private String sortBy;
 
 	private String sortOrder;

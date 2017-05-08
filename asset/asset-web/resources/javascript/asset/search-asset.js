@@ -30,7 +30,7 @@ class SearchAsset extends React.Component {
     e.preventDefault();
     try {
       //call api call
-      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
+      var list=commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}).responseJSON["Assets"];
       flag = 1;
       this.setState({
         isSearchClicked:true,
@@ -68,10 +68,14 @@ class SearchAsset extends React.Component {
 
   componentDidMount()
   {
-    //console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
+    if(window.opener && window.opener.document) {
+      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+      if(logo_ele && logo_ele[0]) {
+        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+      }
+    }
 
-
-     this.setState({
+    this.setState({
       assetCategories,
       departments,
       statusList

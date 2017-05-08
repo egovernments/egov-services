@@ -65,12 +65,6 @@ public class CrossHierarchyService {
 	private BoundaryTypeService boundaryTypeService;
 
 	@Autowired
-	private BoundaryService boundaryService;
-
-	/*
-	 * @Autowired private AppConfigValueService appConfigValueService;
-	 */
-	@Autowired
 	public CrossHierarchyService(final CrossHierarchyRepository crossHierarchyRepository) {
 		this.crossHierarchyRepository = crossHierarchyRepository;
 	}
@@ -102,13 +96,13 @@ public class CrossHierarchyService {
 	}
 
 	public List<Boundary> getChildBoundariesNameAndBndryTypeAndHierarchyType(final String boundaryTypeName,
-																			 final String hierarchyTypeName) {
+			final String hierarchyTypeName) {
 		return crossHierarchyRepository.findChildBoundariesNameAndBndryTypeAndHierarchyType(boundaryTypeName,
 				hierarchyTypeName);
 	}
 
 	public List<Boundary> getParentBoundaryByChildBoundaryAndParentBoundaryType(final Long childId,
-																				final Long parentTypeId) {
+			final Long parentTypeId) {
 		return crossHierarchyRepository.findParentBoundaryByChildBoundaryAndParentBoundaryType(childId, parentTypeId);
 	}
 
@@ -125,19 +119,13 @@ public class CrossHierarchyService {
 	}
 
 	public List<Boundary> findChildBoundariesByParentBoundary(final String boundaryTypeName,
-															  final String hierarchyTypeName, final String parentBoundary) {
+			final String hierarchyTypeName, final String parentBoundary) {
 		return crossHierarchyRepository.findChildBoundariesByParentBoundary(boundaryTypeName, hierarchyTypeName,
 				parentBoundary);
 	}
 
 	public CrossHierarchy findAllByParentAndChildBoundary(final Long parentId, final Long childId) {
 		return crossHierarchyRepository.findBoundariesByParentAndChildBoundary(parentId, childId);
-	}
-
-	public List<Boundary> getBoundaryByBoundaryType() {
-		final BoundaryType boundaryType = boundaryTypeService.getBoundaryTypeByName("Locality");
-		final List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(boundaryType.getId(),"");
-		return boundaryList;
 	}
 
 	public List<BoundaryType> getCrossHierarchyBoundaryTypes() {
@@ -181,7 +169,8 @@ public class CrossHierarchyService {
 							crossHierarchyRequest.getCrossHierarchy().getTenantId()));
 
 				} else {
-					crossHierarchy.addAll(crossHierarchyRepository.findAllByTenantId(crossHierarchyRequest.getCrossHierarchy().getTenantId()));
+					crossHierarchy.addAll(crossHierarchyRepository
+							.findAllByTenantId(crossHierarchyRequest.getCrossHierarchy().getTenantId()));
 				}
 			}
 		}

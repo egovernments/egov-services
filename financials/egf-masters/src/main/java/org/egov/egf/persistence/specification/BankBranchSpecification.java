@@ -25,7 +25,7 @@ public class BankBranchSpecification implements Specification<BankBranch> {
     @Override
     public Predicate toPredicate(Root<BankBranch> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Path<Long> id = root.get(BankBranch_.id);
-        Path<Bank> bank = root.get(BankBranch_.bank);
+        Path<Long> bank = root.get(BankBranch_.bank);
         Path<String> code = root.get(BankBranch_.code);
         Path<String> name = root.get(BankBranch_.name);
         Path<String> address = root.get(BankBranch_.address);

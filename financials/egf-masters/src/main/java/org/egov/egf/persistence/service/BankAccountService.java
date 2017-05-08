@@ -64,23 +64,23 @@ public class BankAccountService {
 
     private void setBankAccount(final BankAccount bankAccount) {
         if (bankAccount.getBankBranch() != null) {
-            final BankBranch bankBranch = bankBranchService.findOne(bankAccount.getBankBranch().getId());
+            final BankBranch bankBranch = bankBranchService.findOne(bankAccount.getBankBranch());
             if (bankBranch == null)
                 throw new InvalidDataException("bankBranch", "bankBranch.invalid", " Invalid bankBranch");
-            bankAccount.setBankBranch(bankBranch);
+            bankAccount.setBankBranch(bankBranch.getId());
         }
         if (bankAccount.getChartOfAccount() != null) {
-            final ChartOfAccount chartOfAccount = chartOfAccountService.findOne(bankAccount.getChartOfAccount().getId());
+            final ChartOfAccount chartOfAccount = chartOfAccountService.findOne(bankAccount.getChartOfAccount());
             if (chartOfAccount == null)
                 throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid",
                         " Invalid chartOfAccount");
-            bankAccount.setChartOfAccount(chartOfAccount);
+            bankAccount.setChartOfAccount(chartOfAccount.getId());
         }
         if (bankAccount.getFund() != null) {
-            final Fund fund = fundService.findOne(bankAccount.getFund().getId());
+            final Fund fund = fundService.findOne(bankAccount.getFund());
             if (fund == null)
                 throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
-            bankAccount.setFund(fund);
+            bankAccount.setFund(fund.getId());
         }
     }
 

@@ -258,7 +258,11 @@ class PersonalInform extends React.Component {
 
   componentWillMount() {
     try {
-        var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+        var _leaveTypes = commonApiPost("hr-leave", "leavetypes", "_search", {
+          tenantId,
+          pageSize: 500,
+          accumulative: true
+        }).responseJSON["LeaveType"] || [];
     } catch(e) {
         var _leaveTypes = [];
     }

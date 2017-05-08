@@ -28,7 +28,7 @@ public class FundsourceSpecification implements Specification<Fundsource> {
         Path<String> code = root.get(Fundsource_.code);
         Path<String> name = root.get(Fundsource_.name);
         Path<String> type = root.get(Fundsource_.type);
-        Path<Fundsource> fundSource = root.get(Fundsource_.fundSource);
+        Path<Long> fundSource = root.get(Fundsource_.fundSource);
         Path<BigDecimal> llevel = root.get(Fundsource_.llevel);
         Path<Boolean> active = root.get(Fundsource_.active);
         Path<Boolean> isParent = root.get(Fundsource_.isParent);

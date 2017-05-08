@@ -143,6 +143,7 @@ public class Complaint extends AbstractAuditable {
                 .tenantId(tenantId)
                 .state(getState())
                 .complaintStatus(getComplaintStatus())
+                .citizenFeedback(getCitizenFeedback())
                 .build();
     }
 
@@ -152,6 +153,11 @@ public class Complaint extends AbstractAuditable {
 
     public String getLocationId() {
         return location != null ? location.toString() : null;
+    }
+    
+    public String getCitizenFeedback()
+    {
+    	return citizenFeedback!=null ? citizenFeedback.toString():null;
     }
 
     private String getDepartmentId() {

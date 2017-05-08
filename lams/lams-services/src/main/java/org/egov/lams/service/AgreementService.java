@@ -59,61 +59,19 @@ public class AgreementService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	/**
+	 * service call to single agreement based on acknowledgementNumber
+	 * 
+	 * @param acknowledgementNumber
+	 * @return
+	 */
+	public boolean isAgreementExist(String acknowledgementNumber) {
 
-	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
-		/*
-		 * three boolean variables isAgreementNull,isAssetNull and
-		 * isAllotteeNull declared to indicate whether criteria arguments for
-		 * each of the Agreement,Asset and Allottee objects are given or not.
-		 */
-		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
-				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
-				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
-				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
-				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
-				&& agreementCriteria.getAllottee() == null && agreementCriteria.getTenantId() == null;
-
-		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
-				&& agreementCriteria.getMobileNumber() == null;
-
-		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
-				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
-				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
-				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorno() == null;
-
-		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
-			logger.info("agreementRepository.findByAllotee");
-			return agreementRepository.findByAllotee(agreementCriteria);
-
-		} else if (!isAgreementNull && isAssetNull && !isAllotteeNull) {
-			logger.info("agreementRepository.findByAllotee");
-			return agreementRepository.findByAgreementAndAllotee(agreementCriteria);
-
-		} else if (!isAgreementNull && !isAssetNull && isAllotteeNull) {
-			logger.info("agreementRepository.findByAgreementAndAsset : both agreement and ");
-			return agreementRepository.findByAgreementAndAsset(agreementCriteria);
-
-		} else if ((isAgreementNull && isAssetNull && !isAllotteeNull)
-				|| (isAgreementNull && !isAssetNull && !isAllotteeNull)) {
-			logger.info("agreementRepository.findByAllotee : only allottee || allotte and asset");
-			return agreementRepository.findByAllotee(agreementCriteria);
-
-		} else if (isAgreementNull && !isAssetNull && isAllotteeNull) {
-			logger.info("agreementRepository.findByAsset : only asset");
-			return agreementRepository.findByAsset(agreementCriteria);
-
-		} else if (!isAgreementNull && isAssetNull && isAllotteeNull) {
-			logger.info("agreementRepository.findByAgreement : only agreement");
-			return agreementRepository.findByAgreement(agreementCriteria);
-		} else {
-			// if no values are given for all the three criteria objects
-			// (isAgreementNull && isAssetNull && isAllotteeNull)
-			logger.info("agreementRepository.findByAgreement : all values null");
-			return agreementRepository.findByAgreement(agreementCriteria);
-		}
+		return (agreementRepository.findAgreementById(acknowledgementNumber) != null);
 	}
-
-	/*
+	
+	/**
 	 * This method is used to create new agreement
 	 * 
 	 * @return Agreement, return the agreement details with current status
@@ -177,6 +135,119 @@ public class AgreementService {
 		return agreement;
 	}
 
+	/***
+	 * method to update agreementNumber using acknowledgeNumber
+	 * 
+	 * @param agreement
+	 * @return
+	 */
+	public Agreement updateAgreement(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
+		logger.info("updateagreement service :: " + workFlowDetails);
+		ObjectMapper mapper = new ObjectMapper();
+		String agreementValue = null;
+		String kafkaTopic = null;
+		
+		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			// TODO put update demand here
+			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
+
+		} else if (agreement.getSource().equals(Source.SYSTEM)) {
+
+			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
+
+			if (workFlowDetails != null) {
+				
+				logger.info("the workflow details status :: " + workFlowDetails.getAction());
+				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+					logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
+					agreement.setAgreementDate(new Date());
+					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+				}
+				else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setStatus(Status.CANCELLED);
+					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+				} 
+				else if ("print notice".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setStatus(Status.ACTIVE);
+					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+				}
+			}
+		}
+		
+		try {
+			agreementValue = mapper.writeValueAsString(agreementRequest);
+			logger.info("agreementValue::" + agreementValue);
+		} catch (JsonProcessingException jsonProcessingException) {
+			logger.info("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
+			throw new RuntimeException(jsonProcessingException.getMessage());
+		}
+
+		try {
+			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
+		} catch (Exception exception) {
+			logger.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
+		}
+		return agreement;
+	}
+	
+	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
+		/*
+		 * three boolean variables isAgreementNull,isAssetNull and
+		 * isAllotteeNull declared to indicate whether criteria arguments for
+		 * each of the Agreement,Asset and Allottee objects are given or not.
+		 */
+		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
+				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
+				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
+				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
+				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
+				&& agreementCriteria.getAllottee() == null && agreementCriteria.getTenantId() == null;
+
+		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
+				&& agreementCriteria.getMobileNumber() == null;
+
+		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
+				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
+				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
+				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorno() == null;
+
+		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
+			logger.info("agreementRepository.findByAllotee");
+			return agreementRepository.findByAllotee(agreementCriteria);
+
+		} else if (!isAgreementNull && isAssetNull && !isAllotteeNull) {
+			logger.info("agreementRepository.findByAllotee");
+			return agreementRepository.findByAgreementAndAllotee(agreementCriteria);
+
+		} else if (!isAgreementNull && !isAssetNull && isAllotteeNull) {
+			logger.info("agreementRepository.findByAgreementAndAsset : both agreement and ");
+			return agreementRepository.findByAgreementAndAsset(agreementCriteria);
+
+		} else if ((isAgreementNull && isAssetNull && !isAllotteeNull)
+				|| (isAgreementNull && !isAssetNull && !isAllotteeNull)) {
+			logger.info("agreementRepository.findByAllotee : only allottee || allotte and asset");
+			return agreementRepository.findByAllotee(agreementCriteria);
+
+		} else if (isAgreementNull && !isAssetNull && isAllotteeNull) {
+			logger.info("agreementRepository.findByAsset : only asset");
+			return agreementRepository.findByAsset(agreementCriteria);
+
+		} else if (!isAgreementNull && isAssetNull && isAllotteeNull) {
+			logger.info("agreementRepository.findByAgreement : only agreement");
+			return agreementRepository.findByAgreement(agreementCriteria);
+		} else {
+			// if no values are given for all the three criteria objects
+			// (isAgreementNull && isAssetNull && isAllotteeNull)
+			logger.info("agreementRepository.findByAgreement : all values null");
+			return agreementRepository.findByAgreement(agreementCriteria);
+		}
+	}
+	
 	private void getPositions(AgreementRequest agreementRequest) {
 
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
@@ -230,54 +301,5 @@ public class AgreementService {
 						+ workFlowDetails.getInitiatorPosition());
 			}
 		}
-
-		// allottee -> allottee.getId()).collect(Collectors.toList()));
-	}
-
-	/***
-	 * method to update agreementNumber using acknowledgeNumber
-	 * 
-	 * @param agreement
-	 * @return
-	 */
-	public Agreement updateAgreement(AgreementRequest agreementRequest) {
-
-		Agreement agreement = agreementRequest.getAgreement();
-		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-		logger.info("updateAgreement service::" + workFlowDetails);
-		ObjectMapper mapper = new ObjectMapper();
-		String agreementValue = null;
-
-		if (workFlowDetails != null) {
-			// FIXME approve and reject should come from
-			logger.info("the workflow details status :: " + workFlowDetails.getAction());
-			if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
-				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
-				agreement.setAgreementDate(new Date());
-				agreement.setStatus(Status.ACTIVE); // FIXME put status active
-													// when noticegenerate
-				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-			} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setStatus(Status.CANCELLED);
-				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-			}
-		}
-		// TODO FIXME put agreement number generator here and change
-		try {
-			agreementValue = mapper.writeValueAsString(agreementRequest);
-			logger.info("agreementValue::" + agreementValue);
-		} catch (JsonProcessingException jsonProcessingException) {
-			logger.info("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
-			throw new RuntimeException(jsonProcessingException.getMessage());
-		}
-
-		try {
-			agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "save-agreement", agreementValue);
-		} catch (Exception exception) {
-			logger.info("AgreementService : " + exception.getMessage(), exception);
-			throw exception;
-		}
-		return agreement;
 	}
 }

@@ -36,4 +36,5 @@ public class ComplaintRecord {
     private Long workflowStateId;
     private Long department;
     private String tenantId;
+    private String citizenFeedback;
 }

@@ -133,13 +133,13 @@ try { jurisdictions_jurisdictionsType = !localStorage.getItem("jurisdictions_jur
     console.log(e);
     jurisdictions_jurisdictionsType = [];
 }
-/*try {
+try {
   assignments_position = !localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined" ? (localStorage.setItem("assignments_position", JSON.stringify(getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [])), JSON.parse(localStorage.getItem("assignments_position"))) : JSON.parse(localStorage.getItem("assignments_position"));
 } catch (e) {
   console.log(e);
   assignments_position = [];
 
-}*/
+}
 
 function getCommonMaster(mainRoute, resource, returnObject, pageSize) {
     blockUI();

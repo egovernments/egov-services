@@ -88,9 +88,10 @@ public class UserRepositoryTest {
 		User expectedUser = mock(User.class);
 		final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		when(entityUser.toDomain(null, null)).thenReturn(expectedUser);
-		when(userJpaRepository.findByUsername("userName")).thenReturn(entityUser);
+		when(userJpaRepository.findByUsernameAndTenantId("userName", "tenantId"))
+				.thenReturn(entityUser);
 
-		User actualUser = userRepository.findByUsername("userName");
+		User actualUser = userRepository.findByUsername("userName", "tenantId");
 
 		assertThat(expectedUser).isEqualTo(actualUser);
 	}
@@ -100,9 +101,10 @@ public class UserRepositoryTest {
 		User expectedUser = mock(User.class);
 		final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		when(entityUser.toDomain(null, null)).thenReturn(expectedUser);
-		when(userJpaRepository.findByEmailId("userName")).thenReturn(entityUser);
+		when(userJpaRepository.findByEmailIdAndTenantId("userName", "tenantId"))
+				.thenReturn(entityUser);
 
-		User actualUser = userRepository.findByEmailId("userName");
+		User actualUser = userRepository.findByEmailId("userName", "tenantId");
 
 		assertThat(expectedUser).isEqualTo(actualUser);
 	}

@@ -2005,6 +2005,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
+              tempListBox= [];
             }
           }
           employee[object][editIndex] = employeeSubObject[object];
@@ -2016,6 +2017,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
+              tempListBox= [];
             }
             employee[object].push(Object.assign({}, employeeSubObject[object]));
             updateTable("#" + tableName, modalName, object);

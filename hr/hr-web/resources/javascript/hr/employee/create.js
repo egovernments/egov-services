@@ -2164,7 +2164,7 @@ $("#createEmployeeForm").validate({
             var err = response["responseJSON"].Error.message || "";
             if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
               for(var key in response["responseJSON"].Error.fields) {
-                err += "\n " + response["responseJSON"].Error.fields[key] + " ";
+                err += "\n " + response["responseJSON"].Error.fields[key] + " "; //HERE
               }
               showError(err);
             } else {

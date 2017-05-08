@@ -11,7 +11,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandReason;
-import org.egov.lams.model.WorkFlowDetails;
+import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.producers.AgreementProducer;
@@ -59,7 +59,7 @@ public class AgreementService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	/**
 	 * service call to single agreement based on acknowledgementNumber
 	 * 
@@ -70,16 +70,16 @@ public class AgreementService {
 
 		return (agreementRepository.findAgreementById(acknowledgementNumber) != null);
 	}
-	
+
 	/**
 	 * This method is used to create new agreement
 	 * 
 	 * @return Agreement, return the agreement details with current status
 	 * 
-	 * @param agreement, hold agreement details
+	 * @param agreement,
+	 *            hold agreement details
 	 * 
 	 */
-
 	public Agreement createAgreement(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
@@ -91,9 +91,9 @@ public class AgreementService {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
 		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
-		Date closeDate = calendar.getTime();
-		agreement.setCloseDate(closeDate);
-		logger.info("The closeDate calculated is " + closeDate + "from commencementDate of "
+		Date expiryDate = calendar.getTime();
+		agreement.setExpiryDate(expiryDate);
+		logger.info("The closeDate calculated is " + expiryDate + "from commencementDate of "
 				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
 
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
@@ -103,13 +103,10 @@ public class AgreementService {
 		} else {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);
-			getPositions(agreementRequest);
 
-			List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-			if (demandReasons.isEmpty())
-				throw new RuntimeException("No demand reason found for given criteria");
+			setInitiatorPosition(agreementRequest);
+			List<Demand> demands = prepareDemands(agreementRequest);
 
-			List<Demand> demands = demandRepository.getDemandList(agreementRequest, demandReasons);
 			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 			List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 					.collect(Collectors.toList());
@@ -144,40 +141,39 @@ public class AgreementService {
 	public Agreement updateAgreement(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
-		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
+		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 		logger.info("updateagreement service :: " + workFlowDetails);
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
-		
+
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-			// TODO put update demand here
+
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
+			agreement.setDemands(updateDemnad(agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
 
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 
 			if (workFlowDetails != null) {
-				
+
 				logger.info("the workflow details status :: " + workFlowDetails.getAction());
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 					logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
 					agreement.setAgreementDate(new Date());
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-				}
-				else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
+				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-				} 
-				else if ("print notice".equalsIgnoreCase(workFlowDetails.getAction())) {
+				} else if ("print notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 				}
 			}
 		}
-		
+
 		try {
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
@@ -194,7 +190,35 @@ public class AgreementService {
 		}
 		return agreement;
 	}
-	
+
+	private List<String> updateDemnad(List<Demand> demands, RequestInfo requestInfo) {
+
+		DemandResponse demandResponse = null;
+		if (demands == null)
+			demandResponse = demandRepository.createDemand(demands, requestInfo);
+		else
+			demandResponse = demandRepository.updateDemand(demands, requestInfo);
+		return demandResponse.getDemands().stream().map(demand -> demand.getId())
+				.collect(Collectors.toList());
+	}
+
+	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		if (agreement.getExpiryDate() == null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(agreement.getCommencementDate());
+			calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
+			Date expiryDate = calendar.getTime();
+			agreement.setExpiryDate(expiryDate);
+		}
+		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		if (demandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+
+		return demandRepository.getDemandList(agreementRequest, demandReasons);
+	}
+
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
 		/*
 		 * three boolean variables isAgreementNull,isAssetNull and
@@ -247,12 +271,12 @@ public class AgreementService {
 			return agreementRepository.findByAgreement(agreementCriteria);
 		}
 	}
-	
-	private void getPositions(AgreementRequest agreementRequest) {
+
+	private void setInitiatorPosition(AgreementRequest agreementRequest) {
 
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		Agreement agreement = agreementRequest.getAgreement();
-		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
+		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());

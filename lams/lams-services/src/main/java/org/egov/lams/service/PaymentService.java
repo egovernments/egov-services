@@ -260,7 +260,7 @@ public class PaymentService {
 		System.out.print("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
 		LOGGER.info("The amount collected from citizen is ::: " + currentDemand.getCollectionAmount());
 		currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
-		demandRepository.updateDemand(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
+		demandRepository.updateDemandForCollection(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
 		System.out.print("PaymentService- updateDemand - setPaymentInfos done");
 
 		// / FIXME put update workflow here here

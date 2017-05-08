@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class WorkFlowDetails {
+public class WorkflowDetails {
 	
   private String department;
 

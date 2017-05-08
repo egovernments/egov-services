@@ -35,5 +35,6 @@ public class ProcessInstance   {
 	private String details;
 	List<Task> tasks = new ArrayList<Task>();
 	private String tenantId;
+	private Long initiatorPosition;
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
   }

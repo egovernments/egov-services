@@ -65,7 +65,7 @@ public class ErrorHandler {
 		error.setCode(400);
 		error.setMessage(e.getMessage());
 		errorResponse.setError(error);
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.OK);
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
 	
 	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(RequestInfo requestInfo) {

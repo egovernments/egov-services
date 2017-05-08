@@ -120,7 +120,7 @@ public class DemandRepository {
 		return demandResponse;
 	}
 
-	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo) {
+	public DemandResponse updateDemandForCollection(List<Demand> demands, RequestInfo requestInfo) {
 
 		System.out.println("DemandRepository createDemand demands:" + demands.toString());
 		DemandRequest demandRequest = new DemandRequest();
@@ -129,6 +129,30 @@ public class DemandRepository {
 
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getUpdateDemandBasePath()
 				+ demands.get(0).getId() + propertiesManager.getUpdateDemandService();
+		LOGGER.info("the url for update demand API call is  ::: " + url);
+
+		DemandResponse demandResponse = null;
+		try {
+			demandResponse = restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.info("the exception raised during update demand API call ::: " + e);
+		}
+		LOGGER.info("the exception raised during update demand API call ::: " +demandResponse );
+		return demandResponse;
+	}
+	
+	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo) {
+
+		System.out.println("DemandRepository createDemand demands:" + demands.toString());
+		DemandRequest demandRequest = new DemandRequest();
+		demandRequest.setRequestInfo(requestInfo);
+		demandRequest.setDemand(demands);
+
+		String url = propertiesManager.getDemandServiceHostName()
+					+ propertiesManager.getUpdateDemandBasePath()
+					+ propertiesManager.getUpdateDemandService();
+		
 		LOGGER.info("the url for update demand API call is  ::: " + url);
 
 		DemandResponse demandResponse = null;

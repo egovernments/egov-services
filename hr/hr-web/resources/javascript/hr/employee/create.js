@@ -1642,17 +1642,17 @@ function updateTable(tableName, modalName, object) {
     if (object == "assignments") {
       $(tableName).append(`<td data-label=${"fromDate"}>
 
-                                ${employee[object][i]["fromDate"]}
+                                ${employee[object][i]["fromDate"] || ""}
                           </td>`)
       $(tableName).append(`<td data-label=${"toDate"}>
 
-                                ${employee[object][i]["toDate"]}
+                                ${employee[object][i]["toDate"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"department"}>
-                                ${getNameById("department",employee[object][i]["department"],"")}
+                                ${getNameById("department",employee[object][i]["department"],"") || ""}
                           </td>`)
       $(tableName).append(`<td data-label=${"designation"}>
-                                ${getNameById("designation",employee[object][i]["designation"],"")}
+                                ${getNameById("designation",employee[object][i]["designation"],"") || ""}
                             </td>`)
       try {
         assignments_position = commonApiPost("hr-masters", "positions", "_search", {
@@ -1669,19 +1669,19 @@ function updateTable(tableName, modalName, object) {
                             </td>`)
       $(tableName).append(`<td data-label=${"isPrimary"}>
 
-                                                      ${employee[object][i]["isPrimary"]}
+                                                      ${employee[object][i]["isPrimary"] || ""}
                                                 </td>`)
       $(tableName).append(`<td data-label=${"fund"}>
-                                                                          ${getNameById("fund",employee[object][i]["fund"],"")}
+                                                                          ${getNameById("fund",employee[object][i]["fund"],"") || ""}
                                                                     </td>`)
       $(tableName).append(`<td data-label=${"function"}>
-                                                                                              ${getNameById("function",employee[object][i]["function"],"")}
+                                                                                              ${getNameById("function",employee[object][i]["function"],"") || ""}
                                                                                         </td>`)
       $(tableName).append(`<td data-label=${"functionary"}>
-                                                                                                                  ${getNameById("functionary",employee[object][i]["functionary"],"")}
+                                                                                                                  ${getNameById("functionary",employee[object][i]["functionary"],"") || ""}
                                                                                                             </td>`)
       $(tableName).append(`<td data-label=${"grade"}>
-                                                                                                                                      ${getNameById("grade",employee[object][i]["grade"],"")}
+                                                                                                                                      ${getNameById("grade",employee[object][i]["grade"],"") || ""}
                                                                                                                                 </td>`)
       $(tableName).append(`<td data-label=${"hod"}>
       ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
@@ -1690,7 +1690,7 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"govtOrderNumber"}>
 
-                                                                                                                                                                            ${employee[object][i]["govtOrderNumber"]}
+                                                                                                                                                                            ${employee[object][i]["govtOrderNumber"] || ""}
                                                                                                                                                                       </td>`)
       $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1717,11 +1717,11 @@ function updateTable(tableName, modalName, object) {
     } else if (object=="serviceHistory") {
       $(tableName).append(`<td data-label=${"serviceInfo"}>
 
-                                ${employee[object][i]["serviceInfo"]}
+                                ${employee[object][i]["serviceInfo"] || ""}
                           </td>`)
       $(tableName).append(`<td data-label=${"serviceFrom"}>
 
-                                ${employee[object][i]["serviceFrom"]}
+                                ${employee[object][i]["serviceFrom"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
@@ -1729,7 +1729,7 @@ function updateTable(tableName, modalName, object) {
                                                                                       </td>`)
                                                                                       $(tableName).append(`<td data-label=${"orderNo"}>
 
-                                                                                                                                                        ${employee[object][i]["orderNo"]}
+                                                                                                                                                        ${employee[object][i]["orderNo"] || ""}
                                                                                                                                                                       </td>`)
 
         $(tableName).append(`<td data-label=${"documents"}>
@@ -1742,17 +1742,17 @@ function updateTable(tableName, modalName, object) {
       </td>`)
       $(tableName).append(`<td data-label=${"declaredOn"}>
 
-                                ${employee[object][i]["declaredOn"]}
+                                ${employee[object][i]["declaredOn"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"orderNo"}>
                         ${employee[object][i]["orderNo"]}                                                               </td>`)
       $(tableName).append(`<td data-label=${"orderDate"}>
 
-                                ${employee[object][i]["orderDate"]}
+                                ${employee[object][i]["orderDate"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
-                                                                        ${employee[object][i]["remarks"]}
+                                                                        ${employee[object][i]["remarks"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1762,17 +1762,17 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"qualification"}>
 
-                                ${employee[object][i]["qualification"]}
+                                ${employee[object][i]["qualification"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"majorSubject"}>
-                        ${employee[object][i]["majorSubject"]}                                                               </td>`)
+                        ${employee[object][i]["majorSubject"] || ""}                                                               </td>`)
       $(tableName).append(`<td data-label=${"yearOfPassing"}>
 
-                                ${employee[object][i]["yearOfPassing"]}
+                                ${employee[object][i]["yearOfPassing"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"university"}>
 
-                                                                        ${employee[object][i]["university"]}
+                                                                        ${employee[object][i]["university"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1782,17 +1782,17 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"skill"}>
 
-                                ${employee[object][i]["skill"]}
+                                ${employee[object][i]["skill"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"grade"}>
-                        ${employee[object][i]["grade"]}                                                               </td>`)
+                        ${employee[object][i]["grade"] || ""}                                                               </td>`)
       $(tableName).append(`<td data-label=${"yearOfPassing"}>
 
-                                ${employee[object][i]["yearOfPassing"]}
+                                ${employee[object][i]["yearOfPassing"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
-                                                                        ${employee[object][i]["remarks"]}
+                                                                        ${employee[object][i]["remarks"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1802,15 +1802,15 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"test"}>
 
-                                ${employee[object][i]["test"]}
+                                ${employee[object][i]["test"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"yearOfPassing"}>
 
-                                ${employee[object][i]["yearOfPassing"]}
+                                ${employee[object][i]["yearOfPassing"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
-                                                                        ${employee[object][i]["remarks"]}
+                                                                        ${employee[object][i]["remarks"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -2116,7 +2116,9 @@ $("#createEmployeeForm").validate({
     // console.log(form);
     if (!hasAllRequiredFields(employee)) {
       showError("Please enter all mandatory fields.");
-    } else if ((employee.assignments.length > 0 && isHavingPrimary()) && employee.jurisdictions.length > 0) {
+    } else if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
+      if(!isHavingPrimary())
+        return showError("Atleast one primary assignment is required.");
       //Call api
       var __emp = Object.assign({}, employee);
 
@@ -2153,34 +2155,27 @@ $("#createEmployeeForm").validate({
           });
 
           if (response["status"] === 200) {
-            //showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
             window.location.href = "app/hr/common/employee-search.html?type=view";
+          } else if(response["responseJSON"] && response["responseJSON"].Error) {
+            var err = response["responseJSON"].Error.message || "";
+            if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
+              for(var key in response["responseJSON"].Error.fields) {
+                err += "\n " + response["responseJSON"].Error.fields[key] + " ";
+              }
+              showError(err);
+            } else {
+              showError(response["statusText"]);
+            }
+            employee = Object.assign({}, __emp);
           } else {
             showError(response["statusText"]);
             employee = Object.assign({}, __emp);
           }
-
-
-          // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
-          //     RequestInfo: requestInfo,
-          //     Employee: employee
-          // }, function(response) {
-          //     alert("submit");
-          //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-          //     console.log(response);
-          // },function(error){
-          //   alert("error")
-          //   console.log(error);
-          // })
         }
       })
     } else {
       showError("Please enter atleast one assignment and jurisdiction.");
     }
-    //alert("submitterd");
-    // form.submit();
-
-    // console.log(agreement);
   }
 })
 
@@ -2291,7 +2286,7 @@ addMandatoryStart(user, "user");
 
 function isHavingPrimary() {
   for (var i = 0; i < employee.assignments.length; i++) {
-    if (employee.assignments[i].isPrimary) {
+    if (employee.assignments[i].isPrimary == "true" || employee.assignments[i].isPrimary == true) {
       return true;
     }
 

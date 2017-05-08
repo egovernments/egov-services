@@ -627,7 +627,6 @@ class CreateAsset extends React.Component {
       }
 
 			if(type==="update"){
-				console.log("hi");
 				$(document).ready(function(){
 	     		$('#assetCategory').attr('disabled','disabled');
 		 		})

@@ -1,18 +1,42 @@
-
-let months=[
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+const months = [{
+        id: 0,
+        name: "January"
+    }, {
+        id: 1,
+        name: "February"
+    }, {
+        id: 2,
+        name: "March"
+    }, {
+        id: 3,
+        name: "April"
+    }, {
+        id: 4,
+        name: "May"
+    }, {
+        id: 5,
+        name: "June"
+    }, {
+        id: 6,
+        name: "July"
+    }, {
+        id: 7,
+        name: "August"
+    }, {
+        id: 8,
+        name: "September"
+    }, {
+        id: 9,
+        name: "October"
+    }, {
+        id: 10,
+        name: "November"
+    }, {
+        id: 11,
+        name: "December"
+    }
 ];
+
 
 class EditDemand extends React.Component {
   constructor(props) {
@@ -21,72 +45,67 @@ class EditDemand extends React.Component {
       "month":"",
       "demand":"",
       "collection":"",
-      "month": "",
       "year": "",
-
-
+},demands:[],
 }
-}
-    this.handleCheckAll = this.handleCheckAll.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.markDemand = this.markDemand.bind(this);
-    this.markBulkDemand = this.markBulkDemand.bind(this);
+    // this.handleCheckAll = this.handleCheckAll.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    // this.markDemand = this.markDemand.bind(this);
+    // this.markBulkDemand = this.markBulkDemand.bind(this);
+    this.handleChangeSrchRslt=this.handleChangeSrchRslt.bind(this);
 }
 close(){
     // widow.close();
     open(location, '_self').close();
 }
+handleChangeSrchRslt(e, name, ind) {
+  var _emps = Object.assign([], this.state.demands);
+  _emps[ind][name] = e.target.value;
+  this.setState({
+      ...this.state,
+      demands: _emps
+  })
+}
 
-  handleCheckAll(e,date,type)
+componentWillMount()
   {
-      this.markBulkDemand(date,type);
-  }
-
-  markBulkDemand(oDate,type)
-  {
-    var demands=this.state.demands;
-    var date=`${oDate.getMonth()}-${oDate.getDate().toString().length===1?"0"+oDate.getDate():oDate.getDate()}`;
-    for(var emp in employees)
-    {
-      var now = new Date();
-      employees[emp].attendance[date]=type;
-      // this.markDemand(type,emp,date);
-    }
-    this.setState({
-        employees:employees
-    })
-  }
-
-  handleChange(e,empCode,date)
-  {
-            this.markDemand(e.target.value,empCode,date);
-
-
-  }
-
-  markDemand(value,empCode,date)
-  {
-
-      this.setState({
-        demands:{
-            ...this.state.demands,
-            [empCode]:{
-              ...this.state.demands[empCode],
-              ["attendance"]:{
-                  ...this.state.demands[empCode]["attendance"],
-                  [date]:value
-              }
-            }
-          }
+        var currentMonthId = new Date().getMonth();
+        var _months = months.filter(val => {
+         return (val.id <= currentMonthId);
       })
-
-  }
+      this.setState({
+          months: _months
+      })
+    }
 
 
 render() {
-let{demands}=this.state;
+let{demands,months}=this.state;
 let{month,demand,collection}=demands;
-let {handleCheckAll,handleChange,save}=this;
+let {handleCheckAll,handleChange,save,handleChangeSrchRslt,}=this;
+
+    const renderBody = function()
+    {
+
+      return months.map((item, index)=>
+      {
+
+            return (<tr key={index}>
+
+                    <td data-label="month">{item.name}</td>
+                    <td data-label="demand">
+                    <input type="number" id={item.id} name="demand"  value={item.demand}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "demand", index)}} />
+                    </td>
+                    <td data-label="collection">
+                    <input type="number" id={item.id} name="collection"  value={item.collection}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "collection", index)}} />
+                    </td>
+                </tr>
+            );
+
+      })
+    }
 
 return (
   <div>
@@ -104,9 +123,11 @@ return (
 
           </tr>
           </thead>
-                    <tbody id="attendanceTableBody">
-
-          </tbody>
+              <tbody id="employeeSearchResultTableBody">
+              {
+                  renderBody()
+              }
+                </tbody>
 
 
           </table>

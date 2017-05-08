@@ -21,6 +21,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -144,6 +146,30 @@ public class UserJpaRepositoryTest {
 
 		assertThat(userList.size()).isEqualTo(1);
 		assertThat(userList.get(0).getId()).isEqualTo(5);
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void test_should_find_user_by_id_and_tenant_id() {
+		User actualUser = userJpaRepository.findByIdAndTenantId(1L, "ap.public");
+
+		assertNotNull(actualUser);
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void test_should_return_null_when_user_for_given_id_and_tenant_id_does_not_exist() {
+		User actualUser = userJpaRepository.findByIdAndTenantId(1L, "unknown");
+
+		assertNull(actualUser);
 	}
 
 	@Test

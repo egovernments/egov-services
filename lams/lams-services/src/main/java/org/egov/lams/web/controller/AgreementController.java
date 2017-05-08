@@ -60,10 +60,7 @@ public class AgreementController {
 		}
 		
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
-				+ agreementCriteria);
-		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
-				+ requestInfo);
+		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"+ agreementCriteria);
 		List<Agreement> agreements = agreementService
 				.searchAgreement(agreementCriteria);
 		if(agreements.isEmpty())
@@ -111,8 +108,9 @@ public class AgreementController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		
-		if(!acknowledgementNumber.equals(agreementRequest.getAgreement().getAcknowledgementNumber())){
-			throw new RuntimeException("Invalid acknowledgementnumber, no agreement found for this value");
+		if (!acknowledgementNumber.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
+				&& agreementService.isAgreementExist(acknowledgementNumber)) {
+			throw new RuntimeException("acknowledgementnumber mismatch or no agreement found for this value");
 		}
 		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
 
@@ -123,6 +121,32 @@ public class AgreementController {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
 		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(),true));
+		LOGGER.info(agreementResponse.toString());
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("demands/_prepare")
+	@ResponseBody
+	public ResponseEntity<?> prepareDemand(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+
+		if (errors.hasErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		LOGGER.info("agreementRequest::" + agreementRequest);
+		if (agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber())) {
+			throw new RuntimeException("no agreement found for this value");
+		}
+		
+		Agreement agreement = agreementRequest.getAgreement();
+		agreement.setLegacyDemands(agreementService.prepareDemands(agreementRequest));
+		
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = new AgreementResponse();
+		agreementResponse.setAgreement(agreements);
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}

@@ -28,9 +28,9 @@ public class BankAccountSpecification implements Specification<BankAccount> {
     @Override
     public Predicate toPredicate(Root<BankAccount> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Path<Long> id = root.get(BankAccount_.id);
-        Path<BankBranch> bankBranch = root.get(BankAccount_.bankBranch);
-        Path<ChartOfAccount> chartOfAccount = root.get(BankAccount_.chartOfAccount);
-        Path<Fund> fund = root.get(BankAccount_.fund);
+        Path<Long> bankBranch = root.get(BankAccount_.bankBranch);
+        Path<Long> chartOfAccount = root.get(BankAccount_.chartOfAccount);
+        Path<Long> fund = root.get(BankAccount_.fund);
         Path<String> accountNumber = root.get(BankAccount_.accountNumber);
         Path<String> accountType = root.get(BankAccount_.accountType);
         Path<String> description = root.get(BankAccount_.description);

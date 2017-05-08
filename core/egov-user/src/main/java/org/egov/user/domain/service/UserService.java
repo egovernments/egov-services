@@ -28,12 +28,12 @@ public class UserService {
 		this.defaultPasswordExpiryInDays = defaultPasswordExpiryInDays;
 	}
 
-	public User getUserByUsername(final String userName) {
-		return userRepository.findByUsername(userName);
+	public User getUserByUsername(final String userName, String tenantId) {
+		return userRepository.findByUsername(userName, tenantId);
 	}
 
-	public User getUserByEmailId(final String emailId) {
-		return userRepository.findByEmailId(emailId);
+	public User getUserByEmailId(final String emailId, String tenantId) {
+		return userRepository.findByEmailId(emailId, tenantId);
 	}
 
 	public User createUser(User user) {
@@ -73,7 +73,8 @@ public class UserService {
 
 	public void updatePasswordForLoggedInUser(LoggedInUserUpdatePasswordRequest updatePasswordRequest) {
 		updatePasswordRequest.validate();
-		final User user = userRepository.getUserById(updatePasswordRequest.getUserId());
+		final User user = userRepository
+				.getUserById(updatePasswordRequest.getUserId(), updatePasswordRequest.getTenantId());
 		validateUserPresent(user);
 		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
 		user.updatePassword(updatePasswordRequest.getNewPassword());
@@ -83,14 +84,14 @@ public class UserService {
 	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
 		request.validate();
 		validateOtp(request.getOtpValidationRequest());
-		final User user = fetchUserByUserName(request.getUserName());
+		final User user = fetchUserByUserName(request.getUserName(), request.getTenantId());
 		validateUserPresent(user);
 		user.updatePassword(request.getNewPassword());
 		userRepository.update(user);
 	}
 
-	private User fetchUserByUserName(String userName) {
-		return userRepository.findByUsername(userName);
+	private User fetchUserByUserName(String userName, String tenantId) {
+		return userRepository.findByUsername(userName, tenantId);
 	}
 
 	private void conditionallyValidateOtp(User user) {
@@ -146,7 +147,7 @@ public class UserService {
 
 	private void validateUser(final Long id, final User user) {
 		validateDuplicateUserName(id, user);
-		if (userRepository.getUserById(id) == null) {
+		if (userRepository.getUserById(id, user.getTenantId()) == null) {
 			throw new UserNotFoundException(user);
 		}
 	}

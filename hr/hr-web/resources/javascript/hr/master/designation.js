@@ -1,9 +1,14 @@
 class Designation extends React.Component{
   constructor(props){
     super(props);
-    this.state={designationSet:{name:"",
-    code:"",description:"", chartOfAccounts:null,active:"true",
-    tenantId:tenantId}
+    this.state={
+      designationSet:{
+        name:"",
+        code:"",
+        description:"",
+        chartOfAccounts:null,
+        active:"true",
+        tenantId:tenantId}
       }
 
       this.handleChange=this.handleChange.bind(this);
@@ -35,6 +40,12 @@ class Designation extends React.Component{
 
 
       componentDidMount(){
+        if(window.opener && window.opener.document) {
+           var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+           if(logo_ele && logo_ele[0]) {
+             document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+           }
+         }
 
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
@@ -76,14 +87,11 @@ class Designation extends React.Component{
                             name:"",
                             code:"",
                             description:"",
-
-                            active:"",
+                            active:"true",
                             "tenantId": tenantId
                           },
 
                           })
-
-
                     },
                     error: function(err) {
                         showError(err);
@@ -107,9 +115,8 @@ class Designation extends React.Component{
                             name:"",
                             code:"",
                             description:"",
-                            active:"",
-                          "tenantId": tenantId},
-
+                            active:"true",
+                            "tenantId": tenantId},
                           })
 
                     },
@@ -127,19 +134,6 @@ class Designation extends React.Component{
         let {handleChange,addOrUpdate}=this;
         let mode=getUrlVars()["type"];
         let {name,code,description,chartOfAccounts,active}=this.state.designationSet;
-        const renderOption=function(list)
-        {
-          if(list)
-          {
-            return list.map((item)=>
-            {
-                return (<option key={item.description} value={item.description}>
-                        {item.description}
-                  </option>)
-            })
-          }
-
-        }
 
         const showActionButton=function() {
           if((!mode) ||mode==="update")

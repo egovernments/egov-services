@@ -5,7 +5,7 @@ class SearchAssetCategory extends React.Component {
     this.state={list:[],searchSet:{
       "name": "",
       "assetCategoryType": "",
-   },isSearchClicked:false,asset_category_type:[]}
+   },isSearchClicked:false,asset_category_type:[], assetCategories: [], assignments_unitOfMeasurement: []}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
 
@@ -15,7 +15,7 @@ class SearchAssetCategory extends React.Component {
     e.preventDefault();
     try {
       //call api call
-      var list = commonApiPost("asset-services","assetCategories","_search",this.state.searchSet).responseJSON["AssetCategory"];
+      var list = commonApiPost("asset-services","assetCategories","_search",{...this.state.searchSet,tenantId,pageSize:500}).responseJSON["AssetCategory"];
       flag = 1;
       this.setState({
         isSearchClicked:true,
@@ -31,8 +31,33 @@ class SearchAssetCategory extends React.Component {
   }
 
   componentDidMount() {
-     this.setState({
-      asset_category_type
+    if(window.opener && window.opener.document) {
+      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+      if(logo_ele && logo_ele[0]) {
+        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+      }
+    }
+    
+    var asset_category_type, assetCategories, assignments_unitOfMeasurement;
+    try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
+        console.log(e);
+        asset_category_type = {};
+    }
+
+    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+        console.log(e);
+        assetCategories = [];
+    }
+
+    try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uoms", "_search", {tenantId}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
+        console.log(e);
+        assignments_unitOfMeasurement = [];
+    }
+
+    this.setState({
+      asset_category_type,
+      assetCategories,
+      assignments_unitOfMeasurement
     })
   }
 
@@ -76,7 +101,7 @@ class SearchAssetCategory extends React.Component {
   render() {
     let {handleChange,search}=this;
     let {assetCategoryType,name}=this.state.searchSet;
-    let {isSearchClicked,list}=this.state;
+    let {isSearchClicked, list, assignments_unitOfMeasurement, assetCategories}=this.state;
 
     const renderOption=function(list)
     {

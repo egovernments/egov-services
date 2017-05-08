@@ -41,9 +41,7 @@
 package org.egov.asset.web.controller;
 
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
@@ -78,74 +76,75 @@ public class AssetController {
 
 	@Autowired
 	private AssetService assetService;
-	
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	@Autowired
 	private AssetValidator assetValidator;
-	
+
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, @ModelAttribute @Valid AssetCriteria assetCriteria,BindingResult bindingResult) {
-		logger.info("assetCriteria::"+assetCriteria);
-		logger.info("requestInfoWrapper::"+requestInfoWrapper);
-			
-		if(bindingResult.hasErrors()){
-			ErrorResponse errorResponse=populateErrors(bindingResult);
-			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid AssetCriteria assetCriteria, BindingResult bindingResult) {
+		logger.info("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		List<Asset> assets = assetService.getAssets(assetCriteria);
 		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(new ResponseInfo());
-		
-		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.OK);
+
+		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid AssetRequest assetRequest,BindingResult bindingResult) {
-		
-		logger.info("create asset:"+ assetRequest);
-		if(bindingResult.hasErrors()){
-			ErrorResponse errorResponse=populateErrors(bindingResult);
-			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> create(@RequestBody @Valid AssetRequest assetRequest, BindingResult bindingResult) {
+
+		logger.info("create asset:" + assetRequest);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		//TODO Input field validation, it will be a part of phash-2
+		// TODO Input field validation, it will be a part of phase-2
 		assetValidator.validateAsset(assetRequest);
-		
-		AssetResponse assetResponse=assetService.createAsync(assetRequest);
-		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.CREATED);
+
+		AssetResponse assetResponse = assetService.createAsync(assetRequest);
+		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("_update/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AssetRequest assetRequest, BindingResult bindingResult) {
-		
-		if(bindingResult.hasErrors()){
-			ErrorResponse errorResponse=populateErrors(bindingResult);
-			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AssetRequest assetRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
-		if(!code.equals(assetRequest.getAsset().getCode())){
+
+		if (!code.equals(assetRequest.getAsset().getCode())) {
 			throw new RuntimeException("Invalid asset code");
 		}
-		//TODO Input field validation, it will be a part of phash-2
-		
-		AssetResponse assetResponse=assetService.updateAsync(assetRequest);
-		
-		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.OK);
+		// TODO Input field validation, it will be a part of phash-2
+
+		AssetResponse assetResponse = assetService.updateAsync(assetRequest);
+
+		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
-	
+
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 
-		//ResponseInfo responseInfo = new ResponseInfo();
-		/*responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setApi_id("");
-		errRes.setResponseInfo(responseInfo);*/
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");

@@ -39,6 +39,35 @@ class EmployeeReport extends React.Component {
   }
 
   componentWillMount() {
+    try {
+      var _year = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
+    } catch(e) {
+        console.log(e);
+      var _year = [];
+    }
+
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
+
+    try {
+      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+      }
+      catch (e) {
+        console.log(e);
+      var employeeType = [];
+    }
+
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
@@ -80,7 +109,7 @@ class EmployeeReport extends React.Component {
     e.preventDefault();
     var result;
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
+        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}).responseJSON["Employee"] || [];
     } catch (e) {
         result = [];
         console.log(e);
@@ -164,59 +193,65 @@ class EmployeeReport extends React.Component {
                 <form onSubmit={(e)=>
                     {searchEmployee(e)}}>
                     <fieldset>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Department <span> * </span></label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select id="department" value={department} required="true"onChange={(e) => {handleChange(e, "department")}}>
-                                            <option value="" selected> </option>
-                                            {renderOptions(departments)}
-                                        </select>
-                                    </div>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label for="">Department </label>
                                 </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Designation <span> * </span> </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select id="designation" value={designation} required="true" onChange={(e) => {handleChange(e, "designation")}}>
-                                            <option value="" selected></option>
-                                            {renderOptions(designations)}
-                                        </select>
-                                    </div>
+                                <div className="col-sm-6">
+                                  <div className="styled-select">
+                                    <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
+                                        <option value="">Select department</option>
+                                        {renderOptions(departments)}
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Employee Code/Name <span> * </span> </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <input id="employeeCode" type="text" value={employeeCode} required="true"onChange={(e) => {handleChange(e, "employeeCode")}}/>
-                                    </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label for="">Designation </label>
                                 </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Employee Type </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                            <option value="" selected></option>
-                                            {renderOptions(employeeTypes)}
-                                        </select>
-                                    </div>
+                                <div className="col-sm-6">
+                                  <div className="styled-select">
+                                    <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
+                                        <option value="">Select Designation</option>
+                                        {renderOptions(designations)}
+                                    </select>
                                 </div>
                             </div>
                         </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label for="">Employee Code/Name </label>
+                                </div>
+                                <div className="col-sm-6">
+                                    <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label for="">Employee Type </label>
+                                </div>
+                                <div className="col-sm-6">
+                                  <div className="styled-select">
+                                    <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
+                                      <option value="">Select EmployeeType</option>
+                                        {renderOptions(employeeTypes)}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="row">

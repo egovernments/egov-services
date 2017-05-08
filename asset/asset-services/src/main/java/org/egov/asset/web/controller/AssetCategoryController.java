@@ -1,9 +1,7 @@
 package org.egov.asset.web.controller;
 
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
@@ -14,8 +12,6 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.web.validator.AssetCategoryValidator;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,65 +31,65 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/assetCategories")
 public class AssetCategoryController {
 	private static final Logger logger = LoggerFactory.getLogger(AssetCategoryController.class);
-	
+
 	@Autowired
-	private AssetCategoryService  assetCategoryService;
-	
+	private AssetCategoryService assetCategoryService;
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	@Autowired
 	private AssetCategoryValidator assetCategoryValidator;
-	
-	
+
 	@PostMapping("/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper ,@ModelAttribute AssetCategoryCriteria assetCategoryCriteria,BindingResult bindingResult){
-		
-		if(bindingResult.hasErrors()){
-			ErrorResponse errorResponse=populateErrors(bindingResult);
-			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid AssetCategoryCriteria assetCategoryCriteria, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
-		List<AssetCategory> assetCategories=assetCategoryService.search(assetCategoryCriteria);
-		AssetCategoryResponse response=new AssetCategoryResponse();
+
+		List<AssetCategory> assetCategories = assetCategoryService.search(assetCategoryCriteria);
+		AssetCategoryResponse response = new AssetCategoryResponse();
 		response.setAssetCategory(assetCategories);
 		response.setResponseInfo(new ResponseInfo());
-		
-		return new ResponseEntity<AssetCategoryResponse>(response, HttpStatus.OK);
-	}
-	
-	@PostMapping("/_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid AssetCategoryRequest assetCategoryRequest,BindingResult bindingResult){
-		
-		logger.info("AssetCategory create::"+assetCategoryRequest);
-		if(bindingResult.hasErrors()){
-			ErrorResponse errorResponse=populateErrors(bindingResult);
-			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		
-		assetCategoryValidator.validateAssetCategory(assetCategoryRequest);
-		Boolean isAsync=applicationProperties.getAssetCategoryAsync();
-		AssetCategoryResponse response=null;
-		
-		if(isAsync) {
-			response=assetCategoryService.createAsync(assetCategoryRequest);
-		} else {
-			response=assetCategoryService.create(assetCategoryRequest);
-		}
-		
-		return new ResponseEntity<AssetCategoryResponse>(response, HttpStatus.CREATED);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	
+	@PostMapping("/_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid AssetCategoryRequest assetCategoryRequest,
+			BindingResult bindingResult) {
+
+		logger.info("AssetCategory create::" + assetCategoryRequest);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+
+		assetCategoryValidator.validateAssetCategory(assetCategoryRequest);
+		Boolean isAsync = applicationProperties.getAssetCategoryAsync();
+		AssetCategoryResponse response = null;
+
+		if (isAsync) {
+			response = assetCategoryService.createAsync(assetCategoryRequest);
+		} else {
+			response = assetCategoryService.create(assetCategoryRequest);
+		}
+
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 
-		//ResponseInfo responseInfo = new ResponseInfo();
-		/*responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setApi_id("");
-		errRes.setResponseInfo(responseInfo);*/
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");

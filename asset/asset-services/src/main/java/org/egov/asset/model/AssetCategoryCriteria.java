@@ -3,6 +3,8 @@ package org.egov.asset.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class AssetCategoryCriteria {
 	  private Long id = null;
 	  
 	  @JsonProperty("tenantId")
+	  @NotNull
 	  private String tenantId = null;
 
 	  @JsonProperty("name")
@@ -34,6 +37,6 @@ public class AssetCategoryCriteria {
 	  private String code = null;
 
 	  @JsonProperty("assetCategoryType")
-	  private List<String> assetCategoryType = new ArrayList<String>();
+	  private List<String> assetCategoryType = new ArrayList<>();
 
 }

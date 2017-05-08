@@ -1,16 +1,52 @@
+const months = [{
+        id: 0,
+        name: "January"
+    }, {
+        id: 1,
+        name: "February"
+    }, {
+        id: 2,
+        name: "March"
+    }, {
+        id: 3,
+        name: "April"
+    }, {
+        id: 4,
+        name: "May"
+    }, {
+        id: 5,
+        name: "June"
+    }, {
+        id: 6,
+        name: "July"
+    }, {
+        id: 7,
+        name: "August"
+    }, {
+        id: 8,
+        name: "September"
+    }, {
+        id: 9,
+        name: "October"
+    }, {
+        id: 10,
+        name: "November"
+    }, {
+        id: 11,
+        name: "December"
+    }
+];
+
+
 class EditDemand extends React.Component {
   constructor(props) {
     super(props);
     this.state={demands:{
-      "arrears":"",
-      "arrearsDemand":"",
-      "paymentCycle":"",
-      "arrearesCollection":"",
-      "current":"",
-      "currentDemand":"",
-      "currentCollection":"",
-
-}
+      "month":"",
+      "demand":"",
+      "collection":"",
+      "year": "",
+},demands:[],
 }
 }
 close(){
@@ -18,9 +54,45 @@ close(){
     open(location, '_self').close();
 }
 
+componentWillMount()
+  {
+        var currentMonthId = new Date().getMonth();
+        var _months = months.filter(val => {
+         return (val.id <= currentMonthId);
+      })
+      this.setState({
+          months: _months
+      })
+    }
+
+
 render() {
-  let{demands}=this.state;
-let{arrears,arrearsDemand,paymentCycle,arrearesCollection,current,currentDemand,currentCollection}=demands;
+let{demands,months}=this.state;
+let{month,demand,collection}=demands;
+let {handleCheckAll,handleChange,save,handleChangeSrchRslt,}=this;
+
+    const renderBody = function()
+    {
+
+      return months.map((item, index)=>
+      {
+
+            return (<tr key={index}>
+
+                    <td data-label="month">{item.name}</td>
+                    <td data-label="demand">
+                    <input type="number" id={item.id} name="demand"  value={item.demand}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "demand", index)}} />
+                    </td>
+                    <td data-label="collection">
+                    <input type="number" id={item.id} name="collection"  value={item.collection}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "collection", index)}} />
+                    </td>
+                </tr>
+            );
+
+      })
+    }
 
 return (
   <div>
@@ -29,117 +101,24 @@ return (
   <form >
         <div className="form-section-inner">
 
-        <div className="row">
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="arrears">Arrears</label>
-        </div>
-        <div className="col-sm-6">
-                <input type="text" id="arrears" name="arrears" value={arrears}/>
-        </div>
-        </div>
-        </div>
+        <table id="editDemand" className="table table-bordered">
+          <thead>
+          <tr>
+              <th> Month &nbsp; &nbsp; &nbsp; &nbsp; </th>
+              <th>&nbsp; &nbsp; &nbsp; &nbsp; Demand <tr> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<input type="checkbox" value="demand" /> </tr></th>
+              <th> &nbsp; &nbsp;&nbsp; &nbsp; Collection <tr> &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;<input type="checkbox" value="collection" /> </tr></th>
 
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="arrearsDemand">Arrears Demand <span>*</span></label>
-        </div>
-        <div className="col-sm-6">
-        <div className="text-no-ui">
-          <span>₹</span>
-                 <input type="number" min="0" name="arrearsDemand" id="arrearsDemand" value={arrearsDemand} required/>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-
-        <div className="row">
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="arrearesCollection">Arrears Collection <span>*</span></label>
-        </div>
-        <div className="col-sm-6">
-        <div className="text-no-ui">
-          <span>₹</span>
-                 <input type="number" min="0" name="arrearesCollection" id="arrearesCollection" value={arrearesCollection} required/>
-        </div>
-        </div>
-        </div>
-        </div>
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="current">Current</label>
-        </div>
-        <div className="col-sm-6">
-                <input type="text" id="current" name="current" value={current}/>
-        </div>
-        </div>
-        </div>
-        </div>
-
-
-        <div className="row">
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="currentDemand">Current Demand <span>*</span></label>
-        </div>
-        <div className="col-sm-6">
-        <div className="text-no-ui">
-          <span>₹</span>
-                 <input type="number" min="0" name="currentDemand" id="currentDemand" value={currentDemand} required/>
-        </div>
-        </div>
-        </div>
-        </div>
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="currentCollection">Current Collection <span>*</span></label>
-        </div>
-        <div className="col-sm-6">
-        <div className="text-no-ui">
-          <span>₹</span>
-                 <input type="number" min="0" name="currentCollection" id="currentCollection" value={currentCollection} required/>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-
-
-        <div className="row">
-        <div className="col-sm-6">
-        <div className="row">
-        <div className="col-sm-6 label-text">
-                <label for="paymentCycle">Payment Cycle <span>*</span></label>
-        </div>
-        <div className="col-sm-6">
-                         <input type="radio"  name="paymentCycle" id="paymentCycle" value={paymentCycle} required/> Yearly
-                         &nbsp;
-                          <input type="radio"  name="paymentCycle" id="paymentCycle" value={paymentCycle} required/> Monthly
-
-
-        </div>
-        </div>
-        </div>
-        </div>
-
+          </tr>
+          </thead>
+              <tbody id="employeeSearchResultTableBody">
+              {
+                  renderBody()
+              }
+        </tbody>
+        </table>
         <div className="text-center">
-
-        <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
-
+          <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
         </div>
-
-
-
-
-
 </div>
 </form>
 </div>

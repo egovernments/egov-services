@@ -142,6 +142,7 @@ public class FundController {
     @ResponseStatus(HttpStatus.OK)
     public FundContractResponse search(@ModelAttribute FundContract fundContracts, @RequestBody RequestInfo requestInfo,
             BindingResult errors) {
+        String tenantId = fundContracts.getTenantId();
         final FundContractRequest fundContractRequest = new FundContractRequest();
         fundContractRequest.setFund(fundContracts);
         fundContractRequest.setRequestInfo(requestInfo);
@@ -155,7 +156,7 @@ public class FundController {
         fundContractResponse.setPage(new Pagination());
         Page<Fund> allFunds;
         ModelMapper model = new ModelMapper();
-
+        
         allFunds = fundService.search(fundContractRequest);
         FundContract fundContract = null;
         for (Fund b : allFunds) {

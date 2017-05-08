@@ -1,3 +1,4 @@
+var flag = 0;
 class ShowCalenderHoliday extends React.Component {
   constructor(props) {
     super(props);
@@ -14,26 +15,46 @@ class ShowCalenderHoliday extends React.Component {
 
 
   componentWillMount(){
+    try {
+    var  year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [])), JSON.parse(localStorage.getItem("year"))) : JSON.parse(localStorage.getItem("year"));
+
+    } catch (e) {
+        console.log(e);
+      var  year = [];
+    }
     this.setState({
-    year
+      year : Object.assign([], year)
   })
   }
 
   componentDidUpdate(prevProps, prevState)
   {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#employeeTable').DataTable().draw();
+          // $('#calenderTable').DataTable().draw();
           // alert(prevState.list.length);
           // alert(this.state.list.length);
           // alert('updated');
-          $('#employeeTable').DataTable({
+          $('#calenderTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true,
+             language: {
+              "emptyTable": "No Records"
+            }
           });
       }
+  }
+
+  componentDidMount() {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
   }
 
   handleChange(e,name)
@@ -48,6 +69,12 @@ class ShowCalenderHoliday extends React.Component {
 
   }
 
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#calenderTable').dataTable().fnDestroy();
+    }
+  }
 
   close(){
       // widow.close();
@@ -57,8 +84,14 @@ class ShowCalenderHoliday extends React.Component {
 search(e)
   {
     e.preventDefault();
-    //call api call
-     var list=commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear,pageSize:500}).responseJSON["Holiday"];
+    try{
+      var list=commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear,pageSize:500}).responseJSON["Holiday"];
+    }
+    catch(e){
+      console.log(e);
+      var list = [];
+    }
+    flag = 1;
     this.setState({
       isSearchClicked:true,
       list
@@ -102,7 +135,7 @@ const showTable=function()
       if(isSearchClicked)
       {
           return (
-            <table id="employeeTable" className="table table-bordered">
+            <table id="calenderTable" className="table table-bordered">
                 <thead>
                     <tr>
                       <th>Sl NO.</th>

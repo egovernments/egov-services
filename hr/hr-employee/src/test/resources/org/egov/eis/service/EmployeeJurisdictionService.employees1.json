@@ -239,7 +239,7 @@
 		"dob": "01/06/1964",
 		"locale": "3",
 		"fatherOrHusbandName": "tharu",
-		"bloodGroup": "O+",
+		"bloodGroup": "O_POSITIVE",
 		"identificationMark": "eds",
 		"type": "EMPLOYEE",
 		"tenantId": "1"

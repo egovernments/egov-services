@@ -72,10 +72,12 @@ class AssetSearch extends React.Component {
   }
 
   handleSelectChange(type,id,category) {
-    console.log(type);
-    console.log(category);
     if (type === "create") {
       window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
+    }
+    else {
+      window.open("app/dataentry/data-entry.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
+
     }
 
     // window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
@@ -161,7 +163,7 @@ class AssetSearch extends React.Component {
                                           }}>
                                               <option value="">Select Action</option>
                                               <option value="create">Create</option>
-
+                                              <option value="dataEntry"> Data Entry </option>
                                           </select>
                                       </div>
                                   </td>

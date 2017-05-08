@@ -1,5 +1,6 @@
 package org.egov.web.controller;
 
+import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 
 import org.egov.web.contract.CreateMessagesRequest;
@@ -28,7 +29,8 @@ public class MessageController {
     @GetMapping()
     public MessagesResponse getMessagesForLocale(@RequestParam("locale") String locale,
                                                  @RequestParam("tenantId") String tenantId) {
-        List<org.egov.domain.model.Message> domainMessages = messageService.getMessagesAsPerLocale(locale, tenantId);
+        List<org.egov.domain.model.Message> domainMessages =
+            messageService.getMessages(locale, new Tenant(tenantId));
         return createResponse(domainMessages);
     }
 
@@ -38,9 +40,15 @@ public class MessageController {
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             throw new InvalidCreateMessageRequest(bindingResult.getFieldErrors());
-        final List<org.egov.persistence.entity.Message> entityMessages = messageRequest.toEntityMessages();
-        List<org.egov.domain.model.Message> domainMessages = messageService.saveAllEntityMessages(entityMessages);
-        return createResponse(domainMessages);
+        final List<org.egov.domain.model.Message> messages = messageRequest.toDomainMessages();
+        messageService.createMessages(messages);
+        return createResponse(messages);
+    }
+
+    @PostMapping("/cache-bust")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void clearMessagesCache() {
+        messageService.bustCache();
     }
 
     private MessagesResponse createResponse(List<org.egov.domain.model.Message> domainMessages) {

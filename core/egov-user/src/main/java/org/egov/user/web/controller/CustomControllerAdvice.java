@@ -99,4 +99,5 @@ public class CustomControllerAdvice {
 			InvalidUserSearchCriteriaException ex) {
 		return new InvalidUserSearchRequestErrorHandler().adapt(ex.getSearchCriteria());
 	}
+
 }

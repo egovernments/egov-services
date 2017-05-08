@@ -57,6 +57,9 @@ import javax.validation.constraints.NotNull;
 import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -82,18 +85,20 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
     @GeneratedValue(generator = SEQ_BANKACCOUNT, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "branchid", nullable = true)
-    private BankBranch bankBranch;
+//    @ManyToOne
+    @Column(name = "branchid")
+    private Long bankBranch;
 
-    
-    @ManyToOne
-    @JoinColumn(name = "glcodeid")
-    private ChartOfAccount chartOfAccount;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne
+//    @JoinColumn(name = "glcodeid")
+    @Column(name="glcodeid")
+    private Long chartOfAccount;
 
-    @ManyToOne
-    @JoinColumn(name = "fundid")
-    private Fund fund;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne
+    @Column(name = "fundid")
+    private Long fund;
 
     @NotNull
     @Length(max=25)

@@ -14,6 +14,12 @@ public class Message {
  
     private String code;
     private String message;
-    private String tenantId;
+    private Tenant tenant;
     private String locale;
+
+    public boolean isMoreSpecificComparedTo(Message otherMessage) {
+        return code.equals(otherMessage.getCode())
+            && locale.equals(otherMessage.getLocale())
+            && tenant.isMoreSpecificComparedTo(otherMessage.getTenant());
+    }
 }

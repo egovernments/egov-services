@@ -11,7 +11,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandReason;
-import org.egov.lams.model.WorkFlowDetails;
+import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.producers.AgreementProducer;
@@ -59,6 +59,165 @@ public class AgreementService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+
+	/**
+	 * service call to single agreement based on acknowledgementNumber
+	 * 
+	 * @param acknowledgementNumber
+	 * @return
+	 */
+	public boolean isAgreementExist(String acknowledgementNumber) {
+
+		return (agreementRepository.findAgreementById(acknowledgementNumber) != null);
+	}
+
+	/**
+	 * This method is used to create new agreement
+	 * 
+	 * @return Agreement, return the agreement details with current status
+	 * 
+	 * @param agreement,
+	 *            hold agreement details
+	 * 
+	 */
+	public Agreement createAgreement(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		logger.info("createAgreement service::" + agreement);
+		String kafkaTopic = null;
+		ObjectMapper mapper = new ObjectMapper();
+		String agreementValue = null;
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agreement.getCommencementDate());
+		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
+		Date expiryDate = calendar.getTime();
+		agreement.setExpiryDate(expiryDate);
+		logger.info("The closeDate calculated is " + expiryDate + "from commencementDate of "
+				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
+
+		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			kafkaTopic = propertiesManager.getSaveAgreementTopic();
+			agreement.setStatus(Status.ACTIVE);
+			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+		} else {
+			kafkaTopic = propertiesManager.getStartWorkflowTopic();
+			agreement.setStatus(Status.WORKFLOW);
+
+			setInitiatorPosition(agreementRequest);
+			List<Demand> demands = prepareDemands(agreementRequest);
+
+			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+			List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+					.collect(Collectors.toList());
+			agreement.setDemands(demandIdList);
+			agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+			logger.info(agreement.getAcknowledgementNumber());
+		}
+
+		try {
+			agreementValue = mapper.writeValueAsString(agreementRequest);
+			logger.info("agreementValue::" + agreementValue);
+		} catch (JsonProcessingException JsonProcessingException) {
+			logger.info("AgreementService : " + JsonProcessingException.getMessage(), JsonProcessingException);
+			throw new RuntimeException(JsonProcessingException.getMessage());
+		}
+
+		try {
+			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
+		} catch (Exception exception) {
+			logger.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
+		}
+		return agreement;
+	}
+
+	/***
+	 * method to update agreementNumber using acknowledgeNumber
+	 * 
+	 * @param agreement
+	 * @return
+	 */
+	public Agreement updateAgreement(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
+		logger.info("updateagreement service :: " + workFlowDetails);
+		ObjectMapper mapper = new ObjectMapper();
+		String agreementValue = null;
+		String kafkaTopic = null;
+
+		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+
+			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
+			agreement.setDemands(updateDemnad(agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
+
+		} else if (agreement.getSource().equals(Source.SYSTEM)) {
+
+			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
+
+			if (workFlowDetails != null) {
+
+				logger.info("the workflow details status :: " + workFlowDetails.getAction());
+				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+					logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
+					agreement.setAgreementDate(new Date());
+					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setStatus(Status.CANCELLED);
+					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+				} else if ("print notice".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setStatus(Status.ACTIVE);
+					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+				}
+			}
+		}
+
+		try {
+			agreementValue = mapper.writeValueAsString(agreementRequest);
+			logger.info("agreementValue::" + agreementValue);
+		} catch (JsonProcessingException jsonProcessingException) {
+			logger.info("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
+			throw new RuntimeException(jsonProcessingException.getMessage());
+		}
+
+		try {
+			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
+		} catch (Exception exception) {
+			logger.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
+		}
+		return agreement;
+	}
+
+	private List<String> updateDemnad(List<Demand> demands, RequestInfo requestInfo) {
+
+		DemandResponse demandResponse = null;
+		if (demands == null)
+			demandResponse = demandRepository.createDemand(demands, requestInfo);
+		else
+			demandResponse = demandRepository.updateDemand(demands, requestInfo);
+		return demandResponse.getDemands().stream().map(demand -> demand.getId())
+				.collect(Collectors.toList());
+	}
+
+	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		if (agreement.getExpiryDate() == null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(agreement.getCommencementDate());
+			calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
+			Date expiryDate = calendar.getTime();
+			agreement.setExpiryDate(expiryDate);
+		}
+		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		if (demandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+
+		return demandRepository.getDemandList(agreementRequest, demandReasons);
+	}
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
 		/*
@@ -113,75 +272,11 @@ public class AgreementService {
 		}
 	}
 
-	/*
-	 * This method is used to create new agreement
-	 * 
-	 * @return Agreement, return the agreement details with current status
-	 * 
-	 * @param agreement, hold agreement details
-	 * 
-	 */
-
-	public Agreement createAgreement(AgreementRequest agreementRequest) {
-
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("createAgreement service::" + agreement);
-		String kafkaTopic = null;
-		ObjectMapper mapper = new ObjectMapper();
-		String agreementValue = null;
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(agreement.getCommencementDate());
-		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
-		Date closeDate = calendar.getTime();
-		agreement.setCloseDate(closeDate);
-		logger.info("The closeDate calculated is " + closeDate + "from commencementDate of "
-				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
-
-		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-			kafkaTopic = propertiesManager.getSaveAgreementTopic();
-			agreement.setStatus(Status.ACTIVE);
-			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
-		} else {
-			kafkaTopic = propertiesManager.getStartWorkflowTopic();
-			agreement.setStatus(Status.WORKFLOW);
-			getPositions(agreementRequest);
-
-			List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-			if (demandReasons.isEmpty())
-				throw new RuntimeException("No demand reason found for given criteria");
-
-			List<Demand> demands = demandRepository.getDemandList(agreementRequest, demandReasons);
-			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
-			List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
-					.collect(Collectors.toList());
-			agreement.setDemands(demandIdList);
-			agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-			logger.info(agreement.getAcknowledgementNumber());
-		}
-
-		try {
-			agreementValue = mapper.writeValueAsString(agreementRequest);
-			logger.info("agreementValue::" + agreementValue);
-		} catch (JsonProcessingException JsonProcessingException) {
-			logger.info("AgreementService : " + JsonProcessingException.getMessage(), JsonProcessingException);
-			throw new RuntimeException(JsonProcessingException.getMessage());
-		}
-
-		try {
-			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
-		} catch (Exception exception) {
-			logger.info("AgreementService : " + exception.getMessage(), exception);
-			throw exception;
-		}
-		return agreement;
-	}
-
-	private void getPositions(AgreementRequest agreementRequest) {
+	private void setInitiatorPosition(AgreementRequest agreementRequest) {
 
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		Agreement agreement = agreementRequest.getAgreement();
-		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
+		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
@@ -230,54 +325,5 @@ public class AgreementService {
 						+ workFlowDetails.getInitiatorPosition());
 			}
 		}
-
-		// allottee -> allottee.getId()).collect(Collectors.toList()));
-	}
-
-	/***
-	 * method to update agreementNumber using acknowledgeNumber
-	 * 
-	 * @param agreement
-	 * @return
-	 */
-	public Agreement updateAgreement(AgreementRequest agreementRequest) {
-
-		Agreement agreement = agreementRequest.getAgreement();
-		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-		logger.info("updateAgreement service::" + workFlowDetails);
-		ObjectMapper mapper = new ObjectMapper();
-		String agreementValue = null;
-
-		if (workFlowDetails != null) {
-			// FIXME approve and reject should come from
-			logger.info("the workflow details status :: " + workFlowDetails.getAction());
-			if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
-				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
-				agreement.setAgreementDate(new Date());
-				agreement.setStatus(Status.ACTIVE); // FIXME put status active
-													// when noticegenerate
-				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-			} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setStatus(Status.CANCELLED);
-				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-			}
-		}
-		// TODO FIXME put agreement number generator here and change
-		try {
-			agreementValue = mapper.writeValueAsString(agreementRequest);
-			logger.info("agreementValue::" + agreementValue);
-		} catch (JsonProcessingException jsonProcessingException) {
-			logger.info("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
-			throw new RuntimeException(jsonProcessingException.getMessage());
-		}
-
-		try {
-			agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "save-agreement", agreementValue);
-		} catch (Exception exception) {
-			logger.info("AgreementService : " + exception.getMessage(), exception);
-			throw exception;
-		}
-		return agreement;
 	}
 }

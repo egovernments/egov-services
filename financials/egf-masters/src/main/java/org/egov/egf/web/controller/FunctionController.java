@@ -139,6 +139,7 @@ public class FunctionController {
     @ResponseStatus(HttpStatus.OK)
     public FunctionContractResponse search(@ModelAttribute final FunctionContract functionContracts,
             @RequestBody final RequestInfo requestInfo, final BindingResult errors) {
+        String tenantId = functionContracts.getTenantId();
         final FunctionContractRequest functionContractRequest = new FunctionContractRequest();
         functionContractRequest.setFunction(functionContracts);
         functionContractRequest.setRequestInfo(requestInfo);

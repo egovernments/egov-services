@@ -162,14 +162,14 @@ class CreateAsset extends React.Component {
            "order": null,
            "columns": []
       },
-      asset_category_type,
-      assetCategories,
-      depreciationMethod,
-      assetAccount,
-      accumulatedDepreciationAccount,
-      revaluationReserveAccount,
-      depreciationExpenseAccount,
-      assignments_unitOfMeasurement,
+      asset_category_type: [],
+      assetCategories: [],
+      depreciationMethod: [],
+      assetAccount: [],
+      accumulatedDepreciationAccount: [],
+      revaluationReserveAccount: [],
+      depreciationExpenseAccount: [],
+      assignments_unitOfMeasurement: [],
       dataType: [],
       isEdit: false,
       index: -1,
@@ -185,6 +185,67 @@ class CreateAsset extends React.Component {
   }
 
   componentDidMount() {
+    var _this = this;
+    if(window.opener && window.opener.document) {
+      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+      if(logo_ele && logo_ele[0]) {
+        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+      }
+    }
+    
+    var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
+
+    try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
+        console.log(e);
+        asset_category_type = {};
+    }
+
+    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+        console.log(e);
+        assetCategories = [];
+    }
+
+    try { depreciationMethod = !localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined" ? (localStorage.setItem("depreciationMethod", JSON.stringify(commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("depreciationMethod"))) : JSON.parse(localStorage.getItem("depreciationMethod")); } catch (e) {
+        console.log(e);
+        depreciationMethod = {};
+    }
+
+    try { assetAccount = !localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined" ? (localStorage.setItem("assetAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("assetAccount"))) : JSON.parse(localStorage.getItem("assetAccount")); } catch (e) {
+        console.log(e);
+        assetAccount = [];
+    }
+
+    try { accumulatedDepreciationAccount = !localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined" ? (localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("accumulatedDepreciationAccount"))) : JSON.parse(localStorage.getItem("accumulatedDepreciationAccount")); } catch (e) {
+        console.log(e);
+        accumulatedDepreciationAccount = [];
+    }
+
+    try { revaluationReserveAccount = !localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined" ? (localStorage.setItem("revaluationReserveAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("revaluationReserveAccount"))) : JSON.parse(localStorage.getItem("revaluationReserveAccount")); } catch (e) {
+        console.log(e);
+        revaluationReserveAccount = [];
+    }
+
+    try { depreciationExpenseAccount = !localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined" ? (localStorage.setItem("depreciationExpenseAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("depreciationExpenseAccount"))) : JSON.parse(localStorage.getItem("depreciationExpenseAccount")); } catch (e) {
+        console.log(e);
+        depreciationExpenseAccount = [];
+    }
+
+    try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uoms", "_search", {tenantId}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
+        console.log(e);
+        assignments_unitOfMeasurement = [];
+    }
+
+    this.setState({
+      asset_category_type,
+      assetCategories,
+      depreciationMethod,
+      assetAccount,
+      accumulatedDepreciationAccount,
+      revaluationReserveAccount,
+      depreciationExpenseAccount,
+      assignments_unitOfMeasurement
+    });
+
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
     if (getUrlVars()["type"] === "view") {
@@ -195,9 +256,11 @@ class CreateAsset extends React.Component {
     }
     if (type === "view" || type === "update") {
       // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
-      this.setState({
-        assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
-      })
+      setTimeout(function(){
+        _this.setState({
+          assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
+        })
+      }, 100);
     }
     // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
     // this.setState({

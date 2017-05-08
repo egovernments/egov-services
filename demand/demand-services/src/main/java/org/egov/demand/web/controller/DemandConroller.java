@@ -141,6 +141,22 @@ public class DemandConroller {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
 		}
 		try {
+			egDemand = demandService.updateDemandForCollection(demandRequest.getDemand().get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		demandRequest.getDemand().get(0).setId(egDemand.getId());
+		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
+	}
+	
+	@PostMapping("/_update")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> update(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+		EgDemand egDemand = null;
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
+		}
+		try {
 			egDemand = demandService.updateDemand(demandRequest.getDemand().get(0));
 		} catch (Exception e) {
 			e.printStackTrace();

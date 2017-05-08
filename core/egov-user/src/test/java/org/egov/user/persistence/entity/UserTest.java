@@ -88,14 +88,6 @@ public class UserTest {
 		assertThat(entityUser.getLastModifiedDate()).isEqualTo(domainUser.getLastModifiedDate());
 		assertThat(entityUser.getCreatedDate()).isEqualTo(domainUser.getCreatedDate());
 		assertThat(entityUser.getRoles().size()).isEqualTo(2);
-//		final List<Address> addresses = entityUser.getAddresses();
-//		assertThat(addresses.size()).isEqualTo(1);
-//		assertEquals(Long.valueOf(1), addresses.get(0).getUserId());
-//		assertEquals("PERMANENT", addresses.get(0).getType());
-//		assertEquals("tenant1", addresses.get(0).getTenantId());
-//		assertEquals("city1", addresses.get(0).getCity());
-//		assertEquals("pinCode1", addresses.get(0).getPinCode());
-//		assertEquals("address1", addresses.get(0).getAddress());
 	}
 
 	private org.egov.user.persistence.entity.User getUserEntity() {
@@ -221,18 +213,6 @@ public class UserTest {
 				.identificationMark("identification mark")
 				.build();
 	}
-
-//	private List<org.egov.user.domain.model.Address> getDomainAddresses() {
-//		final org.egov.user.domain.model.Address address1 = org.egov.user.domain.model.Address.builder()
-//				.address("address1")
-//				.pinCode("pinCode1")
-//				.city("city1")
-//				.type(AddressType.PERMANENT)
-//				.userId(1L)
-//				.tenantId("tenant1")
-//				.build();
-//		return Collections.singletonList(address1);
-//	}
 
 	private List<org.egov.user.domain.model.Role> getListOfDomainRoles() {
 		org.egov.user.domain.model.Role userRole = org.egov.user.domain.model.Role.builder()

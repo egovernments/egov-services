@@ -2,7 +2,6 @@ package org.egov.user.persistence.repository;
 
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.enums.BloodGroup;
 import org.egov.user.persistence.enums.Gender;
@@ -23,6 +22,7 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -84,7 +84,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_name() {
-		User user = userJpaRepository.findByUsername("greenfish424");
+		User user = userJpaRepository.findByUsernameAndTenantId("greenfish424", "ap.public");
 		assertThat(user.getId()).isEqualTo(2L);
 	}
 
@@ -95,7 +95,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_email() {
-		User user = userJpaRepository.findByEmailId("email3@gmail.com");
+		User user = userJpaRepository.findByEmailIdAndTenantId("email3@gmail.com", "ap.public");
 		assertThat(user.getId()).isEqualTo(3L);
 	}
 
@@ -146,6 +146,30 @@ public class UserJpaRepositoryTest {
 
 		assertThat(userList.size()).isEqualTo(1);
 		assertThat(userList.get(0).getId()).isEqualTo(5);
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void test_should_find_user_by_id_and_tenant_id() {
+		User actualUser = userJpaRepository.findByIdAndTenantId(1L, "ap.public");
+
+		assertNotNull(actualUser);
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void test_should_return_null_when_user_for_given_id_and_tenant_id_does_not_exist() {
+		User actualUser = userJpaRepository.findByIdAndTenantId(1L, "unknown");
+
+		assertNull(actualUser);
 	}
 
 	@Test

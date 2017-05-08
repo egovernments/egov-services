@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.asset.contract.DepreciationMetaData;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 
@@ -50,6 +49,9 @@ public class AssetCategory   {
 
   @JsonProperty("depreciationMethod")
   private DepreciationMethod depreciationMethod;
+  
+  @JsonProperty("isAssetAllow")
+  private Boolean isAssetAllow;
 
   @JsonProperty("assetAccount")
   private Long assetAccount;
@@ -65,11 +67,14 @@ public class AssetCategory   {
 
   @JsonProperty("unitOfMeasurement")
   private Long unitOfMeasurement;
+  
+  @JsonProperty("version")
+  private String version;
 
   @JsonProperty("depreciationRate")
   private List<DepreciationMetaData> depreciationRate ;
 
-  @JsonProperty("customFields")
-  private List<AssetCategoryCustomFields> customFields;
+  @JsonProperty("assetFieldsDefination")
+  private List<AttributeDefination> assetFieldsDefination;
 }
 

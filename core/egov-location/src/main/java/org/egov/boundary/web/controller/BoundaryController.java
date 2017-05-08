@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/boundarys")
 public class BoundaryController {
+	
     @Autowired
     private BoundaryService boundaryService;
 
@@ -154,7 +155,7 @@ public class BoundaryController {
             List<Boundary> boundaries = mapToContractBoundaryList(
                     boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(boundaryTypeId),
                             tenantId));
-            boundaryResponse.setBoundarys(boundaries);
+			boundaryResponse.setBoundarys(boundaries);
             return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
         } else
             return new ResponseEntity<>(boundaryResponse, HttpStatus.BAD_REQUEST);

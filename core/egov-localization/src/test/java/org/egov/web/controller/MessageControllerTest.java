@@ -3,6 +3,7 @@ package org.egov.web.controller;
 import org.apache.commons.io.IOUtils;
 import org.egov.TestConfiguration;
 import org.egov.domain.model.Message;
+import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 
 
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,7 +47,7 @@ public class MessageControllerTest {
     @Test
     public void test_should_fetch_messages_for_given_locale() throws Exception {
         final List<Message> modelMessages = getModelMessages();
-        when(messageService.getMessagesAsPerLocale(LOCALE,TENANT_ID))
+        when(messageService.getMessages(LOCALE, new Tenant(TENANT_ID)))
             .thenReturn(modelMessages);
          mockMvc.perform(get("/messages")
             .param("tenantId", TENANT_ID)
@@ -57,27 +59,25 @@ public class MessageControllerTest {
 
     @Test
     public void test_should_save_new_messages() throws Exception {
-        final org.egov.persistence.entity.Message message1 = org.egov.persistence.entity.Message.builder()
+        final Message message1 = Message.builder()
           	.code("code1")
             .message("message1")
             .locale(LOCALE)
-            .tenantId(TENANT_ID)
+            .tenant(new Tenant(TENANT_ID))
             .build();
-        final org.egov.persistence.entity.Message message2 = org.egov.persistence.entity.Message.builder()
-        
-        	.code("code2")
+        final Message message2 = Message.builder()
+            .code("code2")
             .message("message2")
             .locale(LOCALE)
-            .tenantId(TENANT_ID)
+            .tenant(new Tenant(TENANT_ID))
             .build();
-        List< org.egov.persistence.entity.Message> expectedMessages = Arrays.asList(message1, message2);
-        when(messageService.saveAllEntityMessages(expectedMessages)).thenReturn(getModelMessages());
-
+        List<Message> expectedMessages = Arrays.asList(message1, message2);
         mockMvc.perform(post("/messages")
             .content(getFileContents("newMessagesRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isCreated())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("messagesResponse.json")));
+        verify(messageService).createMessages(expectedMessages);
     }
 
     @Test
@@ -105,13 +105,13 @@ public class MessageControllerTest {
         final Message message1 = Message.builder()
             .code("code1")
             .message("message1")
-            .tenantId("tenant123")
+            .tenant(new Tenant("tenant123"))
             .locale(LOCALE)
             .build();
         final Message message2 = Message.builder()
             .code("code2")
             .message("message2")
-            .tenantId("tenant123")
+            .tenant(new Tenant("tenant123"))
             .locale(LOCALE)
             .build();
         return Arrays.asList(message1, message2);

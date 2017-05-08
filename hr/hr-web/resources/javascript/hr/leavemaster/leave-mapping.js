@@ -22,19 +22,29 @@ constructor(props){
   this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
 
 }
-componentWillMount()
-{
-  try {
-      var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
-  } catch(e) {
-      var _leaveTypes = [];
-  }
-  this.setState({
-    assignments_designation,
-    leaveTypeList: _leaveTypes
+    componentWillMount()
+    {
+      try {
+        var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+      } catch (e) {
+          console.log(e);
+           var assignments_designation = [];
+      }
 
-})
-}
+      try {
+          var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+      } catch(e) {
+          var _leaveTypes = [];
+      }
+
+      this.setState({
+        assignments_designation: assignments_designation,
+        leaveTypeList: _leaveTypes
+
+    })
+  }
+
+
     handleChange(e,name)
     {
         this.setState({
@@ -153,6 +163,12 @@ componentWillMount()
 
 
     componentDidMount(){
+      if(window.opener && window.opener.document) {
+         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+         if(logo_ele && logo_ele[0]) {
+           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+         }
+       }
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 

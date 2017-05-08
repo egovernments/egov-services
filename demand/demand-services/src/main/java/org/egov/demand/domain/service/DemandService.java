@@ -27,7 +27,7 @@ public class DemandService {
 	private InstallmentService installmentService;
 
 	public EgDemand createDemand(Demand demand) throws Exception {
-		LOGGER.info("createDemand - demand - "+demand);
+		LOGGER.info("createDemand - demand - " + demand);
 		EgDemand egDemand = new EgDemand();
 		Installment demandInstallment = null;
 		EgDemandDetails egDemandDetails = null;
@@ -62,8 +62,22 @@ public class DemandService {
 		}
 		egDemand.setEgDemandDetails(demandDetailsList);
 		demandRepository.save(egDemand);
-		LOGGER.info("createDemand - egDemand - "+egDemand);
+		LOGGER.info("createDemand - egDemand - " + egDemand);
 		return egDemand;
+	}
+
+	public EgDemand updateDemandForCollection(Demand demand) throws Exception {
+		EgDemand egDemand = demandRepository.findOne(demand.getId());
+		for (DemandDetails demandDetails : demand.getDemandDetails()) {
+			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
+				if (egDemandDetail.getId().equals(demandDetails.getId())) {
+					LOGGER.info("match is occuring in update service");
+					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
+				}
+			}
+		}
+		egDemand.addCollected(demand.getCollectionAmount());
+		return demandRepository.save(egDemand);
 	}
 
 	public EgDemand updateDemand(Demand demand) throws Exception {
@@ -72,7 +86,9 @@ public class DemandService {
 			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
 				if (egDemandDetail.getId().equals(demandDetails.getId())) {
 					LOGGER.info("match is occuring in update service");
-					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
+					egDemandDetail.setAmount(demandDetails.getTaxAmount());
+					egDemandDetail.setAmtCollected(demandDetails.getCollectionAmount());
+					egDemandDetail.setAmtRebate(demandDetails.getRebateAmount());
 				}
 			}
 		}

@@ -1,7 +1,6 @@
 package org.egov.user.security;
 
 import org.egov.user.security.oauth2.custom.CustomAuthenticationProvider;
-import org.egov.user.security.oauth2.custom.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,13 +15,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomAuthenticationProvider authProvider;
 
-	@Autowired
-	private CustomUserDetailService customUserDetailService;
-
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-		auth.authenticationProvider(authProvider).userDetailsService(customUserDetailService);
+		auth.authenticationProvider(authProvider);
 	}
 
 	@Override

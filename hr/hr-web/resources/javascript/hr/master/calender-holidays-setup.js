@@ -20,11 +20,20 @@ constructor(props){
 
 
 
-componentWillMount(){
-  this.setState({
-    year
-})
-}
+    componentWillMount()
+    {
+      try {
+      var  year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [])), JSON.parse(localStorage.getItem("year"))) : JSON.parse(localStorage.getItem("year"));
+
+      } catch (e) {
+          console.log(e);
+        var  year = [];
+      }
+      this.setState({
+        year : year
+    })
+  }
+
     handleChange(e,name)
     {
 
@@ -38,6 +47,12 @@ componentWillMount(){
     }
 
     componentDidMount(){
+      if(window.opener && window.opener.document) {
+         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+         if(logo_ele && logo_ele[0]) {
+           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+         }
+       }
       var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $('#applicableOn').datepicker({
@@ -82,18 +97,16 @@ componentWillMount(){
             e.preventDefault();
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
-              if(type==="update"){
-                delete tempInfo.calendarYear.id;
-                delete tempInfo.calendarYear.active;
-                delete tempInfo.calendarYear.endDate;
-                delete tempInfo.calendarYear.startDate;
-              }
 
             var body={
                 "RequestInfo":requestInfo,
                 "Holiday":tempInfo
               },_this=this;
                 if(type == "update") {
+                  delete tempInfo.calendarYear.id;
+                  delete tempInfo.calendarYear.active;
+                  delete tempInfo.calendarYear.endDate;
+                  delete tempInfo.calendarYear.startDate;
                   $.ajax({
                         url:baseUrl+"/egov-common-masters/holidays/" + _this.state.Holiday.id + "/" + "_update?tenantId=" + tenantId,
                         type: 'POST',
@@ -162,16 +175,36 @@ componentWillMount(){
         $('#applicableOn').data("datepicker").setStartDate(new Date(e.target.value, 0, 1));
         $('#applicableOn').data("datepicker").setEndDate(new Date(e.target.value, 11, 31));
 
-        this.setState({
-          Holiday:{
-            ...this.state.Holiday,
-            [pName]:{
-                ...this.state.Holiday[pName],
-                [name]:e.target.value
+        var str = this.state.Holiday.applicableOn;
+        var value = e.target.value;
+        var year = str.split("/").pop();
+
+        if(value==year){
+          this.setState({
+            Holiday:{
+              ...this.state.Holiday,
+              [pName]:{
+                  ...this.state.Holiday[pName],
+                  [name]:e.target.value
+              }
+            }
+
+          })
+        }
+        else {
+          this.setState({
+            Holiday:{
+              ...this.state.Holiday,
+              "applicableOn": "",
+              [pName]:{
+                  ...this.state.Holiday[pName],
+                  [name]:e.target.value
             }
           }
 
-        })
+          })
+        }
+
 
   }
 

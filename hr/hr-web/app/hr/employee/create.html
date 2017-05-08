@@ -22,11 +22,11 @@
     /*.modal{
           width:70%
         }*/
-    
+
     body {
         padding: 0;
     }
-    
+
     footer {
         background-color: #f3f4f5;
         bottom: 0;
@@ -35,33 +35,33 @@
         width: 100%;
         z-index: 999;
     }
-    
+
     footer a {
         color: rgb(116, 101, 101);
         text-decoration: none;
     }
-    
+
     footer span.copyright {
         float: left;
         font-size: 11px;
         padding: 7px;
     }
-    
+
     footer span.version {
         float: right;
         font-size: 11px;
         padding: 7px;
     }
-    
+
     footer span.copyright a {
         color: rgb(116, 101, 101);
     }
-    
+
     footer #legal {
         clear: left;
         display: block;
     }
-    
+
     .constrain {
         padding-left: 10px;
         padding-right: 10px;
@@ -101,7 +101,7 @@
                 <!-- logo -->
                 <div class="navbar-brand">
                     <a href="javascript:void(0);">
-                        <img src="resources/images/logo.jpg" height="60" class="homepage_logo">
+                        <img src="" height="60" class="homepage_logo">
                     </a>
                 </div>
                 <div class="navbar-brand">
@@ -216,7 +216,7 @@
                                                                     <label for="user.name">Employee Name</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.name" name="user.name" type="text">
+                                                                    <input id="user.name" name="user.name" type="text" maxlength="256"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -226,7 +226,7 @@
                                                                     <label for="code">Employee Code</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="code" name="code" type="text">
+                                                                    <input id="code" name="code" type="text" maxlength="256"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -550,7 +550,7 @@
                                                                     <label for="user.pan">PAN </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.pan" name="user.pan" type="text" maxlength="10">
+                                                                    <input id="user.pan" name="user.pan" type="text" maxlength="10"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -572,7 +572,7 @@
                                                                     <label for="gpfNo">GPF Number</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="gpfNo" name="gpfNo" type="text">
+                                                                    <input id="gpfNo" name="gpfNo" type="text" maxlength="16"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -624,7 +624,7 @@
                                                                     <label for="bankAccount">Account number </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="bankAccount" name="bankAccount" type="number" min="0" maxlength="20">
+                                                                    <input id="bankAccount" name="bankAccount" type="text" maxlength="20">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -647,7 +647,7 @@
                                                                         <label for="user.permanentAddress">Permanent Address </label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <textarea id="user.permanentAddress" name="user.permanentAddress"></textarea>
+                                                                        <textarea id="user.permanentAddress" name="user.permanentAddress" maxlength="1024"></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -655,7 +655,7 @@
                                                                         <label for="user.permanentCity">City </label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input id="user.permanentCity" name="user.permanentCity" type="text">
+                                                                        <input id="user.permanentCity" name="user.permanentCity" type="text" maxlength="50"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -1104,10 +1104,10 @@
                                                                                 <label for="assignments.mainDepartments">Departments</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <!-- <div class="styled-select multiple"> -->
+                                                                                 <div class="styled-select multiple">
                                                                                 <select multiple id="assignments.mainDepartments" name="assignments.mainDepartments">
                                                                                 </select>
-                                                                                <!-- </div> -->
+                                                                                 </div> 
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1119,7 +1119,7 @@
                                                                                 <label for="assignments.govtOrderNumber">Govt Order No</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.govtOrderNumber" name="assignments.govtOrderNumber" type="text">
+                                                                                <input id="assignments.govtOrderNumber" name="assignments.govtOrderNumber" type="text" maxlength="50"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1289,7 +1289,7 @@
                                                                                     <label for="serviceHistory.remarks">Remarks/Comments</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="serviceHistory.remarks" name="serviceHistory.remarks" type="text"></textarea>
+                                                                                    <textarea id="serviceHistory.remarks" name="serviceHistory.remarks" type="text" maxlength="1024"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1299,7 +1299,7 @@
                                                                                     <label for="serviceHistory.orderNo">Order No</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="serviceHistory.orderNo" name="serviceHistory.orderNo" type="text">
+                                                                                    <input id="serviceHistory.orderNo" name="serviceHistory.orderNo" type="text" maxlength="50">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1584,7 +1584,7 @@
                                                                                     <label for="education.qualification">Qualification</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="education.qualification" name="education.qualification" type="text">
+                                                                                    <input id="education.qualification" name="education.qualification" type="text" maxlength="50"/  >
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1594,7 +1594,7 @@
                                                                                     <label for="education.majorSubject">Major Subject</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="education.majorSubject" name="education.majorSubject" type="text">
+                                                                                    <input id="education.majorSubject" name="education.majorSubject" type="text" maxlength="50">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1618,7 +1618,7 @@
                                                                                     <label for="education.university">University/Board</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="education.university" name="education.university" type="text">
+                                                                                    <input id="education.university" name="education.university" type="text" maxlength="50"/>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1994,14 +1994,14 @@
             </div>
         </div>
     </div>
-    <footer class="clearfix simple">
+    <!-- <footer class="clearfix simple">
         <div class="constrain">
             <div id="legal">
                 <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
                 <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
             </div>
         </div>
-    </footer>
+    </footer> -->
     <script src="resources/javascript/egov/custom.js"></script>
     <script src="resources/javascript/js.cookies.js"></script>
     <script src="resources/javascript/hr/employee/create.js"></script>

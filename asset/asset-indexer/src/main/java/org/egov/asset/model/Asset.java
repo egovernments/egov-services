@@ -41,10 +41,10 @@
 
 package org.egov.asset.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
@@ -75,10 +75,8 @@ public class Asset {
 	private String name;
 	private String code;
 	
-	
 	private Department department;
 	
-	@Valid
 	private AssetCategory assetCategory;
 	private String assetDetails;
 	private ModeOfAcquisition modeOfAcquisition;
@@ -98,6 +96,9 @@ public class Asset {
 	private String totalArea;
 	private Double grossValue;
 	private Double accumulatedDepreciation;
+	private Long assetReference = null;
+	private String version;
+    private List<Attributes> assetAttributes = new ArrayList<>();
+    
 	
-	private Map<String, String> properties;
 }

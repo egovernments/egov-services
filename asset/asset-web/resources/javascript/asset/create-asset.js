@@ -157,36 +157,36 @@ const makeAjaxUpload = function(file, cb) {
 }
 
 const uploadFiles = function(body, cb) {
-    if(body.Asset.properties && Object.keys(body.Asset.properties).length) {
-        var counter1 = Object.keys(body.Asset.properties).length;
+    if(body.Asset.assetAttributes && body.Asset.assetAttributes.length) {
+        var counter1 = body.Asset.assetAttributes.length;
         var breakout = 0;
-        for(var key in body.Asset.properties) {
-            if(body.Asset.properties[key].constructor == FileList) {
-                var counter = body.Asset.properties[key].length;
-                for(let j=0; j<body.Asset.properties[key].length; j++) {
-                    makeAjaxUpload(body.Asset.properties[key][j], function(err, res) {
-                        if (breakout == 1)
-                            return;
-                        else if (err) {
-                            cb(err);
-                            breakout = 1;
-                        } else {
-                            counter--;
-                            body.Asset.properties[key][j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
-                            if(counter == 0) {
-                                counter1--;
-                                if(counter1 == 0 && breakout == 0)
-                                    cb(null, body);
-                            }
+        for(let i=0; i<body.Asset.assetAttributes.length; i++) {
+          if(body.Asset.assetAttributes[i].type == "File") {
+            var counter = body.Asset.assetAttributes[i].value.length;
+            for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
+                makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        body.Asset.assetAttributes[i].value[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                cb(null, body);
                         }
-                    })
-                }
-            } else {
-                counter1--;
-                if(counter1 == 0 && breakout == 0) {
-                    cb(null, body);
-                }
+                    }
+                })
             }
+          } else {
+            counter1--;
+            if(counter1 == 0 && breakout == 0) {
+                cb(null, body);
+            }
+          }
         }
     } else {
         cb(null, body);
@@ -206,8 +206,8 @@ const defaultAssetSetState = {
         "name": ""
     },
 		"assetDetails": "",
-    "modeOfAcquisition": "ACQUIRED",
-    "status": "CWIP",
+    "modeOfAcquisition": "",
+    "status": "",
     "grossValue": "",
     "accumulatedDepreciation": "",
     "description": "",
@@ -249,18 +249,18 @@ class CreateAsset extends React.Component {
           status: "",
           code: ""
         },
-        assetCategories,
-        locality,
-        electionwards,
-        departments,
-        acquisitionList,
-        revenueZone,
-        street,
-        revenueWards,
-        revenueBlock,
+        assetCategories: [],
+        locality: [],
+        electionwards: [],
+        departments: [],
+        acquisitionList: [],
+        revenueZone: [],
+        street: [],
+        revenueWards: [],
+        revenueBlock: [],
         customFields:[],
-        statusList,
-        asset_category_type,
+        statusList: [],
+        asset_category_type: [],
         capitalized: false,
         error: "",
         success: "",
@@ -429,7 +429,7 @@ class CreateAsset extends React.Component {
                 }
             });
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${_this.state.assetSet.code}`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${response["responseJSON"] && response["responseJSON"].Assets && response["responseJSON"].Assets[0] && response["responseJSON"].Assets[0].code ?  response["responseJSON"].Assets[0].code : ""}`;
             } else {
                 this.setState({
                     ...this.state,
@@ -618,7 +618,86 @@ class CreateAsset extends React.Component {
 
 
   componentDidMount() {
-      var type = getUrlVars()["type"], _this = this;
+      var _this = this, type = getUrlVars()["type"];
+      if(window.opener && window.opener.document) {
+        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+        if(logo_ele && logo_ele[0]) {
+          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+        }
+      }
+
+      var assetCategories, locality, electionwards, departments, acquisitionList, revenueZone, street, revenueWards, revenueBlock, statusList, asset_category_type;
+
+      try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+          console.log(e);
+          assetCategories = [];
+      }
+
+      try { locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality")); } catch (e) {
+          console.log(e);
+          locality = [];
+      }
+
+      try { electionwards = !localStorage.getItem("ward") || localStorage.getItem("ward") == "undefined" ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("ward"))) : JSON.parse(localStorage.getItem("ward")); } catch (e) {
+          console.log(e);
+          electionwards = [];
+      }
+
+      try { departments = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department")); } catch (e) {
+          console.log(e);
+          departments = [];
+      }
+
+      try { acquisitionList = !localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined" ? (localStorage.setItem("acquisitionList", JSON.stringify(commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {tenantId}).responseJSON || [])), JSON.parse(localStorage.getItem("acquisitionList"))) : JSON.parse(localStorage.getItem("acquisitionList")); } catch (e) {
+          console.log(e);
+          acquisitionList = [];
+      }
+
+      try { revenueZone = !localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined" ? (localStorage.setItem("revenueZone", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueZone"))) : JSON.parse(localStorage.getItem("revenueZone")); } catch (e) {
+          console.log(e);
+          revenueZone = [];
+      }
+
+      try { street = !localStorage.getItem("street") || localStorage.getItem("street") == "undefined" ? (localStorage.setItem("street", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("street"))) : JSON.parse(localStorage.getItem("street")); } catch (e) {
+          console.log(e);
+          street = [];
+      }
+
+      try { revenueWards = !localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined" ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueWard"))) : JSON.parse(localStorage.getItem("revenueWard")); } catch (e) {
+          console.log(e);
+          revenueWard = [];
+      }
+
+      try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined" ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueBlock"))) : JSON.parse(localStorage.getItem("revenueBlock")); } catch (e) {
+          console.log(e);
+          revenueBlock = [];
+      }
+
+      try { statusList = !localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined" ? (localStorage.setItem("statusList", JSON.stringify(commonApiGet("asset-services", "", "GET_STATUS", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("statusList"))) : JSON.parse(localStorage.getItem("statusList")); } catch (e) {
+          console.log(e);
+          statusList = {};
+      }
+
+      try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
+          console.log(e);
+          asset_category_type = {};
+      }
+
+      this.setState({
+        assetCategories,
+        locality,
+        electionwards,
+        departments,
+        acquisitionList,
+        revenueZone,
+        street,
+        revenueWards,
+        revenueBlock,
+        statusList,
+        asset_category_type,
+        readonly: (type === "view")
+      })
+
       var id = getUrlVars()["id"];
       $(document).on('focus',".custom-date-picker", function(){
             $(this).datetimepicker({
@@ -640,24 +719,24 @@ class CreateAsset extends React.Component {
          })
       });
 
-      this.setState({
-          readonly: (type === "view")
-      });
-
       if (type === "view" || type === "update") {
           let asset = getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0];
           var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
-          this.setState({
-              assetSet: {
-                ...asset,
-                dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
-              }
-          });
+          setTimeout(function() {
+            _this.setState({
+                assetSet: {
+                  ...asset,
+                  dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
+                }
+            });
+          }, 100);
 
           if(asset.status == "CAPITALIZED") {
-              this.setState({
+            setTimeout(function() {
+              _this.setState({
                   capitalized: true
               })
+            }, 100);
           }
 
           if(asset.assetCategory && asset.assetCategory.id) {
@@ -674,7 +753,7 @@ class CreateAsset extends React.Component {
                   }
               }, 2000);
           }
-          
+
           if(asset.assetReference) {
             let res = getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference);
             if(res && res.responseJSON && res.responseJSON["Assets"] && res.responseJSON["Assets"][0]) {
@@ -761,7 +840,7 @@ class CreateAsset extends React.Component {
           [name]: [1]
         }
       })
-    else 
+    else
       this.setState({
         newRows: {
           ...this.state.newRows,
@@ -903,7 +982,7 @@ class CreateAsset extends React.Component {
               for(var i=0; i<customFields.length; i++) {
                 if(customFields[i].type != "Table") {
                   _custFields.push(customFields[i]);
-                } else 
+                } else
                   _tables.push(customFields[i]);
               }
 
@@ -997,7 +1076,7 @@ class CreateAsset extends React.Component {
 
           if(textItem && textItem[0])
             _values = textItem[0].value;
-        } 
+        }
         return (
           <div className="col-sm-6" key={index}>
             <div className="row">
@@ -1013,6 +1092,37 @@ class CreateAsset extends React.Component {
         );
       }
 		}
+
+    const showDatePicker = function(item, index, ifTable) {
+      if(ifTable) {
+        return (
+          <input  className="custom-date-picker" name={item.name} type="text"
+            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+        )
+      } else {
+        var type = getUrlVars()["type"];
+        var _values;
+        if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
+          var textItem = assetAttributes.filter(function(val, ind) {
+            return (val.type == "Text" && item.name == val.key);
+          });
+
+          if(textItem && textItem[0])
+            _values = textItem[0].value;
+        }
+        return (<div className="col-sm-6" key={index}>
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                          <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
+                      </div>
+                      <div className="col-sm-6">
+                          <input  className="custom-date-picker" name={item.name} type="text"
+                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                      </div>
+                  </div>
+              </div>)
+      }
+    }
 
 		const showSelect = function(item, index, multi, ifTable) {
       if(ifTable) {
@@ -1052,7 +1162,7 @@ class CreateAsset extends React.Component {
       }
 		}
 
-		const showRadioButton = function(item, index, ifTable) {
+		/*const showRadioButton = function(item, index, ifTable) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -1080,26 +1190,7 @@ class CreateAsset extends React.Component {
 					</div>
 				</div>
 			);
-		}
-
-    const showDatePicker = function(item, index, ifTable) {
-      if(ifTable) {
-        return (
-          <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
-        )
-      } else {
-        return (<div className="col-sm-6" key={index}>
-                  <div className="row">
-                      <div className="col-sm-6 label-text">
-                          <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
-                      </div>
-                      <div className="col-sm-6">
-                          <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
-                      </div>
-                  </div>
-              </div>)
-      }
-    }
+		}*/
 
     const showFile = function(item, index, ifTable) {
       if(ifTable) {
@@ -1241,7 +1332,7 @@ class CreateAsset extends React.Component {
                       <h3 className="categoryType">{item.name}</h3>
                    </div>
                    <div className="col-md-4 text-right">
-                      
+
                    </div>
                 </div>
                 <div className="row">
@@ -1334,12 +1425,12 @@ class CreateAsset extends React.Component {
                         <td>{item.code}</td>
                         <td>{item.name}</td>
                         <td>{item.assetCategory.name}</td>
-                        <td>{getNameById(departments, item.department.id)}</td>
+                        <td>{getNameById(this.state.departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td data-label="action">
                           <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>
                         </td>
-                      </tr>  
+                      </tr>
               );
         })
       }

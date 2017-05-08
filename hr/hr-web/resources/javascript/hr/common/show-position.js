@@ -13,13 +13,29 @@ class ShowPosition extends React.Component {
 
   componentDidMount()
   {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
+     
     try {
         var _position = commonApiPost("hr-masters","positions","_search",{tenantId,pageSize:500}).responseJSON["Position"] || [];
     } catch(e) {
         var _position = [];
     }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
+
     this.setState({
-      list: _position
+      list: _position,
+      assignments_department
     });
   }
 
@@ -43,7 +59,7 @@ class ShowPosition extends React.Component {
   }
 
   render() {
-    let {list}=this.state;
+    let {list,assignments_department}=this.state;
     let {department,designation,name,isPostOutsourced,active}=this.state.positionSet;
     var mode = getUrlVars()["type"];
 
@@ -71,7 +87,7 @@ class ShowPosition extends React.Component {
                     <td data-label="department">{getNameById(assignments_department,item.deptdesig.department)}</td>
                     <td data-label="designation">{item.deptdesig.designation.name}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="isPostOutsourced">{item.isPostOutsourced?item.isPostOutsourced:"false"}</td>
+                    <td data-label="isPostOutsourced">{item.isPostOutsourced?"true":"false"}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
 
                     <td data-label="action">
@@ -84,7 +100,7 @@ class ShowPosition extends React.Component {
     }
 
       return (<div>
-        <h3>{mode} Position </h3>
+          <h3>{titleCase(getUrlVars()["type"])} Position</h3>
         <table id="positionTable" className="table table-bordered">
             <thead>
                 <tr>

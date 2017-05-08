@@ -1,0 +1,85 @@
+	title Modify Property Flow
+
+Client->+PropertySvc: Modify Property Request
+note over Client,PropertySvc
+    Municipal employee, CSC center
+    posts a Modify property request 
+    using admin console
+end note
+PropertySvc->PropertySvc: validate Request Format
+note over PropertySvc
+    All request format validations like 
+    email, phone, string and number fields
+end note
+PropertySvc->PropertySvc: business Validations
+note over PropertySvc
+    Busniess validations e.g. application
+    could not be accepted due to some 
+    business reason
+end note
+PropertySvc->+KafkaQSvc: Queue for further processing
+PropertySvc->-Client: Modify Property Response
+alt isExistingSystemProperty
+    opt ifUserNotFound
+        note over KafkaQSvc, UserSvc
+            Need to rethink whether we should mandate
+            the user to be present rather than auto 
+            creating user
+        end note over 
+        KafkaQSvc->UserSvc: Create New User
+    end
+    KafkaQSvc->BoundrySvc: identify Boundry
+    KafkaQSvc->TaxCalcSvc: calculatePropertyTax
+    KafkaQSvc->DemandSvc: generateDemand
+    KafkaQSvc->WorkflowSvc: initiateWorkflow
+    KafkaQSvc->PropertySvc: updateProperty
+    KafkaQSvc->ESSvc: updateElasticSearchIndex
+    KafkaQSvc->NotificationSvc: sendNotification
+else isLegacyPropertyUpload
+        opt ifUserNotFound
+        note over KafkaQSvc, UserSvc
+            There's no choice but to automatically
+            Create user
+        end note over 
+        KafkaQSvc->UserSvc: Create New User
+    end
+    KafkaQSvc->BoundrySvc: identify Boundry
+    KafkaQSvc->DemandSvc: generateDemand
+    KafkaQSvc->PropertySvc: persistProperty
+    KafkaQSvc->ESSvc: updateElasticSearchIndex
+end
+
+
+	title Modify Property Flow
+
+Client->+PropertySvc: Modify Property Request
+note over Client,PropertySvc
+    municipal employee, CSC center
+    posts a modify new property request 
+    using admin console
+end note
+PropertySvc->PropertySvc: validate Request Format
+note over PropertySvc
+    All request format validations like 
+    email, phone, string and number fields
+end note
+PropertySvc->PropertySvc: business Validations
+note over PropertySvc
+    Busniess validations e.g. application
+    could not be accepted due to some 
+    business reason
+end note
+PropertySvc->+KafkaQSvc: Queue for further processing
+PropertySvc->-Client: Modify Property Response
+KafkaQSvc->TaxCalcSvc: calculatePropertyTax
+KafkaQSvc->DemandSvc: generateDemand
+KafkaQSvc->PropertySvc: adjustDemandAndCollection
+note over PropertySvc, KafkaQSvc
+    If there is a collection before update
+    then this collection to be adjusted
+    after change in a taxes
+end note
+KafkaQSvc->WorkflowSvc: initiateWorkflow
+KafkaQSvc->PropertySvc: persistProperty
+KafkaQSvc->ESSvc: updateElasticSearchIndex
+KafkaQSvc->NotificationSvc: sendNotification

@@ -1,0 +1,23 @@
+	title Create Property Master Flow
+
+Client->+PropertyMasterSvc: Property Master Request
+note over Client,PropertyMasterSvc
+    Municipal employee posts a 
+    new property Master request 
+    using admin console
+end note
+PropertyMasterSvc->PropertyMasterSvc: validate Request Format
+note over PropertyMasterSvc
+    Request format validations like 
+    unique value, others
+end note
+PropertyMasterSvc->PropertyMasterSvc: business Validations
+note over PropertyMasterSvc
+    Busniess validations e.g. master
+    could not be created due to some 
+    business reason
+end note
+PropertyMasterSvc->+KafkaQSvc: Queue for further processing
+PropertyMasterSvc->-Client: create Property Master Response
+KafkaQSvc->PropertyMasterSvc: persist Property Master
+KafkaQSvc->ESSvc: createElasticSearchIndex

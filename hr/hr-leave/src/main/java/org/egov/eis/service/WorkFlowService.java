@@ -111,7 +111,7 @@ public class WorkFlowService {
             task.setStatus(LeaveStatus.REJECTED.toString());
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             task.setStatus(LeaveStatus.CANCELLED.toString());
-        else if ("Submit".contains(workFlowAction))
+        else if ("Submit".equalsIgnoreCase(workFlowAction))
             task.setStatus(LeaveStatus.RESUBMITTED.toString());
         task.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
         Position assignee = new Position();

@@ -1,55 +1,73 @@
 package org.egov.boundary.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.EntityManager;
 
-import org.egov.boundary.persistence.entity.Boundary;
+import org.egov.boundary.persistence.repository.BoundaryJpaRepository;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BoundaryServiceTest {
 
-    @Mock
-    private BoundaryRepository boundaryRepository;
+	@Mock
+	private BoundaryJpaRepository boundaryJpaRepository;
 
-    @InjectMocks
-    private BoundaryService boundaryService;
+	@Mock
+	private BoundaryRepository boundaryRepository;
 
-    @Test
-    public void TestShouldFetchBoundariesForBoundarytypeAndHierarchytypeName() {
-        when(boundaryRepository.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("Ward", "ADMINISTRATION", "tenantId"))
-                .thenReturn(getExpectedBoundaryDetails());
+	@Mock
+	private CrossHierarchyService crossHierarchyService;
 
-        List<Boundary> boundaryList = boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("Ward",
-                "ADMINISTRATION", "tenantId");
+	@Mock
+	private BoundaryTypeService boundaryTypeService;
 
-        assertEquals("Election Ward No 1", boundaryList.get(0).getName());
-    }
+	private BoundaryService boundaryService;
 
-    @Test
-    public void TestShouldFetchBoundariesForBoundarytypeAndTenantId() {
-        when(boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(7L, "tenantId","tenantId"))
-                .thenReturn(getExpectedBoundaryDetails());
+	@Autowired
+	private EntityManager entityManager;
 
-        List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(7L, "tenantId");
+	@Before
+	public void before() {
+		boundaryService = new BoundaryService(boundaryJpaRepository, entityManager, boundaryTypeService,
+				crossHierarchyService, boundaryRepository);
+	}
 
-        assertEquals("Election Ward No 1", boundaryList.get(0).getName());
-    }
+	@Test
+	@Transactional
+	public void test_should_fetch_boundaries_for_boundarytype_and_hierarchytype_name() {
 
-    private List<Boundary> getExpectedBoundaryDetails() {
-        final List<Boundary> boundaryList = new ArrayList<>();
-        final Boundary boundary1 = Boundary.builder().id(1L).name("Election Ward No 1").build();
-        final Boundary boundary2 = Boundary.builder().id(2L).name("Election Ward No 2").build();
-        boundaryList.add(boundary1);
-        boundaryList.add(boundary2);
-        return boundaryList;
-    }
+		boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("Ward", "ADMINISTRATION",
+				"tenantId");
+
+		verify(boundaryRepository).getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("Ward", "ADMINISTRATION",
+				"tenantId");
+	}
+
+	@Test
+	@Transactional
+	public void test_should_fetch_boundaries_for_boundarytype_and_tenantid() {
+
+		boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(1l, "tenantId");
+
+		verify(boundaryRepository).getAllBoundariesByBoundaryTypeIdAndTenantId(1l, "tenantId");
+	}
+	
+	
+	@Test
+	@Transactional
+	public void test_should_fetch_boundaries_for_id_and_tenantid() {
+
+		boundaryService.getBoundariesByIdAndTenantId(1l, "tenantId");
+
+		verify(boundaryRepository).getBoundariesByIdAndTenantId(1l, "tenantId");
+	}
+
 }

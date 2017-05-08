@@ -26,6 +26,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.mockito.Matchers.any;
@@ -83,11 +86,17 @@ public class UserRequestControllerTest {
                 .andExpect(content().json(getFileContents("createCitizenOtpFailureResponse.json")));
     }
 
+	private Date toDate(LocalDateTime localDateTime) {
+		final ZonedDateTime expectedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("Asia/Calcutta"));
+		return Date.from(expectedDateTime.toInstant());
+	}
+
     private User buildUser() {
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.set(1917, Calendar.MARCH, 8, 11, 15, 36);
-        Date dateOfBirth = c.getTime();
-        c.set(2017, Calendar.FEBRUARY, 8, 11, 15, 36);
+		final Date expectedDOB = toDate(LocalDateTime.of(1986, 8, 4, 5, 30));
+
+		c.set(2017, Calendar.FEBRUARY, 8, 11, 15, 36);
         Date createdDate = c.getTime();
         c.set(2018, Calendar.FEBRUARY, 8, 11, 15, 36);
         Date pwdExpiryDate = c.getTime();
@@ -109,7 +118,7 @@ public class UserRequestControllerTest {
                 .pan("AITGC5624P")
                 .aadhaarNumber("96a70a9a-03bd-11e7-93ae-92361f002671")
                 .active(Boolean.TRUE)
-                .dob(dateOfBirth)
+                .dob(expectedDOB)
                 .passwordExpiryDate(pwdExpiryDate)
                 .locale("en_IN")
                 .type(UserType.CITIZEN)

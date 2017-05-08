@@ -1,49 +1,8 @@
-/*
- * eGov suite of products aim to improve the internal efficiency,transparency,
- *    accountability and the service delivery of the government  organizations.
- *
- *     Copyright (C) <2015>  eGovernments Foundation
- *
- *     The updated version of eGov suite of products as by eGovernments Foundation
- *     is available at http://www.egovernments.org
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program. If not, see http://www.gnu.org/licenses/ or
- *     http://www.gnu.org/licenses/gpl.html .
- *
- *     In addition to the terms of the GPL license to be adhered to in using this
- *     program, the following additional terms are to be complied with:
- *
- *         1) All versions of this program, verbatim or modified must carry this
- *            Legal Notice.
- *
- *         2) Any misrepresentation of the origin of the material is prohibited. It
- *            is required that all modified versions of this material be marked in
- *            reasonable ways as different from the original version.
- *
- *         3) This license does not grant any rights to any user of the program
- *            with regards to rights under trademark law for use of the trade names
- *            or trademarks of eGovernments Foundation.
- *
- *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
-
 package org.egov.user.security.oauth2.custom;
 
+import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.domain.model.SecureUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -54,8 +13,11 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -65,19 +27,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      * authentication_code.
      */
 
-    @Autowired
     private UserService userService;
 
-    @Override
+	public CustomAuthenticationProvider(UserService userService) {
+		this.userService = userService;
+	}
+
+	@Override
     public Authentication authenticate(Authentication authentication) {
 
         String userName = authentication.getName();
         String password = authentication.getCredentials().toString();
+        String tenantId = getTenantId(authentication);
         User user;
         if (userName.contains("@") && userName.contains(".")) {
-            user = userService.getUserByEmailId(userName);
+            user = userService.getUserByEmailId(userName, tenantId);
         } else {
-            user = userService.getUserByUsername(userName);
+            user = userService.getUserByUsername(userName, tenantId);
         }
         if (user == null) {
             throw new OAuth2Exception("Invalid login credentials");
@@ -105,7 +71,18 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
-    private org.egov.user.web.contract.auth.User getUser(User user) {
+	@SuppressWarnings("unchecked")
+	private String getTenantId(Authentication authentication) {
+		final LinkedHashMap<String, String> details =
+				(LinkedHashMap<String, String>) authentication.getDetails();
+		final String tenantId = details.get("tenantId");
+		if (isEmpty(tenantId)) {
+			throw new OAuth2Exception("TenantId is mandatory");
+		}
+		return tenantId;
+	}
+
+	private org.egov.user.web.contract.auth.User getUser(User user) {
         return org.egov.user.web.contract.auth.User.builder()
                 .id(user.getId())
                 .userName(user.getUsername())

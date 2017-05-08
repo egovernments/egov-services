@@ -43,6 +43,7 @@ package org.egov.egf.persistence.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -58,73 +59,168 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode(exclude={"accountCodePurpose","chartOfAccountDetails"},callSuper=false)
+@EqualsAndHashCode(exclude = { "accountCodePurpose", "chartOfAccountDetails" }, callSuper = false)
 @Table(name = "egf_chartofaccount")
 @SequenceGenerator(name = ChartOfAccount.SEQ_CHARTOFACCOUNT, sequenceName = ChartOfAccount.SEQ_CHARTOFACCOUNT, allocationSize = 1)
 public class ChartOfAccount extends AbstractAuditable {
 
-	private static final long serialVersionUID = 61219209022946300L;
+    private static final long serialVersionUID = 61219209022946300L;
 
-	public static final String SEQ_CHARTOFACCOUNT = "seq_egf_chartofaccount";
+    public static final String SEQ_CHARTOFACCOUNT = "seq_egf_chartofaccount";
 
-	@Id
-	@GeneratedValue(generator = ChartOfAccount.SEQ_CHARTOFACCOUNT, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    @Id
+    @GeneratedValue(generator = ChartOfAccount.SEQ_CHARTOFACCOUNT, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@NotNull
-	@Length(max = 16,min=1)
-	private String glcode;
-	@NotNull
-	@Length(max = 128,min=5)
-	private String name;
+    @NotNull
+    @Length(max = 16, min = 1)
+    private String glcode;
+    @NotNull
+    @Length(max = 128, min = 5)
+    private String name;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "purposeId", nullable = true)
-	private AccountCodePurpose accountCodePurpose;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "purposeId")
+    private Long accountCodePurpose;
 
-	@Length(max = 256)
-	private String description;
-	
-	@NotNull
-	private Boolean isActiveForPosting;
+    @Length(max = 256)
+    private String description;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="parentId")
-	private ChartOfAccount parentId;
-	@NotNull
-	private Character type;
-	@NotNull
-	private Long classification;
-	@NotNull
-	private Boolean functionRequired;
-	@NotNull
-	private Boolean budgetCheckRequired;
+    @NotNull
+    private Boolean isActiveForPosting;
 
-	@Length(max = 16)
-	private String majorCode;
+//    @JsonProperty(access = Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "parentId")
+    private Long parentId;
+    @NotNull
+    private Character type;
+    @NotNull
+    private Long classification;
+    @NotNull
+    private Boolean functionRequired;
+    @NotNull
+    private Boolean budgetCheckRequired;
 
-	@Transient
-	private Boolean isSubLedger;
+    @Length(max = 16)
+    private String majorCode;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "chartOfAccount", targetEntity = ChartOfAccountDetail.class)
-	private Set<ChartOfAccountDetail> chartOfAccountDetails = new HashSet<ChartOfAccountDetail>();
+    @Transient
+    private Boolean isSubLedger;
 
-	 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getGlcode() {
+        return glcode;
+    }
+
+    public void setGlcode(String glcode) {
+        this.glcode = glcode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getIsActiveForPosting() {
+        return isActiveForPosting;
+    }
+
+    public void setIsActiveForPosting(Boolean isActiveForPosting) {
+        this.isActiveForPosting = isActiveForPosting;
+    }
+
+    public Character getType() {
+        return type;
+    }
+
+    public void setType(Character type) {
+        this.type = type;
+    }
+
+    public Long getClassification() {
+        return classification;
+    }
+
+    public void setClassification(Long classification) {
+        this.classification = classification;
+    }
+
+    public Boolean getFunctionRequired() {
+        return functionRequired;
+    }
+
+    public void setFunctionRequired(Boolean functionRequired) {
+        this.functionRequired = functionRequired;
+    }
+
+    public Boolean getBudgetCheckRequired() {
+        return budgetCheckRequired;
+    }
+
+    public void setBudgetCheckRequired(Boolean budgetCheckRequired) {
+        this.budgetCheckRequired = budgetCheckRequired;
+    }
+
+    public String getMajorCode() {
+        return majorCode;
+    }
+
+    public void setMajorCode(String majorCode) {
+        this.majorCode = majorCode;
+    }
+
+    public Boolean getIsSubLedger() {
+        return isSubLedger;
+    }
+
+    public void setIsSubLedger(Boolean isSubLedger) {
+        this.isSubLedger = isSubLedger;
+    }
+
+    public Long getAccountCodePurpose() {
+        return accountCodePurpose;
+    }
+
+    public void setAccountCodePurpose(Long accountCodePurpose) {
+        this.accountCodePurpose = accountCodePurpose;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
 }

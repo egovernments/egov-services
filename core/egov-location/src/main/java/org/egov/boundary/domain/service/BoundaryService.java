@@ -50,9 +50,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.persistence.repository.BoundaryJpaRepository;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.geotools.data.DataStore;
@@ -79,16 +82,24 @@ public class BoundaryService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BoundaryService.class);
 
-	private final BoundaryRepository boundaryRepository;
+	private final BoundaryJpaRepository boundaryJpaRepository;
 
-	@Autowired
 	private CrossHierarchyService crossHierarchyService;
 
-	@Autowired
 	private BoundaryTypeService boundaryTypeService;
 
+	private EntityManager entityManager;
+
+	private BoundaryRepository boundaryRepository;
+
 	@Autowired
-	public BoundaryService(final BoundaryRepository boundaryRepository) {
+	public BoundaryService(final BoundaryJpaRepository boundaryJpaRepository, EntityManager entityManager,
+			BoundaryTypeService boundaryTypeService, CrossHierarchyService crossHierarchyService,
+			BoundaryRepository boundaryRepository) {
+		this.boundaryJpaRepository = boundaryJpaRepository;
+		this.entityManager = entityManager;
+		this.boundaryTypeService = boundaryTypeService;
+		this.crossHierarchyService = crossHierarchyService;
 		this.boundaryRepository = boundaryRepository;
 	}
 
@@ -101,35 +112,38 @@ public class BoundaryService {
 			boundary.setBoundaryType(boundaryTypeService.findByIdAndTenantId(boundary.getBoundaryType().getId(),
 					boundary.getTenantId()));
 		}
-		return boundaryRepository.save(boundary);
+		return boundaryJpaRepository.save(boundary);
 	}
 
 	@Transactional
 	public Boundary updateBoundary(final Boundary boundary) {
 		boundary.setHistory(false);
 		boundary.setMaterializedPath(getMaterializedPath(boundary, boundary.getParent()));
-		return boundaryRepository.save(boundary);
+		return boundaryJpaRepository.save(boundary);
 	}
 
 	public Boundary getBoundaryById(final Long id) {
-		return boundaryRepository.findOne(id);
+		return boundaryJpaRepository.findOne(id);
 	}
 
 	public List<Boundary> getAllBoundariesOrderByBoundaryNumAsc(BoundaryType boundaryType) {
-		return boundaryRepository.findByBoundaryTypeOrderByBoundaryNumAsc(boundaryType);
+		return boundaryJpaRepository.findByBoundaryTypeOrderByBoundaryNumAsc(boundaryType);
 	}
 
-	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,final String tenantId) {
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,tenantId,tenantId);
+	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
+			final String tenantId) {
+
+		return boundaryRepository.getAllBoundariesByBoundaryTypeIdAndTenantId(boundaryTypeId, tenantId);
 	}
 
-	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId,final String tenantId) {
+	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId, final String tenantId) {
 
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,tenantId,tenantId);
+		return boundaryJpaRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,
+				tenantId, tenantId);
 	}
 
 	public Boundary getBoundaryByTypeAndNo(final BoundaryType boundaryType, final Long boundaryNum) {
-		return boundaryRepository.findBoundarieByBoundaryTypeAndBoundaryNum(boundaryType, boundaryNum);
+		return boundaryJpaRepository.findBoundarieByBoundaryTypeAndBoundaryNum(boundaryType, boundaryNum);
 	}
 
 	public List<Boundary> getParentBoundariesByBoundaryId(final Long boundaryId) {
@@ -144,57 +158,60 @@ public class BoundaryService {
 	}
 
 	public List<Boundary> getActiveBoundariesByBoundaryTypeId(final Long boundaryTypeId) {
-		return boundaryRepository.findActiveBoundariesByBoundaryTypeId(boundaryTypeId);
+		return boundaryJpaRepository.findActiveBoundariesByBoundaryTypeId(boundaryTypeId);
 	}
 
 	public List<Boundary> getTopLevelBoundaryByHierarchyType(final HierarchyType hierarchyType) {
-		return boundaryRepository.findActiveBoundariesByHierarchyTypeAndLevelAndAsOnDate(hierarchyType, 1l, new Date());
+		return boundaryJpaRepository.findActiveBoundariesByHierarchyTypeAndLevelAndAsOnDate(hierarchyType, 1l,
+				new Date());
 	}
 
 	public List<Boundary> getActiveChildBoundariesByBoundaryId(final Long boundaryId) {
-		return boundaryRepository.findActiveChildBoundariesByBoundaryIdAndAsOnDate(boundaryId, new Date());
+		return boundaryJpaRepository.findActiveChildBoundariesByBoundaryIdAndAsOnDate(boundaryId, new Date());
 	}
 
 	public List<Boundary> getChildBoundariesByBoundaryId(final Long boundaryId) {
-		return boundaryRepository.findChildBoundariesByBoundaryIdAndAsOnDate(boundaryId, new Date());
+		return boundaryJpaRepository.findChildBoundariesByBoundaryIdAndAsOnDate(boundaryId, new Date());
 	}
 
 	public Boundary getActiveBoundaryByBndryNumAndTypeAndHierarchyTypeCode(final Long bndryNum,
 			final String boundaryType, final String hierarchyTypeCode) {
-		return boundaryRepository.findActiveBoundaryByBndryNumAndTypeAndHierarchyTypeCodeAndAsOnDate(bndryNum,
+		return boundaryJpaRepository.findActiveBoundaryByBndryNumAndTypeAndHierarchyTypeCodeAndAsOnDate(bndryNum,
 				boundaryType, hierarchyTypeCode, new Date());
 	}
 
 	public List<Boundary> getActiveBoundariesByBndryTypeNameAndHierarchyTypeName(final String boundaryTypeName,
 			final String hierarchyTypeName) {
-		return boundaryRepository.findActiveBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
+		return boundaryJpaRepository.findActiveBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
 				hierarchyTypeName);
 	}
 
 	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
-																					  final String hierarchyTypeName, final String tenantId) {
+			final String hierarchyTypeName, final String tenantId) {
+
 		return boundaryRepository.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(boundaryTypeName,
 				hierarchyTypeName, tenantId);
 	}
 
 	public Boundary getBoundaryByBndryTypeNameAndHierarchyTypeName(final String boundaryTypeName,
 			final String hierarchyTypeName) {
-		return boundaryRepository.findBoundaryByBndryTypeNameAndHierarchyTypeName(boundaryTypeName, hierarchyTypeName);
+		return boundaryJpaRepository.findBoundaryByBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
+				hierarchyTypeName);
 	}
 
 	public List<Boundary> getBondariesByNameAndTypeOrderByBoundaryNumAsc(final String boundaryName,
 			final Long boundaryTypeId) {
-		return boundaryRepository.findByNameAndBoundaryTypeOrderByBoundaryNumAsc(boundaryName, boundaryTypeId);
+		return boundaryJpaRepository.findByNameAndBoundaryTypeOrderByBoundaryNumAsc(boundaryName, boundaryTypeId);
 	}
 
 	public Boolean validateBoundary(final BoundaryType boundaryType) {
-		return Optional.ofNullable(boundaryRepository.findByBoundaryTypeNameAndHierarchyTypeNameAndLevel(
+		return Optional.ofNullable(boundaryJpaRepository.findByBoundaryTypeNameAndHierarchyTypeNameAndLevel(
 				boundaryType.getName(), boundaryType.getHierarchyType().getName(), 1L)).isPresent();
 	}
 
 	public List<Boundary> getBondariesByNameAndBndryTypeAndHierarchyType(final String boundaryTypeName,
 			final String hierarchyTypeName, final String name) {
-		return boundaryRepository.findActiveBoundariesByNameAndBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
+		return boundaryJpaRepository.findActiveBoundariesByNameAndBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
 				hierarchyTypeName, name);
 	}
 
@@ -203,29 +220,29 @@ public class BoundaryService {
 
 		crossHierarchyService.getChildBoundaryNameAndBndryTypeAndHierarchyTypeAndTenantId("Locality", "Location",
 				"Administration", '%' + name + '%', tenantId).stream().forEach(location -> {
-			final Map<String, Object> res = new HashMap<>();
-			res.put("id", location.getId());
-			res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
-			list.add(res);
-		});
+					final Map<String, Object> res = new HashMap<>();
+					res.put("id", location.getId());
+					res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
+					list.add(res);
+				});
 		return list;
 	}
 
 	public List<Boundary> findActiveChildrenWithParent(final Long parentBoundaryId) {
-		return boundaryRepository.findActiveChildrenWithParent(parentBoundaryId);
+		return boundaryJpaRepository.findActiveChildrenWithParent(parentBoundaryId);
 	}
 
 	public List<Boundary> findActiveBoundariesForMpath(final Set<String> mpath) {
-		return boundaryRepository.findActiveBoundariesForMpath(mpath);
+		return boundaryJpaRepository.findActiveBoundariesForMpath(mpath);
 	}
 
 	public String getMaterializedPath(final Boundary child, final Boundary parent) {
 		String mpath = "";
 		int childSize = 0;
 		if (null == parent)
-			mpath = String.valueOf(boundaryRepository.findAllParents().size() + 1);
+			mpath = String.valueOf(boundaryJpaRepository.findAllParents().size() + 1);
 		else
-			childSize = boundaryRepository.findActiveImmediateChildrenWithOutParent(parent.getId()).size();
+			childSize = boundaryJpaRepository.findActiveImmediateChildrenWithOutParent(parent.getId()).size();
 		if (mpath.isEmpty())
 			if (null != child) {
 				if (parent != null && !child.getMaterializedPath()
@@ -266,7 +283,7 @@ public class BoundaryService {
 						if (geom.contains(point)) {
 							LOG.debug("Found coordinates in shape file");
 							return getBoundaryByNumberAndType((Long) feature.getAttribute("bndrynum"),
-									(String) feature.getAttribute("bndrytype"),tenantId);
+									(String) feature.getAttribute("bndrytype"), tenantId);
 						}
 					}
 				} finally {
@@ -288,7 +305,8 @@ public class BoundaryService {
 			if (boundary == null) {
 				final BoundaryType cityBoundaryType = boundaryTypeService
 						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION");
-				return Optional.ofNullable(this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(),tenantId).get(0));
+				return Optional.ofNullable(
+						this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(), tenantId).get(0));
 			}
 			return Optional.of(boundary);
 		}
@@ -297,7 +315,11 @@ public class BoundaryService {
 	}
 
 	public Boundary findByTenantIdAndCode(String tenantId, String code) {
-		return boundaryRepository.findByTenantIdAndBoundaryNum(tenantId, code);
+		return boundaryJpaRepository.findByTenantIdAndBoundaryNum(tenantId, code);
+	}
+
+	public List<Boundary> getBoundariesByIdAndTenantId(Long id, String tenantId) {
+		return boundaryRepository.getBoundariesByIdAndTenantId(id, tenantId);
 	}
 
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
@@ -305,8 +327,8 @@ public class BoundaryService {
 		if (boundaryRequest.getBoundary().getTenantId() != null
 				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
 			if (boundaryRequest.getBoundary().getId() != null) {
-				boundaries.add(boundaryRepository.findByTenantIdAndId(boundaryRequest.getBoundary().getTenantId(),
-						boundaryRequest.getBoundary().getId()));
+				boundaries.addAll(getBoundariesByIdAndTenantId(boundaryRequest.getBoundary().getId(),
+						boundaryRequest.getBoundary().getTenantId()));
 			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
@@ -318,8 +340,8 @@ public class BoundaryService {
 					else
 						boundaries = new ArrayList<Boundary>();
 				} else {
-					boundaries
-							.addAll(boundaryRepository.findAllByTenantId(boundaryRequest.getBoundary().getTenantId()));
+					boundaries.addAll(
+							boundaryJpaRepository.findAllByTenantId(boundaryRequest.getBoundary().getTenantId()));
 				}
 			}
 		}

@@ -1,0 +1,38 @@
+package org.egov.pgrrest.read.domain.service;
+
+import java.util.List;
+
+import org.egov.pgrrest.common.entity.ComplaintTypeCategory;
+import org.egov.pgrrest.read.persistence.repository.ComplaintTypeCategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional(readOnly = true)
+public class ComplaintTypeCategoryService {
+
+    private final ComplaintTypeCategoryRepository complaintTypeCategoryRepository;
+
+    @Autowired
+    public ComplaintTypeCategoryService(final ComplaintTypeCategoryRepository complaintTypeCategoryRepository) {
+        this.complaintTypeCategoryRepository = complaintTypeCategoryRepository;
+    }
+
+    public ComplaintTypeCategory findById(final Long categoryId) {
+        return complaintTypeCategoryRepository.findOne(categoryId);
+    }
+
+    @Transactional
+    public ComplaintTypeCategory createComplaintTypeCategory(final ComplaintTypeCategory complaintTypeCategory) {
+        return complaintTypeCategoryRepository.save(complaintTypeCategory);
+    }
+
+    public List<ComplaintTypeCategory> getAll(final String tenantId) {
+        return complaintTypeCategoryRepository.findAllByTenantIdOrderByNameAsc(tenantId);
+    }
+
+    public ComplaintTypeCategory findByName(final String categoryName) {
+        return complaintTypeCategoryRepository.findByName(categoryName);
+    }
+}

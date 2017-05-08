@@ -87,7 +87,14 @@ class PersonalInform extends React.Component {
   }
 
 
-  componentDidMount(){
+  componentDidMount() {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
+     
     if(getUrlVars()["type"] == "view") {
       this.setState({
         readonly: true
@@ -258,7 +265,11 @@ class PersonalInform extends React.Component {
 
   componentWillMount() {
     try {
-        var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+        var _leaveTypes = commonApiPost("hr-leave", "leavetypes", "_search", {
+          tenantId,
+          pageSize: 500,
+          accumulative: true
+        }).responseJSON["LeaveType"] || [];
     } catch(e) {
         var _leaveTypes = [];
     }
@@ -268,9 +279,23 @@ class PersonalInform extends React.Component {
     } catch(e) {
         var _years = [];
     }
+
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
     this.setState({
-      departmentsList:assignments_department,
-      designationList:assignments_designation,
+      departmentsList: assignments_department,
+      designationList: assignments_designation,
       leave: _leaveTypes,
       years: _years
   })

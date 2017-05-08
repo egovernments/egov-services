@@ -2164,7 +2164,13 @@ $("#createEmployeeForm").validate({
             var err = response["responseJSON"].Error.message || "";
             if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
               for(var key in response["responseJSON"].Error.fields) {
-                err += "\n " + response["responseJSON"].Error.fields[key] + " ";
+                var _key = "";
+                if(key.indexOf(".") > -1) {
+                  _key = key.split(".");
+                  _key.shift();
+                  _key = _key.join("."); 
+                }
+                err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
               }
               showError(err);
             } else {

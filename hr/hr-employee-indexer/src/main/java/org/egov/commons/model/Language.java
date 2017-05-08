@@ -40,16 +40,24 @@
 
 package org.egov.commons.model;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.commons.web.contract.ReligionResponse;
+import org.egov.commons.web.contract.ReligionResponse.ReligionResponseBuilder;
+import org.egov.core.web.contract.ResponseInfo;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

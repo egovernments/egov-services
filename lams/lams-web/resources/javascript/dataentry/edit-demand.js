@@ -48,23 +48,10 @@ class EditDemand extends React.Component {
       "year": "",
 },demands:[],
 }
-    // this.handleCheckAll = this.handleCheckAll.bind(this);
-    // this.handleChange = this.handleChange.bind(this);
-    // this.markDemand = this.markDemand.bind(this);
-    // this.markBulkDemand = this.markBulkDemand.bind(this);
-    this.handleChangeSrchRslt=this.handleChangeSrchRslt.bind(this);
 }
 close(){
     // widow.close();
     open(location, '_self').close();
-}
-handleChangeSrchRslt(e, name, ind) {
-  var _emps = Object.assign([], this.state.demands);
-  _emps[ind][name] = e.target.value;
-  this.setState({
-      ...this.state,
-      demands: _emps
-  })
 }
 
 componentWillMount()
@@ -127,23 +114,11 @@ return (
               {
                   renderBody()
               }
-                </tbody>
-
-
-          </table>
-
-
-
+        </tbody>
+        </table>
         <div className="text-center">
-
-        <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
-
+          <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
         </div>
-
-
-
-
-
 </div>
 </form>
 </div>

@@ -112,27 +112,27 @@ public class AssetIndex {
 			this.localityName = locationBoundary.getName();
 
 		this.zone = location.getZone();
-		Boundary zoneBoundary = map.get(location.getLocality());
+		Boundary zoneBoundary = map.get(location.getZone());
 		if (zoneBoundary != null)
 			this.zoneName = map.get(location.getZone()).getName();
 
 		this.revenueWard = location.getRevenueWard();
-		Boundary revenueWardBoundary = map.get(location.getLocality());
+		Boundary revenueWardBoundary = map.get(location.getRevenueWard());
 		if (revenueWardBoundary != null)
 			this.revenueWardName = map.get(location.getRevenueWard()).getName();
 
 		this.block = location.getBlock();
-		Boundary blockBoundary = map.get(location.getLocality());
+		Boundary blockBoundary = map.get(location.getBlock());
 		if (blockBoundary != null)
 			this.blockName = map.get(location.getBlock()).getName();
 
 		this.street = location.getStreet();
-		Boundary streetBoundary = map.get(location.getLocality());
+		Boundary streetBoundary = map.get(location.getStreet());
 		if (streetBoundary != null)
 			this.streetName = map.get(location.getStreet()).getName();
 
 		this.electionWard = location.getElectionWard();
-		Boundary electionWardBoundary = map.get(location.getLocality());
+		Boundary electionWardBoundary = map.get(location.getElectionWard());
 		if (electionWardBoundary != null)
 			this.electionWardName = map.get(location.getElectionWard()).getName();
 

@@ -36,7 +36,7 @@ public class DataSyncTask {
     @Value("${state}")
     private String state;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRateString = "${rateInSeconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
         String now = dateFormat.format(new Date());
@@ -53,7 +53,7 @@ public class DataSyncTask {
                 ).forEach(res -> {
                     try {
                         new RowSyncer(info, res, sourceSchema, destinationSchema, state, jdbcTemplate).insertOrUpdate();
-                    } catch (SQLException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });

@@ -7,7 +7,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -29,17 +28,17 @@ public class RowSyncer {
         this.syncInfo = syncInfo;
         this.rs = rs;
         this.sourceSchema = sourceSchema;
-        this.destinationSchema = destinationSchema;
+        this.destinationSchema = getDestinationSchema(destinationSchema);
         this.state = state;
         this.jdbcTemplate = jdbcTemplate;
         columnValueMapper = new RowColumnValueMapper(syncInfo, rs);
-        overrideDestinationSchema();
     }
 
-    private void overrideDestinationSchema() {
+    private String getDestinationSchema(String destinationSchema) {
         if (Objects.equals(sourceSchema, "microservice")) {
-            destinationSchema = String.format("%s.%s", state, rs.get("tenantId"));
+            return String.format("%s", rs.get("tenantId")).split(".")[1];
         }
+        return destinationSchema;
     }
 
     public void insertOrUpdate() throws SQLException {

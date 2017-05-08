@@ -429,7 +429,7 @@ class CreateAsset extends React.Component {
                 }
             });
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${_this.state.assetSet.code}`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${response["responseJSON"] && response["responseJSON"].Assets && response["responseJSON"].Assets[0] && response["responseJSON"].Assets[0].code ?  response["responseJSON"].Assets[0].code : ""}`;
             } else {
                 this.setState({
                     ...this.state,

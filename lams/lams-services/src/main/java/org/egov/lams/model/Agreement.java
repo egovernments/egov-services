@@ -98,5 +98,5 @@ public class Agreement {
 	@NotNull
 	private Source source;
 	
-	private Demand legacyDemand;
+	private List<Demand> legacyDemands;
 }

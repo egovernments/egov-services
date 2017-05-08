@@ -99,6 +99,7 @@ public class UserControllerTest {
 				.username("userName")
 				.name("foo")
 				.dob(expectedDate)
+				.guardian("name of relative")
 				.build();
 		when(userService.createCitizen(any())).thenReturn(user);
 
@@ -118,6 +119,7 @@ public class UserControllerTest {
 				.username("userName")
 				.name("foo")
 				.dob(expectedDate)
+				.guardian("name of relative")
 				.build();
 		final ArgumentCaptor<org.egov.user.domain.model.User> argumentCaptor =
 				ArgumentCaptor.forClass(org.egov.user.domain.model.User.class);
@@ -134,6 +136,7 @@ public class UserControllerTest {
 		assertEquals("foo", actualUser.getName());
 		assertEquals("userName", actualUser.getUsername());
 		assertEquals(expectedDate, actualUser.getDob());
+		assertEquals("name of relative", actualUser.getGuardian());
 	}
 
 	@Test

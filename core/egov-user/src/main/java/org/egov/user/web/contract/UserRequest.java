@@ -89,15 +89,9 @@ public class UserRequest {
 		this.lastModifiedDate = user.getLastModifiedDate();
 		this.tenantId = user.getTenantId();
 		this.roles = convertDomainRoleToContract(user.getRoles());
-		mapFatherOrHusbandName(user);
+		this.fatherOrHusbandName = user.getGuardian();
 		mapPermanentAddress(user);
 		mapCorrespondenceAddress(user);
-	}
-
-	private void mapFatherOrHusbandName(User user) {
-		if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
-			this.fatherOrHusbandName = user.getGuardian();
-		}
 	}
 
 	private void mapCorrespondenceAddress(User user) {
@@ -119,12 +113,6 @@ public class UserRequest {
 	private List<RoleRequest> convertDomainRoleToContract(List<Role> domainRoles) {
 		if (domainRoles == null) return new ArrayList<>();
 		return domainRoles.stream().map(RoleRequest::new).collect(Collectors.toList());
-	}
-
-	private boolean isGuardianRelationFatherOrHusband(GuardianRelation guardianRelation) {
-		return guardianRelation != null &&
-				(guardianRelation.equals(GuardianRelation.Father)
-						|| guardianRelation.equals(GuardianRelation.Husband));
 	}
 
 	@JsonIgnore
@@ -159,6 +147,7 @@ public class UserRequest {
 				.loggedInUserId(loggedInUserId)
 				.permanentAddress(toDomainPermanentAddress())
 				.correspondenceAddress(toDomainCorrespondenceAddress())
+				.guardian(fatherOrHusbandName)
 				.build();
 	}
 

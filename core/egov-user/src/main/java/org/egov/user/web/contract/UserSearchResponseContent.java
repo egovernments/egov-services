@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 
 import java.util.ArrayList;
@@ -87,16 +86,10 @@ public class UserSearchResponseContent {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.roles = convertDomainRolesToContract(user.getRoles());
-		mapFatherOrHusbandName(user);
+		this.fatherOrHusbandName = user.getGuardian();
 		mapPermanentAddress(user);
 		mapCorrespondenceAddress(user);
     }
-
-	private void mapFatherOrHusbandName(User user) {
-		if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
-			this.fatherOrHusbandName = user.getGuardian();
-		}
-	}
 
 	private void mapCorrespondenceAddress(User user) {
 		if (user.getCorrespondenceAddress() != null) {
@@ -120,9 +113,4 @@ public class UserSearchResponseContent {
         return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toList());
     }
 
-    private boolean isGuardianRelationFatherOrHusband(GuardianRelation guardianRelation) {
-        return guardianRelation != null &&
-                (guardianRelation.equals(GuardianRelation.Father)
-                        || guardianRelation.equals(GuardianRelation.Husband));
-    }
 }

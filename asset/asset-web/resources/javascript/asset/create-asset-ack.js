@@ -4,6 +4,15 @@ class CreateAsset extends React.Component {
       open(location, '_self').close();
     }
 
+    componentDidMount() {
+      if(window.parent && window.parent.document) {
+        var logo_ele = window.parent.document.getElementsByClassName("homepage_logo");
+        if(logo_ele && logo_ele[0]) {
+          document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
+        }
+      }
+    }
+    
     render() {
       const renderCode = function () {
         if(getUrlVars()["code"]) {

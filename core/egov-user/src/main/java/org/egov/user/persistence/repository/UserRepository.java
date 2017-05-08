@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class UserRepository {
@@ -78,7 +77,7 @@ public class UserRepository {
 	private org.egov.user.domain.model.Address saveAddress(org.egov.user.domain.model.Address address,
 														   Long userId,
 														   String tenantId) {
-		if(address != null) {
+		if (address != null) {
 			addressRepository.create(address, userId, tenantId);
 			return address;
 		}
@@ -143,7 +142,8 @@ public class UserRepository {
 	}
 
 	private Role fetchRole(User user, Role role) {
-		final Role enrichedRole = roleJpaRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode());
+		final Role enrichedRole = roleJpaRepository
+				.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode());
 		if (enrichedRole == null) {
 			throw new InvalidRoleCodeException(role.getCode());
 		}
@@ -162,30 +162,29 @@ public class UserRepository {
 
 	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
 		User oldUser = userJpaRepository.findByIdAndTenantId(user.getId(), user.getTenantId());
-                oldUser.setAadhaarNumber(user.getAadhaarNumber());
-                oldUser.setAccountLocked(user.getAccountLocked());
-                oldUser.setActive(user.getActive());
-                oldUser.setAltContactNumber(user.getAltContactNumber());
-                oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
-                oldUser.setDob(user.getDob());
-                oldUser.setEmailId(user.getEmailId());
-                oldUser.setGender(toEnumType(Gender.class, user.getGender()));
-                oldUser.setGuardian(user.getGuardian());
-                oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
-                oldUser.setIdentificationMark(user.getIdentificationMark());
-                oldUser.setLocale(user.getLocale());
-                oldUser.setMobileNumber(user.getMobileNumber());
-                oldUser.setName(user.getName());
-                oldUser.setPan(user.getPan());
-                oldUser.setPassword(user.getPassword());
-                oldUser.setPhoto(user.getPhoto());
-                oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
-                oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
-                oldUser.setSalutation(user.getSalutation());
-                oldUser.setSignature(user.getSignature());
-                oldUser.setTitle(user.getTitle());
-                oldUser.setType(toEnumType(UserType.class, user.getType()));
-
+		oldUser.setAadhaarNumber(user.getAadhaarNumber());
+		oldUser.setAccountLocked(user.getAccountLocked());
+		oldUser.setActive(user.getActive());
+		oldUser.setAltContactNumber(user.getAltContactNumber());
+		oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
+		oldUser.setDob(user.getDob());
+		oldUser.setEmailId(user.getEmailId());
+		oldUser.setGender(toEnumType(Gender.class, user.getGender()));
+		oldUser.setGuardian(user.getGuardian());
+		oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
+		oldUser.setIdentificationMark(user.getIdentificationMark());
+		oldUser.setLocale(user.getLocale());
+		oldUser.setMobileNumber(user.getMobileNumber());
+		oldUser.setName(user.getName());
+		oldUser.setPan(user.getPan());
+		oldUser.setPassword(user.getPassword());
+		oldUser.setPhoto(user.getPhoto());
+		oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
+		oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
+		oldUser.setSalutation(user.getSalutation());
+		oldUser.setSignature(user.getSignature());
+		oldUser.setTitle(user.getTitle());
+		oldUser.setType(toEnumType(UserType.class, user.getType()));
 		setEnrichedRolesToUser(oldUser);
 		encryptPassword(oldUser);
 		oldUser.setLastModifiedDate(new Date());

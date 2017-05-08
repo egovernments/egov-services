@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("v1/files")
+@RequestMapping("/v1/files")
 public class StorageController {
 
     private StorageService storageService;

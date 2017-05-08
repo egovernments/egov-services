@@ -107,7 +107,7 @@ class SearchAsset extends React.Component {
   render() {
       let {handleChange,search}=this;
       let {assetCategory,name,code,department,status}=this.state.searchSet;
-      let {isSearchClicked,list}=this.state;
+      let {isSearchClicked,list, departments}=this.state;
 
       const renderOption=function(list)
       {

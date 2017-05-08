@@ -1426,7 +1426,7 @@ class CreateAsset extends React.Component {
                         <td>{item.code}</td>
                         <td>{item.name}</td>
                         <td>{item.assetCategory.name}</td>
-                        <td>{getNameById(departments, item.department.id)}</td>
+                        <td>{getNameById(this.state.departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td data-label="action">
                           <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>

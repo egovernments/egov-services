@@ -12,6 +12,12 @@ class ShowCategory extends React.Component {
 
   componentDidMount()
   {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
     try {
         var _categories = commonApiPost("egov-common-masters","categories","_search",{tenantId,pageSize:500}).responseJSON["Category"] || [];
     } catch(e) {

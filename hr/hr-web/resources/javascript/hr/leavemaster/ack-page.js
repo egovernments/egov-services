@@ -3,6 +3,14 @@ class AckPage extends React.Component {
       // widow.close();
       open(location, '_self').close();
     }
+    componentDidMount(){
+      if(window.opener && window.opener.document) {
+         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+         if(logo_ele && logo_ele[0]) {
+           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+         }
+       }
+    }
     render() {
 
 

@@ -14,7 +14,14 @@ class SearchLeaveApplication extends React.Component {
 
   }
 
-
+  componentDidMount(){
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
+  }
 
 
   search(e)
@@ -47,10 +54,25 @@ class SearchLeaveApplication extends React.Component {
 
   componentWillMount()
   {
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
 
     this.setState({
-      assignments_department,
-      assignments_designation
+      assignments_department:assignments_department,
+      assignments_designation:assignments_designation,
+      assignments_designation,
+      assignments_department
   })
   }
 
@@ -136,7 +158,7 @@ class SearchLeaveApplication extends React.Component {
 
   render() {
     let {handleChange,search,handleBlur}=this;
-    let {isSearchClicked,employees}=this.state;
+    let {isSearchClicked,employees,assignments_designation,assignments_department}=this.state;
     let {name,
     code,
     departmentId,

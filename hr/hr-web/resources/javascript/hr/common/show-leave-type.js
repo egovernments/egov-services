@@ -17,6 +17,13 @@ class ShowLeaveType extends React.Component {
 
 componentDidMount()
 {
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+     }
+   }
+   
   try {
       var _leaveTypes = commonApiPost("hr-leave", "leavetypes","_search",{tenantId,pageSize:500}).responseJSON["LeaveType"] || [];
   } catch(e) {

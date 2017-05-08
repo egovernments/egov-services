@@ -20,11 +20,20 @@ constructor(props){
 
 
 
-componentWillMount(){
-  this.setState({
-    year
-})
-}
+    componentWillMount()
+    {
+      try {
+      var  year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [])), JSON.parse(localStorage.getItem("year"))) : JSON.parse(localStorage.getItem("year"));
+
+      } catch (e) {
+          console.log(e);
+        var  year = [];
+      }
+      this.setState({
+        year : year
+    })
+  }
+
     handleChange(e,name)
     {
 
@@ -38,6 +47,12 @@ componentWillMount(){
     }
 
     componentDidMount(){
+      if(window.opener && window.opener.document) {
+         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+         if(logo_ele && logo_ele[0]) {
+           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+         }
+       }
       var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $('#applicableOn').datepicker({

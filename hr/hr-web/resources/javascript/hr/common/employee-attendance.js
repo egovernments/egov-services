@@ -62,25 +62,48 @@ class EmployeeSearch extends React.Component {
   componentWillMount()
   {
     var date = new Date();
-    var _year;
+
 
     try {
-        _year = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
+      var _year = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
     } catch(e) {
         console.log(e);
-        _year = [];
+      var  _year = [];
+    }
+
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
+
+    try {
+      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+      }
+      catch (e) {
+        console.log(e);
+      var employeeType = [];
     }
 
     this.setState({
-        employeeType,
+        employeeType: employeeType,
         department: Object.assign([], assignments_department),
         designation: Object.assign([], assignments_designation),
         month,
         year: _year
     })
+
   }
 
-  handleChange(e,name) {  
+  handleChange(e,name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -104,7 +127,7 @@ class EmployeeSearch extends React.Component {
                     month
                 })
           }
-      } 
+      }
   }
 
 
@@ -146,7 +169,7 @@ class EmployeeSearch extends React.Component {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
-                          <label for="">Year <span> *</span> </label>
+                          <label htmlFor="">Year <span> *</span> </label>
                         </div>
                         <div className="col-sm-6">
                         <div className="styled-select">
@@ -164,7 +187,7 @@ class EmployeeSearch extends React.Component {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label for="">Month  <span> *</span></label>
+                            <label htmlFor="">Month  <span> *</span></label>
                           </div>
                           <div className="col-sm-6">
                           <div className="styled-select">
@@ -184,7 +207,7 @@ class EmployeeSearch extends React.Component {
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for="">Department  </label>
+                        <label htmlFor="">Department  </label>
                       </div>
                       <div className="col-sm-6">
                       <div className="styled-select">
@@ -201,7 +224,7 @@ class EmployeeSearch extends React.Component {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
-                          <label for="">Designation  </label>
+                          <label htmlFor="">Designation  </label>
                         </div>
                         <div className="col-sm-6">
                         <div className="styled-select">
@@ -221,7 +244,7 @@ class EmployeeSearch extends React.Component {
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for="">Employee Code/Name  </label>
+                        <label htmlFor="">Employee Code/Name  </label>
                       </div>
                       <div className="col-sm-6">
                           <input type="text" name="code" onChange={(e)=>{

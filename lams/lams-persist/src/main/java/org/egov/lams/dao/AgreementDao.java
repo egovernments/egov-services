@@ -157,7 +157,7 @@ public class AgreementDao {
 				throw new RuntimeException(ex.getMessage());
 			}
 		}*/
-		//FIXME do we need to update demand??? the nation wants to know? 
+		//FIXME do we need to update demand??? if data entry screen add new demand here 
 	
 		List<Document> documents = agreement.getDocuments();
 		if(documents != null){

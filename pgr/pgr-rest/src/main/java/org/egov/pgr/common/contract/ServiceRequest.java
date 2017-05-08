@@ -10,10 +10,7 @@ import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.ComplaintType;
 import org.egov.pgr.read.domain.model.Coordinates;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -97,6 +94,13 @@ public class ServiceRequest {
     
     private Map<String, String> values = new HashMap<>();
 
+//  Short term hack - to support values and attribValues usage
+//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
+    @JsonProperty("isAttribValuesPopulated")
+    private boolean attribValuesPopulated;
+
+    private List<AttributeEntry> attribValues = new ArrayList<>();
+
     public ServiceRequest(Complaint complaint) {
         crn = complaint.getCrn();
         status = complaint.isClosed();
@@ -116,7 +120,6 @@ public class ServiceRequest {
         email = complaint.getComplainant().getEmail();
         values = getAdditionalValues(complaint);
         tenantId = complaint.getTenantId();
-     
     }
 
     private Map<String, String> getAdditionalValues(Complaint complaint) {
@@ -164,11 +167,10 @@ public class ServiceRequest {
             .receivingCenter(getReceivingCenter())
             .modifyComplaint(isUpdate)
             .build();
-
     }
 
     private Complainant getComplainant() {
-        final String complainantAddress = getcomplainantAddress();
+        final String complainantAddress = getComplainantAddress();
         final String complainantUserId = getComplainantUserId();
         return Complainant.builder()
             .firstName(firstName)
@@ -178,10 +180,6 @@ public class ServiceRequest {
             .address(complainantAddress)
             .tenantId(tenantId)
             .build();
-    }
-
-    private String getcomplainantAddress() {
-        return values.get(COMPLAINANT_ADDRESS);
     }
 
     private ComplaintLocation getComplaintLocation() {
@@ -195,19 +193,31 @@ public class ServiceRequest {
     }
 
     private String getLocationId() {
-        return values.get(LOCATION_ID);
+        return getDynamicSingleValue(LOCATION_ID);
     }
 
     private String getReceivingMode() {
-        return values.get(RECEIVING_MODE);
+        return getDynamicSingleValue(RECEIVING_MODE);
     }
 
     private String getReceivingCenter() {
-        return values.get(RECEIVING_CENTER);
+        return getDynamicSingleValue(RECEIVING_CENTER);
     }
 
     private String getComplainantUserId() {
-        return values.get(USER_ID);
+        return getDynamicSingleValue(USER_ID);
+    }
+
+    private String getComplainantAddress() {
+        return getDynamicSingleValue(COMPLAINANT_ADDRESS);
+    }
+
+    private String getDynamicSingleValue(String key) {
+        if (attribValuesPopulated) {
+            return AttributeValues.getAttributeSingleValue(attribValues, key);
+        } else {
+            return values.get(key);
+        }
     }
 
 }

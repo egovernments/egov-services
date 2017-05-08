@@ -1,1 +1,1 @@
-update message set tenantid='default' where tenanticd d='ap.public';
+update message set tenantid='default' where tenantid='ap.public';

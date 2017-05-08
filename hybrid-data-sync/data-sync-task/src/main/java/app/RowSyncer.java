@@ -71,12 +71,17 @@ public class RowSyncer {
     private void update() throws SQLException {
         log.info("Insert failed");
         log.info("Trying to update");
-        String updateQuery = String.format("UPDATE %s.%s set %s WHERE id = %s",
+        String updateQuery = String.format("UPDATE %s.%s set %s WHERE id = '%s'",
                 destinationSchema,
                 syncInfo.getDestinationTable(),
                 String.join(",", columnValueMapper.getColumnNameValuePairForUpdate()),
                 rs.get("id")
         );
+
+        if (Objects.equals(destinationSchema, "microservice")) {
+            updateQuery = String.format("%s AND tenantId = '%s'", updateQuery, rs.get("tenantId"));
+        }
+
         log.info(updateQuery);
         jdbcTemplate.update(updateQuery);
     }

@@ -249,18 +249,18 @@ class CreateAsset extends React.Component {
           status: "",
           code: ""
         },
-        assetCategories,
-        locality,
-        electionwards,
-        departments,
-        acquisitionList,
-        revenueZone,
-        street,
-        revenueWards,
-        revenueBlock,
+        assetCategories: [],
+        locality: [],
+        electionwards: [],
+        departments: [],
+        acquisitionList: [],
+        revenueZone: [],
+        street: [],
+        revenueWards: [],
+        revenueBlock: [],
         customFields:[],
-        statusList,
-        asset_category_type,
+        statusList: [],
+        asset_category_type: [],
         capitalized: false,
         error: "",
         success: "",
@@ -618,12 +618,85 @@ class CreateAsset extends React.Component {
 
 
   componentDidMount() {
+      var _this = this;
       if(window.opener && window.opener.document) {
         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
         if(logo_ele && logo_ele[0]) {
           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
+
+      var assetCategories, locality, electionwards, departments, acquisitionList, revenueZone, street, revenueWards, revenueBlock, statusList, asset_category_type;
+
+      try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+          console.log(e);
+          assetCategories = [];
+      }
+
+      try { locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality")); } catch (e) {
+          console.log(e);
+          locality = [];
+      }
+
+      try { electionwards = !localStorage.getItem("ward") || localStorage.getItem("ward") == "undefined" ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("ward"))) : JSON.parse(localStorage.getItem("ward")); } catch (e) {
+          console.log(e);
+          electionwards = [];
+      }
+
+      try { departments = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department")); } catch (e) {
+          console.log(e);
+          departments = [];
+      }
+
+      try { acquisitionList = !localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined" ? (localStorage.setItem("acquisitionList", JSON.stringify(commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {tenantId}).responseJSON || [])), JSON.parse(localStorage.getItem("acquisitionList"))) : JSON.parse(localStorage.getItem("acquisitionList")); } catch (e) {
+          console.log(e);
+          acquisitionList = [];
+      }
+
+      try { revenueZone = !localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined" ? (localStorage.setItem("revenueZone", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueZone"))) : JSON.parse(localStorage.getItem("revenueZone")); } catch (e) {
+          console.log(e);
+          revenueZone = [];
+      }
+
+      try { street = !localStorage.getItem("street") || localStorage.getItem("street") == "undefined" ? (localStorage.setItem("street", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("street"))) : JSON.parse(localStorage.getItem("street")); } catch (e) {
+          console.log(e);
+          street = [];
+      }
+
+      try { revenueWards = !localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined" ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueWard"))) : JSON.parse(localStorage.getItem("revenueWard")); } catch (e) {
+          console.log(e);
+          revenueWard = [];
+      }
+
+      try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined" ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueBlock"))) : JSON.parse(localStorage.getItem("revenueBlock")); } catch (e) {
+          console.log(e);
+          revenueBlock = [];
+      }
+
+      try { statusList = !localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined" ? (localStorage.setItem("statusList", JSON.stringify(commonApiGet("asset-services", "", "GET_STATUS", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("statusList"))) : JSON.parse(localStorage.getItem("statusList")); } catch (e) {
+          console.log(e);
+          statusList = {};
+      }
+
+      try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
+          console.log(e);
+          asset_category_type = {};
+      }
+
+      this.setState({
+        assetCategories,
+        locality,
+        electionwards,
+        departments,
+        acquisitionList,
+        revenueZone,
+        street,
+        revenueWards,
+        revenueBlock,
+        statusList,
+        asset_category_type,
+        readonly: (type === "view")
+      })
 
       var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
@@ -647,24 +720,24 @@ class CreateAsset extends React.Component {
          })
       });
 
-      this.setState({
-          readonly: (type === "view")
-      });
-
       if (type === "view" || type === "update") {
           let asset = getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0];
           var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
-          this.setState({
-              assetSet: {
-                ...asset,
-                dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
-              }
-          });
+          setTimeout(function() {
+            _this.setState({
+                assetSet: {
+                  ...asset,
+                  dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
+                }
+            });
+          }, 100);
 
           if(asset.status == "CAPITALIZED") {
-              this.setState({
+            setTimeout(function() {
+              _this.setState({
                   capitalized: true
               })
+            }, 100);
           }
 
           if(asset.assetCategory && asset.assetCategory.id) {

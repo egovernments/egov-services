@@ -75,6 +75,22 @@ class SearchAsset extends React.Component {
       }
     }
 
+    var assetCategories, departments, statusList;
+    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+        console.log(e);
+        assetCategories = [];
+    }
+
+    try { departments = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department")); } catch (e) {
+        console.log(e);
+        departments = [];
+    }
+
+    try { statusList = !localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined" ? (localStorage.setItem("statusList", JSON.stringify(commonApiGet("asset-services", "", "GET_STATUS", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("statusList"))) : JSON.parse(localStorage.getItem("statusList")); } catch (e) {
+        console.log(e);
+        statusList = {};
+    }
+
     this.setState({
       assetCategories,
       departments,

@@ -17,6 +17,7 @@ flyway:
   locations: db/migration/ddl,db/migration/seed
 
 state: ap
+rateInSeconds: 5000
 
 ---
 source-schemas: kurnool

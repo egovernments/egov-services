@@ -48,21 +48,4 @@ public class CustomResultSet {
     public Object get(String columnLabel) {
         return resultMap.get(columnLabel);
     }
-
-    public ArrayList<String> getValuesToInsert(SyncInfo info) throws SQLException {
-        ArrayList<String> values = new ArrayList<>();
-        for (ColumnConfig column : info.getColumns()) {
-            if (column.isShouldSync()) {
-                String value;
-                if (column.isShouldSource()) {
-                    value = String.format("%s", get(column.getSource()));
-                } else {
-                    value = column.getDefaultValue();
-                }
-
-                values.add((String.format("'%s'", value)));
-            }
-        }
-        return values;
-    }
 }

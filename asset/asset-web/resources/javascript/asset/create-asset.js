@@ -618,7 +618,7 @@ class CreateAsset extends React.Component {
 
 
   componentDidMount() {
-      var _this = this;
+      var _this = this, type = getUrlVars()["type"];
       if(window.opener && window.opener.document) {
         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
         if(logo_ele && logo_ele[0]) {
@@ -698,7 +698,6 @@ class CreateAsset extends React.Component {
         readonly: (type === "view")
       })
 
-      var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $(document).on('focus',".custom-date-picker", function(){
             $(this).datetimepicker({

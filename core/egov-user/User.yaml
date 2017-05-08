@@ -476,7 +476,7 @@ definitions:
       dob:
         type: string
         format: date
-        description: Data of bith of the user in mm/dd/yyyy format.
+        description: Data of bith of the user in dd/mm/yyyy format.
       pwdExpiryDate:
         type: string
         format: date

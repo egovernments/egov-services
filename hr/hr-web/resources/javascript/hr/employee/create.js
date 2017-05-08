@@ -1,4 +1,100 @@
-//closing current window
+
+var employeeType, employeeStatus, group, motherTongue, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function,assignments_position, maritalStatus, user_bloodGroup;
+
+try { employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType")); } catch (e) {
+    console.log(e);
+    employeeType = [];
+}
+try { employeeStatus = !localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined" ? (localStorage.setItem("employeeStatus", JSON.stringify(getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"] || [])), JSON.parse(localStorage.getItem("employeeStatus"))) : JSON.parse(localStorage.getItem("employeeStatus")); } catch (e) {
+    console.log(e);
+    employeeStatus = [];
+}
+try { group = !localStorage.getItem("group") || localStorage.getItem("group") == "undefined" ? (localStorage.setItem("group", JSON.stringify(getCommonMaster("hr-masters", "groups", "Group").responseJSON["Group"] || [])), JSON.parse(localStorage.getItem("group"))) : JSON.parse(localStorage.getItem("group")); } catch (e) {
+    console.log(e);
+    group = [];
+}
+try { maritalStatus = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(commonApiPost("hr-employee", "maritalstatuses", "_search", {tenantId, pageSize:500}).responseJSON["MaritalStatus"] || [])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus")); } catch (e) {
+    console.log(e);
+    maritalStatus = [];
+}
+try { user_bloodGroup = !localStorage.getItem("user_bloodGroup") || localStorage.getItem("user_bloodGroup") == "undefined" ? (localStorage.setItem("user_bloodGroup", JSON.stringify(commonApiPost("hr-employee", "bloodgroups", "_search", {tenantId, pageSize:500}).responseJSON["BloodGroup"] || [])), JSON.parse(localStorage.getItem("user_bloodGroup"))) : JSON.parse(localStorage.getItem("user_bloodGroup")); } catch (e) {
+    console.log(e);
+    user_bloodGroup = [];
+}
+try { motherTongue = !localStorage.getItem("motherTongue") || localStorage.getItem("motherTongue") == "undefined" ? (localStorage.setItem("motherTongue", JSON.stringify(getCommonMaster("egov-common-masters", "languages", "Language").responseJSON["Language"] || [])), JSON.parse(localStorage.getItem("motherTongue"))) : JSON.parse(localStorage.getItem("motherTongue")); } catch (e) {
+    console.log(e);
+    motherTongue = [];
+}
+try { religion = !localStorage.getItem("religion") || localStorage.getItem("religion") == "undefined" ? (localStorage.setItem("religion", JSON.stringify(getCommonMaster("egov-common-masters", "religions", "Religion").responseJSON["Religion"] || [])), JSON.parse(localStorage.getItem("religion"))) : JSON.parse(localStorage.getItem("religion")); } catch (e) {
+    console.log(e);
+    religion = [];
+}
+try { community = !localStorage.getItem("community") || localStorage.getItem("community") == "undefined" ? (localStorage.setItem("community", JSON.stringify(getCommonMaster("egov-common-masters", "communities", "Community").responseJSON["Community"] || [])), JSON.parse(localStorage.getItem("community"))) : JSON.parse(localStorage.getItem("community")); } catch (e) {
+    console.log(e);
+    community = [];
+}
+try { category = !localStorage.getItem("category") || localStorage.getItem("category") == "undefined" ? (localStorage.setItem("category", JSON.stringify(getCommonMaster("egov-common-masters", "categories", "Category").responseJSON["Category"] || [])), JSON.parse(localStorage.getItem("category"))) : JSON.parse(localStorage.getItem("category")); } catch (e) {
+    console.log(e);
+    category = [];
+}
+try { bank = !localStorage.getItem("bank") || localStorage.getItem("bank") == "undefined" ? (localStorage.setItem("bank", JSON.stringify(getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [])), JSON.parse(localStorage.getItem("bank"))) : JSON.parse(localStorage.getItem("bank")); } catch (e) {
+    console.log(e);
+    bank = [];
+}
+try { recruitmentMode = !localStorage.getItem("recruitmentMode") || localStorage.getItem("recruitmentMode") == "undefined" ? (localStorage.setItem("recruitmentMode", JSON.stringify(getCommonMaster("hr-masters", "recruitmentmodes", "RecruitmentMode").responseJSON["RecruitmentMode"] || [])), JSON.parse(localStorage.getItem("recruitmentMode"))) : JSON.parse(localStorage.getItem("recruitmentMode")); } catch (e) {
+    console.log(e);
+    recruitmentMode = [];
+}
+try { recruitmentType = !localStorage.getItem("recruitmentType") || localStorage.getItem("recruitmentType") == "undefined" ? (localStorage.setItem("recruitmentType", JSON.stringify(getCommonMaster("hr-masters", "recruitmenttypes", "RecruitmentType").responseJSON["RecruitmentType"] || [])), JSON.parse(localStorage.getItem("recruitmentType"))) : JSON.parse(localStorage.getItem("recruitmentType")); } catch (e) {
+    console.log(e);
+    recruitmentType = [];
+}
+try { recruitmentQuota = !localStorage.getItem("recruitmentQuota") || localStorage.getItem("recruitmentQuota") == "undefined" ? (localStorage.setItem("recruitmentQuota", JSON.stringify(getCommonMaster("hr-masters", "recruitmentquotas", "RecruitmentQuota").responseJSON["RecruitmentQuota"] || [])), JSON.parse(localStorage.getItem("recruitmentQuota"))) : JSON.parse(localStorage.getItem("recruitmentQuota")); } catch (e) {
+    console.log(e);
+    recruitmentQuota = [];
+}
+try { assignments_grade = !localStorage.getItem("assignments_grade") || localStorage.getItem("assignments_grade") == "undefined" ? (localStorage.setItem("assignments_grade", JSON.stringify(getCommonMaster("hr-masters", "grades", "Grade").responseJSON["Grade"] || [])), JSON.parse(localStorage.getItem("assignments_grade"))) : JSON.parse(localStorage.getItem("assignments_grade")); } catch (e) {
+    console.log(e);
+    assignments_grade = [];
+}
+try { assignments_fund = !localStorage.getItem("assignments_fund") || localStorage.getItem("assignments_fund") == "undefined" ? (localStorage.setItem("assignments_fund", JSON.stringify(getCommonMaster("egf-masters", "funds", "funds").responseJSON["funds"])) || []) : JSON.parse(localStorage.getItem("assignments_fund")); } catch (e) {
+    console.log(e);
+    assignments_fund = [];
+}
+try { assignments_functionary = !localStorage.getItem("assignments_functionary") || localStorage.getItem("assignments_functionary") == "undefined" ? (localStorage.setItem("assignments_functionary", JSON.stringify(getCommonMaster("egf-masters", "functionaries", "funds").responseJSON["functionaries"] || [])), JSON.parse(localStorage.getItem("assignments_functionary"))) : JSON.parse(localStorage.getItem("assignments_functionary")); } catch (e) {
+    console.log(e);
+    assignments_functionary = [];
+}
+try { assignments_function = !localStorage.getItem("assignments_function") || localStorage.getItem("assignments_function") == "undefined" ? (localStorage.setItem("assignments_function", JSON.stringify(getCommonMaster("egf-masters", "functions", "functions").responseJSON["functions"] || [])), JSON.parse(localStorage.getItem("assignments_function"))) : JSON.parse(localStorage.getItem("assignments_function")); } catch (e) {
+    console.log(e);
+    assignments_function = [];
+}
+
+try { jurisdictions_jurisdictionsType = !localStorage.getItem("jurisdictions_jurisdictionsType") || localStorage.getItem("jurisdictions_jurisdictionsType") == "undefined" ? (localStorage.setItem("jurisdictions_jurisdictionsType", JSON.stringify(commonApiPost("egov-location/boundarytypes", "getByHierarchyType", "", { tenantId, hierarchyTypeName: "ADMINISTRATION" }).responseJSON["BoundaryType"] || [])), JSON.parse(localStorage.getItem("jurisdictions_jurisdictionsType"))) : JSON.parse(localStorage.getItem("jurisdictions_jurisdictionsType")); } catch (e) {
+    console.log(e);
+    jurisdictions_jurisdictionsType = [];
+}
+try {
+  assignments_position = !localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined" ? (localStorage.setItem("assignments_position", JSON.stringify(getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [])), JSON.parse(localStorage.getItem("assignments_position"))) : JSON.parse(localStorage.getItem("assignments_position"));
+} catch (e) {
+  console.log(e);
+  assignments_position = [];
+
+}
+try {
+    assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+} catch (e) {
+    console.log(e);
+      assignments_designation = [];
+}
+try {
+   assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+} catch (e) {
+    console.log(e);
+    assignments_department = [];
+}
+
+
 $('#close').on("click", function() {
   window.close();
 })
@@ -1546,17 +1642,17 @@ function updateTable(tableName, modalName, object) {
     if (object == "assignments") {
       $(tableName).append(`<td data-label=${"fromDate"}>
 
-                                ${employee[object][i]["fromDate"]}
+                                ${employee[object][i]["fromDate"] || ""}
                           </td>`)
       $(tableName).append(`<td data-label=${"toDate"}>
 
-                                ${employee[object][i]["toDate"]}
+                                ${employee[object][i]["toDate"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"department"}>
-                                ${getNameById("department",employee[object][i]["department"],"")}
+                                ${getNameById("department",employee[object][i]["department"],"") || ""}
                           </td>`)
       $(tableName).append(`<td data-label=${"designation"}>
-                                ${getNameById("designation",employee[object][i]["designation"],"")}
+                                ${getNameById("designation",employee[object][i]["designation"],"") || ""}
                             </td>`)
       try {
         assignments_position = commonApiPost("hr-masters", "positions", "_search", {
@@ -1573,19 +1669,19 @@ function updateTable(tableName, modalName, object) {
                             </td>`)
       $(tableName).append(`<td data-label=${"isPrimary"}>
 
-                                                      ${employee[object][i]["isPrimary"]}
+                                                      ${employee[object][i]["isPrimary"] || ""}
                                                 </td>`)
       $(tableName).append(`<td data-label=${"fund"}>
-                                                                          ${getNameById("fund",employee[object][i]["fund"],"")}
+                                                                          ${getNameById("fund",employee[object][i]["fund"],"") || ""}
                                                                     </td>`)
       $(tableName).append(`<td data-label=${"function"}>
-                                                                                              ${getNameById("function",employee[object][i]["function"],"")}
+                                                                                              ${getNameById("function",employee[object][i]["function"],"") || ""}
                                                                                         </td>`)
       $(tableName).append(`<td data-label=${"functionary"}>
-                                                                                                                  ${getNameById("functionary",employee[object][i]["functionary"],"")}
+                                                                                                                  ${getNameById("functionary",employee[object][i]["functionary"],"") || ""}
                                                                                                             </td>`)
       $(tableName).append(`<td data-label=${"grade"}>
-                                                                                                                                      ${getNameById("grade",employee[object][i]["grade"],"")}
+                                                                                                                                      ${getNameById("grade",employee[object][i]["grade"],"") || ""}
                                                                                                                                 </td>`)
       $(tableName).append(`<td data-label=${"hod"}>
       ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
@@ -1594,7 +1690,7 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"govtOrderNumber"}>
 
-                                                                                                                                                                            ${employee[object][i]["govtOrderNumber"]}
+                                                                                                                                                                            ${employee[object][i]["govtOrderNumber"] || ""}
                                                                                                                                                                       </td>`)
       $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1621,11 +1717,11 @@ function updateTable(tableName, modalName, object) {
     } else if (object=="serviceHistory") {
       $(tableName).append(`<td data-label=${"serviceInfo"}>
 
-                                ${employee[object][i]["serviceInfo"]}
+                                ${employee[object][i]["serviceInfo"] || ""}
                           </td>`)
       $(tableName).append(`<td data-label=${"serviceFrom"}>
 
-                                ${employee[object][i]["serviceFrom"]}
+                                ${employee[object][i]["serviceFrom"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
@@ -1633,7 +1729,7 @@ function updateTable(tableName, modalName, object) {
                                                                                       </td>`)
                                                                                       $(tableName).append(`<td data-label=${"orderNo"}>
 
-                                                                                                                                                        ${employee[object][i]["orderNo"]}
+                                                                                                                                                        ${employee[object][i]["orderNo"] || ""}
                                                                                                                                                                       </td>`)
 
         $(tableName).append(`<td data-label=${"documents"}>
@@ -1646,17 +1742,17 @@ function updateTable(tableName, modalName, object) {
       </td>`)
       $(tableName).append(`<td data-label=${"declaredOn"}>
 
-                                ${employee[object][i]["declaredOn"]}
+                                ${employee[object][i]["declaredOn"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"orderNo"}>
                         ${employee[object][i]["orderNo"]}                                                               </td>`)
       $(tableName).append(`<td data-label=${"orderDate"}>
 
-                                ${employee[object][i]["orderDate"]}
+                                ${employee[object][i]["orderDate"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
-                                                                        ${employee[object][i]["remarks"]}
+                                                                        ${employee[object][i]["remarks"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1666,17 +1762,17 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"qualification"}>
 
-                                ${employee[object][i]["qualification"]}
+                                ${employee[object][i]["qualification"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"majorSubject"}>
-                        ${employee[object][i]["majorSubject"]}                                                               </td>`)
+                        ${employee[object][i]["majorSubject"] || ""}                                                               </td>`)
       $(tableName).append(`<td data-label=${"yearOfPassing"}>
 
-                                ${employee[object][i]["yearOfPassing"]}
+                                ${employee[object][i]["yearOfPassing"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"university"}>
 
-                                                                        ${employee[object][i]["university"]}
+                                                                        ${employee[object][i]["university"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1686,17 +1782,17 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"skill"}>
 
-                                ${employee[object][i]["skill"]}
+                                ${employee[object][i]["skill"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"grade"}>
-                        ${employee[object][i]["grade"]}                                                               </td>`)
+                        ${employee[object][i]["grade"] || ""}                                                               </td>`)
       $(tableName).append(`<td data-label=${"yearOfPassing"}>
 
-                                ${employee[object][i]["yearOfPassing"]}
+                                ${employee[object][i]["yearOfPassing"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
-                                                                        ${employee[object][i]["remarks"]}
+                                                                        ${employee[object][i]["remarks"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1706,15 +1802,15 @@ function updateTable(tableName, modalName, object) {
 
       $(tableName).append(`<td data-label=${"test"}>
 
-                                ${employee[object][i]["test"]}
+                                ${employee[object][i]["test"] || ""}
                           </td>`)
   $(tableName).append(`<td data-label=${"yearOfPassing"}>
 
-                                ${employee[object][i]["yearOfPassing"]}
+                                ${employee[object][i]["yearOfPassing"] || ""}
                                               </td>`)
       $(tableName).append(`<td data-label=${"remarks"}>
 
-                                                                        ${employee[object][i]["remarks"]}
+                                                                        ${employee[object][i]["remarks"] || ""}
                                                                                       </td>`)
         $(tableName).append(`<td data-label=${"documents"}>
 
@@ -1909,6 +2005,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
+              tempListBox= [];
             }
           }
           employee[object][editIndex] = employeeSubObject[object];
@@ -1920,6 +2017,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
+              tempListBox= [];
             }
             employee[object].push(Object.assign({}, employeeSubObject[object]));
             updateTable("#" + tableName, modalName, object);
@@ -1973,6 +2071,13 @@ for (var key in final_validatin_rules) {
 };
 
 $(document).ready(function() {
+
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+     }
+   }
     $.validator.addMethod('phone', function(value) {
         return value ? /^[0-9]{10}$/.test(value) : true;
     }, 'Please enter a valid phone number.');
@@ -2013,7 +2118,9 @@ $("#createEmployeeForm").validate({
     // console.log(form);
     if (!hasAllRequiredFields(employee)) {
       showError("Please enter all mandatory fields.");
-    } else if ((employee.assignments.length > 0 && isHavingPrimary()) && employee.jurisdictions.length > 0) {
+    } else if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
+      if(!isHavingPrimary())
+        return showError("Atleast one primary assignment is required.");
       //Call api
       var __emp = Object.assign({}, employee);
 
@@ -2050,34 +2157,27 @@ $("#createEmployeeForm").validate({
           });
 
           if (response["status"] === 200) {
-            //showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
             window.location.href = "app/hr/common/employee-search.html?type=view";
+          } else if(response["responseJSON"] && response["responseJSON"].Error) {
+            var err = response["responseJSON"].Error.message || "";
+            if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
+              for(var key in response["responseJSON"].Error.fields) {
+                err += "\n " + response["responseJSON"].Error.fields[key] + " ";
+              }
+              showError(err);
+            } else {
+              showError(response["statusText"]);
+            }
+            employee = Object.assign({}, __emp);
           } else {
             showError(response["statusText"]);
             employee = Object.assign({}, __emp);
           }
-
-
-          // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
-          //     RequestInfo: requestInfo,
-          //     Employee: employee
-          // }, function(response) {
-          //     alert("submit");
-          //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-          //     console.log(response);
-          // },function(error){
-          //   alert("error")
-          //   console.log(error);
-          // })
         }
       })
     } else {
       showError("Please enter atleast one assignment and jurisdiction.");
     }
-    //alert("submitterd");
-    // form.submit();
-
-    // console.log(agreement);
   }
 })
 
@@ -2188,7 +2288,7 @@ addMandatoryStart(user, "user");
 
 function isHavingPrimary() {
   for (var i = 0; i < employee.assignments.length; i++) {
-    if (employee.assignments[i].isPrimary) {
+    if (employee.assignments[i].isPrimary == "true" || employee.assignments[i].isPrimary == true) {
       return true;
     }
 

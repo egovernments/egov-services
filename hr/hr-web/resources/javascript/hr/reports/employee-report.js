@@ -1,18 +1,3 @@
-// var EmployeeReportCommon=require("../common/employee-search-common.js");
-
-// function getUrlVars() {
-//     var vars = [],
-//         hash;
-//     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-//     for (var i = 0; i < hashes.length; i++) {
-//         hash = hashes[i].split('=');
-//         vars.push(hash[0]);
-//         vars[hash[0]] = hash[1];
-//     }
-//     return vars;
-// }
-
-
 class EmployeeReport extends React.Component {
 
   constructor(props) {
@@ -37,11 +22,37 @@ class EmployeeReport extends React.Component {
   }
 
   componentWillMount() {
+
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
+
+    try {
+      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+      }
+      catch (e) {
+        console.log(e);
+      var employeeType = [];
+    }
+
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
          designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType)
+         employeeTypes: Object.assign([], employeeType),
+         assignments_department,
+         assignments_designation
+
      });
   }
 
@@ -76,7 +87,7 @@ class EmployeeReport extends React.Component {
     e.preventDefault();
     var result;
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
+        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}).responseJSON["Employee"] || [];
     } catch (e) {
         result = [];
         console.log(e);
@@ -90,7 +101,7 @@ class EmployeeReport extends React.Component {
 
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
-    let {result, employeeTypes, departments, designations} = this.state;
+    let {result, employeeTypes, departments, designations,assignments_designation,assignments_department} = this.state;
     let {employeeCode, department, designation, employeeType, employeeStatus} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -112,8 +123,8 @@ class EmployeeReport extends React.Component {
                 <tr key={ind}>
                     <td>{item.code}</td>
                     <td>{item.name}</td>
-                    <td></td>
-                    <td></td>
+                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
                     <td><a href="#" Employee>Employee </a></td>
                 </tr>
             )
@@ -162,12 +173,14 @@ class EmployeeReport extends React.Component {
                                         <label for="">Department </label>
                                     </div>
                                     <div className="col-sm-6">
+                                      <div className="styled-select">
                                         <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
-                                            <option value="" selected></option>
+                                            <option value="">Select department</option>
                                             {renderOptions(departments)}
                                         </select>
                                     </div>
                                 </div>
+                            </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
@@ -175,13 +188,15 @@ class EmployeeReport extends React.Component {
                                         <label for="">Designation </label>
                                     </div>
                                     <div className="col-sm-6">
+                                      <div className="styled-select">
                                         <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
-                                            <option value="" selected></option>
+                                            <option value="">Select Designation</option>
                                             {renderOptions(designations)}
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                          </div>
                         </div>
                         <div className="row">
                             <div className="col-sm-6">
@@ -200,13 +215,15 @@ class EmployeeReport extends React.Component {
                                         <label for="">Employee Type </label>
                                     </div>
                                     <div className="col-sm-6">
+                                      <div className="styled-select">
                                         <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                            <option value="" selected></option>
+                                          <option value="">Select EmployeeType</option>
                                             {renderOptions(employeeTypes)}
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                          </div>
                         </div>
                         <div className="row">
                             <div className="col-sm-6">
@@ -221,9 +238,10 @@ class EmployeeReport extends React.Component {
                             </div>
                         </div>
                         <div className="text-center">
-                            <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-                            &nbsp;&nbsp;
-                            <button type="submit" className="btn btn-submit">Search</button>
+
+
+                            <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
+                            <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
                         </div>
                     </fieldset>
                 </form>

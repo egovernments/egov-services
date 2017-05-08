@@ -40,6 +40,35 @@ class EmployeeAttendence extends React.Component {
  }
 
  componentWillMount() {
+   try {
+     var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+   } catch (e) {
+       console.log(e);
+        var assignments_designation = [];
+   }
+
+   try {
+     var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+   } catch (e) {
+       console.log(e);
+     var  assignments_department = [];
+   }
+
+   try {
+     var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+     }
+     catch (e) {
+       console.log(e);
+     var employeeType = [];
+   }
+
+   try {
+   var  year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [])), JSON.parse(localStorage.getItem("year"))) : JSON.parse(localStorage.getItem("year"));
+
+   } catch (e) {
+       console.log(e);
+     var  year = [];
+   }
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
@@ -80,7 +109,7 @@ class EmployeeAttendence extends React.Component {
    e.preventDefault();
    var result;
    try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
+        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}).responseJSON["Employee"] || [];
    } catch(e) {
         result = [];
         console.log(e);

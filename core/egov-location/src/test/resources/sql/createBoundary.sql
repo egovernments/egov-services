@@ -1,5 +1,5 @@
 INSERT INTO eg_hierarchy_type (id, name, code, createddate, lastmodifieddate, createdby, lastmodifiedby, version, localname,tenantid) 
-VALUES (1, 'ADMINISTRATION', 'ADMIN', '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 0,NULL,'ap.public');
+VALUES (1, 'ADMINISTRATION', 'ADMIN', '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 0,NULL,'default');
 
 INSERT INTO eg_boundary_type (id, hierarchy, parent, name, hierarchytype, createddate, lastmodifieddate, createdby, lastmodifiedby, version, localname, code, tenantid) 
 VALUES (1, 1, NULL, 'City', 1, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 0, NULL, NULL,'default');

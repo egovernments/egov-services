@@ -429,7 +429,7 @@ class CreateAsset extends React.Component {
                 }
             });
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${_this.state.assetSet.code}`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${response["responseJSON"] && response["responseJSON"].Assets && response["responseJSON"].Assets[0] && response["responseJSON"].Assets[0].code ?  response["responseJSON"].Assets[0].code : ""}`;
             } else {
                 this.setState({
                     ...this.state,
@@ -618,7 +618,7 @@ class CreateAsset extends React.Component {
 
 
   componentDidMount() {
-      var _this = this;
+      var _this = this, type = getUrlVars()["type"];
       if(window.opener && window.opener.document) {
         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
         if(logo_ele && logo_ele[0]) {
@@ -698,7 +698,6 @@ class CreateAsset extends React.Component {
         readonly: (type === "view")
       })
 
-      var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $(document).on('focus',".custom-date-picker", function(){
             $(this).datetimepicker({

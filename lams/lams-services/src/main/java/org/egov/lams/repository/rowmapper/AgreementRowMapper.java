@@ -42,7 +42,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 				agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 				agreement.setStateId(rs.getString("stateid"));
 				agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));
-				agreement.setCloseDate(rs.getDate("closedate"));
+				//agreement.setCloseDate(rs.getDate("closedate"));
 				agreement.setTimePeriod(rs.getLong("timePeriod"));
 				agreement.setAgreementDate(rs.getTimestamp("agreement_date"));
 				agreement.setAgreementNumber(rs.getString("agreement_no"));

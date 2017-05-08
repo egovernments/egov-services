@@ -37,7 +37,13 @@ class UpdateLeave extends React.Component {
 }
 
 
-  componentDidMount(){
+  componentDidMount() {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
     var type = getUrlVars()["type"], _this = this;
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;

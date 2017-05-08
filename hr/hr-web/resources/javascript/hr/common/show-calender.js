@@ -12,15 +12,23 @@ class ShowCalender extends React.Component {
 
 
   componentDidMount() {
-    try {
-        var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
-    } catch(e) {
-        var _years = [];
-    }
-        this.setState({
-            list:_years
-        });
-  }
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
+       try {
+           var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
+       } catch(e) {
+           var _years = [];
+       }
+           this.setState({
+               list:_years
+           });
+   }
+
+
 
   componentDidUpdate(prevProps, prevState)
   {

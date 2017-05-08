@@ -27,8 +27,6 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date closeDate;
 	
 	@NotNull
 	@Max(5)
@@ -91,12 +89,11 @@ public class Agreement {
 
 	private List<Document> documents;
 	private List<String> demands;
-	private WorkFlowDetails workflowDetails;
+	private WorkflowDetails workflowDetails;
 	private Double goodWillAmount;
 	@Min(0)
 	private Double collectedGoodWillAmount;
 	@NotNull
 	private Source source;
-	
 	private List<Demand> legacyDemands;
 }

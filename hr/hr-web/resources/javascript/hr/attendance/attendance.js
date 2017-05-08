@@ -107,6 +107,12 @@ class Attendance extends React.Component {
 
   componentDidMount()
   {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
     //call employee api and get employees
     // console.log(getUrlVars()["month"]);
     var queryParam=getUrlVars();

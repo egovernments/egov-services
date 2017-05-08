@@ -22,15 +22,6 @@ public class AssetCategoryQueryBuilder {
 		return selectQuery.toString();
 	}
 	
-	private void addPagingClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
-			AssetCategoryCriteria assetCategoryCriteria) {
-	
-	}
-
-	private void addOrderByClause(StringBuilder selectQuery, AssetCategoryCriteria assetCategoryCriteria) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	private void addWhereClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
 			AssetCategoryCriteria assetCategoryCriteria) {
@@ -100,12 +91,21 @@ public class AssetCategoryQueryBuilder {
 		return query.append(")").toString();
 	}
 
-	public String getInsertQuery(){
-		String INSERT_QUERY="INSERT into egasset_assetcategory "
-	+"(id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,"
-	+ "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,"
-	+ "lastmodifiedby,lastmodifieddate,isassetallow,version)"
-	+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		return INSERT_QUERY;
+	public String getInsertQuery() {
+		return "INSERT into egasset_assetcategory "
+				+ "(id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,"
+				+ "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,"
+				+ "lastmodifiedby,lastmodifieddate,isassetallow,version)"
+				+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
+	
+	/*private void addPagingClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
+	AssetCategoryCriteria assetCategoryCriteria) {
+
+}
+
+private void addOrderByClause(StringBuilder selectQuery, AssetCategoryCriteria assetCategoryCriteria) {
+// TODO Auto-generated method stub
+
+}*/
 }

@@ -2704,7 +2704,7 @@ function makeAjaxUpload(file, cb) {
       }
     });
   } else {
-    cb({
+    cb(null, {
       files: [{
         fileStoreId: file
       }]

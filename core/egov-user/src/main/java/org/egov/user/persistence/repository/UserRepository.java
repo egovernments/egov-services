@@ -15,6 +15,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,29 +25,33 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class UserRepository {
+	private static final String SELECT_NEXT_SEQUENCE = "select nextval('seq_eg_user')";
 	private UserJpaRepository userJpaRepository;
 	private UserSearchSpecificationFactory userSearchSpecificationFactory;
 	private RoleJpaRepository roleJpaRepository;
 	private PasswordEncoder passwordEncoder;
 	private AddressRepository addressRepository;
+	private EntityManager entityManager;
 
 	public UserRepository(UserJpaRepository userJpaRepository,
 						  UserSearchSpecificationFactory userSearchSpecificationFactory,
 						  RoleJpaRepository roleJpaRepository,
 						  PasswordEncoder passwordEncoder,
-						  AddressRepository addressRepository) {
+						  AddressRepository addressRepository, EntityManager entityManager) {
 		this.userJpaRepository = userJpaRepository;
 		this.userSearchSpecificationFactory = userSearchSpecificationFactory;
 		this.roleJpaRepository = roleJpaRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.addressRepository = addressRepository;
+		this.entityManager = entityManager;
 	}
 
 	public org.egov.user.domain.model.User findByUsername(String userName, String tenantId) {
-		final User entityUser = userJpaRepository.findByUsernameAndTenantId(userName, tenantId);
+		final User entityUser = userJpaRepository.findByUsernameAndUserKeyTenantId(userName, tenantId);
 		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
@@ -57,7 +64,7 @@ public class UserRepository {
 	}
 
 	public org.egov.user.domain.model.User findByEmailId(String emailId, String tenantId) {
-		final User entityUser = userJpaRepository.findByEmailIdAndTenantId(emailId, tenantId);
+		final User entityUser = userJpaRepository.findByEmailIdAndUserKeyTenantId(emailId, tenantId);
 		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
@@ -67,12 +74,20 @@ public class UserRepository {
 		encryptPassword(entityUser);
 		entityUser.setCreatedDate(new Date());
 		entityUser.setLastModifiedDate(new Date());
+		final Long newId = getNextSequence();
+		entityUser.getUserKey().setId(newId);
 		final User savedUser = userJpaRepository.save(entityUser);
 		final org.egov.user.domain.model.Address savedCorrespondenceAddress =
-				saveAddress(domainUser.getCorrespondenceAddress(), savedUser.getId(), savedUser.getTenantId());
+				saveAddress(domainUser.getCorrespondenceAddress(), savedUser.getId().getId(),
+						savedUser.getId().getTenantId());
 		final org.egov.user.domain.model.Address savedPermanentAddress =
-				saveAddress(domainUser.getPermanentAddress(), savedUser.getId(), savedUser.getTenantId());
+				saveAddress(domainUser.getPermanentAddress(), savedUser.getId().getId(), savedUser.getId().getTenantId());
 		return savedUser.toDomain(savedCorrespondenceAddress, savedPermanentAddress);
+	}
+
+	private long getNextSequence() {
+		final Query query = entityManager.createNativeQuery(SELECT_NEXT_SEQUENCE);
+		return ((BigInteger) query.getSingleResult()).longValue();
 	}
 
 	private org.egov.user.domain.model.Address saveAddress(org.egov.user.domain.model.Address address,
@@ -94,7 +109,7 @@ public class UserRepository {
 
 	private org.egov.user.domain.model.User getAddressAndMapToDomain(User user) {
 		final List<org.egov.user.domain.model.Address> addresses = addressRepository.
-				find(user.getId(), user.getTenantId());
+				find(user.getId().getId(), user.getId().getTenantId());
 		final org.egov.user.domain.model.Address correspondenceAddress = filter(addresses,
 				org.egov.user.domain.model.enums.AddressType.CORRESPONDENCE);
 		final org.egov.user.domain.model.Address permanentAddress =
@@ -144,7 +159,7 @@ public class UserRepository {
 
 	private Role fetchRole(User user, Role role) {
 		final Role enrichedRole = roleJpaRepository
-				.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode());
+				.findByRoleKeyTenantIdAndCodeIgnoreCase(user.getId().getTenantId(), role.getCode());
 		if (enrichedRole == null) {
 			throw new InvalidRoleCodeException(role.getCode());
 		}
@@ -157,12 +172,12 @@ public class UserRepository {
 	}
 
 	public org.egov.user.domain.model.User getUserById(final Long id, String tenantId) {
-		final User entityUser = userJpaRepository.findByIdAndTenantId(id, tenantId);
+		final User entityUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(id, tenantId);
 		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
 	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
-		User oldUser = userJpaRepository.findByIdAndTenantId(user.getId(), user.getTenantId());
+		User oldUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(user.getId(), user.getTenantId());
 		oldUser.setAadhaarNumber(user.getAadhaarNumber());
 		oldUser.setAccountLocked(user.getAccountLocked());
 		oldUser.setActive(user.getActive());
@@ -178,7 +193,9 @@ public class UserRepository {
 		oldUser.setMobileNumber(user.getMobileNumber());
 		oldUser.setName(user.getName());
 		oldUser.setPan(user.getPan());
-		oldUser.setPassword(user.getPassword());
+		if(!isEmpty(user.getPassword())) {
+			oldUser.setPassword(user.getPassword());
+		}
 		oldUser.setPhoto(user.getPhoto());
 		oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
 		oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));

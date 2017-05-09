@@ -29,10 +29,10 @@ public class RoleJpaRepositoryTest {
             "/sql/createRoles.sql"
     })
     public void test_should_return_role_by_name_ignoring_case() {
-        final Role actualRole = roleJpaRepository.findByTenantIdAndCodeIgnoreCase("ap.public","emp");
+        final Role actualRole = roleJpaRepository.findByRoleKeyTenantIdAndCodeIgnoreCase("ap.public","emp");
 
         assertNotNull(actualRole);
-        assertEquals(Long.valueOf(1), actualRole.getId());
+        assertEquals(Long.valueOf(1), actualRole.getId().getId());
         assertEquals("Employee", actualRole.getName());
     }
 
@@ -43,7 +43,7 @@ public class RoleJpaRepositoryTest {
             "/sql/createRoles.sql"
     })
     public void test_should_return_null_when_role_with_given_name_does_not_exist() {
-        final Role actualRole = roleJpaRepository.findByTenantIdAndCodeIgnoreCase("tenantId","unknown");
+        final Role actualRole = roleJpaRepository.findByRoleKeyTenantIdAndCodeIgnoreCase("tenantId","unknown");
 
         assertNull(actualRole);
     }

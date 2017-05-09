@@ -3,6 +3,8 @@ package org.egov.user.persistence.specification;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.entity.User;
+import org.egov.user.persistence.entity.UserKey;
+import org.egov.user.persistence.entity.UserKey_;
 import org.egov.user.persistence.entity.User_;
 import org.egov.user.persistence.enums.UserType;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,7 +25,8 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
 
     @Override
     public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        Path<Long> longPath = root.get(User_.id);
+		Path<UserKey> userKey = root.get(User_.userKey);
+		Path<Long> longPath = userKey.get(UserKey_.id);
         Path<String> userName = root.get(User_.username);
         Path<String> name = root.get(User_.name);
         Path<String> mobileNumber = root.get(User_.mobileNumber);
@@ -32,7 +35,7 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
         Path<String> emailId = root.get(User_.emailId);
         Path<Boolean> active = root.get(User_.active);
         Path<UserType> type = root.get(User_.type);
-        Path<String> tenantId = root.get(User_.tenantId);
+        Path<String> tenantId = userKey.get(UserKey_.tenantId);
 
         List<Predicate> predicates = new ArrayList<>();
 

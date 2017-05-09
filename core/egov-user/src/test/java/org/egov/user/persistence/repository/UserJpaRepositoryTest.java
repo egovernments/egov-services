@@ -60,8 +60,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
-	public void test_should_return_zero_count_when_usesr_does_not_exist_for_given_user_name_and_tenant_not_having_id
-			() {
+	public void test_should_return_zero_count_when_user_does_not_exist_for_given_user_name_and_tenant_not_having_id() {
 		Long count = userJpaRepository.isUserPresent("bigcat399", 1L, "ap.public");
 		assertEquals(Long.valueOf(0), count);
 	}
@@ -84,8 +83,8 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_name() {
-		User user = userJpaRepository.findByUsernameAndTenantId("greenfish424", "ap.public");
-		assertThat(user.getId()).isEqualTo(2L);
+		User user = userJpaRepository.findByUsernameAndUserKeyTenantId("greenfish424", "ap.public");
+		assertThat(user.getId().getId()).isEqualTo(2L);
 	}
 
 	@Test
@@ -95,8 +94,8 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_email() {
-		User user = userJpaRepository.findByEmailIdAndTenantId("email3@gmail.com", "ap.public");
-		assertThat(user.getId()).isEqualTo(3L);
+		User user = userJpaRepository.findByEmailIdAndUserKeyTenantId("email3@gmail.com", "ap.public");
+		assertThat(user.getId().getId()).isEqualTo(3L);
 	}
 
 	@Test
@@ -118,9 +117,9 @@ public class UserJpaRepositoryTest {
 		List<User> userList = userJpaRepository.findAll(fuzzyNameMatchingSpecification);
 
 		assertEquals(3, userList.size());
-		assertThat(userList.get(0).getId()).isEqualTo(3);
-		assertThat(userList.get(1).getId()).isEqualTo(4);
-		assertThat(userList.get(2).getId()).isEqualTo(5);
+		assertThat(userList.get(0).getId().getId()).isEqualTo(3);
+		assertThat(userList.get(1).getId().getId()).isEqualTo(4);
+		assertThat(userList.get(2).getId().getId()).isEqualTo(5);
 	}
 
 	@Test
@@ -145,7 +144,7 @@ public class UserJpaRepositoryTest {
 		List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
 		assertThat(userList.size()).isEqualTo(1);
-		assertThat(userList.get(0).getId()).isEqualTo(5);
+		assertThat(userList.get(0).getId().getId()).isEqualTo(5);
 	}
 
 	@Test
@@ -155,7 +154,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void test_should_find_user_by_id_and_tenant_id() {
-		User actualUser = userJpaRepository.findByIdAndTenantId(1L, "ap.public");
+		User actualUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(1L, "ap.public");
 
 		assertNotNull(actualUser);
 	}
@@ -167,7 +166,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
 	public void test_should_return_null_when_user_for_given_id_and_tenant_id_does_not_exist() {
-		User actualUser = userJpaRepository.findByIdAndTenantId(1L, "unknown");
+		User actualUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(1L, "unknown");
 
 		assertNull(actualUser);
 	}

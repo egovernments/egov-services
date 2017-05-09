@@ -28,7 +28,7 @@ public class RoleTest {
 
         Role entityRole = new Role(domainRole);
 
-        assertThat(entityRole.getId()).isEqualTo(domainRole.getId());
+        assertThat(entityRole.getId().getId()).isEqualTo(domainRole.getId());
         assertThat(entityRole.getName()).isEqualTo(domainRole.getName());
         assertThat(entityRole.getDescription()).isEqualTo(domainRole.getDescription());
         assertThat(entityRole.getLastModifiedDate()).isEqualTo(domainRole.getLastModifiedDate());
@@ -42,10 +42,10 @@ public class RoleTest {
         Date date = calendar.getTime();
 
         User user = mock(User.class);
-        when(user.getId()).thenReturn(1L);
+        when(user.getId()).thenReturn(new UserKey(1L, "tenant"));
 
         Role entityRole = Role.builder()
-                .id(1L)
+                .roleKey(new RoleKey(1L, "tenant"))
                 .name("ADMIN")
                 .description("description").build();
         entityRole.setLastModifiedDate(date);
@@ -55,7 +55,7 @@ public class RoleTest {
 
         org.egov.user.domain.model.Role domainRole = entityRole.toDomain();
 
-        assertThat(domainRole.getId()).isEqualTo(entityRole.getId());
+        assertThat(domainRole.getId()).isEqualTo(entityRole.getId().getId());
         assertThat(domainRole.getName()).isEqualTo(entityRole.getName());
         assertThat(domainRole.getDescription()).isEqualTo(entityRole.getDescription());
         assertThat(domainRole.getLastModifiedDate()).isEqualTo(entityRole.getLastModifiedDate());

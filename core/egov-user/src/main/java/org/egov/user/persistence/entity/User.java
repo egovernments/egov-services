@@ -14,27 +14,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
-import static org.egov.user.persistence.entity.User.SEQ_USER;
-
 
 @Entity
 @Table(name = "eg_user")
-@Inheritance(strategy = InheritanceType.JOINED)
-@Cacheable
+//@Inheritance(strategy = InheritanceType.JOINED)
+//@Cacheable
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(name = SEQ_USER, sequenceName = SEQ_USER, allocationSize = 1)
-public class User extends AbstractAuditable {
+public class User extends AbstractAuditable<UserKey> {
 
-    public static final String SEQ_USER = "seq_eg_user";
     private static final long serialVersionUID = 1666623645834766468L;
 
-    @Id
-    @GeneratedValue(generator = SEQ_USER, strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @EmbeddedId
+    private UserKey userKey;
 
     @Column(name = "username")
     private String username;
@@ -81,9 +76,16 @@ public class User extends AbstractAuditable {
     private Boolean active;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "eg_userrole", joinColumns = @JoinColumn(name = "userid"),
-            inverseJoinColumns = @JoinColumn(name = "roleid"))
-    private Set<Role> roles = new HashSet<>();
+    @JoinTable(name = "eg_userrole", joinColumns = {
+    		@JoinColumn(name = "userid"),
+    		@JoinColumn(name = "useridtenantid"),
+	},
+            inverseJoinColumns = {
+    		@JoinColumn(name = "roleid"),
+			@JoinColumn(name = "roleidtenantid")
+    }
+    )
+	private Set<Role> roles = new HashSet<>();
 
     @Column(name = "dob")
     @Temporal(TemporalType.DATE)
@@ -114,12 +116,12 @@ public class User extends AbstractAuditable {
     @Column(name = "accountlocked")
     private Boolean accountLocked;
 
-    @Column(name = "tenantid")
-    private String tenantId;
+//	@Column(name = "tenantid")
+//    private String tenantId;
 
     public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
-        this.id = user.getId();
+        this.userKey = new UserKey(user.getId(), user.getTenantId());
         this.username = user.getUsername();
         this.title = user.getTitle();
         this.password = user.getPassword();
@@ -143,14 +145,14 @@ public class User extends AbstractAuditable {
         this.photo = user.getPhoto();
         this.accountLocked = user.getAccountLocked();
         this.roles = convertDomainRolesToEntity(user.getRoles());
-        this.tenantId = user.getTenantId();
+//        this.tenantId = user.getTenantId();
     }
 
     public org.egov.user.domain.model.User toDomain(org.egov.user.domain.model.Address correspondenceAddress,
 													org.egov.user.domain.model.Address permanentAddress) {
         return
         org.egov.user.domain.model.User.builder()
-                .id(id)
+                .id(userKey.getId())
                 .username(username)
                 .title(title)
                 .password(password)
@@ -179,7 +181,7 @@ public class User extends AbstractAuditable {
                 .createdDate(getCreatedDate())
                 .lastModifiedBy(getLastModifiedId())
                 .createdBy(getCreatedById())
-                .tenantId(tenantId)
+                .tenantId(userKey.getTenantId())
 				.correspondenceAddress(correspondenceAddress)
 				.permanentAddress(permanentAddress)
 				.build();
@@ -236,4 +238,13 @@ public class User extends AbstractAuditable {
         return entityRoles.stream().map(Role::toDomain).collect(Collectors.toList());
     }
 
+	@Override
+	public UserKey getId() {
+		return userKey;
+	}
+
+	@Override
+	protected void setId(UserKey id) {
+		this.userKey = id;
+	}
 }

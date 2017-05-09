@@ -53,7 +53,7 @@ class EmployeeSearch extends React.Component {
        _this.setState({
          searchSet:{
              ..._this.state.searchSet,
-             name:obj.name
+             name: obj ? obj.name : ""
            }
      })
   }
@@ -240,31 +240,27 @@ componentWillUpdate() {
       }
 }
 
-const getTodaysDate = function() {
-        var now = new Date();
-        var month = (now.getMonth() + 1);
-        var day = now.getDate();
-        if(month < 10)
-            month = "0" + month;
-        if(day < 10)
-            day = "0" + day;
-        return (now.getFullYear() + '-' + month + '-' + day);
-    }
-
   //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
     const renderBody = function() {
       if(employees.length>0)
       {
       return employees.map((item,index)=>
       {
+            var ind = 0;
+            for(var i=0; i<item.assignments.length; i++) {
+              if([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                ind = i;
+                break;
+              }
+            }
             return (<tr key={index}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
 
-                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
-                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
-                    <td data-label="position">{getNameById(assignments_position,item.assignments[0].position)}</td>
-                    <td data-label="range">{item.assignments[0].fromDate}-{item.assignments[0].toDate}</td>
+                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[ind].designation)}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.assignments[ind].department)}</td>
+                    <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
+                    <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>

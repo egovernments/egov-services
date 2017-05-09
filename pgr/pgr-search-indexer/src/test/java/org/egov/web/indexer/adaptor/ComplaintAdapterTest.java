@@ -76,7 +76,6 @@ public class ComplaintAdapterTest {
         serviceRequest.getValues().put("status", "REOPENED");
         complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
-        
     }
 	
 	private ServiceRequest setUpServiceRequest() {

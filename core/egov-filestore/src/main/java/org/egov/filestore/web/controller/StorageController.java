@@ -5,6 +5,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;
 import org.egov.filestore.web.contract.GetFilesByTagResponse;
@@ -27,54 +28,49 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/v1/files")
 public class StorageController {
 
-    private StorageService storageService;
-    private ResponseFactory responseFactory;
+	private StorageService storageService;
+	private ResponseFactory responseFactory;
 
-    public StorageController(StorageService storageService, ResponseFactory responseFactory) {
-        this.storageService = storageService;
-        this.responseFactory = responseFactory;
-    }
+	public StorageController(StorageService storageService, ResponseFactory responseFactory) {
+		this.storageService = storageService;
+		this.responseFactory = responseFactory;
+	}
 
-    @GetMapping("/id")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile(@RequestParam(value = "tenantId", required = true) String tenantId,
-            @RequestParam("fileStoreId") String fileStoreId) {
-        if (tenantId != null && !tenantId.isEmpty()) {
-            org.egov.filestore.domain.model.Resource resource = storageService.retrieve(fileStoreId, tenantId);
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFileName() + "\"")
-                    .header(HttpHeaders.CONTENT_TYPE, resource.getContentType()).body(resource.getResource());
-        }
-        return null;
-    }
+	@GetMapping("/id")
+	@ResponseBody
+	public ResponseEntity<Resource> getFile(@RequestParam(value = "tenantId") String tenantId,
+											@RequestParam("fileStoreId") String fileStoreId) {
+		org.egov.filestore.domain.model.Resource resource = storageService.retrieve(fileStoreId, tenantId);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFileName() + "\"")
+				.header(HttpHeaders.CONTENT_TYPE, resource.getContentType()).body(resource.getResource());
+	}
 
-    @GetMapping(value = "/tag", produces = APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public GetFilesByTagResponse getUrlListByTag(@RequestParam(value = "tenantId", required = true) String tenantId,
-            @RequestParam("tag") String tag) {
-        if (tenantId != null && !tenantId.isEmpty()) {
-            return responseFactory.getFilesByTagResponse(storageService.retrieveByTag(tag, tenantId));
-        }
-        return null;
-    }
+	@GetMapping(value = "/tag", produces = APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public GetFilesByTagResponse getUrlListByTag(@RequestParam(value = "tenantId") String tenantId,
+												 @RequestParam("tag") String tag) {
+		final List<FileInfo> fileInfoList = storageService.retrieveByTag(tag, tenantId);
+		return responseFactory.getFilesByTagResponse(fileInfoList);
+	}
 
-    @PostMapping(produces = APPLICATION_JSON_UTF8_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
-            @RequestParam(value = "tenantId", required = true) String tenantId,
-            @RequestParam("module") String module,
-            @RequestParam(value = "tag", required = false) String tag) {
-        final List<String> fileStoreIds = storageService.save(files, module, tag, tenantId);
-        return getStorageResponse(fileStoreIds,tenantId);
-    }
+	@PostMapping(produces = APPLICATION_JSON_UTF8_VALUE)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseBody
+	public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
+									  @RequestParam(value = "tenantId") String tenantId,
+									  @RequestParam("module") String module,
+									  @RequestParam(value = "tag", required = false) String tag) {
+		final List<String> fileStoreIds = storageService.save(files, module, tag, tenantId);
+		return getStorageResponse(fileStoreIds, tenantId);
+	}
 
-    private StorageResponse getStorageResponse(List<String> fileStorageIds,String tenantId) {
-        List<File> files = new ArrayList<>();
-        for(String fileStorageId : fileStorageIds){
-           File f = new File(fileStorageId,tenantId);
-           files.add(f);
-        }
-        return new StorageResponse(files);
-    }
+	private StorageResponse getStorageResponse(List<String> fileStorageIds, String tenantId) {
+		List<File> files = new ArrayList<>();
+		for (String fileStorageId : fileStorageIds) {
+			File f = new File(fileStorageId, tenantId);
+			files.add(f);
+		}
+		return new StorageResponse(files);
+	}
 }

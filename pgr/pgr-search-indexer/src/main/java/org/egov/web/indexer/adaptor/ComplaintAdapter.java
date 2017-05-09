@@ -1,18 +1,7 @@
 package org.egov.web.indexer.adaptor;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-
 import org.apache.commons.lang.time.DateUtils;
-import org.egov.web.indexer.contract.Assignment;
-import org.egov.web.indexer.contract.Boundary;
-import org.egov.web.indexer.contract.City;
-import org.egov.web.indexer.contract.ComplaintType;
-import org.egov.web.indexer.contract.Employee;
-import org.egov.web.indexer.contract.ServiceRequest;
+import org.egov.web.indexer.contract.*;
 import org.egov.web.indexer.repository.BoundaryRepository;
 import org.egov.web.indexer.repository.ComplaintTypeRepository;
 import org.egov.web.indexer.repository.EmployeeRepository;
@@ -21,6 +10,11 @@ import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 
 @Service
 public class ComplaintAdapter {
@@ -71,8 +65,8 @@ public class ComplaintAdapter {
     public ComplaintIndex indexOnUpdate(ServiceRequest serviceRequest) {
         ComplaintIndex complaintIndex = new ComplaintIndex();
         setCommonDetails(complaintIndex, serviceRequest);
-        if (serviceRequest != null && !serviceRequest.getValues().isEmpty()) {
-            String status = serviceRequest.getValues().get("status");
+        if (serviceRequest != null) {
+            String status = serviceRequest.getDynamicSingleValue("status");
             // Update complaint level index variables
             if (status != null && !status.isEmpty() && (status.equalsIgnoreCase(COMPLETED)
                     || status.equalsIgnoreCase(WITHDRAWN) || status.equalsIgnoreCase(REJECTED))) {
@@ -176,9 +170,8 @@ public class ComplaintAdapter {
                 serviceRequest.getLng(), serviceRequest.getTenantId());
 
         // Reading from serviceRequest values map
-        Map<String, String> values = serviceRequest.getValues();
-        complaintIndex.setComplaintStatusName(values.get("status"));
-        complaintIndex.setReceivingMode(values.get("receivingMode"));
+        complaintIndex.setComplaintStatusName(serviceRequest.getDynamicSingleValue("status"));
+        complaintIndex.setReceivingMode(serviceRequest.getDynamicSingleValue("receivingMode"));
         /*
          * complaintIndex.setSatisfactionIndex(Double.valueOf(values.get(
          * "citizenFeedback")));
@@ -190,9 +183,11 @@ public class ComplaintAdapter {
          * InitializeCityDetails(complaintIndex, values.get("tenantId"));
          */
         InitializeCityDetails(complaintIndex,serviceRequest.getTenantId());
-        InitializeBoundaryDetails(complaintIndex, values.get("locationId"), values.get("child_location_id"),
-                serviceRequest.getTenantId());
-        InitializeEmployeeDetails(complaintIndex, values.get("assignment_id"), serviceRequest.getTenantId());
+        final String locationId = serviceRequest.getDynamicSingleValue("locationId");
+        final String childLocationId = serviceRequest.getDynamicSingleValue("child_location_id");
+        InitializeBoundaryDetails(complaintIndex, locationId, childLocationId, serviceRequest.getTenantId());
+        final String assignmentId = serviceRequest.getDynamicSingleValue("assignment_id");
+        InitializeEmployeeDetails(complaintIndex, assignmentId, serviceRequest.getTenantId());
 
     }
 

@@ -98,7 +98,7 @@ public class AssetRepositoryTest {
 		Asset asset = new Asset();
 		asset.setTenantId("ap.kurnool");
 		asset.setName("asset name");
-		asset.setStatus(Status.CWIP);
+		asset.setStatus(Status.CREATED);
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
 		Location location = new Location();

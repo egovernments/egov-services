@@ -19,6 +19,7 @@ import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandResponse;
+import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.Position;
 import org.egov.lams.web.contract.PositionResponse;
@@ -63,12 +64,12 @@ public class AgreementService {
 	/**
 	 * service call to single agreement based on acknowledgementNumber
 	 * 
-	 * @param acknowledgementNumber
+	 * @param code
 	 * @return
 	 */
-	public boolean isAgreementExist(String acknowledgementNumber) {
+	public boolean isAgreementExist(String code) {
 
-		return (agreementRepository.findAgreementById(acknowledgementNumber) != null);
+		return (agreementRepository.findAgreementByUniqueCode(code) != null);
 	}
 
 	/**
@@ -204,19 +205,29 @@ public class AgreementService {
 
 	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
 
+		List<Demand> legacyDemands = null;
 		Agreement agreement = agreementRequest.getAgreement();
-		if (agreement.getExpiryDate() == null) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(agreement.getCommencementDate());
-			calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
-			Date expiryDate = calendar.getTime();
-			agreement.setExpiryDate(expiryDate);
-		}
-		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-		if (demandReasons.isEmpty())
-			throw new RuntimeException("No demand reason found for given criteria");
+		List<String> demandIds = agreement.getDemands();
+		if (demandIds == null) {
 
-		return demandRepository.getDemandList(agreementRequest, demandReasons);
+			if (agreement.getExpiryDate() == null) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(agreement.getCommencementDate());
+				calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
+				Date expiryDate = calendar.getTime();
+				agreement.setExpiryDate(expiryDate);
+			}
+			List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+			if (demandReasons.isEmpty())
+				throw new RuntimeException("No demand reason found for given criteria");
+			legacyDemands = demandRepository.getDemandList(agreementRequest, demandReasons);
+		} else {
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(Long.getLong(demandIds.get(0)));
+			legacyDemands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+					.getDemands();
+		}
+		return legacyDemands;
 	}
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {

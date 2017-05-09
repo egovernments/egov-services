@@ -142,6 +142,7 @@
                                         <exclude>org.egov.pgr.employee.enrichment.PgrEmployeeEnrichmentApplication
                                         </exclude>
                                         <exclude>org.egov.pgr.employee.enrichment.consumer.contract.*</exclude>
+                                        <exclude>org.egov.pgr.employee.enrichment.model.SevaRequest</exclude>
                                         <exclude>org.egov.pgr.employee.enrichment.model.RequestContext</exclude>
                                         <exclude>org.egov.pgr.employee.enrichment.repository.contract.*</exclude>
                                         <exclude>org.egov.pgr.employee.enrichment.json.ObjectMapperFactory</exclude>

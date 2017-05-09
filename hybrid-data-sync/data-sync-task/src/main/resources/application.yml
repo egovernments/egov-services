@@ -27,6 +27,90 @@ spring:
   profiles: ml-to-ms
 sync:
   info:
+    - sourceTable: eg_hierarchy_type
+      destinationTable: eg_hierarchy_type
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: localname
+          destination: localname
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+    - sourceTable: eg_boundary_type
+      destinationTable: eg_boundary_type
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: hierarchy
+          destination: hierarchy
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: parent
+          destination: parent
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
     - sourceTable: bank
       destinationTable: egf_bank
       columns:
@@ -95,7 +179,7 @@ sync:
 
 ---
 source-schemas: microservice
-destination-schema: fubar
+destination-schema: NA
 spring:
   profiles: ms-to-ml
 sync:

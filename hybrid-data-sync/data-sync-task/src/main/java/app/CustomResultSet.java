@@ -42,6 +42,9 @@ public class CustomResultSet {
             case "Boolean":
             	value = this.rs.getBoolean(columnLabel);
             	break;
+            case "TimestampWithoutTimeZone":
+                value = this.rs.getTimestamp(columnLabel);
+                break;
             default:
                 throw new SQLException(String.format("Column type: %s is not valid", type));
         }

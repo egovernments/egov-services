@@ -240,17 +240,6 @@ componentWillUpdate() {
       }
 }
 
-const getTodaysDate = function() {
-        var now = new Date();
-        var month = (now.getMonth() + 1);
-        var day = now.getDate();
-        if(month < 10)
-            month = "0" + month;
-        if(day < 10)
-            day = "0" + day;
-        return (now.getFullYear() + '-' + month + '-' + day);
-    }
-
   //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
     const renderBody = function() {
       if(employees.length>0)

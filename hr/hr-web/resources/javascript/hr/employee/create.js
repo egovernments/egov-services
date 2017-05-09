@@ -663,7 +663,7 @@ var commom_fields_rules = {
   },
   "assignments.govtOrderNumber": {
     required: false,
-    alphanumericWSplChar: true
+    alphanumericWSplCharNSpc: true
   },
   "assignments.is_primary": {
     required: true
@@ -707,7 +707,7 @@ var commom_fields_rules = {
   },
   "serviceHistory.orderNo": {
     required: false,
-    alphanumericWSplChar: true
+    alphanumericWSplCharNSpc: true
   },
   "serviceHistory.documents": {
     required: false
@@ -2240,6 +2240,10 @@ $(document).ready(function() {
 
     $.validator.addMethod('alphanumericWSplChar', function(value) {
         return value ? /^[a-zA-Z0-9\-\/\_]*$/.test(value) : true;
+    }, 'Only alphanumeric with -/_ allowed.');
+
+    $.validator.addMethod('alphanumericWSplCharNSpc', function(value) {
+        return value ? /^[a-zA-Z0-9\-\/\_ ]*$/.test(value) : true;
     }, 'Only alphanumeric with -/_ allowed.');
 
     $.validator.addMethod('alphaWSplChar', function(value) {

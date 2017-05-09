@@ -53,7 +53,7 @@ class EmployeeSearch extends React.Component {
        _this.setState({
          searchSet:{
              ..._this.state.searchSet,
-             name:obj.name
+             name:obj.name ? obj.name : ""
            }
      })
   }

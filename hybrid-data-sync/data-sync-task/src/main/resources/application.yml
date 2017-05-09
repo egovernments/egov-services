@@ -426,7 +426,7 @@ sync:
 
         - source: employeetypeid
           destination: employeetype
-          Type: Date
+          Type: Integer
           shouldSource: True
           shouldSync: True
 

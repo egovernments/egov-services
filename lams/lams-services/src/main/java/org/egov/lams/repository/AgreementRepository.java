@@ -51,11 +51,11 @@ public class AgreementRepository {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public Agreement findAgreementById(String acknowledgementNumber) {
+	public Agreement findAgreementByUniqueCode(String code) {
 
 		Agreement agreement = null;
 		String sql = AgreementQueryBuilder.agreementQuery;
-		Object[] preparedStatementValues = new Object[] { acknowledgementNumber };
+		Object[] preparedStatementValues = new Object[] { code ,code };
 
 		try {
 			agreement = jdbcTemplate.queryForObject(sql, preparedStatementValues, Agreement.class);
@@ -76,8 +76,7 @@ public class AgreementRepository {
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
-			// FIXME log exception here
-			// FIXME see if it can be better than RunTimeException rethrown
+			logger.info("exception in agreementrepo jdbc temp :"+ e);
 			throw new RuntimeException(e.getMessage());
 		}
 		if (agreements.isEmpty())

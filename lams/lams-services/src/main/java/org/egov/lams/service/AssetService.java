@@ -48,7 +48,7 @@ public class AssetService {
 	public boolean isAssetAvailable(Long assetId) {
 
 		final String sql = "select id from eglams_agreement where asset=" + assetId;
-		logger.info("the url for asset api call to check isAssetAvalable : " + sql, sql);
+		logger.info("the url for asset api call to check isAssetAvalable : " + sql);
 		// FIXME table name from config
 		List<Map<String, Object>> resultSet = null;
 		try {

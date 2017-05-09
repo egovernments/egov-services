@@ -45,8 +45,10 @@ public class AssetValidator {
 		String existingName = assetService.getAssetName(asset.getTenantId(), asset.getName());
 
 		if (existingName != null) {
-			if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName()))
+			if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName())){
+				logger.info("duplicate asset with same name found");
 				throw new RuntimeException("Duplicate asset name asset already exists");
+			}
 		} else {
 			logger.info("no duplicate asset with same name found");
 		}

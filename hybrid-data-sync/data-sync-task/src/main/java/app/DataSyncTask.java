@@ -90,6 +90,6 @@ public class DataSyncTask {
     }
 
     private void updateEpoch(String epoch) {
-        jdbcTemplate.update("UPDATE data_sync_epoch set epoch=?", new Object[]{Timestamp.valueOf(epoch)});
+        jdbcTemplate.update("UPDATE data_sync_epoch set epoch=? WHERE profile=?", new Object[]{Timestamp.valueOf(epoch), activeProfile});
     }
 }

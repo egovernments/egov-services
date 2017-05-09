@@ -1,42 +1,3 @@
-// const months = [
-//   {
-//     id: 0,
-//     name: "January"
-//   }, {
-//     id: 1,
-//     name: "February"
-//   }, {
-//     id: 2,
-//     name: "March"
-//   }, {
-//     id: 3,
-//     name: "April"
-//   }, {
-//     id: 4,
-//     name: "May"
-//   }, {
-//     id: 5,
-//     name: "June"
-//   }, {
-//     id: 6,
-//     name: "July"
-//   }, {
-//     id: 7,
-//     name: "August"
-//   }, {
-//     id: 8,
-//     name: "September"
-//   }, {
-//     id: 9,
-//     name: "October"
-//   }, {
-//     id: 10,
-//     name: "November"
-//   }, {
-//     id: 11,
-//     name: "December"
-//   }
-// ];
 
 class EditDemand extends React.Component {
   constructor(props) {
@@ -46,6 +7,11 @@ class EditDemand extends React.Component {
       agreement: {},
       legacyDemand: {}
     }
+
+    this.close = this.close.bind(this);
+    this.addOrUpdate = this.addOrUpdate.bind(this);
+    this.handleChange=this.handleChange.bind(this);
+    this.handleCheckAll=this.handleCheckAll.bind(this);
   }
   close() {
     // widow.close();
@@ -57,99 +23,83 @@ class EditDemand extends React.Component {
     //call update method
   }
 
-  componentWillMount()
-  {
+  handleChange(e,name,auctualDemand,k) {
+
+  }
+
+  handleCheckAll(e, name){
+  // console.log(JSON.stringify(this.state.demands));
+  //   var keys = Object.keys(this.state.demands);
+  //   if(this.state.demands[0] && this.state.demands[0]["isActualDemand"]) {
+  //     var demands = this.state.demands;
+  //     for(key in demands) {
+  //       if(!demands[key]) demands[key] = {};
+  //       demands[key]["isActualDemand"] = this.state.demands[0]["isActualDemand"];
+  //     }
+  //
+  //     this.setState({
+  //       demands
+  //     })
+  //   } else {
+  //     e.preventDefault();
+  //   }
+  }
+
+  componentWillMount() {
     var demands={};
-    var agreementDetail={};
-    //uncommet once its up
+   var agreementDetail={};
+   agreementDetail["timePeriod"]=5;
+   agreementDetail["paymentCycle"]="MONTH";
 
-    // try {
-    //   if (getUrlVars()["agreementNumber"]) {
-    //     agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
-    //       agreementNumber: getUrlVars()["agreementNumber"],
-    //       tenantId
-    //     }).responseJSON["Agreements"][0] || {};
-    //   } else if (getUrlVars()["acknowledgementNumber"]) {
-    //     agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
-    //       acknowledgementNumber: getUrlVars()["acknowledgementNumber"],
-    //       tenantId
-    //     }).responseJSON["Agreements"][0] || {};
-    //   } else {
-    //     agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
-    //       stateId: getUrlVars()["state"],
-    //       tenantId
-    //     }).responseJSON["Agreements"][0] || {};
-    //   }
-    //
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    agreementDetail["timePeriod"]=5;
-    agreementDetail["paymentCycle"]="MONTH";
-
-    var date = new Date();
-    var endDate = new Date((date.getFullYear()+agreementDetail["timePeriod"]),date.getMonth(),date.getDate());
-    var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+   var date = new Date();
+   var endDate = new Date((date.getFullYear()+agreementDetail["timePeriod"]),date.getMonth(),date.getDate());
+   var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 
 
 
-    //uncomment this if else when api is ready
-    // if (agreementDetail["demands"]>0 || !agreementDetail["demands"]>0) {
-    //
-    // } else {
-    //
-    // }
 
 
-    switch (agreementDetail["paymentCycle"]) {
-      case "MONTH":
-          // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
-          var i=0;
-          while (date <= endDate)
-          {
-              // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
-              // resultList.push(stringDate);
-              demands[i]={
+   switch (agreementDetail["paymentCycle"]) {
+     case "MONTH":
+         // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+         var i=0;
+         while (date <= endDate)
+         {
+             // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+             // resultList.push(stringDate);
+             demands[i]={
 
-                  		"taxAmount" : null,
-                  		"collectionAmount" : null,
-                  		"rebateAmount" : null,
-                  		"taxReason" : null,
-                  		"taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                  		"glCode" : null,
-                  		"isActualDemand" : null,
-                  		tenantId
-              }
-              date.setDate(date.getMonth() + 1);
+                   "taxAmount" : null,
+                   "collectionAmount" : null,
+                   "rebateAmount" : null,
+                   "taxReason" : null,
+                   "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+                   "glCode" : null,
+                   "isActualDemand" : null,
+                   tenantId
+             }
+
+              date.setMonth(date.getMonth() + 1);
           }
-        break;
+       break;
 
-      case "QUARTER":
+     case "QUARTER":
 
-        break;
-      case "HALFYEAR":
+       break;
+     case "HALFYEAR":
 
-        break;
-      default:
+       break;
+     default: break
 
-    }
-
-    // var currentMonthId = new Date().getMonth();
-    // var _months = months.filter(val => {
-    //   return (val.id <= currentMonthId);
-    // })
-    // this.setState({months: _months})
-
-    this.setState({
-      demands
-    })
   }
 
 
-  // function getDemandRows(mode,years) {
-  //
-  // }
+   this.setState({
+     demands
+   })
+  }
+
 
   render() {
     let {demands} = this.state;
@@ -177,56 +127,58 @@ class EditDemand extends React.Component {
 
 
     }
-
     return (
       <div>
 
-        <form onSubmit={(e) => {
-          this.addOrUpdate(e);
-        }}>
-          <div className="form-section-inner">
+          <form onSubmit={(e) => {
+            this.addOrUpdate(e);
+          }}>
+            <div className="form-section-inner">
 
-            <table id="editDemand" className="table table-bordered">
-              <thead>
-                <tr>
-                  <th className="text-center">
-                    Month
-                  </th>
-                  <th className="text-center">Demand
+              <table id="editDemand" className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th className="text-center">
+                      Month
+                    </th>
+                    <th className="text-center">Demand
 
-                    <div className="checkbox">
-                        <label>
-                          <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Demand")}}/>
-                        </label>
-                    </div>
+                      <div className="checkbox">
+                          <label>
+                            <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Demand")}}/>
+                          </label>
+                      </div>
 
 
-                  </th>
-                  <th>
-                    Collection
-                    <div className="checkbox">
-                        <label>
-                          <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Collection")}}/>
-                        </label>
-                    </div>
-                  </th>
+                    </th>
+                    <th>
+                      Collection
+                      <div className="checkbox">
+                          <label>
+                            <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Collection")}}/>
+                          </label>
+                      </div>
+                    </th>
+                    </tr>
 
-                </tr>
-              </thead>
-              <tbody>
-                {renderBody()}
-              </tbody>
-            </table>
-            <div className="text-center">
-              <button type="button" className="btn btn-default" onClick={(e) => {
-                this.close()
-              }}>Close</button>
+                    {renderBody()}
 
-              <button type="Submit" className="btn btn-submit">Submit</button>
+                </thead>
+                <tbody>
+
+                </tbody>
+              </table>
+              <div className="text-center">
+                <button type="button" className="btn btn-default" onClick={(e) => {
+                  this.close()
+                }}>Close</button>
+
+                <button type="Submit" className="btn btn-submit">Submit</button>
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+
     );
   }
 }

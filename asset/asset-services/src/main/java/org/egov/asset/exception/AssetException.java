@@ -15,6 +15,6 @@ public class AssetException {
 		error.setCode(400);
 		error.setMessage(e.getMessage());
 		errorResponse.setError(error);
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.OK);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 }

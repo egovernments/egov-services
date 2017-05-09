@@ -54,7 +54,7 @@ public class DataSyncTask {
         for (String sourceSchema : sourceSchemas) {
             for (SyncInfo info : syncConfig.getInfo()) {
                 epoch = calculateEpochWithTZ(epoch, info);
-                log.info(String.format("EPOCH: %s, table: %s", epoch, info.getSourceTable()));
+                log.info(String.format("EPOCH: %s, table: %s, TZ: %s", epoch, info.getSourceTable(), info.getSourceTimeZone()));
                 String query = String.format("SELECT %s from %s.%s WHERE lastmodifieddate >=?",
                         String.join(",", info.getSourceColumnNamesToReadFrom()), sourceSchema, info.getSourceTable());
                 log.info(query);

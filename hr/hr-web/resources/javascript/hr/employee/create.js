@@ -2914,6 +2914,7 @@ function printValue(object = "", values) {
 
   } else {
     for (var key in values) {
+      if(key == "documents") continue;
       if (typeof values[key] === "object" && key == "user") {
         for (ckey in values[key]) {
           if (values[key][ckey]) {

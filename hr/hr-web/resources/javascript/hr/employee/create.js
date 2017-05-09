@@ -584,25 +584,25 @@ var commom_fields_rules = {
   },
   "user.permanentAddress": {
     required: false,
-    alphanumericWSplChar: true
+    alphanumericWSplCharNSpc: true
   },
   "user.permanentCity": {
     required: false,
-    alphanumeric: true
+    alphanumericWSpc: true
   },
   "user.permanentPinCode": {
     required: false
   },
   "user.correspondenceCity": {
     required: false,
-    alphanumeric: true
+    alphanumericWSpc: true
   },
   "user.correspondencePinCode": {
     required: false
   },
   "user.correspondenceAddress": {
     required: false,
-    alphanumericWSplChar: true
+    alphanumericWSplCharNSpc: true
   },
   "user.active": {
     required: true
@@ -703,7 +703,7 @@ var commom_fields_rules = {
   },
   "serviceHistory.remarks": {
     required: false,
-    alpha: true
+    alphanumericWSpc: true
   },
   "serviceHistory.orderNo": {
     required: false,
@@ -2230,7 +2230,7 @@ $(document).ready(function() {
     $.validator.addMethod('panNo', function(value) {
         return value ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
     }, 'Please enter a valid pan.');
-    
+
     $.validator.addMethod('alpha', function(value) {
     return value ? /^[a-zA-Z]*$/.test(value) : true;
     }, 'Only alphabets allowed.');
@@ -2243,6 +2243,10 @@ $(document).ready(function() {
         return value ? /^[a-zA-Z0-9]*$/.test(value) : true;
     }, 'Only alphanumeric characters allowed.');
 
+    $.validator.addMethod('alphanumericWSpc', function(value) {
+        return value ? /^[a-zA-Z0-9 ]*$/.test(value) : true;
+    }, 'Only alphanumeric characters and space allowed.');
+
     $.validator.addMethod('alphanumericWSplChar', function(value) {
         return value ? /^[a-zA-Z0-9\-\/\_]*$/.test(value) : true;
     }, 'Only alphanumeric with -/_ allowed.');
@@ -2252,8 +2256,8 @@ $(document).ready(function() {
     }, 'Only alphanumeric with -/_ allowed.');
 
     $.validator.addMethod('alphaWSplChar', function(value) {
-        return value ? /^[a-zA-Z\-\/\_]*$/.test(value) : true;
-    }, 'Only alphabets with -/_ allowed.');
+        return value ? /^[a-zA-Z\-\/\_\.\*\@\#\$\%\^\&\ ]*$/.test(value) : true;
+    }, 'Only alphabets with special characters allowed.');
 
     $(".onlyNumber").on("keydown", function(e) {
         var key = e.keyCode ? e.keyCode : e.which;

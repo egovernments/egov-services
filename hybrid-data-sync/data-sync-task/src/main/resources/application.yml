@@ -29,7 +29,7 @@ sync:
   info:
     - sourceTable: eg_department
       destinationTable: eg_department
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -59,7 +59,7 @@ sync:
 
     - sourceTable: eg_designation
       destinationTable: egeis_designation
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -100,7 +100,7 @@ sync:
 
     - sourceTable: egeis_deptdesig
       destinationTable: egeis_departmentdesignation
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -122,7 +122,7 @@ sync:
 
     - sourceTable: eg_position
       destinationTable: egeis_position
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -157,7 +157,7 @@ sync:
 
 #    - sourceTable: bank
 #      destinationTable: egf_bank
-#      sourceTimeZone: "UTC"
+#      sourceTimeZone: UTC
 #      columns:
 #        - source: id
 #          destination: id
@@ -185,7 +185,7 @@ sync:
 #
 #    - sourceTable: bankbranch
 #      destinationTable: egf_bankbranch
-#      sourceTimeZone: "UTC"
+#      sourceTimeZone: UTC
 #      columns:
 #        - source: id
 #          destination: id
@@ -232,7 +232,7 @@ sync:
   info:
     - sourceTable: eg_user
       destinationTable: eg_user
-      sourceTimeZone: "Asia/Kolkata"
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -398,7 +398,7 @@ sync:
 
     - sourceTable: egeis_employee
       destinationTable: egeis_employee
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -438,7 +438,7 @@ sync:
 
     - sourceTable: egeis_assignment
       destinationTable: egeis_assignment
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -551,7 +551,7 @@ sync:
 
     - sourceTable: egeis_hoddepartment
       destinationTable: egeis_employee_hod
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -585,7 +585,7 @@ sync:
 
     - sourceTable: egeis_employeejurisdictions
       destinationTable: egeis_jurisdiction
-      sourceTimeZone: "UTC"
+      sourceTimeZone: UTC
       columns:
         - source: id
           destination: id
@@ -619,7 +619,7 @@ sync:
 
 #    - sourceTable: egf_bank
 #      destinationTable: bank
-#      sourceTimeZone: "UTC"
+#      sourceTimeZone: UTC
 #      columns:
 #        - source: id
 #          destination: id
@@ -653,7 +653,7 @@ sync:
 #
 #    - sourceTable: egf_bankbranch
 #      destinationTable: bankbranch
-#      sourceTimeZone: "UTC"
+#      sourceTimeZone: UTC
 #      columns:
 #        - source: id
 #          destination: id

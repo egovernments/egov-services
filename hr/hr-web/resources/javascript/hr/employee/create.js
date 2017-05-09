@@ -2125,7 +2125,7 @@ $("#createEmployeeForm").validate({
           var empJuridictions = employee["jurisdictions"];
           employee["jurisdictions"] = [];
           for (var i = 0; i < empJuridictions.length; i++) {
-            if(typeof employee["jurisdictions"][0] == "object")
+            if(typeof empJuridictions[i] == "object")
               employee["jurisdictions"].push(empJuridictions[i].boundary);
             else
               employee["jurisdictions"].push(empJuridictions[i]);

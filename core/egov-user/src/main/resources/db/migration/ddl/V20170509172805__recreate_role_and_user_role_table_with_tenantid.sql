@@ -13,7 +13,7 @@ CREATE TABLE eg_role (
     lastmodifieddate timestamp,
     version bigint,
     tenantid character varying(256) not null,
-    CONSTRAINT eg_roles_role_name_key UNIQUE (name)
+    CONSTRAINT eg_roles_code_tenant UNIQUE (code, tenantid)
 );
 
 CREATE SEQUENCE SEQ_EG_ROLE

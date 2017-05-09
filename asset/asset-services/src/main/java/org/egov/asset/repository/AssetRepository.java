@@ -89,21 +89,19 @@ public class AssetRepository {
 		return assets;
 	}
 
-	public Asset findByName(String tenantId, String name) {
+	public String findAssetName(String tenantId, String name) {
 
 		String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
 		System.out.println("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
-		List<Asset> assets = null;
+		String assetName = null;
 		try {
-			assets = jdbcTemplate.query(queryStr, new Object[] { name, tenantId }, assetRowMapper);
-			System.out.println("AssetRepository::" + assets);
+			assetName = jdbcTemplate.queryForObject(queryStr, new Object[] { name, tenantId }, String.class);
+			System.out.println("AssetRepository::" + assetName);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw ex;
 		}
-		if (assets.isEmpty())
-			return null;
-		return assets.get(0);
+		return assetName;
 	}
 
 	public String getAssetCode() {

@@ -238,5 +238,5 @@ public class AssetQueryBuilder {
 
 	}
 
-	public final static String FINDBYNAMEQUERY = "SELECT * FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
+	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 }

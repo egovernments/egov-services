@@ -21,6 +21,7 @@ public class AssetValidator {
 	
 	public void validateAsset(AssetRequest assetRequest){
 		findAssetCategory(assetRequest);
+		findAsset(assetRequest);
 	}
 	
 	public void findAssetCategory(AssetRequest assetRequest) {

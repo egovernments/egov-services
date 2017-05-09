@@ -197,7 +197,7 @@ var commomFieldsRules = {
         required: true
     }
 };
-if (decodeURIComponent(getUrlVars()["type"]) == "land") {
+if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     // validation rules for land agreement
     validationRules = {
             // landRegisterNumber: {

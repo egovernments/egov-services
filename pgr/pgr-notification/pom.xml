@@ -140,7 +140,7 @@
                                     <element>CLASS</element>
                                     <excludes>
                                         <exclude>org.egov.PgrNotificationApplication</exclude>
-                                        <exclude>org.egov.persistence.queue.contract.*</exclude>
+                                        <exclude>org.egov.domain.model.SevaRequest</exclude>
                                         <exclude>org.egov.consumer.HashMapDeserializer</exclude>
                                     </excludes>
                                     <limits>

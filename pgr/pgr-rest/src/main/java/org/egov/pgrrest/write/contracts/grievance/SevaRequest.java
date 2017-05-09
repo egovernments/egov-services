@@ -14,8 +14,8 @@ public class SevaRequest {
 
     private static final String SERVICE_REQUEST = "serviceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
-    public static final String CITIZEN = "CITIZEN";
-    public static final String VALUES_CITIZENFEEDBACK ="citizenFeedback";
+    private static final String CITIZEN = "CITIZEN";
+    private static final String VALUES_CITIZENFEEDBACK = "citizenFeedback";
 
     private HashMap<String, Object> sevaRequestMap;
     private ObjectMapper objectMapper;
@@ -37,19 +37,19 @@ public class SevaRequest {
             .complainantName(this.getServiceRequest().getFirstName())
             .complainantMobileNumber(this.getServiceRequest().getPhone())
             .complainantEmail(this.getServiceRequest().getEmail())
-            .complainantAddress(this.getServiceRequest().getValues().get(VALUES_COMPLAINANT_ADDRESS))
+            .complainantAddress(this.getServiceRequest().getDynamicSingleValue(VALUES_COMPLAINANT_ADDRESS))
             .complainantUserId(getUserId())
-            .receivingMode(this.getServiceRequest().getValues().get(VALUES_RECEIVING_MODE))
+            .receivingMode(this.getServiceRequest().getDynamicSingleValue(VALUES_RECEIVING_MODE))
             .receivingCenter(getReceivingCenter())
             .complaintTypeCode(this.getServiceRequest().getComplaintTypeCode())
-            .complaintStatus(this.getServiceRequest().getValues().get(VALUES_STATUS))
+            .complaintStatus(this.getServiceRequest().getDynamicSingleValue(VALUES_STATUS))
             .assigneeId(getAssigneeId())
             .location(getLocation())
             .childLocation(getChildLocation())
             .escalationDate(this.getServiceRequest().getEscalationDate())
             .workflowStateId(getStateId())
             .department(getDepartment())
-            .citizenFeedback( getCitizenFeedback())
+            .citizenFeedback(getCitizenFeedback())
             .tenantId(this.getServiceRequest().getTenantId())
             .build();
     }
@@ -64,10 +64,9 @@ public class SevaRequest {
     }
 
     private String getCitizenFeedback() {
-	   	  return  this.getServiceRequest().getValues().get(VALUES_CITIZENFEEDBACK)==null?null:
-        this.getServiceRequest().getValues().get(VALUES_CITIZENFEEDBACK);
- 	}
-    
+        return this.getServiceRequest().getDynamicSingleValue(VALUES_CITIZENFEEDBACK);
+    }
+
     private Long getRequesterId() {
         return getRequestInfo().getUserInfo().getId();
     }
@@ -90,31 +89,31 @@ public class SevaRequest {
     }
 
     public Long getReceivingCenter() {
-        final String receivingCenter = this.getServiceRequest().getValues().get(VALUES_RECEIVING_CENTER);
+        final String receivingCenter = this.getServiceRequest().getDynamicSingleValue(VALUES_RECEIVING_CENTER);
         return isEmpty(receivingCenter) ? null : Long.valueOf(receivingCenter);
     }
 
     private Long getDepartment() {
-        return Long.valueOf(this.getServiceRequest().getValues().get(VALUES_DEPARTMENT));
+        return Long.valueOf(this.getServiceRequest().getDynamicSingleValue(VALUES_DEPARTMENT));
     }
 
     private Long getStateId() {
-        final String stateId = this.getServiceRequest().getValues().get(VALUES_STATE_ID);
+        final String stateId = this.getServiceRequest().getDynamicSingleValue(VALUES_STATE_ID);
         return isEmpty(stateId) ? null : Long.valueOf(stateId);
     }
 
     public Long getLocation() {
-        final String locationId = this.getServiceRequest().getValues().get(LOCATION_ID);
+        final String locationId = this.getServiceRequest().getDynamicSingleValue(LOCATION_ID);
         return isEmpty(locationId) ? null : Long.valueOf(locationId);
     }
 
     private Long getChildLocation() {
-        final String childLocationId = this.getServiceRequest().getValues().get(CHILD_LOCATION_ID);
-        return isEmpty(childLocationId) ?  null : Long.valueOf(childLocationId);
+        final String childLocationId = this.getServiceRequest().getDynamicSingleValue(CHILD_LOCATION_ID);
+        return isEmpty(childLocationId) ? null : Long.valueOf(childLocationId);
     }
 
     private Long getAssigneeId() {
-        final String assigneeId = this.getServiceRequest().getValues().get(VALUES_ASSIGNEE_ID);
+        final String assigneeId = this.getServiceRequest().getDynamicSingleValue(VALUES_ASSIGNEE_ID);
         return isEmpty(assigneeId) ? null : Long.valueOf(assigneeId);
     }
 

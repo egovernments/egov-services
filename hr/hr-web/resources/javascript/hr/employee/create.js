@@ -1568,16 +1568,11 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
+      /*if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
           var dateSplit = currentState.value.split("/");
-          //var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-          //var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-          //var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-          //var yearIn = date.getFullYear();
           employee[splitResult[0]][splitResult[1]] =  dateSplit[1]  + "/" + dateSplit[0] + "/" + dateSplit[2];
-      } else if (currentState.id == "user.active") {
+      } else*/ if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
-
       } else if (currentState.type === "file") {
         employee[splitResult[0]][splitResult[1]] = $.extend(true, [], currentState.files);
       } else {
@@ -2286,16 +2281,19 @@ $("#createEmployeeForm").validate({
       var __emp = Object.assign({}, employee);
 
       if(employee["jurisdictions"] && employee["jurisdictions"].length && typeof employee["jurisdictions"][0] == "object") {
-          var empJuridictiona = employee["jurisdictions"];
+          var empJuridictions = employee["jurisdictions"];
           employee["jurisdictions"] = [];
-          for (var i = 0; i < empJuridictiona.length; i++) {
-            employee["jurisdictions"].push(empJuridictiona[i].boundary);
+          for (var i = 0; i < empJuridictions.length; i++) {
+            if(typeof empJuridictions[i] == "object")
+              employee["jurisdictions"].push(empJuridictions[i].boundary);
+            else
+              employee["jurisdictions"].push(empJuridictions[i]);
           }
       }
 
       if(employee.user && employee.user.dob && getUrlVars()["type"] == "update" && employee.user.dob.indexOf("-") > -1) {
         var _date = employee.user.dob.split("-");
-        employee.user.dob = _date[1] + "/" + _date[2] + "/" + _date[0];
+        employee.user.dob = _date[2] + "/" + _date[1] + "/" + _date[0];
       }
       //Upload files if any
       uploadFiles(employee, function(err, emp) {

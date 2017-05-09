@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,133 +26,132 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ArtifactRepositoryTest {
 
-    @Mock
-    private DiskFileStoreRepository diskFileStoreRepository;
+	@Mock
+	private DiskFileStoreRepository diskFileStoreRepository;
 
-    @Mock
-    private FileStoreJpaRepository fileStoreJpaRepository;
+	@Mock
+	private FileStoreJpaRepository fileStoreJpaRepository;
 
-    @Captor
-    private ArgumentCaptor<List<Artifact>> listArgumentCaptor;
+	@Captor
+	private ArgumentCaptor<List<Artifact>> listArgumentCaptor;
 
-    private final String JURISDICTION_ID = "jurisdictionId";
-    private final String MODULE = "module";
-    private final String TAG = "tag";
-    private final String TENANTID = "tenantId";
-    private final String FILE_STORE_ID_1 = "fileStoreId1";
-    private final String FILE_STORE_ID_2 = "fileStoreId2";
+	private final String MODULE = "module";
+	private final String TAG = "tag";
+	private final String TENANT_ID = "tenantId";
+	private final String FILE_STORE_ID_1 = "fileStoreId1";
+	private final String FILE_STORE_ID_2 = "fileStoreId2";
 
-    private ArtifactRepository artifactRepository;
+	private ArtifactRepository artifactRepository;
 
-    @Before
-    public void setUp() {
-        artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
-    }
+	@Before
+	public void setUp() {
+		artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
+	}
 
-    @Test
-    public void shouldSaveArtifactToRepository() throws Exception {
-        List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
+	@Test
+	public void shouldSaveArtifactToRepository() throws Exception {
+		List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
 
-        artifactRepository.save(listOfMockedArtifacts);
+		artifactRepository.save(listOfMockedArtifacts);
 
-        verify(diskFileStoreRepository).write(listOfMockedArtifacts);
-    }
+		verify(diskFileStoreRepository).write(listOfMockedArtifacts);
+	}
 
-    @Test
-    public void shouldPersistArtifactMetaDataToJpaRepository() throws Exception {
-        List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
+	@Test
+	public void shouldPersistArtifactMetaDataToJpaRepository() throws Exception {
+		List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
+		when(fileStoreJpaRepository.save(listArgumentCaptor.capture())).thenReturn(Collections.emptyList());
 
+		artifactRepository.save(listOfMockedArtifacts);
 
-        when(fileStoreJpaRepository.save(listArgumentCaptor.capture())).thenReturn(asList());
+		assertEquals("filename1.extension", listArgumentCaptor.getValue().get(0).getFileName());
+		assertEquals("image/png", listArgumentCaptor.getValue().get(0).getContentType());
+		assertEquals(MODULE, listArgumentCaptor.getValue().get(0).getModule());
+		assertEquals(TAG, listArgumentCaptor.getValue().get(0).getTag());
+		assertEquals(TENANT_ID, listArgumentCaptor.getValue().get(0).getTenantId());
+		assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
+		assertEquals(TENANT_ID, listArgumentCaptor.getValue().get(1).getTenantId());
+	}
 
-        artifactRepository.save(listOfMockedArtifacts);
+	@Test
+	public void shouldRetrieveArtifactMetaDataForGivenFileStoreId() {
+		org.springframework.core.io.Resource mockedResource = mock(org.springframework.core.io.Resource.class);
+		when(diskFileStoreRepository.read(any())).thenReturn(mockedResource);
+		Artifact artifact = new Artifact();
+		artifact.setFileStoreId("fileStoreId");
+		artifact.setContentType("contentType");
+		artifact.setFileName("fileName");
+		artifact.setTenantId(TENANT_ID);
+		when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId", TENANT_ID))
+				.thenReturn(artifact);
 
-        assertEquals("filename1.extension", listArgumentCaptor.getValue().get(0).getFileName());
-        assertEquals("image/png", listArgumentCaptor.getValue().get(0).getContentType());
-        assertEquals(MODULE, listArgumentCaptor.getValue().get(0).getModule());
-        assertEquals(TAG, listArgumentCaptor.getValue().get(0).getTag());
-        assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
+		Resource actualResource = artifactRepository.find("fileStoreId", TENANT_ID);
 
-    }
+		assertEquals(actualResource.getContentType(), "contentType");
+		assertEquals(actualResource.getTenantId(), TENANT_ID);
+		assertEquals(actualResource.getFileName(), "fileName");
+		assertEquals(actualResource.getResource(), mockedResource);
+	}
 
-    @Test
-    public void shouldRetrieveArtifactMetaDataForGivenFileStoreId() {
-        org.springframework.core.io.Resource mockedResource = mock(org.springframework.core.io.Resource.class);
-        when(diskFileStoreRepository.read(any())).thenReturn(mockedResource);
-        Artifact artifact = new Artifact();
-        artifact.setFileStoreId("fileStoreId");
-        artifact.setContentType("contentType");
-        artifact.setFileName("fileName");
-        artifact.setTenantId(TENANTID);
-        when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId",TENANTID)).thenReturn(artifact);
+	@Test(expected = ArtifactNotFoundException.class)
+	public void shouldRaiseExceptionWhenArtifactNotFound() throws Exception {
+		when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId", TENANT_ID)).thenReturn(null);
 
-        Resource actualResource = artifactRepository.find("fileStoreId",TENANTID);
+		artifactRepository.find("fileStoreId", TENANT_ID);
+	}
 
-        assertEquals(actualResource.getContentType(), "contentType");
-        assertEquals(actualResource.getTenantId(), TENANTID);
-        assertEquals(actualResource.getFileName(), "fileName");
-        assertEquals(actualResource.getResource(), mockedResource);
-    }
+	@Test
+	public void shouldRetrieveArtifactMetaDataForGivenTag() {
+		when(fileStoreJpaRepository.findByTagAndTenantId(TAG, TENANT_ID)).thenReturn(getListOfArtifactEntities());
 
-    @Test(expected = ArtifactNotFoundException.class)
-    public void shouldRaiseExceptionWhenArtifactNotFound() throws Exception {
-        when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId",TENANTID)).thenReturn(null);
+		List<FileInfo> actual = artifactRepository.findByTag(TAG, TENANT_ID);
 
-        artifactRepository.find("fileStoreId",TENANTID);
-    }
+		assertEquals(actual.get(0).getContentType(), "contentType1");
+		assertEquals(actual.get(0).getTenantId(), TENANT_ID);
+		assertEquals(actual.get(0).getFileLocation().getFileStoreId(), FILE_STORE_ID_1);
 
-    @Test
-    public void shouldRetrieveArtifactMetaDataForGivenTag() {
-        when(fileStoreJpaRepository.findByTagAndTenantId(TAG,TENANTID)).thenReturn(getListOfArtifactEntities());
+		assertEquals(actual.get(1).getContentType(), "contentType2");
+		assertEquals(actual.get(1).getTenantId(), TENANT_ID);
+		assertEquals(actual.get(1).getFileLocation().getFileStoreId(), FILE_STORE_ID_2);
 
-        List<FileInfo> actual = artifactRepository.findByTag(TAG,TENANTID);
+		verify(fileStoreJpaRepository).findByTagAndTenantId(TAG, TENANT_ID);
+	}
 
-        assertEquals(actual.get(0).getContentType(), "contentType1");
-        assertEquals(actual.get(0).getTenantId(), TENANTID);
-        assertEquals(actual.get(0).getFileLocation().getFileStoreId(), FILE_STORE_ID_1);
+	private List<org.egov.filestore.domain.model.Artifact> getListOfArtifacts() {
+		MultipartFile multipartFile1 = mock(MultipartFile.class);
+		MultipartFile multipartFile2 = mock(MultipartFile.class);
 
-        assertEquals(actual.get(1).getContentType(), "contentType2");
-        assertEquals(actual.get(1).getTenantId(), TENANTID);
-        assertEquals(actual.get(1).getFileLocation().getFileStoreId(), FILE_STORE_ID_2);
+		when(multipartFile1.getOriginalFilename()).thenReturn("filename1.extension");
+		when(multipartFile1.getContentType()).thenReturn("image/png");
+		when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
-        verify(fileStoreJpaRepository).findByTagAndTenantId(TAG,TENANTID);
-    }
+		return asList(
+				new org.egov.filestore.domain.model.Artifact(multipartFile1,
+						new FileLocation(UUID.randomUUID().toString(), MODULE, TAG, TENANT_ID)),
+				new org.egov.filestore.domain.model.Artifact(multipartFile2,
+						new FileLocation(UUID.randomUUID().toString(), MODULE, TAG, TENANT_ID))
+		);
+	}
 
-    private List<org.egov.filestore.domain.model.Artifact> getListOfArtifacts() {
-        MultipartFile multipartFile1 = mock(MultipartFile.class);
-        MultipartFile multipartFile2 = mock(MultipartFile.class);
+	private List<Artifact> getListOfArtifactEntities() {
+		return asList(
+				new Artifact() {{
+					setId(1L);
+					setFileStoreId(FILE_STORE_ID_1);
+					setModule(MODULE);
+					setTag(TAG);
+					setContentType("contentType1");
+					setTenantId(TENANT_ID);
+				}},
 
-        when(multipartFile1.getOriginalFilename()).thenReturn("filename1.extension");
-        when(multipartFile1.getContentType()).thenReturn("image/png");
-        when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
-
-        return asList(
-                new org.egov.filestore.domain.model.Artifact(multipartFile1,
-                        new FileLocation(UUID.randomUUID().toString(), MODULE, TAG,TENANTID)),
-                new org.egov.filestore.domain.model.Artifact(multipartFile2,
-                        new FileLocation(UUID.randomUUID().toString(), MODULE, TAG,TENANTID))
-        );
-    }
-
-    private List<Artifact> getListOfArtifactEntities() {
-        return asList(
-                new Artifact() {{
-                    setId(1L);
-                    setFileStoreId(FILE_STORE_ID_1);
-                    setModule(MODULE);
-                    setTag(TAG);
-                    setContentType("contentType1");
-                    setTenantId(TENANTID);
-                }},
-
-                new Artifact() {{
-                    setId(2L);
-                    setFileStoreId(FILE_STORE_ID_2);
-                    setModule(MODULE);
-                    setTag(TAG);
-                    setContentType("contentType2");
-                    setTenantId(TENANTID);
-                }}
-        );
-    }
+				new Artifact() {{
+					setId(2L);
+					setFileStoreId(FILE_STORE_ID_2);
+					setModule(MODULE);
+					setTag(TAG);
+					setContentType("contentType2");
+					setTenantId(TENANT_ID);
+				}}
+		);
+	}
 }

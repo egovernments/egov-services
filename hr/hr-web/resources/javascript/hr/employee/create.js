@@ -2280,7 +2280,7 @@ $("#createEmployeeForm").validate({
       //Call api
       var __emp = Object.assign({}, employee);
 
-      if(employee["jurisdictions"] && employee["jurisdictions"].length && typeof employee["jurisdictions"][0] == "object") {
+      if(employee["jurisdictions"] && employee["jurisdictions"].length) {
           var empJuridictions = employee["jurisdictions"];
           employee["jurisdictions"] = [];
           for (var i = 0; i < empJuridictions.length; i++) {

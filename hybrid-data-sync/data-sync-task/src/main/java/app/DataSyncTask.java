@@ -42,7 +42,7 @@ public class DataSyncTask {
     @Scheduled(fixedRateString = "${rateInSeconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
-        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Culcutta"));
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Kolkata"));
         String now = dateFormat.format(zonedDateTime);
         log.info("Staring sync at {}", now);
 

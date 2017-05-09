@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class AttributeValues {
-    List<AttributeEntry> attributeValues;
-
     public static String getAttributeSingleValue(List<AttributeEntry> attributeValues, String expectedKey) {
         return attributeValues.stream()
             .filter(a -> expectedKey.equals(a.getKey()))

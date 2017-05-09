@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -197,12 +198,18 @@ public class UserRepository {
 			oldUser.setPassword(user.getPassword());
 		}
 		oldUser.setPhoto(user.getPhoto());
-		oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
-		oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
+		if(user.getPasswordExpiryDate() != null) {
+			oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
+		}
+		if(!CollectionUtils.isEmpty(user.getRoles())) {
+			oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
+		}
 		oldUser.setSalutation(user.getSalutation());
 		oldUser.setSignature(user.getSignature());
 		oldUser.setTitle(user.getTitle());
-		oldUser.setType(toEnumType(UserType.class, user.getType()));
+		if(user.getType() != null) {
+			oldUser.setType(toEnumType(UserType.class, user.getType()));
+		}
 		setEnrichedRolesToUser(oldUser);
 		encryptPassword(oldUser);
 		oldUser.setLastModifiedDate(new Date());

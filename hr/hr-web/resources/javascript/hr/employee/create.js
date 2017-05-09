@@ -467,7 +467,8 @@ var validation_rules = {};
 var final_validatin_rules = {};
 var commom_fields_rules = {
   code: {
-    required: true
+    required: true,
+    alphanumeric: true
   },
   dateOfAppointment: {
     required: true
@@ -530,7 +531,8 @@ var commom_fields_rules = {
     required: false
   },
   gpfNo: {
-    required: false
+    required: false,
+    alphanumeric: true
   },
   bank: {
     required: false
@@ -539,7 +541,8 @@ var commom_fields_rules = {
     required: false
   },
   bankAccount: {
-    required: false
+    required: false,
+    alphanumericWSplChar: true
   },
   group: {
     required: false
@@ -554,7 +557,8 @@ var commom_fields_rules = {
     required: true
   },
   "user.name": {
-    required: true
+    required: true,
+    alpha:  true
   },
   "user.gender": {
     required: true
@@ -579,22 +583,26 @@ var commom_fields_rules = {
     aadhar:true
   },
   "user.permanentAddress": {
-    required: false
+    required: false,
+    alphanumericWSplChar: true
   },
   "user.permanentCity": {
-    required: false
+    required: false,
+    alphanumeric: true
   },
   "user.permanentPinCode": {
     required: false
   },
   "user.correspondenceCity": {
-    required: false
+    required: false,
+    alphanumeric: true
   },
   "user.correspondencePinCode": {
     required: false
   },
   "user.correspondenceAddress": {
-    required: false
+    required: false,
+    alphanumericWSplChar: true
   },
   "user.active": {
     required: true
@@ -654,7 +662,8 @@ var commom_fields_rules = {
     required: true
   },
   "assignments.govtOrderNumber": {
-    required: false
+    required: false,
+    alphanumericWSplChar: true
   },
   "assignments.is_primary": {
     required: true
@@ -666,16 +675,19 @@ var commom_fields_rules = {
     required: true
   },
   "education.qualification": {
-    required: true
+    required: true,
+    alphaWSplChar: true
   },
   "education.majorSubject": {
-    required: false
+    required: false,
+    alphaWSplChar: true
   },
   "education.yearOfPassing": {
     required: true
   },
   "education.university": {
-    required: false
+    required: false,
+    alphaWSplChar: true
   },
   "education.documents": {
     required: false
@@ -690,10 +702,12 @@ var commom_fields_rules = {
     required: true
   },
   "serviceHistory.remarks": {
-    required: false
+    required: false,
+    alpha: true
   },
   "serviceHistory.orderNo": {
-    required: false
+    required: false,
+    alphanumericWSplChar: true
   },
   "serviceHistory.documents": {
     required: false
@@ -732,21 +746,6 @@ var commom_fields_rules = {
     required: false
   },
   "regularisation.documents": {
-    required: false
-  },
-  "education.qualification": {
-    required: true
-  },
-  "education.majorSubject": {
-    required: false
-  },
-  "education.yearOfPassing": {
-    required: true
-  },
-  "education.university": {
-    required: false
-  },
-  "education.documents": {
     required: false
   },
   "technical.skill": {
@@ -1025,6 +1024,53 @@ $("input[name='user.dob']").datepicker({
 //       fillValueToObject(this);
 //   });
 
+$('#dateOfAppointment').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfAppointment').on("change", function(e) {
+
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfRetirement").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Appointment date must be before Retirement date");
+    $("#dateOfAppointment").val("");
+  }
+
+});
+
+$('#dateOfRetirement').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfRetirement').on("change", function(e) {
+  //  fillValueToObject(this);
+
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfRetirement").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Retirement date must be after Appointment date");
+    $("#dateOfRetirement").val("");
+  } else {}
+});
+
+
 
 $('#dateOfAppointment').datepicker({
   format: 'dd/mm/yyyy',
@@ -1035,6 +1081,104 @@ $('#dateOfAppointment').on("change", function(e) {
   // fillValueToObject(this);
   // $('#dateOfJoining').val(this.value);
   // this.id="dateOfJoining";
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfTermination").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Appointment date must be before Termination date");
+    $("#dateOfAppointment").val("");
+  }
+
+});
+
+$('#dateOfTermination').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfTermination').on("change", function(e) {
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfTermination").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Termination date must be after Appointment date");
+    $("#dateOfTermination").val("");
+  }
+
+});
+
+
+$('#dateOfAppointment').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfAppointment').on("change", function(e) {
+  // fillValueToObject(this);
+  // $('#dateOfJoining').val(this.value);
+  // this.id="dateOfJoining";
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfResignation").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Appointment date must be before Resignation date");
+    $("#dateOfAppointment").val("");
+  }
+
+});
+
+$('#dateOfResignation').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfResignation').on("change", function(e) {
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfResignation").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Resignation date must be after Appointment date");
+    $("#dateOfResignation").val("");
+  }
+});
+
+
+
+
+$('#dateOfJoining').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfJoining').on("change", function(e) {
   // fillValueToObject(this);
   var date_received = $("#dateOfJoining").val();
   var date_completed = $("#dateOfAppointment").val();
@@ -1052,15 +1196,15 @@ $('#dateOfAppointment').on("change", function(e) {
 
 });
 
-
-
-
-$('#dateOfJoining').datepicker({
+$('#dateOfAppointment').datepicker({
   format: 'dd/mm/yyyy',
   autoclose: true
 });
 
-$('#dateOfJoining').on("change", function(e) {
+$('#dateOfAppointment').on("change", function(e) {
+  // fillValueToObject(this);
+  // $('#dateOfJoining').val(this.value);
+  // this.id="dateOfJoining";
   // fillValueToObject(this);
   var date_received = $("#dateOfJoining").val();
   var date_completed = $("#dateOfAppointment").val();
@@ -1170,7 +1314,7 @@ $('#dateOfTermination').on("change", function(e) {
   if (date1 > date2) {
     showError("Termination date must be after Joining date");
     $("#dateOfTermination").val("");
-  } else {}
+  }
 
 });
 
@@ -1424,11 +1568,16 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      /*if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
+      if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
           var dateSplit = currentState.value.split("/");
+          //var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+          //var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+          //var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+          //var yearIn = date.getFullYear();
           employee[splitResult[0]][splitResult[1]] =  dateSplit[1]  + "/" + dateSplit[0] + "/" + dateSplit[2];
-      } else*/ if (currentState.id == "user.active") {
+      } else if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
+
       } else if (currentState.type === "file") {
         employee[splitResult[0]][splitResult[1]] = $.extend(true, [], currentState.files);
       } else {
@@ -2086,6 +2235,21 @@ $(document).ready(function() {
     $.validator.addMethod('panNo', function(value) {
         return value ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
     }, 'Please enter a valid pan.');
+    $.validator.addMethod('alpha', function(value) {
+    return value ? /^[a-zA-Z]*$/.test(value) : true;
+    }, 'Only alphabets allowed.');
+
+    $.validator.addMethod('alphanumeric', function(value) {
+        return value ? /^[a-zA-Z0-9]*$/.test(value) : true;
+    }, 'Only alphanumeric characters allowed.');
+
+    $.validator.addMethod('alphanumericWSplChar', function(value) {
+        return value ? /^[a-zA-Z0-9\-\/\_]*$/.test(value) : true;
+    }, 'Only alphanumeric with -/_ allowed.');
+
+    $.validator.addMethod('alphaWSplChar', function(value) {
+        return value ? /^[a-zA-Z\-\/\_]*$/.test(value) : true;
+    }, 'Only alphabets with -/_ allowed.');
 
     $(".onlyNumber").on("keydown", function(e) {
         var key = e.keyCode ? e.keyCode : e.which;
@@ -2121,20 +2285,17 @@ $("#createEmployeeForm").validate({
       //Call api
       var __emp = Object.assign({}, employee);
 
-      if(employee["jurisdictions"] && employee["jurisdictions"].length) {
-          var empJuridictions = employee["jurisdictions"];
+      if(employee["jurisdictions"] && employee["jurisdictions"].length && typeof employee["jurisdictions"][0] == "object") {
+          var empJuridictiona = employee["jurisdictions"];
           employee["jurisdictions"] = [];
-          for (var i = 0; i < empJuridictions.length; i++) {
-            if(typeof employee["jurisdictions"][0] == "object")
-              employee["jurisdictions"].push(empJuridictions[i].boundary);
-            else
-              employee["jurisdictions"].push(empJuridictions[i]);
+          for (var i = 0; i < empJuridictiona.length; i++) {
+            employee["jurisdictions"].push(empJuridictiona[i].boundary);
           }
       }
 
       if(employee.user && employee.user.dob && getUrlVars()["type"] == "update" && employee.user.dob.indexOf("-") > -1) {
         var _date = employee.user.dob.split("-");
-        employee.user.dob = _date[2] + "/" + _date[1] + "/" + _date[0];
+        employee.user.dob = _date[1] + "/" + _date[2] + "/" + _date[0];
       }
       //Upload files if any
       uploadFiles(employee, function(err, emp) {
@@ -2166,7 +2327,7 @@ $("#createEmployeeForm").validate({
                 if(key.indexOf(".") > -1) {
                   _key = key.split(".");
                   _key.shift();
-                  _key = _key.join("."); 
+                  _key = _key.join(".");
                 }
                 err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
               }

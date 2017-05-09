@@ -257,14 +257,21 @@ const getTodaysDate = function() {
       {
       return employees.map((item,index)=>
       {
+            var ind = 0;
+            for(var i=0; i<item.assignments.length; i++) {
+              if([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                ind = i;
+                break;
+              }
+            }
             return (<tr key={index}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
 
-                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
-                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
-                    <td data-label="position">{getNameById(assignments_position,item.assignments[0].position)}</td>
-                    <td data-label="range">{item.assignments[0].fromDate}-{item.assignments[0].toDate}</td>
+                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[ind].designation)}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.assignments[ind].department)}</td>
+                    <td data-label="position">{getNameById(assignments_position,item.assignments[in].position)}</td>
+                    <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>

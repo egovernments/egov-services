@@ -7,7 +7,17 @@ import java.util.stream.Stream;
 public class SyncInfo {
     private String sourceTable;
     private String destinationTable;
+    private String sourceTimeZone;
+
     private List<ColumnConfig> columns;
+
+    public String getSourceTimeZone() {
+        return sourceTimeZone;
+    }
+
+    public void setSourceTimeZone(String sourceTimeZone) {
+        this.sourceTimeZone = sourceTimeZone;
+    }
 
     public String getSourceTable() {
         return sourceTable;

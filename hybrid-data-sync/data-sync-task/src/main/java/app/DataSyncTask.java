@@ -47,15 +47,13 @@ public class DataSyncTask {
     public void startSync() {
         Timestamp epoch = findEpoch();
         LocalDateTime ldt = LocalDateTime.now();
-        ZonedDateTime istTime = ldt.atZone(ZoneId.of("Asia/Kolkata"));
         ZonedDateTime utcTime = ldt.atZone(ZoneId.of("UTC"));
-        String istNow = istTime.format(dateFormatter);
         String utcNow = utcTime.format(dateFormatter);
-        log.info("Staring sync at {}", istNow);
+        log.info("Staring sync at {} UTC", utcNow);
 
         for (String sourceSchema : sourceSchemas) {
-            epoch = calculateEpochWithTZ(epoch, sourceSchema);
             for (SyncInfo info : syncConfig.getInfo()) {
+                epoch = calculateEpochWithTZ(epoch, info);
                 String query = String.format("SELECT %s from %s.%s WHERE lastmodifieddate >=?",
                         String.join(",", info.getSourceColumnNamesToReadFrom()), sourceSchema, info.getSourceTable());
                 log.info(query);
@@ -74,14 +72,10 @@ public class DataSyncTask {
         updateEpoch(utcNow);
     }
 
-    private Timestamp calculateEpochWithTZ(Timestamp epoch, String sourceSchema) {
-        if (Objects.equals(sourceSchema, "microservice")) {
-            ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of("UTC"));
-            LocalDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata")).toLocalDateTime();
-            return Timestamp.valueOf(localDateTime);
-        } else {
-            return epoch;
-        }
+    private Timestamp calculateEpochWithTZ(Timestamp epoch, SyncInfo info) {
+        ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of("UTC"));
+        LocalDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.of(info.getSourceTimeZone())).toLocalDateTime();
+        return Timestamp.valueOf(localDateTime);
     }
 
     private Timestamp findEpoch() {

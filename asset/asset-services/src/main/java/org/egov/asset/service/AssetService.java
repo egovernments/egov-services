@@ -73,9 +73,9 @@ public class AssetService {
 		return assetRepository.findForCriteria(searchAsset);
 	}
 
-	public Asset getAssetByName(String tenantId, String name) {
+	public String getAssetName(String tenantId, String name) {
 		System.out.println("AssetService");
-		return assetRepository.findByName(tenantId, name);
+		return assetRepository.findAssetName(tenantId, name);
 	}
 
 	public AssetResponse create(AssetRequest assetRequest) {

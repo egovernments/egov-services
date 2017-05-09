@@ -13,45 +13,43 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AssetValidator {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AssetValidator.class);
-	
+
 	@Autowired
 	private AssetCategoryValidator assetCategoryValidator;
-	
+
 	@Autowired
 	private AssetService assetService;
-	
-	public void validateAsset(AssetRequest assetRequest){
+
+	public void validateAsset(AssetRequest assetRequest) {
 		findAssetCategory(assetRequest);
 		findAsset(assetRequest);
 	}
-	
+
 	public void findAssetCategory(AssetRequest assetRequest) {
-		
-		List<AssetCategory>	assetCategories = assetCategoryValidator.findByIdAndCode(assetRequest.getAsset().getAssetCategory().getId(), 
-				assetRequest.getAsset().getAssetCategory().getCode(), 
-				assetRequest.getAsset().getTenantId());
-		
-		if(assetCategories.isEmpty()) {
+
+		List<AssetCategory> assetCategories = assetCategoryValidator.findByIdAndCode(
+				assetRequest.getAsset().getAssetCategory().getId(),
+				assetRequest.getAsset().getAssetCategory().getCode(), assetRequest.getAsset().getTenantId());
+
+		if (assetCategories.isEmpty()) {
 			throw new RuntimeException("Invalid asset category");
 		}
-		
+
 	}
-	
-	public void findAsset(AssetRequest assetRequest){
-		
+
+	public void findAsset(AssetRequest assetRequest) {
+
 		Asset asset = assetRequest.getAsset();
-		Asset resultAsset = assetService.getAssetByName(asset.getTenantId(),asset.getName());
-		
-		if (resultAsset != null) {
-			if (resultAsset.getName().equalsIgnoreCase(assetRequest.getAsset().getName()))
+		String existingName = assetService.getAssetName(asset.getTenantId(), asset.getName());
+
+		if (existingName != null) {
+			if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName()))
 				throw new RuntimeException("Duplicate asset name asset already exists");
 		} else {
 			logger.info("no duplicate asset with same name found");
 		}
-			
 	}
-
 
 }

@@ -2128,7 +2128,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
           if(object == "assignments") {
             var hod_value = employeeSubObject[object]["hod"];
             employeeSubObject[object]["hod"] = [];
-            if ([true, "true"].indexOf(hod_value) > -1 && tempListBox.length > 0) {
+            if (((hod_value.constructor == Array && hod_value.length) || [true, "true"].indexOf(hod_value) > -1) && tempListBox.length > 0) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })

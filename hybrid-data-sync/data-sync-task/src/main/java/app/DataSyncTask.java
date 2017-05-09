@@ -11,10 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class DataSyncTask {
 
     private static final Logger log = LoggerFactory.getLogger(DataSyncTask.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Value("#{'${source-schemas}'.split(',')}")
     private List<String> sourceSchemas;
@@ -42,8 +41,8 @@ public class DataSyncTask {
     @Scheduled(fixedRateString = "${rateInSeconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
-        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Kolkata"));
-        String now = dateFormat.format(zonedDateTime);
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+        String now = zonedDateTime.format(dateFormatter);
         log.info("Staring sync at {}", now);
 
         for (String sourceSchema : sourceSchemas) {

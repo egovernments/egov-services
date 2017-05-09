@@ -14,6 +14,9 @@ public class RowColumnValueMapper {
                 String value;
                 if (column.isShouldSource()) {
                     value = String.format("%s", rs.get(column.getSource()));
+                    if (!Objects.equals(value, "null")) {
+                        value = String.format("'%s'", rs.get(column.getSource()));
+                    }
                 } else {
                     value = column.getDefaultValue();
                 }
@@ -37,7 +40,7 @@ public class RowColumnValueMapper {
     public List<String> getCommaSeparatedColumnValues() {
         List<String> colVals = new ArrayList<>();
         for (String colName : getCommaSeparatedColumnNames()) {
-            colVals.add(String.format("'%s'", colValMap.get(colName)));
+            colVals.add(String.format("%s", colValMap.get(colName)));
         }
         return colVals;
     }
@@ -45,7 +48,7 @@ public class RowColumnValueMapper {
     public List<String> getColumnNameValuePairForUpdate() {
         List<String> colValPair = new ArrayList<>();
         for (String colName : getCommaSeparatedColumnNames()) {
-            colValPair.add(String.format("%s = '%s'", colName, colValMap.get(colName)));
+            colValPair.add(String.format("%s = %s", colName, colValMap.get(colName)));
         }
         return colValPair;
     }

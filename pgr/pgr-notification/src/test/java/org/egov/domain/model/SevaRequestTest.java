@@ -2,6 +2,7 @@ package org.egov.domain.model;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TimeZone;
 
@@ -88,6 +89,10 @@ public class SevaRequestTest {
         final HashMap<String, String> values = new HashMap<>();
         values.put("status", "statusName");
         serviceRequest.put("values", values);
+        serviceRequest.put("values", values);
+        serviceRequest.put("isAttribValuesPopulated", false);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequest.put("attribValues", attributeValues);
         sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
@@ -163,6 +168,9 @@ public class SevaRequestTest {
         final HashMap<String, String> values = new HashMap<>();
         values.put("location_name", "locationName");
         serviceRequest.put("values", values);
+        serviceRequest.put("isAttribValuesPopulated", false);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequest.put("attribValues", attributeValues);
         sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);

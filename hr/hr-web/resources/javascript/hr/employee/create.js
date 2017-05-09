@@ -2684,24 +2684,32 @@ function hasFile(elements) {
 }
 
 function makeAjaxUpload(file, cb) {
-  let formData = new FormData();
-  formData.append("jurisdictionId", "ap.public");
-  formData.append("module", "PGR");
-  formData.append("file", file);
-  $.ajax({
-    url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-    data: formData,
-    cache: false,
-    contentType: false,
-    processData: false,
-    type: 'POST',
-    success: function(res) {
-      cb(null, res);
-    },
-    error: function(jqXHR, exception) {
-      cb(jqXHR.responseText || jqXHR.statusText);
-    }
-  });
+  if(file.constructor == File) {
+    let formData = new FormData();
+    formData.append("jurisdictionId", "ap.public");
+    formData.append("module", "PGR");
+    formData.append("file", file);
+    $.ajax({
+      url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function(res) {
+        cb(null, res);
+      },
+      error: function(jqXHR, exception) {
+        cb(jqXHR.responseText || jqXHR.statusText);
+      }
+    });
+  } else {
+    cb({
+      files: [{
+        fileStoreId: file
+      }]
+    })
+  }
 }
 
 function hasAllRequiredFields(emp) {

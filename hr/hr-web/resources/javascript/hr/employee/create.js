@@ -2071,22 +2071,9 @@ function markEditIndex(index = -1, modalName = "", object = "") {
       } else {
         employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
         for (var key in employeeSubObject[object]) {
-          // if($(`#${object}\\.${key}`).length == 0) {
-          //       alert("not there");
-          //   }
-          // if (object + "." + key == "assignments.fromDate" || object + "." + key == "assignments.toDate" || object + "." + key == "serviceHistory.serviceFrom" || object + "." + key == "probation.orderDate" || object + "." + key == "probation.declaredOn" || object + "." + key == "regularisation.declaredOn" || object + "." + key == "regularisation.orderDate" || object + "." + key == "education.yearOfPassing" || object + "." + key == "technical.yearOfPassing" || object + "." + key == "test.yearOfPassing") {
-          //     var dateSplit = employeeSubObject[object][key].split("/");
-          //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-          //     // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-          //     // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-          //     // var yearIn=date.getFullYear();
-          //     // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
-          //     $(`#${object}\\.${key}`).val(date);
-          //
-          // } else {
-          //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-          // }
-          if (key == "position") {
+          if(key == "documents") 
+            continue;
+          else if (key == "position") {
             setTimeout(function(key, object){
                getPositions({
                 id: "assignments.department"
@@ -2726,7 +2713,9 @@ function checkIfNoDup(employee, objectType, subObject) {
     return true;
   else if (objectType == "jurisdictions") {
     for (let i = 0; i < employee[objectType].length; i++) {
-      if (employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
+      if (typeof employee[objectType][i] == "object" && employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
+        return false;
+      else if(employee[objectType][i] == subObject.boundary)
         return false;
     }
   }

@@ -558,7 +558,7 @@ var commom_fields_rules = {
   },
   "user.name": {
     required: true,
-    alpha:  true
+    alphaWSpcNDot:  true
   },
   "user.gender": {
     required: true
@@ -2230,9 +2230,14 @@ $(document).ready(function() {
     $.validator.addMethod('panNo', function(value) {
         return value ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
     }, 'Please enter a valid pan.');
+    
     $.validator.addMethod('alpha', function(value) {
     return value ? /^[a-zA-Z]*$/.test(value) : true;
     }, 'Only alphabets allowed.');
+
+    $.validator.addMethod('alphaWSpcNDot', function(value) {
+    return value ? /^[a-zA-Z \.]*$/.test(value) : true;
+    }, 'Only alphabets and spaces allowed.');
 
     $.validator.addMethod('alphanumeric', function(value) {
         return value ? /^[a-zA-Z0-9]*$/.test(value) : true;

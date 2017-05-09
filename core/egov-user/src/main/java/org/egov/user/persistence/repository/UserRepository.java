@@ -66,6 +66,7 @@ public class UserRepository {
 		setEnrichedRolesToUser(entityUser);
 		encryptPassword(entityUser);
 		entityUser.setCreatedDate(new Date());
+		entityUser.setLastModifiedDate(new Date());
 		final User savedUser = userJpaRepository.save(entityUser);
 		final org.egov.user.domain.model.Address savedCorrespondenceAddress =
 				saveAddress(domainUser.getCorrespondenceAddress(), savedUser.getId(), savedUser.getTenantId());

@@ -1,19 +1,19 @@
 spring:
     datasource:
       driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:5432/test_scheduler_datasync
-      username: erp_owner
-      password: erp_owner
+      url: jdbc:postgresql://localhost:5432/devdb
+      username: postgres
+      password: postgres
     profiles:
       active: "ms-to-ml"
 
 flyway:
-  user: erp_owner
-  password: erp_owner
+  user: postgres
+  password: postgres
   outOfOrder: true
   table: data_sync_schema_version
   baseline-on-migrate: true
-  url: jdbc:postgresql://localhost:5432/test_scheduler_datasync
+  url: jdbc:postgresql://localhost:5432/devdb
   locations: db/migration/ddl,db/migration/seed
 
 state: ap

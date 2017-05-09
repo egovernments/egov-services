@@ -53,13 +53,13 @@ public class DataSyncTask {
 
         for (String sourceSchema : sourceSchemas) {
             for (SyncInfo info : syncConfig.getInfo()) {
-                epoch = calculateEpochWithTZ(epoch, info);
-                log.info(String.format("EPOCH: %s, table: %s, TZ: %s", epoch, info.getSourceTable(), info.getSourceTimeZone()));
+                Timestamp convertedEpoch = calculateEpochWithTZ(epoch, info);
+                log.info(String.format("EPOCH: %s, table: %s, TZ: %s", convertedEpoch, info.getSourceTable(), info.getSourceTimeZone()));
                 String query = String.format("SELECT %s from %s.%s WHERE lastmodifieddate >=?",
                         String.join(",", info.getSourceColumnNamesToReadFrom()), sourceSchema, info.getSourceTable());
                 log.info(query);
                 jdbcTemplate.query(
-                        query, new Object[]{epoch},
+                        query, new Object[]{convertedEpoch},
                         (rs, rowNum) -> new CustomResultSet(rs, info.getSourceColumnConfigsToReadFrom())
                 ).forEach(res -> {
                     try {
@@ -74,9 +74,6 @@ public class DataSyncTask {
     }
 
     private Timestamp calculateEpochWithTZ(Timestamp epoch, SyncInfo info) {
-        if (Objects.equals(info.getSourceTimeZone(), "UTC")){
-            return epoch;
-        }
         ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of("UTC"));
         LocalDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.of(info.getSourceTimeZone())).toLocalDateTime();
         return Timestamp.valueOf(localDateTime);

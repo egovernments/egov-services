@@ -31,15 +31,23 @@ public class IndexerListener {
     @KafkaListener(topics = "${kafka.topics.egov.index.name}")
     public void listen(HashMap<String, Object> sevaRequestMap) {
         SevaRequest sevaRequest = objectMapper.convertValue(sevaRequestMap, SevaRequest.class);
-        if (sevaRequest.getServiceRequest() != null && !sevaRequest.getServiceRequest().getValues().isEmpty()) {
-            if (sevaRequest.getServiceRequest().getValues().get("status").equalsIgnoreCase("REGISTERED")) {
-                ComplaintIndex complaintIndex = complaintAdapter.indexOnCreate(sevaRequest.getServiceRequest());
-                elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+        if (sevaRequest.getServiceRequest() != null) {
+            if (sevaRequest.getServiceRequest().isNewServiceRequest()) {
+                createIndexDocument(sevaRequest);
             } else {
-                ComplaintIndex complaintIndex = complaintAdapter.indexOnUpdate(sevaRequest.getServiceRequest());
-                elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+                updateIndexDocument(sevaRequest);
             }
         }
 
+    }
+
+    private void updateIndexDocument(SevaRequest sevaRequest) {
+        ComplaintIndex complaintIndex = complaintAdapter.indexOnUpdate(sevaRequest.getServiceRequest());
+        elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+    }
+
+    private void createIndexDocument(SevaRequest sevaRequest) {
+        ComplaintIndex complaintIndex = complaintAdapter.indexOnCreate(sevaRequest.getServiceRequest());
+        elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
     }
 }

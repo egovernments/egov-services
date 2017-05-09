@@ -91,18 +91,7 @@ constructor(props){
                     },
                     success: function(res) {
                             showSuccess("Leave Mapping Modified successfully.");
-                            _this.setState({
-                              leave:{
-                                "id": "",
-                                "designation": "",
-                                "leaveType":{
-                                  "id" :""
-                                },
-                                "noOfDays":"",
-                                "active": "",
-                                "tenantId": tenantId
-                                }
-                            })
+                            window.location.href = 'app/hr/common/show-leave-mapping.html?type=update';
 
                     },
                     error: function(err) {

@@ -1,1 +1,1 @@
-insert into data_sync_epoch (epoch) VALUES ('2010-01-01 00:00:00');
+insert into data_sync_epoch (epoch) VALUES (now());

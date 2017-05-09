@@ -11,11 +11,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class DataSyncTask {
@@ -38,14 +40,21 @@ public class DataSyncTask {
     @Value("${state}")
     private String state;
 
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
+
     @Scheduled(fixedRateString = "${rateInSeconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
-        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-        String now = zonedDateTime.format(dateFormatter);
-        log.info("Staring sync at {}", now);
+        LocalDateTime ldt = LocalDateTime.now();
+        ZonedDateTime istTime = ldt.atZone(ZoneId.of("Asia/Kolkata"));
+        ZonedDateTime utcTime = ldt.atZone(ZoneId.of("UTC"));
+        String istNow = istTime.format(dateFormatter);
+        String utcNow = utcTime.format(dateFormatter);
+        log.info("Staring sync at {}", istNow);
 
         for (String sourceSchema : sourceSchemas) {
+            epoch = calculateEpochWithTZ(epoch, sourceSchema);
             for (SyncInfo info : syncConfig.getInfo()) {
                 String query = String.format("SELECT %s from %s.%s WHERE lastmodifieddate >=?",
                         String.join(",", info.getSourceColumnNamesToReadFrom()), sourceSchema, info.getSourceTable());
@@ -62,11 +71,21 @@ public class DataSyncTask {
                 });
             }
         }
-        updateEpoch(now);
+        updateEpoch(utcNow);
+    }
+
+    private Timestamp calculateEpochWithTZ(Timestamp epoch, String sourceSchema) {
+        if (Objects.equals(sourceSchema, "microservice")) {
+            ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of("UTC"));
+            LocalDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata")).toLocalDateTime();
+            return Timestamp.valueOf(localDateTime);
+        } else {
+            return epoch;
+        }
     }
 
     private Timestamp findEpoch() {
-        List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT epoch from data_sync_epoch LIMIT 1");
+        List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT epoch from data_sync_epoch where profile = ?", new Object[]{activeProfile});
         return (Timestamp) res.get(0).get("epoch");
     }
 

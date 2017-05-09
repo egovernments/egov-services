@@ -1,0 +1,1 @@
+ALTER TABLE data_sync_epoch ADD COLUMN profile VARCHAR(20)

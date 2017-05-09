@@ -74,6 +74,9 @@ public class DataSyncTask {
     }
 
     private Timestamp calculateEpochWithTZ(Timestamp epoch, SyncInfo info) {
+        if (Objects.equals(info.getSourceTimeZone(), "UTC")){
+            return epoch;
+        }
         ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of("UTC"));
         LocalDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.of(info.getSourceTimeZone())).toLocalDateTime();
         return Timestamp.valueOf(localDateTime);

@@ -25,12 +25,12 @@ public class LocationService {
     private SevaRequest enrichLocation(SevaRequest sevaRequest) {
         if (sevaRequest.isLocationCoordinatesPresent()) {
             BoundaryResponse response = boundaryRepository
-                    .findBoundary(sevaRequest.getLatitude(), sevaRequest.getLongitude(),sevaRequest.gettenantId());
+                    .findBoundary(sevaRequest.getLatitude(), sevaRequest.getLongitude(),sevaRequest.getTenantId());
 
             sevaRequest.update(response);
         } else if (sevaRequest.isCrossHierarchyIdPresent()) {
             CrossHierarchyResponse response = crossHierarchyRepository
-                    .getCrossHierarchy(sevaRequest.getCrossHierarchyId(),sevaRequest.gettenantId());
+                    .getCrossHierarchy(sevaRequest.getCrossHierarchyId(),sevaRequest.getTenantId());
             sevaRequest.update(response);
         }
         return sevaRequest;

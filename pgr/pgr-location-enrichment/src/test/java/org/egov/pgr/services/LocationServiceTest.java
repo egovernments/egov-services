@@ -1,13 +1,5 @@
 package org.egov.pgr.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-
 import org.egov.pgr.contract.BoundaryResponse;
 import org.egov.pgr.contract.CrossHierarchyResponse;
 import org.egov.pgr.model.SevaRequest;
@@ -18,6 +10,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationServiceTest {
@@ -37,11 +36,14 @@ public class LocationServiceTest {
     public void test_should_return_seva_request_as_is_when_location_id_is_already_present() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
+        serviceRequestMap.put("isAttribValuesPopulated", false);
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("locationId", "5");
         serviceRequestMap.put("values", valuesMap);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -59,6 +61,9 @@ public class LocationServiceTest {
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
         serviceRequestMap.put("tenantId","ap.public");
+        serviceRequestMap.put("isAttribValuesPopulated", false);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -76,6 +81,9 @@ public class LocationServiceTest {
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("addressId", "crossHierarchyId");
         serviceRequestMap.put("tenantId", "ap.public");
+        serviceRequestMap.put("isAttribValuesPopulated", false);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final BoundaryResponse parentBoundaryResponse = new BoundaryResponse(1L, "parent");

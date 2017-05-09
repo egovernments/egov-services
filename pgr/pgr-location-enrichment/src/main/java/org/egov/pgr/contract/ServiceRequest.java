@@ -33,6 +33,9 @@ public class ServiceRequest {
     @JsonProperty("lng")
     private Double lng;
 
+    @JsonProperty("isAttribValuesPopulated")
+    private boolean attribValuesPopulated;
+
     public String getLongitude() {
         return lng.toString();
     }

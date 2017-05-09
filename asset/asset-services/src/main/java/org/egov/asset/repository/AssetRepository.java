@@ -72,127 +72,146 @@ public class AssetRepository {
 
 	@Autowired
 	private AssetQueryBuilder assetQueryBuilder;
-	
+
 	public List<Asset> findForCriteria(AssetCriteria assetCriteria) {
 
-		List<Object> preparedStatementValues = new ArrayList<Object>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 		String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
 		List<Asset> assets = null;
-		try{
-			System.out.println("queryStr::"+queryStr+"preparedStatementValues::"+preparedStatementValues.toString());
-			assets=jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
-			System.out.println("AssetRepository::"+assets);
-		} catch(Exception ex) {
+		try {
+			System.out.println(
+					"queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+			assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
+			System.out.println("AssetRepository::" + assets);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return assets;
 	}
-	
-	public String getAssetCode(){
+
+	public Asset findByName(String tenantId, String name) {
+
+		String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
+		System.out.println("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
+		List<Asset> assets = null;
+		try {
+			assets = jdbcTemplate.query(queryStr, new Object[] { name, tenantId }, assetRowMapper);
+			System.out.println("AssetRepository::" + assets);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+		if (assets.isEmpty())
+			return null;
+		return assets.get(0);
+	}
+
+	public String getAssetCode() {
 		String query = "SELECT nextval('seq_egasset_assetcode')";
-		Integer result = jdbcTemplate.queryForObject(query,Integer.class);
-		System.out.println("result:"+result);
-		//String code=String.format("%03d", result);
-		StringBuilder code=null;
-		try{
-		 code = new StringBuilder(String.format("%06d", result));
-		}catch(Exception ex){
+		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
+		System.out.println("result:" + result);
+		// String code=String.format("%03d", result);
+		StringBuilder code = null;
+		try {
+			code = new StringBuilder(String.format("%06d", result));
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return code.toString();
 	}
-	
+
 	public Asset create(AssetRequest assetRequest) {
 		RequestInfo requestInfo = assetRequest.getRequestInfo();
 		Asset asset = assetRequest.getAsset();
-		
-		
-		String property=null;
+
+		String property = null;
 		try {
-			 ObjectMapper objectMapper=new ObjectMapper();
-			 objectMapper.setSerializationInclusion(Include.NON_NULL);
-			 Asset asset2=new Asset();
-			 asset2.setAssetAttributes(asset.getAssetAttributes());
-			 property = objectMapper.writeValueAsString(asset2);
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			Asset asset2 = new Asset();
+			asset2.setAssetAttributes(asset.getAssetAttributes());
+			property = objectMapper.writeValueAsString(asset2);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		String query=assetQueryBuilder.getInsertQuery();
-		
-		String modeOfAcquisition=null;
-		String status=null;
-		
-		if(asset.getModeOfAcquisition()!=null)
-		modeOfAcquisition=asset.getModeOfAcquisition().toString();
-		
-		if(asset.getStatus()!=null)
-		status = asset.getStatus().toString();
+
+		String query = assetQueryBuilder.getInsertQuery();
+
+		String modeOfAcquisition = null;
+		String status = null;
+
+		if (asset.getModeOfAcquisition() != null)
+			modeOfAcquisition = asset.getModeOfAcquisition().toString();
+
+		if (asset.getStatus() != null)
+			status = asset.getStatus().toString();
 
 		Location location = asset.getLocationDetails();
-	
-		Object[] obj = new Object[] {asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),asset.getDepartment().getId(),
-				asset.getAssetDetails(), asset.getDescription(),asset.getDateOfCreation(), asset.getRemarks(), 
-				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
-				status,asset.getTenantId(),location.getZone(),location.getRevenueWard(),location.getStreet(),
-				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
-				property,requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
-				asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetReference(),asset.getVersion()};
-		try{
-			 jdbcTemplate.update(query, obj);
-		} catch(Exception ex) {
+
+		Object[] obj = new Object[] { asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),
+				asset.getDepartment().getId(), asset.getAssetDetails(), asset.getDescription(),
+				asset.getDateOfCreation(), asset.getRemarks(), asset.getLength(), asset.getWidth(),
+				asset.getTotalArea(), modeOfAcquisition, status, asset.getTenantId(), location.getZone(),
+				location.getRevenueWard(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
+				location.getPinCode(), location.getLocality(), location.getBlock(), property,
+				requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
+				asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
+				asset.getVersion() };
+		try {
+			jdbcTemplate.update(query, obj);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 		return asset;
 	}
-	
+
 	public Asset update(AssetRequest assetRequest) {
-		
+
 		RequestInfo requestInfo = assetRequest.getRequestInfo();
 		Asset asset = assetRequest.getAsset();
-		
-		String property=null;
+
+		String property = null;
 		try {
-			
-			 ObjectMapper objectMapper=new ObjectMapper();
-			 objectMapper.setSerializationInclusion(Include.NON_NULL);
-			 Asset asset2=new Asset();
-			 asset2.setAssetAttributes(asset.getAssetAttributes());
-			 property = objectMapper.writeValueAsString(asset2);
-		
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			Asset asset2 = new Asset();
+			asset2.setAssetAttributes(asset.getAssetAttributes());
+			property = objectMapper.writeValueAsString(asset2);
+
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		
-		String query=assetQueryBuilder.getUpdateQuery();
-		
-		System.out.println("query::"+query);
-		
-		String modeOfAcquisition=null;
-		String status=null;
-		
-		if(asset.getModeOfAcquisition()!=null)
-		modeOfAcquisition=asset.getModeOfAcquisition().toString();
-		
-		if(asset.getStatus()!=null)
-		status = asset.getStatus().toString();
+
+		String query = assetQueryBuilder.getUpdateQuery();
+
+		System.out.println("query::" + query);
+
+		String modeOfAcquisition = null;
+		String status = null;
+
+		if (asset.getModeOfAcquisition() != null)
+			modeOfAcquisition = asset.getModeOfAcquisition().toString();
+
+		if (asset.getStatus() != null)
+			status = asset.getStatus().toString();
 
 		Location location = asset.getLocationDetails();
-				
-		Object[] obj = new Object[] {asset.getAssetCategory().getId(), asset.getName(),asset.getDepartment().getId(),
-				asset.getAssetDetails(), asset.getDescription(), asset.getRemarks(), 
-				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
-				status,location.getZone(),location.getRevenueWard(),location.getStreet(),
-				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
-				property,requestInfo.getMsgId(), new Date(),asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetReference(),
-				asset.getVersion(),asset.getCode(),asset.getTenantId()};
-		try{
-			System.out.println("query1::"+query+","+Arrays.toString(obj));
-			int i= jdbcTemplate.update(query, obj);
-			System.out.println("i:"+i);
-		} catch(Exception ex) {
+
+		Object[] obj = new Object[] { asset.getAssetCategory().getId(), asset.getName(), asset.getDepartment().getId(),
+				asset.getAssetDetails(), asset.getDescription(), asset.getRemarks(), asset.getLength(),
+				asset.getWidth(), asset.getTotalArea(), modeOfAcquisition, status, location.getZone(),
+				location.getRevenueWard(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
+				location.getPinCode(), location.getLocality(), location.getBlock(), property, requestInfo.getMsgId(),
+				new Date(), asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
+				asset.getVersion(), asset.getCode(), asset.getTenantId() };
+		try {
+			System.out.println("query1::" + query + "," + Arrays.toString(obj));
+			int i = jdbcTemplate.update(query, obj);
+			System.out.println("i:" + i);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return asset;

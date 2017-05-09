@@ -64,82 +64,85 @@ public class AssetService {
 
 	@Autowired
 	private AssetProducer assetProducer;
-	
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	public List<Asset> getAssets(AssetCriteria searchAsset) {
 		System.out.println("AssetService");
 		return assetRepository.findForCriteria(searchAsset);
 	}
-	
+
+	public Asset getAssetByName(String tenantId, String name) {
+		System.out.println("AssetService");
+		return assetRepository.findByName(tenantId, name);
+	}
+
 	public AssetResponse create(AssetRequest assetRequest) {
-		Asset asset=assetRepository.create(assetRequest);
-		List<Asset> assets=new ArrayList<Asset>();
+		Asset asset = assetRepository.create(assetRequest);
+		List<Asset> assets = new ArrayList<Asset>();
 		assets.add(asset);
-		AssetResponse assetResponse=getAssetResponse(assets);
+		AssetResponse assetResponse = getAssetResponse(assets);
 		return assetResponse;
 	}
-	
+
 	public AssetResponse createAsync(AssetRequest assetRequest) {
-		
+
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
-		
+
 		// TODO validate assetcategory for an asset
-		ObjectMapper objectMapper=new ObjectMapper();
-		System.out.println("assetRequest createAsync::"+assetRequest);
-		String value=null;
-		
+		ObjectMapper objectMapper = new ObjectMapper();
+		System.out.println("assetRequest createAsync::" + assetRequest);
+		String value = null;
+
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		
-		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(),"save-asset", value);
-		
+
+		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), "save-asset", value);
+
 		List<Asset> assets = new ArrayList<Asset>();
 		assets.add(assetRequest.getAsset());
 		AssetResponse assetResponse = getAssetResponse(assets);
-		
-	   return assetResponse;	
-	}
-	
-	public AssetResponse update(AssetRequest assetRequest){
-		
-		Asset asset=assetRepository.update(assetRequest);
-		List<Asset> assets=new ArrayList<Asset>();
-		assets.add(asset);
-		AssetResponse assetResponse=getAssetResponse(assets);
+
 		return assetResponse;
 	}
-	
-	public AssetResponse updateAsync(AssetRequest assetRequest){
-		
-		ObjectMapper objectMapper=new ObjectMapper();
-		System.out.println("assetRequest createAsync::"+assetRequest);
-		String value=null;
-		
+
+	public AssetResponse update(AssetRequest assetRequest) {
+
+		Asset asset = assetRepository.update(assetRequest);
+		List<Asset> assets = new ArrayList<Asset>();
+		assets.add(asset);
+		AssetResponse assetResponse = getAssetResponse(assets);
+		return assetResponse;
+	}
+
+	public AssetResponse updateAsync(AssetRequest assetRequest) {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		System.out.println("assetRequest createAsync::" + assetRequest);
+		String value = null;
+
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		
-		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(),"update-asset", value);
-		
+
+		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(), "update-asset", value);
+
 		List<Asset> assets = new ArrayList<Asset>();
 		assets.add(assetRequest.getAsset());
 		AssetResponse assetResponse = getAssetResponse(assets);
-		
-	   return assetResponse;
+
+		return assetResponse;
 	}
-	
-	
-	
-	private AssetResponse getAssetResponse(List<Asset> assets){
-		AssetResponse  assetResponse=new AssetResponse();
+
+	private AssetResponse getAssetResponse(List<Asset> assets) {
+		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
-	  return assetResponse;
+		return assetResponse;
 	}
 }

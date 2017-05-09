@@ -5,13 +5,16 @@ import java.util.List;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.service.AssetService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AssetValidator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AssetValidator.class);
 	
 	@Autowired
 	private AssetCategoryValidator assetCategoryValidator;
@@ -38,13 +41,16 @@ public class AssetValidator {
 	
 	public void findAsset(AssetRequest assetRequest){
 		
-		AssetCriteria assetCriteria = new AssetCriteria();
-		assetCriteria.setTenantId(assetRequest.getAsset().getTenantId());
-		assetCriteria.setName(assetRequest.getAsset().getName());
-		List<Asset> assets = assetService.getAssets(assetCriteria);
+		Asset asset = assetRequest.getAsset();
+		Asset resultAsset = assetService.getAssetByName(asset.getTenantId(),asset.getName());
 		
-		if(assets.get(0).getName().equalsIgnoreCase(assetRequest.getAsset().getName()))
-			throw new RuntimeException("Duplicate asset name asset already exists");
+		if (resultAsset != null) {
+			if (resultAsset.getName().equalsIgnoreCase(assetRequest.getAsset().getName()))
+				throw new RuntimeException("Duplicate asset name asset already exists");
+		} else {
+			logger.info("no duplicate asset with same name found");
+		}
+			
 	}
 
 

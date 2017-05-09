@@ -6,7 +6,6 @@ import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.service.AssetCategoryService;
-import org.egov.asset.web.controller.AssetCategoryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

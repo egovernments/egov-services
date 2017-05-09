@@ -2467,7 +2467,7 @@ function uploadFiles(employee, cb) {
       if (err) {
         cb(err);
       } else {
-        employee.user.photo = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+        employee.user.photo = `${res.files[0].fileStoreId}`;
         uploadFiles(employee, cb);
       }
     })
@@ -2476,7 +2476,7 @@ function uploadFiles(employee, cb) {
       if (err) {
         cb(err);
       } else {
-        employee.user.signature = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+        employee.user.signature = `${res.files[0].fileStoreId}`;
         uploadFiles(employee, cb);
       }
     })
@@ -2492,7 +2492,7 @@ function uploadFiles(employee, cb) {
           breakout = 1;
         } else {
           counter--;
-          employee.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+          employee.documents[i] = `${res.files[0].fileStoreId}`;
           if (counter == 0 && breakout == 0)
             uploadFiles(employee, cb);
         }
@@ -2512,7 +2512,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.assignments[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.assignments[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2536,7 +2536,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.serviceHistory[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.serviceHistory[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2560,7 +2560,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.probation[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.probation[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2584,7 +2584,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.regularisation[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.regularisation[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2608,7 +2608,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.technical[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.technical[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2632,7 +2632,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.education[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.education[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2656,7 +2656,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.test[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.test[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)

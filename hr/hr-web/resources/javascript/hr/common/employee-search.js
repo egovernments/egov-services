@@ -270,7 +270,7 @@ const getTodaysDate = function() {
 
                     <td data-label="designation">{getNameById(assignments_designation,item.assignments[ind].designation)}</td>
                     <td data-label="department">{getNameById(assignments_department,item.assignments[ind].department)}</td>
-                    <td data-label="position">{getNameById(assignments_position,item.assignments[in].position)}</td>
+                    <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
                     <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}

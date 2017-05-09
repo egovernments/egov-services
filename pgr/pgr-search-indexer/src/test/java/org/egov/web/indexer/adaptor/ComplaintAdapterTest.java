@@ -94,18 +94,18 @@ public class ComplaintAdapterTest {
 		values.put("citizenFeedback", "0");
 		values.put("escalationHours", "0");
 		values.put("locationId", "1");
-		values.put("child_location_id", "2");
-		values.put("assignment_id", "1");
+		values.put("childLocationId", "2");
+		values.put("assignmentId", "1");
 		final ComplaintType expectedComplaintType = getComplaintType();
 		final Boundary expectedBoundary = getExpectedBoundary();
 		//final City expectedCityContent = getExpectedCityContent();
 		final Employee expectedAssignment = getExpectedEmployee();
 		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public")).thenReturn(expectedComplaintType);
 		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")),"ap.public")).thenReturn(expectedBoundary);
-		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("child_location_id")),"ap.public")).thenReturn(expectedBoundary);
+		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("childLocationId")),"ap.public")).thenReturn(expectedBoundary);
 		when(tenantRepository.fetchTenantByCode("ap.public")).thenReturn(getCity());
 		//when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
-		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignment_id")), new LocalDate(),
+		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignmentId")), new LocalDate(),
 				serviceRequest.getTenantId())).thenReturn(expectedAssignment);
 		return serviceRequest;
 	}

@@ -22,7 +22,8 @@ public class ServiceRequest {
     private static final String SERVICE_STATUS = "status";
     private static final String REGISTERED = "REGISTERED";
 
-    @JsonProperty("service_request_id")
+
+    @JsonProperty("serviceRequestId")
     private String crn = null;
 
     @JsonProperty("status")
@@ -31,19 +32,19 @@ public class ServiceRequest {
     @JsonProperty("statusNotes")
     private String statusDetails = null;
 
-    @JsonProperty("service_name")
+    @JsonProperty("serviceName")
     private String complaintTypeName = null;
 
-    @JsonProperty("service_code")
+    @JsonProperty("serviceCode")
     private String complaintTypeCode = null;
 
     @JsonProperty("description")
     private String details = null;
 
-    @JsonProperty("requested_datetime")
+    @JsonProperty("requestedDatetime")
     private String createdDate = null;
 
-    @JsonProperty("expected_datetime")
+    @JsonProperty("expectedDatetime")
     private String escalationDate = null;
 
     @JsonProperty("address")
@@ -55,7 +56,7 @@ public class ServiceRequest {
     @JsonProperty("lng")
     private Double lng = null;
 
-    @JsonProperty("first_name")
+    @JsonProperty("firstName")
     private String firstName = null;
 
     @JsonProperty("phone")

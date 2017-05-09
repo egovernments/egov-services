@@ -10,19 +10,19 @@
     "requesterId": "2",
     "authToken": null
   },
-  "ServiceRequest": {
+  "serviceRequest": {
     "tenantId": "ap.public",
-    "service_request_id": "00312-2017-FQ",
+    "serviceRequestId": "00312-2017-FQ",
     "status": true,
-    "service_name": "Public Health/Dengue/Malaria/Gastro-enteritis",
-    "service_code": "PHDMG",
+    "serviceName": "Public Health/Dengue/Malaria/Gastro-enteritis",
+    "serviceCode": "PHDMG",
     "description": "dsadadsadsasd",
-    "requested_datetime": null,
-    "expected_datetime": null,
+    "requestedDatetime": null,
+    "expectedDatetime": null,
     "address": "",
     "lat": 0.0,
     "lng": 0.0,
-    "first_name": "wewwrwer",
+    "firstName": "wewwrwer",
     "phone": "1123123123",
     "email": "nseady@gmail.com",
     "values": {
@@ -31,9 +31,9 @@
       "status": "REGISTERED",
       "complainantAddress": "sadadadasd",
       "locationId": "178",
-      "location_name": "Election Ward No 6",
-      "child_location_id": "169",
-      "assignment_id": "2",
+      "locationName": "Election Ward No 6",
+      "childLocationId": "169",
+      "assignmentId": "2",
       "stateId": "355"
     }
   }

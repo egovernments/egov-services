@@ -184,9 +184,9 @@ public class ComplaintAdapter {
          */
         InitializeCityDetails(complaintIndex,serviceRequest.getTenantId());
         final String locationId = serviceRequest.getDynamicSingleValue("locationId");
-        final String childLocationId = serviceRequest.getDynamicSingleValue("child_location_id");
+        final String childLocationId = serviceRequest.getDynamicSingleValue("childLocationId");
         InitializeBoundaryDetails(complaintIndex, locationId, childLocationId, serviceRequest.getTenantId());
-        final String assignmentId = serviceRequest.getDynamicSingleValue("assignment_id");
+        final String assignmentId = serviceRequest.getDynamicSingleValue("assignmentId");
         InitializeEmployeeDetails(complaintIndex, assignmentId, serviceRequest.getTenantId());
 
     }

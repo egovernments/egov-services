@@ -3,6 +3,7 @@ package org.egov.web.indexer.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 public class EmployeeResponse {
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo = null;
 
     @JsonProperty("Employees")
     private List<Employee> employees = new ArrayList<Employee>();

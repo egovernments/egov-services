@@ -1,7 +1,8 @@
 {
-  "ComplaintType": 
-    {
-      "slaHours": 10
-    }
-  
+    "responseInfo": null,
+    "complaintTypes": [
+        {
+            "slaHours": 10
+        }
+    ]
 }

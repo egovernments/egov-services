@@ -36,7 +36,7 @@ public class TenantRepositoryTest {
     @Test
     public void test_should_fetch_tenant_for_given_id() throws Exception {
         server.expect(once(),
-            requestTo("http://host/v1/tenant/_search?code=default"))
+            requestTo("http://host/tenant/v1/tenant/_search?code=default"))
             .andExpect(method(HttpMethod.POST))
 
             .andRespond(withSuccess(resources.getFileContents("successTenantResponse.json"),
@@ -52,7 +52,7 @@ public class TenantRepositoryTest {
     @Test
     public void test_should_fail_when_tenant_id_null() throws Exception {
         server.expect(once(),
-            requestTo("http://host/v1/tenant/_search?code=null"))
+            requestTo("http://host/tenant/v1/tenant/_search?code=null"))
             .andExpect(method(HttpMethod.POST))
 
             .andRespond(withSuccess(resources.getFileContents("failureTenantResponse.json"),

@@ -20,15 +20,15 @@ state: ap
 rateInSeconds: 5000
 
 ---
-source-schemas: kurnool
+source-schemas: kurnool,adoni
 destination-schema: microservice
 
 spring:
   profiles: ml-to-ms
 sync:
   info:
-    - sourceTable: eg_hierarchy_type
-      destinationTable: eg_hierarchy_type
+    - sourceTable: eg_department
+      destinationTable: eg_department
       columns:
         - source: id
           destination: id
@@ -44,6 +44,251 @@ sync:
 
         - source: code
           destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
+
+    - sourceTable: eg_designation
+      destinationTable: egeis_designation
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: description
+          destination: description
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: chartofaccounts
+          destination: chartofaccounts
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
+    - sourceTable: egeis_deptdesig
+      destinationTable: egeis_departmentdesignation
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: department
+          destination: departmentid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: designation
+          destination: designationid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+    - sourceTable: eg_position
+      destinationTable: egeis_position
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: deptdesig
+          destination: deptdesigid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: ispostoutsourced
+          destination: ispostoutsourced
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
+#    - sourceTable: bank
+#      destinationTable: egf_bank
+#      columns:
+#        - source: id
+#          destination: id
+#          type: Integer
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: code
+#          destination: code
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: name
+#          destination: name
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: isactive
+#          destination: active
+#          Type: Boolean
+#          shouldSource: True
+#          shouldSync: True
+#
+#    - sourceTable: bankbranch
+#      destinationTable: egf_bankbranch
+#      columns:
+#        - source: id
+#          destination: id
+#          type: Integer
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: branchcode
+#          destination: code
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: branchname
+#          destination: name
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: isactive
+#          destination: active
+#          Type: Boolean
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: bankid
+#          destination: bankid
+#          Type: Integer
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: branchaddress1
+#          destination: address
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+
+---
+source-schemas: microservice
+destination-schema: NA
+spring:
+  profiles: ms-to-ml
+sync:
+  info:
+    - sourceTable: eg_user
+      destinationTable: eg_user
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: title
+          destination: title
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: salutation
+          destination: salutation
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: dob
+          destination: dob
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: locale
+          destination: locale
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: username
+          destination: username
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: password
+          destination: password
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: pwdexpirydate
+          destination: pwdexpirydate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: mobilenumber
+          destination: mobilenumber
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: altcontactnumber
+          destination: altcontactnumber
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: emailid
+          destination: emailid
           Type: String
           shouldSource: True
           shouldSync: True
@@ -72,141 +317,68 @@ sync:
           shouldSource: True
           shouldSync: True
 
+        - source: active
+          destination: active
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: gender
+          destination: gender
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: pan
+          destination: pan
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: aadhaarnumber
+          destination: aadhaarnumber
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: type
+          destination: type
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
         - source: version
           destination: version
           Type: Integer
           shouldSource: True
           shouldSync: True
 
-        - source: localname
-          destination: localname
+        - source: guardian
+          destination: guardian
           Type: String
           shouldSource: True
           shouldSync: True
 
-    - sourceTable: eg_boundary_type
-      destinationTable: eg_boundary_type
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: hierarchy
-          destination: hierarchy
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: parent
-          destination: parent
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: isactive
-          destination: active
-          Type: Boolean
-          shouldSource: True
-          shouldSync: True
-
-    - sourceTable: bank
-      destinationTable: egf_bank
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: code
-          destination: code
+        - source: guardianrelation
+          destination: guardianrelation
           Type: String
           shouldSource: True
           shouldSync: True
 
-        - source: name
-          destination: name
+        - source: signature
+          destination: signature
           Type: String
           shouldSource: True
           shouldSync: True
 
-        - source: isactive
-          destination: active
-          Type: Boolean
-          shouldSource: True
-          shouldSync: True
-
-    - sourceTable: bankbranch
-      destinationTable: egf_bankbranch
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: branchcode
-          destination: code
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: branchname
-          destination: name
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: isactive
-          destination: active
-          Type: Boolean
-          shouldSource: True
-          shouldSync: True
-
-        - source: bankid
-          destination: bankid
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: branchaddress1
-          destination: address
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
----
-source-schemas: microservice
-destination-schema: NA
-spring:
-  profiles: ms-to-ml
-sync:
-  info:
-    - sourceTable: egf_bank
-      destinationTable: bank
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: code
-          destination: code
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: name
-          destination: name
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: active
-          destination: isactive
+        - source: accountlocked
+          destination: accountlocked
           Type: Boolean
           shouldSource: True
           shouldSync: True
@@ -217,8 +389,8 @@ sync:
           shouldSource: True
           shouldSync: False
 
-    - sourceTable: egf_bankbranch
-      destinationTable: bankbranch
+    - sourceTable: egeis_employee
+      destinationTable: egeis_employee
       columns:
         - source: id
           destination: id
@@ -227,32 +399,26 @@ sync:
           shouldSync: True
 
         - source: code
-          destination: branchcode
+          destination: code
           Type: String
           shouldSource: True
           shouldSync: True
 
-        - source: name
-          destination: branchname
-          Type: String
+        - source: dateofappointment
+          destination: dateofappointment
+          Type: Date
           shouldSource: True
           shouldSync: True
 
-        - source: active
-          destination: isactive
-          Type: Boolean
+        - source: dateofretirement
+          destination: dateofretirement
+          Type: Date
           shouldSource: True
           shouldSync: True
 
-        - source: bankid
-          destination: bankid
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: address
-          destination: branchaddress1
-          Type: String
+        - source: employeetypeid
+          destination: employeetype
+          Type: Date
           shouldSource: True
           shouldSync: True
 
@@ -261,10 +427,266 @@ sync:
           Type: String
           shouldSource: True
           shouldSync: False
+
+    - sourceTable: egeis_assignment
+      destinationTable: egeis_assignment
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: fundid
+          destination: fund
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: functionid
+          destination: function
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: designationid
+          destination: designation
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: functionaryid
+          destination: functionary
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: departmentid
+          destination: department
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: positionid
+          destination: position
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: gradeid
+          destination: grade
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: fromdate
+          destination: fromdate
+          Type: Date
+          shouldSource: True
+          shouldSync: True
+
+        - source: todate
+          destination: todate
+          Type: Date
+          shouldSource: True
+          shouldSync: True
 
         - source: NA
-          destination: branchFax
-          Type: String
+          destination: version
+          Type: Integer
           shouldSource: False
           shouldSync: True
-          defaultValue: Test
+          defaultValue: 0
+
+        - source: employeeid
+          destination: employee
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: isprimary
+          destination: isprimary
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: tenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
+    - sourceTable: egeis_hoddepartment
+      destinationTable: egeis_employee_hod
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: departmentid
+          destination: hod
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: assignmentid
+          destination: assignment
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: tenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
+    - sourceTable: egeis_employeejurisdictions
+      destinationTable: egeis_jurisdiction
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: employeeid
+          destination: employee
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: jurisdictionid
+          destination: boundary
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: tenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
+#    - sourceTable: egf_bank
+#      destinationTable: bank
+#      columns:
+#        - source: id
+#          destination: id
+#          type: Integer
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: code
+#          destination: code
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: name
+#          destination: name
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: active
+#          destination: isactive
+#          Type: Boolean
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: tenantid
+#          destination: NA
+#          Type: String
+#          shouldSource: True
+#          shouldSync: False
+#
+#    - sourceTable: egf_bankbranch
+#      destinationTable: bankbranch
+#      columns:
+#        - source: id
+#          destination: id
+#          type: Integer
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: code
+#          destination: branchcode
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: name
+#          destination: branchname
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: active
+#          destination: isactive
+#          Type: Boolean
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: bankid
+#          destination: bankid
+#          Type: Integer
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: address
+#          destination: branchaddress1
+#          Type: String
+#          shouldSource: True
+#          shouldSync: True
+#
+#        - source: tenantid
+#          destination: NA
+#          Type: String
+#          shouldSource: True
+#          shouldSync: False
+#
+#        - source: NA
+#          destination: branchFax
+#          Type: String
+#          shouldSource: False
+#          shouldSync: True
+#          defaultValue: Test

@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
@@ -53,16 +52,19 @@ import org.egov.asset.model.Location;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class AssetRepository {
+
+	private static final Logger logger = LoggerFactory.getLogger(AssetRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -79,12 +81,11 @@ public class AssetRepository {
 		String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
 		List<Asset> assets = null;
 		try {
-			System.out.println(
-					"queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+			logger.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 			assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
-			System.out.println("AssetRepository::" + assets);
+			logger.info("AssetRepository::" + assets);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.info("the exception from findforcriteria : " + ex);
 		}
 		return assets;
 	}
@@ -92,14 +93,13 @@ public class AssetRepository {
 	public String findAssetName(String tenantId, String name) {
 
 		String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
-		System.out.println("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
+		logger.info("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
 		String assetName = null;
 		try {
 			assetName = jdbcTemplate.queryForObject(queryStr, new Object[] { name, tenantId }, String.class);
-			System.out.println("AssetRepository::" + assetName);
+			logger.info("AssetRepository::" + assetName);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw ex;
+			logger.info("the exception from findbyname method indicates no duplicate assets available : " + ex);
 		}
 		return assetName;
 	}
@@ -107,13 +107,12 @@ public class AssetRepository {
 	public String getAssetCode() {
 		String query = "SELECT nextval('seq_egasset_assetcode')";
 		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-		System.out.println("result:" + result);
-		// String code=String.format("%03d", result);
+		logger.info("result:" + result);
 		StringBuilder code = null;
 		try {
 			code = new StringBuilder(String.format("%06d", result));
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.info("the exception from seq number gen for code : " + ex);
 		}
 		return code.toString();
 	}
@@ -130,8 +129,7 @@ public class AssetRepository {
 			asset2.setAssetAttributes(asset.getAssetAttributes());
 			property = objectMapper.writeValueAsString(asset2);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("the exception in insert from parsing attributes : " + e);
 		}
 
 		String query = assetQueryBuilder.getInsertQuery();
@@ -159,7 +157,7 @@ public class AssetRepository {
 		try {
 			jdbcTemplate.update(query, obj);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.info("the exception from insert query : " + ex);
 		}
 
 		return asset;
@@ -180,12 +178,12 @@ public class AssetRepository {
 			property = objectMapper.writeValueAsString(asset2);
 
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.info("exception from parsing the assetattributes : " + e);
 		}
 
 		String query = assetQueryBuilder.getUpdateQuery();
 
-		System.out.println("query::" + query);
+		logger.info("query::" + query);
 
 		String modeOfAcquisition = null;
 		String status = null;
@@ -206,11 +204,11 @@ public class AssetRepository {
 				new Date(), asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
 				asset.getVersion(), asset.getCode(), asset.getTenantId() };
 		try {
-			System.out.println("query1::" + query + "," + Arrays.toString(obj));
+			logger.info("query1::" + query + "," + Arrays.toString(obj));
 			int i = jdbcTemplate.update(query, obj);
-			System.out.println("i:" + i);
+			logger.info("output of update query : " + i);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.info("the exception from update asset : " + ex);
 		}
 		return asset;
 	}

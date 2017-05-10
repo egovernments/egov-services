@@ -94,16 +94,14 @@ public class AssetRepository {
 
 		String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
 		logger.info("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
-		List<String> assetNameList = new ArrayList<>();
+		String assetName = null;
 		try {
-			assetNameList = jdbcTemplate.queryForList(queryStr, new Object[] { name, tenantId }, String.class);
-			logger.info("AssetRepository::" + assetNameList);
+			assetName = jdbcTemplate.queryForObject(queryStr, new Object[] { name, tenantId }, String.class);
+			logger.info("AssetRepository::" + assetName);
 		} catch (Exception ex) {
 			logger.info("the exception from findbyname method indicates no duplicate assets available : " + ex);
 		}
-		if (assetNameList.isEmpty())
-			return null;
-		return assetNameList.get(0);
+		return assetName;
 	}
 
 	public String getAssetCode() {

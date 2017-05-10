@@ -147,7 +147,6 @@ class SearchAsset extends React.Component {
                       <th>Asset Category Type</th>
                       <th>Department</th>
                       <th>Status</th>
-                      <th>Asset Details</th>
                       <th>Action</th>
                   </tr>
                   </thead>
@@ -191,8 +190,6 @@ class SearchAsset extends React.Component {
                                   <td>{item.assetCategory.name}</td>
                                   <td>{getNameById(departments,item.department.id)}</td>
                                   <td>{item.status}</td>
-                                  <td>{item.assetDetails?item.assetDetails:"-"}</td>
-
                                   <td data-label="action">
                       {renderAction(getUrlVars()["type"],item.id)}
                       </td>

@@ -633,9 +633,9 @@ class CreateAsset extends React.Component {
         }
       }
 
-			if(type==="update"){
+			if(type==="update"|| type==="view" ){
 				$(document).ready(function(){
-	     		$('#assetCategory').attr('disabled','disabled');
+	     		$('#assetCategory,#code').attr('disabled','disabled');
 		 		})
 			}
       var assetCategories, locality, electionwards, departments, acquisitionList, revenueZone, street, revenueWards, revenueBlock, statusList, asset_category_type;
@@ -1428,6 +1428,26 @@ class CreateAsset extends React.Component {
         )
       }
     }
+		const showCodeonUpdate = function(){
+
+			var type = getUrlVars()["type"];
+			if(type==="update" || type==="view"){
+				return(
+					<div className="col-sm-6">
+						<div className="row">
+							<div className="col-sm-6 label-text">
+								<label for="code">  Code </label>
+							</div>
+							<div className="col-sm-6">
+								<input id="code" name="code" value={code} type="text"
+									onChange={(e)=>{handleChange(e,"code")}} readonly/>
+							</div>
+						</div>
+					</div>
+				)
+			}
+
+		}
 
     const renderRefBody = function() {
       if (references.length > 0) {
@@ -1593,7 +1613,7 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6 label-text">
                           <label for="assetReferenceName">Asset Reference </label>
                         </div>
-                        <div className="col-sm-6">
+                      <div className="col-sm-6">
                         <div className="row">
                           <div className="col-xs-10">
                             <input id="assetReferenceName" name="assetReferenceName" value={assetReferenceName} type="text" disabled/>
@@ -1607,7 +1627,10 @@ class CreateAsset extends React.Component {
                       </div>
                     </div>
                   </div>
+									{showCodeonUpdate()}
+
                 </div>
+
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">

@@ -424,6 +424,21 @@ sync:
           shouldSource: True
           shouldSync: True
 
+        - source: employeestatus
+          destination: NA
+          Type: Integer
+          shouldSource: True
+          shouldSync: False
+
+        - source: custom-query
+          destination: employeestatus
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+          query: select code from microservice.egeis_hrstatus where id::varchar=?
+          queryElements:
+            - employeestatus
+
         - source: employeetypeid
           destination: employeetype
           Type: Integer
@@ -604,8 +619,9 @@ sync:
           Type: Integer
           shouldSource: True
           shouldSync: True
-          query: select boundarytype from microservice.eg_boundary where id='?'
-          queryElements: jurisdictionid
+          query: select boundarytype from microservice.eg_boundary where id::varchar=?
+          queryElements:
+            - jurisdictionid
 
         - source: jurisdictionid
           destination: boundary

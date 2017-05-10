@@ -1,0 +1,5 @@
+INSERT INTO egeis_employee (id, code, dateofappointment, dateofretirement, employeestatus, employeetype, version,tenantId) VALUES ((select id from eg_user where username ='ravi' and tenantId='default'), 'E006', NULL, NULL, 'EMPLOYED', 3, 0,'default');
+
+INSERT INTO eg_position (name, id, deptdesig, createddate, lastmodifieddate, createdby, lastmodifiedby, ispostoutsourced, version,tenantId) VALUES ('L-ASSISTANT ENGINEER-1', nextval('SEQ_EG_POSITION'), 1, '2015-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, false, 0,'default');
+
+INSERT INTO egeis_assignment (id, fund, function, designation, functionary, department, "position", grade, lastmodifiedby, lastmodifieddate, createddate, createdby, fromdate, todate, version, employee, isprimary,tenantId) VALUES (nextval('SEQ_EGEIS_ASSIGNMENT'), 1, NULL, 46, NULL, 20, (select id from eg_position where name='L-ASSISTANT ENGINEER-1'and tenantId='default'), 1, 1, '2015-01-01 00:00:00', '2015-01-01 00:00:00', 1, '2015-04-01', '2020-03-31', 0, (select id from egeis_employee where code='E006' and tenantId='default' ), true,'default');

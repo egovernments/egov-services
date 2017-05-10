@@ -191,11 +191,14 @@ public class UserRepository {
 		oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
 		oldUser.setIdentificationMark(user.getIdentificationMark());
 		oldUser.setLocale(user.getLocale());
-		oldUser.setMobileNumber(user.getMobileNumber());
+		if(!isEmpty(user.getMobileNumber())) {
+			oldUser.setMobileNumber(user.getMobileNumber());
+		}
 		oldUser.setName(user.getName());
 		oldUser.setPan(user.getPan());
 		if(!isEmpty(user.getPassword())) {
 			oldUser.setPassword(user.getPassword());
+			encryptPassword(oldUser);
 		}
 		oldUser.setPhoto(user.getPhoto());
 		if(user.getPasswordExpiryDate() != null) {
@@ -211,7 +214,6 @@ public class UserRepository {
 			oldUser.setType(toEnumType(UserType.class, user.getType()));
 		}
 		setEnrichedRolesToUser(oldUser);
-		encryptPassword(oldUser);
 		oldUser.setLastModifiedDate(new Date());
 		addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
 		return userJpaRepository.save(oldUser).toDomain(user.getCorrespondenceAddress(), user.getPermanentAddress());

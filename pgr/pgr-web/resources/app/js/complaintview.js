@@ -108,7 +108,7 @@ $(document).ready(function()
 
 function getComplaint(){
 	$.ajax({
-		url: "/pgr/seva/_search?tenantId=ap.public&service_request_id="+srn,
+		url: "/pgr/seva/_search?tenantId=default&serviceRequestId="+srn,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -121,13 +121,13 @@ function getComplaint(){
 			//console.log('Get complaint done!'+JSON.stringify(response));
 			updateResponse = JSON.parse(JSON.stringify(response));
 
-			if(response.service_requests.length == 0){
+			if(response.serviceRequests.length == 0){
 				bootbox.alert(translate('pgr.error.notvalid.srn'));
 				hideLoader();
 				return;
 			}
 
-			status = response.service_requests[0].values.complaintStatus;
+			status = response.serviceRequests[0].values.complaintStatus;
 			
 			if(localStorage.getItem('type') == 'EMPLOYEE'){
 				if(status == 'COMPLETED' || status == 'REJECTED')
@@ -138,14 +138,14 @@ function getComplaint(){
 			}
 
 			$.ajax({
-				url: "/filestore/v1/files/tag?tag="+srn,
+				url: "/filestore/v1/files/tag?tenantId=default&tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
 					//console.log(fileresponse.files)
 
 					//History
 					$.ajax({
-						url : "/workflow/history?tenantId=ap.public&workflowId="+response.service_requests[0].values.stateId,
+						url : "/workflow/history?tenantId=default&workflowId="+response.serviceRequests[0].values.stateId,
 						type : 'GET',
 						success : function(work_response){
 
@@ -161,23 +161,23 @@ function getComplaint(){
 							if(localStorage.getItem('type') == 'CITIZEN' && status != 'COMPLETED')
 								$('.feedback').remove();
 
-							lat = response.service_requests[0].lat;
-							lng = response.service_requests[0].lng;
+							lat = response.serviceRequests[0].lat;
+							lng = response.serviceRequests[0].lng;
 
 							if (lat != '0' && lng != '0')
 								getAddressbyLatLng(lat, lng, response);
 
-							var receivingcenter = response.service_requests[0].values.receivingCenter;
+							var receivingcenter = response.serviceRequests[0].values.receivingCenter;
 
 							if(receivingcenter)
 								getReceivingCenterbyId(receivingcenter, response);
 
-							var departmentId = response.service_requests[0].values.departmentId;
+							var departmentId = response.serviceRequests[0].values.departmentId;
 
 							getDepartmentbyId(departmentId, response);
 
-							var locationId = response.service_requests[0].values.locationId;
-							var childLocationId = response.service_requests[0].values.childLocationId;
+							var locationId = response.serviceRequests[0].values.locationId;
+							var childLocationId = response.serviceRequests[0].values.childLocationId;
 
 							if(locationId)
 								getBoundarybyId(locationId,'LocationName', response);
@@ -200,9 +200,9 @@ function getComplaint(){
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								$('#status').attr('required','required');
-								var wardId = response.service_requests[0].values.locationId;
-								var localityid = response.service_requests[0].values.childLocationId;
-								var serviceName = response.service_requests[0].service_name;
+								var wardId = response.serviceRequests[0].values.locationId;
+								var localityid = response.serviceRequests[0].values.childLocationId;
+								var serviceName = response.serviceRequests[0].serviceName;
 								complaintType(loadDD, serviceName);
 								getWard(loadDD, wardId);
 								getLocality(wardId, localityid);
@@ -242,31 +242,31 @@ function complaintUpdate(obj){
 	var duplicateResponse, req_obj = {};
 	duplicateResponse =  JSON.parse(JSON.stringify(updateResponse));
 
-	req_obj['RequestInfo'] = duplicateResponse.response_info;
-	req_obj['ServiceRequest'] = duplicateResponse.service_requests[0];
-	req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
+	req_obj['RequestInfo'] = {'authToken':localStorage.getItem('auth')};
+	req_obj['serviceRequest'] = duplicateResponse.serviceRequests[0];
+	//req_obj['RequestInfo']['authToken'] = localStorage.getItem('auth');
 
 	var dat = new Date().toLocaleDateString();
 	var time = new Date().toLocaleTimeString();
 	var date = dat.split("/").join("-");
-	req_obj.ServiceRequest['updated_datetime'] = date+' '+time;
-	req_obj.ServiceRequest['tenantId'] = 'ap.public';
-	req_obj.ServiceRequest.values['complaintStatus'] = $('#status').val() ? $('#status').val() : status;
-	req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
+	req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
+	req_obj.serviceRequest['tenantId'] = 'default';
+	req_obj.serviceRequest.values['complaintStatus'] = $('#status').val() ? $('#status').val() : status;
+	req_obj.serviceRequest.values['approvalComments'] = $('#approvalComment').val();
 	if(localStorage.getItem('type') == 'CITIZEN')
-		req_obj.ServiceRequest.values['userId'] = localStorage.getItem('id');
-	req_obj.ServiceRequest.values['assignment_id'] = req_obj.ServiceRequest.values['assigneeId'];
-	delete req_obj.ServiceRequest.values['assigneeId'];
-	req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['complaintStatus'];
-	delete req_obj.ServiceRequest.values['complaintStatus'];
+		req_obj.serviceRequest.values['userId'] = localStorage.getItem('id');
+	req_obj.serviceRequest.values['assignmentId'] = req_obj.serviceRequest.values['assigneeId'];
+	delete req_obj.serviceRequest.values['assigneeId'];
+	req_obj.serviceRequest.values['status'] = req_obj.serviceRequest.values['complaintStatus'];
+	delete req_obj.serviceRequest.values['complaintStatus'];
 
 	if($("#approvalDepartment").val())
-		req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
+		req_obj.serviceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
 	if($("#approvalPosition").val())
-		req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
+		req_obj.serviceRequest.values['assignmentId'] = $("#approvalPosition").val();
 
 	$.ajax({
-		url: "/pgr/seva/_update?jurisdiction_id=ap.public",
+		url: "/pgr/seva/_update",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -282,7 +282,7 @@ function complaintUpdate(obj){
 			if(filefilledlength > 0){
 				
 				var formData=new FormData();
-				formData.append('jurisdictionId', 'ap.public');
+				formData.append('tenantId', 'default');
 				formData.append('module', 'PGR');
 				formData.append('tag', srn);
 				// Main magic with files here
@@ -330,7 +330,7 @@ function complaintUpdate(obj){
 
 function complaintType(loadDD, serviceName){
 	$.ajax({
-		url: "/pgr/services?type=all&tenantId=ap.public",
+		url: "/pgr/services?type=ALL&tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -339,7 +339,7 @@ function complaintType(loadDD, serviceName){
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
-			data:data.ComplaintType,
+			data:data.complaintTypes,
 			keyValue:'serviceCode',
 			keyDisplayName:'serviceName'
 		});
@@ -360,6 +360,7 @@ function nextStatus(loadDD){
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
+		console.log(JSON.stringify(data))
 		loadDD.load({
 			element:$('#status'),
 			data:data,
@@ -373,7 +374,7 @@ function nextStatus(loadDD){
 
 function getWard(loadDD, wardId){
 	$.ajax({
-		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
+		url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=Administration",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -393,7 +394,7 @@ function getWard(loadDD, wardId){
 
 function getLocality(boundaryId, localityid){
 	$.ajax({
-		url: "/v1/location/boundarys/childLocationsByBoundaryId?boundaryId="+boundaryId,
+		url: "/egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId="+boundaryId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -415,7 +416,7 @@ function getLocality(boundaryId, localityid){
 
 function getDepartment(loadDD){
 	$.ajax({
-		url: "/eis/departments",
+		url: "/eis/departments?tenantId=default",
 		type : 'GET'
 	}).done(function(data) {
 		loadDD.load({
@@ -430,7 +431,7 @@ function getDepartment(loadDD){
 
 function getDesignation(depId){
 	$.ajax({
-		url: "/eis/designationByDepartmentId?id="+depId,
+		url: "/eis/designationByDepartmentId?tenantId=default&id="+depId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -450,7 +451,7 @@ function getDesignation(depId){
 function getUser(depId, desId){
 	//console.log(depId, desId);
 	$.ajax({
-		url: "/eis/assignmentsByDeptOrDesignId?deptId="+depId+"&desgnId="+desId,
+		url: "/eis/assignmentsByDeptOrDesignId?tenantId=default&deptId="+depId+"&desgnId="+desId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -469,10 +470,10 @@ function getUser(depId, desId){
 
 function getDepartmentbyId(departmentId, response){
 	$.ajax({
-		url : '/eis/departments?id='+departmentId,
+		url : '/eis/departments?tenantId=default&id='+departmentId,
 		async : false,
 		success : function(depresponse){
-			response.service_requests[0].values['departmentName'] = depresponse.Department[0].name;
+			response.serviceRequests[0].values['departmentName'] = depresponse.Department[0].name;
 		},
 		error : function(){
 			bootbox.alert('Loading departmentName failed');
@@ -482,10 +483,10 @@ function getDepartmentbyId(departmentId, response){
 
 function getBoundarybyId(id, name, response){
 	$.ajax({
-		url : '/v1/location/boundarys?boundary='+id,
+		url : '/egov-location/boundarys?tenantId=default&boundary='+id,
 		async : false,
 		success : function(lresponse){
-			response.service_requests[0].values[''+name+''] = lresponse.Boundary[0].name;
+			response.serviceRequests[0].values[''+name+''] = lresponse.Boundary[0].name;
 		},
 		error : function(){
 			bootbox.alert('Loading location failed');
@@ -495,7 +496,7 @@ function getBoundarybyId(id, name, response){
 
 function getReceivingCenterbyId(receivingcenter, response){
 	$.ajax({
-		url : "/pgr/receivingcenter/_getreceivingcenterbyid?tenantId=1&id="+receivingcenter,
+		url : "/pgr/receivingcenter/_search?tenantId=default&id="+receivingcenter,
 		type: 'POST',
 		dataType: 'json',
 		processData : false,
@@ -503,7 +504,7 @@ function getReceivingCenterbyId(receivingcenter, response){
 		data : JSON.stringify(requestInfo)
 ,		async : false,
 		success : function(centerReponse){
-			response.service_requests[0].values['recCenterText'] = centerReponse.name;
+			response.serviceRequests[0].values['recCenterText'] = centerReponse.name;
 		}
 	});
 }

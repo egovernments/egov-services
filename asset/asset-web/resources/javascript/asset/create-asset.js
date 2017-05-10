@@ -633,9 +633,9 @@ class CreateAsset extends React.Component {
         }
       }
 
-			if(type==="update"){
+			if(type==="update"|| type==="view" ){
 				$(document).ready(function(){
-	     		$('#assetCategory').attr('disabled','disabled');
+	     		$('#assetCategory,#code').attr('disabled','disabled');
 		 		})
 			}
       var assetCategories, locality, electionwards, departments, acquisitionList, revenueZone, street, revenueWards, revenueBlock, statusList, asset_category_type;
@@ -863,7 +863,7 @@ class CreateAsset extends React.Component {
 
   render() {
     let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet} = this.state;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1428,6 +1428,26 @@ class CreateAsset extends React.Component {
         )
       }
     }
+		const showCodeonUpdate = function(){
+
+			var type = getUrlVars()["type"];
+			if(type==="update" || type==="view"){
+				return(
+					<div className="col-sm-6">
+						<div className="row">
+							<div className="col-sm-6 label-text">
+								<label for="code">  Code </label>
+							</div>
+							<div className="col-sm-6">
+								<input id="code" name="code" value={code} type="text"
+									onChange={(e)=>{handleChange(e,"code")}} readonly/>
+							</div>
+						</div>
+					</div>
+				)
+			}
+
+		}
 
     const renderRefBody = function() {
       if (references.length > 0) {
@@ -1437,7 +1457,7 @@ class CreateAsset extends React.Component {
                         <td>{item.code}</td>
                         <td>{item.name}</td>
                         <td>{item.assetCategory.name}</td>
-                        <td>{getNameById(this.state.departments, item.department.id)}</td>
+                        <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td data-label="action">
                           <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>
@@ -1593,7 +1613,7 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6 label-text">
                           <label for="assetReferenceName">Asset Reference </label>
                         </div>
-                        <div className="col-sm-6">
+                      <div className="col-sm-6">
                         <div className="row">
                           <div className="col-xs-10">
                             <input id="assetReferenceName" name="assetReferenceName" value={assetReferenceName} type="text" disabled/>
@@ -1607,7 +1627,10 @@ class CreateAsset extends React.Component {
                       </div>
                     </div>
                   </div>
+									{showCodeonUpdate()}
+
                 </div>
+
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">

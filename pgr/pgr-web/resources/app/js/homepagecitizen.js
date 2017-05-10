@@ -50,6 +50,7 @@ $(document).ready(function()
 
 	obj['RequestInfo'] = RequestInfo.requestInfo;
 	obj['id'] = userArray;
+	obj['tenantId'] = 'default';
 
 	$.ajax({
 		url : "/user/_search",

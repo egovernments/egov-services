@@ -13,35 +13,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResponseFactoryTest {
 
-    private ResponseFactory responseFactory;
+	private ResponseFactory responseFactory;
 
-    private final String MODULE = "pgr";
-    private final String JURISDICTION_ID = "mumbai";
-    private final String TAG = "tag";
-    private final String FILE_STORE_ID_1 = "FileStoreID1";
-    private final String FILE_STORE_ID_2 = "FileStoreID2";
-    private final String CONTENT_TYPE_1= "contentType1";
-    private final String CONTENT_TYPE_2= "contentType2";
-    private final String TENANTID = "tenantId";
+	private final String MODULE = "pgr";
+	private final String TAG = "tag";
+	private final String FILE_STORE_ID_1 = "FileStoreID1";
+	private final String FILE_STORE_ID_2 = "FileStoreID2";
+	private final String CONTENT_TYPE_1 = "contentType1";
+	private final String CONTENT_TYPE_2 = "contentType2";
+	private final String TENANT_ID = "default";
 
-    @Before
-    public void setUp() throws Exception {
-        responseFactory = new ResponseFactory("/fileStore");
-    }
+	@Before
+	public void setUp() throws Exception {
+		responseFactory = new ResponseFactory("/fileStore");
+	}
 
-    @Test
-    public void test_getFilesByTagResponse_from_FileInfo() throws Exception {
-        FileLocation fileLocation1 = new FileLocation(FILE_STORE_ID_1, MODULE, TAG,TENANTID);
-        FileLocation fileLocation2 = new FileLocation(FILE_STORE_ID_2, MODULE, TAG,TENANTID);
-        FileInfo fileInfo1 = new FileInfo(CONTENT_TYPE_1, fileLocation1,TENANTID);
-        FileInfo fileInfo2 = new FileInfo(CONTENT_TYPE_2, fileLocation2,TENANTID);
-        List<FileInfo> listOfFileInfo = asList(fileInfo1, fileInfo2);
+	@Test
+	public void test_getFilesByTagResponse_from_FileInfo() throws Exception {
+		FileLocation fileLocation1 = new FileLocation(FILE_STORE_ID_1, MODULE, TAG, TENANT_ID);
+		FileLocation fileLocation2 = new FileLocation(FILE_STORE_ID_2, MODULE, TAG, TENANT_ID);
+		FileInfo fileInfo1 = new FileInfo(CONTENT_TYPE_1, fileLocation1, TENANT_ID);
+		FileInfo fileInfo2 = new FileInfo(CONTENT_TYPE_2, fileLocation2, TENANT_ID);
+		List<FileInfo> listOfFileInfo = asList(fileInfo1, fileInfo2);
 
-        GetFilesByTagResponse result = responseFactory.getFilesByTagResponse(listOfFileInfo);
+		GetFilesByTagResponse result = responseFactory.getFilesByTagResponse(listOfFileInfo);
 
-        assertThat(result.getFiles().get(0).getContentType()).isEqualTo(CONTENT_TYPE_1);
-        assertThat(result.getFiles().get(0).getUrl()).isEqualTo("/fileStore/v1/files/id?fileStoreId=FileStoreID1");
-        assertThat(result.getFiles().get(1).getContentType()).isEqualTo(CONTENT_TYPE_2);
-        assertThat(result.getFiles().get(1).getUrl()).isEqualTo("/fileStore/v1/files/id?fileStoreId=FileStoreID2");
-    }
+		assertThat(result.getFiles().get(0).getContentType()).isEqualTo(CONTENT_TYPE_1);
+		assertThat(result.getFiles().get(0).getUrl()).isEqualTo
+				("/fileStore/v1/files/id?fileStoreId=FileStoreID1&tenantId=default");
+		assertThat(result.getFiles().get(1).getContentType()).isEqualTo(CONTENT_TYPE_2);
+		assertThat(result.getFiles().get(1).getUrl()).isEqualTo
+				("/fileStore/v1/files/id?fileStoreId=FileStoreID2&tenantId=default");
+	}
 }

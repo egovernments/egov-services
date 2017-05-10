@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Component
 public class ResponseFactory {
 
-	private static final String FORMAT = "%s/v1/files/id?fileStoreId=%s";
+	private static final String FORMAT = "%s/v1/files/id?fileStoreId=%s&tenantId=%s";
 	private String contextPath;
 
     public ResponseFactory(@Value("${server.contextPath}") String contextPath) {
@@ -19,7 +19,9 @@ public class ResponseFactory {
 
     public GetFilesByTagResponse getFilesByTagResponse(List<FileInfo> listOfFileInfo) {
         List<FileRecord> fileRecords = listOfFileInfo.stream().map(fileInfo -> {
-            String url = String.format(FORMAT, contextPath, fileInfo.getFileLocation().getFileStoreId());
+            String url = String.format(FORMAT, contextPath,
+					fileInfo.getFileLocation().getFileStoreId(),
+					fileInfo.getTenantId());
             return new FileRecord(url, fileInfo.getContentType());
         }).collect(Collectors.toList());
 

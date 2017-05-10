@@ -598,7 +598,7 @@ class CreateAsset extends React.Component {
                   */}
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,column)}} ><span className="glyphicon glyphicon-trash"></span></button>
+                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,column)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -641,7 +641,7 @@ class CreateAsset extends React.Component {
                     </td>
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} ><span className="glyphicon glyphicon-trash"></span></button>
+                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -655,6 +655,14 @@ class CreateAsset extends React.Component {
         return (<p className="text-danger">Name and Data Type is mandatory.</p>)
       } else
         return "";
+    }
+
+    const showAddNewBtn = function() {
+      if(getUrlVars()["type"] != "view") {
+        return (
+            <button type="button" className="btn btn-primary btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+          )
+      }
     }
 
     const showCustomFieldsTable=function()
@@ -688,7 +696,7 @@ class CreateAsset extends React.Component {
               </table>
           </div>
           <div className="row" style={{"padding-right": "18px"}}>
-            <button type="button" className="btn btn-primary btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+            {showAddNewBtn()}
             <br/>
           </div>
             {showCustomFieldAddForm()}

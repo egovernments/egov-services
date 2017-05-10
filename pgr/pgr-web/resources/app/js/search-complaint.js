@@ -99,7 +99,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	    	return;
 	    }
 
-	    var searchURL = '/pgr/seva/_search?tenantId=ap.public&'+formData;
+	    var searchURL = '/pgr/seva/_search?tenantId=default&'+formData;
 
     	tableContainer = $("#complaintSearchResults").DataTable( {
     		"ajax": {
@@ -110,7 +110,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	            data: function ( requestInfo ) {
 			      return JSON.stringify( requestInfo );
 			    },
-	            "dataSrc": "service_requests",
+	            "dataSrc": "serviceRequests",
 	            beforeSend : function(){
 					showLoader();
 				},
@@ -140,9 +140,9 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 				}
 			],
 			columns: [
-				{data: 'service_request_id'},
-				{data: 'service_name'},
-				{data: 'first_name'},
+				{data: 'serviceRequestId'},
+				{data: 'serviceName'},
+				{data: 'firstName'},
 				{"render": function ( data, type, full, meta ) {
 					var wardname = getBoundariesbyId(full.values.locationId);
 					var localityname = getBoundariesbyId(full.values.childLocationId);
@@ -153,7 +153,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 					var depart = getDepartmentbyId(full.values.departmentId);
 					return depart;
 			    } },
-				{data : 'requested_datetime'}
+				{data : 'requestedDatetime'}
 			]
 	    });
 
@@ -162,13 +162,13 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 });
 
 $("#complaintSearchResults").on('click','tbody tr',function(event) {
-	var srn = tableContainer.row( this ).data().service_request_id;
+	var srn = tableContainer.row( this ).data().serviceRequestId;
 	openPopUp('view-complaint.html?srn='+srn, srn);
 });
 
 function loadDeparment(){
 	$.ajax({
-		url: "/eis/departments",
+		url: "/eis/departments?tenantId=default",
 		type : 'GET'
 	}).done(function(data) {
 		department = data.Department;
@@ -185,7 +185,7 @@ function getDepartmentbyId(departmentId){
 
 function loadBoundarys(){
 	$.ajax({
-		url : '/v1/location/boundarys?boundary.tenantId=ap.kurnool',
+		url : '/egov-location/boundarys?boundary.tenantId=default',
 		success : function(data){
 			ward = data.Boundary;
 		}
@@ -256,12 +256,17 @@ function getquarter(d) {
 
 function loadReceivingMode(){
 	$.ajax({
-		url : "/pgr/receivingmode?tenantId=ap.public",
+		url : "/pgr/receivingmode/_search?tenantId=default",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
 		success : function(response){
 			loadDD.load({
 				element:$('#receivingMode'),
 				placeholder : 'Select Receiving Mode',
-				data:response,
+				data:response.receivingModes,
 				keyValue:'id',
 				keyDisplayName:'name'
 			});
@@ -283,7 +288,7 @@ function complaintType(){
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
-			data:data.ComplaintType,
+			data:data.complaintTypes,
 			placeholder : 'Select Complaint Type',
 			keyValue:'serviceCode',
 			keyDisplayName:'serviceName'
@@ -312,7 +317,7 @@ function loadStatus(){
 
 function loadWard(){
 	$.ajax({
-		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
+		url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,

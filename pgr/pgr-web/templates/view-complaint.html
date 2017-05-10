@@ -35,20 +35,20 @@
 
 				<div class="row viewcomplaint">
 				<script id="viewcomplaint-script" type="text/x-handlebars-template">
-					{{#service_requests}}
+					{{#serviceRequests}}
 					<div class="col-md-12">
 						<div class="panel panel-primary" data-collapsed="0">
 							<div class="panel-heading">
 								<div class="panel-title">
-									{{service_request_id}}
+									{{serviceRequestId}}
 								</div>
 							</div>
 							<div class="panel-body">
 								<div class="row add-border">
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="core.lbl.fullname"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{#if first_name}}
-											{{first_name}}
+										{{#if firstName}}
+											{{firstName}}
 										{{else}}
 											N/A
 										{{/if}}
@@ -66,11 +66,11 @@
 								<div class="row add-border">
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.srn"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{service_request_id}}
+										{{serviceRequestId}}
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{requested_datetime}}
+										{{requestedDatetime}}
 									</div>
 								</div>
 								<div class="row add-border">
@@ -80,13 +80,13 @@
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.nextescalation.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{expected_datetime}}
+										{{expectedDatetime}}
 									</div> 
 								</div>
 								<div class="row add-border">
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.type"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{service_name}}
+										{{serviceName}}
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.filedvia"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
@@ -105,7 +105,7 @@
 										{{description}}
 									</div>
 								</div>
-					{{/service_requests}}
+					{{/serviceRequests}}
 								<div class="row add-border">
 									<div class="col-md-3 col-sm-6 col-xs-6 add-margin" data-translate="core.lbl.grievance.photo/video"></div>
 									<div id="links" class="col-md-9 col-sm-6 col-xs-12 view-content">
@@ -122,7 +122,7 @@
 									{{/each}}
 									</div>
 								</div>
-					{{#service_requests}}
+					{{#serviceRequests}}
 								<div class="row add-border">
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.location"></div>
 									<div class="col-md-9 col-xs-6 add-margin view-content">
@@ -153,7 +153,7 @@
 							</div>
 						</div>
 					</div>
-					{{/service_requests}}
+					{{/serviceRequests}}
 				</script>
 				</div>
 				

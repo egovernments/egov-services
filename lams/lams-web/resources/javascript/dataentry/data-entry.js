@@ -179,7 +179,7 @@ var commomFieldsRules = {
         required: true
     },
     approverName: {
-        required: true
+        required: false
     },
     rentIncrementMethod: {
         required: (decodeURIComponent(getUrlVars()["type"]) == "land" || decodeURIComponent(getUrlVars()["type"]) == "shop") ? true : false
@@ -984,20 +984,6 @@ $("#createAgreement").on("click", function(e) {
 })
 
 
-function getPositionId(id) {
-    var tempEmploye = {};
-    for (var i = 0; i < employees.length; i++) {
-        if (employees[i].id == id) {
-            tempEmploye = employees[i];
-        }
-    }
-
-    for (var i = 0; i < tempEmploye.assignments.length; i++) {
-        if (tempEmploye.assignments[i].isPrimary) {
-            return tempEmploye.assignments[i].position;
-        }
-    }
-}
 
 // Adding Jquery validation dynamically
 $("#createAgreementForm").validate({
@@ -1006,8 +992,6 @@ $("#createAgreementForm").validate({
     submitHandler: function(form) {
         // form.submit();
         // form.preventDefault();
-        agreement["workflowDetails"] = {};
-        agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
         agreement["asset"]["name"] = assetDetails["name"];
@@ -1079,7 +1063,7 @@ function uploadFiles(agreement, cb) {
                     counter--;
                     agreement.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
                     if (counter == 0 && breakout == 0)
-                        uploadFiles(agreement, cb);
+                        cb(null, agreement);
                 }
             })
         }

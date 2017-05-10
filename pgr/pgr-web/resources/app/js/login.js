@@ -131,7 +131,7 @@ $(document).ready(function()
 				e.preventDefault();
 			}
 			$.ajax({
-				url : '/user/oauth/token?jurisdiction_id=ap.public',
+				url : '/user/oauth/token',
 				type: 'POST',
 				beforeSend : function(){
 					obj.attr("disabled", "disabled");
@@ -145,7 +145,8 @@ $(document).ready(function()
 					username : $('#username').val(),
 					password : $('#password').val(),
 					grant_type: 'password',
-					scope : 'read'
+					scope : 'read',
+					tenantId : 'default'
 				},
 				success : function(response){
 					localStorage.setItem("auth", response.access_token);
@@ -188,7 +189,7 @@ $(document).ready(function()
 	$('#lang-dropdown').change(function(){
 		var sel_value = $(this).val();
 		$.ajax({
-			url : '/localization/messages?tenantId=ap.public&locale='+sel_value,
+			url : '/localization/messages?tenantId=default&locale='+sel_value,
 			type : 'GET',
 			success : function(response){
 				var locale = response.messages;

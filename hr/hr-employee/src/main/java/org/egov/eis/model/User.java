@@ -151,6 +151,12 @@ public class User {
 
 	private String bloodGroup;
 
+	@Size(max=36)
+	private String photo;
+
+	@Size(max=36)
+	private String signature;
+
 	@Size(max=300)
 	private String identificationMark;
 

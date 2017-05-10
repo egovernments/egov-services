@@ -604,7 +604,7 @@ sync:
           Type: Integer
           shouldSource: True
           shouldSync: True
-          query: select boundarytype from microservice.eg_boundary where id=?
+          query: select boundarytype from microservice.eg_boundary where id='?'
           queryElements: jurisdictionid
 
         - source: jurisdictionid

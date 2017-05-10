@@ -1,35 +1,16 @@
 DROP TABLE eg_userrole;
-DROP TABLE eg_role;
-DROP SEQUENCE SEQ_EG_ROLE;
-
-CREATE TABLE eg_role (
-    id bigint NOT NULL,
-    name character varying(32) NOT NULL,
-    code character varying(50) NOT NULL,
-    description character varying(128),
-    createddate timestamp DEFAULT CURRENT_TIMESTAMP,
-    createdby bigint,
-    lastmodifiedby bigint,
-    lastmodifieddate timestamp,
-    version bigint,
-    tenantid character varying(256) not null,
-    CONSTRAINT eg_roles_code_tenant UNIQUE (code, tenantid)
-);
-
-CREATE SEQUENCE SEQ_EG_ROLE
- START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
+ALTER TABLE eg_role ADD roleid bigint NOT NULL DEFAULT 0;
+UPDATE eg_role SET roleid = id;
+ALTER TABLE eg_role ALTER COLUMN roleid DROP DEFAULT;
+ALTER TABLE eg_role DROP COLUMN id;
+ALTER TABLE eg_role RENAME COLUMN roleid TO id;
 ALTER TABLE eg_role ADD CONSTRAINT eg_role_pk PRIMARY KEY (id, tenantid);
 
 CREATE TABLE eg_userrole (
     roleid bigint NOT NULL,
     roleidtenantid character varying(256) NOT NULL,
     userid bigint NOT NULL,
-    useridtenantid character varying(256) NOT NULL,
+    tenantid character varying(256) NOT NULL,
     FOREIGN KEY (roleid, roleidtenantid) REFERENCES eg_role (id, tenantid),
-    FOREIGN KEY (userid, useridtenantid) REFERENCES eg_user (id, tenantid)
+    FOREIGN KEY (userid, tenantid) REFERENCES eg_user (id, tenantid)
 );

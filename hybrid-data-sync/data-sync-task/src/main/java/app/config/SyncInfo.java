@@ -1,6 +1,7 @@
 package app.config;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,6 +49,6 @@ public class SyncInfo {
     }
 
     public List<ColumnConfig> getSourceColumnConfigsToReadFrom() {
-        return columns.stream().filter(ColumnConfig::isShouldSource).collect(Collectors.toList());
+        return columns.stream().filter(c -> c.isShouldSource() && !Objects.equals(c.getSource(), "custom-query")).collect(Collectors.toList());
     }
 }

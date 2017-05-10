@@ -38,7 +38,7 @@ public class EmployeeRepository {
     }
 
     public EmployeeRes getEmployeeForPositionAndTenantId(final Long posId, final LocalDate asOnDate, final String tenantId) {
-        return restTemplate.getForObject(employeesByPositionIdurl, EmployeeRes.class, posId, asOnDate);
+        return restTemplate.getForObject(employeesByPositionIdurl, EmployeeRes.class, tenantId, posId, asOnDate);
     }
 
     public EmployeeRes getEmployeeForUserIdAndTenantId(final Long userId,final String tenantId) {

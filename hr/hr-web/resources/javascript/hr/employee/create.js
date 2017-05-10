@@ -2804,7 +2804,7 @@ if (getUrlVars()["type"] == "update") {
 
 
     employee = currentEmployee;
-
+    $("#code").prop("disabled", true);
     printValue("", currentEmployee);
 
     if (currentEmployee["assignments"].length > 0) {

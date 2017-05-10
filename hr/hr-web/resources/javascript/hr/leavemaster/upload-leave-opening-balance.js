@@ -6,7 +6,7 @@ class UploadLeaveType extends React.Component{
         "id": "",
         "my_file_input":"",
         "tenantId": tenantId
-  },temp:[],dataType:[],employees:[],_leaveTypes:[],_years:[]}
+  },temp:[],dataType:[],employees:[],_leaveTypes:[],_years:[],duplicate:[]}
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
@@ -26,6 +26,7 @@ class UploadLeaveType extends React.Component{
     } catch(e) {
         var _leaveTypes = [];
     }
+    console.log("Leave type required",_leaveTypes);
     this.setState({
       _leaveTypes : _leaveTypes
     });
@@ -43,9 +44,11 @@ class UploadLeaveType extends React.Component{
     } catch (e) {
     var  employees = [];
     }
+    console.log(employees);
     this.setState({
       employees : employees
     });
+
 
   }
 
@@ -97,19 +100,44 @@ class UploadLeaveType extends React.Component{
                 key = Object.keys(oJS[0]);
 
           });
-          var finalObject = [];
+          var finalObject = [],duplicateObject = [],scannedObject = [];
           oJS.forEach(function(d){
 
-            finalObject.push({"employee": d[key[0]],
+            scannedObject.push({"employee": d[key[0]],
                               "calendarYear":d[key[4]],
                               "leaveType":  { "id": d[key[3]]},
-                              "noOfDays" : d[key[5]]
+                              "noOfDays" : d[key[5]],
+                              "duplicate" : "false"
+
             });
           });
+
+
+          for(var i=0;i<scannedObject.length;i++){
+              for(var j=i+1;j<=scannedObject.length-1;j++)
+              if(scannedObject[i].employee===scannedObject[j].employee){
+                  if(scannedObject[i].leaveType.id===scannedObject[j].leaveType.id)
+                    scannedObject[i].duplicate = "true";
+                    scannedObject[j].duplicate = "true";
+              }
+          }
+          scannedObject.forEach(function(d){
+              if(d.duplicate === "true"){
+                d.errorMessage = "Duplicate row in the excel scanned";
+                duplicateObject.push(d);
+              }
+          });
+          scannedObject.forEach(function(d){
+              if(d.duplicate === "false"){
+                finalObject.push(d);
+              }
+          });
+
           _this.setState({
             LeaveType:{
               ..._this.state.LeaveType
-            }, temp : finalObject
+            }, temp : finalObject,
+               duplicate : duplicateObject
           })
       };
 
@@ -128,10 +156,12 @@ addOrUpdate(e,mode)
 {
 
         e.preventDefault();
-        var serverObject = [];
+        var serverObject = [],errorObject=[],finalValidatedServerObject=[];
         var tempInfo=Object.assign([],this.state.temp);
-
-
+        var duplicateInfo = Object.assign([],this.state.duplicate);
+        duplicateInfo.forEach(function(d){
+          errorObject.push(d);
+        });
         var leaveArray =[],calendarYearArray=[],employeeArray=[];
         var checkLeave = [],checkCalenderYear= [],checkEmployee=[];
         this.state._leaveTypes.forEach(function(d) {
@@ -165,7 +195,7 @@ addOrUpdate(e,mode)
         });
 
 
-        var finalErrorMessage="Invalid Details : ",post=0,neagativeDays="",invalidLeaveTypes="";
+        var finalErrorMessage="",post=0,neagativeDays="",invalidLeaveTypes="",error=0;
         var i=0,invalidEmployees="",invalidCalendarYears="";
         var leaveName,calendarYearName,employeeName,calenderName,noOfDays;
         var searchName;
@@ -182,13 +212,21 @@ addOrUpdate(e,mode)
           var calenderValidate = checkCalenderYear.indexOf(d.calendarYear);
 
           if(noOfDays<0){
+            d.errorMessage = "Invalid : Number of days is negative "+noOfDays;
             neagativeDays = neagativeDays.concat(" "+noOfDays+", ");
+            error=1;
             post=1;
           }
 
           if(leaveValidate<0){
+            if(d.errorMessage===""){
+                d.errorMessage = "Invalid: Leave type "+leaveName;
+            }else{
+                d.errorMessage = d.errorMessage+" Invalid: Leave type "+leaveName;
+            }
             invalidLeaveTypes = invalidLeaveTypes.concat(" "+leaveName+", ");
             post =1;
+            error=1;
           }else{
               for(var j=0;i<leaveArray.length;j++){
                 if(leaveName===leaveArray[j].name)
@@ -202,8 +240,13 @@ addOrUpdate(e,mode)
             }
 
             if(employeeValidate<0){
+              if(d.errorMessage===""){
+                  d.errorMessage = "Invalid: Employee Code "+employeeName;
+              }else{
+                  d.errorMessage = d.errorMessage+" Invalid: Employee Code "+employeeName;
+              }
               invalidEmployees = invalidEmployees.concat(" "+employeeName+", ");
-              //showError("invalid Employee");
+              error=1;
               post =1;
             }else{
                 for(var j=0;i<employeeArray.length;j++){
@@ -219,7 +262,14 @@ addOrUpdate(e,mode)
               }
 
               if(calenderValidate<0){
+                if(d.errorMessage===""){
+                    d.errorMessage = "Invalid: Calender Year "+calenderName;
+                }else{
+                    d.errorMessage = d.errorMessage+" Invalid: Calender Year "+calenderName;
+                }
+
                 invalidCalendarYears = invalidCalendarYears.concat(" "+calenderName+", ");
+                error=1;
                 post =1;
               }else{
                   for(var j=0;i<calendarYearArray.length;j++){
@@ -233,15 +283,101 @@ addOrUpdate(e,mode)
                     }
                   }
                 }
+
+          if(error===0) {
+
           serverObject.push({"employee": employeeId,
                             "calendarYear": calenderId,
                             "leaveType":  { "id": leaveId},
                             "noOfDays" : noOfDays,
                             "tenantId": tenantId
           });
+        }else{
+          errorObject.push(d);
+          error = 0;
+          }
         }
-        console.log(serverObject);
-        if(post===0){
+        console.log("Success Object",serverObject);
+        console.log("Error Object",errorObject);
+        var calenderYearApi = serverObject[0].calendarYear;
+
+        try {
+            var leaveBal = commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
+                tenantId,
+                pageSize: 500,
+                year : calenderYearApi
+              }).responseJSON["LeaveOpeningBalance"] || [];
+        } catch(e) {
+            var leaveBal = [];
+        }
+
+        console.log(leaveBal);
+        var errorLeaveOpening=[]
+
+        for(var i=0;i<serverObject.length;i++){
+              var calendarNumber = parseInt(serverObject[i].calendarYear);
+                var count = 0;
+              for(var j=0;j<leaveBal.length;j++){
+                if(calendarNumber===leaveBal[j].calendarYear){
+
+
+                   if(serverObject[i].employee===leaveBal[j].employee){
+
+                             if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
+
+                               serverObject[i].errorMessage = "Invalid: Leave Already present in leaveopening Balanace for this Employee";
+                               errorLeaveOpening.push(serverObject[i]);
+                               break;
+                             }else {
+
+                                finalValidatedServerObject.push(serverObject[i]);
+                                break;
+
+                             }
+
+                     serverObject[i].errorMessage = "Invalid: Employee Already present in leaveopening Balanace";
+                               errorLeaveOpening.push(serverObject[i])
+                               break;
+                   }
+
+                   count++;
+                    // for(var k=0;k<leaveBal.length;k++){
+                    //   console.log("Server object ",serverObject[i].employee);
+                    //   console.log("leave balance",leaveBal[k].employee);
+                    //
+                    //   if(serverObject[i].employee===leaveBal[k].employee){
+                    //         console.log("hi");
+                    //           serverObject[i].errorMessage = "Invalid: Leave Already present in leaveopening Balanace";
+                    //           errorLeaveOpening.push(serverObject[i])
+                    //           break;
+                    //         }
+                    //         break;
+                    // }
+
+                  }
+
+                }
+                  console.log("count",count);
+                if(count===leaveBal.length){
+
+                console.log(serverObject[i]);
+                 finalValidatedServerObject.push(serverObject[i]);
+                  break;
+                }
+
+        }
+        console.log("Data already present",errorLeaveOpening);
+
+        errorLeaveOpening.forEach(function(d){
+          errorObject.push(d);
+        });
+
+        console.log("Final Server Object After Validation",finalValidatedServerObject);
+        console.log("Final Error Object After Validation",errorObject);
+
+
+
+        if(finalValidatedServerObject.length!==0){
 
         // try {
         //   employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
@@ -252,7 +388,7 @@ addOrUpdate(e,mode)
 
         var body={
             "RequestInfo":requestInfo,
-            "LeaveOpeningBalance":serverObject
+            "LeaveOpeningBalance":finalValidatedServerObject
           },_this=this;
 
           $.ajax({

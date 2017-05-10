@@ -24,7 +24,7 @@ public class AssetValidator {
 
 	public void validateAsset(AssetRequest assetRequest) {
 		findAssetCategory(assetRequest);
-		findAsset(assetRequest);
+		//findAsset(assetRequest); FIXME not need as per elzan remove the full code later
 	}
 
 	public void findAssetCategory(AssetRequest assetRequest) {

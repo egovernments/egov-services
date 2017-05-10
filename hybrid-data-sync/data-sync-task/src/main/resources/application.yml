@@ -599,6 +599,15 @@ sync:
           shouldSource: True
           shouldSync: True
 
+        - source: custom-query
+          destination: boundarytype
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+          query: select boundarytype from microservice.eg_boundary where id::varchar=?
+          queryElements:
+            - jurisdictionid
+
         - source: jurisdictionid
           destination: boundary
           Type: Integer

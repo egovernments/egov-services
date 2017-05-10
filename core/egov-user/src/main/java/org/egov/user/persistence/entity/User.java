@@ -78,7 +78,7 @@ public class User extends AbstractAuditable<UserKey> {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "eg_userrole", joinColumns = {
     		@JoinColumn(name = "userid"),
-    		@JoinColumn(name = "useridtenantid"),
+    		@JoinColumn(name = "tenantid"),
 	},
             inverseJoinColumns = {
     		@JoinColumn(name = "roleid"),

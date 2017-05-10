@@ -10,7 +10,7 @@ CREATE TABLE eg_userrole (
     roleid bigint NOT NULL,
     roleidtenantid character varying(256) NOT NULL,
     userid bigint NOT NULL,
-    useridtenantid character varying(256) NOT NULL,
+    tenantid character varying(256) NOT NULL,
     FOREIGN KEY (roleid, roleidtenantid) REFERENCES eg_role (id, tenantid),
-    FOREIGN KEY (userid, useridtenantid) REFERENCES eg_user (id, tenantid)
+    FOREIGN KEY (userid, tenantid) REFERENCES eg_user (id, tenantid)
 );

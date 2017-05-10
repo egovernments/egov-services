@@ -50,6 +50,8 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AssetService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
 
 	@Autowired
 	private AssetRepository assetRepository;
@@ -69,21 +73,20 @@ public class AssetService {
 	private ApplicationProperties applicationProperties;
 
 	public List<Asset> getAssets(AssetCriteria searchAsset) {
-		System.out.println("AssetService");
+		logger.info("AssetService getAssets");
 		return assetRepository.findForCriteria(searchAsset);
 	}
 
 	public String getAssetName(String tenantId, String name) {
-		System.out.println("AssetService");
+		logger.info("AssetService getAssetName");
 		return assetRepository.findAssetName(tenantId, name);
 	}
 
 	public AssetResponse create(AssetRequest assetRequest) {
 		Asset asset = assetRepository.create(assetRequest);
-		List<Asset> assets = new ArrayList<Asset>();
+		List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse = getAssetResponse(assets);
-		return assetResponse;
+		return getAssetResponse(assets);
 	}
 
 	public AssetResponse createAsync(AssetRequest assetRequest) {
@@ -92,52 +95,47 @@ public class AssetService {
 
 		// TODO validate assetcategory for an asset
 		ObjectMapper objectMapper = new ObjectMapper();
-		System.out.println("assetRequest createAsync::" + assetRequest);
+		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.info("JsonProcessingException assetrequest for kafka : " + e);
 		}
 
 		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), "save-asset", value);
 
-		List<Asset> assets = new ArrayList<Asset>();
+		List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		AssetResponse assetResponse = getAssetResponse(assets);
-
-		return assetResponse;
+		return getAssetResponse(assets);
 	}
 
 	public AssetResponse update(AssetRequest assetRequest) {
 
 		Asset asset = assetRepository.update(assetRequest);
-		List<Asset> assets = new ArrayList<Asset>();
+		List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse = getAssetResponse(assets);
-		return assetResponse;
+		return getAssetResponse(assets);
 	}
 
 	public AssetResponse updateAsync(AssetRequest assetRequest) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		System.out.println("assetRequest createAsync::" + assetRequest);
+		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.info("JsonProcessingException assetrequest for update for kafka : " + e);
 		}
 
 		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(), "update-asset", value);
 
-		List<Asset> assets = new ArrayList<Asset>();
+		List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		AssetResponse assetResponse = getAssetResponse(assets);
-
-		return assetResponse;
+		return getAssetResponse(assets);
 	}
 
 	private AssetResponse getAssetResponse(List<Asset> assets) {

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,62 +20,61 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 @Configuration
 @EnableKafka
 public class AssetConsumerConfig {
-	
-	 @Value("${kafka.config.bootstrap_server_config}")
-	    private String serverConfig;
 
-	    @Value("${kafka.consumer.config.auto_commit}")
-	    private Boolean enableAutoCommit;
+	private static final Logger logger = LoggerFactory.getLogger(AssetConsumerConfig.class);
 
-	    @Value("${kafka.consumer.config.auto_commit_interval}")
-	    private String autoCommitInterval;
+	@Value("${kafka.config.bootstrap_server_config}")
+	private String serverConfig;
 
-	    @Value("${kafka.consumer.config.session_timeout}")
-	    private String sessionTimeout;
+	@Value("${kafka.consumer.config.auto_commit}")
+	private Boolean enableAutoCommit;
 
-	    @Value("${kafka.consumer.config.group_id}")
-	    private String groupId;
+	@Value("${kafka.consumer.config.auto_commit_interval}")
+	private String autoCommitInterval;
 
-	    @Value("${kafka.consumer.config.auto_offset_reset}")
-	    private String autoOffsetReset;
+	@Value("${kafka.consumer.config.session_timeout}")
+	private String sessionTimeout;
 
-	    @Bean
-	    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
-	       System.out.println("kafkaListenerContainerFactory");
-	    	ConcurrentKafkaListenerContainerFactory<String, String> factory = new
-	                ConcurrentKafkaListenerContainerFactory<>();
-	        factory.setConsumerFactory(consumerFactory());
-	        factory.setConcurrency(3);
-	        factory.getContainerProperties().setPollTimeout(3000);
-	        return factory;
-	    }
+	@Value("${kafka.consumer.config.group_id}")
+	private String groupId;
 
-	    @Bean
-	    public ConsumerFactory<String, String> consumerFactory() {
-	    	System.out.println("consumerFactory");
-	        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
-	    }
+	@Value("${kafka.consumer.config.auto_offset_reset}")
+	private String autoOffsetReset;
 
-	    @Bean
-	    public Map<String, Object> consumerConfigs() {
-	        // TODO - Load configs from env vars
-	        Map<String, Object> propsMap = new HashMap<>();
-	        propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
-	        propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
-	        propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);
-	        propsMap.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
-	        propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
-	        propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-	        propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-	        propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-	        return propsMap;
-	    }
+	@Bean
+	KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+		logger.info("kafkaListenerContainerFactory");
+		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(consumerFactory());
+		factory.setConcurrency(3);
+		factory.getContainerProperties().setPollTimeout(3000);
+		return factory;
+	}
 
-	    @Bean
-	    public AssetConsumers listener() {
-	        return new AssetConsumers();
-	    }
-	    
-	    
+	@Bean
+	public ConsumerFactory<String, String> consumerFactory() {
+		logger.info("consumerFactory");
+		return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+	}
+
+	@Bean
+	public Map<String, Object> consumerConfigs() {
+		// TODO - Load configs from env vars
+		Map<String, Object> propsMap = new HashMap<>();
+		propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
+		propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
+		propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);
+		propsMap.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
+		propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
+		propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+		propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		return propsMap;
+	}
+
+	@Bean
+	public AssetConsumers listener() {
+		return new AssetConsumers();
+	}
 
 }

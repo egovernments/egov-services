@@ -67,7 +67,7 @@ public class AssetQueryBuilder {
 	@SuppressWarnings("rawtypes")
 	public String getQuery(AssetCriteria searchAsset, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		System.out.println("get query");
+		logger.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
 

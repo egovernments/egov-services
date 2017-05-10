@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,8 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 @Configuration
 @EnableKafka
 public class AssetConsumerConfig {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AssetConsumerConfig.class);
 	
 	 @Value("${kafka.config.bootstrap_server_config}")
 	    private String serverConfig;
@@ -39,7 +43,7 @@ public class AssetConsumerConfig {
 
 	    @Bean
 	    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
-	       System.out.println("kafkaListenerContainerFactory");
+	       logger.info("kafkaListenerContainerFactory");
 	    	ConcurrentKafkaListenerContainerFactory<String, String> factory = new
 	                ConcurrentKafkaListenerContainerFactory<>();
 	        factory.setConsumerFactory(consumerFactory());
@@ -50,7 +54,7 @@ public class AssetConsumerConfig {
 
 	    @Bean
 	    public ConsumerFactory<String, String> consumerFactory() {
-	    	System.out.println("consumerFactory");
+	    	logger.info("consumerFactory");
 	        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
 	    }
 

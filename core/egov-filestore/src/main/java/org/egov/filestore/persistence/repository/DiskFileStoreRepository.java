@@ -27,16 +27,22 @@ public class DiskFileStoreRepository {
         artifacts.forEach(artifact -> {
             MultipartFile multipartFile = artifact.getMultipartFile();
             FileLocation fileLocation = artifact.getFileLocation();
-            Path path = Paths.get(fileMountPath, fileLocation.getModule(), fileLocation.getFileStoreId());
-            fileRepository.write(multipartFile, path);
+			Path path = getPath(fileLocation);
+			fileRepository.write(multipartFile, path);
         });
     }
 
-    public Resource read(FileLocation fileLocation) {
-        Path path = Paths.get(fileMountPath,
-                fileLocation.getModule(), fileLocation.getFileStoreId());
+	public Resource read(FileLocation fileLocation) {
+        Path path = getPath(fileLocation);
         return fileRepository.read(path);
     }
+
+	private Path getPath(FileLocation fileLocation) {
+		return Paths.get(fileMountPath, fileLocation.getTenantId(),
+				fileLocation.getModule(),
+				fileLocation.getFileStoreId());
+	}
+
 
 }
 

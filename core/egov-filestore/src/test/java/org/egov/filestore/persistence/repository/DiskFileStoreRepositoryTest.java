@@ -49,15 +49,15 @@ public class DiskFileStoreRepositoryTest {
 
 		diskFileStoreRepository.write(listOfMockedArtifacts);
 
-		verify(fileRepository).write(file1, Paths.get(FILE_STORAGE_MOUNT_PATH, MODULE, fileStoreId1));
-		verify(fileRepository).write(file2, Paths.get(FILE_STORAGE_MOUNT_PATH, MODULE, fileStoreId2));
+		verify(fileRepository).write(file1, Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, fileStoreId1));
+		verify(fileRepository).write(file2, Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, fileStoreId2));
 	}
 
 	@Test
 	public void shouldReturnResourceForGivenPath() {
 		FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, TAG, TENANT_ID);
 		Resource expectedResource = mock(Resource.class);
-		when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, MODULE, "fileStoreId")))
+		when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, "fileStoreId")))
 				.thenReturn(expectedResource);
 
 		Resource actualResource = diskFileStoreRepository.read(fileLocation);

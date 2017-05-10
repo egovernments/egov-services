@@ -1063,7 +1063,7 @@ function uploadFiles(agreement, cb) {
                     counter--;
                     agreement.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
                     if (counter == 0 && breakout == 0)
-                        uploadFiles(agreement, cb);
+                        cb(null, agreement);
                 }
             })
         }

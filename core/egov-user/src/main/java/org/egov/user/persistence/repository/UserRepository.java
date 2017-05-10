@@ -180,8 +180,12 @@ public class UserRepository {
 	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
 		User oldUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(user.getId(), user.getTenantId());
 		oldUser.setAadhaarNumber(user.getAadhaarNumber());
-		oldUser.setAccountLocked(user.getAccountLocked());
-		oldUser.setActive(user.getActive());
+		if(user.getAccountLocked() != null) {
+			oldUser.setAccountLocked(user.getAccountLocked());
+		}
+		if(user.getActive() != null) {
+			oldUser.setActive(user.getActive());
+		}
 		oldUser.setAltContactNumber(user.getAltContactNumber());
 		oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
 		oldUser.setDob(user.getDob());

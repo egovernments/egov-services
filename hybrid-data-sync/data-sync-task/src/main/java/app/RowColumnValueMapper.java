@@ -2,18 +2,29 @@ package app;
 
 import app.config.ColumnConfig;
 import app.config.SyncInfo;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RowColumnValueMapper {
     private Map<String, String> colValMap = new HashMap<>();
 
-    public RowColumnValueMapper(SyncInfo syncInfo, CustomResultSet rs) {
+    public RowColumnValueMapper(SyncInfo syncInfo, CustomResultSet rs, JdbcTemplate jdbcTemplate) {
         for (ColumnConfig column : syncInfo.getColumns()) {
             if (column.isShouldSync()) {
                 String value;
                 if (column.isShouldSource()) {
-                    value = String.format("%s", rs.get(column.getSource()));
+                    if (Objects.equals(column.getSource(), "custom-query")) {
+                        List<String> query_elements = Arrays.stream(column.getQueryElements().split(",")).map(c -> String.format("%s", rs.get(c))).collect(Collectors.toList());
+
+                        SqlRowSet res = jdbcTemplate.queryForRowSet(
+                                column.getQuery(), query_elements);
+                        value = res.getString(0);
+                    } else {
+                        value = String.format("%s", rs.get(column.getSource()));
+                    }
                     if (!Objects.equals(value, "null")) {
                         value = String.format("'%s'", rs.get(column.getSource()));
                     }

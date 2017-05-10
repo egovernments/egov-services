@@ -201,6 +201,7 @@ class SearchAsset extends React.Component {
 
     return (
       <div>
+      <h3>{titleCase(getUrlVars()["type"])} Asset</h3>
       <div className="form-section-inner">
         <form onSubmit={(e)=>{search(e)}}>
         <div className="row">

@@ -863,7 +863,7 @@ class CreateAsset extends React.Component {
 
   render() {
     let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet} = this.state;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1457,7 +1457,7 @@ class CreateAsset extends React.Component {
                         <td>{item.code}</td>
                         <td>{item.name}</td>
                         <td>{item.assetCategory.name}</td>
-                        <td>{getNameById(this.state.departments, item.department.id)}</td>
+                        <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td data-label="action">
                           <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>

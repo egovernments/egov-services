@@ -100,19 +100,18 @@ public class AgreementController {
 	
 	@PostMapping("_update/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@PathVariable("code") String acknowledgementNumber, @RequestBody AgreementRequest agreementRequest,
+	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AgreementRequest agreementRequest,
 			BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
-		if (!acknowledgementNumber.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
-				&& agreementService.isAgreementExist(acknowledgementNumber)) {
-			throw new RuntimeException("acknowledgementnumber mismatch or no agreement found for this value");
-		}
-		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
+
+		if (!(code.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
+				|| code.equals(agreementRequest.getAgreement().getAgreementNumber())
+						&& agreementService.isAgreementExist(code)))
+			throw new RuntimeException("code mismatch or no agreement found for this value");
 
 		Agreement agreement = null;
 		agreement = agreementService.updateAgreement(agreementRequest);
@@ -120,8 +119,9 @@ public class AgreementController {
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(),true));
-		LOGGER.info(agreementResponse.toString());
+		agreementResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		LOGGER.info("the response form update agrement call : " + agreementResponse);
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 	

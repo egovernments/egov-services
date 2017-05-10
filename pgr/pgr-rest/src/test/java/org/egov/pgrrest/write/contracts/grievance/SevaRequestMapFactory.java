@@ -1,5 +1,6 @@
 package org.egov.pgrrest.write.contracts.grievance;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SevaRequestMapFactory {
@@ -17,6 +18,9 @@ public class SevaRequestMapFactory {
         serviceRequestMap.put("requestedDatetime", "01-04-2017 13:20:47");
         serviceRequestMap.put("updatedDatetime", "02-04-2017 13:20:47");
         serviceRequestMap.put("tenantId", "ap.public");
+        serviceRequestMap.put("isAttribValuesPopulated", false);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequestMap.put("attribValues", attributeValues);
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("departmentId", "29");
         valuesMap.put("complainantAddress", "complainant address");

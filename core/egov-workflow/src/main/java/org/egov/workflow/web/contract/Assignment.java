@@ -55,6 +55,6 @@ public class Assignment {
     private Department department;
     
     @JsonProperty("tenantId")
-    private Department tenantId;
+    private String tenantId;
 
 }

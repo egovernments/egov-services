@@ -1,8 +1,11 @@
 package org.egov.web.indexer.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.web.indexer.contract.ComplaintType;
 import org.egov.web.indexer.contract.ComplaintTypeResponse;
+import org.egov.web.indexer.contract.RequestInfoBody;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,11 +23,14 @@ public class ComplaintTypeRepository {
 
     public ComplaintType fetchComplaintTypeByCode(String code, String tenantId) {
         String url = this.complaintTypeServiceHostname + "pgr/services/{serviceCode}?tenantId={tenantId}";
-        return getComplaintTypeServiceResponse(url, code, tenantId).getComplaintType();
+        return getComplaintTypeServiceResponse(url, code, tenantId).getComplaintTypes().get(0);
     }
 
     private ComplaintTypeResponse getComplaintTypeServiceResponse(final String url, String code, String tenantId) {
-        return restTemplate.getForObject(url, ComplaintTypeResponse.class, code, tenantId);
+        final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
+
+        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+        return restTemplate.postForObject(url, request, ComplaintTypeResponse.class, code, tenantId);
     }
 
 }

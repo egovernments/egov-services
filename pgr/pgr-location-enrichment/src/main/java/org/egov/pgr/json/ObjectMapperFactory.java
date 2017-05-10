@@ -10,4 +10,5 @@ public class ObjectMapperFactory {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper;
     }
+
 }

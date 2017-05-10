@@ -2,11 +2,8 @@ package org.egov.lams.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.egov.lams.model.DocumentType;
 import org.egov.lams.model.enums.Application;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
 public class DocumentTypeRowMapper implements RowMapper<DocumentType> {

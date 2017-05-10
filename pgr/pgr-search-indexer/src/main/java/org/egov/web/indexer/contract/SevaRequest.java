@@ -11,6 +11,5 @@ public class SevaRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("ServiceRequest")
     private ServiceRequest serviceRequest;
 }

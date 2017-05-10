@@ -67,7 +67,7 @@ public class IndexerListenerTest {
         valuesMap.put("status", "REGISTERED");
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("values", valuesMap);
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
         return sevaRequestMap;
     }
     
@@ -77,7 +77,7 @@ public class IndexerListenerTest {
         valuesMap.put("status", "COMPLETED");
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("values", valuesMap);
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
         return sevaRequestMap;
     }
 

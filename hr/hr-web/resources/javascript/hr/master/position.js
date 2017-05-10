@@ -153,25 +153,12 @@ handleChangeThreeLevel(e,pName,name,val)
             },
             success: function(res) {
                     showSuccess("Position Modified successfully.");
-                    _this.setState({positionSet:{
-                        "id": "",
-                        "name": "",
-                        "deptdesig": {
-                        "id": "",
-                          "department": "",
-                          "designation": {
-                            "id": "",
+                    window.location.href = 'app/hr/common/show-position.html?type=update';
 
-                            }
-                          },
-                        "isPostOutsourced": "false",
-                        "active": "true",
-                        "tenantId": tenantId
-                      },designationList:[],departmentsList:[]})
 
             },
             error: function(err) {
-                showError(err);
+                showError("Duplicate position are not allowed");
 
             }
         });

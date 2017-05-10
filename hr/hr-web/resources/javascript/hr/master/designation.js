@@ -82,19 +82,11 @@ class Designation extends React.Component{
                       'auth-token': authToken
                     },
                     success: function(res) {
-                            showSuccess("Designation Modified successfully.");
-                            _this.setState({designationSet:{
-                            name:"",
-                            code:"",
-                            description:"",
-                            active:"true",
-                            "tenantId": tenantId
-                          },
-
-                          })
+                          showSuccess("Designation Modified successfully.");
+                          window.location.href = 'app/hr/common/show-designation.html?type=update';
                     },
                     error: function(err) {
-                        showError(err);
+                        showError("Duplicate Designation are not allowed");
 
                     }
                 });

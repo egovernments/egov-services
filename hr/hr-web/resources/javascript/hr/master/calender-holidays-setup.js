@@ -119,17 +119,7 @@ constructor(props){
                         },
                         success: function(res) {
                                 showSuccess("Holiday Modified successfully.");
-                                _this.setState({
-                                  Holiday:{
-                                    "calendarYear": {
-                                      "name": ""
-                                    },
-                                    "name": "",
-                                    "applicableOn": "",
-                                    "tenantId": tenantId
-
-                                  }
-                                })
+                                window.location.href = 'app/hr/common/show-calender-holiday.html?type=update';
 
                         }
                     });

@@ -1,12 +1,17 @@
 package org.egov.web.indexer.contract;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.pgr.common.contract.AttributeEntry;
+import org.egov.pgr.common.contract.AttributeValues;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -14,7 +19,11 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 public class ServiceRequest {
-    @JsonProperty("service_request_id")
+    private static final String SERVICE_STATUS = "status";
+    private static final String REGISTERED = "REGISTERED";
+
+
+    @JsonProperty("serviceRequestId")
     private String crn = null;
 
     @JsonProperty("status")
@@ -23,19 +32,19 @@ public class ServiceRequest {
     @JsonProperty("statusNotes")
     private String statusDetails = null;
 
-    @JsonProperty("service_name")
+    @JsonProperty("serviceName")
     private String complaintTypeName = null;
 
-    @JsonProperty("service_code")
+    @JsonProperty("serviceCode")
     private String complaintTypeCode = null;
 
     @JsonProperty("description")
     private String details = null;
 
-    @JsonProperty("requested_datetime")
+    @JsonProperty("requestedDatetime")
     private String createdDate = null;
 
-    @JsonProperty("expected_datetime")
+    @JsonProperty("expectedDatetime")
     private String escalationDate = null;
 
     @JsonProperty("address")
@@ -47,7 +56,7 @@ public class ServiceRequest {
     @JsonProperty("lng")
     private Double lng = null;
 
-    @JsonProperty("first_name")
+    @JsonProperty("firstName")
     private String firstName = null;
 
     @JsonProperty("phone")
@@ -61,7 +70,26 @@ public class ServiceRequest {
 
     @JsonProperty("values")
     private Map<String, String> values = new HashMap<>();
-    
+
+    //  Short term hack - to support values and attribValues usage
+//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
+    @JsonProperty("isAttribValuesPopulated")
+    private boolean attribValuesPopulated;
+
+    private List<AttributeEntry> attribValues = new ArrayList<>();
+
+    public String getDynamicSingleValue(String key) {
+        if (attribValuesPopulated) {
+            return AttributeValues.getAttributeSingleValue(attribValues, key);
+        } else {
+            return values.get(key);
+        }
+    }
+
+    @JsonIgnore
+    public boolean isNewServiceRequest() {
+        return getDynamicSingleValue(SERVICE_STATUS).equalsIgnoreCase(REGISTERED);
+    }
    /* 
     @JsonProperty("agency_responsible")
     private String agencyResponsible = null;

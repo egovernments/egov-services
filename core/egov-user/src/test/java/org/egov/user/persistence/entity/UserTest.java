@@ -60,7 +60,7 @@ public class UserTest {
 		org.egov.user.domain.model.User domainUser = getUserModel();
 		User entityUser = new User(domainUser);
 
-		assertThat(entityUser.getId()).isEqualTo(domainUser.getId());
+		assertThat(entityUser.getId().getId()).isEqualTo(domainUser.getId());
 		assertThat(entityUser.getName()).isEqualTo(domainUser.getName());
 		assertThat(entityUser.getUsername()).isEqualTo(domainUser.getUsername());
 		assertThat(entityUser.getTitle()).isEqualTo(domainUser.getTitle());
@@ -96,7 +96,7 @@ public class UserTest {
 		Date date = calendar.getTime();
 
 		org.egov.user.persistence.entity.User userEntity = org.egov.user.persistence.entity.User.builder()
-				.id(1L)
+				.userKey(new UserKey(1L, "tenant"))
 				.username("userName")
 				.salutation("salutation")
 				.name("name")
@@ -130,34 +130,15 @@ public class UserTest {
 		return userEntity;
 	}
 
-//	private List<Address> getAddressList() {
-//		return asList(
-//				org.egov.user.persistence.entity.Address.builder()
-//						.id(1L)
-//						.type(AddressType.PERMANENT.toString())
-//						.city("city/town/village 1")
-//						.address("country")
-//						.pinCode("pincode 1")
-//						.build(),
-//
-//
-//				Address.builder()
-//						.id(1L)
-//						.type(AddressType.CORRESPONDENCE.toString())
-//						.city("city/town/village 2")
-//						.address("add2")
-//						.pinCode("pincode 2")
-//						.build()
-//		);
-//	}
-
 	private Set<Role> getListOfRoles() {
-		org.egov.user.persistence.entity.User user = org.egov.user.persistence.entity.User.builder().id(0L).build();
+		org.egov.user.persistence.entity.User user = org.egov.user.persistence.entity.User.builder()
+				.userKey(new UserKey(0L, "tenant"))
+				.build();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(1990, Calendar.JULY, 1);
 
 		org.egov.user.persistence.entity.Role role1 = org.egov.user.persistence.entity.Role.builder()
-				.id(1L)
+				.roleKey(new RoleKey(1L, "tenant"))
 				.name("name of the role 1")
 				.description("description")
 				.build();
@@ -167,7 +148,7 @@ public class UserTest {
 		role1.setLastModifiedDate(calendar.getTime());
 
 		org.egov.user.persistence.entity.Role role2 = org.egov.user.persistence.entity.Role.builder()
-				.id(2L)
+				.roleKey(new RoleKey(2L, "tenant"))
 				.name("name of the role 2")
 				.description("description")
 				.build();

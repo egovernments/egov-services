@@ -6,6 +6,7 @@ import java.util.List;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Notice;
+import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.NoticeRepository;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
@@ -49,9 +50,9 @@ public class NoticeService {
 		return agreements;
 	}
 	
-	/*public NoticeResponse getNotice(NoticeCriteria noticeCriteria) {
-		noticeRepository.createNotice(noticeRequest);
-	}*/
+	public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
+		return noticeRepository.getNotices(noticeCriteria);
+	}
 	
 	private NoticeResponse getNoticeResponse(List<Notice> notices){
 		NoticeResponse  noticeResponse = new NoticeResponse();

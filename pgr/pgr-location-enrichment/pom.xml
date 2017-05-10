@@ -56,6 +56,12 @@
 
         <dependency>
             <groupId>org.egov.services</groupId>
+            <artifactId>pgr-common</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
             <artifactId>tracer</artifactId>
             <version>0.14.0</version>
         </dependency>
@@ -137,6 +143,7 @@
                                         <exclude>org.egov.pgr.PgrLocationEnrichmentApplication</exclude>
                                         <exclude>org.egov.pgr.contract.*</exclude>
                                         <exclude>org.egov.pgr.model.RequestContext</exclude>
+                                        <exclude>org.egov.pgr.model.SevaRequest</exclude>
                                         <exclude>org.egov.pgr.http.CorrelationIdAwareRestTemplate</exclude>
                                         <exclude>org.egov.pgr.json.ObjectMapperFactory</exclude>
                                     </excludes>

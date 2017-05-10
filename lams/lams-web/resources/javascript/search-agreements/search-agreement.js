@@ -150,6 +150,9 @@ class AgreementSearch extends React.Component {
       case "eviction":
         window.open("app/search-agreement/view-renew-agreement.html?view=eviction&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
         break;
+      default:
+          window.open("app/dataentry/edit-demand.html?"+(number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber)+ "&assetId=" + id, "fs", "fullscreen=yes");
+        break;
     }
 }
 

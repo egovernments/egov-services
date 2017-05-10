@@ -1,13 +1,15 @@
 package org.egov.lams.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
+import javax.validation.Valid;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.service.NoticeService;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.ResponseInfo;
+import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -27,42 +29,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("agreement/notice")
 public class NoticeController {
-	
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(NoticeController.class);
-	
+
 	@Autowired
 	private NoticeService noticeService;
-	
+
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
+
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> generateNotice(@RequestBody NoticeRequest noticeRequest,
-											BindingResult errors) {
-		
-		LOGGER.info("NoticeController noticeRequest:"+noticeRequest);
+	public ResponseEntity<?> generateNotice(@RequestBody NoticeRequest noticeRequest, BindingResult errors) {
+
+		LOGGER.info("NoticeController noticeRequest:" + noticeRequest);
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		NoticeResponse noticeResponse = noticeService.generateNotice(noticeRequest);
-		
-		return new ResponseEntity<NoticeResponse>(noticeResponse, HttpStatus.CREATED);
+
+		return new ResponseEntity<>(noticeResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute NoticeCriteria noticeCriteria, BindingResult errors) {
-		
-		LOGGER.info("NoticeController noticeCriteria:"+noticeCriteria);
+	public ResponseEntity<?> search(@ModelAttribute @Valid NoticeCriteria noticeCriteria,
+			@RequestBody @Valid RequestInfo requestInfo, BindingResult errors) {
+
+		LOGGER.info("NoticeController noticeCriteria:" + noticeCriteria);
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		NoticeResponse noticeResponse = new NoticeResponse();
-		Notice notice = new Notice(); 
-		List<Notice> notices = new ArrayList<Notice>();
-		notices.add(notice);
-		noticeResponse.setNotices(notices);
-		return new ResponseEntity<NoticeResponse>(noticeResponse, HttpStatus.CREATED);
+
+		List<Notice> notices = noticeService.getNotices(noticeCriteria);
+		return getSuccessResponse(notices, requestInfo);
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {
@@ -78,10 +80,17 @@ public class NoticeController {
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields().put(errs.getField(),errs.getRejectedValue());
+				error.getFields().put(errs.getField(), errs.getRejectedValue());
 			}
 		}
 		errRes.setError(error);
 		return errRes;
+	}
+
+	private ResponseEntity<?> getSuccessResponse(List<Notice> notices, RequestInfo requestInfo) {
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		LOGGER.info("before returning from getsucces resposne ::" + responseInfo + "notices : " + notices);
+		return new ResponseEntity<>(new NoticeResponse(responseInfo, notices), HttpStatus.OK);
 	}
 }

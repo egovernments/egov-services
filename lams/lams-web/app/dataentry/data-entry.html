@@ -139,7 +139,7 @@
                                 <div class="body-cont-inner">
                                     <!-- ASSET DETAIL, BLOCK -->
 
-                                    <h3>Create Agreement --- Data Entry Screen</h3>
+                                    <h3>Create Agreement-- Data Entry </h3>
                                     <!-- Asset Details for land -->
                                     <div class="form-section" id="landAssetDetailsBlock">
                                         <h3>Land Asset Details </h3>
@@ -1415,6 +1415,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="assetAssetAddress">Asset Address</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="assetAssetAddress" name="assetAssetAddress" type="text"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
 
                                             </div>
                                         </div>
@@ -1881,6 +1891,19 @@
                                                       </div>
                                                   </div>
                                               </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="securityDeposit">Collected Security Deposit  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <input type="number" min="0" id="securityDeposit" name="securityDeposit">
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                            </div>
+                                            <div class="row">
+
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
@@ -1894,42 +1917,27 @@
                                                       </div>
                                                     </div>
                                                 </div>
-                                              </div>
 
-                                                <div class="row">
-                                                  <div class="col-sm-6">
-                                                      <div class="row">
-                                                          <div class="col-sm-6 label-text">
-                                                              <label for="securityDeposit">Collected Security Deposit  </label>
-                                                          </div>
-                                                          <div class="col-sm-6">
-                                                              <input type="number" min="0" id="securityDeposit" name="securityDeposit">
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <div class="col-sm-6">
-                                                      <div class="row">
-                                                          <div class="col-sm-6 label-text">
-                                                              <label for="commencementDate">Date of Commencement  </label>
-                                                          </div>
-                                                          <div class="col-sm-6">
-                                                            <div class="text-no-ui">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                              <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
-                                                          </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="commencementDate">Date of Commencement  </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                          <div class="text-no-ui">
+                                                              <span class="glyphicon glyphicon-calendar"></span>
+                                                            <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
                                                         </div>
                                                       </div>
-                                                  </div>
-
+                                                    </div>
                                                 </div>
 
 
-
-
-
+                                            </div>
 
                                             <div class="row">
-                                                <div class="col-sm-6" id="rendCalculatedMethod">
+                                                                                              <div class="col-sm-6" id="rendCalculatedMethod">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
                                                             <label for="rentIncrementMethod">Method by increase in rent is calculated during renewal  </label>
@@ -1943,29 +1951,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                              <div class="col-sm-6">
-                                                <div class="row">
-                                                    <div class="col-sm-6 label-text">
-                                                        <label for="timePeriod">Time Period  </label>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                      <div class="styled-select">
-                                                        <select name="timePeriod" id="timePeriod">
-                                                          <option value="">Select Time Period</option>
-                                                          <option value="1">1</option>
-                                                          <option value="2">2</option>
-                                                          <option value="3">3</option>
-                                                          <option value="4">4</option>
-                                                          <option value="5">5</option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             </div>
-
-
                                             <div class="row">
                                               <div class="col-sm-6">
                                                   <div class="row">
@@ -1977,29 +1964,48 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" min="0" name="goodWillAmount" id="goodWillAmount"/>
+                                                          <input type="number" min="0" name="goodWillAmount" id="goodWillAmount">
                                                       </div>
                                                     </div>
                                                   </div>
                                               </div>
-
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
 
-                                                          <label for="goodWillAmount">Collected Goodwill Amount <span> * </span> </label>
+                                                          <label for="goodWillAmount">Goodwill Amount  </label>
 
                                                       </div>
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" min="0" name="goodWillAmount" id="goodWillAmount" required/>
+                                                          <input type="number" min="0" name="goodWillAmount" id="goodWillAmount">
                                                       </div>
                                                     </div>
                                                   </div>
                                               </div>
+                                            </div>
 
-
+                                            <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="timePeriod">Time Period  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                          <select name="timePeriod" id="timePeriod">
+                                                            <option value="">Select Time Period</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                          </select>
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
                                             </div>
 
                                             <div class="row">
@@ -2165,6 +2171,21 @@
                                                       </div>
                                                   </div>
                                               </div>
+                                              <!-- <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+
+                                                          <label for="advance">Advance  </label>
+
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span>₹</span>
+                                                          <input type="number" min="0" name="advance" id="advance" readonly="true">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div> -->
 
                                           </div>
                                           <div class="row">
@@ -2233,7 +2254,19 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                              <div class="col-sm-6">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="securityDeposit">Security Deposit  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="securityDepositDate">Security Deposit received date (DD/MM/YYYY)  </label>
@@ -2246,18 +2279,7 @@
                                                     </div>
                                                   </div>
                                               </div>
-                                            </div>
-                                            <div class="row">
-                                              <div class="col-sm-6">
-                                                  <div class="row">
-                                                      <div class="col-sm-6 label-text">
-                                                          <label for="securityDeposit"> Collected Security Deposit  </label>
-                                                      </div>
-                                                      <div class="col-sm-6">
-                                                          <input type="number" min="0" id="securityDeposit" name="securityDeposit">
-                                                      </div>
-                                                  </div>
-                                              </div>
+
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
@@ -2271,7 +2293,8 @@
                                                     </div>
                                                   </div>
                                               </div>
-                                            </div>
+
+                                          </div>
 
                                           <div class="row">
 
@@ -2289,26 +2312,6 @@
                                                       </div>
                                                   </div>
                                               </div>
-                                              <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="timePeriod">Time Period  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                          <div class="styled-select">
-                                                            <select name="timePeriod" id="timePeriod">
-                                                              <option value="">Select Time Period </option>
-                                                              <option value="1">1</option>
-                                                              <option value="2">2</option>
-                                                              <option value="3">3</option>
-                                                              <option value="4">4</option>
-                                                              <option value="5">5</option>
-                                                            </select>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                </div>
-
 
                                           </div>
                                           <div class="row">
@@ -2331,7 +2334,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-6 label-text">
 
-                                                        <label for="goodWillAmount">Collected Goodwill Amount <span> *</span> </label>
+                                                        <label for="goodWillAmount">Collected Goodwill Amount  </label>
 
                                                     </div>
                                                     <div class="col-sm-6">
@@ -2342,8 +2345,28 @@
                                                   </div>
                                                 </div>
                                             </div>
+                                          </div>
+                                          <div class="row">
 
-
+                                            <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="timePeriod">Time Period  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                          <select name="timePeriod" id="timePeriod">
+                                                            <option value="">Select Time Period </option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                          </select>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
                                           </div>
                                           <div class="row">
                                             <div class="col-sm-6">
@@ -2510,6 +2533,21 @@
                                                       </div>
                                                   </div>
                                               </div>
+                                              <!-- <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+
+                                                          <label for="advance">Advance  </label>
+
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span>₹</span>
+                                                          <input type="number" min="0" name="advance" id="advance" readonly="true">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div> -->
 
                                           </div>
                                           <div class="row">
@@ -2578,7 +2616,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                              <div class="col-sm-6">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="securityDeposit">Collected Security Deposit  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+
+                                          <div class="row">
+                                            <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="securityDepositDate">Security Deposit received date (DD/MM/YYYY)  </label>
@@ -2591,35 +2642,25 @@
                                                     </div>
                                                   </div>
                                               </div>
-                                          </div>
-                                          <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="row">
-                                                    <div class="col-sm-6 label-text">
-                                                        <label for="securityDeposit">Collected Security Deposit  </label>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="row">
-                                                    <div class="col-sm-6 label-text">
-                                                        <label for="commencementDate">Date of Commencement  </label>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                      <div class="text-no-ui">
-                                                          <span class="glyphicon glyphicon-calendar"></span>
-                                                        <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
+
+
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="commencementDate">Date of Commencement  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
+                                                      </div>
                                                     </div>
                                                   </div>
-                                                </div>
-                                            </div>
-
+                                              </div>
                                           </div>
 
                                           <div class="row">
+
                                               <div class="col-sm-6" id="rendCalculatedMethod">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
@@ -2634,25 +2675,6 @@
                                                       </div>
                                                   </div>
                                               </div>
-                                              <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="timePeriod">Time Period  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                          <div class="styled-select">
-                                                            <select name="timePeriod" id="timePeriod">
-                                                              <option value="">Select Time Period</option>
-                                                              <option value="1">1</option>
-                                                              <option value="2">2</option>
-                                                              <option value="3">3</option>
-                                                              <option value="4">4</option>
-                                                              <option value="5">5</option>
-                                                            </select>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                </div>
 
                                           </div>
                                           <div class="row">
@@ -2675,7 +2697,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-6 label-text">
 
-                                                        <label for="goodWillAmount">Collected Goodwill Amount <span> * </span>  </label>
+                                                        <label for="goodWillAmount"> Collected Goodwill Amount  </label>
 
                                                     </div>
                                                     <div class="col-sm-6">
@@ -2686,9 +2708,29 @@
                                                   </div>
                                                 </div>
                                             </div>
+                                          </div>
+                                          <div class="row">
 
-
-                                            </div>
+                                            <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="timePeriod">Time Period  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                          <select name="timePeriod" id="timePeriod">
+                                                            <option value="">Select Time Period</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                          </select>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
                                           <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="row">
@@ -2720,7 +2762,59 @@
                                     <!-- /Argeement Details -->
 
                                     <!-- Work flow details -->
-                                                                        <div class="text-center">
+                                    <!-- <div class="form-section" id="workFlowDetails">
+                                        <h3 class="categoryType">Workflow Details </h3>
+                                        <div class="form-section-inner">
+                                              <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="approverDepartment">Approver Department</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="approverDepartment">
+
+                                                            </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="approverDesignation">Approver Designation</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="approverDesignation">
+
+                                                            </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="approverName">Approver Name</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                                <select id="approverName">
+                                                                    <option value="">Select Approver Name</option>
+                                                                </select>
+                                                              </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="text-center">
                                       <button type="button" class="btn btn-submit" id="close">Close</button>
                                         <button type="button" id="createAgreement" class="btn btn-submit">Submit</button>
                                     </div>

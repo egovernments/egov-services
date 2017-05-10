@@ -467,7 +467,8 @@ var validation_rules = {};
 var final_validatin_rules = {};
 var commom_fields_rules = {
   code: {
-    required: true
+    required: true,
+    alphanumeric: true
   },
   dateOfAppointment: {
     required: true
@@ -530,7 +531,8 @@ var commom_fields_rules = {
     required: false
   },
   gpfNo: {
-    required: false
+    required: false,
+    alphanumeric: true
   },
   bank: {
     required: false
@@ -539,7 +541,8 @@ var commom_fields_rules = {
     required: false
   },
   bankAccount: {
-    required: false
+    required: false,
+    alphanumericWSplChar: true
   },
   group: {
     required: false
@@ -554,7 +557,8 @@ var commom_fields_rules = {
     required: true
   },
   "user.name": {
-    required: true
+    required: true,
+    alphaWSpcNDot:  true
   },
   "user.gender": {
     required: true
@@ -579,22 +583,26 @@ var commom_fields_rules = {
     aadhar:true
   },
   "user.permanentAddress": {
-    required: false
+    required: false,
+    alphanumericWSplCharNSpc: true
   },
   "user.permanentCity": {
-    required: false
+    required: false,
+    alphanumericWSpc: true
   },
   "user.permanentPinCode": {
     required: false
   },
   "user.correspondenceCity": {
-    required: false
+    required: false,
+    alphanumericWSpc: true
   },
   "user.correspondencePinCode": {
     required: false
   },
   "user.correspondenceAddress": {
-    required: false
+    required: false,
+    alphanumericWSplCharNSpc: true
   },
   "user.active": {
     required: true
@@ -654,7 +662,8 @@ var commom_fields_rules = {
     required: true
   },
   "assignments.govtOrderNumber": {
-    required: false
+    required: false,
+    alphanumericWSplCharNSpc: true
   },
   "assignments.is_primary": {
     required: true
@@ -666,16 +675,19 @@ var commom_fields_rules = {
     required: true
   },
   "education.qualification": {
-    required: true
+    required: true,
+    alphaWSplChar: true
   },
   "education.majorSubject": {
-    required: false
+    required: false,
+    alphaWSplChar: true
   },
   "education.yearOfPassing": {
     required: true
   },
   "education.university": {
-    required: false
+    required: false,
+    alphaWSplChar: true
   },
   "education.documents": {
     required: false
@@ -690,10 +702,12 @@ var commom_fields_rules = {
     required: true
   },
   "serviceHistory.remarks": {
-    required: false
+    required: false,
+    alphanumericWSpc: true
   },
   "serviceHistory.orderNo": {
-    required: false
+    required: false,
+    alphanumericWSplCharNSpc: true
   },
   "serviceHistory.documents": {
     required: false
@@ -732,21 +746,6 @@ var commom_fields_rules = {
     required: false
   },
   "regularisation.documents": {
-    required: false
-  },
-  "education.qualification": {
-    required: true
-  },
-  "education.majorSubject": {
-    required: false
-  },
-  "education.yearOfPassing": {
-    required: true
-  },
-  "education.university": {
-    required: false
-  },
-  "education.documents": {
     required: false
   },
   "technical.skill": {
@@ -1025,6 +1024,53 @@ $("input[name='user.dob']").datepicker({
 //       fillValueToObject(this);
 //   });
 
+$('#dateOfAppointment').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfAppointment').on("change", function(e) {
+
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfRetirement").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Appointment date must be before Retirement date");
+    $("#dateOfAppointment").val("");
+  }
+
+});
+
+$('#dateOfRetirement').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfRetirement').on("change", function(e) {
+  //  fillValueToObject(this);
+
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfRetirement").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Retirement date must be after Appointment date");
+    $("#dateOfRetirement").val("");
+  } else {}
+});
+
+
 
 $('#dateOfAppointment').datepicker({
   format: 'dd/mm/yyyy',
@@ -1035,6 +1081,104 @@ $('#dateOfAppointment').on("change", function(e) {
   // fillValueToObject(this);
   // $('#dateOfJoining').val(this.value);
   // this.id="dateOfJoining";
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfTermination").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Appointment date must be before Termination date");
+    $("#dateOfAppointment").val("");
+  }
+
+});
+
+$('#dateOfTermination').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfTermination').on("change", function(e) {
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfTermination").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Termination date must be after Appointment date");
+    $("#dateOfTermination").val("");
+  }
+
+});
+
+
+$('#dateOfAppointment').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfAppointment').on("change", function(e) {
+  // fillValueToObject(this);
+  // $('#dateOfJoining').val(this.value);
+  // this.id="dateOfJoining";
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfResignation").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Appointment date must be before Resignation date");
+    $("#dateOfAppointment").val("");
+  }
+
+});
+
+$('#dateOfResignation').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfResignation').on("change", function(e) {
+  // fillValueToObject(this);
+  var date_received = $("#dateOfAppointment").val();
+  var date_completed = $("#dateOfResignation").val();
+  var dateParts = date_received.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+  var date1 = new Date(newDateStr);
+
+  var dateParts = date_completed.split("/");
+  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+  var date2 = new Date(newDateStr);
+  if (date1 > date2) {
+    showError("Resignation date must be after Appointment date");
+    $("#dateOfResignation").val("");
+  }
+});
+
+
+
+
+$('#dateOfJoining').datepicker({
+  format: 'dd/mm/yyyy',
+  autoclose: true
+});
+
+$('#dateOfJoining').on("change", function(e) {
   // fillValueToObject(this);
   var date_received = $("#dateOfJoining").val();
   var date_completed = $("#dateOfAppointment").val();
@@ -1052,15 +1196,15 @@ $('#dateOfAppointment').on("change", function(e) {
 
 });
 
-
-
-
-$('#dateOfJoining').datepicker({
+$('#dateOfAppointment').datepicker({
   format: 'dd/mm/yyyy',
   autoclose: true
 });
 
-$('#dateOfJoining').on("change", function(e) {
+$('#dateOfAppointment').on("change", function(e) {
+  // fillValueToObject(this);
+  // $('#dateOfJoining').val(this.value);
+  // this.id="dateOfJoining";
   // fillValueToObject(this);
   var date_received = $("#dateOfJoining").val();
   var date_completed = $("#dateOfAppointment").val();
@@ -1170,7 +1314,7 @@ $('#dateOfTermination').on("change", function(e) {
   if (date1 > date2) {
     showError("Termination date must be after Joining date");
     $("#dateOfTermination").val("");
-  } else {}
+  }
 
 });
 
@@ -1424,16 +1568,11 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
+      /*if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
           var dateSplit = currentState.value.split("/");
-          //var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-          //var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-          //var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-          //var yearIn = date.getFullYear();
           employee[splitResult[0]][splitResult[1]] =  dateSplit[1]  + "/" + dateSplit[0] + "/" + dateSplit[2];
-      } else if (currentState.id == "user.active") {
+      } else*/ if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
-
       } else if (currentState.type === "file") {
         employee[splitResult[0]][splitResult[1]] = $.extend(true, [], currentState.files);
       } else {
@@ -1932,22 +2071,9 @@ function markEditIndex(index = -1, modalName = "", object = "") {
       } else {
         employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
         for (var key in employeeSubObject[object]) {
-          // if($(`#${object}\\.${key}`).length == 0) {
-          //       alert("not there");
-          //   }
-          // if (object + "." + key == "assignments.fromDate" || object + "." + key == "assignments.toDate" || object + "." + key == "serviceHistory.serviceFrom" || object + "." + key == "probation.orderDate" || object + "." + key == "probation.declaredOn" || object + "." + key == "regularisation.declaredOn" || object + "." + key == "regularisation.orderDate" || object + "." + key == "education.yearOfPassing" || object + "." + key == "technical.yearOfPassing" || object + "." + key == "test.yearOfPassing") {
-          //     var dateSplit = employeeSubObject[object][key].split("/");
-          //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-          //     // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-          //     // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-          //     // var yearIn=date.getFullYear();
-          //     // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
-          //     $(`#${object}\\.${key}`).val(date);
-          //
-          // } else {
-          //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-          // }
-          if (key == "position") {
+          if(key == "documents") 
+            continue;
+          else if (key == "position") {
             setTimeout(function(key, object){
                getPositions({
                 id: "assignments.department"
@@ -2002,7 +2128,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
           if(object == "assignments") {
             var hod_value = employeeSubObject[object]["hod"];
             employeeSubObject[object]["hod"] = [];
-            if ([true, "true"].indexOf(hod_value) > -1 && tempListBox.length > 0) {
+            if (((hod_value.constructor == Array && hod_value.length) || [true, "true"].indexOf(hod_value) > -1) && tempListBox.length > 0) {
               tempListBox.map(function(val) {
                 employeeSubObject[object]["hod"].push(val);
               })
@@ -2092,6 +2218,34 @@ $(document).ready(function() {
         return value ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
     }, 'Please enter a valid pan.');
 
+    $.validator.addMethod('alpha', function(value) {
+    return value ? /^[a-zA-Z]*$/.test(value) : true;
+    }, 'Only alphabets allowed.');
+
+    $.validator.addMethod('alphaWSpcNDot', function(value) {
+    return value ? /^[a-zA-Z \.]*$/.test(value) : true;
+    }, 'Only alphabets and spaces allowed.');
+
+    $.validator.addMethod('alphanumeric', function(value) {
+        return value ? /^[a-zA-Z0-9]*$/.test(value) : true;
+    }, 'Only alphanumeric characters allowed.');
+
+    $.validator.addMethod('alphanumericWSpc', function(value) {
+        return value ? /^[a-zA-Z0-9 ]*$/.test(value) : true;
+    }, 'Only alphanumeric characters and space allowed.');
+
+    $.validator.addMethod('alphanumericWSplChar', function(value) {
+        return value ? /^[a-zA-Z0-9\-\/\_]*$/.test(value) : true;
+    }, 'Only alphanumeric with -/_ allowed.');
+
+    $.validator.addMethod('alphanumericWSplCharNSpc', function(value) {
+        return value ? /^[a-zA-Z0-9\-\/\_ ]*$/.test(value) : true;
+    }, 'Only alphanumeric with -/_ allowed.');
+
+    $.validator.addMethod('alphaWSplChar', function(value) {
+        return value ? /^[a-zA-Z\-\/\_\.\*\@\#\$\%\^\&\ ]*$/.test(value) : true;
+    }, 'Only alphabets with special characters allowed.');
+
     $(".onlyNumber").on("keydown", function(e) {
         var key = e.keyCode ? e.keyCode : e.which;
         if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
@@ -2126,17 +2280,20 @@ $("#createEmployeeForm").validate({
       //Call api
       var __emp = Object.assign({}, employee);
 
-      if(employee["jurisdictions"] && employee["jurisdictions"].length && typeof employee["jurisdictions"][0] == "object") {
-          var empJuridictiona = employee["jurisdictions"];
+      if(employee["jurisdictions"] && employee["jurisdictions"].length) {
+          var empJuridictions = employee["jurisdictions"];
           employee["jurisdictions"] = [];
-          for (var i = 0; i < empJuridictiona.length; i++) {
-            employee["jurisdictions"].push(empJuridictiona[i].boundary);
+          for (var i = 0; i < empJuridictions.length; i++) {
+            if(typeof empJuridictions[i] == "object")
+              employee["jurisdictions"].push(empJuridictions[i].boundary);
+            else
+              employee["jurisdictions"].push(empJuridictions[i]);
           }
       }
 
       if(employee.user && employee.user.dob && getUrlVars()["type"] == "update" && employee.user.dob.indexOf("-") > -1) {
         var _date = employee.user.dob.split("-");
-        employee.user.dob = _date[1] + "/" + _date[2] + "/" + _date[0];
+        employee.user.dob = _date[2] + "/" + _date[1] + "/" + _date[0];
       }
       //Upload files if any
       uploadFiles(employee, function(err, emp) {
@@ -2168,7 +2325,7 @@ $("#createEmployeeForm").validate({
                 if(key.indexOf(".") > -1) {
                   _key = key.split(".");
                   _key.shift();
-                  _key = _key.join("."); 
+                  _key = _key.join(".");
                 }
                 err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
               }
@@ -2310,7 +2467,7 @@ function uploadFiles(employee, cb) {
       if (err) {
         cb(err);
       } else {
-        employee.user.photo = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+        employee.user.photo = `${res.files[0].fileStoreId}`;
         uploadFiles(employee, cb);
       }
     })
@@ -2319,7 +2476,7 @@ function uploadFiles(employee, cb) {
       if (err) {
         cb(err);
       } else {
-        employee.user.signature = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+        employee.user.signature = `${res.files[0].fileStoreId}`;
         uploadFiles(employee, cb);
       }
     })
@@ -2335,7 +2492,7 @@ function uploadFiles(employee, cb) {
           breakout = 1;
         } else {
           counter--;
-          employee.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+          employee.documents[i] = `${res.files[0].fileStoreId}`;
           if (counter == 0 && breakout == 0)
             uploadFiles(employee, cb);
         }
@@ -2355,7 +2512,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.assignments[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.assignments[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2379,7 +2536,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.serviceHistory[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.serviceHistory[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2403,7 +2560,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.probation[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.probation[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2427,7 +2584,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.regularisation[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.regularisation[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2451,7 +2608,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.technical[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.technical[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2475,7 +2632,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.education[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.education[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2499,7 +2656,7 @@ function uploadFiles(employee, cb) {
             breakout = 1;
           } else {
             counter--;
-            employee.test[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+            employee.test[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0)
@@ -2527,24 +2684,32 @@ function hasFile(elements) {
 }
 
 function makeAjaxUpload(file, cb) {
-  let formData = new FormData();
-  formData.append("jurisdictionId", "ap.public");
-  formData.append("module", "PGR");
-  formData.append("file", file);
-  $.ajax({
-    url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-    data: formData,
-    cache: false,
-    contentType: false,
-    processData: false,
-    type: 'POST',
-    success: function(res) {
-      cb(null, res);
-    },
-    error: function(jqXHR, exception) {
-      cb(jqXHR.responseText || jqXHR.statusText);
-    }
-  });
+  if(file.constructor == File) {
+    let formData = new FormData();
+    formData.append("jurisdictionId", "ap.public");
+    formData.append("module", "PGR");
+    formData.append("file", file);
+    $.ajax({
+      url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function(res) {
+        cb(null, res);
+      },
+      error: function(jqXHR, exception) {
+        cb(jqXHR.responseText || jqXHR.statusText);
+      }
+    });
+  } else {
+    cb(null, {
+      files: [{
+        fileStoreId: file
+      }]
+    })
+  }
 }
 
 function hasAllRequiredFields(emp) {
@@ -2556,7 +2721,9 @@ function checkIfNoDup(employee, objectType, subObject) {
     return true;
   else if (objectType == "jurisdictions") {
     for (let i = 0; i < employee[objectType].length; i++) {
-      if (employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
+      if (typeof employee[objectType][i] == "object" && employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
+        return false;
+      else if(employee[objectType][i] == subObject.boundary)
         return false;
     }
   }
@@ -2637,7 +2804,7 @@ if (getUrlVars()["type"] == "update") {
 
 
     employee = currentEmployee;
-
+    $("#code").prop("disabled", true);
     printValue("", currentEmployee);
 
     if (currentEmployee["assignments"].length > 0) {
@@ -2757,6 +2924,7 @@ function printValue(object = "", values) {
 
   } else {
     for (var key in values) {
+      if(key == "documents") continue;
       if (typeof values[key] === "object" && key == "user") {
         for (ckey in values[key]) {
           if (values[key][ckey]) {

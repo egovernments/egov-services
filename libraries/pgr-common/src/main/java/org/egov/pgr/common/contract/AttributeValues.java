@@ -7,9 +7,10 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class AttributeValues {
-    List<AttributeEntry> attributeValues;
-
     public static String getAttributeSingleValue(List<AttributeEntry> attributeValues, String expectedKey) {
+        if (attributeValues == null) {
+            return null;
+        }
         return attributeValues.stream()
             .filter(a -> expectedKey.equals(a.getKey()))
             .findFirst()
@@ -18,6 +19,9 @@ public class AttributeValues {
     }
 
     public static List<String> getAttributeMultipleValue(List<AttributeEntry> attributeValues, String expectedKey) {
+        if (attributeValues == null) {
+            return null;
+        }
         return attributeValues.stream()
             .filter(a -> expectedKey.equals(a.getKey()))
             .map(AttributeEntry::getName)

@@ -2,10 +2,7 @@ package app;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import app.config.*;
 
@@ -35,9 +32,21 @@ public class CustomResultSet {
         switch (type) {
             case "Integer":
                 value = this.rs.getLong(columnLabel);
+                if (Objects.equals(String.format("%s", value), "0")) {
+                    value = "null";
+                }
                 break;
             case "String":
                 value = this.rs.getString(columnLabel);
+                break;
+            case "Boolean":
+                value = this.rs.getBoolean(columnLabel);
+                break;
+            case "TimestampWithoutTimeZone":
+                value = this.rs.getTimestamp(columnLabel);
+                break;
+            case "Date":
+                value = this.rs.getDate(columnLabel);
                 break;
             default:
                 throw new SQLException(String.format("Column type: %s is not valid", type));

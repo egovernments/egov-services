@@ -15,7 +15,7 @@ import static org.egov.user.persistence.entity.Address.SEQ_ADDRESS;
 @AllArgsConstructor
 @Builder
 @SequenceGenerator(name = SEQ_ADDRESS, sequenceName = SEQ_ADDRESS, allocationSize = 1)
-public class Address extends AbstractAuditable {
+public class Address extends AbstractAuditable<Long> {
 
     private static final long serialVersionUID = -2568199277079287051L;
 	public static final String SEQ_ADDRESS = "SEQ_EG_USER_ADDRESS";

@@ -6,6 +6,7 @@ import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,6 +100,9 @@ public class SevaRequestTest {
         serviceRequestMap.put(STATUS, "REGISTERED");
         serviceRequestMap.put(VALUES, valueMap);
         serviceRequestMap.put("tenantId", "tenantId");
+        serviceRequestMap.put("isAttribValuesPopulated", false);
+        final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put(SERVICE_REQUEST, serviceRequestMap);
         sevaRequestMap.put(REQUEST_INFO, requestInfoMap);
         return sevaRequest;

@@ -50,6 +50,8 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,87 +61,86 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class AssetService {
 
+	private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
+
 	@Autowired
 	private AssetRepository assetRepository;
 
 	@Autowired
 	private AssetProducer assetProducer;
-	
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	public List<Asset> getAssets(AssetCriteria searchAsset) {
-		System.out.println("AssetService");
+		logger.info("AssetService getAssets");
 		return assetRepository.findForCriteria(searchAsset);
 	}
-	
+
+	public String getAssetName(String tenantId, String name) {
+		logger.info("AssetService getAssetName");
+		return assetRepository.findAssetName(tenantId, name);
+	}
+
 	public AssetResponse create(AssetRequest assetRequest) {
-		Asset asset=assetRepository.create(assetRequest);
-		List<Asset> assets=new ArrayList<Asset>();
+		Asset asset = assetRepository.create(assetRequest);
+		List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse=getAssetResponse(assets);
-		return assetResponse;
+		return getAssetResponse(assets);
 	}
-	
+
 	public AssetResponse createAsync(AssetRequest assetRequest) {
-		
+
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
-		
+
 		// TODO validate assetcategory for an asset
-		ObjectMapper objectMapper=new ObjectMapper();
-		System.out.println("assetRequest createAsync::"+assetRequest);
-		String value=null;
-		
+		ObjectMapper objectMapper = new ObjectMapper();
+		logger.info("assetRequest createAsync::" + assetRequest);
+		String value = null;
+
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.info("JsonProcessingException assetrequest for kafka : " + e);
 		}
-		
-		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(),"save-asset", value);
-		
-		List<Asset> assets = new ArrayList<Asset>();
+
+		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), "save-asset", value);
+
+		List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		AssetResponse assetResponse = getAssetResponse(assets);
-		
-	   return assetResponse;	
+		return getAssetResponse(assets);
 	}
-	
-	public AssetResponse update(AssetRequest assetRequest){
-		
-		Asset asset=assetRepository.update(assetRequest);
-		List<Asset> assets=new ArrayList<Asset>();
+
+	public AssetResponse update(AssetRequest assetRequest) {
+
+		Asset asset = assetRepository.update(assetRequest);
+		List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse=getAssetResponse(assets);
-		return assetResponse;
+		return getAssetResponse(assets);
 	}
-	
-	public AssetResponse updateAsync(AssetRequest assetRequest){
-		
-		ObjectMapper objectMapper=new ObjectMapper();
-		System.out.println("assetRequest createAsync::"+assetRequest);
-		String value=null;
-		
+
+	public AssetResponse updateAsync(AssetRequest assetRequest) {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		logger.info("assetRequest createAsync::" + assetRequest);
+		String value = null;
+
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.info("JsonProcessingException assetrequest for update for kafka : " + e);
 		}
-		
-		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(),"update-asset", value);
-		
-		List<Asset> assets = new ArrayList<Asset>();
+
+		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(), "update-asset", value);
+
+		List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		AssetResponse assetResponse = getAssetResponse(assets);
-		
-	   return assetResponse;
+		return getAssetResponse(assets);
 	}
-	
-	
-	
-	private AssetResponse getAssetResponse(List<Asset> assets){
-		AssetResponse  assetResponse=new AssetResponse();
+
+	private AssetResponse getAssetResponse(List<Asset> assets) {
+		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
-	  return assetResponse;
+		return assetResponse;
 	}
 }

@@ -2,6 +2,8 @@ package org.egov.user.persistence.specification;
 
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.entity.User;
+import org.egov.user.persistence.entity.UserKey;
+import org.egov.user.persistence.entity.UserKey_;
 import org.egov.user.persistence.entity.User_;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,7 +22,8 @@ public class FuzzyNameMatchingSpecification implements Specification<User> {
         final String QUERY = String.format("%%%s%%", userSearchCriteria.getName().toLowerCase());
         Path<String> name = root.get(User_.name);
         Path<Boolean> active = root.get(User_.active);
-        Path<String> tenantId = root.get(User_.tenantId);
+		Path<UserKey> userKey = root.get(User_.userKey);
+		Path<String> tenantId = userKey.get(UserKey_.tenantId);
 
         return criteriaBuilder.and(
                 criteriaBuilder.like(criteriaBuilder.lower(name), QUERY),

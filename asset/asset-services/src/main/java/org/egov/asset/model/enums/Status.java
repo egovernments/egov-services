@@ -47,8 +47,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Status {
 
-	CWIP("CWIP"), CANCELLED("CANCELLED"), CAPITALIZED("CAPITALIZED"), CREATED("CREATED"), DISPOSED(
-			"DISPOSED"), RETIRED("RETIRED"), REVALUATED("REVALUATED"), SOLD("SOLD");
+	CANCELLED("CANCELLED"), CAPITALIZED("CAPITALIZED"), CREATED("CREATED");
 
 	private String value;
 

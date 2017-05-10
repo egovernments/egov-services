@@ -29,7 +29,7 @@ public class BoundaryRepositoryTest {
 
 	@Test
 	public void test_should_fetch_boundary_for_given_id() throws Exception {
-		server.expect(once(), requestTo("http://host/v1/location/boundarys?boundary.id=1&boundary.tenantId=ap.public"))
+		server.expect(once(), requestTo("http://host/egov-location/boundarys?boundary.id=1&boundary.tenantId=ap.public"))
 				.andExpect(method(HttpMethod.GET))
 				.andRespond(withSuccess(new Resources().getFileContents("successBoundaryResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));

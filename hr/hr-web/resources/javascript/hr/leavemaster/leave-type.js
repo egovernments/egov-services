@@ -71,24 +71,7 @@ addOrUpdate(e,mode)
               },
               success: function(res) {
                       showSuccess("Leave Modified successfully.");
-                      _this.setState({
-                        LeaveType:{
-                          "id": "",
-                          "name": "",
-                          "description": "",
-                          "halfdayAllowed": "false",
-                          "payEligible": "false",
-                          "accumulative": "false",
-                          "encashable": "false",
-                          "active": "true",
-                          "createdBy": "",
-                          "createdDate": "",
-                          "lastModifiedBy": "",
-                          "lastModifiedDate": "",
-                          "tenantId": tenantId
-                      }
-                      })
-
+                      window.location.href = 'app/hr/common/show-leave-type.html?type=update';
               },
               error: function(err) {
                   showError("Leave Type already defined");

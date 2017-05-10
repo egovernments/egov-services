@@ -39,6 +39,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>pgr-common</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda-time-version}</version>

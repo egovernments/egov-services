@@ -2,8 +2,10 @@ package org.egov.domain.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -21,6 +23,10 @@ public class SevaRequest {
     private static final String REQUESTED_DATE = "requested_datetime";
     private static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
     private final static String SERVICE_REQUEST = "ServiceRequest";
+    private static final String ATTRIBUTE_VALUES = "attribValues";
+    private static final String ATTRIBUTE_VALUES_KEY_FIELD = "key";
+    private static final String ATTRIBUTE_VALUES_NAME_FIELD = "name";
+    private static final String ATTRIBUTE_VALUES_POPULATED_FLAG = "isAttribValuesPopulated";
     private final HashMap<String, Object> serviceRequest;
 
     @SuppressWarnings("unchecked")
@@ -49,7 +55,7 @@ public class SevaRequest {
 	}
 
     public String getStatusName() {
-        return getValues().get(VALUES_STATUS);
+        return getDynamicSingleValue(VALUES_STATUS);
     }
 
     @SuppressWarnings("unchecked")
@@ -76,12 +82,35 @@ public class SevaRequest {
     }
 
     public String getLocationName() {
-        return getValues().get(LOCATION_NAME);
+        return getDynamicSingleValue(LOCATION_NAME);
     }
 
     public String getComplainantName() {
 	    //TODO: Remove default once retrieval of FirstName from userInfo is implemented.
         return (String) this.serviceRequest.getOrDefault(FIRST_NAME, "placeholder");
+    }
+
+    private boolean isAttributeValuesPopulated() {
+        return (boolean) this.serviceRequest.get(ATTRIBUTE_VALUES_POPULATED_FLAG);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<HashMap<String, String>> getAttributeValues() {
+        final List<HashMap<String, String>> attributeValues =
+            (List<HashMap<String, String>>) this.serviceRequest.get(ATTRIBUTE_VALUES);
+        return attributeValues == null ? Collections.emptyList() : attributeValues;
+    }
+
+    private String getDynamicSingleValue(String key) {
+        if (isAttributeValuesPopulated()) {
+            return getAttributeValues().stream()
+                .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
+                .findFirst()
+                .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
+                .orElse(null);
+        } else {
+            return getValues().get(key);
+        }
     }
 
 }

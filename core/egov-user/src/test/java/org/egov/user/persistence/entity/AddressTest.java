@@ -12,7 +12,7 @@ public class AddressTest {
     @Test
     public void test_entity_address_should_build_itself_from_domain_address() {
         User user = mock(User.class);
-        when(user.getId()).thenReturn(1L);
+        when(user.getId()).thenReturn(new UserKey(1L, "tenant"));
 
         Address entityAddress = Address.builder()
                 .id(1L)

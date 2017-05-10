@@ -8,7 +8,6 @@ import lombok.Getter;
 public class FileLocation {
     private String fileStoreId;
     private String module;
-   // private String jurisdictionId;
     private String tag;
     private String tenantId;
 }

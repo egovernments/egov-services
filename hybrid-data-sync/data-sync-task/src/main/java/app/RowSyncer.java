@@ -31,7 +31,7 @@ public class RowSyncer {
         this.destinationSchema = getDestinationSchema(destinationSchema);
         this.state = state;
         this.jdbcTemplate = jdbcTemplate;
-        columnValueMapper = new RowColumnValueMapper(syncInfo, rs);
+        columnValueMapper = new RowColumnValueMapper(syncInfo, rs, jdbcTemplate);
     }
 
     private String getDestinationSchema(String destinationSchema) {

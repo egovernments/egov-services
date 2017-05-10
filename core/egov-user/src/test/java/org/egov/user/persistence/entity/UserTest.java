@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 public class UserTest {
@@ -57,7 +58,7 @@ public class UserTest {
 
 	@Test
 	public void test_entity_should_build_itself_from_domain() {
-		org.egov.user.domain.model.User domainUser = getUserModel();
+		org.egov.user.domain.model.User domainUser = getUserModel(true, false);
 		User entityUser = new User(domainUser);
 
 		assertThat(entityUser.getId().getId()).isEqualTo(domainUser.getId());
@@ -67,8 +68,8 @@ public class UserTest {
 		assertThat(entityUser.getPassword()).isEqualTo(domainUser.getPassword());
 		assertThat(entityUser.getSalutation()).isEqualTo(domainUser.getSalutation());
 		assertThat(entityUser.getGuardian()).isEqualTo(domainUser.getGuardian());
-		assertThat(entityUser.getGuardianRelation()).isEqualTo(org.egov.user.persistence.enums.GuardianRelation
-				.Father);
+		assertThat(entityUser.getGuardianRelation())
+				.isEqualTo(org.egov.user.persistence.enums.GuardianRelation.Father);
 		assertThat(entityUser.getGender()).isEqualTo(org.egov.user.persistence.enums.Gender.FEMALE);
 		assertThat(entityUser.getMobileNumber()).isEqualTo(domainUser.getMobileNumber());
 		assertThat(entityUser.getEmailId()).isEqualTo(domainUser.getEmailId());
@@ -88,6 +89,16 @@ public class UserTest {
 		assertThat(entityUser.getLastModifiedDate()).isEqualTo(domainUser.getLastModifiedDate());
 		assertThat(entityUser.getCreatedDate()).isEqualTo(domainUser.getCreatedDate());
 		assertThat(entityUser.getRoles().size()).isEqualTo(2);
+	}
+
+	@Test
+	public void test_entity_should_map_boolean_flags_to_false_when_not_specified_in_domain() {
+		org.egov.user.domain.model.User domainUser = getUserModel(null, null);
+
+		User entityUser = new User(domainUser);
+
+		assertFalse(entityUser.getActive());
+		assertFalse(entityUser.getAccountLocked());
 	}
 
 	private org.egov.user.persistence.entity.User getUserEntity() {
@@ -163,7 +174,7 @@ public class UserTest {
 		}};
 	}
 
-	private org.egov.user.domain.model.User getUserModel() {
+	private org.egov.user.domain.model.User getUserModel(Boolean isActive, Boolean isAccountLocked) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(1990, Calendar.JULY, 1);
 		Date date = calendar.getTime();
@@ -179,12 +190,12 @@ public class UserTest {
 				.altContactNumber("mobileNumber2")
 				.pan("pan")
 				.aadhaarNumber("aadhaarNumber")
-				.active(true)
+				.active(isActive)
 				.dob(date)
 				.passwordExpiryDate(date)
 				.locale("en_IN")
 				.type(UserType.CITIZEN)
-				.accountLocked(false)
+				.accountLocked(isAccountLocked)
 				.roles(getListOfDomainRoles())
 				.guardian("name of relative")
 				.guardianRelation(GuardianRelation.Father)

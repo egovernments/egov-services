@@ -116,9 +116,6 @@ public class User extends AbstractAuditable<UserKey> {
     @Column(name = "accountlocked")
     private Boolean accountLocked;
 
-//	@Column(name = "tenantid")
-//    private String tenantId;
-
     public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
         this.userKey = new UserKey(user.getId(), user.getTenantId());
@@ -134,7 +131,8 @@ public class User extends AbstractAuditable<UserKey> {
         this.altContactNumber = user.getAltContactNumber();
         this.pan = user.getPan();
         this.aadhaarNumber = user.getAadhaarNumber();
-        this.active = user.getActive();
+        this.active = mapNullableBooleanToPrimitive(user.getActive());
+		this.accountLocked = mapNullableBooleanToPrimitive(user.getAccountLocked());
         this.dob = user.getDob();
         this.pwdExpiryDate = user.getPasswordExpiryDate();
         this.locale = user.getLocale();
@@ -143,12 +141,18 @@ public class User extends AbstractAuditable<UserKey> {
         this.identificationMark = user.getIdentificationMark();
         this.signature = user.getSignature();
         this.photo = user.getPhoto();
-        this.accountLocked = user.getAccountLocked();
         this.roles = convertDomainRolesToEntity(user.getRoles());
-//        this.tenantId = user.getTenantId();
     }
 
-    public org.egov.user.domain.model.User toDomain(org.egov.user.domain.model.Address correspondenceAddress,
+	private boolean mapNullableBooleanToPrimitive(Boolean nullableBoolean) {
+		if (nullableBoolean == null) {
+			return false;
+		} else {
+			return nullableBoolean;
+		}
+	}
+
+	public org.egov.user.domain.model.User toDomain(org.egov.user.domain.model.Address correspondenceAddress,
 													org.egov.user.domain.model.Address permanentAddress) {
         return
         org.egov.user.domain.model.User.builder()

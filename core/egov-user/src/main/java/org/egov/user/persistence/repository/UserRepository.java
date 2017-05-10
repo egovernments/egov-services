@@ -191,7 +191,9 @@ public class UserRepository {
 		oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
 		oldUser.setIdentificationMark(user.getIdentificationMark());
 		oldUser.setLocale(user.getLocale());
-		oldUser.setMobileNumber(user.getMobileNumber());
+		if(!isEmpty(user.getMobileNumber())) {
+			oldUser.setMobileNumber(user.getMobileNumber());
+		}
 		oldUser.setName(user.getName());
 		oldUser.setPan(user.getPan());
 		if(!isEmpty(user.getPassword())) {

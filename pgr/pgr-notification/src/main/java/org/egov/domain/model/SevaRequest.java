@@ -2,6 +2,7 @@ package org.egov.domain.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +96,9 @@ public class SevaRequest {
 
     @SuppressWarnings("unchecked")
     private List<HashMap<String, String>> getAttributeValues() {
-        return (List<HashMap<String, String>>) this.serviceRequest.get(ATTRIBUTE_VALUES);
+        final List<HashMap<String, String>> attributeValues =
+            (List<HashMap<String, String>>) this.serviceRequest.get(ATTRIBUTE_VALUES);
+        return attributeValues == null ? Collections.emptyList() : attributeValues;
     }
 
     private String getDynamicSingleValue(String key) {

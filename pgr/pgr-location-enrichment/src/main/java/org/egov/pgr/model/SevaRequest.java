@@ -5,6 +5,7 @@ import org.egov.pgr.contract.CrossHierarchyResponse;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.json.ObjectMapperFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,9 @@ public class SevaRequest {
     @SuppressWarnings("unchecked")
     private List<HashMap<String, String>> getAttributeValues() {
         HashMap<String, Object> serviceRequest = getServiceRequest();
-        return (List<HashMap<String, String>>) serviceRequest.get(ATTRIBUTE_VALUES);
+        final List<HashMap<String, String>> attributeValues =
+            (List<HashMap<String, String>>) serviceRequest.get(ATTRIBUTE_VALUES);
+        return attributeValues == null ? Collections.emptyList() : attributeValues;
     }
 
     private boolean isAttributeValuesPopulated() {

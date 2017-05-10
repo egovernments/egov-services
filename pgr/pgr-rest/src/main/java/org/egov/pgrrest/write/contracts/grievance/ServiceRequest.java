@@ -1,9 +1,6 @@
 package org.egov.pgrrest.write.contracts.grievance;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ServiceRequest {
 
@@ -93,7 +90,9 @@ public class ServiceRequest {
 
     @SuppressWarnings("unchecked")
     private List<HashMap<String, String>> getAttributeValues() {
-        return (List<HashMap<String, String>>) this.serviceRequestMap.get(ATTRIBUTE_VALUES);
+        final List<HashMap<String, String>> attributeValues =
+            (List<HashMap<String, String>>) this.serviceRequestMap.get(ATTRIBUTE_VALUES);
+        return attributeValues == null ? Collections.emptyList() : attributeValues;
     }
 
     public String getDynamicSingleValue(String key) {

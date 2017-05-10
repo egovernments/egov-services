@@ -8,10 +8,7 @@ import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse.STATE_ID;
 
@@ -184,7 +181,9 @@ public class SevaRequest {
     @SuppressWarnings("unchecked")
     private List<HashMap<String, String>> getAttributeValues() {
         HashMap<String, Object> serviceRequest = getServiceRequest();
-        return (List<HashMap<String, String>>) serviceRequest.get(ATTRIBUTE_VALUES);
+        final List<HashMap<String, String>> attributeValues =
+            (List<HashMap<String, String>>) serviceRequest.get(ATTRIBUTE_VALUES);
+        return attributeValues == null ? Collections.emptyList() : attributeValues;
     }
 
     private boolean isAttributeValuesPopulated() {

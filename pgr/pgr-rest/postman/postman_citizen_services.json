@@ -66,6 +66,26 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "submit service request with attrib values",
+			"request": {
+				"url": "http://{{host}}:{{port}}/pgr/seva/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"api_id\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"16-03-2017 12:09:14\",\n    \"action\": null,\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msg_id\": \"654654\",\n    \"requester_id\": \"61\"\n  },\n  \"serviceRequest\": {\n    \"serviceCode\": \"PHDMG\",\n    \"description\": \" detailsdetailsdetailsdetailsdetails\",\n    \"addressId\": \"127\",\n    \"lat\": \"0\",\n    \"lng\": \"0\",\n    \"address\": \"\",\n    \"serviceRequestId\": \"\",\n    \"firstName\": \"Sanjeev\",\n    \"phone\": \"9036623763\",\n    \"email\": \"aslam@yahoo.in\",\n    \"status\": true,\n    \"serviceName\": \"Public Health\\/Dengue\\/Malaria\\/Gastro-enteritis\",\n    \"requestedDatetime\": \"\",\n    \"mediaUrl\": \"\",\n    \"tenantId\": \"default\",\n    \"isAttribValuesPopulated\": true,\n    \"attribValues\": [\n      {\n        \"key\": \"receivingMode\",\n        \"name\": \"MANUAL\"\n      },\n      {\n        \"key\": \"receivingCenter\",\n        \"name\": \"5\"\n      },\n      {\n        \"key\": \"status\",\n        \"name\": \"REGISTERED\"\n      },\n      {\n        \"key\": \"complainantAddress\",\n        \"name\": \"erode\"\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

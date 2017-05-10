@@ -16,7 +16,6 @@ public class FileRepository {
 
     public void write(MultipartFile file, Path path) {
         try {
-            log.info("Preparing to write file to disk");
             FileUtils.forceMkdirParent(path.toFile());
             file.transferTo(path.toFile());
             log.info("Successfully wrote file to disk. " +

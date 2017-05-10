@@ -35,13 +35,16 @@ public class CustomResultSet {
         switch (type) {
             case "Integer":
                 value = this.rs.getLong(columnLabel);
+                if ((Integer) value == 0) {
+                    value = "null";
+                }
                 break;
             case "String":
                 value = this.rs.getString(columnLabel);
                 break;
             case "Boolean":
-            	value = this.rs.getBoolean(columnLabel);
-            	break;
+                value = this.rs.getBoolean(columnLabel);
+                break;
             case "TimestampWithoutTimeZone":
                 value = this.rs.getTimestamp(columnLabel);
                 break;

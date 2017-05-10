@@ -20,7 +20,7 @@ public class RowColumnValueMapper {
                         List<String> query_elements = Arrays.stream(column.getQueryElements().split(",")).map(c -> String.format("%s", rs.get(c))).collect(Collectors.toList());
 
                         SqlRowSet res = jdbcTemplate.queryForRowSet(
-                                column.getQuery(), query_elements);
+                                column.getQuery(), query_elements.toArray());
                         value = res.getString(0);
                     } else {
                         value = String.format("%s", rs.get(column.getSource()));

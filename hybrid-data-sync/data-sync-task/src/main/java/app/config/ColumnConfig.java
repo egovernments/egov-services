@@ -1,6 +1,8 @@
 package app.config;
 
 
+import java.util.List;
+
 public class ColumnConfig {
     private String source;
     private String destination;
@@ -9,7 +11,7 @@ public class ColumnConfig {
     private boolean shouldSource;
     private String defaultValue;
     private String query;
-    private String queryElements;
+    private List<String> queryElements;
 
     public String getDestination() {
         return destination;
@@ -67,11 +69,11 @@ public class ColumnConfig {
         this.query = query;
     }
 
-    public String getQueryElements() {
+    public List<String> getQueryElements() {
         return queryElements;
     }
 
-    public void setQueryElements(String queryElements) {
+    public void setQueryElements(List<String> queryElements) {
         this.queryElements = queryElements;
     }
 }

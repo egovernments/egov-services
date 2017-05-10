@@ -1006,6 +1006,7 @@ $("#createAgreementForm").validate({
     submitHandler: function(form) {
         // form.submit();
         // form.preventDefault();
+        console.log("Hittt");
         agreement["workflowDetails"] = {};
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
         agreement["asset"] = {};

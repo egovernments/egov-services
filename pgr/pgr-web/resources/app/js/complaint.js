@@ -74,7 +74,7 @@ $(document).ready(function()
 	$('#complaintTypeCategory').change(function() {
 		if ($(this).val()) {
 			$.ajax({
-				url: "/pgr/services?type=category&categoryId="+$(this).val()+"&tenantId=ap.public",
+				url: "/pgr/services?type=category&categoryId="+$(this).val()+"&tenantId=default",
 				type : 'POST',
 				data : JSON.stringify(requestInfo),
 				dataType: 'json',
@@ -84,7 +84,7 @@ $(document).ready(function()
 			}).done(function(data) {
 				loadDD.load({
 					element:$('#complaintType'),
-					data:data.ComplaintType,
+					data:data.complaintTypes,
 					keyValue:'serviceCode',
 					keyDisplayName:'serviceName'
 				});
@@ -96,7 +96,7 @@ $(document).ready(function()
 
 	//typeahead initialize
 	var locationtypeahead = new $.typeahead({
-		url : '/v1/location/boundarys/getLocationByLocationName?locationName=%QUERY',
+		url : '/egov-location/boundarys/getLocationByLocationName?tenantId=default&locationName=%QUERY',
 		element : $('#location'),
 		keyValue:'id',
 		keyDisplayName:'name',
@@ -286,15 +286,15 @@ $(document).ready(function()
 				var $form = $("form");
 				var data = getFormData($form);
 
-				data['service_request_id'] = '';
-				data['first_name'] = $('#first_name').val() ? $('#first_name').val() : userName;
+				data['serviceRequestId'] = '';
+				data['firstName'] = $('#first_name').val() ? $('#first_name').val() : userName;
 				data['phone'] = $('#phone').val() ? $('#phone').val() : userMobile;
 				data['email'] = $('#email').val() ? $('#email').val() : userEmail;
 				data['status'] = true;
-				data['service_name'] = $('#complaintType option:selected').text();
-				data['requested_datetime'] = "";
-				data['media_url'] = "";
-				data['tenantId'] = 'ap.public';
+				data['serviceName'] = $('#complaintType option:selected').text();
+				data['requestedDatetime'] = "";
+				data['mediaUrl'] = "";
+				data['tenantId'] = 'default';
 
 				var finobj = {};
 				finobj['receivingMode'] = $('#receivingMode').val() ? $('#receivingMode').val() : 'Website';
@@ -310,12 +310,12 @@ $(document).ready(function()
 
 				var request = {};
 				request['RequestInfo'] = RequestInfo.requestInfo;
-				request['ServiceRequest'] = data;
+				request['serviceRequest'] = data;
 
 				//console.log(JSON.stringify(request));
 
 				$.ajax({
-					url: "/pgr/seva/_create?jurisdiction_id=ap.public",
+					url: "/pgr/seva/_create",
 					type : 'POST',
 					dataType: 'json',
 					processData : false,
@@ -333,9 +333,9 @@ $(document).ready(function()
 						if(filefilledlength > 0){
 							//AJAX Fileupload
 							var formData=new FormData();
-							formData.append('jurisdictionId', 'ap.public');
+							formData.append('tenantId', 'default');
 							formData.append('module', 'PGR');
-							formData.append('tag', response.service_requests[0].service_request_id);
+							formData.append('tag', response.serviceRequests[0].serviceRequestId);
 							// Main magic with files here
 
 							$('input[name=file]').each(function(){
@@ -425,6 +425,7 @@ function doCheckUser(){
 		var userRequestInfo = {};
 		userRequestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		userRequestInfo['id'] = userArray;
+		userRequestInfo['tenantId'] = 'default';
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',
@@ -446,8 +447,8 @@ function doAck(response){
 	var acklabel = translate('core.msg.acknowledgement');
 	$('.breadcrumb').append('<li class="active">'+acklabel+'</li>');
 	$('.acknowledgement, .breadcrumb').removeClass('hide');
-	$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
-	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
+	$('.acknowledgement #firstname').html('Dear '+response.serviceRequests[0].firstName+',');
+	$('.acknowledgement #crn').html(response.serviceRequests[0].serviceRequestId);
 	$('.createcrn, .tour-section').addClass('hide');
 }
 
@@ -479,11 +480,16 @@ function typingfeelintypeahead(text, input, typeaheadtext){
 
 function loadReceivingMode(){
 	$.ajax({
-		url : "/pgr/receivingmode?tenantId=ap.public",
+		url : "/pgr/receivingmode/_search?tenantId=default",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
 		success : function(response){
 			loadDD.load({
 				element:$('#receivingMode'),
-				data:response,
+				data:response.receivingModes,
 				keyValue:'code',
 				keyDisplayName:'name'
 			});
@@ -497,11 +503,16 @@ function loadReceivingMode(){
 
 function loadReceivingCenter(){
 	$.ajax({
-		url : "/pgr/receivingcenter?tenantId=ap.public",
+		url : "/pgr/receivingcenter/_search?tenantId=default",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
 		success : function(response){
 			loadDD.load({
 				element:$('#receivingCenter'),
-				data:response,
+				data:response.receivingCenters,
 				keyValue:'id',
 				keyDisplayName:'name'
 			});
@@ -515,7 +526,7 @@ function loadReceivingCenter(){
 
 function complaintCategory(){
 	$.ajax({
-		url: "/pgr/complaintTypeCategories?tenantId=ap.public",
+		url: "/pgr/complaintTypeCategories?tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -524,7 +535,7 @@ function complaintCategory(){
 		success : function(data){
 			loadDD.load({
 				element:$('#complaintTypeCategory'),
-				data:data.ComplaintTypeCategory,
+				data:data.complaintTypeCategories,
 				keyValue:'id',
 				keyDisplayName:'name'
 			});
@@ -537,16 +548,16 @@ function complaintCategory(){
 
 function topComplaintTypes(){
 	$.ajax({
-		url: "/pgr/services?type=frequency&count=5&tenantId=ap.public",
+		url: "/pgr/services?type=frequency&count=5&tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
 		processData : false,
 		contentType: "application/json",
 		success : function(data){
-			if(data.ComplaintType.length > 0){
+			if(data.complaintTypes.length > 0){
 				$('#topcomplaint').html('');
-				$.each(data.ComplaintType,function(i,obj){
+				$.each(data.complaintTypes,function(i,obj){
 					$('#topcomplaint').append('<a href="javascript:void(0)" data-type="'+obj.serviceCode+'" data-category="'+obj.groupId+'" class="btn btn-secondary btn-xs tag-element freq-ct" data-toggle="popover" title="Click to select the Grievance category and type">'+obj.serviceName+'</a>')
 				});
 			}else{

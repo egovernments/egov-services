@@ -58,16 +58,15 @@
 								<form id="searchComplaintForm" class="form-horizontal form-groups-bordered">
 									<div class="form-group">
 										<div class="col-md-3 col-sm-4 add-margin">
-											<input type="text" name="service_request_id" class="form-control patternvalidation" data-pattern="alphanumericwithhyphen" data-translate="pgr.lbl.srn" id="ct-ctno"/>
+											<input type="text" name="serviceRequestId" class="form-control patternvalidation" data-pattern="alphanumericwithhyphen" data-translate="pgr.lbl.srn" id="ct-ctno"/>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<select name="location_id" id="ct-location" class="form-control"></select>
+											<select name="locationId" id="ct-location" class="form-control"></select>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
 											<select id="when_date" class="form-control"
 												data-first-option="false">
 												<option value="">Select Date Range</option>
-												<option value="all">All</option>
 												<option value="lastsevendays">In Last 7 days</option>
 												<option value="lastthirtydays">In Last 30 days</option>
 												<option value="lastninetydays">In Last 90 days</option>
@@ -75,11 +74,11 @@
 											</select>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<input type="text" name="start_date" class="form-control datepicker checkdate" id="start_date" 
+											<input type="text" name="startDate" class="form-control datepicker checkdate" id="start_date" 
 											data-inputmask="'mask': 'd-m-y'" data-translate="core.lbl.date.fromdate" />
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<input type="text" name="end_date" class="form-control datepicker checkdate" id="end_date" 
+											<input type="text" name="endDate" class="form-control datepicker checkdate" id="end_date" 
 											data-inputmask="'mask': 'd-m-y'" data-translate="core.lbl.date.todate" />
 										</div>
 									</div>
@@ -94,13 +93,13 @@
 											<input type="text" name="name" class="form-control patternvalidation" data-pattern="alphabetwithspace" data-translate="core.lbl.fullname" id="ct-name" />
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<input type="text" name="mobile_number" class="form-control patternvalidation mobilevalidate" data-pattern="number" id="ct-mobno" data-translate="core.lbl.mobilenumber" maxlength="10"/>
+											<input type="text" name="mobileNumber" class="form-control patternvalidation mobilevalidate" data-pattern="number" id="ct-mobno" data-translate="core.lbl.mobilenumber" maxlength="10"/>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<input type="text" name="email_id" class="form-control emailvalidate" data-translate="core.lbl.email.compulsory" id="ct-email"/>
+											<input type="text" name="emailId" class="form-control emailvalidate" data-translate="core.lbl.email.compulsory" id="ct-email"/>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<select class="form-control" id="complaintType" name="service_code">
+											<select class="form-control" id="complaintType" name="serviceCode">
 											</select>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">

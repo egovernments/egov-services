@@ -142,7 +142,7 @@ $(document).ready(function()
 			"destroy":true,
 	        "aaSorting": [],
 			"ajax": {
-				"url": "/workflow/history?tenantId=ap.public&workflowId="+stateId,
+				"url": "/workflow/history?tenantId=default&workflowId="+stateId,
 				"dataSrc":"",
 			},
 			"columns": [
@@ -181,7 +181,7 @@ $(document).ready(function()
 	});
 
 	$("#official_inbox").on('click','tbody tr',function(event) {
-		var srn = tableContainer.row( this ).data()['service_request_id'];
+		var srn = tableContainer.row( this ).data()['serviceRequestId'];
 		openPopUp('view-complaint.html?srn='+srn,srn)
 	});
 	
@@ -432,24 +432,24 @@ function worklist(){
 		"autoWidth": false,
         "aaSorting": [],
 		"ajax": {
-			url : "/pgr/seva/_search?tenantId=ap.public&assignment_id="+positionId,
+			url : "/pgr/seva/_search?tenantId=default&assignment_id="+positionId,
 			type: 'POST',
 			contentType: "application/json",
             processData : true,
             data: function ( requestInfo ) {
 		      return JSON.stringify( requestInfo );
 		    },
-			dataSrc : "service_requests"
+			dataSrc : "serviceRequests"
 		},
 		"columns": [
-		{ "title": dt_date, "data": "requested_datetime","width": "16%" },
-		{ "title":dt_sender, "data": "first_name","width": "15%" },
+		{ "title": dt_date, "data": "requestedDatetime","width": "16%" },
+		{ "title":dt_sender, "data": "firstName","width": "15%" },
 		{ "title":dt_now, "width": "20%", "render": function ( data, type, full, meta ) {
 			return 'Grievance';
 	    } },
 		{ "title":dt_status, "data": "values.complaintStatus","width": "24%"},
 		{ "title":dt_comments, "width": "20%", "render": function ( data, type, full, meta ) {
-			var text = 'Complaint Number '+(full.service_request_id)+' for '+(full.service_name)+' filed on '+(full.requested_datetime)+'. Date of Resolution is '+(full.expected_datetime);
+			var text = 'Complaint Number '+(full.serviceRequestId)+' for '+(full.serviceName)+' filed on '+(full.requestedDatetime)+'. Date of Resolution is '+(full.expectedDatetime);
 			return text;
 	    } },
 		{ "data" : null, "target":-1,"defaultContent": '<i class="fa fa-history inbox-history history-size" class="tooltip-secondary" data-toggle="tooltip" title="History"></i>'},
@@ -619,7 +619,7 @@ function inboxloadmethod(){
 
 function getPosition(){
 	$.ajax({
-		url : '/eis/_assignmentByEmployeeId?employeeId='+localStorage.getItem('id'),
+		url : '/eis/_assignmentByEmployeeId?tenantId=default&employeeId='+localStorage.getItem('id'),
 		type : 'POST',
 		processData : false,
 		contentType: "application/json",

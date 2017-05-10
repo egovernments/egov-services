@@ -52,12 +52,12 @@ $(document).ready(function(){
 			var data = getFormData($form);
 			data['active'] = true;
 			data['type'] = localStorage.getItem("type");
-			data['tenantId'] = 'ap.public';
+			data['tenantId'] = 'default';
 			data['id'] = localStorage.getItem("id");
 			reqObj['User'] = data;
  			//ajax call
  			$.ajax({
- 				url: '/user/user/_patch',
+ 				url: '/user/profile/_update',
  				type : 'POST',
 				processData : false,
 				data : JSON.stringify(reqObj),
@@ -94,6 +94,7 @@ function doCheckUser(){
 		var requestInfo = {};
 		requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		requestInfo['id'] = userArray;
+		requestInfo['tenantId'] = 'default';
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',

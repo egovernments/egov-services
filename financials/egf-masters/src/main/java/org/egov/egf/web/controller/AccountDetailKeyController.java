@@ -10,6 +10,7 @@ import org.egov.egf.persistence.entity.AccountDetailKey;
 import org.egov.egf.persistence.queue.contract.AccountDetailKeyContract;
 import org.egov.egf.persistence.queue.contract.AccountDetailKeyContractRequest;
 import org.egov.egf.persistence.queue.contract.AccountDetailKeyContractResponse;
+import org.egov.egf.persistence.queue.contract.AccountDetailTypeContract;
 import org.egov.egf.persistence.queue.contract.Pagination;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
@@ -50,11 +51,22 @@ public class AccountDetailKeyController {
 		for(AccountDetailKeyContract accountDetailKeyContract:accountDetailKeyContractRequest.getAccountDetailKeys())
 		{
 		
-		AccountDetailKey	accountDetailKeyEntity=	modelMapper.map(accountDetailKeyContract, AccountDetailKey.class);
+		AccountDetailKey	accountDetailKeyEntity=	new AccountDetailKey();
+		accountDetailKeyEntity.setKey(accountDetailKeyContract.getKey());
+		
+		accountDetailKeyEntity.setAccountDetailType(accountDetailKeyContract.getAccountDetailType().getId());
+		
+		accountDetailKeyEntity.setTenantId(accountDetailKeyContract.getTenantId());
 		accountDetailKeyEntity = accountDetailKeyService.create(accountDetailKeyEntity);
-		AccountDetailKeyContract resp=modelMapper.map(accountDetailKeyEntity, AccountDetailKeyContract.class);
+		
+		accountDetailKeyContract=new AccountDetailKeyContract();
+		accountDetailKeyContract.setKey(accountDetailKeyEntity.getKey());
+		accountDetailKeyContract.setKey(accountDetailKeyEntity.getKey());
+		AccountDetailTypeContract adtc=new AccountDetailTypeContract();
+		adtc.setId(accountDetailKeyEntity.getAccountDetailType());
+		accountDetailKeyContract.setAccountDetailType(adtc);
 		accountDetailKeyContract.setId(accountDetailKeyEntity.getId());
-		accountDetailKeyContractResponse.getAccountDetailKeys().add(resp);
+		accountDetailKeyContractResponse.getAccountDetailKeys().add(accountDetailKeyContract);
 		}
 
 		accountDetailKeyContractResponse.setResponseInfo(getResponseInfo(accountDetailKeyContractRequest.getRequestInfo()));

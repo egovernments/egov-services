@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository 
 public interface AccountDetailKeyRepository extends JpaRepository<AccountDetailKey,java.lang.Long>,JpaSpecificationExecutor<AccountDetailKey>  {
 
-AccountDetailKey findByName(String name);
 
 }

@@ -42,6 +42,7 @@ package org.egov.egf.persistence.entity;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -65,35 +66,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"accountDetailType"},callSuper=false)
-
 @Table(name = "egf_accountdetailkey")
 @SequenceGenerator(name = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, sequenceName = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, allocationSize = 1)
- 
- 
+
 public class AccountDetailKey extends AbstractAuditable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String SEQ_ACCOUNTDETAILKEY = "seq_egf_accountdetailtype";
+	public static final String SEQ_ACCOUNTDETAILKEY = "seq_egf_accountdetailkey";
 
-    @Id
-    @GeneratedValue(generator = SEQ_ACCOUNTDETAILKEY, strategy = GenerationType.SEQUENCE)
-   
+	@Id
+	@GeneratedValue(generator = SEQ_ACCOUNTDETAILKEY, strategy = GenerationType.SEQUENCE)
 	private Long id;
-    
-	private Integer groupId;
-	
-	@Length(max=128)
-	private String name;
-	
-	private Integer key;
 	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "detailTypeId")
-	private AccountDetailType accountDetailType;
-	 @Override
-	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+	private Long key;
+
+	@NotNull
+	@Column(name="detailtypeid")
+	private Long accountDetailType;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 }

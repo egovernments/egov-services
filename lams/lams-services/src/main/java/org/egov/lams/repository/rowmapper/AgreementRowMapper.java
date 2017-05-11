@@ -32,13 +32,13 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		while(rs.next()){
 			
 			Long agreementId = rs.getLong("agreementid");
-			System.err.println(agreementId);
+			System.err.println("agreementid"+agreementId);
 			Agreement agreement = AgreementMap.get(agreementId);
 			
 			if(agreement == null){
 				
 				agreement = new Agreement();
-				agreement.setId(rs.getLong("id"));
+				agreement.setId(rs.getLong("agreementid"));
 				agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 				agreement.setStateId(rs.getString("stateid"));
 				agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));

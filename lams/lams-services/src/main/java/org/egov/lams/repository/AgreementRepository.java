@@ -164,7 +164,7 @@ public class AgreementRepository {
 
 	public List<Agreement> findByAgreementAndAsset(AgreementCriteria fetchAgreementsModel) {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAsset");
-		List<Object> preparedStatementValues = new ArrayList<Object>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 
 		String queryStr = AgreementQueryBuilder.agreementSearchQuery(fetchAgreementsModel, preparedStatementValues);

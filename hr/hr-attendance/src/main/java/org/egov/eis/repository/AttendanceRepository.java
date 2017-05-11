@@ -89,9 +89,10 @@ public class AttendanceRepository {
     }
 
     @SuppressWarnings("static-access")
-    public AttendanceType findAttendanceTypeByCode(final String code) {
+    public AttendanceType findAttendanceTypeByCode(final String code, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(code.toUpperCase());
+        preparedStatementValues.add(tenantId);
         final String query = AttendanceQueryBuilder.selectTypeByCodeQuery();
         final List<AttendanceType> attendanceTypes = jdbcTemplate.query(query, preparedStatementValues.toArray(),
                 attendanceTypeRowMapper);
@@ -133,9 +134,9 @@ public class AttendanceRepository {
                 @Override
                 public void setValues(final PreparedStatement ps, final int i) throws SQLException {
                     final Attendance attendance = ((List<Attendance>) attendanceRequest.getNewAttendances()).get(i);
-                    AttendanceType type = findAttendanceTypeByCode(attendance.getType().getCode());
+                    AttendanceType type = findAttendanceTypeByCode(attendance.getType().getCode(), attendance.getTenantId());
                     if (type == null)
-                        type = findAttendanceTypeByCode("A");
+                        type = findAttendanceTypeByCode("A", attendance.getTenantId());
                     ps.setDate(1, new Date(attendance.getAttendanceDate().getTime()));
                     ps.setLong(2, attendance.getEmployee());
                     ps.setInt(3, attendance.getMonth());
@@ -168,9 +169,9 @@ public class AttendanceRepository {
                 @Override
                 public void setValues(final PreparedStatement ps, final int i) throws SQLException {
                     final Attendance attendance = ((List<Attendance>) attendanceRequest.getSavedAttendances()).get(i);
-                    AttendanceType type = findAttendanceTypeByCode(attendance.getType().getCode());
+                    AttendanceType type = findAttendanceTypeByCode(attendance.getType().getCode(), attendance.getTenantId());
                     if (type == null)
-                        type = findAttendanceTypeByCode("A");
+                        type = findAttendanceTypeByCode("A", attendance.getTenantId());
                     ps.setDate(1, new Date(attendance.getAttendanceDate().getTime()));
                     ps.setLong(2, attendance.getEmployee());
                     ps.setInt(3, attendance.getMonth());
@@ -194,9 +195,10 @@ public class AttendanceRepository {
         }
     }
 
-    public List<AttendanceType> findAllAttendanceTypes() {
+    public List<AttendanceType> findAllAttendanceTypes(final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String query = AttendanceQueryBuilder.selectAttendanceTypeQuery();
+        preparedStatementValues.add(tenantId);
         return jdbcTemplate.query(query, preparedStatementValues.toArray(),
                 attendanceTypeRowMapper);
     }

@@ -104,11 +104,11 @@ public class AttendanceService {
         return attendanceRepository.saveAttendance(attendanceRequest);
     }
 
-    public AttendanceType getAttendanceTypeByCode(final String code) {
-        return attendanceRepository.findAttendanceTypeByCode(code);
+    public AttendanceType getAttendanceTypeByCode(final String code, final String tenantId) {
+        return attendanceRepository.findAttendanceTypeByCode(code, tenantId);
     }
 
-    public List<AttendanceType> getAllAttendanceTypes() {
-        return attendanceRepository.findAllAttendanceTypes();
+    public List<AttendanceType> getAllAttendanceTypes(final String tenantId) {
+        return attendanceRepository.findAllAttendanceTypes(tenantId);
     }
 }

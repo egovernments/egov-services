@@ -30,9 +30,9 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		
 		
 		while(rs.next()){
-			
+
 			Long agreementId = rs.getLong("agreementid");
-			System.err.println("agreementid"+agreementId);
+			System.err.println("agreementid in row mapper"+rs.getLong("agreementid"));
 			Agreement agreement = AgreementMap.get(agreementId);
 			
 			if(agreement == null){

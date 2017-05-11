@@ -85,46 +85,57 @@ $(document).ready(function()
         
 	});*/
 
-	/*$('#password-form').on('submit', function(e){
-	       e.preventDefault();
-	       $.ajax({
-	                url: 'home/password/update',
-	                type: 'GET',
-	                data: {'currentPwd': $("#old-pass").val(), 'newPwd':$("#new-pass").val(),'retypeNewPwd':$("#retype-pass").val()},
-	                success: function(data) {
-	                	var msg = "";
-	                	if (data == "SUCCESS") {
-	                		$("#old-pass").val("");
-	                		$("#new-pass").val("");
-	                		$("#retype-pass").val("");
-	                		$('.change-password').modal('hide');
-	                		bootbox.alert("Your password has been updated.");
-	                		$('.pass-cancel').removeAttr('disabled');
-	                		$('#pass-alert').hide();
-	                	} else if (data == "NEWPWD_UNMATCH") {
-	                		msg = "New password you have entered does not match with retyped password.";
-	                		$("#new-pass").val("");
-	                		$("#retype-pass").val("");
-	                		$('.change-password').modal('show');
-	                	} else if (data == "CURRPWD_UNMATCH") {
-	                		msg = "Old password you have entered is incorrect.";
-	                		$("#old-pass").val("");
-	                		$('.change-password').modal('show');
-	                	} else  if (data == "NEWPWD_INVALID") {
-	                		msg = $('.password-error-msg').html();
-	                		$("#new-pass").val("");
-	                		$("#retype-pass").val("");
-	                		$('.change-password').modal('show');
-	                	}
-	                	$('.password-error').html(msg).show();
-	                	
-	                },
-	                error: function() {
-	                	bootbox.alert("Internal server error occurred, please try after sometime.");
-	                }
-	        });
-	        
-	});*/
+	var password = false;
+	
+	$('.check-password').blur(function(){
+		if(($('#new-pass').val()!="") && ($('#retype-pass').val()!=""))
+		{
+			if ($('#new-pass').val() === $('#retype-pass').val()) {
+					password = true;
+					$('.password-error').hide();
+				}else{
+					password = false;
+					$('.password-error').show();
+					$('#retype-pass').addClass('error');
+			}
+		}
+	});	
+
+	$('#resetpassword').click(function(){
+		
+		$.validator.addMethod("passwordvalidate",function(value){
+		    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!@$^*-`(){}])(?!.*[&<>#%"'/\\ ]).{8,32}$/.test(value);
+		},translate('core.error.password'));
+
+		jQuery.validator.addClassRules({
+			passwordvalidate : { passwordvalidate : true }    
+		});
+
+		var reqObj = {};
+		reqObj['RequestInfo'] = RequestInfo.requestInfo;
+		reqObj['existingPassword'] = $('#old-pass').val();
+		reqObj['newPassword'] = $('#new-pass').val();
+		reqObj['tenantId'] = 'default';
+
+		if($('#password-form').valid() && password){
+			$.ajax({
+				url: '/user/password/_update',
+				type : 'POST',
+				processData : false,
+				contentType: "application/json",
+				data : JSON.stringify( reqObj ),
+				success : function(response){
+					$('.change-password').modal('hide');
+					bootbox.alert('Password successfully updated');
+				},
+				error: function(){
+					bootbox.alert('Password update failed');
+				}
+			})
+		}else{
+
+		}
+	});
 	
 	getPosition();
 	worklist();
@@ -192,19 +203,7 @@ $(document).ready(function()
 			windowObjectReference.focus();
 		}
 	});
-	
-	$('.check-password').blur(function(){
-		if(($('#new-pass').val()!="") && ($('#retype-pass').val()!=""))
-		{
-			if ($('#new-pass').val() === $('#retype-pass').val()) {
-				
-				}else{
-				$('.password-error').show();
-				$('#retype-pass').addClass('error');
-			}
-		}
-	});	
-	
+
 	$('#natureofwork').on('click', 'ul li a', function() {
 		$('#natureofwork ul li').removeClass('active');
 		$(this).parent().addClass('active');
@@ -423,7 +422,9 @@ function clearnow(){
 }
 //common ajax functions for worklist, drafts and notifications 
 function worklist(){
-	//console.log(positionId)
+	if(!positionId)
+		return;
+
 	tableContainer1 = $("#official_inbox"); 
 	tableContainer = tableContainer1.DataTable({
 		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row buttons-margin'<'col-md-5 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-4 col-xs-6 text-right'p>>",
@@ -626,8 +627,13 @@ function getPosition(){
 		data : JSON.stringify( requestInfo ),
 		async : false,
 		success : function(response){
-			positionId = response.Assignment[0].position;
-			$('.profile-text').text(response.Assignment[0].employee);
+			try{
+				positionId = response.Assignment[0].position;
+				$('.profile-text').text(response.Assignment[0].employee);
+			}catch(e){
+
+			}
+			
 		},
 		error: function(){
 			bootbox.alert('Error getting positionId!');

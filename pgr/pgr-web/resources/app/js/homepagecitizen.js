@@ -98,18 +98,6 @@ $(document).ready(function()
 		}
 	});
 	
-	$('.check-password').blur(function(){
-		if(($('#new-pass').val()!="") && ($('#retype-pass').val()!=""))
-		{
-			if ($('#new-pass').val() === $('#retype-pass').val()) {
-				
-				}else{
-				$('.password-error').show();
-				$('#retype-pass').addClass('error');
-			}
-		}
-	});
-	
 	$(".ico-menu").bind('mouseover', function () {
 		$(this).addClass('open');
 	});
@@ -128,6 +116,58 @@ $(document).ready(function()
 		var srn = $(this).data('srn');
 		openPopUp('view-complaint.html?srn='+srn,srn);
 		e.stopPropagation();
+	});
+
+	var password = false;
+	
+	$('.check-password').blur(function(){
+		if(($('#new-pass').val()!="") && ($('#retype-pass').val()!=""))
+		{
+			if ($('#new-pass').val() === $('#retype-pass').val()) {
+					password = true;
+					$('.password-error').hide();
+				}else{
+					password = false;
+					$('.password-error').show();
+					$('#retype-pass').addClass('error');
+			}
+		}
+	});	
+
+	$('#resetpassword').click(function(){
+		
+		$.validator.addMethod("passwordvalidate",function(value){
+		    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!@$^*-`(){}])(?!.*[&<>#%"'/\\ ]).{8,32}$/.test(value);
+		},translate('core.error.password'));
+
+		jQuery.validator.addClassRules({
+			passwordvalidate : { passwordvalidate : true }    
+		});
+
+		var reqObj = {};
+		reqObj['RequestInfo'] = RequestInfo.requestInfo;
+		reqObj['existingPassword'] = $('#old-pass').val();
+		reqObj['newPassword'] = $('#new-pass').val();
+		reqObj['tenantId'] = 'default';
+
+		if($('#password-form').valid() && password){
+			$.ajax({
+				url: '/user/password/_update',
+				type : 'POST',
+				processData : false,
+				contentType: "application/json",
+				data : JSON.stringify( reqObj ),
+				success : function(response){
+					$('.change-password').modal('hide');
+					bootbox.alert('Password successfully updated');
+				},
+				error: function(){
+					bootbox.alert('Password update failed');
+				}
+			});
+		}else{
+
+		}
 	});
 		
 });

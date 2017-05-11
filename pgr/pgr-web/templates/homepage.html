@@ -127,12 +127,13 @@
 										<span class="title">Edit Profile</span>
 									</a>
 								</li>
-								<!-- <li>
+								<li>
 									<a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});">
 										<i class="fa fa-key"></i>
 										<span class="title">Change Password</span>
 									</a>
 								</li>
+								<!--
 								<li>
 									<a href="javascript:void(0);" onclick="jQuery('.add-feedback').modal('show', {backdrop: 'static'});">
 										<i class="fa fa-comment"></i>
@@ -263,6 +264,52 @@
 						<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.cancel"></button>
 					</div>
 					
+				</div>
+			</div>
+		</div>
+		<div class="modal fade change-password" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close pass-cancel" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title">Change Password</h4>
+					</div>
+					<div class="modal-body">
+						<form id="password-form" class="form-horizontal form-groups-bordered">
+							<div class="form-group">
+								<div class="col-md-4">
+									<label class="control-label required">Old Password</label>
+								</div>
+								<div class="col-md-8 add-margin">
+									<input style="display:none">
+									<input type="password" name="existingPassword" class="form-control" id="old-pass" required="required">
+								</div>
+							</div>
+							<div class="form-group" id="wrap">
+								<div class="col-md-4">
+									<label class="control-label required" data-translate="core.lbl.new.password">New Password</label>
+								</div>
+								<div class="col-md-8 add-margin">
+									<input type="password" class="form-control check-password passwordvalidate" name="newPassword" data-toggle="popover" data-container="#wrap" data-content="core.error.password" id="new-pass" maxlength="32" required="required">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-4">
+									<label class="control-label required">Re-type Password</label>
+								</div>
+								<div class="col-md-8 add-margin">
+									<input type="password" class="form-control check-password" id="retype-pass" maxlength="32" required="required">
+									<div class="password-error error-msg display-hide" data-translate="core.error.password.confirmpassword.same"></div>
+								</div>
+							</div>
+							<div class="form-group text-right">
+								<div class="col-md-12 add-margin">
+									<button type="button" class="btn btn-primary" id="resetpassword">Change Password</button>
+									<button type="button" class="btn btn-default pass-cancel" data-dismiss="modal" data-translate="core.lbl.cancel"></button>
+								</div>
+							</div>
+							</form>
+					</div>
 				</div>
 			</div>
 		</div>

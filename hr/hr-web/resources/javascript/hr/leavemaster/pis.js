@@ -94,7 +94,7 @@ class PersonalInform extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+
     if(getUrlVars()["type"] == "view") {
       this.setState({
         readonly: true
@@ -469,12 +469,6 @@ class PersonalInform extends React.Component {
       }
     };
 
-    const showCloseButton = function() {
-        if(employees.length) {
-            return (<button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>);
-        }
-    }
-
     return (
       <div>
           <form onSubmit={(e)=>{search(e)}}>
@@ -587,7 +581,7 @@ class PersonalInform extends React.Component {
           {showTable()}
           <div className="text-center">
           {showActionButton()} &nbsp;&nbsp;
-          {showCloseButton()}
+          <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
           </div>
       </div>
     );

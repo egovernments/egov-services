@@ -31,14 +31,14 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		
 		while(rs.next()){
 
-			Long agreementId = rs.getLong("agreementid");
-			System.err.println("agreementid in row mapper"+rs.getLong("agreementid"));
+			Long agreementId = rs.getLong("lamsagreementid");
+			System.err.println("agreementid in row mapper"+rs.getLong("lamsagreementid"));
 			Agreement agreement = AgreementMap.get(agreementId);
 			
 			if(agreement == null){
 				
 				agreement = new Agreement();
-				agreement.setId(rs.getLong("agreementid"));
+				agreement.setId(rs.getLong("lamsagreementid"));
 				agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 				agreement.setStateId(rs.getString("stateid"));
 				agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));

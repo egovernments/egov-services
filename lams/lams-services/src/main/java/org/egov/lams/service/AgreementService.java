@@ -241,7 +241,7 @@ public class AgreementService {
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
 				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
 				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
-				&& agreementCriteria.getAllottee() == null && agreementCriteria.getTenantId() == null;
+				&& agreementCriteria.getAllottee() == null;
 
 		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
 				&& agreementCriteria.getMobileNumber() == null;

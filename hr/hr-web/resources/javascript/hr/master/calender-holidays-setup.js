@@ -53,6 +53,7 @@ constructor(props){
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
+        $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Holiday");
       var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $('#applicableOn').datepicker({

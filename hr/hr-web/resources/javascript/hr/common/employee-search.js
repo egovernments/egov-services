@@ -134,6 +134,7 @@ componentWillUpdate() {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
     $('#asOnDate').datepicker({

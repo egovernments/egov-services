@@ -94,7 +94,8 @@ public class AttendanceQueryBuilder {
 
         if (attendanceGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
-            selectQuery.append(" tenantId = ?");
+            selectQuery.append(" a.tenantId = ? and t.tenantId = ?");
+            preparedStatementValues.add(attendanceGetRequest.getTenantId());
             preparedStatementValues.add(attendanceGetRequest.getTenantId());
         }
 
@@ -206,11 +207,11 @@ public class AttendanceQueryBuilder {
     }
 
     public static String selectTypeByCodeQuery() {
-        return "select * from egeis_attendance_type where upper(code) = ?";
+        return "select * from egeis_attendance_type where upper(code) = ? and tenantId = ?";
     }
 
     public static String selectAttendanceTypeQuery() {
-        return "select * from egeis_attendance_type";
+        return "select * from egeis_attendance_type where tenantId = ?";
     }
 
     public static String selectAttendanceByEmployeeAndDateQuery() {

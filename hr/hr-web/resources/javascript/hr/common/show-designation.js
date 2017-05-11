@@ -15,7 +15,7 @@ class ShowDesignation extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Designation");
     try {
         var _designation = commonApiPost("hr-masters","designations","_search",{tenantId,pageSize:500}).responseJSON["Designation"] || [];
     } catch(e) {

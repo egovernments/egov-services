@@ -18,6 +18,9 @@ class ShowCategory extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+     
+     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Category");
+
     try {
         var _categories = commonApiPost("egov-common-masters","categories","_search",{tenantId,pageSize:500}).responseJSON["Category"] || [];
     } catch(e) {

@@ -19,7 +19,7 @@ class ShowPosition extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Position");
     try {
         var _position = commonApiPost("hr-masters","positions","_search",{tenantId,pageSize:500}).responseJSON["Position"] || [];
     } catch(e) {

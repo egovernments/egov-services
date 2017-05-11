@@ -37,7 +37,8 @@ class SearchAssetCategory extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
-
+    $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
+    
     var asset_category_type, assetCategories, assignments_unitOfMeasurement;
     try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
         console.log(e);

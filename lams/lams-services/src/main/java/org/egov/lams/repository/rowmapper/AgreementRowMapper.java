@@ -96,9 +96,13 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 			}
 			
 			List<String> demandIdList = agreement.getDemands();
-			if(demandIdList == null)
-				demandIdList = new ArrayList<>();
-			demandIdList.add(rs.getString("demandid"));
+			String demandId = rs.getString("demandid");
+			if(demandId!=null){
+				if(demandIdList == null)
+					demandIdList = new ArrayList<>();
+				demandIdList.add(demandId);
+			}
+			
 			agreement.setDemands(demandIdList);
 		}
 		logger.info("converting map to list object ::: "+AgreementMap.values());

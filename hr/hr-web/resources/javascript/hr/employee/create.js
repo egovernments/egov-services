@@ -3004,6 +3004,9 @@ function displayFiles(employee) {
 }
 
 function appendTr(tBodyName, count, name, fileId) {
+    if($("#fileTable").css('display') == 'none')
+      $("#fileTable").show();
+
     $(tBodyName).append(`<tr data-key=${count}>
                           <td>
                             ${count}
@@ -3047,8 +3050,6 @@ function checkNRemoveFile() {
 
 function deleteFile(e, name, fileId, count) {
   e.stopPropagation();
-  if($("#fileTable").css('display') == 'none')
-    $("#fileTable").show();
 
   if($("[data-key='"+ count +"']").css("backgroundColor") == "rgb(211, 211, 211)") {
     var ind = filesToBeDeleted[name.toLowerCase()].indexOf(fileId);

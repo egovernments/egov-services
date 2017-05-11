@@ -1,0 +1,12 @@
+apps:
+    - path: ../core/egov-filestore
+      name: egov-filestore
+      buildCmd: ./verify.sh
+      artifact: ../core/egov-filestore/target/egov-filestore-0.0.1-SNAPSHOT.jar
+      port: 8081
+
+    - path: ../core/egov-common-masters
+      name: egov-common-masters
+      buildCmd: mvn clean verify package
+      artifact: ../core/egov-common-masters/target/egov-common-masters-0.0.1-SNAPSHOT.jar
+      port: 8082

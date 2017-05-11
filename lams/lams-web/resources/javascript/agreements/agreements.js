@@ -1076,7 +1076,7 @@ function uploadFiles(agreement, cb) {
                     breakout = 1;
                 } else {
                     counter--;
-                    docs.push(res.files[0].fileStoreId);
+                    docs.push({fileStore: res.files[0].fileStoreId});
                     if (counter == 0 && breakout == 0) {
                         agreement.documents = docs;
                         cb(null, agreement);

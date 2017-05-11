@@ -1055,6 +1055,22 @@ $("#createAgreementForm").validate({
                         window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
                     }
 
+                } else if(response["responseJSON"] && response["responseJSON"].Error) {
+                    var err = response["responseJSON"].Error.message || "";
+                    if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
+                      for(var key in response["responseJSON"].Error.fields) {
+                        var _key = "";
+                        if(key.indexOf(".") > -1) {
+                          _key = key.split(".");
+                          _key.shift();
+                          _key = _key.join(".");
+                        }
+                        err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
+                      }
+                      showError(err);
+                    } else {
+                      showError(response["statusText"]);
+                    }
                 } else {
                     showError(err);
                 }

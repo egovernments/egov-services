@@ -384,10 +384,16 @@ definitions:
           description: New password.
           minLength: 1
           maxLength: 64
+        tenantId:
+          type: string
+          description: Tenant id
+          minLength: 1
+          maxLength: 256
       required:
         - RequestInfo
         - existingPassword
         - newPassword
+        - tenantId
 
 
   User:

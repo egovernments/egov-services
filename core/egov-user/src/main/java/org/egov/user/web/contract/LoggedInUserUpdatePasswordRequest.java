@@ -14,12 +14,14 @@ public class LoggedInUserUpdatePasswordRequest {
 	private RequestInfo requestInfo;
 	private String existingPassword;
 	private String newPassword;
+	private String tenantId;
 
 	public org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest toDomain() {
 		return org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword(existingPassword)
 				.newPassword(newPassword)
 				.userId(getUserId())
+				.tenantId(tenantId)
 				.build();
 	}
 

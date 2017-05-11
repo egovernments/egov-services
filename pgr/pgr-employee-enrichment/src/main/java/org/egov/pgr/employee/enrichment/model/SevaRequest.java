@@ -183,7 +183,7 @@ public class SevaRequest {
         HashMap<String, Object> serviceRequest = getServiceRequest();
         final List<HashMap<String, String>> attributeValues =
             (List<HashMap<String, String>>) serviceRequest.get(ATTRIBUTE_VALUES);
-        return attributeValues == null ? Collections.emptyList() : attributeValues;
+        return attributeValues == null ? new ArrayList<>() : attributeValues;
     }
 
     private boolean isAttributeValuesPopulated() {

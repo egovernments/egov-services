@@ -49,6 +49,7 @@ public class PasswordControllerTest {
 				.existingPassword("oldPassword")
 				.newPassword("newPassword")
 				.userId(123L)
+				.tenantId("foo")
 				.build();
 
 		verify(userService).updatePasswordForLoggedInUser(expectedRequest);

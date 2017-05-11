@@ -17,8 +17,6 @@ import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
 
 @Entity
 @Table(name = "eg_user")
-//@Inheritance(strategy = InheritanceType.JOINED)
-//@Cacheable
 @Setter
 @Getter
 @Builder

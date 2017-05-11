@@ -75,9 +75,8 @@ class AssetSearch extends React.Component {
     if (type === "create") {
       window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
     }
-    else {
+    else if(type === "dataEntry") {
       window.open("app/dataentry/data-entry.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
-
     }
 
     // window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")

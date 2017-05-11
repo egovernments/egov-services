@@ -25,8 +25,8 @@ public class AccountDetailKeySpecification implements Specification<AccountDetai
     @Override
     public Predicate toPredicate(Root<AccountDetailKey> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Path<Long> id = root.get(AccountDetailKey_.id);
-        Path<Integer> key = root.get(AccountDetailKey_.key);
-        Path<AccountDetailType> accountDetailType = root.get(AccountDetailKey_.accountDetailType);
+        Path<Long> key = root.get(AccountDetailKey_.key);
+        Path<Long> accountDetailType = root.get(AccountDetailKey_.accountDetailType);
         Path<String> tenantId = root.get(AccountDetailKey_.tenantId);
         final List<Predicate> predicates = new ArrayList<>();
         if (criteria != null) {

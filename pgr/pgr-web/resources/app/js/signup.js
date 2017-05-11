@@ -144,7 +144,7 @@ $(document).ready(function(){
 					data['active'] = true;
 					data['type'] = 'CITIZEN';
 					data['otpReference'] =  response.otp.UUID;
-					data['tenantId'] = 'ap.public'
+					data['tenantId'] = 'default';
 					reqObj['User'] = data;
 
 					$.ajax({

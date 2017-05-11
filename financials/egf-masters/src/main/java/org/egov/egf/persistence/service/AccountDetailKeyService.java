@@ -45,18 +45,18 @@ public class AccountDetailKeyService {
 
     @Transactional
     public AccountDetailKey create(final AccountDetailKey accountDetailKey) {
-        setAccountDetailKey(accountDetailKey);
+       // setAccountDetailKey(accountDetailKey);
         return accountDetailKeyRepository.save(accountDetailKey);
     }
 
     private void setAccountDetailKey(final AccountDetailKey accountDetailKey) {
         if (accountDetailKey.getAccountDetailType() != null) {
             final AccountDetailType accountDetailType = accountDetailTypeService
-                    .findOne(accountDetailKey.getAccountDetailType().getId());
+                    .findOne(accountDetailKey.getAccountDetailType() );
             if (accountDetailType == null)
                 throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
                         " Invalid accountDetailType");
-            accountDetailKey.setAccountDetailType(accountDetailType);
+            accountDetailKey.setAccountDetailType(accountDetailType.getId());
         }
     }
 
@@ -70,9 +70,7 @@ public class AccountDetailKeyService {
         return accountDetailKeyRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
     }
 
-    public AccountDetailKey findByName(final String name) {
-        return accountDetailKeyRepository.findByName(name);
-    }
+   
 
     public AccountDetailKey findOne(final Long id) {
         return accountDetailKeyRepository.findOne(id);

@@ -2,7 +2,7 @@ $('#close').on("click", function() {
     window.close();
 })
 
-
+var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
 var agreement = {};
 var employees = [];
 
@@ -1004,7 +1004,7 @@ $("#createAgreementForm").validate({
         agreement["rentIncrementMethod"] = {};
         agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         agreement["tenantId"] = tenantId;
-        agreement["Source"]=["DATA_ENTRY"];
+        agreement["source"] = "DATA_ENTRY";
         uploadFiles(agreement, function(err, _agreement) {
             if (err) {
                 //Handle error
@@ -1033,13 +1033,29 @@ $("#createAgreementForm").validate({
                     contentType: 'application/json'
                 });
 
-                if (response["status"] === 201) {
+                if (response["status"] === 201) { //Response
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
                         window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
                     }
 
+                } else if(response["responseJSON"] && response["responseJSON"].Error) {
+                    var err = response["responseJSON"].Error.message || "";
+                    if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
+                      for(var key in response["responseJSON"].Error.fields) {
+                        var _key = "";
+                        if(key.indexOf(".") > -1) {
+                          _key = key.split(".");
+                          _key.shift();
+                          _key = _key.join(".");
+                        }
+                        err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
+                      }
+                      showError(err);
+                    } else {
+                      showError(response["statusText"]);
+                    }
                 } else {
                     showError(err);
                 }
@@ -1051,7 +1067,7 @@ $("#createAgreementForm").validate({
 function uploadFiles(agreement, cb) {
     if (agreement.documents && agreement.documents.constructor == FileList) {
         let counter = agreement.documents.length,
-            breakout = 0;
+            breakout = 0, docs = [];
         for (let i = 0; len = agreement.documents.length, i < len; i++) {
             makeAjaxUpload(agreement.documents[i], function(err, res) {
                 if (breakout == 1)
@@ -1061,9 +1077,11 @@ function uploadFiles(agreement, cb) {
                     breakout = 1;
                 } else {
                     counter--;
-                    agreement.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
-                    if (counter == 0 && breakout == 0)
+                    docs.push({fileStore: res.files[0].fileStoreId});
+                    if (counter == 0 && breakout == 0) {
+                        agreement.documents = docs;
                         cb(null, agreement);
+                    }
                 }
             })
         }
@@ -1073,22 +1091,30 @@ function uploadFiles(agreement, cb) {
 }
 
 function makeAjaxUpload(file, cb) {
-    let formData = new FormData();
-    formData.append("jurisdictionId", "ap.public");
-    formData.append("module", "PGR");
-    formData.append("file", file);
-    $.ajax({
-        url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function(res) {
-            cb(null, res);
-        },
-        error: function(jqXHR, exception) {
-            cb(jqXHR.responseText || jqXHR.statusText);
-        }
-    });
+    if(file.constructor == File) {
+        let formData = new FormData();
+        formData.append("jurisdictionId", tenantId);
+        formData.append("module", "LAMS");
+        formData.append("file", file);
+        $.ajax({
+            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(res) {
+                cb(null, res);
+            },
+            error: function(jqXHR, exception) {
+                cb(jqXHR.responseText || jqXHR.statusText);
+            }
+        });
+    } else {
+        cb(null, {
+              files: [{
+                fileStoreId: file
+              }]
+            });
+    }
 }

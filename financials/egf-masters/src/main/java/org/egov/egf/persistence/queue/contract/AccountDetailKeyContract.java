@@ -63,14 +63,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "groupId", "name", "key", "accountDetailType" })
+@JsonPropertyOrder({ "id",  "key", "accountDetailType" })
 public class AccountDetailKeyContract extends AuditableContract {
 
     private Long id;
 
     @JsonProperty(access = Access.WRITE_ONLY)
     private List<Long> ids = new ArrayList<Long>();
-    private Integer key;
+    private Long key;
    
     @NotNull
     private AccountDetailTypeContract accountDetailType;

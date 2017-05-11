@@ -53,7 +53,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         if (bcrypt.matches(password, user.getPassword())) {
 
-            if (!user.getActive()) {
+            if (user.getActive() == null || !user.getActive()) {
                 throw new OAuth2Exception("Please activate your account");
             }
             /**

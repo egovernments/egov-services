@@ -632,8 +632,7 @@ class CreateAsset extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
-			$('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
-			
+
 			if(type==="update"|| type==="view" ){
 				$(document).ready(function(){
 	     		$('#assetCategory,#code').attr('disabled','disabled');

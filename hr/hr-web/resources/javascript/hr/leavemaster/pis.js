@@ -84,6 +84,7 @@ class PersonalInform extends React.Component {
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChangeSrchRslt = this.handleChangeSrchRslt.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.close = this.close.bind(this);
   }
 
 
@@ -387,7 +388,8 @@ class PersonalInform extends React.Component {
         updateTable,
         addOrUpdate,
         handleChangeSrchRslt,
-        handleBlur
+        handleBlur,
+        close
     } = this;
     let {
         isSearchClicked,
@@ -468,6 +470,12 @@ class PersonalInform extends React.Component {
         return (<button type="button" className="btn btn-submit" onClick={(e) => {addOrUpdate(e)}}>{mode?"Update":"Add"}</button>);
       }
     };
+
+    const showCloseButton = function() {
+        if(employees.length) {
+            return (<button type="button" className="btn btn-close" onClick={(e)=>{close()}}>Close</button>);
+        }
+    }
 
     return (
       <div>
@@ -581,7 +589,7 @@ class PersonalInform extends React.Component {
           {showTable()}
           <div className="text-center">
           {showActionButton()} &nbsp;&nbsp;
-          <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+          {showCloseButton()}
           </div>
       </div>
     );

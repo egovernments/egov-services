@@ -2053,7 +2053,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
       } else {
         employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
         for (var key in employeeSubObject[object]) {
-          if(key == "documents") 
+          if(key == "documents")
             continue;
           else if (key == "position") {
             setTimeout(function(key, object){
@@ -2188,6 +2188,7 @@ $(document).ready(function() {
        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
      }
    }
+   $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
     $.validator.addMethod('phone', function(value) {
         return value ? /^[0-9]{10}$/.test(value) : true;
     }, 'Please enter a valid phone number.');
@@ -2985,7 +2986,7 @@ function displayFiles(employee) {
     if(key == "documents" && employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
       for(var i=0; i<employee[key].length; i++) {
         appendTr(tBody, count, "Documents", employee[key][i]);
-        count++; 
+        count++;
       }
     } else if(employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
       for(var i=0; i<employee[key].length; i++) {

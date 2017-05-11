@@ -95,7 +95,7 @@ class PersonalInform extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Opening Balance");
+    if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Opening Balance");
 
     if(getUrlVars()["type"] == "view") {
       this.setState({

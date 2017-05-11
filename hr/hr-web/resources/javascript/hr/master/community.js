@@ -18,7 +18,7 @@ class Community extends React.Component{
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
-       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Community");
+       if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Community");
 
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];

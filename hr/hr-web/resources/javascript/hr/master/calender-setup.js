@@ -33,7 +33,7 @@ class Calender_setup extends React.Component{
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
-      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calender");
+    if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calender");
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
       var _this = this;

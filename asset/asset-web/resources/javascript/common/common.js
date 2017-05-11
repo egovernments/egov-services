@@ -18,15 +18,19 @@ var requestInfo = {
 var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 
 function titleCase (field) {
-	var newField = field[0].toUpperCase();
-	for(let i=1; i<field.length; i++) {
-      if(field[i-1] != " " && field[i] != " ") {
-      	newField += field.charAt(i).toLowerCase();
-      } else {
-        newField += field[i]
-      }
+    if(field) {
+        var newField = field[0].toUpperCase();
+        for(let i=1; i<field.length; i++) {
+          if(field[i-1] != " " && field[i] != " ") {
+            newField += field.charAt(i).toLowerCase();
+          } else {
+            newField += field[i]
+          }
+        }
+        return newField;
+    } else {
+        return "";
     }
-    return newField;
 }
 
 

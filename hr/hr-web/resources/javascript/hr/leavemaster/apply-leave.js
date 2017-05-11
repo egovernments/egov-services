@@ -38,7 +38,7 @@ class ApplyLeave extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
+    if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;

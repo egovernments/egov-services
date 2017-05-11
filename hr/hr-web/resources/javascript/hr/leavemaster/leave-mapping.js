@@ -159,7 +159,7 @@ constructor(props){
          }
        }
 
-       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
+      if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
 
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];

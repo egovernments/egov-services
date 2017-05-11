@@ -352,7 +352,7 @@ var employee = {
   bankAccount: "",
   group: "",
   placeOfBirth: "",
-  documents: ["123"],
+  documents: [],
   serviceHistory: [],
   probation: [],
   regularisation: [],

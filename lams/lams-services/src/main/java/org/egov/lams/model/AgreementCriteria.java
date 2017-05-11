@@ -3,6 +3,8 @@ package org.egov.lams.model;
 import java.util.Date;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.lams.model.enums.Status;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,6 +22,7 @@ import lombok.ToString;
 @ToString
 public class AgreementCriteria {
 
+	@NotNull
 	 private String tenantId;
 	 private Set<Long> agreementId;
 	 private String agreementNumber;
@@ -43,8 +46,8 @@ public class AgreementCriteria {
 	 private Long doorno;
 	 private String allotteeName;
 	 private Long mobileNumber;
-	 private String offSet;
-	 private String size;
+	 private Long offSet;
+	 private Long size;
 	 private String stateId;
 	 private Set<Long> asset;
 	 private Set<Long> allottee;

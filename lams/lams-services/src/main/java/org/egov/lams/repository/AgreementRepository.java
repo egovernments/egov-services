@@ -72,7 +72,7 @@ public class AgreementRepository {
 
 		List<Allottee> allottees = getAllottees(agreementCriteria);
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdList(allottees));
-		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -101,7 +101,7 @@ public class AgreementRepository {
 		if (assets.size() > 1000) // FIXME
 			throw new RuntimeException("Asset criteria is too big");
 		agreementCriteria.setAsset(assetHelper.getAssetIdList(assets));
-		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -122,7 +122,7 @@ public class AgreementRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(fetchAgreementsModel, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.agreementSearchQuery(fetchAgreementsModel, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -145,7 +145,7 @@ public class AgreementRepository {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -167,7 +167,7 @@ public class AgreementRepository {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(fetchAgreementsModel, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.agreementSearchQuery(fetchAgreementsModel, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {

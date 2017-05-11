@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -127,21 +128,27 @@ public class AgreementController {
 	
 	@PostMapping("demands/_prepare")
 	@ResponseBody
-	public ResponseEntity<?> prepareDemand(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+	public ResponseEntity<?> prepareDemand(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, BindingResult errors,
+			@RequestParam (name="agreementNumber", required=false)  String agreementNumber,
+			@RequestParam (name="tenantId", required=true)  String tenantId) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		
-		LOGGER.info("agreementRequest::" + agreementRequest);
-		if (agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber())) {
-			throw new RuntimeException("no agreement found for this value");
-		}
+		AgreementRequest agreementRequest = new AgreementRequest();
+		agreementRequest.setRequestInfo(requestInfoWrapper.getRequestInfo());
 		
-		Agreement agreement = agreementRequest.getAgreement();
+		AgreementCriteria agreementCriteria = new AgreementCriteria();
+		agreementCriteria.setTenantId(tenantId);
+		agreementCriteria.setAgreementNumber(agreementNumber);
+		
+		Agreement agreement = agreementService.searchAgreement(agreementCriteria).get(0);
+		agreementRequest.setAgreement(agreement);
 		agreement.setLegacyDemands(agreementService.prepareDemands(agreementRequest));
 		
+
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();

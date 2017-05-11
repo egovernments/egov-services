@@ -87,17 +87,14 @@ public class LamsConfigurationController {
 			BindingResult bindingResult, @RequestBody RequestInfoWrapper requestInfoWrapper) {
 		
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
 		// validate header
 		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
 		}
-
 		// validate input params
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
 		}
-
 		// Call service
 		Map<String, List<String>> lamsConfigurationKeyValuesList = null;
 		try {
@@ -122,6 +119,7 @@ public class LamsConfigurationController {
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		lamsConfigurationRes.setResponseInfo(responseInfo);
+		System.err.println(lamsConfigurationRes);
 		return new ResponseEntity<>(lamsConfigurationRes, HttpStatus.OK);
 
 	}

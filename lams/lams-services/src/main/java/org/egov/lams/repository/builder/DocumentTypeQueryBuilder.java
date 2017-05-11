@@ -8,7 +8,7 @@ public class DocumentTypeQueryBuilder {
 
 	 public static String getDocumentTypeQuery(DocumentType documentType,List<Object> preparedStatementValues){
 		 
-		StringBuilder baseQuery = new StringBuilder("SELECT * FROM eg_documenttype documenttype");
+		StringBuilder baseQuery = new StringBuilder("SELECT * FROM eglams_documenttype documenttype");
 		 
 		 if(!(documentType.getApplication() == null && documentType.getTenantId() == null)){
 			

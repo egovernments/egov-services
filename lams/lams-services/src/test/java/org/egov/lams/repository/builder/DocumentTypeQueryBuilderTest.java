@@ -11,7 +11,7 @@ public class DocumentTypeQueryBuilderTest {
 	@Test
 	public void no_input_test(){
 		
-		assertEquals("SELECT * FROM eg_documenttype documenttype", DocumentTypeQueryBuilder.getDocumentTypeQuery(new DocumentType(), new ArrayList<>()));
+		assertEquals("SELECT * FROM eglams_documenttype documenttype", DocumentTypeQueryBuilder.getDocumentTypeQuery(new DocumentType(), new ArrayList<>()));
 		
 	}
 	
@@ -22,7 +22,7 @@ public class DocumentTypeQueryBuilderTest {
 		documentType.setTenantId("1");
 		documentType.setApplication(Application.CREATE);
 		
-		assertEquals("SELECT * FROM eg_documenttype documenttype WHERE documenttype.tenantId=? AND documenttype.application=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
+		assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.tenantId=? AND documenttype.application=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
 		
 	}
 	
@@ -32,7 +32,7 @@ public class DocumentTypeQueryBuilderTest {
 		DocumentType documentType = new DocumentType();
 		documentType.setApplication(Application.CREATE);
 		
-		assertEquals("SELECT * FROM eg_documenttype documenttype WHERE documenttype.application=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
+		assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.application=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
 		
 	}
 	
@@ -42,7 +42,7 @@ public class DocumentTypeQueryBuilderTest {
 		DocumentType documentType = new DocumentType();
 		documentType.setTenantId("1");
 		
-		assertEquals("SELECT * FROM eg_documenttype documenttype WHERE documenttype.tenantId=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
+		assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.tenantId=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
 		
 	}
 

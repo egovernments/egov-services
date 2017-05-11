@@ -31,21 +31,20 @@ public class DemandRepository {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	DemandHelper demandHelper;
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
-		
-		String url = propertiesManager.getDemandServiceHostName()
-				   + propertiesManager.getDemandReasonSearchService()
-				   + demandHelper.getDemandReasonUrlParams(agreementRequest);
-		
+
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
+				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
+
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {
-			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
-					DemandReasonResponse.class);
+			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),DemandReasonResponse.class);
+			System.err.println(demandReasonResponse);
 		} catch (Exception exception) {
 			exception.printStackTrace();
 			throw new RuntimeException("DemandRepository : " + exception.getMessage(), exception.getCause());
@@ -138,10 +137,10 @@ public class DemandRepository {
 			e.printStackTrace();
 			LOGGER.info("the exception raised during update demand API call ::: " + e);
 		}
-		LOGGER.info("the exception raised during update demand API call ::: " +demandResponse );
+		LOGGER.info("the exception raised during update demand API call ::: " + demandResponse);
 		return demandResponse;
 	}
-	
+
 	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo) {
 
 		System.out.println("DemandRepository createDemand demands:" + demands.toString());
@@ -149,10 +148,9 @@ public class DemandRepository {
 		demandRequest.setRequestInfo(requestInfo);
 		demandRequest.setDemand(demands);
 
-		String url = propertiesManager.getDemandServiceHostName()
-					+ propertiesManager.getUpdateDemandBasePath()
-					+ propertiesManager.getUpdateDemandService();
-		
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getUpdateDemandBasePath()
+				+ propertiesManager.getUpdateDemandService();
+
 		LOGGER.info("the url for update demand API call is  ::: " + url);
 
 		DemandResponse demandResponse = null;
@@ -162,7 +160,7 @@ public class DemandRepository {
 			e.printStackTrace();
 			LOGGER.info("the exception raised during update demand API call ::: " + e);
 		}
-		LOGGER.info("the exception raised during update demand API call ::: " +demandResponse );
+		LOGGER.info("the exception raised during update demand API call ::: " + demandResponse);
 		return demandResponse;
 	}
 }

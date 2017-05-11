@@ -138,15 +138,11 @@ class UploadLeaveType extends React.Component{
               if(d.duplicate === "true"){
                 d.errorMessage = "Duplicate row in the excel scanned";
                 duplicateObject.push(d);
-              }
-          });
-          scannedObject.forEach(function(d){
-              if(d.duplicate === "false"){
+              }else {
                 finalObject.push(d);
               }
           });
-
-          _this.setState({
+        _this.setState({
             LeaveType:{
               ..._this.state.LeaveType
             }, temp : finalObject,
@@ -225,7 +221,7 @@ addOrUpdate(e,mode)
           var leaveValidate = checkLeave.indexOf(d.leaveType.id);
           var employeeValidate = checkEmployee.indexOf(d.employee);
           var calenderValidate = checkCalenderYear.indexOf(d.calendarYear);
-
+          d.errorMessage = "";
           if(noOfDays<0){
             d.errorMessage = "Number of days is negative "+noOfDays;
             neagativeDays = neagativeDays.concat(" "+noOfDays+", ");

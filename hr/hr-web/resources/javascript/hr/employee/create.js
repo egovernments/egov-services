@@ -2188,7 +2188,7 @@ $(document).ready(function() {
        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
      }
    }
-   $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+   if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
     $.validator.addMethod('phone', function(value) {
         return value ? /^[0-9]{10}$/.test(value) : true;
     }, 'Please enter a valid phone number.');
@@ -2798,7 +2798,6 @@ if (getUrlVars()["type"] == "update") {
     employee = currentEmployee;
     $("#code").prop("disabled", true);
     printValue("", currentEmployee);
-    $("#fileTable").show();
     displayFiles(employee);
 
     if (currentEmployee["assignments"].length > 0) {
@@ -2870,7 +2869,6 @@ if (getUrlVars()["type"] == "view") {
 
     employee = currentEmployee;
     printValue("", currentEmployee);
-    $("#fileTable").show();
     displayFiles(employee);
 
     if (currentEmployee["assignments"].length > 0) {
@@ -3049,6 +3047,9 @@ function checkNRemoveFile() {
 
 function deleteFile(e, name, fileId, count) {
   e.stopPropagation();
+  if($("#fileTable").css('display') == 'none')
+    $("#fileTable").show();
+
   if($("[data-key='"+ count +"']").css("backgroundColor") == "rgb(211, 211, 211)") {
     var ind = filesToBeDeleted[name.toLowerCase()].indexOf(fileId);
     filesToBeDeleted[name.toLowerCase()].splice(ind, 1);

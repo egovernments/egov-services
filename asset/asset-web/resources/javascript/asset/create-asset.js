@@ -123,22 +123,11 @@
 //       }
 //     ]
 var flag = 0;
-const titleCase = (field) => {
-	var newField = field[0].toUpperCase();
-	for(let i=1; i<field.length; i++) {
-      if(field[i-1] != " " && field[i] != " ") {
-      	newField += field.charAt(i).toLowerCase();
-      } else {
-        newField += field[i]
-      }
-    }
-    return newField;
-}
 
 const makeAjaxUpload = function(file, cb) {
     let formData = new FormData();
-    formData.append("jurisdictionId", "ap.public");
-    formData.append("module", "PGR");
+    formData.append("jurisdictionId", tenantId);
+    formData.append("module", "ASSET");
     formData.append("file", file);
     $.ajax({
         url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
@@ -632,7 +621,7 @@ class CreateAsset extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
-			$('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
+			if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
 			
 			if(type==="update"|| type==="view" ){
 				$(document).ready(function(){

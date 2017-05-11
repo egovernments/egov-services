@@ -167,7 +167,7 @@ public class AttendanceController {
         final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo());
         final Map<String, List<String>> weeklyHolidays = hrConfigurationService.getWeeklyHolidays(tenantId,
                 attendanceRequest.getRequestInfo());
-        final List<AttendanceType> attendanceTypes = attendanceService.getAllAttendanceTypes();
+        final List<AttendanceType> attendanceTypes = attendanceService.getAllAttendanceTypes(tenantId);
         final List<Long> employees = new ArrayList<>();
         boolean isHoliday = true;
         boolean isEmployeeDate = true;

@@ -26,7 +26,7 @@ class UploadLeaveType extends React.Component{
     } catch(e) {
         var _leaveTypes = [];
     }
-
+    console.log("Leave type required",_leaveTypes);
     this.setState({
       _leaveTypes : _leaveTypes
     });
@@ -44,7 +44,7 @@ class UploadLeaveType extends React.Component{
     } catch (e) {
     var  employees = [];
     }
-
+    console.log(employees);
     this.setState({
       employees : employees
     });
@@ -98,8 +98,9 @@ class UploadLeaveType extends React.Component{
                 oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
 
                 key = Object.keys(oJS[0]);
-
+                console.log("key",key);
           });
+          console.log("oJS",oJS);
           var finalObject = [],duplicateObject = [],scannedObject = [];
           oJS.forEach(function(d){
 
@@ -163,7 +164,7 @@ addOrUpdate(e,mode)
         var serverObject = [],errorObject=[],finalValidatedServerObject=[],finalSuccessObject=[];
         var tempInfo=Object.assign([],this.state.temp);
         var duplicateInfo = Object.assign([],this.state.duplicate);
-
+        console.log("TEMP ",tempInfo);
         duplicateInfo.forEach(function(d){
           errorObject.push(d);
         });
@@ -208,6 +209,7 @@ addOrUpdate(e,mode)
         for(var k=0;k<tempInfo.length;k++){
 
           var d = tempInfo[k];
+          console.log("d----->",d);
           noOfDays = parseInt(d.noOfDays)
           leaveName = d.leaveType.id;
           employeeName = d.employee;
@@ -306,7 +308,8 @@ addOrUpdate(e,mode)
           error = 0;
           }
         }
-
+        console.log("Success Object",serverObject);
+        console.log("Error Object",errorObject);
         var calenderYearApi = serverObject[0].calendarYear;
 
         try {
@@ -319,6 +322,7 @@ addOrUpdate(e,mode)
             var leaveBal = [];
         }
 
+        console.log(leaveBal);
         var errorLeaveOpening=[]
 
         for(var i=0;i<serverObject.length;i++){
@@ -352,21 +356,24 @@ addOrUpdate(e,mode)
                   }
 
                 }
-
+                  console.log("count",count);
                 if(count===leaveBal.length){
 
+                console.log(serverObject[i]);
                 serverObject[i].successMessage = "Employee leaves created successfully";
                  finalValidatedServerObject.push(serverObject[i]);
                   break;
                 }
 
         }
-
+        console.log("Data already present",errorLeaveOpening);
 
         errorLeaveOpening.forEach(function(d){
           errorObject.push(d);
         });
 
+        console.log("Final Server Object After Validation",finalValidatedServerObject);
+        console.log("Final Error Object After Validation",errorObject);
 
         var ep1=new ExcelPlus();
         var b=0;
@@ -390,7 +397,7 @@ addOrUpdate(e,mode)
 
 
           finalValidatedServerObject.forEach(function(d){
-
+            console.log(d);
               finalSuccessObject.push({"employee": d.employee,
                               "calendarYear": d.calendarYear,
                               "leaveType":  { "id": d.leaveType["id"]},
@@ -398,7 +405,7 @@ addOrUpdate(e,mode)
                               "tenantId": d.tenantId
                             });
           });
-
+          console.log("FINSSL SNJNCJ",finalSuccessObject);
 
         if(finalSuccessObject.length!==0){
 

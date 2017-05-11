@@ -1,26 +1,22 @@
 package org.egov.user.persistence.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
-
-import static org.egov.user.persistence.entity.UserKey.SEQ_USER;
 
 @Embeddable
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SequenceGenerator(name = SEQ_USER, sequenceName = SEQ_USER, allocationSize = 1)
+@EqualsAndHashCode
 public class UserKey implements Serializable {
 	public static final String SEQ_USER = "seq_eg_user";
+	private static final long serialVersionUID = -4233379616753115481L;
 
 	@Column(name = "id", nullable = false)
-	@GeneratedValue(generator = SEQ_USER, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@Column(name = "tenantid", nullable = false)

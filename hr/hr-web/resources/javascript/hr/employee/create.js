@@ -1,4 +1,6 @@
 
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+var filesToBeDeleted = {};
 var employeeType, employeeStatus, group, motherTongue, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function,assignments_position, maritalStatus, user_bloodGroup;
 
 try { employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType")); } catch (e) {
@@ -350,7 +352,7 @@ var employee = {
   bankAccount: "",
   group: "",
   placeOfBirth: "",
-  documents: null,
+  documents: ["123"],
   serviceHistory: [],
   probation: [],
   regularisation: [],
@@ -584,7 +586,7 @@ var commom_fields_rules = {
   },
   "user.permanentAddress": {
     required: false,
-    alphanumericWSplCharNSpc: true
+    alphanumericWAllSplCharNSpc: true
   },
   "user.permanentCity": {
     required: false,
@@ -602,7 +604,7 @@ var commom_fields_rules = {
   },
   "user.correspondenceAddress": {
     required: false,
-    alphanumericWSplCharNSpc: true
+    alphanumericWAllSplCharNSpc: true
   },
   "user.active": {
     required: true
@@ -1568,26 +1570,14 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      /*if (currentState.id == "user.dob" && currentState.value.indexOf("/") > -1) {
-          var dateSplit = currentState.value.split("/");
-          employee[splitResult[0]][splitResult[1]] =  dateSplit[1]  + "/" + dateSplit[0] + "/" + dateSplit[2];
-      } else*/ if (currentState.id == "user.active") {
+      if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
       } else if (currentState.type === "file") {
-        employee[splitResult[0]][splitResult[1]] = $.extend(true, [], currentState.files);
+        employee[splitResult[0]][splitResult[1]] = currentState.files;
       } else {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
       }
     } else {
-      // if (currentState.id == "assignments.fromDate" || currentState.id == "assignments.toDate" || currentState.id == "serviceHistory.serviceFrom" || currentState.id == "probation.orderDate" || currentState.id == "probation.declaredOn" || currentState.id == "regularisation.declaredOn" || currentState.id == "regularisation.orderDate" || currentState.id == "education.yearOfPassing" || currentState.id == "technical.yearOfPassing" || currentState.id == "test.yearOfPassing") {
-      //     var dateSplit = currentState.value.split("-");
-      //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-      //     var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-      //     var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-      //     var yearIn = date.getFullYear();
-      //     employeeSubObject[splitResult[0]][splitResult[1]] = day + "/" + monthIn + "/" + yearIn;
-      //
-      // } else
       if (currentState.id == "assignments.mainDepartments") {
         tempListBox = [];
         for (var i = 0; i < $(currentState).val().length; i++) {
@@ -1597,33 +1587,25 @@ function fillValueToObject(currentState) {
         }
 
 
-      }
-      // else if(currentState.id=="assignments.isPrimary")
-      // {
-      //   employeeSubObject[splitResult[0]][splitResult[1]]=currentState.value=="No"?false:true;
-      // }
-      // if (currentState.id=="jurisdictions.boundary") {
-      //       employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.value);
-      // }
-      else if (currentState.type === "file") {
-        employeeSubObject[splitResult[0]][splitResult[1]] = $.extend(true, [], currentState.files);
+      } else if (currentState.type === "file") {
+        if(!employeeSubObject[splitResult[0]][splitResult[1]])
+          employeeSubObject[splitResult[0]][splitResult[1]] = [];
+        for(var i=0; i<currentState.files.length; i++) {
+          employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.files[i]);
+        }
       } else
         employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
     }
 
   } else {
-    // if (currentState.id == "dateOfAppointment" || currentState.id == "dateOfRetirement" || currentState.id == "dateOfTermination" || currentState.id == "retirementAge" || currentState.id == "dateOfJoining" || currentState.id == "dateOfRetirement" || currentState.id == "dateOfTermination" || currentState.id == "dateOfResignation") {
-    //     var dateSplit = currentState.value.split("-");
-    //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-    //     var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-    //     var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-    //     var yearIn = date.getFullYear();
-    //     employee[currentState.id] = day + "/" + monthIn + "/" + yearIn;
-    // } else
     if (currentState.id == "languagesKnown") {
       employee[currentState.id] = $(currentState).val();
     } else if (currentState.type === "file") {
-      employee[currentState.id] = $.extend(true, [], currentState.files);
+      if(!employee[currentState.id])
+        employee[currentState.id] = [];
+      for(var i=0; i<currentState.files.length; i++) {
+        employee[currentState.id].push(currentState.files[i]);
+      }
     } else {
       employee[currentState.id] = currentState.value;
     }
@@ -2242,6 +2224,10 @@ $(document).ready(function() {
         return value ? /^[a-zA-Z0-9\-\/\_ ]*$/.test(value) : true;
     }, 'Only alphanumeric with -/_ allowed.');
 
+    $.validator.addMethod('alphanumericWAllSplCharNSpc', function(value) {
+        return value ? /^[a-zA-Z0-9\-\/\_ \#\(\)\,\.\&]*$/.test(value) : true;
+    }, 'Only alphanumeric with -/_#(),.& allowed.');
+
     $.validator.addMethod('alphaWSplChar', function(value) {
         return value ? /^[a-zA-Z\-\/\_\.\*\@\#\$\%\^\&\ ]*$/.test(value) : true;
     }, 'Only alphabets with special characters allowed.');
@@ -2295,6 +2281,11 @@ $("#createEmployeeForm").validate({
         var _date = employee.user.dob.split("-");
         employee.user.dob = _date[2] + "/" + _date[1] + "/" + _date[0];
       }
+
+      if(getUrlVars()["type"] == "update") {
+        checkNRemoveFile();
+      }
+
       //Upload files if any
       uploadFiles(employee, function(err, emp) {
         if (err) {
@@ -2483,7 +2474,7 @@ function uploadFiles(employee, cb) {
   } else if (employee.documents && employee.documents.length && employee.documents[0].constructor == File) {
     let counter = employee.documents.length,
       breakout = 0;
-    for (let i = 0; len = employee.documents.length, i < len; i++) {
+    for (let i = 0, len = employee.documents.length; i < len; i++) {
       makeAjaxUpload(employee.documents[i], function(err, res) {
         if (breakout == 1)
           return;
@@ -2503,7 +2494,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.assignments.length, i < len; i++) {
       let counter = employee.assignments[i].documents.length;
-      for (let j = 0; len1 = employee.assignments[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.assignments[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.assignments[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2527,7 +2518,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.serviceHistory.length, i < len; i++) {
       let counter = employee.serviceHistory[i].documents.length;
-      for (let j = 0; len1 = employee.serviceHistory[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.serviceHistory[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.serviceHistory[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2551,7 +2542,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.probation.length, i < len; i++) {
       let counter = employee.probation[i].documents.length;
-      for (let j = 0; len1 = employee.probation[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.probation[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.probation[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2575,7 +2566,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.regularisation.length, i < len; i++) {
       let counter = employee.regularisation[i].documents.length;
-      for (let j = 0; len1 = employee.regularisation[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.regularisation[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.regularisation[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2599,7 +2590,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.technical.length, i < len; i++) {
       let counter = employee.technical[i].documents.length;
-      for (let j = 0; len1 = employee.technical[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.technical[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.technical[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2623,7 +2614,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.education.length, i < len; i++) {
       let counter = employee.education[i].documents.length;
-      for (let j = 0; len1 = employee.education[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.education[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.education[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2647,7 +2638,7 @@ function uploadFiles(employee, cb) {
       breakout = 0;
     for (let i = 0; len = employee.test.length, i < len; i++) {
       let counter = employee.test[i].documents.length;
-      for (let j = 0; len1 = employee.test[i].documents.length, j < len1; j++) {
+      for (let j = 0, len1 = employee.test[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.test[i].documents[j], function(err, res) {
           if (breakout == 1)
             return;
@@ -2686,8 +2677,8 @@ function hasFile(elements) {
 function makeAjaxUpload(file, cb) {
   if(file.constructor == File) {
     let formData = new FormData();
-    formData.append("jurisdictionId", "ap.public");
-    formData.append("module", "PGR");
+    formData.append("jurisdictionId", tenantId);
+    formData.append("module", "HR");
     formData.append("file", file);
     $.ajax({
       url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
@@ -2806,6 +2797,8 @@ if (getUrlVars()["type"] == "update") {
     employee = currentEmployee;
     $("#code").prop("disabled", true);
     printValue("", currentEmployee);
+    $("#fileTable").show();
+    displayFiles(employee);
 
     if (currentEmployee["assignments"].length > 0) {
       updateTable("#agreementTableBody", 'assignmentDetailModal', "assignments")
@@ -2876,6 +2869,8 @@ if (getUrlVars()["type"] == "view") {
 
     employee = currentEmployee;
     printValue("", currentEmployee);
+    $("#fileTable").show();
+    displayFiles(employee);
 
     if (currentEmployee["assignments"].length > 0) {
       updateTable("#agreementTableBody", 'xyz', "assignments")
@@ -2928,6 +2923,7 @@ function printValue(object = "", values) {
       if (typeof values[key] === "object" && key == "user") {
         for (ckey in values[key]) {
           if (values[key][ckey]) {
+            if(["signature", "photo"].indexOf(ckey) > -1) continue;
             //Get description
             if (ckey == "dob") {
               $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
@@ -2966,5 +2962,104 @@ function printValue(object = "", values) {
         // $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
       }
     }
+  }
+}
+
+
+function displayFiles(employee) {
+  var tBody = "#fileBody",
+      count = 1;
+  $(tBody).html("");
+
+  if(employee.user && employee.user.signature) {
+    appendTr(tBody, count, "Signature", employee.user.signature);
+    count++;
+  }
+
+  if(employee.user && employee.user.photo) {
+    appendTr(tBody, count, "Photo", employee.user.photo);
+    count++;
+  }
+
+  for(var key in employee) {
+    if(key == "documents" && employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
+      for(var i=0; i<employee[key].length; i++) {
+        appendTr(tBody, count, "Documents", employee[key][i]);
+        count++; 
+      }
+    } else if(employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
+      for(var i=0; i<employee[key].length; i++) {
+        if(typeof employee[key][i] == "object") {
+          for(key2 in employee[key][i]) {
+            if(key2 == "documents" && employee[key][i][key2].constructor == Array && employee[key][i][key2].length > 0) {
+              for(var j=0; j<employee[key][i][key2].length; j++) {
+                appendTr(tBody, count, key, employee[key][i][key2][j]);
+                count++;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function appendTr(tBodyName, count, name, fileId) {
+    $(tBodyName).append(`<tr data-key=${count}>
+                          <td>
+                            ${count}
+                          </td>
+                          <td>
+                            ${titleCase(name)}
+                          </td>
+                          <td>
+                            <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                              Download
+                            </a>
+                          </td>
+                          <td>
+                            ${getUrlVars()["type"] == "view" ? "" : "<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
+                          </td>
+                        </tr>`);
+}
+
+function checkNRemoveFile() {
+  for(var key in filesToBeDeleted) {
+    if(key == "photo" || key == "signature") {
+      employee.user[key] = "";
+    } else if(key == "documents") {
+      for(var i=0; i<filesToBeDeleted[key].length; i++) {
+        var ind = employee[key].indexOf(filesToBeDeleted[key][i]);
+        employee[key].splice(ind, 1);
+      }
+    } else {
+      for(var i=0; i<filesToBeDeleted[key].length; i++) {
+        for(var j=0; j<employee[key].length; j++) {
+          var ind = employee[key][j]["documents"].indexOf(filesToBeDeleted[key][i]);
+          if(ind > -1) {
+            employee[key][j]["documents"].splice(ind, 1);
+            break;
+          }
+        }
+      }
+    }
+  }
+}
+
+function deleteFile(e, name, fileId, count) {
+  e.stopPropagation();
+  if($("[data-key='"+ count +"']").css("backgroundColor") == "rgb(211, 211, 211)") {
+    var ind = filesToBeDeleted[name.toLowerCase()].indexOf(fileId);
+    filesToBeDeleted[name.toLowerCase()].splice(ind, 1);
+    $("[data-key='"+ count +"']").css("backgroundColor","#ffffff");
+    $("[data-key='"+ count +"']").css("textDecoration","");
+    $("[data-key='"+ count +"'] button").text("Delete");
+  } else {
+    if(!filesToBeDeleted[name.toLowerCase()])
+      filesToBeDeleted[name.toLowerCase()] = [];
+    filesToBeDeleted[name.toLowerCase()].push(fileId);
+    $("[data-key='"+ count +"']").css("backgroundColor","#d3d3d3");
+    $("[data-key='"+ count +"']").css("textDecoration","line-through");
+    $("[data-key='"+ count +"'] button").text("Undo");
   }
 }

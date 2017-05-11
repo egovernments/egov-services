@@ -94,10 +94,5 @@ public class ConnectionCategoryProducerConfig {
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-
-    @Bean
-    public ConnectionCategoryProducer sender() {
-        return new ConnectionCategoryProducer();
-    }
 }
 

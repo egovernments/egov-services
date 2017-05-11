@@ -25,7 +25,8 @@ class ShowLeaveMapping extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
+
     try {
         var _leaveAllotment = commonApiPost("hr-leave","leaveallotments","_search",{tenantId,pageSize:500}).responseJSON["LeaveAllotment"] || [];
     } catch(e) {

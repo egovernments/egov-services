@@ -113,6 +113,7 @@ class Attendance extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Attendance");
     //call employee api and get employees
     // console.log(getUrlVars()["month"]);
     var queryParam=getUrlVars();

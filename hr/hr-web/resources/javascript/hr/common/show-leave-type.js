@@ -23,7 +23,7 @@ componentDidMount()
        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
      }
    }
-   
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Type");
   try {
       var _leaveTypes = commonApiPost("hr-leave", "leavetypes","_search",{tenantId,pageSize:500}).responseJSON["LeaveType"] || [];
   } catch(e) {

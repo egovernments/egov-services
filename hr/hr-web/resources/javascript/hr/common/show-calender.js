@@ -18,6 +18,9 @@ class ShowCalender extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+
+     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calendar");
+
        try {
            var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
        } catch(e) {

@@ -58,7 +58,7 @@ class EmployeeSearch extends React.Component {
 
     // console.log("fired");
   }
-  
+
   componentWillMount()
   {
     var date = new Date();
@@ -137,8 +137,9 @@ class EmployeeSearch extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
   }
-  
+
   close(){
       // widow.close();
       open(location, '_self').close();

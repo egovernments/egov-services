@@ -55,11 +55,12 @@ class ShowCalenderHoliday extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Holiday");
   }
+
 
   handleChange(e,name)
   {
-
       this.setState({
           holidaySet:{
               ...this.state.holidaySet,

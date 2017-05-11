@@ -20,7 +20,9 @@ class ShowGrade extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Grade");
+
     try {
         var _grade = commonApiPost("hr-masters","grades","_search",{tenantId,pageSize:500}).responseJSON["Grade"] || [];
     } catch(e) {

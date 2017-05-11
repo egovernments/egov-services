@@ -352,7 +352,7 @@ addOrUpdate(e,mode)
                 }
 
                 if(exists===false){
-                  console.log("finalSuccessObject-->"serverObject[i]);
+                  console.log("finalSuccessObject-->",serverObject[i]);
                   serverObject[i].successMessage = "Employee leaves created successfully";
                   finalValidatedServerObject.push(serverObject[i]);
                 }

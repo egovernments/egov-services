@@ -181,7 +181,7 @@ public class ConnectionCategoryQueryBuilder {
 
 
     public static String selectCategoryByNameAndCodeNotInQuery() {
-        return " select code from egwtr_usage_type where name = ? and tenantId = ? and code != ? ";
+        return " select code from egwtr_category where name = ? and tenantId = ? and code != ? ";
     }
 
 

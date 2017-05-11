@@ -1,0 +1,10 @@
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.edit.profile','Edit Profile','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.pass.change','Change Password','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.old.password','Old Password','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.retype.password','Re-type Password','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.msg.success.password.updated','Password successfully updated','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.edit.profile','प्रोफाईल संपादित करा','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.pass.change','पासवर्ड बदला','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.old.password','जुने संकेतशब्द','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.retype.password','पासवर्ड पुन्हा टाईप करा','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.msg.success.password.updated','संकेतशब्द यशस्वीरित्या अद्यतनित केला','default');

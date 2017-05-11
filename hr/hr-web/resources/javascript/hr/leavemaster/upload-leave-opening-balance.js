@@ -103,16 +103,24 @@ class UploadLeaveType extends React.Component{
           console.log("oJS",oJS);
           var finalObject = [],duplicateObject = [],scannedObject = [];
           oJS.forEach(function(d){
+            var employee = d[key[0]];
+            employee = employee.trim();
+            var leaveType = d[key[3]];
+            leaveType = leaveType.trim();
+            var calendarYear = d[key[4]];
+            calendarYear = calendarYear.trim();
+            var noOfDays = d[key[5]];
+            noOfDays = noOfDays.trim();
 
-            scannedObject.push({"employee": d[key[0]],
-                              "calendarYear":d[key[4]],
-                              "leaveType":  { "id": d[key[3]]},
-                              "noOfDays" : d[key[5]],
+            scannedObject.push({"employee": employee,
+                              "calendarYear": calendarYear,
+                              "leaveType":  { "id":leaveType },
+                              "noOfDays" : noOfDays,
                               "duplicate" : "false",
-                              "employeeCode" : d[key[0]],
+                              "employeeCode" : employee,
                               "employeeName" : d[key[1]],
                               "department": d[key[2]],
-                              "leaveTypeName": d[key[3]]
+                              "leaveTypeName": leaveType
 
             });
           });
@@ -308,8 +316,8 @@ addOrUpdate(e,mode)
           error = 0;
           }
         }
-        console.log("Success Object",serverObject);
-        console.log("Error Object",errorObject);
+        console.log("Success Objects",serverObject);
+        console.log("Error Objects",errorObject);
         var calenderYearApi = serverObject[0].calendarYear;
 
         try {
@@ -324,45 +332,29 @@ addOrUpdate(e,mode)
 
         console.log(leaveBal);
         var errorLeaveOpening=[]
-
+        var exists = false;
         for(var i=0;i<serverObject.length;i++){
+          console.log("Success Object-->",serverObject[i]);
               var calendarNumber = parseInt(serverObject[i].calendarYear);
-                var count = 0;
+              exists = false;
               for(var j=0;j<leaveBal.length;j++){
                 if(calendarNumber===leaveBal[j].calendarYear){
-
-
                    if(serverObject[i].employee===leaveBal[j].employee){
-
-                             if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
-
+                       if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
+                         console.log("Duplicate object from server -->",serverObject[i]);
+                               exists=true;
                                serverObject[i].errorMessage = "Leave opening balance already present in the system for this Employee";
                                errorLeaveOpening.push(serverObject[i]);
                                break;
-                             }else {
-                                serverObject[i].successMessage = "Employee leaves created successfully";
-                                finalValidatedServerObject.push(serverObject[i]);
-                                break;
-
-                             }
-
-                             serverObject[i].errorMessage = "Leave opening balance already present in the system for this Employee";
-                               errorLeaveOpening.push(serverObject[i])
-                               break;
-                   }
-
-                   count++;
-
+                          }
+                    }
                   }
-
                 }
-                  console.log("count",count);
-                if(count===leaveBal.length){
 
-                console.log(serverObject[i]);
-                serverObject[i].successMessage = "Employee leaves created successfully";
-                 finalValidatedServerObject.push(serverObject[i]);
-                  break;
+                if(exists===false){
+                  console.log("finalSuccessObject-->"serverObject[i]);
+                  serverObject[i].successMessage = "Employee leaves created successfully";
+                  finalValidatedServerObject.push(serverObject[i]);
                 }
 
         }

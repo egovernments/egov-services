@@ -38,13 +38,11 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
-
+package org.egov.eis.web.contract;
 
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -61,34 +59,26 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class LeaveOpeningBalance {
+public class CalendarYear {
 
+	@NotNull
 	private Long id;
 
 	@NotNull
-	private Long employee;
+	private Integer name;
 
 	@NotNull
-	private Integer calendarYear;
-
-	private LeaveType leaveType;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date startDate;
 
 	@NotNull
-	private Float noOfDays;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date endDate;
 
-	private Long createdBy;
+	@NotNull
+	private Boolean active;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date lastModifiedDate;
-
-	@Size(max=256)
+	@NotNull
 	private String tenantId;
-	
-	private String errorMsg;
 
 }

@@ -38,57 +38,59 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class LeaveOpeningBalance {
+public class EmployeeInfo {
 
 	private Long id;
 
-	@NotNull
-	private Long employee;
+	@Size(min = 1, max = 256)
+	private String code;
 
-	@NotNull
-	private Integer calendarYear;
+	@Size(max = 5)
+	private String salutation;
 
-	private LeaveType leaveType;
+	@Size(min = 3, max = 100)
+	private String name;
 
-	@NotNull
-	private Float noOfDays;
+	@Size(min = 1, max = 64)
+	private String userName;
 
-	private Long createdBy;
+	@Size(max = 10)
+	private String mobileNumber;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date createdDate;
+	@Size(min = 5, max = 128)
+	private String emailId;
 
-	private Long lastModifiedBy;
+	@Size(max = 10)
+	private String pan;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date lastModifiedDate;
+	@Size(max = 12)
+	private String aadhaarNumber;
 
-	@Size(max=256)
+	private Boolean active;
+
+	private Long employeeStatus;
+
+	private Long employeeType;
+
 	private String tenantId;
-	
-	private String errorMsg;
 
 }

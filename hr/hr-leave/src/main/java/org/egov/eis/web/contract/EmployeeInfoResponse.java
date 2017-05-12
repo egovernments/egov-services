@@ -38,15 +38,12 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -61,34 +58,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class LeaveOpeningBalance {
+public class EmployeeInfoResponse {
 
-	private Long id;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@NotNull
-	private Long employee;
-
-	@NotNull
-	private Integer calendarYear;
-
-	private LeaveType leaveType;
-
-	@NotNull
-	private Float noOfDays;
-
-	private Long createdBy;
-
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date lastModifiedDate;
-
-	@Size(max=256)
-	private String tenantId;
-	
-	private String errorMsg;
+	@JsonProperty("Employee")
+	private List<EmployeeInfo> employees = new ArrayList<EmployeeInfo>();
 
 }

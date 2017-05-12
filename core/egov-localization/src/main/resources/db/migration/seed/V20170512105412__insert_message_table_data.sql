@@ -1,0 +1,12 @@
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.gender','Gender','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.alt.contactno','Alternate Contact No.','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.dob','DOB','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.aadharcard.number','Aadhaar Number','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.pan.number','PAN','default');
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.lbl.enter.preferred.language','Preferred Language','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.gender','लिंग','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.alt.contactno','वैकल्पिक संपर्क क्रमांक','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.dob','DOB','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.aadharcard.number','आधार क्रमांक','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.pan.number','PAN','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.lbl.enter.preferred.language','प्राधान्य दिलेली भाषा','default');

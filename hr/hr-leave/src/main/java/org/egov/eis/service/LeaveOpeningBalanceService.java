@@ -166,6 +166,7 @@ public class LeaveOpeningBalanceService {
 				.getEmployees(leaveOpeningBalanceRequest.getRequestInfo(), tenantId);
 		LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
 		leaveTypeGetRequest.setTenantId(tenantId);
+		leaveTypeGetRequest.setAccumulative(true);
 		leaveTypeGetRequest.setPageSize((short) 500);
 		List<LeaveType> leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
 		Map<Integer, CalendarYear> calendarYearMap = new HashMap<Integer, CalendarYear>();

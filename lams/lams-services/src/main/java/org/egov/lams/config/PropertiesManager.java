@@ -66,7 +66,7 @@ public class PropertiesManager {
 	private String updateWorkflowTopic;
 	
 	@Value("${egov.services.demand_service.searchpath}")
-	private String demandSearchService;
+	private String demandSearchServicepath;
 	
 	@Value("${egov.services.demand_service.bill.create}")
 	private String demandBillCreateService;

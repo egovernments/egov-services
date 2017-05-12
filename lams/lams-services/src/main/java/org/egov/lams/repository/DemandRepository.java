@@ -77,7 +77,7 @@ public class DemandRepository {
 		}
 		demand.setDemandDetails(demandDetails);
 		demands.add(demand);
-		System.err.println(demand);
+		System.err.println(demands);
 
 		return demands;
 	}
@@ -95,7 +95,7 @@ public class DemandRepository {
 
 	public DemandResponse getDemandBySearch(DemandSearchCriteria demandSearchCriteria, RequestInfo requestInfo) {
 
-		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandSearchService()
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandSearchServicepath()
 				+ "?demandId=" + demandSearchCriteria.getDemandId();
 		LOGGER.info("the url of demand search API call ::: is " + url);
 

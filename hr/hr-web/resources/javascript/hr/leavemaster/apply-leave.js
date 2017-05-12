@@ -38,6 +38,8 @@ class ApplyLeave extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+    $('#availableDays,#leaveDays').prop("disabled", true);
+
     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
@@ -338,14 +340,6 @@ addOrUpdate(e,mode)
     let {name,code,leaveDays,availableDays,fromDate,toDate,reason,leaveType}=leaveSet;
     let mode=getUrlVars()["type"];
 
-
-    const showActionButton=function() {
-      if((!mode) ||mode==="create")
-      {
-        return (<button type="submit" className="btn btn-submit">{mode?"Approve":"Apply"}</button>);
-      }
-    };
-
     const renderOption=function(list)
     {
       if(list)
@@ -490,7 +484,7 @@ addOrUpdate(e,mode)
 
 
             <div className="text-center">
-            {showActionButton()} &nbsp;&nbsp;
+            <button type="submit" className="btn btn-submit">Apply</button> &nbsp;&nbsp;
             <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

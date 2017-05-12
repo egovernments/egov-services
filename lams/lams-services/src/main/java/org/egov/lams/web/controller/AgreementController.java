@@ -144,9 +144,12 @@ public class AgreementController {
 		agreementCriteria.setTenantId(tenantId);
 		agreementCriteria.setAgreementNumber(agreementNumber);
 		
+		LOGGER.info("before search : "+agreementNumber);
 		Agreement agreement = agreementService.searchAgreement(agreementCriteria).get(0);
+		LOGGER.info("after search "+ agreement);
 		agreementRequest.setAgreement(agreement);
 		agreement.setLegacyDemands(agreementService.prepareDemands(agreementRequest));
+		LOGGER.info("after prepare denmands : "+agreement.getLegacyDemands());
 		
 
 		List<Agreement> agreements = new ArrayList<>();

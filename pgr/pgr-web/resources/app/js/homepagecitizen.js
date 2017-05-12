@@ -177,7 +177,7 @@ $(document).ready(function()
 
 function loadComplaints(){
 	$.ajax({
-		url : "/pgr/seva/_search?tenantId=ap.public&user_id="+localStorage.getItem("id"),
+		url : "/pgr/seva/_search?tenantId=default&user_id="+localStorage.getItem("id"),
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -190,7 +190,7 @@ function loadComplaints(){
 			//$("#grievance-template").html('');
 			var source   = $("#grievance-template").html();
 			var template = Handlebars.compile(source);
-			var html = template(response.service_requests);
+			var html = template(response.serviceRequests);
 			$('.reloadtemplate').remove();
 			$('.grievanceresponse').append(html);
 		},

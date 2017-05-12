@@ -1,29 +1,24 @@
 swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
 info:
   version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  #Parameter name must start with small case followed by camel case.
+  ######################################################
+  
   title: Water Charges Management-Master APIs
   description: |
     APIs available for Water Charges Management Usage Type Master definitions.
-    ### Notes
-
-    * *All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
-
-    * *All _search will be synchronous and all _create and _update will be asynchronous*.
-
-    * *RequestInfo and ResponseInfo object should be reffered from Common*.
-
-    * *In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model*.
-
-    * *Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
-
-    * *All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message*.
-
-    * *Definition must start with Upper case followed by camel case*.
-
-    * *Every model will have tenantId. Validate tenantId on create*.
-
-    * *Parameter name must start with small case followed by camel case*.
-
   contact:
     name: Rishi
 host: phoenix-qa.egovernments.org
@@ -58,7 +53,7 @@ paths:
           minLength: 0
           maxLength: 100
           exclusiveMinimum: true
-          exclusiveMaximum: false
+          exclusiveMaximum: false 
         - name: code
           in: query
           description: Unique code of the usage type.
@@ -67,13 +62,13 @@ paths:
           minLength: 0
           maxLength: 20
           exclusiveMinimum: true
-          exclusiveMaximum: false
+          exclusiveMaximum: false 
         - name: id
           in: query
           description: Unique Id of usage type
           required: false
           type: array
-          items:
+          items: 
             type: integer
           format: int64
           maxItems: 50
@@ -98,7 +93,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-      tags:
+      tags: 
        - Usage Type
   /usageType/_create:
   ######################################################
@@ -116,7 +111,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UsageTypeReq'
-
+      
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
@@ -130,14 +125,14 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
       tags:
-        - Usage Type
-
+        - Usage Type      
+  
   /usageType/{code}/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
   # Validate tenantId before persisting.
-  # Unique identifier of the model to be updated should be passed as path parameter.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
   ######################################################
    parameters:
     - $ref: "#/parameters/usageTypeCode"
@@ -165,7 +160,7 @@ paths:
             $ref: '#/definitions/ErrorRes'
       tags:
         - Usage Type
-
+        
 definitions:
 ########################################################
 #RequestInfo and ResponseInfo object should be reffered from Common.
@@ -233,7 +228,7 @@ definitions:
       - ver
       - ts
       - status
-
+      
   Error:
     type: object
     properties:
@@ -298,14 +293,14 @@ definitions:
       lastModifiedDate:
         type: string
         format: date
-        description: Date on which the master data was last modified.
+        description: Date on which the master data was last modified.  
       tenantId:
         type: string
         readOnly: true
-        description: Unique Identifier of the tenant
+        description: Unique Identifier of the tenant 
     required:
       - name
-      - code
+      - code 
       - active
       - tenantId
   UsageTypeRes:
@@ -315,22 +310,20 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       UsageType:
         type: array
-        items:
-         $ref: '#/definitions/UsageType'
+        items: 
+         $ref: '#/definitions/UsageType' 
   UsageTypeReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       UsageType:
-        $ref: '#/definitions/UsageType'
+        type: array
+        items: 
+         $ref: '#/definitions/UsageType'   
     required:
-      - tenantId
       - RequestInfo
-      - UsageType
+      - UsageType    
 
 parameters:
 ##########################################################

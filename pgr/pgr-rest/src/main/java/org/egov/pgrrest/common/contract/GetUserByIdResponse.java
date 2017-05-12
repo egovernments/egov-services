@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.egov.pgrrest.read.web.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgrrest.read.web.contract.User;
 
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 public class GetUserByIdResponse {
 
-    ResponseInfo responseInfo;
-
-	List<User> user;
+    private ResponseInfo responseInfo;
+	private List<User> user;
 }

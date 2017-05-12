@@ -20,7 +20,7 @@ public class AgreementQueryBuilder {
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 
 		StringBuilder selectQuery = new StringBuilder(
-				"SELECT *,agreement.id as agreementid FROM eglams_agreement agreement "
+				"SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
 						+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid");
 
 		if (!(agreementsModel.getAgreementId() == null && agreementsModel.getAgreementNumber() == null

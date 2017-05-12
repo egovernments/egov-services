@@ -1,12 +1,12 @@
 package org.egov.pgrrest.read.web.controller;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgrrest.common.contract.GetUserByIdResponse;
 import org.egov.pgrrest.common.contract.ServiceRequest;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.Complaint;
 import org.egov.pgrrest.read.domain.service.ComplaintService;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
-import org.egov.pgrrest.read.web.contract.ResponseInfo;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

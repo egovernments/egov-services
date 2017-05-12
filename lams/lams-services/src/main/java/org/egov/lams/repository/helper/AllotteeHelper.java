@@ -7,10 +7,15 @@ import java.util.stream.Collectors;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
+import org.egov.lams.service.AgreementService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AllotteeHelper {
+
+	public static final Logger logger = LoggerFactory.getLogger(AllotteeHelper.class);
 
 	public String getAllotteeParams(AgreementCriteria searchAllottee) {
 
@@ -33,16 +38,17 @@ public class AllotteeHelper {
 	}
 
 	public Set<Long> getAllotteeIdList(List<Allottee> allotteeList) {
-		
+
 		Set<Long> idSet = new HashSet<>();
 		idSet.addAll(allotteeList.stream().map(allottee -> allottee.getId()).collect(Collectors.toList()));
 		return idSet;
 	}
 
 	public Set<Long> getAllotteeIdListByAgreements(List<Agreement> agreementList) {
-		
+
 		Set<Long> allotteeIdList = new HashSet<>();
-		allotteeIdList.addAll(agreementList.stream().map(agreement -> agreement.getAllottee().getId()).collect(Collectors.toList()));
+		allotteeIdList.addAll(
+				agreementList.stream().map(agreement -> agreement.getAllottee().getId()).collect(Collectors.toList()));
 		return allotteeIdList;
 	}
 

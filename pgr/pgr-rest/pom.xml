@@ -181,6 +181,9 @@
                                     <excludes>
                                         <exclude>org.egov.pgrrest.common.entity.*</exclude>
                                         <exclude>org.egov.pgrrest.common.model.AuthenticatedUser</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.AttributeDefinition</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.ServiceDefinition</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.ValueDefinition</exclude>
                                         <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgrrest.PgrRestSpringBootApplication</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.entity.*</exclude>

@@ -30,15 +30,15 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		
 		
 		while(rs.next()){
-			
-			Long agreementId = rs.getLong("agreementid");
-			System.err.println(agreementId);
+
+			Long agreementId = rs.getLong("lamsagreementid");
+			System.err.println("agreementid in row mapper"+rs.getLong("lamsagreementid"));
 			Agreement agreement = AgreementMap.get(agreementId);
 			
 			if(agreement == null){
 				
 				agreement = new Agreement();
-				agreement.setId(rs.getLong("id"));
+				agreement.setId(rs.getLong("lamsagreementid"));
 				agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 				agreement.setStateId(rs.getString("stateid"));
 				agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));
@@ -96,9 +96,13 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 			}
 			
 			List<String> demandIdList = agreement.getDemands();
-			if(demandIdList == null)
-				demandIdList = new ArrayList<>();
-			demandIdList.add(rs.getString("demandid"));
+			String demandId = rs.getString("demandid");
+			if(demandId!=null){
+				if(demandIdList == null)
+					demandIdList = new ArrayList<>();
+				demandIdList.add(demandId);
+			}
+			
 			agreement.setDemands(demandIdList);
 		}
 		logger.info("converting map to list object ::: "+AgreementMap.values());

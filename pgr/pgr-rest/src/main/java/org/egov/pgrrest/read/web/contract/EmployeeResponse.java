@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.web.contract;
 
 import lombok.Getter;
+import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.ArrayList;
 import java.util.List;

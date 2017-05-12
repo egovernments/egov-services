@@ -16,9 +16,8 @@ class ShowUsageType extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-
     try {
-        var _UsageType = commonApiPost("wcms","usagetype","_search",{tenantId,pageSize:500}).responseJSON["_UsageType"] || [];
+        var _UsageType = commonApiPost("wcms-masters","usagetype","_search",{tenantId}).responseJSON["UsageType"] || [];
     } catch(e) {
         var _UsageType = [];
     }
@@ -29,19 +28,19 @@ class ShowUsageType extends React.Component {
   }
 
 
-  // componentDidUpdate(prevProps, prevState)
-  // {
-  //     if (prevState.list.length!=this.state.list.length) {
-  //
-  //         $('#designationTable').DataTable({
-  //           dom: 'Bfrtip',
-  //           buttons: [
-  //                    'copy', 'csv', 'excel', 'pdf', 'print'
-  //            ],
-  //            ordering: false
-  //         });
-  //     }
-  // }
+  componentDidUpdate(prevProps, prevState)
+  {
+      if (prevState.list.length!=this.state.list.length) {
+
+          $('#designationTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false
+          });
+      }
+  }
 
 
   close(){
@@ -55,7 +54,7 @@ class ShowUsageType extends React.Component {
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/create/create-usage-type.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>

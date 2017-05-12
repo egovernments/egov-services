@@ -1,26 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
-    <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Water Charge</title>
+    <base href="/wcms-web/"/>
 
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    <!--
-      Notice the use of %PUBLIC_URL% in the tag above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Water Charges</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
@@ -99,7 +87,6 @@
     <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
     <script src="resources/javascript/moment.js"></script>
     <script src="resources/javascript/bootstrap-datetimepicker.js"></script>
-    <script src="resources/javascript/extra.js"></script>
 </head>
 
 <body class="page-body">
@@ -130,7 +117,7 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">Water Charges</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">EIS</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -218,7 +205,21 @@
             <div class="inline-main-content">
                 <div class="row main-space" id="worklist">
                     <div class="col-xs-12">
-
+                        <!-- Middle Section -->
+                        <!-- <h4>Create Agreement Links</h4> -->
+                        <!-- <ul>
+                            <li><a href="./app/agreements/new.html?type=land">Land Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=shop">Shops in Shopping Complex Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=market">Markets Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=kalyanamandapam">Kalyana mandapams Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=parking_space">Parking Spaces Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=slaughter_house">Slaughter Houses Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=usfructs">Usfructs Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=community">Community Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=fish_tank">Fish Tank Agreement</a></li>
+                            <li><a href="./app/agreements/new.html?type=park">Fish Tank Agreement</a></li>
+                        </ul> -->
+                        <!-- /Middle Section -->
 
                     </div>
                 </div>
@@ -237,6 +238,7 @@
     </footer>
 
     <script src="resources/javascript/egov/custom.js"></script>
+    <script src="resources/javascript/egov/custom-menu.js"></script>
     <script src="resources/javascript/js.cookies.js"></script>
     <script>
         var menuItems = [{
@@ -244,48 +246,88 @@
             id: 'menuID',
             // icon: 'fa fa-reorder',
             items: [
-              {
-
-                    name: 'Water Charges ',
+                {
+                    name: 'Water Charges',
                     id: 'itemID',
                     icon: 'fa fa-laptop',
                     link: '#',
                     items: [{
-                    title: 'Water Charges',
-                    icon: 'fa fa-laptop',
-                                  items: [{
-                                        name: ' Masters',
-                                        icon: 'fa fa-desktop',
-                                        link: '#',
-                                        items: [{
-                                            title: 'Usage Type Master',
+                        title: 'Water Charges',
+                        icon: 'fa fa-laptop',
+                        items: [{
+                                name: 'Masters',
+                                icon: 'fa fa-desktop',
+                                link: '#',
+                                items: [{
+                                    title: 'Masters',
+                                    icon: 'fa fa-desktop',
+                                    link: '#',
+                                    items: [{
+                                            name: 'Usage Type',
                                             icon: 'fa fa-desktop',
                                             link: '#',
                                             items: [{
-                                                    name: 'Create Usage Type',
+                                                title: 'Usage Type',
+                                                icon: 'fa fa-desktop',
+                                                link: '#',
+                                                items: [{
+                                                        name: 'Create',
+                                                        icon: 'fa fa-phone',
+                                                        link: './app/create/create-usage-type.html'
+                                                    },
+                                                    {
+                                                        name: 'Update',
+                                                        icon: 'fa fa-phone',
+                                                        link: './app/common/show-usage-type.html?type=Update'
+                                                    },
+                                                    {
+                                                        name: 'View',
+                                                        icon: 'fa fa-phone',
+                                                        link: './app/common/show-usage-type.html?type=View'
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            name: 'Category Type',
+                                            icon: 'fa fa-phone',
+                                            link: '#',
+                                            items: [{
+                                              title: 'Category Type',
+                                              icon: 'fa fa-desktop',
+                                              link: '#',
+                                              items: [{
+                                                    name: 'Create',
                                                     icon: 'fa fa-phone',
-                                                    link: './app/create/create-usage-type.html'
+                                                    link: './app/create/create-category-master.html'
                                                 },
                                                 {
+                                                    name: 'Update',
                                                     icon: 'fa fa-phone',
-                                                    name: 'Modify Usage Type',
-                                                    link: './app/common/show-usage-type.html?type=Update'
+                                                    link: './app/common/show-category-master.html?type=Update'
                                                 },
                                                 {
-                                                    name: 'View Usage Type',
+                                                    name: 'View',
                                                     icon: 'fa fa-phone',
-                                                    link: './app/common/show-usage-type.html?type=View'
-                                                },
-
+                                                    link: './app/common/show-category-master.html?type=View'
+                                                }
                                             ]
-                                        }]
-                                    },
+                                          }]
+                                        },
+
+
+
+
 
                                     ]
-                            }
-                        ]
-                },
+                                }]
+                            },
 
+
+
+                        ]
+                    }]
+                }
 
             ]
         }];
@@ -298,34 +340,28 @@
         });
         // $(document).on("keydown", disableRefreshAndBack);
     </script>
-    <script src="resources/javascript/egov/custom-menu.js"></script>
-
 
     <script type="text/javascript">
-
     var response=$.ajax({
-              url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify({}),
-              async: false,
-              contentType: 'application/json',
-              headers:{
-                'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
-              }
-          });
-
-          if(response["status"]===200)
-          {
-              localStorage.setItem("auth-token", response.responseJSON["access_token"]);
-            // alert("Successfully added");
+          url: window.location.origin+"/user/_login?tenantId=ap.public&username=manas&password=demo&grant_type=password&scope=read",
+          type: 'POST',
+          dataType: 'json',
+          data:JSON.stringify({}),
+          async: false,
+          contentType: 'application/json',
+          headers:{
+            'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
           }
-          else {
-            // alert(response["statusText"]);
-          }
+      });
 
-          // console.log(localStorage.getItem("auth-token"));
-
+      if(response["status"]===200)
+      {
+          localStorage.setItem("auth-token", response.responseJSON["access_token"]);
+        // alert("Successfully added");
+      }
+      else {
+        // alert(response["statusText"]);
+      }
 
         $('#ast-srch').DataTable({
             "bFilter": false

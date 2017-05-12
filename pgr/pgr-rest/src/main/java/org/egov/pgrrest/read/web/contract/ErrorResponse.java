@@ -3,6 +3,7 @@ package org.egov.pgrrest.read.web.contract;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.List;
 

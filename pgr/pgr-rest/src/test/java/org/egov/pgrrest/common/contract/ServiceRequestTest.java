@@ -392,8 +392,8 @@ public class ServiceRequestTest {
             .complaintLocation(complaintLocation)
             .childLocation("childLocationIdName")
             .state("stateName")
-            .assignee("assigneeName")
-            .department("departmentName")
+            .assignee(2L)
+            .department(1L)
             .citizenFeedback("citizenFeedback")
             .build();
 
@@ -414,9 +414,9 @@ public class ServiceRequestTest {
         assertEquals("stateId", attributeEntries.get(5).getKey());
         assertEquals("stateName", attributeEntries.get(5).getName());
         assertEquals("assigneeId", attributeEntries.get(6).getKey());
-        assertEquals("assigneeName", attributeEntries.get(6).getName());
+        assertEquals("2", attributeEntries.get(6).getName());
         assertEquals("departmentId", attributeEntries.get(7).getKey());
-        assertEquals("departmentName", attributeEntries.get(7).getName());
+        assertEquals("1", attributeEntries.get(7).getName());
         assertEquals("citizenFeedback", attributeEntries.get(8).getKey());
         assertEquals("citizenFeedback", attributeEntries.get(8).getName());
     }
@@ -441,8 +441,8 @@ public class ServiceRequestTest {
             .complaintLocation(complaintLocation)
             .childLocation("childLocation")
             .state("state")
-            .assignee("assignee")
-            .department("department")
+            .assignee(2L)
+            .department(1L)
             .citizenFeedback("citizenFeedback")
             .build();
 
@@ -456,8 +456,8 @@ public class ServiceRequestTest {
         assertEquals("locationId", values.get("locationId"));
         assertEquals("childLocation", values.get("childLocationId"));
         assertEquals("state", values.get("stateId"));
-        assertEquals("assignee", values.get("assigneeId"));
-        assertEquals("department", values.get("departmentId"));
+        assertEquals("2", values.get("assigneeId"));
+        assertEquals("1", values.get("departmentId"));
         assertEquals("citizenFeedback", values.get("citizenFeedback"));
     }
 

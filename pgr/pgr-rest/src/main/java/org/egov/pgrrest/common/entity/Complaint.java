@@ -19,7 +19,7 @@ import static org.egov.pgrrest.common.entity.Complaint.SEQ_COMPLAINT;
 @AllArgsConstructor
 @Table(name = "egpgr_complaint")
 @SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
-public class Complaint extends AbstractAuditable {
+public class Complaint extends AbstractAuditable<Long> {
 
     public static final String SEQ_COMPLAINT = "SEQ_EGPGR_COMPLAINT";
     private static final long serialVersionUID = 4020616083055647372L;
@@ -160,12 +160,12 @@ public class Complaint extends AbstractAuditable {
     	return citizenFeedback!=null ? citizenFeedback.toString():null;
     }
 
-    private String getDepartmentId() {
-        return department != null ? department.toString(): null;
+    private Long getDepartmentId() {
+        return department;
     }
 
-    private String getAssigneeId() {
-        return assignee != null ? assignee.toString() : null;
+    private Long getAssigneeId() {
+        return assignee;
     }
 
     private String getState() {
@@ -181,7 +181,7 @@ public class Complaint extends AbstractAuditable {
     }
     
     private String getComplaintStatus(){
-    	return  status!=null ? status:null ;
+    	return status;
     }
 
 }

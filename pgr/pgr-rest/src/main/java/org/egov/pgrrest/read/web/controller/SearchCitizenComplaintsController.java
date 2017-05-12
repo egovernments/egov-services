@@ -5,7 +5,7 @@ import org.egov.pgrrest.common.contract.GetUserByIdResponse;
 import org.egov.pgrrest.common.contract.ServiceRequest;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.Complaint;
-import org.egov.pgrrest.read.domain.service.ComplaintService;
+import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 public class SearchCitizenComplaintsController {
 
     private UserRepository userRepository;
-    private ComplaintService complaintService;
+    private ServiceRequestService serviceRequestService;
 
     @Autowired
-    public SearchCitizenComplaintsController(UserRepository userRepository, ComplaintService complaintService) {
+    public SearchCitizenComplaintsController(UserRepository userRepository, ServiceRequestService serviceRequestService) {
         this.userRepository = userRepository;
-        this.complaintService = complaintService;
+        this.serviceRequestService = serviceRequestService;
     }
 
     @PostMapping
@@ -36,7 +36,7 @@ public class SearchCitizenComplaintsController {
         if (tenantId != null && !tenantId.isEmpty()) {
             GetUserByIdResponse user = userRepository.findUserByIdAndTenantId(userId,tenantId);
             if (!user.getUser().isEmpty() && user.getUser().get(0).getType().equalsIgnoreCase("CITIZEN")) {
-                complaints = complaintService.getAllModifiedCitizenComplaints(userId,tenantId);
+                complaints = serviceRequestService.getAllModifiedCitizenComplaints(userId,tenantId);
             }
         }
         return createResponse(complaints);

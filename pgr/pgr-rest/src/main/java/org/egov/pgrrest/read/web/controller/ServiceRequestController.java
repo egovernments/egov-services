@@ -6,7 +6,7 @@ import org.egov.pgrrest.common.contract.ServiceRequest;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.read.domain.model.Complaint;
 import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgrrest.read.domain.service.ComplaintService;
+import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +21,20 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = {"/seva"})
-public class ComplaintController {
+public class ServiceRequestController {
 
-    private ComplaintService complaintService;
+    private ServiceRequestService serviceRequestService;
 
     @Autowired
-    public ComplaintController(ComplaintService complaintService) {
-        this.complaintService = complaintService;
+    public ServiceRequestController(ServiceRequestService serviceRequestService) {
+        this.serviceRequestService = serviceRequestService;
     }
 
     @PostMapping(value = "/_create")
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
         final Complaint complaint = request.toDomainForCreateRequest();
-        complaintService.save(complaint, request);
+        serviceRequestService.save(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
         return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
     }
@@ -43,7 +43,7 @@ public class ComplaintController {
     @ResponseStatus(HttpStatus.OK)
     public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
         final Complaint complaint = request.toDomainForUpdateRequest();
-        complaintService.update(complaint, request);
+        serviceRequestService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
     }
@@ -77,20 +77,34 @@ public class ComplaintController {
                                                   childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
-        ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder().assignmentId(assignmentId)
-            .endDate(endDate).lastModifiedDatetime(lastModifiedDate).serviceCode(serviceCode)
-            .serviceRequestId(serviceRequestId).startDate(startDate).escalationDate(escalationDate).status(status).userId(userId).name(name)
-            .mobileNumber(mobileNumber).emailId(emailId).receivingMode(receivingMode).locationId(locationId)
-            .childLocationId(childLocationId).tenantId(tenantId).build();
-        final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
+        ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
+            .assignmentId(assignmentId)
+            .endDate(endDate)
+            .lastModifiedDatetime(lastModifiedDate)
+            .serviceCode(serviceCode)
+            .serviceRequestId(serviceRequestId)
+            .startDate(startDate)
+            .escalationDate(escalationDate)
+            .status(status)
+            .userId(userId)
+            .name(name)
+            .mobileNumber(mobileNumber)
+            .emailId(emailId)
+            .receivingMode(receivingMode)
+            .locationId(locationId)
+            .childLocationId(childLocationId)
+            .tenantId(tenantId)
+            .build();
+        final List<Complaint> complaints = serviceRequestService.findAll(complaintSearchCriteria);
         return createResponse(complaints);
     }
 
     @PostMapping(value = "/updateLastAccessedTime")
     @ResponseBody
     public void updateLastAccessedTime(@RequestParam final String serviceRequestId,
-                                       @RequestBody RequestInfoBody requestInfo, @RequestParam(value = "tenantId", required = true) final String tenantId) {
-        complaintService.updateLastAccessedTime(serviceRequestId,tenantId);
+                                       @RequestBody RequestInfoBody requestInfo,
+                                       @RequestParam(value = "tenantId") final String tenantId) {
+        serviceRequestService.updateLastAccessedTime(serviceRequestId,tenantId);
     }
 
     private ServiceResponse createResponse(List<Complaint> complaints) {

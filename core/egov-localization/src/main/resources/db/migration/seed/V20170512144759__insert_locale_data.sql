@@ -1,0 +1,2 @@
+insert into message values (nextval('SEQ_MESSAGE'),'en_IN','core.msg.profile.updated','Profile updated successfully','default');
+insert into message values (nextval('SEQ_MESSAGE'),'mr_IN','core.msg.profile.updated','प्रोफाइल यशस्वीरित्या अद्यतनित केले','default');

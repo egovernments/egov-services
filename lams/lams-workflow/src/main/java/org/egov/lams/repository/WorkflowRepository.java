@@ -52,10 +52,10 @@ public class WorkflowRepository {
 		try {
 			processInstanceRes = restTemplate.postForObject(url, processInstanceRequest, ProcessInstanceResponse.class);
 		} catch (Exception e) {
-			LOGGER.info(e.toString());
+			LOGGER.info("the exception from workflow service call : "+e);
 			throw e;
 		}
-		LOGGER.error("the response object from workflow : " + processInstanceRes.getProcessInstance().getId());
+		LOGGER.info("the response object from workflow : " + processInstanceRes.getProcessInstance().getId());
 
 		saveAgreement(agreementRequest, processInstanceRes.getProcessInstance().getId());
 		return processInstanceRes.getProcessInstance();

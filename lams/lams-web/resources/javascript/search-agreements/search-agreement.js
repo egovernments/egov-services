@@ -305,6 +305,8 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
+                <option value="addeditdemand">Add / Edit Demand </option>
+                
             </select>
           )
 

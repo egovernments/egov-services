@@ -883,6 +883,7 @@ label.error.custom {
   display: inline-block;
   vertical-align: top;
   padding: 0 5px;
+  width: calc(100% - 100px);
 }
 .page-container .main-content .community-card .label-font .label-subfont {
   font-size: 12px;

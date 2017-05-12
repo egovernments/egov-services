@@ -4,107 +4,302 @@ class EditDemand extends React.Component {
     super(props);
     this.state = {
       demands: {},
-      agreement: {},
-      legacyDemand: {}
+      agreementDetail: {},
+      paymentCycle:"",
+      commonDemand:null,
+      commonCollection:null
     }
 
     this.close = this.close.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChange=this.handleChange.bind(this);
-    this.handleCheckAll=this.handleCheckAll.bind(this);
+    // this.handleCheckAll=this.handleCheckAll.bind(this);
+    this.handleChangeAll=this.handleChangeAll.bind(this);
+
   }
   close() {
     // widow.close();
     open(location, '_self').close();
   }
 
-  addOrUpdate(e) {
+
+
+  addOrUpdate(e)
+  {
     e.preventDefault();
-    //call update method
+    var agreementDetail=this.state.agreementDetail;
+    var demands=this.state.demands;
+    var tempt=[];
+
+    for (var variable in demands) {
+        console.log(demands[variable]);
+        tempt.push(demands[variable]);
+    }
+
+    agreementDetail["legacyDemands"]["demandDetails"]=tempt;
+
+    // api call update method
+    var response = $.ajax({
+        url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.agreementNumber}?tenantId=` + tenantId,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            RequestInfo: requestInfo,
+            Agreement: agreementDetail
+        }),
+        async: false,
+        headers: {
+            'auth-token': authToken
+        },
+        contentType: 'application/json'
+    });
+    if (response["status"] === 201) {
+        showError(response["Demand added Successfully"]);
+        // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, _agrmntDet["assignee"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+    } else {
+        showError(response["statusText"]);
+    }
+
+    // console.log(agreementDetail);
+
+
+
   }
 
-  handleChange(e,name,auctualDemand,k) {
-
+  handleChange(e,name,k) {
+        this.setState({
+            demands:{
+              ...this.state.demands,
+              [k]:{
+                  ...this.state.demands[k],
+                  [name]:e.target.value
+              }
+            }
+        })
   }
 
-  handleCheckAll(e, name){
-  // console.log(JSON.stringify(this.state.demands));
-  //   var keys = Object.keys(this.state.demands);
-  //   if(this.state.demands[0] && this.state.demands[0]["isActualDemand"]) {
-  //     var demands = this.state.demands;
-  //     for(key in demands) {
-  //       if(!demands[key]) demands[key] = {};
-  //       demands[key]["isActualDemand"] = this.state.demands[0]["isActualDemand"];
-  //     }
-  //
-  //     this.setState({
-  //       demands
-  //     })
-  //   } else {
-  //     e.preventDefault();
-  //   }
-  }
+    handleChangeAll(e,whichProperty)
+    {
+        var demands=this.state.demands;
 
-  componentWillMount() {
-    var demands={};
-   var agreementDetail={};
-   agreementDetail["timePeriod"]=5;
-   agreementDetail["paymentCycle"]="MONTH";
+        for (var variable in demands) {
+              demands[variable][whichProperty]=e.target.value;
+        }
 
-   var date = new Date();
-   var endDate = new Date((date.getFullYear()+agreementDetail["timePeriod"]),date.getMonth(),date.getDate());
-   var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        this.setState({
+          demands
+        })
+    }
 
+  // handleCheckAll(e, name){
+  // // console.log(JSON.stringify(this.state.demands));
+  // //   var keys = Object.keys(this.state.demands);
+  // //   if(this.state.demands[0] && this.state.demands[0]["isActualDemand"]) {
+  // //     var demands = this.state.demands;
+  // //     for(key in demands) {
+  // //       if(!demands[key]) demands[key] = {};
+  // //       demands[key]["isActualDemand"] = this.state.demands[0]["isActualDemand"];
+  // //     }
+  // //
+  // //     this.setState({
+  // //       demands
+  // //     })
+  // //   } else {
+  // //     e.preventDefault();
+  // //   }
+  // }
 
+  componentWillMount()
+  {
+         var demands={};
+         var agreementDetail={};
+         //api call
 
-
-
-
-   switch (agreementDetail["paymentCycle"]) {
-     case "MONTH":
-         // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
-         var i=0;
-         while (date <= endDate)
-         {
-             // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
-             // resultList.push(stringDate);
-             demands[i]={
-
-                   "taxAmount" : null,
-                   "collectionAmount" : null,
-                   "rebateAmount" : null,
-                   "taxReason" : null,
-                   "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                   "glCode" : null,
-                   "isActualDemand" : null,
-                   tenantId
+         try {
+             if (getUrlVars()["agreementNumber"]) {
+                agreementDetail = commonApiPost("lams-services", "agreements", "demands/_prepare", {
+                     agreementNumber: getUrlVars()["agreementNumber"],
+                     tenantId
+                 }).responseJSON["Agreements"][0] || {};
              }
 
-              date.setMonth(date.getMonth() + 1);
-          }
-       break;
 
-     case "QUARTER":
 
-       break;
-     case "HALFYEAR":
+         } catch (e) {
+             console.log(e);
+         }
+        //  agreementDetail["timePeriod"]=5;
 
-       break;
-     default: break
+        //api call for prepare demands
 
+        //  try {
+        //
+        //         agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
+        //              agreementNumber: getUrlVars()["agreementNumber"],
+        //              tenantId
+        //          }).responseJSON["Agreements"][0] || {};
+        //
+        //  } catch (e) {
+        //      console.log(e);
+        //  }
+
+
+        //  agreementDetail["paymentCycle"]="HALFYEAR";
+        //  agreementDetail["commencementDate"]="01/01/2016";
+        //  agreementDetail["expiryDate"]="01/10/2017";
+        //  agreementDetail["demands"]=null;
+        //  agreementDetail["legacyDemands"]=[];
+
+        // agreementDetail["legacyDemands"].push({demandDetails:[]});
+
+         var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+         var date = new Date(agreementDetail["commencementDate"].split("/")[2],agreementDetail["commencementDate"].split("/")[1],agreementDetail["commencementDate"].split("/")[0]);
+         var currentDate=new Date();
+         var endDate = new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1],agreementDetail["expiryDate"].split("/")[0])<currentDate?new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1],agreementDetail["expiryDate"].split("/")[0]):new Date();
+
+
+         if (agreementDetail["demands"]) {
+            var i=0;
+            for (var variable in agreementDetail["legacyDemands"][0]["demandDetails"]) {
+              demands[i]=agreementDetail["legacyDemands"][0]["demandDetails"][i];
+              i++;
+            }
+         } else {
+           switch (agreementDetail["paymentCycle"]) {
+             case "MONTH":
+
+
+                 // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+                 var i=0;
+                //  console.log(date);
+                //  console.log(endDate);
+                 while (date <= endDate)
+                 {
+                     // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+                     // resultList.push(stringDate);
+                     demands[i]={
+
+                           "taxAmount" : null,
+                           "collectionAmount" : null,
+                           "rebateAmount" : null,
+                           "taxReason" : null,
+                           "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+                           "glCode" : null,
+                           "isActualDemand" : null,
+                           tenantId
+                     }
+                    date.setMonth(date.getMonth() + 1);
+                    i++;
+                }
+               break;
+
+             case "QUARTER":
+             // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+
+             var i=0;
+            //  console.log(date);
+            //  console.log(endDate);
+             while (date <= endDate)
+             {
+                 // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+                 // resultList.push(stringDate);
+
+                   demands[i]={
+
+                         "taxAmount" : null,
+                         "collectionAmount" : null,
+                         "rebateAmount" : null,
+                         "taxReason" : null,
+                         "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+                         "glCode" : null,
+                         "isActualDemand" : null,
+                         tenantId
+                   }
+
+
+                date.setMonth(date.getMonth() + 3);
+                i++;
+              }
+               break;
+             case "HALFYEAR":
+             // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+
+             var i=0;
+            //  console.log(date);
+            //  console.log(endDate);
+             while (date <= endDate)
+             {
+                 // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+                 // resultList.push(stringDate);
+
+                   demands[i]={
+
+                         "taxAmount" : null,
+                         "collectionAmount" : null,
+                         "rebateAmount" : null,
+                         "taxReason" : null,
+                         "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+                         "glCode" : null,
+                         "isActualDemand" : null,
+                         tenantId
+                   }
+
+
+                date.setMonth(date.getMonth() + 6);
+                i++;
+              }
+               break;
+             default:
+             // demands=getDemandRows(agreementDetail["paymentCycle"],agreementDetail["timePeriod"]);
+
+             var i=0;
+            //  console.log(date);
+            //  console.log(endDate);
+             while (date <= endDate)
+             {
+                 // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+                 // resultList.push(stringDate);
+
+                   demands[i]={
+
+                         "taxAmount" : null,
+                         "collectionAmount" : null,
+                         "rebateAmount" : null,
+                         "taxReason" : null,
+                         "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+                         "glCode" : null,
+                         "isActualDemand" : null,
+                         tenantId
+                   }
+
+
+                date.setMonth(date.getMonth() + 12);
+                i++;
+              }
+             break;
+
+      }
+    }
+
+
+
+
+
+    // console.log(demands);
+     this.setState({
+       demands,
+       paymentCycle:agreementDetail["paymentCycle"],
+       agreementDetail
+     })
   }
 
 
-   this.setState({
-     demands
-   })
-  }
-
-
-  render() {
-    let {demands} = this.state;
+  render()
+  {
+    let {demands,paymentCycle,commonDemand,commonCollection} = this.state;
     // let {month, demand, collection} = demands;
-    let {handleCheckAll, handleChange, save} = this;
+    let {handleCheckAll,handleChangeAll, handleChange, save} = this;
 
     const renderBody = function() {
 
@@ -113,13 +308,13 @@ class EditDemand extends React.Component {
         return (<tr key={demands[k].code}>
                     <td>{demands[k]["taxPeriod"]}</td>
                     <td data-label="demand">
-                      <input type="number" name={demands[k]["isActualDemand"]} value={demands[k]["isActualDemand"]} onChange={(e) => {
-                        handleChange(e, "demands","isActualDemand", k)
+                      <input type="number" name={demands[k]["taxAmount"]} value={demands[k]["taxAmount"]} onChange={(e) => {
+                        handleChange(e, "taxAmount", k)
                       }}/>
                     </td>
                     <td data-label="collection">
                       <input type="number" name={demands[k]["collectionAmount"]} value={demands[k]["collectionAmount"]} onChange={(e) => {
-                        handleChange(e, "demands","collectionAmount", k)
+                        handleChange(e, "collectionAmount", k)
                       }}/>
                     </td>
                 </tr>)
@@ -139,25 +334,25 @@ class EditDemand extends React.Component {
                 <thead>
                   <tr>
                     <th className="text-center">
-                      Month
+                      {paymentCycle +"LY Period"}
                     </th>
                     <th className="text-center">Demand
 
-                      <div className="checkbox">
-                          <label>
-                            <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Demand")}}/>
-                          </label>
-                      </div>
+                    <input type="number" min="0"  style={{color:"black"}} name="commonDemand" value={commonDemand}  onChange={(e) => {
+                      handleChangeAll(e, "taxAmount")
+                    }}/>
+
+
+
 
 
                     </th>
                     <th>
                       Collection
-                      <div className="checkbox">
-                          <label>
-                            <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Collection")}}/>
-                          </label>
-                      </div>
+                      <input type="number" min="0" style={{color:"black"}} name="commonCollection" value={commonCollection}   onChange={(e) => {
+                        handleChangeAll(e, "collectionAmount")
+                      }}/>
+
                     </th>
                     </tr>
 
@@ -185,3 +380,14 @@ class EditDemand extends React.Component {
 
 ReactDOM.render(
   <EditDemand/>, document.getElementById('root'));
+
+
+  // {/*
+  //
+  //   <div className="checkbox">
+  //       <label>
+  //         <input type="checkbox" onChange={(e)=>{handleCheckAll(e,"Demand")}}/>
+  //       </label>
+  //   </div>
+  //
+  //   */}

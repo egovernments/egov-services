@@ -220,7 +220,8 @@ public class AgreementService {
 			legacyDemands = demandRepository.getDemandList(agreementRequest, demandReasons);
 		} else {
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.getLong(demandIds.get(0)));
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			logger.info("the demand search id :: "+demandSearchCriteria.getDemandId());
 			legacyDemands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 					.getDemands();
 		}

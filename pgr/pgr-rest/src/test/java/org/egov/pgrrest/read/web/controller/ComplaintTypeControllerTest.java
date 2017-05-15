@@ -56,7 +56,7 @@ public class ComplaintTypeControllerTest {
     public void getComplaintTypesWhereTypeIsFrequency() throws Exception {
         when(complaintTypeService.findByCriteria(getSearchCriteria(FREQUENCY))).thenReturn(getComplaintTypeList());
 
-        mockMvc.perform(post("/services?type=FREQUENCY&count=2&tenantId=ap.public")
+        mockMvc.perform(post("/services/_search?type=FREQUENCY&count=2&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -67,7 +67,7 @@ public class ComplaintTypeControllerTest {
     public void getAllComplaintTypes() throws Exception {
         when(complaintTypeService.findByCriteria(getSearchCriteria(ALL))).thenReturn(getAllComplaintType());
 
-        mockMvc.perform(post("/services?type=ALL&tenantId=ap.public")
+        mockMvc.perform(post("/services/_search?type=ALL&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class ComplaintTypeControllerTest {
     public void getComplaintTypesByCategory() throws Exception {
         when(complaintTypeService.findByCriteria(getSearchCriteria(CATEGORY))).thenReturn(getComplaintTypeListForCategoryIdSearch());
 
-        mockMvc.perform(post("/services?type=CATEGORY&categoryId=1&tenantId=ap.public")
+        mockMvc.perform(post("/services/_search?type=CATEGORY&categoryId=1&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())

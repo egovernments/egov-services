@@ -90,6 +90,14 @@ class EditDemand extends React.Component {
           demands
         })
     }
+    componentDidMount(){
+      if(window.opener && window.opener.document) {
+         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+         if(logo_ele && logo_ele[0]) {
+           document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
+         }
+       }
+    }
 
   // handleCheckAll(e, name){
   // // console.log(JSON.stringify(this.state.demands));
@@ -112,6 +120,7 @@ class EditDemand extends React.Component {
   componentWillMount()
   {
          var demands={};
+         var tempDemands={};
          var agreementDetail={};
          //api call
 
@@ -159,13 +168,13 @@ class EditDemand extends React.Component {
          var endDate = new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1],agreementDetail["expiryDate"].split("/")[0])<currentDate?new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1],agreementDetail["expiryDate"].split("/")[0]):new Date();
 
 
-         if (agreementDetail["demands"]) {
-            var i=0;
-            for (var variable in agreementDetail["legacyDemands"][0]["demandDetails"]) {
-              demands[i]=agreementDetail["legacyDemands"][0]["demandDetails"][i];
-              i++;
-            }
-         } else {
+
+          var k=0;
+          for (var variable in agreementDetail["legacyDemands"][0]["demandDetails"]) {
+              tempDemands[k]=agreementDetail["legacyDemands"][0]["demandDetails"][k];
+              k++;
+          }
+
            switch (agreementDetail["paymentCycle"]) {
              case "MONTH":
 
@@ -178,17 +187,19 @@ class EditDemand extends React.Component {
                  {
                      // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
                      // resultList.push(stringDate);
-                     demands[i]={
-
-                           "taxAmount" : null,
-                           "collectionAmount" : null,
-                           "rebateAmount" : null,
-                           "taxReason" : null,
-                           "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                           "glCode" : null,
-                           "isActualDemand" : null,
-                           tenantId
-                     }
+                     demands[i]=tempDemands[i];
+                    //  {
+                     //
+                    //        "taxAmount" : null,
+                    //        "collectionAmount" : null,
+                    //        "rebateAmount" : null,
+                    //        "taxReason" : null,
+                    //        "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
+                    //        "glCode" : null,
+                    //        "isActualDemand" : null,
+                    //        tenantId
+                    //  }
+                     getDay()
                     date.setMonth(date.getMonth() + 1);
                     i++;
                 }
@@ -205,17 +216,7 @@ class EditDemand extends React.Component {
                  // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
                  // resultList.push(stringDate);
 
-                   demands[i]={
-
-                         "taxAmount" : null,
-                         "collectionAmount" : null,
-                         "rebateAmount" : null,
-                         "taxReason" : null,
-                         "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                         "glCode" : null,
-                         "isActualDemand" : null,
-                         tenantId
-                   }
+                  demands[i]=tempDemands[i];
 
 
                 date.setMonth(date.getMonth() + 3);
@@ -233,18 +234,7 @@ class EditDemand extends React.Component {
                  // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
                  // resultList.push(stringDate);
 
-                   demands[i]={
-
-                         "taxAmount" : null,
-                         "collectionAmount" : null,
-                         "rebateAmount" : null,
-                         "taxReason" : null,
-                         "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                         "glCode" : null,
-                         "isActualDemand" : null,
-                         tenantId
-                   }
-
+                demands[i]=tempDemands[i];
 
                 date.setMonth(date.getMonth() + 6);
                 i++;
@@ -260,19 +250,7 @@ class EditDemand extends React.Component {
              {
                  // var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
                  // resultList.push(stringDate);
-
-                   demands[i]={
-
-                         "taxAmount" : null,
-                         "collectionAmount" : null,
-                         "rebateAmount" : null,
-                         "taxReason" : null,
-                         "taxPeriod" : monthNameList[date.getMonth()] + " " + date.getFullYear(),
-                         "glCode" : null,
-                         "isActualDemand" : null,
-                         tenantId
-                   }
-
+                demands[i]=tempDemands[i];
 
                 date.setMonth(date.getMonth() + 12);
                 i++;
@@ -280,7 +258,7 @@ class EditDemand extends React.Component {
              break;
 
       }
-    }
+
 
 
 

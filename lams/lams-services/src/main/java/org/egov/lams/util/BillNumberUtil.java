@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.util;
 
 import org.egov.lams.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BillNumberService {
+public class BillNumberUtil {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

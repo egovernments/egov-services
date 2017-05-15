@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.util;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -10,9 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AcknowledgementNumberService {
+public class AcknowledgementNumberUtil {
 	
-	public static final Logger logger = LoggerFactory.getLogger(AcknowledgementNumberService.class);
+	public static final Logger logger = LoggerFactory.getLogger(AcknowledgementNumberUtil.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

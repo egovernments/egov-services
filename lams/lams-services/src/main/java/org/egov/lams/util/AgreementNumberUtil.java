@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.util;
 
 import java.time.LocalDateTime;
 
@@ -10,9 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AgreementNumberService {
+public class AgreementNumberUtil {
 	
-	public static final Logger logger = LoggerFactory.getLogger(AgreementNumberService.class);
+	public static final Logger logger = LoggerFactory.getLogger(AgreementNumberUtil.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

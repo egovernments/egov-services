@@ -191,7 +191,7 @@ public class EligibleLeavesController {
 
         List<LeaveApplication> leaveApplicationsList = null;
         try {
-            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
+            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest,requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

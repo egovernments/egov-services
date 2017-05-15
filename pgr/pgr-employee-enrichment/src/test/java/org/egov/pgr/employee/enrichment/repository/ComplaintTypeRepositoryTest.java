@@ -17,7 +17,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 public class ComplaintTypeRepositoryTest {
     private static final String HOST = "http://host";
-    private static final String COMPLAINT_TYPE_URL = "/pgr/services/{code}?tenantId={tenantId}";
+    private static final String COMPLAINT_TYPE_URL = "/pgr/services/{code}/_search?tenantId={tenantId}";
 
     private ComplaintTypeRepository complaintTypeRepository;
     private MockRestServiceServer server;
@@ -33,7 +33,7 @@ public class ComplaintTypeRepositoryTest {
     @Test
     public void test_should_get_complaint_type_id_for_given_complaint_code() {
         server.expect(once(),
-            requestTo("http://host/pgr/services/complaintTypeCode?tenantId=tenantId"))
+            requestTo("http://host/pgr/services/complaintTypeCode/_search?tenantId=tenantId"))
             .andExpect(method(HttpMethod.POST))
             .andRespond(withSuccess(resources.getFileContents("complaintTypeResponse.json"),
                 MediaType.APPLICATION_JSON_UTF8));

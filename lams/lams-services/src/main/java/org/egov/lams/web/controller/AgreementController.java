@@ -63,7 +63,7 @@ public class AgreementController {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"+ agreementCriteria);
 		List<Agreement> agreements = agreementService
-				.searchAgreement(agreementCriteria);
+				.searchAgreement(agreementCriteria,requestInfo);
 		if(agreements.isEmpty())
 			throw new LamsException("No agreements found for the given criteria");
 		System.err.println("before sending for response su7ccess");
@@ -145,7 +145,7 @@ public class AgreementController {
 		agreementCriteria.setAgreementNumber(agreementNumber);
 		
 		LOGGER.info("before search : "+agreementNumber);
-		Agreement agreement = agreementService.searchAgreement(agreementCriteria).get(0);
+		Agreement agreement = agreementService.searchAgreement(agreementCriteria,requestInfoWrapper.getRequestInfo()).get(0);
 		LOGGER.info("after search "+ agreement);
 		agreementRequest.setAgreement(agreement);
 		agreement.setLegacyDemands(agreementService.prepareDemands(agreementRequest));

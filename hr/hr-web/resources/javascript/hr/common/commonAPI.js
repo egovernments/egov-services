@@ -201,7 +201,7 @@ function showSuccess(message) {
     $('#success-alert-div').show();
     setTimeout(function() {
         $('#success-alert-div').remove();
-    }, 3000);
+    }, 6000);
 }
 
 function showError(message) {
@@ -215,7 +215,7 @@ function showError(message) {
     $('#error-alert-div').show();
     setTimeout(function() {
         $('#error-alert-div').remove();
-    }, 3000);
+    }, 6000);
 }
 
 function getCookie(cname) {

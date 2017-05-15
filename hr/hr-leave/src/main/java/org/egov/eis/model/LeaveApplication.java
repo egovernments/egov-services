@@ -96,7 +96,7 @@ public class LeaveApplication {
     @Size(min = 5, max = 500)
     private String reason;
 
-    private LeaveStatus status;
+    private Long status;
 
     private Long stateId;
 

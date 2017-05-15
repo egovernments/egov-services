@@ -38,11 +38,12 @@ public class EmployeeListener {
 		LOGGER.info("requestInfoJSONObject : " + requestInfoJSONObject);
 		JsonObject employeeJSONObject = jsonObject.getJsonObject("Employee");
 		LOGGER.info("employeeJSONObject : " + employeeJSONObject);
-		String tenantId = employeeJSONObject.getString("tenantId");
+		String tenantId = employeeJSONObject.isNull("tenantId") ? null : employeeJSONObject.getString("tenantId");
 		LOGGER.info("tenantId : " + tenantId);
 
 		RequestInfo requestInfo = requestInfoFactory.getRequestInfo(requestInfoJSONObject, tenantId);
 
+		// FIXME : Parse id in long once egf-masters update their AccountDetailKey Contract & table schema.
 		employeeService.processRequest(employeeJSONObject.getInt("id"), tenantId, requestInfo);
 	}
 

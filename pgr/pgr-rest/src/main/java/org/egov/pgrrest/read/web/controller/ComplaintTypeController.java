@@ -20,7 +20,7 @@ public class ComplaintTypeController {
     @Autowired
     private ComplaintTypeService complaintTypeService;
 
-    @PostMapping
+    @PostMapping(value = "/_search")
     public ComplaintTypeResponse getComplaintTypes(@RequestParam String type,
                                                    @RequestParam(required = false) Long categoryId, @RequestParam(required = false) Integer count,
                                                    @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,
@@ -32,7 +32,7 @@ public class ComplaintTypeController {
         return new ComplaintTypeResponse(null, complaintTypes);
     }
 
-    @PostMapping("/{serviceCode}")
+    @PostMapping("/{serviceCode}/_search")
     public ComplaintTypeResponse getComplaintTypes(@PathVariable(name = "serviceCode") String complaintTypeCode,
                                                    @RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
                                                    @RequestBody RequestInfoBody requestInfo) {

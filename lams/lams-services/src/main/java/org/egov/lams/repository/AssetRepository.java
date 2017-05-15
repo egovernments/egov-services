@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class AssetService {
+public class AssetRepository {
 
-	public static final Logger logger = LoggerFactory.getLogger(AssetService.class);
+	public static final Logger logger = LoggerFactory.getLogger(AssetRepository.class);
 
 	@Autowired
 	private PropertiesManager propertiesManager;

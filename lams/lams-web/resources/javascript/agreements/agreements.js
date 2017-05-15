@@ -6,6 +6,15 @@ var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
 var agreement = {};
 var employees = [];
 
+$(document).ready(function(){
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
+     }
+   }
+});
+
 $(".disabled").attr("disabled", true);
 //Getting data for user input
 $("input").on("keyup", function() {

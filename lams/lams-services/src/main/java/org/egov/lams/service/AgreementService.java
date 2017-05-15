@@ -71,7 +71,7 @@ public class AgreementService {
 	 */
 	public boolean isAgreementExist(String code) {
 
-		return (agreementRepository.findAgreementByUniqueCode(code) != null);
+		return agreementRepository.isAgreementExist(code);
 	}
 
 	/**

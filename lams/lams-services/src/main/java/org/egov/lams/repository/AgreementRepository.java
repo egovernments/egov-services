@@ -49,21 +49,20 @@ public class AgreementRepository {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public Agreement findAgreementByUniqueCode(String code) {
+	public boolean isAgreementExist(String code) {
 
-		List<Agreement> agreements = null;
+		Long  agreementId = null;
 		String sql = AgreementQueryBuilder.agreementQuery;
 		Object[] preparedStatementValues = new Object[] { code ,code };
 
 		try {
-			agreements = jdbcTemplate.queryForList(sql, preparedStatementValues, Agreement.class);
+			agreementId = jdbcTemplate.queryForList(sql, preparedStatementValues, Long.class).get(0);
 		} catch (DataAccessException e) {
 			logger.info("exception in getagreementbyid :: " + e);
 			throw new RuntimeException(e.getMessage());
 		}
 		
-		if(agreements.isEmpty()) throw new RuntimeException("no agreements found for the given agreement/acknowledgenent number");
-		return agreements.get(0);
+		return (agreementId != null && agreementId != 0);
 	}
 
 	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {

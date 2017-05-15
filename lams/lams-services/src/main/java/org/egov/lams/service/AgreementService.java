@@ -149,6 +149,8 @@ public class AgreementService {
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
+		//FIXME remove after fixing tenantidf set to default for now 
+		agreement.getLegacyDemands().get(0).setTenantId("default");
 		
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			logger.info("updateagreementservice Source.DATA_ENTRY");

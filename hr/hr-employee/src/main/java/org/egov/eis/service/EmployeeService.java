@@ -65,8 +65,7 @@ import org.egov.eis.repository.RegularisationRepository;
 import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
-import org.egov.eis.service.exception.UserCreateException;
-import org.egov.eis.service.exception.UserUpdateException;
+import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeCriteria;
@@ -74,12 +73,9 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
-import org.egov.eis.web.errorhandler.ErrorResponse;
-import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -222,29 +218,13 @@ public class EmployeeService {
 		return employee;
 	}
 
-	public Employee createAsync(EmployeeRequest employeeRequest) throws JsonProcessingException {
+	public Employee createAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
 				: userRequest.getUser().getBloodGroup());
 
-		ResponseEntity<?> responseEntity = null;
-
-		// FIXME : User service is expecting & sending dates in multiple
-		// formats. Fix a common standard
-		try {
-			responseEntity = userService.createUser(userRequest);
-
-			if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
-					|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
-				throw new UserCreateException(0L);
-				// return responseEntity;
-			}
-		} catch (Exception e) {
-			LOGGER.debug("Error occurred while creating user", e);
-			throw new UserCreateException(0L);
-		}
-
-		UserResponse userResponse = (UserResponse) responseEntity.getBody();
+		// FIXME : Fix a common standard for date formats in User Service.
+		UserResponse userResponse = userService.createUser(userRequest);;
 		User user = userResponse.getUser().get(0);
 
 		Employee employee = employeeRequest.getEmployee();
@@ -298,7 +278,7 @@ public class EmployeeService {
 		}
 	}
 
-	public Employee updateAsync(EmployeeRequest employeeRequest) throws JsonProcessingException {
+	public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
 
 		Employee employee = employeeRequest.getEmployee();
 
@@ -306,20 +286,7 @@ public class EmployeeService {
 		userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
 				: userRequest.getUser().getBloodGroup());
 
-		ResponseEntity<?> responseEntity = null;
-
-		try {
-			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
-		} catch (Exception e) {
-			LOGGER.debug("Error occurred while updating user", e);
-			throw new UserUpdateException(employee.getId());
-		}
-
-		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
-				|| responseEntity.getBody().getClass().equals(ErrorResponse.class))
-			throw new UserUpdateException(employee.getId());
-
-		UserResponse userResponse = (UserResponse) responseEntity.getBody();
+		UserResponse userResponse = userService.updateUser(userRequest.getUser().getId(), userRequest);
 		User user = userResponse.getUser().get(0);
 		employee.setUser(user);
 

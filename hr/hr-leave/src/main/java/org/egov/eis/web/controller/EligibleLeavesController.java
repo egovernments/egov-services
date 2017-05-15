@@ -183,6 +183,8 @@ public class EligibleLeavesController {
         leaveApplicationGetRequest.setLeaveType(leaveType);
 
         leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
+        
+        leaveApplicationGetRequest.setTenantId(tenantId);
 
         leaveApplicationGetRequest
                 .setFromDate(Date.from(yearStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));

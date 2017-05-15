@@ -1,12 +1,10 @@
 package org.egov.workflow.web.controller;
 
-
 import org.egov.workflow.Resources;
 import org.egov.workflow.domain.exception.InvalidComplaintStatusException;
 import org.egov.workflow.domain.exception.InvalidComplaintStatusSearchException;
 import org.egov.workflow.domain.model.ComplaintStatus;
 import org.egov.workflow.domain.model.ComplaintStatusSearchCriteria;
-import org.egov.workflow.domain.model.KeywordStatusMapping;
 import org.egov.workflow.domain.model.KeywordStatusMappingSearchCriteria;
 import org.egov.workflow.domain.service.ComplaintStatusService;
 import org.egov.workflow.domain.service.KeywordStatusMappingService;
@@ -23,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,8 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ComplaintStatusController.class)
-public class ComplaintStatusControllerTest {
+@WebMvcTest(ServiceStatusController.class)
+public class ServiceStatusControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -46,9 +46,9 @@ public class ComplaintStatusControllerTest {
     @Test
     public void findAllStatusTest() throws Exception {
         List<ComplaintStatus> complaintStatuses = Collections.singletonList(
-                org.egov.workflow.domain.model.ComplaintStatus.builder()
-                    .code("REGISTERED").id(1L)
-                    .name("REGISTERED").tenantId("default").build()
+            org.egov.workflow.domain.model.ComplaintStatus.builder()
+                .code("00001").id(1L)
+                .name("REGISTERED").tenantId("default").build()
         );
 
         KeywordStatusMappingSearchCriteria searchCriteria = KeywordStatusMappingSearchCriteria.builder()
@@ -59,54 +59,55 @@ public class ComplaintStatusControllerTest {
         when(keywordStatusMappingService.getStatusForKeyword(searchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
-                    post("/statuses/_search")
-                        .param("tenantId", "default")
-                        .param("keyword", "Complaint")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(resources.getFileContents("complaintStatusRequest.json"))
-                )
-                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(new Resources().getFileContents("complaintStatusResponse.json")));
+            post("/v1/statuses/_search")
+                .param("tenantId", "default")
+                .param("keyword", "Complaint")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(resources.getFileContents("complaintStatusRequest.json"))
+        )
+            .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(new Resources().getFileContents("serviceStatusResponse.json")));
     }
 
     @Test
     public void testComplaintStatusMappingService() throws Exception {
         String status = "REGISTERED";
         List<ComplaintStatus> complaintStatuses = Collections.singletonList(
-                new ComplaintStatus(1L, "REGISTERED","default","0001")
+            new ComplaintStatus(1L, "REGISTERED","default","00001")
         );
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L));
+            new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L));
         when(complaintStatusService.getNextStatuses(complaintStatusSearchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
-                    post("/nextstatuses/_search")
-                        .param("currentStatus", status)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(resources.getFileContents("complaintStatusRequest.json"))
-                )
-                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(resources.getFileContents("complaintStatusResponse.json")));
+            post("/v1/nextstatuses/_search")
+                .param("currentStatus", status)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(resources.getFileContents("complaintStatusRequest.json"))
+        )
+            .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(resources.getFileContents("serviceStatusResponse.json")));
     }
 
     @Test
     public void should_return_400_when_request_fields_are_invalid() throws Exception {
         InvalidComplaintStatusSearchException exception =
-                new InvalidComplaintStatusSearchException(
-                        new ComplaintStatusSearchCriteria("", Collections.emptyList())
-                );
+            new InvalidComplaintStatusSearchException(
+                new ComplaintStatusSearchCriteria("", Collections.emptyList())
+            );
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
         mockMvc.perform(
-                    post("/nextstatuses/_search")
-                        .param("currentStatus", "")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(resources.getFileContents("complaintStatusRequest.json"))
-                )
-                .andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(resources.getFileContents("getNextStatusErrorResponseForFieldValidationErrors.json")));
+            post("/v1/nextstatuses/_search")
+                .param("currentStatus", "")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(resources.getFileContents("complaintStatusRequest.json"))
+        )
+            .andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(resources.getFileContents("getNextStatusErrorResponseForFieldValidationErrors.json")));
     }
+
 
     @Test
     public void should_return_400_when_current_status_does_not_exist() throws Exception {
@@ -115,13 +116,15 @@ public class ComplaintStatusControllerTest {
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
         mockMvc.perform(
-                    post("/nextstatuses/_search")
-                            .param("currentStatus", CURRENT_STATUS)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(resources.getFileContents("complaintStatusRequest.json"))
-                )
-                .andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(resources.getFileContents("getNextStatusErrorResponseForInvalidCurrentStatus.json")));
+            post("/v1/nextstatuses/_search")
+                .param("currentStatus", CURRENT_STATUS)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(resources.getFileContents("complaintStatusRequest.json"))
+        )
+            .andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(resources.getFileContents("getNextStatusErrorResponseForInvalidCurrentStatus.json")));
 
     }
+
+
 }

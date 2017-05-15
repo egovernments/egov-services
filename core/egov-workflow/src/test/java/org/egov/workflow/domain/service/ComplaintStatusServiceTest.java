@@ -51,8 +51,9 @@ public class ComplaintStatusServiceTest {
     public void test_should_find_next_statuses_given_current_status_name_and_user_roles() throws Exception {
         final String CURRENT_STATUS_NAME = "REJECTED";
         final Long CURRENT_STATUS_ID = 1L;
+        final String CURRENT_STATUS_TENANTID = "default";
 
-        ComplaintStatus currentStatus = new ComplaintStatus(CURRENT_STATUS_ID, CURRENT_STATUS_NAME);
+        ComplaintStatus currentStatus = new ComplaintStatus(CURRENT_STATUS_ID, CURRENT_STATUS_NAME,CURRENT_STATUS_TENANTID,"0001");
         List<Long> listOfRoles = asList(1L, 2L);
         List<ComplaintStatus> complaintStatuses = getListOfComplaintStatusModels();
 
@@ -95,8 +96,8 @@ public class ComplaintStatusServiceTest {
 
     private List<ComplaintStatus> getListOfComplaintStatusModels() {
         return asList(
-                new ComplaintStatus(1L, "REGISTERED"),
-                new ComplaintStatus(2L, "WITHDRAWN")
+                new ComplaintStatus(1L, "REGISTERED","default","0001"),
+                new ComplaintStatus(2L, "WITHDRAWN","default","0002")
         );
     }
 }

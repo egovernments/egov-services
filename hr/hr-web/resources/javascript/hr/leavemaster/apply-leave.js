@@ -29,6 +29,8 @@ class ApplyLeave extends React.Component {
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
     this.getPrimaryAssigmentDep=this.getPrimaryAssigmentDep.bind(this);
+    this.isSecondSat = this.isSecondSat.bind(this);
+    this.isFourthSat = this.isFourthSat.bind(this);
   }
 
   componentDidMount() {
@@ -86,37 +88,52 @@ class ApplyLeave extends React.Component {
             autoclose:true
 
         });
-
         $('#fromDate, #toDate').on("change", function(e) {
           var _from = $('#fromDate').val();
           var _to = $('#toDate').val();
           var _triggerId = e.target.id;
           if(_from && _to) {
-            var dateParts = _from.split("/");
-            var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+            var dateParts1 = _from.split("/");
+            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
             var date1 = new Date(newDateStr);
-            var dateParts = _to.split("/");
-            var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+            var dateParts2 = _to.split("/");
+            var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
             var date2 = new Date(newDateStr);
             if (date1 > date2) {
               showError("From date must be before End date.");
               $('#' + _triggerId).val("");
             } else {
+              var holidayList = [], m1 = dateParts1[1], m2 = dateParts2[1], y1 = dateParts1[2], y2 = dateParts2[2];
+              for(var i=0; i<allHolidayList.length;i++) {
+                if(allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
+                  holidayList.push(new Date(allHolidayList[i].applicableOn.split("/")[2], allHolidayList[i].applicableOn.split("/")[1]-1, allHolidayList[i].applicableOn.split("/")[0]).getTime());
+                }
+              }
               //Calculate working days
               var _days = 0;
               var parts1 = $('#fromDate').val().split("/");
               var parts2 = $('#toDate').val().split("/");
               var startDate = new Date(parts1[2], (+parts1[1]-1), parts1[0]);
               var endDate = new Date(parts2[2], (+parts2[1]-1), parts2[0]);
-              if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week") {
+              
+              if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week") {
                 for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
-                    if(!(allHolidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y") && !(d.getDay()===0||d.getDay()===6))
+                    if(holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !(d.getDay()===0||d.getDay()===6))
                         _days++;
                  }
-              }
-              else {
+              } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd Saturday holiday") {
                 for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
-                    if(!(allHolidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y") && !(d.getDay()===0))
+                    if(holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !_this.isSecondSat(d) && d.getDay() != 0)
+                        _days++;
+                }
+              } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd and 4th Saturday holiday"){
+                for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+                    if(holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && d.getDay() != 0 && !_this.isSecondSat(d) && !_this.isFourthSat(d))
+                        _days++;
+                }
+              } else {
+                for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+                    if(holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !(d.getDay()===0))
                       _days++;
                 }
               }
@@ -254,11 +271,18 @@ class ApplyLeave extends React.Component {
 
 }
 
+close(){
+    // widow.close();
+    open(location, '_self').close();
+}
 
-  close(){
-      // widow.close();
-      open(location, '_self').close();
-  }
+isSecondSat (d) {
+  return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 2);
+}
+
+isFourthSat (d) {
+  return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 4);
+}
 
 addOrUpdate(e,mode)
 {

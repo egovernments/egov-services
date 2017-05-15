@@ -48,9 +48,9 @@ public class ComplaintStatusMappingRepositoryTest {
 
 
     private List<ComplaintStatusMapping> getListOfComplaintStatusMappingEntities() {
-        ComplaintStatus registered = new ComplaintStatus(1L, "REGISTERED");
-        ComplaintStatus processing = new ComplaintStatus(2L, "PROCESSING");
-        ComplaintStatus completed = new ComplaintStatus(3L, "COMPLETED");
+        ComplaintStatus registered = new ComplaintStatus(1L, "REGISTERED","default","0001");
+        ComplaintStatus processing = new ComplaintStatus(2L, "PROCESSING","default","0002");
+        ComplaintStatus completed = new ComplaintStatus(3L, "COMPLETED","default","0003");
 
         ComplaintStatusMapping complaintStatusMapping1 =
                 new ComplaintStatusMapping(1L, registered, processing, 1L, 1);

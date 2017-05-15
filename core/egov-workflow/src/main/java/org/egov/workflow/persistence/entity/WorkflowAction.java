@@ -54,7 +54,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "EG_WF_ACTION")
 @SequenceGenerator(name = WorkflowAction.SEQ_WF_ACTION, sequenceName = WorkflowAction.SEQ_WF_ACTION, allocationSize = 1)
-public class WorkflowAction extends AbstractAuditable {
+public class WorkflowAction extends AbstractAuditable<Long> {
 
     static final String SEQ_WF_ACTION = "SEQ_EG_WF_ACTION";
     private static final long serialVersionUID = -7940804129929823917L;

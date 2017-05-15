@@ -45,7 +45,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "EG_WF_TYPES")
 @SequenceGenerator(name = WorkflowTypes.SEQ_WORKFLOWTYPES, sequenceName = WorkflowTypes.SEQ_WORKFLOWTYPES, allocationSize = 1)
-public class WorkflowTypes extends AbstractAuditable {
+public class WorkflowTypes extends AbstractAuditable<Long> {
 
     static final String SEQ_WORKFLOWTYPES = "SEQ_EG_WF_TYPES";
     private static final long serialVersionUID = 1L;

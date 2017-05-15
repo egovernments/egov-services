@@ -37,6 +37,13 @@ class AgreementSearch extends React.Component {
   }
 
   componentDidMount() {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+     }
+     
     let _this = this;
     this.setState({
       assetCategories,
@@ -305,6 +312,8 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
+                <option value="addeditdemand">Add / Edit Demand </option>
+
             </select>
           )
 

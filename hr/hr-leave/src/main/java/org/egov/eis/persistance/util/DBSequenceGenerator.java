@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ public class DBSequenceGenerator {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Serializable createAndGetNextSequence(final String sequenceName) throws SQLException {
         final List<Object> preparedStatementValues = new ArrayList<>();
         jdbcTemplate.execute("create sequence " + sequenceName);

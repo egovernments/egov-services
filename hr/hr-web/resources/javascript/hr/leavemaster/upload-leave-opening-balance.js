@@ -7,7 +7,6 @@ class UploadLeaveType extends React.Component{
         "my_file_input":"",
         "tenantId": tenantId
   },temp:[],dataType:[],employees:[],_leaveTypes:[],_years:[],duplicate:[]}
-    this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
   }
@@ -21,55 +20,34 @@ class UploadLeaveType extends React.Component{
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-    try {
-        var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+  try {
+    var _leaveTypes = commonApiPost("hr-leave", "leavetypes", "_search", {
+      tenantId,
+      pageSize: 500,
+      accumulative: true
+      }).responseJSON["LeaveType"] || [];
     } catch(e) {
-        var _leaveTypes = [];
+            var _leaveTypes = [];
     }
-    console.log("Leave type required",_leaveTypes);
-    this.setState({
-      _leaveTypes : _leaveTypes
-    });
+    //console.log("Leave type required",_leaveTypes);
+
     try {
         var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
     } catch(e) {
-        var _years = [];
+        var _years = [];``
     }
 
-    this.setState({
-      _years : _years
-    });
     try {
     var  employees = getCommonMaster("hr-employee","employees","Employee").responseJSON["Employee"] || [];
     } catch (e) {
     var  employees = [];
     }
-    console.log(employees);
+    //console.log(employees);
     this.setState({
-      employees : employees
+      employees : employees,
+      _years : _years,
+      _leaveTypes : _leaveTypes
     });
-
-
-  }
-
-  handleChange(e,name)
-  {
-      if(name === "active"){
-        this.setState({
-          LeaveType:{
-              ...this.state.LeaveType,
-              active: !this.state.LeaveType.active
-
-          }
-        })
-      } else{
-        this.setState({
-            LeaveType:{
-                ...this.state.LeaveType,
-                [name]:e.target.value
-            }
-        })
-      }
 
 
   }
@@ -98,9 +76,9 @@ class UploadLeaveType extends React.Component{
                 oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
 
                 key = Object.keys(oJS[0]);
-                console.log("key",key);
+                //console.log("key",key);
           });
-          console.log("oJS",oJS);
+          //console.log("oJS",oJS);
           var finalObject = [],duplicateObject = [],scannedObject = [];
           oJS.forEach(function(d){
             var employee = d[key[0]];
@@ -168,7 +146,7 @@ addOrUpdate(e,mode)
         var serverObject = [],errorObject=[],finalValidatedServerObject=[],finalSuccessObject=[];
         var tempInfo=Object.assign([],this.state.temp);
         var duplicateInfo = Object.assign([],this.state.duplicate);
-        console.log("TEMP ",tempInfo);
+        //console.log("TEMP ",tempInfo);
         duplicateInfo.forEach(function(d){
           errorObject.push(d);
         });
@@ -205,15 +183,15 @@ addOrUpdate(e,mode)
         });
 
 
-        var finalErrorMessage="",post=0,neagativeDays="",invalidLeaveTypes="",error=0;
-        var i=0,invalidEmployees="",invalidCalendarYears="";
+        var post=0,error=0;
+        var i=0;
         var leaveName,calendarYearName,employeeName,calenderName,noOfDays;
         var searchName;
         var leaveId = 0,employeeId=0,calenderId=0;
         for(var k=0;k<tempInfo.length;k++){
 
           var d = tempInfo[k];
-          console.log("d----->",d);
+          //console.log("d----->",d);
           noOfDays = parseInt(d.noOfDays)
           leaveName = d.leaveType.id;
           employeeName = d.employee;
@@ -224,7 +202,6 @@ addOrUpdate(e,mode)
           d.errorMessage = "";
           if(noOfDays<0){
             d.errorMessage = "Number of days is negative "+noOfDays;
-            neagativeDays = neagativeDays.concat(" "+noOfDays+", ");
             error=1;
             post=1;
           }
@@ -235,7 +212,6 @@ addOrUpdate(e,mode)
             }else{
                 d.errorMessage = d.errorMessage+" Leave type "+leaveName +" is not exist in system";
             }
-            invalidLeaveTypes = invalidLeaveTypes.concat(" "+leaveName+", ");
             post =1;
             error=1;
           }else{
@@ -256,7 +232,6 @@ addOrUpdate(e,mode)
               }else{
                   d.errorMessage = d.errorMessage+" Employee Code "+employeeName +" is not exist in system";
               }
-              invalidEmployees = invalidEmployees.concat(" "+employeeName+", ");
               error=1;
               post =1;
             }else{
@@ -278,8 +253,6 @@ addOrUpdate(e,mode)
                 }else{
                     d.errorMessage = d.errorMessage+" Calender Year "+calenderName +" is not exist in system";
                 }
-
-                invalidCalendarYears = invalidCalendarYears.concat(" "+calenderName+", ");
                 error=1;
                 post =1;
               }else{
@@ -312,8 +285,8 @@ addOrUpdate(e,mode)
           error = 0;
           }
         }
-        console.log("Success Objects",serverObject);
-        console.log("Error Objects",errorObject);
+        //console.log("Success Objects",serverObject);
+        //console.log("Error Objects",errorObject);
         var calenderYearApi = serverObject[0].calendarYear;
 
         try {
@@ -326,18 +299,18 @@ addOrUpdate(e,mode)
             var leaveBal = [];
         }
 
-        console.log(leaveBal);
+        //console.log(leaveBal);
         var errorLeaveOpening=[]
         var exists = false;
         for(var i=0;i<serverObject.length;i++){
-          console.log("Success Object-->",serverObject[i]);
+          //console.log("Success Object-->",serverObject[i]);
               var calendarNumber = parseInt(serverObject[i].calendarYear);
               exists = false;
               for(var j=0;j<leaveBal.length;j++){
                 if(calendarNumber===leaveBal[j].calendarYear){
                    if(serverObject[i].employee===leaveBal[j].employee){
                        if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
-                         console.log("Duplicate object from server -->",serverObject[i]);
+                         //console.log("Duplicate object from server -->",serverObject[i]);
                                exists=true;
                                serverObject[i].errorMessage = "Leave opening balance already present in the system for this Employee";
                                errorLeaveOpening.push(serverObject[i]);
@@ -348,20 +321,20 @@ addOrUpdate(e,mode)
                 }
 
                 if(exists===false){
-                  console.log("finalSuccessObject-->",serverObject[i]);
+                  //console.log("finalSuccessObject-->",serverObject[i]);
                   serverObject[i].successMessage = "Employee leaves created successfully";
                   finalValidatedServerObject.push(serverObject[i]);
                 }
 
         }
-        console.log("Data already present",errorLeaveOpening);
+        //console.log("Data already present",errorLeaveOpening);
 
         errorLeaveOpening.forEach(function(d){
           errorObject.push(d);
         });
 
-        console.log("Final Server Object After Validation",finalValidatedServerObject);
-        console.log("Final Error Object After Validation",errorObject);
+        //console.log("Final Server Object After Validation",finalValidatedServerObject);
+        //console.log("Final Error Object After Validation",errorObject);
 
         var ep1=new ExcelPlus();
         var b=0;
@@ -385,7 +358,7 @@ addOrUpdate(e,mode)
 
 
           finalValidatedServerObject.forEach(function(d){
-            console.log(d);
+            //console.log(d);
               finalSuccessObject.push({"employee": d.employee,
                               "calendarYear": d.calendarYear,
                               "leaveType":  { "id": d.leaveType["id"]},
@@ -393,7 +366,7 @@ addOrUpdate(e,mode)
                               "tenantId": d.tenantId
                             });
           });
-          console.log("FINSSL SNJNCJ",finalSuccessObject);
+          //console.log("FINSSL SNJNCJ",finalSuccessObject);
 
         if(finalSuccessObject.length!==0){
 
@@ -436,25 +409,14 @@ addOrUpdate(e,mode)
                 }
             });
           }else{
-            if(neagativeDays!="")
-            finalErrorMessage =  finalErrorMessage.concat(neagativeDays+" is not a valid days");
-
-            if(invalidLeaveTypes!="")
-            finalErrorMessage =   finalErrorMessage.concat(invalidLeaveTypes+" Leave types does not exist in system");
-
-            if(invalidEmployees!="")
-            finalErrorMessage =   finalErrorMessage.concat(invalidEmployees+"  Employees does not exist in system");
-
-            if(invalidCalendarYears!="")
-            finalErrorMessage =   finalErrorMessage.concat(invalidCalendarYears+" Calendar Years does not exist in system");
-            showError(finalErrorMessage);
+            showError("No vaild data in the Uploaded Excel");
           }
   }
 
   render()
   {
-    let {handleChange,addOrUpdate,filePicked}=this;
-    let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
+    let {addOrUpdate,filePicked}=this;
+    let {my_file_input}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
 
 

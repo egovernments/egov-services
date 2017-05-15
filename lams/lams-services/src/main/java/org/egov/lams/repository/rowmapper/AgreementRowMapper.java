@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
@@ -27,23 +28,23 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 
 		Map<Long,Agreement> AgreementMap = new HashMap<>();
 		logger.info("after creating map object ::: "+AgreementMap.size());
-		
+		String AgreementIdRsName = "lamsagreementid";
 		
 		while(rs.next()){
-
-			Long agreementId = rs.getLong("lamsagreementid");
-			System.err.println("agreementid in row mapper"+rs.getLong("lamsagreementid"));
+			
+			Long agreementId = (Long)rs.getObject(AgreementIdRsName);
+			logger.info("agreementid in row mapper"+agreementId);
 			Agreement agreement = AgreementMap.get(agreementId);
 			
 			if(agreement == null){
 				
 				agreement = new Agreement();
-				agreement.setId(rs.getLong("lamsagreementid"));
+				agreement.setId((Long)rs.getObject(AgreementIdRsName));
 				agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 				agreement.setStateId(rs.getString("stateid"));
 				agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));
 				//agreement.setCloseDate(rs.getDate("closedate"));
-				agreement.setTimePeriod(rs.getLong("timePeriod"));
+				agreement.setTimePeriod((Long)rs.getObject("timePeriod"));
 				agreement.setAgreementDate(rs.getTimestamp("agreement_date"));
 				agreement.setAgreementNumber(rs.getString("agreement_no"));
 				agreement.setBankGuaranteeAmount(rs.getDouble("bank_guarantee_amount"));
@@ -81,15 +82,15 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 				
 				
 				RentIncrementType rentIncrementType=new RentIncrementType();
-				rentIncrementType.setId(rs.getLong("rent_increment_method"));
+				rentIncrementType.setId((Long)rs.getObject("rent_increment_method"));
 				agreement.setRentIncrementMethod(rentIncrementType);
 
 				Allottee allottee = new Allottee();
-				allottee.setId(rs.getLong("allottee"));
+				allottee.setId((Long)rs.getObject("allottee"));
 				agreement.setAllottee(allottee);
 
 				Asset asset = new Asset();
-				asset.setId(rs.getLong("asset"));
+				asset.setId((Long)rs.getObject("asset"));
 				agreement.setAsset(asset);
 				
 				AgreementMap.put(agreementId,agreement);

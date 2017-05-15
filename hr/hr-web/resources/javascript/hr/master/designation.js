@@ -52,7 +52,7 @@ class Designation extends React.Component{
 
         if(getUrlVars()["type"]==="view")
         {
-            $("input,select").prop("disabled", true);
+            $("input,select,textarea").prop("disabled", true);
           }
 
           if(type==="update"||type==="view")

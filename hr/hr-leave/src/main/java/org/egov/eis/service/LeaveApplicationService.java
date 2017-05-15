@@ -50,6 +50,7 @@ import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
+import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,10 @@ public class LeaveApplicationService {
 
     @Autowired
     private LeaveApplicationRepository leaveApplicationRepository;
-    
+
+    @Autowired
+    private HRStatusService hrStatusService;
+
     @Autowired
     private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
 
@@ -93,9 +97,11 @@ public class LeaveApplicationService {
         final Boolean isExcelUpload = leaveApplicationRequest.getLeaveApplication().size() > 1 ? true : false;
         for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             if (isExcelUpload)
-                leaveApplication.setStatus(LeaveStatus.APPROVED);
+                leaveApplication.setStatus(hrStatusService.getHRStatuses("APPROVED", leaveApplication.getTenantId(),
+                        leaveApplicationRequest.getRequestInfo()).get(0).getId());
             else
-                leaveApplication.setStatus(LeaveStatus.APPLIED);
+                leaveApplication.setStatus(hrStatusService.getHRStatuses("APPLIED", leaveApplication.getTenantId(),
+                        leaveApplicationRequest.getRequestInfo()).get(0).getId());
             leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
         }
         String leaveApplicationRequestJson = null;
@@ -145,20 +151,28 @@ public class LeaveApplicationService {
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        leaveApplicationStatusChange(leaveApplication);
+        leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
         return leaveApplication;
     }
 
-    private void leaveApplicationStatusChange(LeaveApplication leaveApplication) {
+    private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
         final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
         if ("Approve".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.APPROVED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.APPROVED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
         else if ("Reject".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.REJECTED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.CANCELLED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
         else if ("Submit".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.RESUBMITTED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
     }
 
     public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {

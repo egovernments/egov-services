@@ -155,73 +155,1076 @@ sync:
           shouldSync: True
           defaultValue: 1
 
-#    - sourceTable: bank
-#      destinationTable: egf_bank
-#      sourceTimeZone: UTC
-#      columns:
-#        - source: id
-#          destination: id
-#          type: Integer
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: code
-#          destination: code
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: name
-#          destination: name
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: isactive
-#          destination: active
-#          Type: Boolean
-#          shouldSource: True
-#          shouldSync: True
-#
-#    - sourceTable: bankbranch
-#      destinationTable: egf_bankbranch
-#      sourceTimeZone: UTC
-#      columns:
-#        - source: id
-#          destination: id
-#          type: Integer
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: branchcode
-#          destination: code
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: branchname
-#          destination: name
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: isactive
-#          destination: active
-#          Type: Boolean
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: bankid
-#          destination: bankid
-#          Type: Integer
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: branchaddress1
-#          destination: address
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
+    - sourceTable: bank
+      destinationTable: egf_bank
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: narration
+          destination: description
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: bankbranch
+      destinationTable: egf_bankbranch
+      sourceTimeZone: Asia/Kolkata
+      columns:
+          - source: id
+            destination: id
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchcode
+            destination: code
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchname
+            destination: name
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchaddress1
+            destination: address1
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchaddress2
+            destination: address2
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchcity
+            destination: city
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchstate
+            destination: state
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchpin
+            destination: pincode
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchphone
+            destination: phone
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: branchfax
+            destination: fax
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: bankid
+            destination: bankid
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: contactperson
+            destination: contactperson
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: isactive
+            destination: active
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: narration
+            destination: description
+            type: String
+            shouldSource: True
+            shouldSync: True
+
+          - source: createdby
+            destination: createdby
+            type: Integer
+            shouldSource: True
+            shouldSync: True
+
+          - source: createddate
+            destination: createddate
+            type: TimestampWithoutTimeZone
+            shouldSource: True
+            shouldSync: True
+
+          - source: lastmodifiedby
+            destination: lastmodifiedby
+            type: Integer
+            shouldSource: True
+            shouldSync: True
+
+          - source: lastmodifieddate
+            destination: lastmodifieddate
+            type: TimestampWithoutTimeZone
+            shouldSource: True
+            shouldSync: True
+
+          - source: NA
+            destination: version
+            type: Integer
+            shouldSource: false
+            shouldSync: True
+            defaultValue: 0
+
+    - sourceTable: bankaccount
+      destinationTable: egf_bankaccount
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: branchid
+          destination: branchid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: accountnumber
+          destination: accountnumber
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: accounttype
+          destination: accounttype
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: narration
+          destination: description
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          Type: boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: glcodeid
+          destination: glcodeid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: fundid
+          destination: fundid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: payto
+          destination: payto
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: type
+          destination: type
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: egf_accountcode_purpose
+      destinationTable: egf_accountcodepurpose
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: modifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+    - sourceTable: accountdetailtype
+      destinationTable: egf_accountdetailtype
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: description
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: tablename
+          destination: tablename
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: columnname
+          destination: columnname
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          type: boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: full_qualified_name
+          destination: fully_qualified_name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: attributename
+          destination: attributename
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: createdby
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          default-value: 1
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: fund
+      destinationTable: egf_fund
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: llevel
+          destination: level
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: identifier
+          destination: identifier
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: parentid
+          destination: parentid
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isnotleaf
+          destination: isparent
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          type: String
+          shouldSource: True
+          shouldSync: True
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: function
+      destinationTable: egf_function
+      sourceTimeZone: Asia/Kolkata
+      columns:
+      - source: id
+        destination: id
+        type: String
+        shouldSource: True
+        shouldSync: True
+      - source: name
+        destination: name
+        type: String
+        shouldSource: True
+        shouldSync: True
+      - source: code
+        destination: code
+        type: String
+        shouldSource: True
+        shouldSync: True
+      - source: llevel
+        destination: level
+        type: String
+        shouldSource: True
+        shouldSync: True
+      - source: isactive
+        destination: active
+        type: String
+        shouldSource: True
+        shouldSync: True
+      - source: parentid
+        destination: parentid
+        type: String
+        shouldSource: True
+        shouldSync: True
+      - source: isnotleaf
+        destination: isparent
+        type: String
+        shouldSource: True
+        shouldSync: True
+
+      - source: createdby
+        destination: createdby
+        type: Integer
+        shouldSource: True
+        shouldSync: True
+
+      - source: createddate
+        destination: createddate
+        type: TimestampWithoutTimeZone
+        shouldSource: True
+        shouldSync: True
+
+      - source: lastmodifiedby
+        destination: lastmodifiedby
+        type: Integer
+        shouldSource: True
+        shouldSync: True
+
+      - source: lastmodifieddate
+        destination: lastmodifieddate
+        type: TimestampWithoutTimeZone
+        shouldSource: True
+        shouldSync: True
+
+      - source: NA
+        destination: version
+        type: Integer
+        shouldSource: false
+        shouldSync: True
+        defaultValue: 0
+
+    - sourceTable: functionary
+      destinationTable: egf_functionary
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactive
+          destination: active
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: chartofaccounts
+      destinationTable: egf_chartofaccount
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: glcode
+          destination: glcode
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: purposeid
+          destination: purposeid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: description
+          destination: description
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: isactiveforposting
+          destination: isactiveforposting
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: parentid
+          destination: parentid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: type
+          destination: type
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: classification
+          destination: classification
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: functionreqd
+          destination: functionrequired
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: budgetcheckreq
+          destination: budgetcheckrequired
+          Type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+        - source: majorcode
+          destination: majorcode
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: operation
+          destination: issubledger
+          Type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: chartofaccountdetail
+      destinationTable: egf_chartofaccountdetail
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: glcodeid
+          destination: glcodeid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: detailtypeid
+          destination: detailtypeid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 0
+
+    - sourceTable: eg_hierarchy_type
+      destinationTable: eg_hierarchy_type
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: localname
+          destination: localname
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0
+
+
+    - sourceTable: eg_crosshierarchy
+      destinationTable: eg_crosshierarchy
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: parent
+          destination: parent
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: child
+          destination: child
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: parenttype
+          destination: parenttype
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: childtype
+          destination: childtype
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0
+
+
+
+    - sourceTable: eg_role
+      destinationTable: eg_role
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: description
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0
+
+    - sourceTable: eg_userrole
+      destinationTable: eg_userrole
+      sourceTimeZone: UTC
+      columns:
+        - source: roleid
+          destination: roleid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: userid
+          destination: userid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+
+    - sourceTable: eg_uom
+      destinationTable: eg_uom
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: uomcategoryid
+          destination: categoryid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: uom
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: narration
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: conv_factor
+          destination: coversionfactor
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: baseuom
+          destination: baseuom
+          type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+       - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
+       - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+
+    - sourceTable: eg_uomcategory
+      destinationTable: eg_uomcategory
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: category
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: narration
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
+
+
 
 ---
 source-schemas: microservice
@@ -641,89 +1644,78 @@ sync:
           shouldSource: True
           shouldSync: False
 
-#    - sourceTable: egf_bank
-#      destinationTable: bank
-#      sourceTimeZone: UTC
-#      columns:
-#        - source: id
-#          destination: id
-#          type: Integer
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: code
-#          destination: code
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: name
-#          destination: name
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: active
-#          destination: isactive
-#          Type: Boolean
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: tenantid
-#          destination: NA
-#          Type: String
-#          shouldSource: True
-#          shouldSync: False
-#
-#    - sourceTable: egf_bankbranch
-#      destinationTable: bankbranch
-#      sourceTimeZone: UTC
-#      columns:
-#        - source: id
-#          destination: id
-#          type: Integer
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: code
-#          destination: branchcode
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: name
-#          destination: branchname
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: active
-#          destination: isactive
-#          Type: Boolean
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: bankid
-#          destination: bankid
-#          Type: Integer
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: address
-#          destination: branchaddress1
-#          Type: String
-#          shouldSource: True
-#          shouldSync: True
-#
-#        - source: tenantid
-#          destination: NA
-#          Type: String
-#          shouldSource: True
-#          shouldSync: False
-#
-#        - source: NA
-#          destination: branchFax
-#          Type: String
-#          shouldSource: False
-#          shouldSync: True
-#          defaultValue: Test
+    - sourceTable: egf_accountdetailkey
+      destinationTable: accountdetailkey
+      sourceTimeZone: Asia/Kolkata
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: groupid
+          Type: Integer
+          shouldSource: false
+          shouldSync: True
+          defaultValue: 1
+
+        - source: NA
+          destination: detailname
+          Type: String
+          shouldSource: false
+          shouldSync: True
+          defaultValue: employee_id
+
+        - source: key
+          destination: detailkey
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: detailtypeid
+          destination: detailtypeid
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          type: Integer
+          shouldSource: True
+          shouldSync: false
+
+        - source: createddate
+          destination: createddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: false
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: false
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: false
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0 
+          
+        - source: tenantid
+          destination: NA
+          type: String
+          shouldSource: True
+          shouldSync: false
+          
+
+

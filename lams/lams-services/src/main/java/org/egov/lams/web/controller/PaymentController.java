@@ -47,7 +47,7 @@ public class PaymentController {
 		
 		agreementCriteria.setTenantId(tenantId);
 		Agreement agreement = agreementService.searchAgreement(
-				agreementCriteria).get(0);
+				agreementCriteria,requestInfoWrapper.getRequestInfo()).get(0);
 		System.out.print("PaymentController - create - agreement - "+agreement);
 		return new ResponseEntity<>(paymentService.generateBillXml(agreement,
 				requestInfoWrapper.getRequestInfo()), HttpStatus.OK);

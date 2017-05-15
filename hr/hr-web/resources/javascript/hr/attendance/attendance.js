@@ -29,7 +29,8 @@ class Attendance extends React.Component {
         employeeType: "",
         startDate: undefined,
         endDate: undefined,
-        caLength: 0 //CurrentAttendance length
+        caLength: 0 //CurrentAttendance length,
+
     };
     this.handleCheckAll = this.handleCheckAll.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -100,10 +101,27 @@ class Attendance extends React.Component {
 
 
 
-  // componentWillMount()
-  // {
-  //
-  // }
+  componentWillMount()
+  {
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
+    this.setState({
+      assignments_department,
+      assignments_designation
+    })
+
+  }
 
   componentDidMount()
   {
@@ -126,6 +144,7 @@ class Attendance extends React.Component {
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
     var currentDate = new Date(queryParam["year"],queryParam["month"],1);
+
 
     try {
       var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search", {
@@ -406,7 +425,7 @@ class Attendance extends React.Component {
   render() {
 
     console.log(this.state);
-    let {month,year,designationCode,departmentCode,code,type,endDate}=this.state;
+    let {month,year,designationCode,departmentCode,code,type,endDate,assignments_department, assignments_designation}=this.state;
   //  console.log(startDate);
     let {handleCheckAll,handleChange,save}=this;
     const showEmployee=function(employees)
@@ -503,7 +522,9 @@ class Attendance extends React.Component {
     };
     return (
       <div>
-          <h3>Attendance for the month of : {months[month]}-{year} </h3>
+          <h3>Attendance for the month of : {months[month]}-{year}  { getUrlVars()["departmentCode"] && getUrlVars()["designationCode"] ? ("for Department- " + getNameById( assignments_department, getUrlVars()["departmentCode"]) + " and for Designation- " + getNameById( assignments_designation , getUrlVars()["designationCode"]))
+          : ( getUrlVars()["departmentCode"] ) ? ( "for Department- " + getNameById( assignments_department , getUrlVars()["departmentCode"]))
+          : ( getUrlVars()["designationCode"] ) ? "  for Designation- " + getNameById( assignments_designation , getUrlVars()["designationCode"]) : ""}  </h3>
           <div className="attendance-table table-responsive">
               <table className="table table-bordered" id="attendanceTable">
                   <thead>

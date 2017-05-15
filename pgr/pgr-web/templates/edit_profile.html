@@ -40,7 +40,7 @@
     <body class="page-body" oncontextmenu="return false;" cz-shortcut-listen="true">
         <div class="page-container">
 
-			<header class="navbar navbar-fixed-top" data-include="header" data-header-title="Edit Profile">
+			<header class="navbar navbar-fixed-top" data-include="header" data-header-title="core.lbl.edit.profile">
 			</header>
 
             <div class="main-content">
@@ -49,14 +49,13 @@
 						
 						<div class="panel panel-primary" data-collapsed="0">
 							<div class="panel-heading">
-								<div class="panel-title">
-									Account Details
+								<div class="panel-title" data-translate="core.lbl.myaccount">
 								</div>
 							</div>
 							<div class="panel-body custom-form">
 								<form id="user" class="form-horizontal form-groups-bordered" role="form" method="post">
 									<div class="form-group">
-										<label for="field-1" class="col-sm-3 control-label">Full Name<span class="mandatory set-mandatory"></span></label>
+										<label for="field-1" class="col-sm-3 control-label required" data-translate="core.lbl.fullname"></label>
 										<div class="col-sm-2 col-md-1 add-margin">
 											<select id="salutation" name="salutation" class="form-control" required="required">
 												<option value=""></option>
@@ -72,7 +71,7 @@
 									
 									<div class="form-group">
 										
-										<label for="field-1" class="col-sm-3 control-label">Gender<span class="mandatory set-mandatory"></span></label>
+										<label for="field-1" class="col-sm-3 control-label required" data-translate="core.lbl.enter.gender"></label>
 										<div class="col-sm-6 col-xs-12 add-margin dynamic-span capitalize">
 											<span><input id="gender2" name="gender" required="required" type="radio" value="MALE"><label for="gender2">MALE</label></span>
 											<span><input id="gender1" name="gender" required="required" type="radio" value="FEMALE"><label for="gender1">FEMALE</label></span>
@@ -80,66 +79,49 @@
 										</div>
 									</div>
 									<div class="form-group">
-									<label id="gender-error" class="error custom col-sm-offset-3 col-sm-6 col-xs-12 display-hide" for="gender">Required</label>
+									<label id="gender-error" class="error custom col-sm-offset-3 col-sm-6 col-xs-12 display-hide" for="gender" data-translate="core.error.required"></label>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Mobile<span class="mandatory set-mandatory"></span></label>
+										<label class="col-sm-3 control-label required" data-translate="core.lbl.mobilenumber"></label>
 										<div class="col-sm-2 add-margin">
 											<div class="input-group">
 												<span class="input-group-addon">+91</span>
 				                                <input id="mobileNumber" name="mobileNumber" data-extra class="form-control" data-inputmask="'mask': '9999999999'" placeholder="Mobile Number" required="required" disabled="disabled" type="text" value="" maxlength="10">
 											</div>
-											
 										</div>
-										
-										<label for="field-1" class="col-sm-1 control-label">
-											Email
+										<label for="field-1" class="col-sm-1 control-label" data-translate="core.lbl.email.compulsory">
 										</label>
-										
 										<div class="col-sm-3">
 											<input id="emailId" name="emailId" class="form-control" placeholder="abc@xyz.com" type="text" value="" maxlength="50">
-											
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label for="field-1" class="col-sm-3 control-label">Alternate Contact No.</label>
-										
+										<label for="field-1" class="col-sm-3 control-label" data-translate="core.lbl.enter.alt.contactno"></label>
 										<div class="col-sm-2 add-margin">
 											<input id="altContactNumber" name="altContactNumber" class="form-control" data-inputmask="'mask': '9999999999'" placeholder="8080808080" type="text" value="" maxlength="10">
 										</div>
-										
-										<label for="field-1" class="col-sm-1 control-label">
-											DOB
+										<label for="field-1" class="col-sm-1 control-label" data-translate="core.lbl.enter.dob">
 										</label>
-										
 										<div class="col-sm-3 add-margin">
 											<input id="dob" name="dob" class="form-control datepicker" data-inputmask="'mask': 'd/m/y'" placeholder="24/01/1992" type="text" value="">
 										</div>
 									</div>
 									
 									<div class="form-group">
-										
-										<label for="field-1" class="col-sm-3 control-label">
-											Aadhaar Number
+										<label for="field-1" class="col-sm-3 control-label" data-translate="core.lbl.enter.aadharcard.number">
 										</label>
-										
 										<div class="col-sm-2 add-margin">
 											<input id="aadhaarNumber" name="aadhaarNumber" class="form-control" placeholder="123456789012" type="text" value="" maxlength="12">
-											
 										</div>
-										
-										<label for="field-1" class="col-sm-1 control-label">PAN</label>
-										
+										<label for="field-1" class="col-sm-1 control-label" data-translate="core.lbl.enter.pan.number"></label>
 										<div class="col-sm-3 add-margin">
 											<input id="pan" name="pan" class="form-control" placeholder="AHWPU1117T" type="text" value="" maxlength="10">
-											
 										</div>
-										
 									</div>
 									
 									<div class="form-group">
-										<label for="field-1" class="col-sm-3 control-label">Preferred Language</label>
+										<label for="field-1" class="col-sm-3 control-label" data-translate="core.lbl.enter.preferred.language"></label>
 										<div class="col-sm-6 add-margin">
 											<select id="locale" name="locale" class="form-control">
 												<option value=""></option>
@@ -150,8 +132,8 @@
 									
 									<div class="form-group">
 										<div class="text-center">
-											<button type="button" class="btn btn-primary" id="userUpdate">Save Changes</button>
-											<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()">Close</a>
+											<button type="button" class="btn btn-primary" id="userUpdate" data-translate="core.lbl.save"></button>
+											<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
 										</div>
 									</div>
 									

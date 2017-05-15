@@ -121,6 +121,13 @@ $(document).ready(function()
 			}
 		});
 	}
+
+
+	$('form#signform input').keydown(function(e) {
+	    if (e.keyCode == 13) {
+	        $("#signin-action").trigger('click');
+	    }
+	});
 	
 	$("#signin-action").click(function(e){
 		var obj = $(this);

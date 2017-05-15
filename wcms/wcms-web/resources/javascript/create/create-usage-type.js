@@ -1,13 +1,13 @@
 class CreateUsageType extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],searchSet:{
+    this.state={searchSet:{
     "name":"",
-    "code":"",
-  "description":"",
-  "tenantId":tenantId,
-"active":"true"}
+    "description":"",
+    "tenantId":tenantId,
+    "active":"true"
       }
+    }
      this.handleChange=this.handleChange.bind(this);
      this.addOrUpdate=this.addOrUpdate.bind(this);
 
@@ -45,15 +45,16 @@ class CreateUsageType extends React.Component {
        var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        if(getUrlVars()["type"]==="view")
+        if(getUrlVars()["type"]==="View")
         {
-            $("input,select").prop("disabled", true);
+            $("input,select,textarea").prop("disabled", true);
           }
 
-          if(type==="update"||type==="view")
+          if(type==="Update"||type==="View")
           {
                this.setState({
-                 searchSet:getCommonMasterById("wcms","usagetype","UsageType",id).responseJSON["UsageType"][0]
+                 searchSet:getCommonMasterById("wcms-masters","usagetype","UsageType",id).responseJSON["UsageType"][0]
+
               })
           }
 
@@ -61,15 +62,16 @@ class CreateUsageType extends React.Component {
 
 
 addOrUpdate(e,mode){
+  var _this=  this;
   e.preventDefault();
-          var tempInfo=Object.assign({},this.state.searchSet) , type = getUrlVars()["type"];
+          var tempInfo=Object.assign({},_this.state.searchSet) , type = getUrlVars()["type"];
             var body={
               "RequestInfo":requestInfo,
               "UsageType":tempInfo
             },_this=this;
-            if (type == "update") {
+            if (type == "Update") {
                             $.ajax({
-                   url:'http://172.16.2.174'+"/wcms/usagetype/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
+                   url:baseUrl+"/wcms-masters/usagetype/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -80,7 +82,7 @@ addOrUpdate(e,mode){
                     },
                     success: function(res) {
                           showSuccess("Usage Type Modified successfully.");
-                          window.location.href = 'app/common/show-usage-type.html?type=update';
+                          window.location.href = 'app/common/show-usage-type.html?type=Update';
                     },
                     error: function(err) {
                         showError("Duplicate Usage Type are not allowed");
@@ -89,7 +91,7 @@ addOrUpdate(e,mode){
                 });
             } else {
               $.ajax({
-                    url:'http://172.16.2.174'+"/wcms/usagetype/_create?tenantId="+ tenantId ,
+                    url:baseUrl+"/wcms-masters/usagetype/_create",
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -102,7 +104,6 @@ addOrUpdate(e,mode){
                             showSuccess("Usage Type Created successfully.");
                             _this.setState({searchSet:{
                             name:"",
-                            code:"",
                             description:"",
                             active:"true",
                             "tenantId": tenantId},
@@ -128,7 +129,7 @@ addOrUpdate(e,mode){
     let mode=getUrlVars()["type"];
 
     const showActionButton=function() {
-      if((!mode) ||mode==="update")
+      if((!mode) ||mode==="Update")
       {
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
@@ -158,11 +159,11 @@ addOrUpdate(e,mode){
             <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for=""> Description <span> * </span> </label>
+                        <label for=""> Description  </label>
                       </div>
                       <div className="col-sm-6">
               <textarea name="description" id="description" value={description}
-              onChange={(e)=>{handleChange(e,"description")}} required/>
+              onChange={(e)=>{handleChange(e,"description")}} />
 
           </div>
           </div>
@@ -171,7 +172,7 @@ addOrUpdate(e,mode){
               </div>
 
                  <div className="row">
-                                            <div className="col-sm-6">
+                        <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
                                   <label for=""> Active </label>

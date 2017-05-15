@@ -88,5 +88,9 @@ public class LeaveOpeningBalance {
 
 	@Size(max=256)
 	private String tenantId;
+	
+	private String errorMsg;
+	
+	private String employeeName;
 
 }

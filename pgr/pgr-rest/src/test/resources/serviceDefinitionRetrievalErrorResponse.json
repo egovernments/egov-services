@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Service definition not found for given service code and tenant id",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.SERVICE_CODE_NOT_FOUND",
+                "message": "Service definition not found for given service code and tenant id",
+                "field": "serviceCode"
+            }
+        ]
+    }
+}

@@ -9,7 +9,7 @@ import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
-import org.egov.lams.service.RentIncrementService;
+import org.egov.lams.repository.RentIncrementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LamsMasterController {
 
 	@Autowired
-	RentIncrementService RentIncrementService;
+	RentIncrementRepository RentIncrementService;
 
 	@RequestMapping(value = "/getstatus")
 	public Map<String, Status> getSatusEnum() {

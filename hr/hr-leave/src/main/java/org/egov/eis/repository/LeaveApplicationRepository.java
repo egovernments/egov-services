@@ -78,9 +78,11 @@ public class LeaveApplicationRepository {
     @Autowired
     private HRStatusService hrStatusService;
 
-    public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
+    public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest,
+            final RequestInfo requestInfo) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
-        final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues);
+        final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues,
+                requestInfo);
         final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 leaveApplicationRowMapper);
         return leaveApplications;

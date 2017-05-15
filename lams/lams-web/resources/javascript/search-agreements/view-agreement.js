@@ -11,7 +11,7 @@ $(document).ready(function() {
   if(window.opener && window.opener.document) {
      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
      if(logo_ele && logo_ele[0]) {
-       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
      }
    }
     $('.datetimepicker').datetimepicker({

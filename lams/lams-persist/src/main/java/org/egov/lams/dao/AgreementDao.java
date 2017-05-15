@@ -140,25 +140,28 @@ public class AgreementDao {
 			throw new RuntimeException(ex.getMessage());
 		}
 		
-		/*if (agreement.getAgreementNumber() != null) {
-			String sql = "UPDATE eglams_demand SET agreementnumber=" + agreement.getId()
-					+ " WHERE demandid=?";
-			List<Object[]> batchArgs = new ArrayList<>();
+		if(agreement.getDemands() == null){
 			List<String> demands = agreement.getDemands();
-			int demandsCount = demands.size();
-			for (int i = 0; i < demandsCount; i++) {
-				Object[] demandRecord = { demands.get(i) };
-				batchArgs.add(demandRecord);
-			}
-			try {
-				jdbcTemplate.batchUpdate(sql, batchArgs);
-			} catch (DataAccessException ex) {
-				ex.printStackTrace();
-				throw new RuntimeException(ex.getMessage());
-			}
-		}*/
-		//FIXME do we need to update demand??? if data entry screen add new demand here 
-	
+			
+				String sql = "INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
+				List<Object[]> demandBatchArgs = new ArrayList<>();
+				int demandsCount = demands.size();
+
+				for (int i = 0; i < demandsCount; i++) {
+					Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
+					demandBatchArgs.add(demandRecord);
+				}
+
+				try {
+					jdbcTemplate.batchUpdate(sql, demandBatchArgs);
+				} catch (DataAccessException ex) {
+					ex.printStackTrace();
+					throw new RuntimeException(ex.getMessage());
+				}
+		}
+		
+		
+		
 		List<Document> documents = agreement.getDocuments();
 		if(documents != null){
 			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";

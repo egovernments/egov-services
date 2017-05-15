@@ -70,8 +70,8 @@ public class AssetQueryBuilder {
 		logger.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-
-		logger.info("Query : " + selectQuery);
+		selectQuery.append(" ORDER BY asset.name");
+		logger.info("Query from asset querybuilde for search : " + selectQuery);
 		return selectQuery.toString();
 	}
 

@@ -148,7 +148,7 @@ addOrUpdate(e,mode){
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for=""> PName <span> * </span></label>
+                    <label for=""> Name <span> * </span></label>
                   </div>
                   <div className="col-sm-6">
                       <input type="text" id="name" name="name" value={name}

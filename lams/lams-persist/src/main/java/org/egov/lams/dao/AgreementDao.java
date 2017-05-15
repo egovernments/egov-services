@@ -139,27 +139,30 @@ public class AgreementDao {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());
 		}
-		
-		if(agreement.getDemands() == null){
+
+		String demandQuery = "select demandid from eglams_demand where agreementid=" + agreement.getId();
+		List<String> demandIdList = jdbcTemplate.queryForList(demandQuery, String.class);
+
+		if (demandIdList.isEmpty() && agreement.getDemands() != null) {
+
 			List<String> demands = agreement.getDemands();
-			
-				String sql = "INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
-				List<Object[]> demandBatchArgs = new ArrayList<>();
-				int demandsCount = demands.size();
 
-				for (int i = 0; i < demandsCount; i++) {
-					Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
-					demandBatchArgs.add(demandRecord);
-				}
+			String sql = "INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
+			List<Object[]> demandBatchArgs = new ArrayList<>();
+			int demandsCount = demands.size();
 
-				try {
-					jdbcTemplate.batchUpdate(sql, demandBatchArgs);
-				} catch (DataAccessException ex) {
-					ex.printStackTrace();
-					throw new RuntimeException(ex.getMessage());
-				}
+			for (int i = 0; i < demandsCount; i++) {
+				Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
+				demandBatchArgs.add(demandRecord);
+			}
+
+			try {
+				jdbcTemplate.batchUpdate(sql, demandBatchArgs);
+			} catch (DataAccessException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+			}
 		}
-		
 		
 		
 		List<Document> documents = agreement.getDocuments();

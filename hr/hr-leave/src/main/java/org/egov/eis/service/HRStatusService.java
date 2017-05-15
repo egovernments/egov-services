@@ -38,81 +38,39 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.service;
 
-import java.util.Date;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.eis.service.helper.HRStatusSearchURLHelper;
+import org.egov.eis.web.contract.HRStatus;
+import org.egov.eis.web.contract.HRStatusResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import org.egov.eis.model.enums.LeaveStatus;
+@Service
+public class HRStatusService {
+    @Autowired
+    private HRStatusSearchURLHelper hrStatusSearchURLHelper;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+    public List<HRStatus> getHRStatuses(final String code, final String tenantId, final RequestInfo requestInfo) {
+        final String url = hrStatusSearchURLHelper.searchURL(code, tenantId);
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class LeaveApplication {
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
-    private Long id;
+        final HRStatusResponse hrStatusResponse = restTemplate.postForObject(url, request,
+                HRStatusResponse.class);
 
-    @Size(max = 100)
-    private String applicationNumber;
-
-    @NotNull
-    private Long employee;
-
-    private LeaveType leaveType;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date compensatoryForDate;
-
-    private Float leaveDays;
-
-    private Float availableDays;
-
-    private Integer halfdays;
-
-    private Boolean firstHalfleave;
-
-    @Size(min = 5, max = 500)
-    private String reason;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
+        return hrStatusResponse.getHrStatus();
+    }
 }

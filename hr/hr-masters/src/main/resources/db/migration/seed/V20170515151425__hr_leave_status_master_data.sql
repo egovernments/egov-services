@@ -1,0 +1,5 @@
+insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'LeaveApplication','APPLIED','Leave Status when applied','default');
+insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'LeaveApplication','APPROVED','Leave Status when approved','default');
+insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'LeaveApplication','REJECTED','Leave Status when rejected','default');
+insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'LeaveApplication','CANCELLED','Leave Status when cancelled','default');
+insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'LeaveApplication','RESUBMITTED','Leave Status when resubmitted','default');

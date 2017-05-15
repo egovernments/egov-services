@@ -109,7 +109,7 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 		leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));
 		leaveApplication.setFirstHalfleave((Boolean) rs.getObject("la_firstHalfleave"));
 		leaveApplication.setReason(rs.getString("la_reason"));
-		leaveApplication.setStatus(LeaveStatus.fromValue(rs.getString("la_status")));
+		leaveApplication.setStatus(rs.getLong("la_status"));
 		leaveApplication.setStateId(rs.getLong("la_stateId"));
 		leaveApplication.setCreatedBy((Long) rs.getObject("la_createdBy"));
 		leaveApplication.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));

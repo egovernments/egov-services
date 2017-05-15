@@ -38,16 +38,12 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.egov.eis.model.enums.LeaveStatus;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -62,57 +58,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class LeaveApplication {
+public class HRStatusResponse {
 
-    private Long id;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-    @Size(max = 100)
-    private String applicationNumber;
-
-    @NotNull
-    private Long employee;
-
-    private LeaveType leaveType;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date compensatoryForDate;
-
-    private Float leaveDays;
-
-    private Float availableDays;
-
-    private Integer halfdays;
-
-    private Boolean firstHalfleave;
-
-    @Size(min = 5, max = 500)
-    private String reason;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
+	@JsonProperty("HRStatus")
+	private List<HRStatus> hrStatus = new ArrayList<HRStatus>();
 
 }

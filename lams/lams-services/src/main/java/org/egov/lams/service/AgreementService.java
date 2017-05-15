@@ -151,16 +151,16 @@ public class AgreementService {
 		String kafkaTopic = null;
 
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-
+			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
-			agreement.setDemands(updateDemnad(agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
+			agreement.setDemands(updateDemnad(agreement.getDemands(),agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
 
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 
 			if (workFlowDetails != null) {
-
+				logger.info("updateagreementservice Source.SYSTEM");
 				logger.info("the workflow details status :: " + workFlowDetails.getAction());
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
@@ -194,13 +194,13 @@ public class AgreementService {
 		return agreement;
 	}
 
-	private List<String> updateDemnad(List<Demand> demands, RequestInfo requestInfo) {
+	private List<String> updateDemnad(List<String> demands,List<Demand> legacydemands, RequestInfo requestInfo) {
 
 		DemandResponse demandResponse = null;
 		if (demands == null)
-			demandResponse = demandRepository.createDemand(demands, requestInfo);
+			demandResponse = demandRepository.createDemand(legacydemands, requestInfo);
 		else
-			demandResponse = demandRepository.updateDemand(demands, requestInfo);
+			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
 		return demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 	}

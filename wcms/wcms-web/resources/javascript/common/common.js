@@ -17,8 +17,8 @@ var requestInfo = {
      "id":"1",
    }
 };
-//
-var tenantId =  "ap." + window.location.origin.split("-")[0].split("//")[1];
+
+var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 //
 function blockUI() {
    $('body').css('overflow', 'hidden');

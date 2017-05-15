@@ -114,6 +114,6 @@ public class AssetCategoryQueryBuilder {
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, AssetCategoryCriteria assetCategoryCriteria) {
-		selectQuery.append("ORDER BY assetcategory.name");
+		selectQuery.append(" ORDER BY assetcategory.name");
 	}
 }

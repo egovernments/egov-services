@@ -1,6 +1,6 @@
 package org.egov.workflow.persistence.repository;
 
-import org.egov.workflow.domain.model.ComplaintStatus;
+import org.egov.workflow.persistence.entity.ComplaintStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,14 +15,14 @@ public class ComplaintStatusRepository {
         this.complaintStatusJpaRepository = complaintStatusJpaRepository;
     }
 
-    public List<ComplaintStatus> findAll() {
+    public List<org.egov.workflow.domain.model.ComplaintStatus> findAll() {
         return complaintStatusJpaRepository.findAll()
                 .stream()
-                .map(org.egov.workflow.persistence.entity.ComplaintStatus::toDomain)
+                .map(ComplaintStatus::toDomain)
                 .collect(Collectors.toList());
     }
 
-    public ComplaintStatus findByName(String name) {
+    public org.egov.workflow.domain.model.ComplaintStatus findByName(String name) {
         return complaintStatusJpaRepository.findByName(name).toDomain();
     }
 }

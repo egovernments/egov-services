@@ -40,6 +40,7 @@
 
 package org.egov.workflow.persistence.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -56,7 +57,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditable extends AbstractPersistable<Long> {
+public abstract class AbstractAuditable<T extends Serializable> extends AbstractPersistable<T> {
 
 	private static final long serialVersionUID = 7138056997693406739L;
 

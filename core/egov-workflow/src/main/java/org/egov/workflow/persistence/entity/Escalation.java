@@ -52,7 +52,7 @@ import static org.egov.workflow.persistence.entity.Escalation.SEQ_ESCALATION;
 @Setter
 @Table(name = "egpgr_escalation")
 @SequenceGenerator(name = SEQ_ESCALATION, sequenceName = SEQ_ESCALATION, allocationSize = 1)
-public class Escalation extends AbstractAuditable {
+public class Escalation extends AbstractAuditable<Long> {
     public static final String SEQ_ESCALATION = "SEQ_EGPGR_ESCALATION";
     private static final long serialVersionUID = 5309370560787246156L;
 

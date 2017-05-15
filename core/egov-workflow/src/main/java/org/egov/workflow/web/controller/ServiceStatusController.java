@@ -5,28 +5,28 @@ import org.egov.workflow.domain.model.ComplaintStatusSearchCriteria;
 import org.egov.workflow.domain.model.KeywordStatusMappingSearchCriteria;
 import org.egov.workflow.domain.service.ComplaintStatusService;
 import org.egov.workflow.domain.service.KeywordStatusMappingService;
-import org.egov.workflow.web.contract.ComplaintStatus;
 import org.egov.workflow.web.contract.ComplaintStatusRequest;
+import org.egov.workflow.web.contract.ServiceStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @RestController
-public class ComplaintStatusController {
-    @Autowired
+@RequestMapping("/v1")
+public class ServiceStatusController {
     private ComplaintStatusService complaintStatusService;
-
-    @Autowired
     private KeywordStatusMappingService keywordStatusMappingService;
 
+    @Autowired
+    public ServiceStatusController(ComplaintStatusService complaintStatusService, KeywordStatusMappingService keywordStatusMappingService) {
+        this.complaintStatusService = complaintStatusService;
+        this.keywordStatusMappingService = keywordStatusMappingService;
+    }
+
     @PostMapping("/statuses/_search")
-    public List<ComplaintStatus> getAllStatus(@RequestBody final ComplaintStatusRequest request,
+    public ServiceStatusResponse getAllStatus(@RequestBody final ComplaintStatusRequest request,
                                               @RequestParam(defaultValue = "Complaint") final String keyword,
                                               @RequestParam(defaultValue = "default") final String tenantId) {
 
@@ -35,23 +35,25 @@ public class ComplaintStatusController {
             .tenantId(tenantId)
             .build();
 
-        return keywordStatusMappingService.getStatusForKeyword(searchCriteria)
-            .stream()
-            .map(ComplaintStatus::new)
-            .collect(Collectors.toList());
+        List<org.egov.workflow.domain.model.ComplaintStatus> domainStatuses = keywordStatusMappingService
+            .getStatusForKeyword(searchCriteria);
+
+        return new ServiceStatusResponse(null, domainStatuses);
     }
 
     @PostMapping("/nextstatuses/_search")
-    public List<ComplaintStatus> getNextStatuses(@RequestBody final ComplaintStatusRequest request,
+    public ServiceStatusResponse getNextStatuses(@RequestBody final ComplaintStatusRequest request,
                                                  @RequestParam final String currentStatus) {
         List<Long> roles = request.getRequestInfo().getUserInfo().getRoles().stream()
-                .map(Role::getId)
-                .collect(Collectors.toList());
+            .map(Role::getId)
+            .collect(Collectors.toList());
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(currentStatus, roles);
+            new ComplaintStatusSearchCriteria(currentStatus, roles);
 
-        return complaintStatusService.getNextStatuses(complaintStatusSearchCriteria).stream()
-                .map(ComplaintStatus::new).collect(Collectors.toList());
+        List<org.egov.workflow.domain.model.ComplaintStatus> domainStatuses =  complaintStatusService
+            .getNextStatuses(complaintStatusSearchCriteria);
+
+        return new ServiceStatusResponse(null, domainStatuses);
     }
 }

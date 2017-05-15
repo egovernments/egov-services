@@ -8,7 +8,7 @@ public class ComplaintStatusTest {
 
     @Test
     public void test_should_map_from_entity_to_domain() {
-        ComplaintStatus complaintStatus = new ComplaintStatus(1L, "name");
+        ComplaintStatus complaintStatus = new ComplaintStatus(1L, "name","default","0001");
 
         org.egov.workflow.domain.model.ComplaintStatus complaintStatusModel = complaintStatus.toDomain();
 

@@ -32,9 +32,7 @@ public class ComplaintStatusService {
                 complaintStatusRepository.findByName(complaintStatusSearchCriteria.getComplaintStatusName());
 
         if (currentStatus == null) {
-            throw new InvalidComplaintStatusException(
-                    new ComplaintStatus(0L, complaintStatusSearchCriteria.getComplaintStatusName())
-            );
+            throw new InvalidComplaintStatusException();
         }
 
         return complaintStatusMappingRepository

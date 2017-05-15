@@ -58,7 +58,7 @@ import java.util.Set;
 @Table(name = "EG_WF_STATES")
 @SequenceGenerator(name = State.SEQ_STATE, sequenceName = State.SEQ_STATE, allocationSize = 1)
 
-public class State extends AbstractAuditable {
+public class State extends AbstractAuditable<Long> {
 
     public static final String DEFAULT_STATE_VALUE_CREATED = "Created";
     public static final String DEFAULT_STATE_VALUE_CLOSED = "Closed";

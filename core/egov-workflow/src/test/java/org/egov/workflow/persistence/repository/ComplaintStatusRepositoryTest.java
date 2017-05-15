@@ -41,7 +41,7 @@ public class ComplaintStatusRepositoryTest {
     @Test
     public void test_should_find_status_by_name() {
         when(complaintStatusJpaRepository.findByName("REJECTED"))
-                .thenReturn(new ComplaintStatus(1L, "REJECTED"));
+                .thenReturn(new ComplaintStatus(1L, "REJECTED","default","0001"));
 
         org.egov.workflow.domain.model.ComplaintStatus result = complaintStatusRepository.findByName("REJECTED");
 
@@ -51,8 +51,8 @@ public class ComplaintStatusRepositoryTest {
 
     private List<ComplaintStatus> getListOfComplaintStatusEntities() {
         return Arrays.asList(
-                new ComplaintStatus(1L, "FORWARDED"),
-                new ComplaintStatus(2L, "WITHDRAWN")
+                new ComplaintStatus(1L, "FORWARDED","default","0001"),
+                new ComplaintStatus(2L, "WITHDRAWN","default","0002")
         );
     }
 }

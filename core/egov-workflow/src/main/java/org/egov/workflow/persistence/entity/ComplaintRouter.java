@@ -52,7 +52,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "egpgr_router")
 @SequenceGenerator(name = ComplaintRouter.SEQ_COMPLAINTROUTER, sequenceName = ComplaintRouter.SEQ_COMPLAINTROUTER, allocationSize = 1)
-public class ComplaintRouter extends AbstractAuditable {
+public class ComplaintRouter extends AbstractAuditable<Long> {
 
 	private static final long serialVersionUID = 5691022600220045218L;
 	

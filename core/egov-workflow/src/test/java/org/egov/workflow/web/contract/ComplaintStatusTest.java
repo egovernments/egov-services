@@ -9,7 +9,7 @@ public class ComplaintStatusTest {
     @Test
     public void test_should_convert_model_to_contract() {
         org.egov.workflow.domain.model.ComplaintStatus complaintStatus =
-                new org.egov.workflow.domain.model.ComplaintStatus(1L, "REGISTERED");
+                new org.egov.workflow.domain.model.ComplaintStatus(1L, "REGISTERED","default","0001");
 
         ComplaintStatus complaintStatusContract = new ComplaintStatus(complaintStatus);
 

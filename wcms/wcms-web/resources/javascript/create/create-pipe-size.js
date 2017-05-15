@@ -21,13 +21,14 @@ class CreateUsageType extends React.Component {
 
           }
         })
-      }else{
+      }else {
         this.setState({
           searchSet:{
             ...this.state.searchSet,
             [name]:e.target.value
           }
         })
+
       }
     }
 
@@ -36,6 +37,7 @@ class CreateUsageType extends React.Component {
       open(location, '_self').close();
   }
   componentDidMount(){
+    var _this=this;
     $('#inputinc').prop("disabled", true);
     if(window.opener && window.opener.document) {
          var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -43,6 +45,8 @@ class CreateUsageType extends React.Component {
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
+
+
        var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
@@ -62,61 +66,10 @@ class CreateUsageType extends React.Component {
 }
 
 
+
 addOrUpdate(e,mode){
-  var _this=  this;
-  e.preventDefault();
-          var tempInfo=Object.assign({},_this.state.searchSet) , type = getUrlVars()["type"];
-            var body={
-              "RequestInfo":requestInfo,
-              "UsageType":tempInfo
-            },_this=this;
-            if (type == "Update") {
-                            $.ajax({
-                   url:baseUrl+"/wcms-masters/usagetype/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
-                    async: false,
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                          showSuccess("Usage Type Modified successfully.");
-                          window.location.href = 'app/common/show-usage-type.html?type=Update';
-                    },
-                    error: function(err) {
-                        showError("Duplicate Usage Type are not allowed");
+// console.log(this.state.searchSet.inputmm);
 
-                    }
-                });
-            } else {
-              $.ajax({
-                    url:baseUrl+"/wcms-masters/usagetype/_create",
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
-                    async: false,
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                            showSuccess("Usage Type Created successfully.");
-                            _this.setState({searchSet:{
-                            name:"",
-                            description:"",
-                            active:"true",
-                            "tenantId": tenantId},
-                          })
-
-                    },
-                    error: function(err) {
-                        showError("Duplicate Usage Type are not allowed");
-
-                    }
-                });
-            }
 }
 
 
@@ -166,11 +119,10 @@ addOrUpdate(e,mode){
               <input  type="number" name="inputinc" id="inputinc"  value={inputinc}
                onChange={(e)=>{handleChange(e,"inputinc")}} readonly/>
 
-          </div>
-          </div>
             </div>
-
-              </div>
+            </div>
+            </div>
+            </div>
 
                  <div className="row">
                         <div className="col-sm-6">

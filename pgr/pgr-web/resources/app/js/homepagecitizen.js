@@ -208,6 +208,7 @@ function search(elem) {
 	var searchText = $(elem).val(); 
 	if($.trim(searchText)){
 		$(".reloadtemplate").each(function() {
+			console.log('searchText', $.trim(searchText));
 	         var $this = $(this)
 	         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
 	             $this.hide();
@@ -215,5 +216,10 @@ function search(elem) {
 		         $this.show();
 		     }
 	    });
+	}else{
+		$(".reloadtemplate").each(function() {
+			var $this = $(this);
+			$this.show();
+		});
 	}
 };

@@ -90,5 +90,7 @@ public class LeaveOpeningBalance {
 	private String tenantId;
 	
 	private String errorMsg;
+	
+	private String employeeName;
 
 }

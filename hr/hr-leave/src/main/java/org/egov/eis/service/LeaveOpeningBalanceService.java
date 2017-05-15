@@ -146,8 +146,7 @@ public class LeaveOpeningBalanceService {
 			return getSuccessResponseForUpload(successLeaveOpeningBalanceList, errorLeaveOpeningBalanceList,
 					leaveOpeningBalanceRequest.getRequestInfo());
 		else
-			return getSuccessResponseForCreate(leaveOpeningBalanceList,
-					leaveOpeningBalanceRequest.getRequestInfo());
+			return getSuccessResponseForCreate(leaveOpeningBalanceList, leaveOpeningBalanceRequest.getRequestInfo());
 	}
 
 	private List<LeaveOpeningBalance> validate(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
@@ -189,10 +188,15 @@ public class LeaveOpeningBalanceService {
 			if (employeeMap.get(leaveOpeningBalance.getEmployee()) == null) {
 				errorMsg = errorMsg + " Employee with id " + leaveOpeningBalance.getEmployee()
 						+ " does not exist in the system";
+			} else {
+				leaveOpeningBalance.setEmployeeName(employeeMap.get(leaveOpeningBalance.getEmployee()).getName());
 			}
 			if (leaveTypeMap.get(leaveOpeningBalance.getLeaveType().getId()) == null) {
 				errorMsg = errorMsg + " Leave Type with id " + leaveOpeningBalance.getLeaveType().getId()
 						+ " does not exist in the system";
+			} else {
+				leaveOpeningBalance.getLeaveType()
+						.setName(leaveTypeMap.get(leaveOpeningBalance.getLeaveType().getId()).getName());
 			}
 			leaveOpeningBalance.setErrorMsg(errorMsg);
 

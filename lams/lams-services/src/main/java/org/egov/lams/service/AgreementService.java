@@ -156,7 +156,7 @@ public class AgreementService {
 			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
 			agreement.setDemands(updateDemnad(agreement.getDemands(),agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
-
+			logger.info("the id from demand save call :: "+agreement.getDemands());
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();

@@ -621,6 +621,20 @@ definitions:
         uniqueItems: true
         items:
           $ref: '#/definitions/EmployeeDocuments'
+      createdBy:
+        type: string
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.
     required:
       - jurisdictions
       - assignments

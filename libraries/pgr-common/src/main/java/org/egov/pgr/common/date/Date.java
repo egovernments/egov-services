@@ -1,4 +1,4 @@
-package date;
+package org.egov.pgr.common.date;
 
 import lombok.AllArgsConstructor;
 

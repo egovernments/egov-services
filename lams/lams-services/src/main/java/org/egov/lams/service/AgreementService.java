@@ -17,6 +17,8 @@ import org.egov.lams.model.enums.Status;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.util.AcknowledgementNumberUtil;
+import org.egov.lams.util.AgreementNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.web.contract.DemandSearchCriteria;
@@ -53,10 +55,10 @@ public class AgreementService {
 	private DemandRepository demandRepository;
 
 	@Autowired
-	private AcknowledgementNumberService acknowledgementNumberService;
+	private AcknowledgementNumberUtil acknowledgementNumberService;
 
 	@Autowired
-	private AgreementNumberService agreementNumberService;
+	private AgreementNumberUtil agreementNumberService;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -210,13 +212,6 @@ public class AgreementService {
 		List<String> demandIds = agreement.getDemands();
 		if (demandIds == null) {
 
-			if (agreement.getExpiryDate() == null) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(agreement.getCommencementDate());
-				calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
-				Date expiryDate = calendar.getTime();
-				agreement.setExpiryDate(expiryDate);
-			}
 			List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 			if (demandReasons.isEmpty())
 				throw new RuntimeException("No demand reason found for given criteria");
@@ -230,7 +225,7 @@ public class AgreementService {
 		return legacyDemands;
 	}
 
-	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
+	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		/*
 		 * three boolean variables isAgreementNull,isAssetNull and
 		 * isAllotteeNull declared to indicate whether criteria arguments for
@@ -253,33 +248,33 @@ public class AgreementService {
 
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");
-			return agreementRepository.findByAllotee(agreementCriteria);
+			return agreementRepository.findByAllotee(agreementCriteria,requestInfo);
 
 		} else if (!isAgreementNull && isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");
-			return agreementRepository.findByAgreementAndAllotee(agreementCriteria);
+			return agreementRepository.findByAgreementAndAllotee(agreementCriteria,requestInfo);
 
 		} else if (!isAgreementNull && !isAssetNull && isAllotteeNull) {
 			logger.info("agreementRepository.findByAgreementAndAsset : both agreement and ");
-			return agreementRepository.findByAgreementAndAsset(agreementCriteria);
+			return agreementRepository.findByAgreementAndAsset(agreementCriteria,requestInfo);
 
 		} else if ((isAgreementNull && isAssetNull && !isAllotteeNull)
 				|| (isAgreementNull && !isAssetNull && !isAllotteeNull)) {
 			logger.info("agreementRepository.findByAllotee : only allottee || allotte and asset");
-			return agreementRepository.findByAllotee(agreementCriteria);
+			return agreementRepository.findByAllotee(agreementCriteria,requestInfo);
 
 		} else if (isAgreementNull && !isAssetNull && isAllotteeNull) {
 			logger.info("agreementRepository.findByAsset : only asset");
-			return agreementRepository.findByAsset(agreementCriteria);
+			return agreementRepository.findByAsset(agreementCriteria,requestInfo);
 
 		} else if (!isAgreementNull && isAssetNull && isAllotteeNull) {
 			logger.info("agreementRepository.findByAgreement : only agreement");
-			return agreementRepository.findByAgreement(agreementCriteria);
+			return agreementRepository.findByAgreement(agreementCriteria,requestInfo);
 		} else {
 			// if no values are given for all the three criteria objects
 			// (isAgreementNull && isAssetNull && isAllotteeNull)
 			logger.info("agreementRepository.findByAgreement : all values null");
-			return agreementRepository.findByAgreement(agreementCriteria);
+			return agreementRepository.findByAgreement(agreementCriteria,requestInfo);
 		}
 	}
 

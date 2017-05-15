@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
-public class AllotteeService {
+public class AllotteeRepository {
 
 	public static final Logger logger = LoggerFactory.getLogger(Allottee.class);
 
@@ -46,8 +46,8 @@ public class AllotteeService {
 		userSearchRequest.setRequestInfo(requestInfo);
 		logger.info("url for allottee api post call :: " + url);
 		List<Long> allotteeId = new ArrayList<>();
-		if(agreementCriteria.getAllottee() != null)
-		allotteeId.addAll(agreementCriteria.getAllottee());
+		if (agreementCriteria.getAllottee() != null)
+			allotteeId.addAll(agreementCriteria.getAllottee());
 		userSearchRequest.setId(allotteeId);
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());
 		userSearchRequest.setTenantId(agreementCriteria.getTenantId());

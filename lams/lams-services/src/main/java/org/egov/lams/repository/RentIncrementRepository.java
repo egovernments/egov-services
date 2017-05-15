@@ -1,4 +1,4 @@
-package org.egov.lams.service;
+package org.egov.lams.repository;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RentIncrementService {
+public class RentIncrementRepository {
 	
-	public static final Logger logger = LoggerFactory.getLogger(RentIncrementService.class);
+	public static final Logger logger = LoggerFactory.getLogger(RentIncrementRepository.class);
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;

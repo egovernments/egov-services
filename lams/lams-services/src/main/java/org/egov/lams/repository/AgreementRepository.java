@@ -13,8 +13,6 @@ import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
 import org.egov.lams.repository.helper.AssetHelper;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
-import org.egov.lams.service.AllotteeService;
-import org.egov.lams.service.AssetService;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.AssetResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -37,10 +35,10 @@ public class AgreementRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	private AssetService assetService;
+	private AssetRepository assetService;
 
 	@Autowired
-	private AllotteeService allotteeService;
+	private AllotteeRepository allotteeService;
 
 	@Autowired
 	private AllotteeHelper allotteeHelper;
@@ -66,11 +64,11 @@ public class AgreementRepository {
 		return agreement;
 	}
 
-	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
+	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
+		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 
-		List<Allottee> allottees = getAllottees(agreementCriteria);
+		List<Allottee> allottees = getAllottees(agreementCriteria,requestInfo);
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdList(allottees));
 		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
@@ -85,18 +83,18 @@ public class AgreementRepository {
 		// agreements");
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
 
-		List<Asset> assets = getAssets(agreementCriteria);
+		List<Asset> assets = getAssets(agreementCriteria,requestInfo);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
 
 		return agreements;
 	}
 
-	public List<Agreement> findByAsset(AgreementCriteria agreementCriteria) {
+	public List<Agreement> findByAsset(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAsset");
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
 		System.out.println("before calling get asset method");
-		List<Asset> assets = getAssets(agreementCriteria);
+		List<Asset> assets = getAssets(agreementCriteria,requestInfo);
 		System.out.println("after calling get asset method : lengeth of result is" + assets.size());
 		if (assets.size() > 1000) // FIXME
 			throw new RuntimeException("Asset criteria is too big");
@@ -111,18 +109,18 @@ public class AgreementRepository {
 		if (agreements.isEmpty())
 			return agreements;
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
-		List<Allottee> allottees = getAllottees(agreementCriteria);
+		List<Allottee> allottees = getAllottees(agreementCriteria,requestInfo);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
 
 		return agreements;
 	}
 
-	public List<Agreement> findByAgreement(AgreementCriteria fetchAgreementsModel) {
+	public List<Agreement> findByAgreement(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreement");
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementSearchQuery(fetchAgreementsModel, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -130,16 +128,16 @@ public class AgreementRepository {
 		}
 		if (agreements.isEmpty())
 			throw new RuntimeException("The criteria provided did not match any agreements");
-		fetchAgreementsModel.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
-		fetchAgreementsModel.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
-		List<Asset> assets = getAssets(fetchAgreementsModel);
-		List<Allottee> allottees = getAllottees(fetchAgreementsModel);
+		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
+		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
+		List<Asset> assets = getAssets(agreementCriteria,requestInfo);
+		List<Allottee> allottees = getAllottees(agreementCriteria,requestInfo);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
 
 		return agreements;
 	}
 
-	public List<Agreement> findByAgreementAndAllotee(AgreementCriteria agreementCriteria) {
+	public List<Agreement> findByAgreementAndAllotee(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		logger.info(
 				"AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAllotee");
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -154,15 +152,15 @@ public class AgreementRepository {
 		if (agreements.isEmpty())
 			throw new RuntimeException("The criteria provided did not match any agreements");
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
-		List<Allottee> allottees = getAllottees(agreementCriteria);
+		List<Allottee> allottees = getAllottees(agreementCriteria,requestInfo);
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
-		List<Asset> assets = getAssets(agreementCriteria);
+		List<Asset> assets = getAssets(agreementCriteria,requestInfo);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
 
 		return agreements;
 	}
 
-	public List<Agreement> findByAgreementAndAsset(AgreementCriteria fetchAgreementsModel) {
+	public List<Agreement> findByAgreementAndAsset(AgreementCriteria fetchAgreementsModel,RequestInfo requestInfo) {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAsset");
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
@@ -176,9 +174,9 @@ public class AgreementRepository {
 		if (agreements.isEmpty())
 			throw new RuntimeException("The criteria provided did not match any agreements");
 		fetchAgreementsModel.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
-		List<Asset> assets = getAssets(fetchAgreementsModel);
+		List<Asset> assets = getAssets(fetchAgreementsModel,requestInfo);
 		fetchAgreementsModel.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
-		List<Allottee> allottees = getAllottees(fetchAgreementsModel);
+		List<Allottee> allottees = getAllottees(fetchAgreementsModel,requestInfo);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
 
 		return agreements;
@@ -188,7 +186,7 @@ public class AgreementRepository {
 	 * method to return a list of Allottee objects by making an API call to
 	 * Allottee API
 	 */
-	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
+	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		// FIXME TODO urgent allottee helper has to be changed for post
 		// String queryString =
 		// allotteeHelper.getAllotteeParams(agreementCriteria);
@@ -203,7 +201,7 @@ public class AgreementRepository {
 	/*
 	 * method to return a list of Asset objects by calling AssetService API
 	 */
-	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
+	public List<Asset> getAssets(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		System.out.println("inside get asset method");
 		String queryString = assetHelper.getAssetParams(agreementCriteria);
 		AssetResponse assetResponse = assetService.getAssets(queryString, new RequestInfoWrapper());

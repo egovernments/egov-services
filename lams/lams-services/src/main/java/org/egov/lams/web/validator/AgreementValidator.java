@@ -9,10 +9,10 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.RentIncrementType;
-import org.egov.lams.service.AllotteeService;
-import org.egov.lams.service.AssetService;
+import org.egov.lams.repository.AllotteeRepository;
+import org.egov.lams.repository.AssetRepository;
+import org.egov.lams.repository.RentIncrementRepository;
 import org.egov.lams.service.LamsConfigurationService;
-import org.egov.lams.service.RentIncrementService;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.AssetResponse;
@@ -30,13 +30,13 @@ public class AgreementValidator {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementValidator.class);
 
 	@Autowired
-	private AssetService assetService;
+	private AssetRepository assetService;
 
 	@Autowired
-	private AllotteeService allotteeService;
+	private AllotteeRepository allotteeService;
 	
 	@Autowired
-	private RentIncrementService rentIncrementService;
+	private RentIncrementRepository rentIncrementService;
 	
 	@Autowired
 	private PropertiesManager propertiesManager;

@@ -34,7 +34,7 @@ public class DemandHelper {
 		urlParams.append("&toDate=" + agreement.getExpiryDate());
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
-		urlParams.append("&tenantId=" + agreement.getTenantId());
+		urlParams.append("&tenantId=" +"default");//FIXME  TODO replace the value with proper tenantid from agreement object agreement.getTenantId()
 		return urlParams.toString();
 	}
 }

@@ -40,9 +40,14 @@
 
 package org.egov.eis.web.errorhandler;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.egov.eis.service.exception.UserException;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
@@ -199,53 +204,6 @@ public class ErrorHandler {
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<ErrorResponse> getResponseEntityForExistingUser(EmployeeRequest employeeRequest) {
-		Error error = new Error();
-		error.setCode(400);
-		error.setMessage("User Creation Failed");
-		error.setDescription("Username Already Exists");
-		error.getFields().put("employee.user", employeeRequest.getEmployee().getUser().getUserName());
-
-		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(employeeRequest.getRequestInfo(), false);
-
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
-
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
-
-	public ResponseEntity<ErrorResponse> getResponseEntityForUnknownUserDBUpdationError(RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(500);
-		error.setMessage("User Creation Failed");
-		error.setDescription("Unknown error");
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
-
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
-
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
-
-	public ResponseEntity<?> getResponseEntityForUnknownUserUpdationError(RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(500);
-		error.setMessage("User Updation Failed");
-		error.setDescription("Unknown error");
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
-
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
-
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
-
 	public ResponseEntity<?> getResponseEntityForInvalidEmployeeId(BindingResult modelAttributeBindingResult,
 			RequestInfo requestInfo) {
 		Error error = new Error();
@@ -257,6 +215,40 @@ public class ErrorHandler {
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<?> getResponseEntityForUserErrors(UserException userException) {
+		UserErrorResponse userErrorResponse = userException.getUserErrorResponse();
+
+		ResponseInfo responseInfo = null;
+		Error error = new Error();
+		Map<String, Object> fields = new HashMap<>();
+		error.setCode(400);
+
+		if (isEmpty(userErrorResponse)) {
+			error.setMessage("User Request Failed");
+			error.setDescription("Unknown Error Occurred In User Service");
+			fields.put("employee.user", "Unknown Error Occurred While Calling User Service");
+			responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(userException.getRequestInfo(),
+					false);
+		} else {
+			error.setMessage(userErrorResponse.getError().getMessage());
+			error.setDescription(userErrorResponse.getError().getDescription());
+			userErrorResponse.getError().getFields().forEach(field -> {
+				field.setField(field.getField().contains("User.") ? field.getField().substring(5) : field.getField());
+				String fieldKey = "employee.user." + field.getField();
+				Object fieldValue = field.getMessage();
+				fields.put(fieldKey, fieldValue);
+			});
+			responseInfo = userException.getUserErrorResponse().getResponseInfo();
+		}
+		error.setFields(fields);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setError(error);
+		errorResponse.setResponseInfo(responseInfo);
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}

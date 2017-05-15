@@ -67,7 +67,7 @@
 					    	You don't have javascript enabled.  Make sure Javascript is enabled.
 					</noscript>
 					</div>
-					<div class="col-md-7 side-space">
+					<div class="col-md-6 side-space">
 						<div class="col-md-12 community-card">
 							<a href="templates/signup.html" target="_blank">
 								<div class="rounded-circle"><i class="fa fa-user a"></i></div>&nbsp;
@@ -91,16 +91,18 @@
 								<div class="rounded-circle compsearch"><i class="fa fa-search b"></i></div>
 								<div class="label-font">
 									<span data-translate="pgr.msg.complaintstatus.anytime"></span><br>
-									<input type="text" data-translate="pgr.lbl.complaintnumber" id="compsearchtxt"
-										style="padding: 2px 5px; height: 30px;font-size: 14px;border: 0;padding-left: 0;border-bottom: 1px solid #D0D2D7;outline: none;box-shadow: none;">
-									<button class="btn-custom compsearch" data-translate="core.lbl.search"
-										style="padding: 4px 5px;border-radius: 4px;font-size: 14px;vertical-align: bottom;"></button>
+									<div class="form-group">
+										<div class="input-group" style="width:240px;">
+								            <input type="text" class="form-control style-form" data-translate="pgr.lbl.complaintnumber" id="compsearchtxt" autocomplete="off">
+								            <span class="input-group-addon compsearch"><span class="glyphicon glyphicon-search"></span></span>
+								        </div>
+									</div>
 								</div>
 							</a>
 							<div class="error-msg search-error-msg display-hide" data-translate="pgr.error.msg.number.required" style="padding-left: 60px;"></div>
 						</div>
 					</div>
-					<div class="col-md-5 side-space">
+					<div class="col-md-6 side-space">
 						
 						<div class="signin-formcontent signin-section">
 							<form method="post" role="form" id="signform" autocomplete="off">

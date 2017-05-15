@@ -76,8 +76,8 @@
 										<i class="fa fa-user"></i> <span class="profile-text"></span>
 									</a>
 									<ul class="right-arrow dropdown-menu" role="menu">
-										<li><a href="javascript:void(0)" data-href="edit_profile.html" data-name="profile" class="open-popup"><i class="fa fa-user"></i>Edit Profile</a></li>
-										<li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i>Change Password</a></li>
+										<li><a href="javascript:void(0)" data-href="edit_profile.html" data-name="profile" class="open-popup"><i class="fa fa-user"></i><span data-translate="core.lbl.edit.profile"></span></a></li>
+										<li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i><span data-translate="core.lbl.pass.change"></span></a></li>
 										<li><a href="javascript:void(0)" class="signout"><i class="fa fa-sign-out"></i><span data-translate="core.lbl.signout"></span></a></li>
 									</ul>
 								</li>
@@ -128,7 +128,7 @@
 						<div class="row padding-tb"><!-- padding-tb -->
 							<div class="search-box col-md-12 col-sm-12">
 								<i class="fa fa-search"></i>
-								<input type="text" class="form-control searchinbox" data-translate="core.lbl.search"onkeyup="search(this)">
+								<input type="text" class="form-control searchinbox" data-translate="core.lbl.search" onkeyup="search(this)">
 							</div>
 							<!-- <div class="col-md-3 col-sm-4 text-center xs-margin-top-10">
 								<div class="btn-group btn-input clearfix" id="sortby_drop">
@@ -157,14 +157,14 @@
 												Grievance Redressal<span class="msg-status">{{values.complaintStatus}}</span> </h3> 
 											</div>
 											<div class="msg-info">
-												<a href="javascript:void(0)" class="open_popup" data-srn={{service_request_id}}><u>{{service_request_id}}</u></a> <span class="dot">•</span> 
+												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
 												
-												<span class="msg-date">{{requested_datetime}}</span>
+												<span class="msg-date">{{requestedDatetime}}</span>
 											</div>
 										</header>
 										<div class="msg-content collapse in">
 											<p> 
-												Grievance No. {{service_request_id}} regarding {{service_name}} in {{values.ComplaintStatus}} status. 
+												Grievance No. {{serviceRequestId}} regarding {{serviceName}} in {{values.complaintStatus}} status. 
 											</p>
 										</div>
 									</div> 
@@ -553,15 +553,15 @@
         <div class="modal fade change-password" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
+					<form id="password-form" class="form-horizontal form-groups-bordered">
 					<div class="modal-header">
 						<button type="button" class="close pass-cancel" data-dismiss="modal" aria-hidden="true">×</button>
-						<h4 class="modal-title">Change Password</h4>
+						<h4 class="modal-title" data-translate="core.lbl.pass.change"></h4>
 					</div>
 					<div class="modal-body">
-						<form id="password-form" class="form-horizontal form-groups-bordered">
 							<div class="form-group">
 								<div class="col-md-4">
-									<label class="control-label required">Old Password</label>
+									<label class="control-label required" data-translate="core.lbl.enter.old.password"></label>
 								</div>
 								<div class="col-md-8 add-margin">
 									<input style="display:none">
@@ -570,7 +570,7 @@
 							</div>
 							<div class="form-group" id="wrap">
 								<div class="col-md-4">
-									<label class="control-label required" data-translate="core.lbl.new.password">New Password</label>
+									<label class="control-label required" data-translate="core.lbl.new.password"></label>
 								</div>
 								<div class="col-md-8 add-margin">
 									<input type="password" class="form-control check-password passwordvalidate" name="newPassword" data-toggle="popover" data-container="#wrap" data-content="core.error.password" id="new-pass" maxlength="32" required="required">
@@ -578,21 +578,21 @@
 							</div>
 							<div class="form-group">
 								<div class="col-md-4">
-									<label class="control-label required">Re-type Password</label>
+									<label class="control-label required" data-translate="core.lbl.retype.password"></label>
 								</div>
 								<div class="col-md-8 add-margin">
 									<input type="password" class="form-control check-password" id="retype-pass" maxlength="32" required="required">
 									<div class="password-error error-msg display-hide" data-translate="core.error.password.confirmpassword.same"></div>
 								</div>
 							</div>
-							<div class="form-group text-right">
-								<div class="col-md-12 add-margin">
-									<button type="button" class="btn btn-primary" id="resetpassword">Change Password</button>
-									<button type="button" class="btn btn-default pass-cancel" data-dismiss="modal" data-translate="core.lbl.cancel"></button>
-								</div>
-							</div>
-							</form>
 					</div>
+					<div class="modal-footer">
+						<div class="text-right">
+							<button type="button" class="btn btn-primary" id="resetpassword" data-translate="core.lbl.pass.change"></button>
+							<button type="button" class="btn btn-default pass-cancel" data-dismiss="modal" data-translate="core.lbl.cancel"></button>
+						</div>
+					</div>
+					</form>
 				</div>
 			</div>
 		</div>

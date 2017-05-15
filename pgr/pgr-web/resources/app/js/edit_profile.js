@@ -66,7 +66,7 @@ $(document).ready(function(){
 				},
 				contentType: "application/json",
 				success : function(userResponse){
-					bootbox.alert('Profile updated successfully', function(){ 
+					bootbox.alert(translate('core.msg.profile.updated'), function(){ 
 						doCheckUser();
 					});
 				},

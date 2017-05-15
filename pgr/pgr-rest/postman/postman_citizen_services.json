@@ -86,6 +86,17 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Retrieve service definition",
+			"request": {
+				"url": "http://{{host}}:{{port}}/pgr/servicedefinition/_search?tenantId=default&serviceCode=DMV66",
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

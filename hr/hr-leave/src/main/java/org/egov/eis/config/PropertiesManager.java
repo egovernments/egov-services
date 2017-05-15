@@ -71,4 +71,16 @@ public class PropertiesManager {
 
     @Value("${egov.services.workflow_service.hostname.businesskey}")
     private String workflowServiceBusinessKey;
+    
+    @Value("${egov.services.hr_masters_service.hostname}")
+    private String hrMastersServiceHostName;
+
+    @Value("${egov.services.hr_masters_service.hrstatus.basepath}")
+    private String hrMastersServiceHRStatusBasePath;
+
+    @Value("${egov.services.hr_masters_service.hrstatuses.searchpath}")
+    private String hrMastersServiceStatusesSearchPath;
+
+    @Value("${egov.services.hr_masters_service.hrstatuses.key}")
+    private String hrMastersServiceStatusesKey;
 }

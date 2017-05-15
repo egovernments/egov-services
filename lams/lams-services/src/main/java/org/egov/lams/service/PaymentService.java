@@ -21,6 +21,7 @@ import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.FinancialsRepository;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
+import org.egov.lams.util.BillNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.BillDetailInfo;
 import org.egov.lams.web.contract.BillInfo;
@@ -72,7 +73,7 @@ public class PaymentService {
 	BillRepository billRepository;
 
 	@Autowired
-	BillNumberService billNumberService;
+	BillNumberUtil billNumberService;
 
 	@Autowired
 	FinancialsRepository financialsRepository;

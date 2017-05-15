@@ -1,0 +1,55 @@
+title (WC0000086) Workflow updation for water connection
+
+Client->+WaterConnectionSvc: Start workflow after demand notice is served for the New Water Connection Request
+
+WaterConnectionSvc->WaterConnectionSvc: validate Request Format
+note over WaterConnectionSvc
+    1. Verify the provided provide water connection acknowledgement number.
+    2. Get WaterConnectionId based upon acknowledgement number.
+end note over 
+
+alt waterConnectionIdExists
+
+    alt isCollectionSuccessful
+        WaterConnectionSvc->DemandSvc: validate internal business rules
+        note over WaterConnectionSvc
+            1. Verify from DemandSvc about the collection
+        end note over
+    
+        WaterConnectionSvc->UserSvc: Get current user details and approver department
+        note over WaterConnectionSvc
+            1. Get currently loggedIn user details from UserSvc.
+            2. Get approver department from UserSvc
+        end note over
+    
+        WaterConnectionSvc->WorkflowSvc: Get workflow matrix
+        note over WaterConnectionSvc
+            1. Get workflow matrix from WorkflowSvc
+        end note over
+    
+        WaterConnectionSvc->UserSvc: Get approver after receiving workflow matrix
+        note over WaterConnectionSvc
+            1. Get approver department from UserSvc
+        end note over
+    
+        WaterConnectionSvc->+KafkaQSvc: Q for further processing
+        note over KafkaQSvc
+            1. Publish To: workflow to update
+        end note over
+        
+        KafkaQSvc->WorkflowSvc: Update work based upon assignee and assigner
+        KafkaQSvc->WaterConnectionSvc: Persist in DB
+        KafkaQSvc->ESSvc: Create index
+        note over ESSvc
+            1. There are two index defined in ESSvc
+            2. waterchargeconsumer & application index. The ESSvc schema can be borrowed from
+           existing code base.
+        end note over 
+    
+    end
+
+else waterConnectionIdDoesnotExist
+    note over WaterConnectionSvc
+        1. Return error.
+    end note over 
+end

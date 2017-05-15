@@ -49,8 +49,7 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
-import org.egov.eis.service.exception.UserCreateException;
-import org.egov.eis.service.exception.UserUpdateException;
+import org.egov.eis.service.exception.UserException;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
@@ -142,7 +141,7 @@ public class EmployeeController {
 		return getSuccessResponseForSearch(employeesList, requestInfo);
 	}
 	
-	/**
+		/**
          * Maps Post Requests for _loggedinemployee & returns ResponseEntity of either
          * EmployeeResponse type or ErrorResponse type
          * 
@@ -241,9 +240,9 @@ public class EmployeeController {
 		Employee employee = null;
 		try {
 			employee = employeeService.createAsync(employeeRequest);
-		} catch (UserCreateException uce) {
-			LOGGER.error("Error while processing request ", uce);
-			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
+		} catch (UserException ue) {
+			LOGGER.error("Error while processing request ", ue);
+			return errorHandler.getResponseEntityForUserErrors(ue);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request ", exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
@@ -271,9 +270,9 @@ public class EmployeeController {
 		Employee employee = null;
 		try {
 			employee = employeeService.updateAsync(employeeRequest);
-		} catch (UserUpdateException ude) {
-			LOGGER.error("Error while processing request ", ude);
-			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
+		} catch (UserException ue) {
+			LOGGER.error("Error while processing request ", ue);
+			return errorHandler.getResponseEntityForUserErrors(ue);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request ", exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());

@@ -38,6 +38,8 @@ class ApplyLeave extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
+    $('#availableDays,#leaveDays').prop("disabled", true);
+
     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
@@ -63,138 +65,114 @@ class ApplyLeave extends React.Component {
         })
       }
       else{
-        $('#fromDate').datepicker({
+        try {
+          var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search", {
+              tenantId: "default"
+          }).responseJSON || [];
+        } catch(e) {
+          var hrConfigurations = [];
+        }
+
+        try {
+          var allHolidayList = commonApiPost("egov-common-masters", "holidays", "_search", {
+            tenantId
+          }).responseJSON["Holiday"] || [];
+        } catch(e) {
+          var allHolidayList = [];
+        }
+
+        $('#fromDate, #toDate').datepicker({
             format: 'dd/mm/yyyy',
             autoclose:true
 
         });
-        $('#fromDate').on("change", function(e) {
-          var from = $('#fromDate').val();
-          var to = $('#toDate').val();
-          var dateParts = from.split("/");
-          var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-          var date1 = new Date(newDateStr);
 
-          var dateParts = to.split("/");
-          var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-          var date2 = new Date(newDateStr);
-          if (date1 > date2) {
-              showError("From date must be before of End date");
-              $('#fromDate').val("");
-          }
-          _this.setState({
-                leaveSet: {
-                    ..._this.state.leaveSet,
-                    "fromDate":$("#fromDate").val()
-                }
-          })
-
-          });
-
-          $('#toDate').datepicker({
-              format: 'dd/mm/yyyy',
-              autoclose:true
-
-          });
-          $('#toDate').on("change", function(e) {
-            var from = $('#fromDate').val();
-            var to = $('#toDate').val();
-            var dateParts = from.split("/");
+        $('#fromDate, #toDate').on("change", function(e) {
+          var _from = $('#fromDate').val();
+          var _to = $('#toDate').val();
+          var _triggerId = e.target.id;
+          if(_from && _to) {
+            var dateParts = _from.split("/");
             var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
             var date1 = new Date(newDateStr);
-
-            var dateParts = to.split("/");
+            var dateParts = _to.split("/");
             var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
             var date2 = new Date(newDateStr);
             if (date1 > date2) {
-                showError("End date must be after of From date");
-                $('#toDate').val("");
-            }
-
-            _this.setState({
-                  leaveSet: {
-                      ..._this.state.leaveSet,
-                      "toDate":$("#toDate").val()
-                  }
-
-            })
-            var start = $('#fromDate').datepicker('getDate');
-            var end   = $('#toDate').datepicker('getDate');
-            var timeDiff = 1 + Math.round(end.getTime() - start.getTime());
-                 var days = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-                 if(days){
-                       // Subtract two weekend days for every week in between
-                       var weeks = Math.floor(days / 7);
-                       days = days - (weeks * 2);
-
-                       // Handle special cases
-                       var startDay = start.getDay();
-                       var endDay = end.getDay();
-
-                       // Remove weekend not previously removed.
-                       if (startDay - endDay > 1)
-                           days = days - 2;
-
-                       // Remove start day if span starts on Sunday but ends before Saturday
-                       if (startDay == 0 && endDay != 6)
-                           days = days - 1;
-
-                       // Remove end day if span ends on Saturday but starts after Sunday
-                       if (endDay == 6 && startDay != 0)
-                           days = days - 1;
-                   }
-
-                   if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
-                     try{
-                        var leaveType = _this.state.leaveSet.leaveType.id;
-                        var asOnDate = _this.state.leaveSet.toDate;
-                        var employeeid =getUrlVars()["id"];
-                        var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
-                         _this.setState({
-                             leaveSet:{
-                                 ..._this.state.leaveSet,
-                                 availableDays: object.noOfDays,
-                                 leaveDays:days
-                             }
-                         })
-
-                         }
-                         catch (e){
-                           console.log(e);
-                         }
-                    } else{
-                      _this.setState({
-                        leaveSet:{
-                            ..._this.state.leaveSet,
-                            leaveDays:days
-                          }
-                      })
-                  }
-            });
-
-            if (!id) {
-
-             var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
+              showError("From date must be before End date.");
+              $('#' + _triggerId).val("");
             } else {
-              var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+              //Calculate working days
+              var _days = 0;
+              var parts1 = $('#fromDate').val().split("/");
+              var parts2 = $('#toDate').val().split("/");
+              var startDate = new Date(parts1[2], (+parts1[1]-1), parts1[0]);
+              var endDate = new Date(parts2[2], (+parts2[1]-1), parts2[0]);
+              if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week") {
+                for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+                    if(!(allHolidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y") && !(d.getDay()===0||d.getDay()===6))
+                        _days++;
+                 }
+              }
+              else {
+                for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+                    if(!(allHolidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y") && !(d.getDay()===0))
+                      _days++;
+                }
+              }
+
+              _this.setState({
+                leaveSet: {
+                    ..._this.state.leaveSet,
+                    [_triggerId]: $("#" + _triggerId).val(),
+                    leaveDays: _days
+                }
+              });
+
+              setTimeout(function() {
+                if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
+                   try{
+                      var leaveType = _this.state.leaveSet.leaveType.id;
+                      var asOnDate = _this.state.leaveSet.toDate;
+                      var employeeid = getUrlVars()["id"];
+                      var object = commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
+                       _this.setState({
+                           leaveSet:{
+                               ..._this.state.leaveSet,
+                               availableDays: object.noOfDays
+                           }
+                       })
+                    } catch (e){
+                      console.log(e);
+                    }
+                }
+              }, 200);
             }
-
+          } else {
             _this.setState({
-              leaveSet:{
+              leaveSet: {
                   ..._this.state.leaveSet,
-                  name:obj.name,
-                  code:obj.code,
-                  employee:obj.id,
-                  // workflowDetails:{
-                  //   ..._this.state.leaveSet.workflowDetails,
-                  //   assignee: assignee || ""
-                  // }
+                  [_triggerId]: $("#" + _triggerId).val()
+              }
+            });
+          }
+        });
 
-                },
-               departmentId:this.getPrimaryAssigmentDep(obj,"department")
+        if (!id) {
+          var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
+        } else {
+          var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+        }
 
-            })
+        _this.setState({
+          leaveSet:{
+              ..._this.state.leaveSet,
+              name: obj.name,
+              code: obj.code,
+              employee: obj.id
+            },
+           departmentId: this.getPrimaryAssigmentDep(obj,"department")
+        })
 
 
 
@@ -338,14 +316,6 @@ addOrUpdate(e,mode)
     let {name,code,leaveDays,availableDays,fromDate,toDate,reason,leaveType}=leaveSet;
     let mode=getUrlVars()["type"];
 
-
-    const showActionButton=function() {
-      if((!mode) ||mode==="create")
-      {
-        return (<button type="submit" className="btn btn-submit">{mode?"Approve":"Apply"}</button>);
-      }
-    };
-
     const renderOption=function(list)
     {
       if(list)
@@ -402,7 +372,7 @@ addOrUpdate(e,mode)
                           <div className="text-no-ui">
                           <span><i className="glyphicon glyphicon-calendar"></i></span>
                           <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
-                          onChange={(e)=>{handleChange(e,"fromDate")}}required/>
+                          onChange={(e)=>{handleChange(e,"fromDate")}} required/>
 
                           </div>
                       </div>
@@ -490,7 +460,7 @@ addOrUpdate(e,mode)
 
 
             <div className="text-center">
-            {showActionButton()} &nbsp;&nbsp;
+            <button type="submit" className="btn btn-submit">Apply</button> &nbsp;&nbsp;
             <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

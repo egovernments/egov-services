@@ -159,10 +159,13 @@ $(document).ready(function()
 				data : JSON.stringify( reqObj ),
 				success : function(response){
 					$('.change-password').modal('hide');
-					bootbox.alert('Password successfully updated');
+					bootbox.alert(translate('core.msg.success.password.updated'));
 				},
-				error: function(){
-					bootbox.alert('Password update failed');
+				error : function(xhr, status, error){
+					$('.change-password').modal('hide');
+					var response = JSON.parse(xhr.responseText);
+					var errorMsg = response.error.fields[0].code;
+					bootbox.alert(translate(errorMsg));
 				}
 			});
 		}else{
@@ -174,7 +177,7 @@ $(document).ready(function()
 
 function loadComplaints(){
 	$.ajax({
-		url : "/pgr/seva/_search?tenantId=ap.public&user_id="+localStorage.getItem("id"),
+		url : "/pgr/seva/_search?tenantId=default&user_id="+localStorage.getItem("id"),
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -187,7 +190,7 @@ function loadComplaints(){
 			//$("#grievance-template").html('');
 			var source   = $("#grievance-template").html();
 			var template = Handlebars.compile(source);
-			var html = template(response.service_requests);
+			var html = template(response.serviceRequests);
 			$('.reloadtemplate').remove();
 			$('.grievanceresponse').append(html);
 		},
@@ -205,6 +208,7 @@ function search(elem) {
 	var searchText = $(elem).val(); 
 	if($.trim(searchText)){
 		$(".reloadtemplate").each(function() {
+			console.log('searchText', $.trim(searchText));
 	         var $this = $(this)
 	         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
 	             $this.hide();
@@ -212,5 +216,10 @@ function search(elem) {
 		         $this.show();
 		     }
 	    });
+	}else{
+		$(".reloadtemplate").each(function() {
+			var $this = $(this);
+			$this.show();
+		});
 	}
 };

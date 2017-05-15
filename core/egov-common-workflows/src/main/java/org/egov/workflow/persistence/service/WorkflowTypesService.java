@@ -53,8 +53,8 @@ public class WorkflowTypesService {
 	    public WorkflowTypes getEnabledWorkflowTypeByType(String type) {
 	        return workflowTypesRepository.findByTypeAndEnabledIsTrue(type);
 	    }
-	    public List<String> getEnabledWorkflowType(Boolean isEnabled) {
-	        return workflowTypesRepository.findTypeEnabled(isEnabled);
+	    public List<String> getEnabledWorkflowType(Boolean isEnabled,String tenantId) {
+	        return workflowTypesRepository.findTypeEnabled(isEnabled,tenantId);
 	    }
 
 	    

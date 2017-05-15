@@ -48,11 +48,13 @@ import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveApplicationRowMapper;
+import org.egov.eis.service.HRStatusService;
 import org.egov.eis.service.WorkFlowService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.ProcessInstance;
+import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -72,6 +74,9 @@ public class LeaveApplicationRepository {
 
     @Autowired
     private WorkFlowService workFlowService;
+
+    @Autowired
+    private HRStatusService hrStatusService;
 
     public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -112,7 +117,7 @@ public class LeaveApplicationRepository {
         final Date now = new Date();
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
         leaveApplication.setStateId(Long.valueOf(task.getId()));
-        leaveApplicationStatusChange(leaveApplication);
+        leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
         final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(),
                 leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
@@ -126,15 +131,23 @@ public class LeaveApplicationRepository {
         return leaveApplication;
     }
 
-    private void leaveApplicationStatusChange(final LeaveApplication leaveApplication) {
+    private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
         final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
         if ("Approve".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.APPROVED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.APPROVED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
         else if ("Reject".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.REJECTED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.CANCELLED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
         else if ("Submit".equalsIgnoreCase(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.RESUBMITTED);
+            leaveApplication
+                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(),
+                            requestInfo).get(0).getId());
     }
 }

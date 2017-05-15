@@ -1,0 +1,67 @@
+title (WC0000077) New Water Connection Appliction from Citizen 
+
+Client->+WaterConnectionSvc: New Water Connection Request
+
+WaterConnectionSvc->WaterConnectionSvc: validate Request Format
+
+opt isNewConnection
+WaterConnectionSvc->WaterConnectionSvc: validate internal business rules
+note over WaterConnectionSvc
+    1. (WC0000083) Check that donation charges or
+    euivalent is configured in water charges
+    donation master 
+    2. Check Water rights from the configuration
+    if applicable (AP it was)
+    3. Verify ConnectionType, UsageType, Category, Water Source Type, Maximum HSC Pipe size
+    PropertyType, Sump Capacity, BPL card holder name.
+    4. BPL card holder name need to verified when Category supplied is BPL
+    5. (WC0000084) Verify the provided documents have been uploaded to the file store.
+end note over 
+end
+
+alt ifPropertyExists
+    WaterConnectionSvc->PropertySvc: validate property rules (WC0000079, WC0000080,WC0000082)
+    note over PropertySvc
+        1. Validate whether property exists
+        2. Validate no dues on property
+        3. Get Boundary details from property
+    end note over
+else IfPropertyDoesntExist
+    note over WaterConnectionSvc 
+        (WC0000081) Flow to be decided 
+    end note over 
+end
+
+alt ifLegacyConnection
+    WaterConnectionSvc->IDGenSvc: generate Consumer number
+else ifNewConnection
+    WaterConnectionSvc->IDGenSvc: (WC0000085, WC0000093) generate Acknowledgement number
+end
+
+WaterConnectionSvc->+KafkaQSvc: Q for further processing
+
+note over KafkaQSvc
+    1. Publish To: wc.connection.new
+    Each line originating from KafkaQSvc
+    represents a consumer performing a certain
+    logical unit of fucntionality
+end note over 
+
+WaterConnectionSvc->-Client: (WC0000085, WC0000093) New Water Connection Response
+
+opt ifNewConnection
+    KafkaQSvc->WorkflowSvc: (WC0000086, WC0000087) Generate workflow
+end
+
+KafkaQSvc->WaterConnectionSvc: Persist in DB
+
+KafkaQSvc->ESSvc: (WC0000088, WC0000089, WC0000090, WC0000091, WC0000092) Create index
+note over ESSvc
+    1. There are two index defined in ESSvc
+    2. waterchargeconsumer & application index. The ESSvc schema can be borrowed from
+       existing code base.
+end note over 
+
+opt ifNewConnection
+    KafkaQSvc->NotificationSvc: (WC0000103) notify consumer/admin as per state and status.
+end

@@ -126,10 +126,13 @@ $(document).ready(function()
 				data : JSON.stringify( reqObj ),
 				success : function(response){
 					$('.change-password').modal('hide');
-					bootbox.alert('Password successfully updated');
+					bootbox.alert(translate('core.msg.success.password.updated'));
 				},
-				error: function(){
-					bootbox.alert('Password update failed');
+				error : function(xhr, status, error){
+					$('.change-password').modal('hide');
+					var response = JSON.parse(xhr.responseText);
+					var errorMsg = response.error.fields[0].code;
+					bootbox.alert(translate(errorMsg));
 				}
 			})
 		}else{

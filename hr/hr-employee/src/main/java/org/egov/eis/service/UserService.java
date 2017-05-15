@@ -46,19 +46,17 @@ import java.util.List;
 
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.User;
+import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.UserSearchURLHelper;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.egov.eis.web.controller.EmployeeController;
-import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -77,9 +75,6 @@ public class UserService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-
-	@Autowired
-	private ErrorHandler errorHandler;
 
 	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
@@ -109,9 +104,8 @@ public class UserService {
 		return users;
 	}
 
-	// FIXME : User service is expecting & sending dates in multiple formats.
-	// Fix a common standard for date formats.
-	public ResponseEntity<?> createUser(UserRequest userRequest) {
+	// FIXME : Fix a common standard for date formats in User Service.
+	public UserResponse createUser(UserRequest userRequest) throws UserException {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
@@ -123,7 +117,7 @@ public class UserService {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
-			LOGGER.debug("Following exception occurred: " + e.getResponseBodyAsString());
+			LOGGER.debug("\n\n" + "Following exception occurred while creating user: " + errorResponseBody);
 			UserErrorResponse userErrorResponse = null;
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -140,20 +134,20 @@ public class UserService {
 				LOGGER.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
-			return new ResponseEntity<UserErrorResponse>(userErrorResponse, HttpStatus.BAD_REQUEST);
+			throw new UserException(userErrorResponse, userRequest.getRequestInfo());
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
-			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(userRequest.getRequestInfo());
+			throw new UserException(null, userRequest.getRequestInfo());
 		}
 		
 		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
 		LOGGER.debug("UserResponse : " + userResponse);
 
-		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
+		return userResponse;
 	}
 
-	public ResponseEntity<?> updateUser(Long userId, UserRequest userRequest) {
+	public UserResponse updateUser(Long userId, UserRequest userRequest) throws UserException {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ getUserUpdatePath(userId);
 
@@ -165,7 +159,7 @@ public class UserService {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
-			LOGGER.debug("Following exception occurred: " + e.getResponseBodyAsString());
+			LOGGER.debug("\n\n" + "Following exception occurred while updating user: " + errorResponseBody);
 			UserErrorResponse userErrorResponse = null;
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -182,17 +176,17 @@ public class UserService {
 				LOGGER.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
-			return new ResponseEntity<UserErrorResponse>(userErrorResponse, HttpStatus.BAD_REQUEST);
+			throw new UserException(userErrorResponse, userRequest.getRequestInfo());
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
-			return errorHandler.getResponseEntityForUnknownUserUpdationError(userRequest.getRequestInfo());
+			throw new UserException(null, userRequest.getRequestInfo());
 		}
 		
 		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
 		LOGGER.debug("UserResponse : " + userResponse);
 
-		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
+		return userResponse;
 	}
 
 	private String getUserUpdatePath(long id) {

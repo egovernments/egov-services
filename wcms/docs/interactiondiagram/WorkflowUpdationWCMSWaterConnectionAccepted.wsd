@@ -1,0 +1,81 @@
+title (WC0000086) Workflow updation for water connection
+
+Client->+WaterConnectionSvc: Start workflow to accept the New Water Connection Request (2.2)
+
+WaterConnectionSvc->WaterConnectionSvc: validate Request Format
+note over WaterConnectionSvc
+    1. Verify the provided provide water connection acknowledgement number.
+    2. Get WaterConnectionId based upon acknowledgement number.
+end note over 
+
+alt waterConnectionIdExists
+
+    opt isModificationProvided
+        WaterConnectionSvc->WaterConnectionSvc: validate internal business rules
+        note over WaterConnectionSvc
+            1. Capture remarks about the modifications.
+            2. Caputre updated connection attributes.
+            3. Verify uploaded file with FileSrv
+        end note over 
+    end
+
+    opt isEstimationInputProvided
+        WaterConnectionSvc->WaterConnectionSvc: validate internal business rules
+        note over WaterConnectionSvc
+            1. Capture array of material items.
+            2. Capture category of road, existing distribution pipeline, pipeline to home distance
+            3. Capture estimation charges, supervision charges
+        end note over 
+        
+        WaterConnectionSvc->WaterConnectionSvc: calculate donation, estimation charges
+        note over WaterConnectionSvc
+            1. Calculate donations charges based upon category & usage type
+            2. Calculate estimation charges
+        end note over 
+    end
+
+    WaterConnectionSvc->UserSvc: Get current user details and approver department
+    note over WaterConnectionSvc
+        1. Get currently loggedIn user details from UserSvc.
+        2. Get approver department from UserSvc
+    end note over
+
+    WaterConnectionSvc->WorkflowSvc: Get workflow matrix
+    note over WaterConnectionSvc
+        1. Get workflow matrix from WorkflowSvc
+    end note over
+
+    WaterConnectionSvc->UserSvc: Get approver after receiving workflow matrix
+    note over WaterConnectionSvc
+        1. Get approver department from UserSvc
+    end note over
+
+    WaterConnectionSvc->+KafkaQSvc: Q for further processing
+    note over KafkaQSvc
+        1. Publish To: workflow to update
+    end note over
+    
+    KafkaQSvc->WorkflowSvc: Update work based upon assignee and assigner
+    KafkaQSvc->WaterConnectionSvc: Persist in DB
+    KafkaQSvc->ESSvc: Create index
+    note over ESSvc
+        1. There are two index defined in ESSvc
+        2. waterchargeconsumer & application index. The ESSvc schema can be borrowed from
+       existing code base.
+    end note over 
+    
+    KafkaQSvc->DemandSvc: Generate demand notice
+    note over KafkaQSvc
+        1. Generate demand notice based upon the calculated charges.
+    end note over 
+
+    KafkaQSvc->NotificationSvc: (WC0000103) notify consumer/admin as per state and status.
+    note over NotificationSvc
+        1. Citizen will be informed about the estimation notice
+    end note over 
+
+else waterConnectionIdDoesnotExist
+    note over WaterConnectionSvc
+        1. Return error.
+    end note over 
+end

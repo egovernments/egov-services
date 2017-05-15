@@ -111,7 +111,7 @@ addOrUpdate(e,mode){
 
                     },
                     error: function(err) {
-                        showError(err);
+                        showError("Duplicate Usage Type are not allowed");
 
                     }
                 });

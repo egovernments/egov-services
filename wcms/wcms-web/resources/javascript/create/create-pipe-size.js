@@ -1,9 +1,9 @@
-class CreateCategoryType extends React.Component {
+class CreateUsageType extends React.Component {
   constructor(props) {
     super(props);
     this.state={searchSet:{
-    "name":"",
-    "description":"",
+    "inputmm":"",
+    "inputinc":"",
     "tenantId":tenantId,
     "active":"true"
       }
@@ -36,6 +36,7 @@ class CreateCategoryType extends React.Component {
       open(location, '_self').close();
   }
   componentDidMount(){
+    $('#inputinc').prop("disabled", true);
     if(window.opener && window.opener.document) {
          var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
          if(logo_ele && logo_ele[0]) {
@@ -53,7 +54,7 @@ class CreateCategoryType extends React.Component {
           if(type==="Update"||type==="View")
           {
                this.setState({
-                 searchSet:getCommonMasterById("wcms-masters","category","Category",id).responseJSON["Category"][0]
+                 searchSet:getCommonMasterById("wcms-masters","usagetype","UsageType",id).responseJSON["UsageType"][0]
 
               })
           }
@@ -67,11 +68,11 @@ addOrUpdate(e,mode){
           var tempInfo=Object.assign({},_this.state.searchSet) , type = getUrlVars()["type"];
             var body={
               "RequestInfo":requestInfo,
-              "Category":tempInfo
+              "UsageType":tempInfo
             },_this=this;
             if (type == "Update") {
                             $.ajax({
-                   url:baseUrl+"/wcms-masters/category/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
+                   url:baseUrl+"/wcms-masters/usagetype/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -91,7 +92,7 @@ addOrUpdate(e,mode){
                 });
             } else {
               $.ajax({
-                    url:baseUrl+"/wcms-masters/category/_create",
+                    url:baseUrl+"/wcms-masters/usagetype/_create",
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -111,7 +112,7 @@ addOrUpdate(e,mode){
 
                     },
                     error: function(err) {
-                        showError("Try To create another Category. Duplication Is not allowed");
+                        showError("Duplicate Usage Type are not allowed");
 
                     }
                 });
@@ -125,7 +126,7 @@ addOrUpdate(e,mode){
   render() {
     let {handleChange,addOrUpdate}=this;
     let {list}=this.state;
-    let {name,code,description,active}=this.state.searchSet;
+    let {inputmm,code,inputinc,active}=this.state.searchSet;
     let mode=getUrlVars()["type"];
 
     const showActionButton=function() {
@@ -140,7 +141,7 @@ addOrUpdate(e,mode){
 
     return (
     <div>
-    <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Category Type</h3>
+    <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Pipe Size</h3>
 
     <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
 
@@ -148,22 +149,22 @@ addOrUpdate(e,mode){
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for=""> Category Type <span> * </span></label>
+                    <label for=""> H.S.C  Pipe Size (mm) <span> * </span></label>
                   </div>
                   <div className="col-sm-6">
-                      <input type="text" id="name" name="name" value={name}
-                        onChange={(e)=>{  handleChange(e,"name")}} required/>
+                      <input type="number" id="inputmm" name="inputmm" value={inputmm}
+                        onChange={(e)=>{  handleChange(e,"inputmm")}} required/>
                   </div>
               </div>
             </div>
             <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for=""> Description  </label>
+                        <label for=""> H.S.C  Pipe Size (inches)  </label>
                       </div>
                       <div className="col-sm-6">
-              <textarea name="description" id="description" value={description}
-              onChange={(e)=>{handleChange(e,"description")}} />
+              <input  type="number" name="inputinc" id="inputinc"  value={inputinc}
+               onChange={(e)=>{handleChange(e,"inputinc")}} readonly/>
 
           </div>
           </div>
@@ -201,7 +202,7 @@ addOrUpdate(e,mode){
 
 
 ReactDOM.render(
-  <CreateCategoryType />,
+  <CreateUsageType />,
   document.getElementById('root')
 );
 //

@@ -43,7 +43,9 @@ package org.egov.eis.repository.builder;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.service.HRStatusService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,9 @@ public class LeaveApplicationQueryBuilder {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private HRStatusService hrStatusService;
 
 	private static final String BASE_QUERY = "SELECT la.id AS la_id, la.applicationNumber AS la_applicationNumber,"
 			+ " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
@@ -72,10 +77,10 @@ public class LeaveApplicationQueryBuilder {
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final LeaveApplicationGetRequest leaveApplicationGetRequest,
-			final List preparedStatementValues) {
+			final List preparedStatementValues, final RequestInfo requestInfo) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, leaveApplicationGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, leaveApplicationGetRequest, requestInfo);
 		addOrderByClause(selectQuery, leaveApplicationGetRequest);
 		addPagingClause(selectQuery, preparedStatementValues, leaveApplicationGetRequest);
 
@@ -85,7 +90,7 @@ public class LeaveApplicationQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final LeaveApplicationGetRequest leaveApplicationGetRequest) {
+			final LeaveApplicationGetRequest leaveApplicationGetRequest, final RequestInfo requestInfo) {
 
 		if (leaveApplicationGetRequest.getId() == null && leaveApplicationGetRequest.getApplicationNumber() == null
 				&& leaveApplicationGetRequest.getEmployee() == null && leaveApplicationGetRequest.getLeaveType() == null
@@ -119,7 +124,8 @@ public class LeaveApplicationQueryBuilder {
 		if (leaveApplicationGetRequest.getStatus() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" la.status = ?");
-			preparedStatementValues.add(leaveApplicationGetRequest.getStatus());
+			preparedStatementValues.add(hrStatusService.getHRStatuses(leaveApplicationGetRequest.getStatus(), leaveApplicationGetRequest.getTenantId(),
+	                            requestInfo).get(0).getId());
 		}
 
 		if (leaveApplicationGetRequest.getEmployee() != null && !leaveApplicationGetRequest.getEmployee().isEmpty()) {

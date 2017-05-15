@@ -13,7 +13,7 @@ public class AgreementQueryBuilder {
 
 	public static final String rentIncrementTypeQuery = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
 
-	public static final String agreementQuery = "SELECT * FROM eglams_agreement agreement WHERE "
+	public static final String agreementQuery = "SELECT id FROM eglams_agreement agreement WHERE "
 			+ "agreement.acknowledgementnumber=? OR agreement.agreement_no=?";
 
 	public static String agreementSearchQuery(AgreementCriteria agreementsModel,

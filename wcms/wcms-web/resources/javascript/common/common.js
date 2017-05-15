@@ -13,12 +13,12 @@ var requestInfo = {
    "msgId": "654654",
    "requesterId": "61",
    "authToken": authToken,
-   "userInfo":{
-     "id":"1",
-   }
+  //  "userInfo":{
+  //    "id":"1",
+  //  }
 };
 //
-var tenantId = "ap.kurnool" //"ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId =  "ap." + window.location.origin.split("-")[0].split("//")[1];
 //
 function blockUI() {
    $('body').css('overflow', 'hidden');

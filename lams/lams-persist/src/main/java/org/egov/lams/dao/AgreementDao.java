@@ -129,7 +129,7 @@ public class AgreementDao {
 				agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
 				agreement.getStateId(), agreement.getTenantId(),agreement.getGoodWillAmount(),
 				agreement.getTimePeriod(),agreement.getCollectedSecurityDeposit(),
-				agreement.getCollectedGoodWillAmount(),agreement.getSource(),
+				agreement.getCollectedGoodWillAmount(),agreement.getSource().toString(),
 				
 				agreement.getAcknowledgementNumber(),agreement.getTenantId()};
 

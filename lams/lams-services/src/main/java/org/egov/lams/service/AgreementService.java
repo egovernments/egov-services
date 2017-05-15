@@ -149,7 +149,8 @@ public class AgreementService {
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
-
+		logger.info("before if else");
+		
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
@@ -176,7 +177,7 @@ public class AgreementService {
 				}
 			}
 		}
-
+		logger.info("kafkatopic value :: "+ kafkaTopic);
 		try {
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);

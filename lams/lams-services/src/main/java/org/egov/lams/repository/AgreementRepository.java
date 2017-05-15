@@ -51,17 +51,19 @@ public class AgreementRepository {
 
 	public Agreement findAgreementByUniqueCode(String code) {
 
-		Agreement agreement = null;
+		List<Agreement> agreements = null;
 		String sql = AgreementQueryBuilder.agreementQuery;
 		Object[] preparedStatementValues = new Object[] { code ,code };
 
 		try {
-			agreement = jdbcTemplate.queryForObject(sql, preparedStatementValues, Agreement.class);
+			agreements = jdbcTemplate.queryForList(sql, preparedStatementValues, Agreement.class);
 		} catch (DataAccessException e) {
 			logger.info("exception in getagreementbyid :: " + e);
 			throw new RuntimeException(e.getMessage());
 		}
-		return agreement;
+		
+		if(agreements.isEmpty()) throw new RuntimeException("no agreements found for the given agreement/acknowledgenent number");
+		return agreements.get(0);
 	}
 
 	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {

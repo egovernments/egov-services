@@ -943,6 +943,286 @@ sync:
           shouldSync: True
           defaultValue: 0
 
+    - sourceTable: eg_hierarchy_type
+      destinationTable: eg_hierarchy_type
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: code
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: localname
+          destination: localname
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0
+
+
+    - sourceTable: eg_crosshierarchy
+      destinationTable: eg_crosshierarchy
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: parent
+          destination: parent
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: child
+          destination: child
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: parenttype
+          destination: parenttype
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: childtype
+          destination: childtype
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0
+
+
+
+    - sourceTable: eg_role
+      destinationTable: eg_role
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: name
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: description
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: version
+          destination: version
+          type: Integer
+          shouldSource: false
+          shouldSync: false
+          defaultValue: 0
+
+    - sourceTable: eg_userrole
+      destinationTable: eg_userrole
+      sourceTimeZone: UTC
+      columns:
+        - source: roleid
+          destination: roleid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: userid
+          destination: userid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+
+    - sourceTable: eg_uom
+      destinationTable: eg_uom
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: uomcategoryid
+          destination: categoryid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: uom
+          destination: code
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: narration
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: conv_factor
+          destination: coversionfactor
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: baseuom
+          destination: baseuom
+          type: Boolean
+          shouldSource: True
+          shouldSync: True
+
+       - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
+       - source: lastmodifiedby
+          destination: lastmodifiedby
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: lastmodifieddate
+          destination: lastmodifieddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createddate
+          destination: createddate
+          Type: TimestampWithoutTimeZone
+          shouldSource: True
+          shouldSync: True
+
+        - source: createdby
+          destination: createdby
+          Type: Integer
+          shouldSource: True
+          shouldSync: True
+
+
+    - sourceTable: eg_uomcategory
+      destinationTable: eg_uomcategory
+      sourceTimeZone: UTC
+      columns:
+        - source: id
+          destination: id
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: category
+          destination: name
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: narration
+          destination: description
+          type: String
+          shouldSource: True
+          shouldSync: True
+
+        - source: NA
+          destination: active
+          Type: Boolean
+          shouldSource: False
+          shouldSync: True
+          defaultValue: 1
+
 
 
 
@@ -1437,3 +1717,5 @@ sync:
           shouldSource: True
           shouldSync: false
           
+
+

@@ -195,7 +195,14 @@ var commomFieldsRules = {
     },
     timePeriod: {
         required: true
-    }
+    },
+    collectedGoodWillAmount{
+      required: true
+    },
+    collectedSecurityDeposit{
+      required: true
+    },
+
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     // validation rules for land agreement

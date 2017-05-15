@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Water Charge</title>
+    <title>water Charges</title>
     <base href="/wcms-web/"/>
-
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
@@ -20,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
 
     <style>
         body {
@@ -85,9 +86,33 @@
     <script type="text/javascript" src="resources/javascript/jquery.dataTables.min.js"></script>
 
     <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
-    <script src="resources/javascript/moment.js"></script>
-    <script src="resources/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="resources/javascript/moment.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="resources/javascript/data-table/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="resources/javascript/data-table/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="resources/javascript/data-table/jszip.min.js">
+
+    </script>
+    <script src="resources/javascript/data-table/pdfmake.min.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/vfs_fonts.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+
+    <!-- Jquery form validator -->
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="resources/javascript/reactjs/react.min.js"></script>
+    <script src="resources/javascript/reactjs/react-dom.min.js"></script>
+    <script src="resources/javascript/reactjs/browser.js"></script>
+    <script src="resources/javascript/common/common.js" charset="utf-8"></script>
 </head>
+
 
 <body class="page-body">
     <!-- for showing loading spinner -->
@@ -97,15 +122,6 @@
     </div>
 
     <div class="page-container horizontal-menu" id="dashboard">
-        <!-- Menu search box -->
-        <!-- <div class="search" style="display: block;">
-        <input type="text" id="searchtree" placeholder="Quick Find"><span class="fa fa-search searchicon tooltip-secondary" data-toggle="tooltip" data-original-title="Search menu item" style="display: block;"></span>
-        <span class="applyanimation"></span>
-      </div>
-      <div class="search_list" style="display: none;">
-        <div class="list" style="top: 0px;"><ul class="ullist"></ul></div>
-      </div> -->
-
         <header class="navbar navbar-fixed-top border-header">
             <!-- set fixed position by adding class "navbar-fixed-top" -->
             <div class="navbar-inner">
@@ -117,12 +133,12 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">Water Charges</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hpCitizenTitle">Asset</h3>
                 </div>
 
                 <!-- notifications and other links -->
                 <ul class="nav navbar-right pull-right">
-                    <li class="dropdown">
+                    <!-- <li class="dropdown">
                         <a href="javascript:void(0);" class="tooltip-secondary workspace active" data-toggle="tooltip" title="" data-work="worklist" data-original-title="Worklist">
                             <i class="fa fa-list fa-fw"></i>
                         </a>
@@ -188,7 +204,7 @@
                         <a href="/egi/logout" class="tooltip-secondary signout" data-toggle="tooltip" title="" data-original-title="Sign Out">
                             <i class="fa fa-sign-out"></i>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li class="dropdown">
                         <a href="http://www.egovernments.org" target="_blank">
@@ -201,163 +217,46 @@
 
         <!-- Multi level menu content -->
         <div class="home-container">
-            <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div>
-            <div class="inline-main-content">
+            <!-- <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div> -->
+            <div class="inline-main-content" style="width:100%">
                 <div class="row main-space" id="worklist">
                     <div class="col-xs-12">
                         <!-- Middle Section -->
-                        <!-- <h4>Create Agreement Links</h4> -->
-                        <!-- <ul>
-                            <li><a href="./app/agreements/new.html?type=land">Land Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=shop">Shops in Shopping Complex Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=market">Markets Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=kalyanamandapam">Kalyana mandapams Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=parking_space">Parking Spaces Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=slaughter_house">Slaughter Houses Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=usfructs">Usfructs Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=community">Community Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=fish_tank">Fish Tank Agreement</a></li>
-                            <li><a href="./app/agreements/new.html?type=park">Fish Tank Agreement</a></li>
-                        </ul> -->
+                        <div class="body-cont">
+                            <div class="body-cont-inner">
+                              <div class="form-section">
+                                <div id="root"></div>
+                                  <script type="text/babel"  src="resources/javascript/create/create-pipe-size.js"></script>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
                         <!-- /Middle Section -->
 
-                    </div>
                 </div>
             </div>
         </div>
 
     </div>
 
+
+
+
+
+
+
+
     <footer class="clearfix simple">
         <div class="constrain">
             <div id="legal">
-                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
+                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>Â®</sup></a></span>
                 <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
             </div>
         </div>
     </footer>
 
     <script src="resources/javascript/egov/custom.js"></script>
-    <script src="resources/javascript/egov/custom-menu.js"></script>
     <script src="resources/javascript/js.cookies.js"></script>
-    <script>
-        var menuItems = [{
-            title: 'All Categories',
-            id: 'menuID',
-            // icon: 'fa fa-reorder',
-            items: [
-                {
-                    name: 'Water Charges',
-                    id: 'itemID',
-                    icon: 'fa fa-laptop',
-                    link: '#',
-                    items: [{
-                        title: 'Water Charges',
-                        icon: 'fa fa-laptop',
-                        items: [{
-                                name: 'Masters',
-                                icon: 'fa fa-desktop',
-                                link: '#',
-                                items: [{
-                                    title: 'Masters',
-                                    icon: 'fa fa-desktop',
-                                    link: '#',
-                                    items: [{
-                                            name: 'Usage Type',
-                                            icon: 'fa fa-desktop',
-                                            link: '#',
-                                            items: [{
-                                                title: 'Usage Type',
-                                                icon: 'fa fa-desktop',
-                                                link: '#',
-                                                items: [{
-                                                        name: 'Create',
-                                                        icon: 'fa fa-phone',
-                                                        link: './app/create/create-usage-type.html'
-                                                    },
-                                                    {
-                                                        name: 'Update',
-                                                        icon: 'fa fa-phone',
-                                                        link: './app/common/show-usage-type.html?type=Update'
-                                                    },
-                                                    {
-                                                        name: 'View',
-                                                        icon: 'fa fa-phone',
-                                                        link: './app/common/show-usage-type.html?type=View'
-                                                    }
-                                                ]
-                                            }]
-                                        },
-                                        {
-                                            name: 'Category Type',
-                                            icon: 'fa fa-phone',
-                                            link: '#',
-                                            items: [{
-                                              title: 'Category Type',
-                                              icon: 'fa fa-desktop',
-                                              link: '#',
-                                              items: [{
-                                                    name: 'Create',
-                                                    icon: 'fa fa-phone',
-                                                    link: './app/create/create-category-master.html'
-                                                },
-                                                {
-                                                    name: 'Update',
-                                                    icon: 'fa fa-phone',
-                                                    link: './app/common/show-category-master.html?type=Update'
-                                                },
-                                                {
-                                                    name: 'View',
-                                                    icon: 'fa fa-phone',
-                                                    link: './app/common/show-category-master.html?type=View'
-                                                }
-                                            ]
-                                          }]
-                                        },
-                                        {
-                                            name: 'Pipe Size',
-                                            icon: 'fa fa-phone',
-                                            link: '#',
-                                            items: [{
-                                              title: 'Pipe Size',
-                                              icon: 'fa fa-desktop',
-                                              link: '#',
-                                              items: [{
-                                                    name: 'Create',
-                                                    icon: 'fa fa-phone',
-                                                    link: './app/create/create-pipe-size.html'
-                                                },
-                                                {
-                                                    name: 'Update',
-                                                    icon: 'fa fa-phone',
-                                                    link: './app/common/show-pipe-size.html?type=Update'
-                                                },
-                                                {
-                                                    name: 'View',
-                                                    icon: 'fa fa-phone',
-                                                    link: './app/common/show-pipe-size.html?type=View'
-                                                }
-                                            ]
-                                          }]
-                                        },
-
-
-
-
-
-                                    ]
-                                }]
-                            },
-
-
-
-                        ]
-                    }]
-                }
-
-            ]
-        }];
-    </script>
 
     <script type="text/javascript">
         $(window).load(function() {
@@ -368,27 +267,6 @@
     </script>
 
     <script type="text/javascript">
-    var response=$.ajax({
-          url: window.location.origin+"/user/_login?tenantId=ap.public&username=manas&password=demo&grant_type=password&scope=read",
-          type: 'POST',
-          dataType: 'json',
-          data:JSON.stringify({}),
-          async: false,
-          contentType: 'application/json',
-          headers:{
-            'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
-          }
-      });
-
-      if(response["status"]===200)
-      {
-          localStorage.setItem("auth-token", response.responseJSON["access_token"]);
-        // alert("Successfully added");
-      }
-      else {
-        // alert(response["statusText"]);
-      }
-
         $('#ast-srch').DataTable({
             "bFilter": false
             // "bLengthChange": false

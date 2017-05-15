@@ -69,7 +69,7 @@ class ApplyLeave extends React.Component {
       else{
         try {
           var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search", {
-              tenantId: "default"
+              tenantId
           }).responseJSON || [];
         } catch(e) {
           var hrConfigurations = [];
@@ -115,7 +115,7 @@ class ApplyLeave extends React.Component {
               var parts2 = $('#toDate').val().split("/");
               var startDate = new Date(parts1[2], (+parts1[1]-1), parts1[0]);
               var endDate = new Date(parts2[2], (+parts2[1]-1), parts2[0]);
-              
+
               if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week") {
                 for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
                     if(holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !(d.getDay()===0||d.getDay()===6))

@@ -1644,6 +1644,34 @@ sync:
           shouldSource: True
           shouldSync: False
 
+    - sourceTable: eg_userrole
+          destinationTable: eg_userrole
+          sourceTimeZone: UTC
+          columns:
+        - source: roleid
+          destination: roleid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: userid
+          destination: userid
+          type: Integer
+          shouldSource: True
+          shouldSync: True
+
+        - source: tenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
+        - source: roleidtenantid
+          destination: NA
+          Type: String
+          shouldSource: True
+          shouldSync: False
+
     - sourceTable: egf_accountdetailkey
       destinationTable: accountdetailkey
       sourceTimeZone: Asia/Kolkata

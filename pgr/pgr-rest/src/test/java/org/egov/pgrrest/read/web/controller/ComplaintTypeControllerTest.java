@@ -45,7 +45,7 @@ public class ComplaintTypeControllerTest {
     public void getComplaintTypes() throws Exception {
         when(complaintTypeService.getComplaintType("BPS", AP_PUBLIC)).thenReturn(getComplaintType());
 
-        mockMvc.perform(post("/services/BPS?tenantId=ap.public")
+        mockMvc.perform(post("/services/BPS/_search?tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())

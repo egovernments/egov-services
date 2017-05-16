@@ -21,10 +21,12 @@ class CreateUsageType extends React.Component {
 
           }
         })
-      }else {
+      }
+      else {
         this.setState({
           searchSet:{
             ...this.state.searchSet,
+            inputinc : (e.target.value * 0.039),
             [name]:e.target.value
           }
         })

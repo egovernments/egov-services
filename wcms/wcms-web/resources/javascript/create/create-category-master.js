@@ -71,7 +71,7 @@ addOrUpdate(e,mode){
             },_this=this;
             if (type == "Update") {
                             $.ajax({
-                   url:baseUrl+"/wcms-masters/category/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
+                   url:baseUrl+"/wcms-masters/category/_update/"+ this.state.searchSet.code + "?" +"tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),

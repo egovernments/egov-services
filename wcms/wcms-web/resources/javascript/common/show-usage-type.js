@@ -35,7 +35,7 @@ class ShowUsageType extends React.Component {
           $('#usagetyepTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
+                      'excel', 'pdf', 'print'
              ],
              ordering: false
           });

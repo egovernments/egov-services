@@ -71,7 +71,7 @@ addOrUpdate(e,mode){
             },_this=this;
             if (type == "Update") {
                             $.ajax({
-                   url:baseUrl+"/wcms-masters/usagetype/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
+                   url:baseUrl+"/wcms-masters/usagetype/_update/"+ this.state.searchSet.code + "?" +"tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -81,11 +81,12 @@ addOrUpdate(e,mode){
                       'auth-token': authToken
                     },
                     success: function(res) {
+                      console.log(hii);
                           showSuccess("Usage Type Modified successfully.");
-                          window.location.href = 'app/common/show-usage-type.html?type=Update';
+                          // window.location.href = 'app/common/show-usage-type.html?type=Update';
                     },
                     error: function(err) {
-                        showError("Duplicate Usage Type are not allowed");
+                        showError(err);
 
                     }
                 });
@@ -148,7 +149,7 @@ addOrUpdate(e,mode){
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for=""> Name <span> * </span></label>
+                    <label for=""> Name :<span> * </span></label>
                   </div>
                   <div className="col-sm-6">
                       <input type="text" id="name" name="name" value={name}
@@ -159,7 +160,7 @@ addOrUpdate(e,mode){
             <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for=""> Description  </label>
+                        <label for=""> Description : </label>
                       </div>
                       <div className="col-sm-6">
               <textarea name="description" id="description" value={description}
@@ -175,7 +176,7 @@ addOrUpdate(e,mode){
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                  <label for=""> Active </label>
+                                  <label for=""> Active : </label>
                                 </div>
                                 <div className="col-sm-6">
                                 <input type="checkbox" name="active" value="true" checked={active == "true" || active  ==  true}

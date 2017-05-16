@@ -330,7 +330,7 @@ function complaintUpdate(obj){
 
 function complaintType(loadDD, serviceName){
 	$.ajax({
-		url: "/pgr/services?type=ALL&tenantId=default",
+		url: "/pgr/services/_search?type=ALL&tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',

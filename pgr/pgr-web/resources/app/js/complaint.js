@@ -74,7 +74,7 @@ $(document).ready(function()
 	$('#complaintTypeCategory').change(function() {
 		if ($(this).val()) {
 			$.ajax({
-				url: "/pgr/services?type=category&categoryId="+$(this).val()+"&tenantId=default",
+				url: "/pgr/services/_search?type=category&categoryId="+$(this).val()+"&tenantId=default",
 				type : 'POST',
 				data : JSON.stringify(requestInfo),
 				dataType: 'json',
@@ -526,7 +526,7 @@ function loadReceivingCenter(){
 
 function complaintCategory(){
 	$.ajax({
-		url: "/pgr/complaintTypeCategories?tenantId=default",
+		url: "/pgr/complaintTypeCategories/_search?tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -548,7 +548,7 @@ function complaintCategory(){
 
 function topComplaintTypes(){
 	$.ajax({
-		url: "/pgr/services?type=frequency&count=5&tenantId=default",
+		url: "/pgr/services/_search?type=frequency&count=5&tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',

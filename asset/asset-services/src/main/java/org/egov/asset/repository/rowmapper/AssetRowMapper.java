@@ -88,8 +88,8 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			asset.setLength(rs.getString("length"));
 			asset.setWidth(rs.getString("width"));
 			asset.setTotalArea(rs.getString("totalArea"));
-			asset.setAccumulatedDepreciation(rs.getDouble("accumulateddepreciation"));
-			asset.setGrossValue(rs.getDouble("grossvalue"));
+			asset.setAccumulatedDepreciation((Double)rs.getObject("accumulateddepreciation"));
+			asset.setGrossValue((Double)rs.getObject("grossvalue"));
 			asset.setAssetReference((Long) rs.getObject("assetreference"));
 			asset.setVersion(rs.getString("version"));
 

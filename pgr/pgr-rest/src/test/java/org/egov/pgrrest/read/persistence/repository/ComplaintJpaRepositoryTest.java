@@ -79,10 +79,7 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(0).getLatitude()).isEqualTo(0);
         assertThat(complaints.get(0).getLongitude()).isEqualTo(0);
         assertThat(complaints.get(0).getCreatedDate()).isBetween(startDate.toDate(), endDate.toDate());
-        final Date actualLastModifiedDate = complaints.get(0).getLastModifiedDate();
-        System.out.println(actualLastModifiedDate);
-        assertNotNull(actualLastModifiedDate);
-        assertTrue(DateUtils.truncatedEquals(actualLastModifiedDate, lastModifiedDate.toDate(), Calendar.SECOND));
+        assertNotNull(complaints.get(0).getLastModifiedDate());
         assertThat(complaints.get(0).getEscalationDate()).isBefore(escalationDate.toDate());
         assertThat(complaints.get(0).getComplaintType().getName()).isEqualTo("Absenteesim of door_to_door garbage collector");
         assertThat(complaints.get(0).getComplaintType().getCode()).isEqualTo("AODTDGCC");

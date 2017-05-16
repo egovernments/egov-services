@@ -29,8 +29,6 @@ class UploadLeaveType extends React.Component{
     } catch(e) {
             var _leaveTypes = [];
     }
-    //console.log("Leave type required",_leaveTypes);
-
     try {
         var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
     } catch(e) {
@@ -42,7 +40,7 @@ class UploadLeaveType extends React.Component{
     } catch (e) {
     var  employees = [];
     }
-    //console.log(employees);
+
     this.setState({
       employees : employees,
       _years : _years,
@@ -76,9 +74,9 @@ class UploadLeaveType extends React.Component{
                 oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
 
                 key = Object.keys(oJS[0]);
-                //console.log("key",key);
+
           });
-          //console.log("oJS",oJS);
+
           var finalObject = [],duplicateObject = [],scannedObject = [];
           oJS.forEach(function(d){
             var employee = d[key[0]];
@@ -114,7 +112,7 @@ class UploadLeaveType extends React.Component{
           }
           scannedObject.forEach(function(d){
               if(d.duplicate === "true"){
-                d.errorMessage = "Duplicate row in the excel scanned";
+                d.errorMsg = "Duplicate row in the excel scanned";
                 duplicateObject.push(d);
               }else {
                 finalObject.push(d);
@@ -146,7 +144,7 @@ addOrUpdate(e,mode)
         var serverObject = [],errorObject=[],finalValidatedServerObject=[],finalSuccessObject=[];
         var tempInfo=Object.assign([],this.state.temp);
         var duplicateInfo = Object.assign([],this.state.duplicate);
-        //console.log("TEMP ",tempInfo);
+
         duplicateInfo.forEach(function(d){
           errorObject.push(d);
         });
@@ -183,7 +181,7 @@ addOrUpdate(e,mode)
         });
 
 
-        var post=0,error=0;
+        var post=0,error=0,errorList=[],successList=[];
         var i=0;
         var leaveName,calendarYearName,employeeName,calenderName,noOfDays;
         var searchName;
@@ -191,7 +189,7 @@ addOrUpdate(e,mode)
         for(var k=0;k<tempInfo.length;k++){
 
           var d = tempInfo[k];
-          //console.log("d----->",d);
+
           noOfDays = parseInt(d.noOfDays)
           leaveName = d.leaveType.id;
           employeeName = d.employee;
@@ -199,18 +197,18 @@ addOrUpdate(e,mode)
           var leaveValidate = checkLeave.indexOf(d.leaveType.id);
           var employeeValidate = checkEmployee.indexOf(d.employee);
           var calenderValidate = checkCalenderYear.indexOf(d.calendarYear);
-          d.errorMessage = "";
+          d.errorMsg = "";
           if(noOfDays<0){
-            d.errorMessage = "Number of days is negative "+noOfDays;
+            d.errorMsg = "Number of days is negative "+noOfDays;
             error=1;
             post=1;
           }
 
           if(leaveValidate<0){
-            if(d.errorMessage===""){
-                d.errorMessage = " Leave type "+leaveName +" is not exist in system";
+            if(d.errorMsg===""){
+                d.errorMsg = " Leave type "+leaveName +" is not exist in system";
             }else{
-                d.errorMessage = d.errorMessage+" Leave type "+leaveName +" is not exist in system";
+                d.errorMsg = d.errorMsg+" Leave type "+leaveName +" is not exist in system";
             }
             post =1;
             error=1;
@@ -227,10 +225,10 @@ addOrUpdate(e,mode)
             }
 
             if(employeeValidate<0){
-              if(d.errorMessage===""){
-                  d.errorMessage = " Employee Code "+employeeName +" is not exist in system";
+              if(d.errorMsg===""){
+                  d.errorMsg = " Employee Code "+employeeName +" is not exist in system";
               }else{
-                  d.errorMessage = d.errorMessage+" Employee Code "+employeeName +" is not exist in system";
+                  d.errorMsg = d.errorMsg+" Employee Code "+employeeName +" is not exist in system";
               }
               error=1;
               post =1;
@@ -248,10 +246,10 @@ addOrUpdate(e,mode)
               }
 
               if(calenderValidate<0){
-                if(d.errorMessage===""){
-                    d.errorMessage = " Calender Year "+calenderName +" is not exist in system";
+                if(d.errorMsg===""){
+                    d.errorMsg = " Calender Year "+calenderName +" is not exist in system";
                 }else{
-                    d.errorMessage = d.errorMessage+" Calender Year "+calenderName +" is not exist in system";
+                    d.errorMsg = d.errorMsg+" Calender Year "+calenderName +" is not exist in system";
                 }
                 error=1;
                 post =1;
@@ -285,8 +283,6 @@ addOrUpdate(e,mode)
           error = 0;
           }
         }
-        //console.log("Success Objects",serverObject);
-        //console.log("Error Objects",errorObject);
         var calenderYearApi = serverObject[0].calendarYear;
 
         try {
@@ -299,20 +295,17 @@ addOrUpdate(e,mode)
             var leaveBal = [];
         }
 
-        //console.log(leaveBal);
         var errorLeaveOpening=[]
         var exists = false;
         for(var i=0;i<serverObject.length;i++){
-          //console.log("Success Object-->",serverObject[i]);
-              var calendarNumber = parseInt(serverObject[i].calendarYear);
+            var calendarNumber = parseInt(serverObject[i].calendarYear);
               exists = false;
               for(var j=0;j<leaveBal.length;j++){
                 if(calendarNumber===leaveBal[j].calendarYear){
                    if(serverObject[i].employee===leaveBal[j].employee){
                        if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
-                         //console.log("Duplicate object from server -->",serverObject[i]);
                                exists=true;
-                               serverObject[i].errorMessage = "Leave opening balance already present in the system for this Employee";
+                               serverObject[i].errorMsg = "Leave opening balance already present in the system for this Employee";
                                errorLeaveOpening.push(serverObject[i]);
                                break;
                           }
@@ -321,52 +314,27 @@ addOrUpdate(e,mode)
                 }
 
                 if(exists===false){
-                  //console.log("finalSuccessObject-->",serverObject[i]);
                   serverObject[i].successMessage = "Employee leaves created successfully";
                   finalValidatedServerObject.push(serverObject[i]);
                 }
 
         }
-        //console.log("Data already present",errorLeaveOpening);
+
 
         errorLeaveOpening.forEach(function(d){
           errorObject.push(d);
         });
 
-        //console.log("Final Server Object After Validation",finalValidatedServerObject);
-        //console.log("Final Error Object After Validation",errorObject);
-
-        var ep1=new ExcelPlus();
-        var b=0;
-
-          ep1.createFile("Success");
-          ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
-          for(b=0;b<finalValidatedServerObject.length;b++){
-            ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].calendarYear,finalValidatedServerObject[b].noOfDays,finalValidatedServerObject[b].successMessage])
-          }
-          ep1.saveAs("success.xlsx");
-
-        var ep2=new ExcelPlus();
-        var b=0;
-
-          ep2.createFile("Error");
-          ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
-          for(b=0;b<errorObject.length;b++){
-            ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMessage])
-          }
-          ep2.saveAs("error.xlsx");
-
 
           finalValidatedServerObject.forEach(function(d){
-            //console.log(d);
               finalSuccessObject.push({"employee": d.employee,
                               "calendarYear": d.calendarYear,
                               "leaveType":  { "id": d.leaveType["id"]},
                               "noOfDays" : d.noOfDays,
+                              "departmentName" : d.department,
                               "tenantId": d.tenantId
                             });
           });
-          //console.log("FINSSL SNJNCJ",finalSuccessObject);
 
         if(finalSuccessObject.length!==0){
 
@@ -384,7 +352,7 @@ addOrUpdate(e,mode)
 
           $.ajax({
 
-                url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId,
+                url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId +"&type=upload",
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -401,6 +369,38 @@ addOrUpdate(e,mode)
                             "tenantId": tenantId
                         }
                         })
+
+                        errorList = res.ErrorList;
+                        res.SuccessList.forEach(function(d){
+                          d.successMessage = "Leave Opening balance created successfully";
+                            successList.push(d);
+                        });
+
+                          var ep1=new ExcelPlus();
+                          var b=0;
+
+                            ep1.createFile("Success");
+                            ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
+                            for(b=0;b<successList.length;b++){
+                              ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].departmentName,successList[b].leaveType["name"],successList[b].calendarYear,successList[b].noOfDays,successList[b].successMessage])
+                            }
+                            ep1.saveAs("success.xlsx");
+
+                      if(errorList.length!==0){
+                        errorList.forEach(function(d){
+                            errorObject.push(d);
+                        });
+                      }
+                      var ep2=new ExcelPlus();
+                      var b=0;
+
+                      ep2.createFile("Error");
+                      ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+                      for(b=0;b<errorObject.length;b++){
+                        ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
+                      }
+                      ep2.saveAs("error.xlsx");
+
 
                 },
                 error: function(err) {

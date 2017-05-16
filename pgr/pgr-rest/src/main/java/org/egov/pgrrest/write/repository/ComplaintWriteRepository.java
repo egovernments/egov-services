@@ -89,7 +89,7 @@ public class ComplaintWriteRepository {
                                               Map<String, List<SubmissionAttribute>> keyToAttributeListMap) {
         final List<SubmissionAttribute> matchingAttributes = keyToAttributeListMap.get(key.getKey());
         if (matchingAttributes == null) {
-            new SubmissionAttribute(true, key);
+            return new SubmissionAttribute(true, key);
         }
         final SubmissionAttribute matchingAttribute = matchingAttributes.stream()
             .filter(a -> key.equals(a.getId()))

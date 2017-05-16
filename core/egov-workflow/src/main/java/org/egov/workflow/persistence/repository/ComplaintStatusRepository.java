@@ -25,5 +25,9 @@ public class ComplaintStatusRepository {
     public org.egov.workflow.domain.model.ComplaintStatus findByName(String name) {
         return complaintStatusJpaRepository.findByName(name).toDomain();
     }
+
+    public org.egov.workflow.domain.model.ComplaintStatus findByCodeAndTenantId(String code, String tenantId){
+        return complaintStatusJpaRepository.findByCodeAndTenantId(code,tenantId).toDomain();
+    }
 }
 

@@ -57,12 +57,12 @@ public class ComplaintStatusServiceTest {
         List<Long> listOfRoles = asList(1L, 2L);
         List<ComplaintStatus> complaintStatuses = getListOfComplaintStatusModels();
 
-        when(complaintStatusRepository.findByName(CURRENT_STATUS_NAME)).thenReturn(currentStatus);
-        when(complaintStatusMappingRepository.getNextStatuses(CURRENT_STATUS_ID, listOfRoles))
+        when(complaintStatusRepository.findByCodeAndTenantId(CURRENT_STATUS_NAME,"default")).thenReturn(currentStatus);
+        when(complaintStatusMappingRepository.getNextStatuses(CURRENT_STATUS_ID, listOfRoles, "default"))
                 .thenReturn(complaintStatuses);
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(CURRENT_STATUS_NAME, listOfRoles);
+                new ComplaintStatusSearchCriteria(CURRENT_STATUS_NAME, listOfRoles, "default");
 
         List<ComplaintStatus> nextStatuses =
                 complaintStatusService.getNextStatuses(complaintStatusSearchCriteria);
@@ -88,7 +88,7 @@ public class ComplaintStatusServiceTest {
         when(complaintStatusRepository.findByName(CURRENT_STATUS_NAME)).thenReturn(null);
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(CURRENT_STATUS_NAME, listOfRoles);
+                new ComplaintStatusSearchCriteria(CURRENT_STATUS_NAME, listOfRoles, "default");
         List<ComplaintStatus> nextStatuses = complaintStatusService.getNextStatuses(complaintStatusSearchCriteria);
 
         assertThat(nextStatuses.size()).isEqualTo(0);

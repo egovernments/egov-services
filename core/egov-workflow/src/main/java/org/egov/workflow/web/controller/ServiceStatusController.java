@@ -43,13 +43,14 @@ public class ServiceStatusController {
 
     @PostMapping("/nextstatuses/_search")
     public ServiceStatusResponse getNextStatuses(@RequestBody final ComplaintStatusRequest request,
-                                                 @RequestParam final String currentStatus) {
+                                                 @RequestParam final String currentStatusCode,
+                                                 @RequestParam(defaultValue = "default") final String tenantId) {
         List<Long> roles = request.getRequestInfo().getUserInfo().getRoles().stream()
             .map(Role::getId)
             .collect(Collectors.toList());
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-            new ComplaintStatusSearchCriteria(currentStatus, roles);
+            new ComplaintStatusSearchCriteria(currentStatusCode, roles,tenantId);
 
         List<org.egov.workflow.domain.model.ComplaintStatus> domainStatuses =  complaintStatusService
             .getNextStatuses(complaintStatusSearchCriteria);

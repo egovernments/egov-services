@@ -43,13 +43,14 @@ public class ComplaintStatusController {
 
     @PostMapping("/nextstatuses/_search")
     public List<ComplaintStatus> getNextStatuses(@RequestBody final ComplaintStatusRequest request,
-                                                 @RequestParam final String currentStatus) {
+                                                 @RequestParam final String currentStatus,
+                                                 @RequestParam(defaultValue = "default") final String tenantId) {
         List<Long> roles = request.getRequestInfo().getUserInfo().getRoles().stream()
                 .map(Role::getId)
                 .collect(Collectors.toList());
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(currentStatus, roles);
+                new ComplaintStatusSearchCriteria(currentStatus, roles,tenantId);
 
         return complaintStatusService.getNextStatuses(complaintStatusSearchCriteria).stream()
                 .map(ComplaintStatus::new).collect(Collectors.toList());

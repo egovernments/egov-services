@@ -16,9 +16,10 @@ public class ComplaintStatusMappingRepository {
         this.complaintStatusMappingJpaRepository = complaintStatusMappingJpaRepository;
     }
 
-    public List<org.egov.workflow.domain.model.ComplaintStatus> getNextStatuses(Long currentStatusId, List<Long> roles) {
+    public List<org.egov.workflow.domain.model.ComplaintStatus> getNextStatuses(Long currentStatusId
+        , List<Long> roles, String tenantId) {
         return complaintStatusMappingJpaRepository
-                .findByCurrentStatusIdAndRoleInOrderByOrderNoAsc(currentStatusId, roles).stream()
+                .findByCurrentStatusIdAndRoleInAndTenantIdOrderByOrderNoAsc(currentStatusId, roles,tenantId).stream()
                 .map(ComplaintStatusMapping::getShowStatus)
                 .map(ComplaintStatus::toDomain)
                 .distinct()

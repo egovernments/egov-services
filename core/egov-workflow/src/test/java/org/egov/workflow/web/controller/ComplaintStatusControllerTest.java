@@ -77,7 +77,7 @@ public class ComplaintStatusControllerTest {
         );
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L));
+                new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L),"default");
         when(complaintStatusService.getNextStatuses(complaintStatusSearchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
@@ -94,7 +94,7 @@ public class ComplaintStatusControllerTest {
     public void should_return_400_when_request_fields_are_invalid() throws Exception {
         InvalidComplaintStatusSearchException exception =
                 new InvalidComplaintStatusSearchException(
-                        new ComplaintStatusSearchCriteria("", Collections.emptyList())
+                        new ComplaintStatusSearchCriteria("", Collections.emptyList(),"default")
                 );
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 

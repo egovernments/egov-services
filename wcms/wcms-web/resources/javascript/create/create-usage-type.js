@@ -111,7 +111,7 @@ addOrUpdate(e,mode){
 
                     },
                     error: function(err) {
-                        showError(err);
+                        showError("Entered Usage Type already exist");
 
                     }
                 });

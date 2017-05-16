@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository 
-public interface BankBranchRepository extends JpaRepository<BankBranch,java.lang.Long>,JpaSpecificationExecutor<BankBranch>  {
+public interface BankBranchJpaRepository extends JpaRepository<BankBranch,java.lang.Long>,JpaSpecificationExecutor<BankBranch>  {
 
 BankBranch findByName(String name);
 

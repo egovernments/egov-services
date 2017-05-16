@@ -35,7 +35,7 @@ public class BankController {
 	@Autowired
 	private BankService bankService;
 
-	@PostMapping
+	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public BankContractResponse create(@RequestBody @Valid BankContractRequest bankContractRequest,
 			BindingResult errors) {

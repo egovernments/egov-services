@@ -37,6 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.egf.domain.model.contract;
 
 import java.util.Date;
@@ -44,14 +45,12 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
 @Getter
 @NoArgsConstructor
 @Setter

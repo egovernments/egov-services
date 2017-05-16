@@ -129,7 +129,7 @@ public class AgreementDao {
 				agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
 				agreement.getStateId(), agreement.getTenantId(),agreement.getGoodWillAmount(),
 				agreement.getTimePeriod(),agreement.getCollectedSecurityDeposit(),
-				agreement.getCollectedGoodWillAmount(),agreement.getSource(),
+				agreement.getCollectedGoodWillAmount(),agreement.getSource().toString(),
 				
 				agreement.getAcknowledgementNumber(),agreement.getTenantId()};
 
@@ -139,26 +139,32 @@ public class AgreementDao {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());
 		}
-		
-		/*if (agreement.getAgreementNumber() != null) {
-			String sql = "UPDATE eglams_demand SET agreementnumber=" + agreement.getId()
-					+ " WHERE demandid=?";
-			List<Object[]> batchArgs = new ArrayList<>();
+
+		String demandQuery = "select demandid from eglams_demand where agreementid=" + agreement.getId();
+		List<String> demandIdList = jdbcTemplate.queryForList(demandQuery, String.class);
+
+		if (demandIdList.isEmpty() && agreement.getDemands() != null) {
+
 			List<String> demands = agreement.getDemands();
+
+			String sql = "INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
+			List<Object[]> demandBatchArgs = new ArrayList<>();
 			int demandsCount = demands.size();
+
 			for (int i = 0; i < demandsCount; i++) {
-				Object[] demandRecord = { demands.get(i) };
-				batchArgs.add(demandRecord);
+				Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
+				demandBatchArgs.add(demandRecord);
 			}
+
 			try {
-				jdbcTemplate.batchUpdate(sql, batchArgs);
+				jdbcTemplate.batchUpdate(sql, demandBatchArgs);
 			} catch (DataAccessException ex) {
 				ex.printStackTrace();
 				throw new RuntimeException(ex.getMessage());
 			}
-		}*/
-		//FIXME do we need to update demand??? if data entry screen add new demand here 
-	
+		}
+		
+		
 		List<Document> documents = agreement.getDocuments();
 		if(documents != null){
 			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";

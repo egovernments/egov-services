@@ -3,7 +3,6 @@ package org.egov.asset.repository.builder;
 import java.util.List;
 
 import org.egov.asset.model.AssetCategoryCriteria;
-import org.egov.asset.repository.AssetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,9 +18,8 @@ public class AssetCategoryQueryBuilder {
 		StringBuilder selectQuery = new StringBuilder(SELECT_BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, assetCategoryCriteria);
-		// addOrderByClause(selectQuery, assetCategoryCriteria);
-		// addPagingClause(selectQuery, preparedStatementValues,
-		// assetCategoryCriteria);
+		addOrderByClause(selectQuery, assetCategoryCriteria);
+		addPagingClause(selectQuery, preparedStatementValues, assetCategoryCriteria);
 		logger.info("selectQuery::" + selectQuery);
 		logger.info("preparedstmt values : " + preparedStatementValues);
 		return selectQuery.toString();
@@ -104,16 +102,18 @@ public class AssetCategoryQueryBuilder {
 				+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
-	/*
-	 * private void addPagingClause(StringBuilder selectQuery, List<Object>
-	 * preparedStatementValues, AssetCategoryCriteria assetCategoryCriteria) {
-	 * 
-	 * }
-	 * 
-	 * private void addOrderByClause(StringBuilder selectQuery,
-	 * AssetCategoryCriteria assetCategoryCriteria) { // TODO Auto-generated
-	 * method stub
-	 * 
-	 * }
-	 */
+	private void addPagingClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
+			AssetCategoryCriteria assetCategoryCriteria) {
+
+		selectQuery.append(" LIMIT ?");
+		preparedStatementValues.add(500); // Set limit to pageSize
+
+		selectQuery.append(" OFFSET ?");
+		long pageNumber = 0; // Default pageNo is zero meaning first page
+		preparedStatementValues.add(pageNumber);
+	}
+
+	private void addOrderByClause(StringBuilder selectQuery, AssetCategoryCriteria assetCategoryCriteria) {
+		selectQuery.append(" ORDER BY assetcategory.name");
+	}
 }

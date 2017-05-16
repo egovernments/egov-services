@@ -149,12 +149,14 @@ public class AgreementService {
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
+		//FIXME remove after fixing tenantidf set to default for now 
+		agreement.getLegacyDemands().get(0).setTenantId("default");
 		
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
 			agreement.setDemands(updateDemnad(agreement.getDemands(),agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
-
+			logger.info("the id from demand save call :: "+agreement.getDemands());
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
@@ -218,7 +220,8 @@ public class AgreementService {
 			legacyDemands = demandRepository.getDemandList(agreementRequest, demandReasons);
 		} else {
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.getLong(demandIds.get(0)));
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			logger.info("the demand search id :: "+demandSearchCriteria.getDemandId());
 			legacyDemands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 					.getDemands();
 		}

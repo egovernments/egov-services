@@ -3,9 +3,12 @@ package org.egov.pgrrest.write.contracts.grievance;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.write.model.ComplaintRecord;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.egov.pgrrest.write.contracts.grievance.ServiceRequest.*;
 import static org.hibernate.internal.util.StringHelper.isEmpty;
@@ -16,6 +19,8 @@ public class SevaRequest {
     private static final String REQUEST_INFO = "RequestInfo";
     private static final String CITIZEN = "CITIZEN";
     private static final String VALUES_CITIZENFEEDBACK = "citizenFeedback";
+    public static final String ATTRIBUTE_ENTRY_KEY = "key";
+    public static final String ATTRIBUTE_ENTRY_CODE = "code";
 
     private HashMap<String, Object> sevaRequestMap;
     private ObjectMapper objectMapper;
@@ -51,7 +56,18 @@ public class SevaRequest {
             .department(getDepartment())
             .citizenFeedback(getCitizenFeedback())
             .tenantId(this.getServiceRequest().getTenantId())
+            .attributeEntries(getAttributeEntries())
             .build();
+    }
+
+    private List<AttributeEntry> getAttributeEntries() {
+        return this.getServiceRequest().getAttributeValues().stream()
+            .map(this::mapToAttributeEntry)
+            .collect(Collectors.toList());
+    }
+
+    private AttributeEntry mapToAttributeEntry(HashMap<String, String> entry) {
+        return new AttributeEntry(entry.get(ATTRIBUTE_ENTRY_KEY), entry.get(ATTRIBUTE_ENTRY_CODE));
     }
 
     @SuppressWarnings("unchecked")

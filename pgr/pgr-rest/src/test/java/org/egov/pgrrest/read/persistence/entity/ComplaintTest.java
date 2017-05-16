@@ -52,7 +52,7 @@ public class ComplaintTest {
         assertEquals(toDate(lastAccessedDateTime), domainComplaint.getLastAccessedTime());
         assertEquals(toDate(lastModifiedDateTime), domainComplaint.getLastModifiedDate());
         assertEquals(toDate(createdDateTime), domainComplaint.getCreatedDate());
-        assertEquals("3", domainComplaint.getDepartment());
+        assertEquals(Long.valueOf(3), domainComplaint.getDepartment());
         assertFalse(domainComplaint.isClosed());
         assertEquals(Collections.emptyList(), domainComplaint.getMediaUrls());
         assertEquals("crn", domainComplaint.getCrn());
@@ -72,11 +72,11 @@ public class ComplaintTest {
         assertEquals("EMAIL", domainComplaint.getReceivingMode());
         assertEquals("4", domainComplaint.getReceivingCenter());
         assertEquals("5", domainComplaint.getChildLocation());
-        assertEquals("6", domainComplaint.getAssignee());
+        assertEquals(Long.valueOf(6), domainComplaint.getAssignee());
         assertEquals("7", domainComplaint.getState());
     }
 
-    public Date toDate(LocalDateTime dateTime) {
+    private Date toDate(LocalDateTime dateTime) {
         final ZonedDateTime zonedDateTime = ZonedDateTime.of(dateTime, ZoneId.of(IST));
         return Date.from(zonedDateTime.toInstant());
     }

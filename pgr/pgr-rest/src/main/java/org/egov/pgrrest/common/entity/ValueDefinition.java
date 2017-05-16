@@ -15,6 +15,7 @@ import javax.persistence.Table;
 @Builder
 @Table(name = "value_definition")
 public class ValueDefinition extends AbstractPersistable<ValueDefinitionKey> {
+    private static final char YES = 'Y';
     @EmbeddedId
     private ValueDefinitionKey id;
 
@@ -24,11 +25,18 @@ public class ValueDefinition extends AbstractPersistable<ValueDefinitionKey> {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "active")
+    private char active;
+
     public String getAttributeCode() {
         return id.getAttributeCode();
     }
 
     public org.egov.pgrrest.common.model.ValueDefinition toDomain() {
-        return new org.egov.pgrrest.common.model.ValueDefinition(name, id.getKey());
+        return new org.egov.pgrrest.common.model.ValueDefinition(name, id.getKey(), isActive());
+    }
+
+    private boolean isActive() {
+        return YES == active;
     }
 }

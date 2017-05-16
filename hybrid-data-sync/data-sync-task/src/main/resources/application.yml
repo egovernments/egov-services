@@ -1162,16 +1162,16 @@ sync:
           shouldSource: True
           shouldSync: True
 
-       - source: NA
+        - source: NA
           destination: active
           Type: Boolean
           shouldSource: False
           shouldSync: True
           defaultValue: 1
 
-       - source: lastmodifiedby
+        - source: lastmodifiedby
           destination: lastmodifiedby
-          type: Integer
+          Type: Integer
           shouldSource: True
           shouldSync: True
 
@@ -1645,9 +1645,9 @@ sync:
           shouldSync: False
 
     - sourceTable: eg_userrole
-          destinationTable: eg_userrole
-          sourceTimeZone: UTC
-          columns:
+      destinationTable: eg_userrole
+      sourceTimeZone: UTC
+      columns:
         - source: roleid
           destination: roleid
           type: Integer

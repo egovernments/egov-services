@@ -29,7 +29,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComplaintServiceTest {
+public class ServiceRequestServiceTest {
 
     private static final String CRN = "crn";
     private static final String TENANT_ID = "tenantId";
@@ -46,7 +46,7 @@ public class ComplaintServiceTest {
     private ComplaintJpaRepository complaintJpaRepository;
 
     @InjectMocks
-    private ComplaintService complaintService;
+    private ServiceRequestService serviceRequestService;
 
     @Test
     public void testShouldValidateComplaintOnSave() {
@@ -54,7 +54,7 @@ public class ComplaintServiceTest {
         when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
         final SevaRequest sevaRequest = getSevaRequest();
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.save(complaint, sevaRequest);
+        serviceRequestService.save(complaint, sevaRequest);
 
         verify(complaint, times(1)).validate();
     }
@@ -65,7 +65,7 @@ public class ComplaintServiceTest {
         when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
         final SevaRequest sevaRequest = getSevaRequest();
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.update(complaint, sevaRequest);
+        serviceRequestService.update(complaint, sevaRequest);
 
         verify(complaint, times(1)).validate();
     }
@@ -75,7 +75,7 @@ public class ComplaintServiceTest {
         final Complaint complaint = getComplaint();
         final SevaRequest sevaRequest = mock(SevaRequest.class);
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.save(complaint, sevaRequest);
+        serviceRequestService.save(complaint, sevaRequest);
 
         verify(sevaRequest).update(complaint);
     }
@@ -85,7 +85,7 @@ public class ComplaintServiceTest {
         final Complaint complaint = getComplaint();
         final SevaRequest sevaRequest = mock(SevaRequest.class);
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.update(complaint, sevaRequest);
+        serviceRequestService.update(complaint, sevaRequest);
 
         verify(sevaRequest).update(complaint);
     }
@@ -96,7 +96,7 @@ public class ComplaintServiceTest {
         final SevaRequest sevaRequest = getSevaRequest();
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.save(complaint, sevaRequest);
+        serviceRequestService.save(complaint, sevaRequest);
 
         assertEquals(CRN, complaint.getCrn());
     }
@@ -109,7 +109,7 @@ public class ComplaintServiceTest {
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
 
-        complaintService.save(complaint, sevaRequest);
+        serviceRequestService.save(complaint, sevaRequest);
 
         final org.egov.common.contract.request.User userInfo = sevaRequest.getRequestInfo().getUserInfo();
         assertNotNull(userInfo);
@@ -128,7 +128,7 @@ public class ComplaintServiceTest {
         sevaRequest.getRequestInfo().setUserInfo(user);
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
 
-        complaintService.save(complaint, sevaRequest);
+        serviceRequestService.save(complaint, sevaRequest);
 
         final org.egov.common.contract.request.User userInfo = sevaRequest.getRequestInfo().getUserInfo();
         assertNotNull(userInfo);
@@ -144,7 +144,7 @@ public class ComplaintServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.save(complaint, sevaRequest);
+        serviceRequestService.save(complaint, sevaRequest);
 
         verify(complaintRepository).save(sevaRequest);
     }
@@ -155,7 +155,7 @@ public class ComplaintServiceTest {
         final ServiceRequest serviceRequest = getServiceRequest();
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
-        complaintService.update(complaint, sevaRequest);
+        serviceRequestService.update(complaint, sevaRequest);
 
         verify(complaintRepository).update(sevaRequest);
     }
@@ -166,7 +166,7 @@ public class ComplaintServiceTest {
         final Complaint expectedComplaint = getComplaint();
         when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
 
-        final List<Complaint> actualComplaints = complaintService.findAll(searchCriteria);
+        final List<Complaint> actualComplaints = serviceRequestService.findAll(searchCriteria);
 
         assertEquals(1, actualComplaints.size());
         assertEquals(expectedComplaint, actualComplaints.get(0));
@@ -174,7 +174,7 @@ public class ComplaintServiceTest {
 
     @Test
     public void testShouldUpdateLastAccessedTime() {
-       complaintService.updateLastAccessedTime("crn", "tenantId");
+       serviceRequestService.updateLastAccessedTime("crn", "tenantId");
         verify(complaintJpaRepository).updateLastAccessedTime(any(Date.class), eq("crn"), eq("tenantId"));
         }
     
@@ -182,7 +182,7 @@ public class ComplaintServiceTest {
         final Complaint expectedComplaint = getComplaint();
         when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Long.class),any(String.class)))
             .thenReturn(Collections.singletonList(expectedComplaint));
-        final List<Complaint> actualComplaints = complaintService.getAllModifiedCitizenComplaints(1L, "tenantId");
+        final List<Complaint> actualComplaints = serviceRequestService.getAllModifiedCitizenComplaints(1L, "tenantId");
         assertEquals(1, actualComplaints.size());
         assertEquals(expectedComplaint, actualComplaints.get(0));
     }
@@ -191,7 +191,7 @@ public class ComplaintServiceTest {
     public void test_should_fetch_empty_list_for_invalid_userid() {
         when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Long.class),any(String.class)))
             .thenReturn(new ArrayList<>());
-        final List<Complaint> actualComplaints = complaintService.getAllModifiedCitizenComplaints(1L, "tenantId");
+        final List<Complaint> actualComplaints = serviceRequestService.getAllModifiedCitizenComplaints(1L, "tenantId");
         assertEquals(0, actualComplaints.size());
     }
 
@@ -211,7 +211,7 @@ public class ComplaintServiceTest {
             .description("description")
             .crn("crn")
             .lastAccessedTime(new Date())
-            .department("2")
+            .department(2L)
             .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
             .build();
     }

@@ -70,7 +70,6 @@ public class AssetQueryBuilder {
 		logger.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-		selectQuery.append(" ORDER BY asset.name");
 		logger.info("Query from asset querybuilde for search : " + selectQuery);
 		return selectQuery.toString();
 	}
@@ -182,6 +181,8 @@ public class AssetQueryBuilder {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues, AssetCriteria searchAsset) {
 		// handle limit(also called pageSize) here
+		selectQuery.append(" ORDER BY asset.name");
+
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
 		if (searchAsset.getSize() != null)

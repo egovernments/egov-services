@@ -16,7 +16,7 @@ import static org.egov.pgrrest.common.entity.ComplaintType.SEQ_COMPLAINTTYPE;
 @AllArgsConstructor
 @Table(name = "egpgr_complainttype")
 @SequenceGenerator(name = SEQ_COMPLAINTTYPE, sequenceName = SEQ_COMPLAINTTYPE, allocationSize = 1)
-public class ComplaintType extends AbstractAuditable {
+public class ComplaintType extends AbstractAuditable<Long> {
 	public static final String SEQ_COMPLAINTTYPE = "SEQ_EGPGR_COMPLAINTTYPE";
 	private static final long serialVersionUID = 8904645810221559541L;
 	@Id

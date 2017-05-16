@@ -1,12 +1,13 @@
 package org.egov.pgrrest.common.model;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public class ValueDefinition {
-    private String name;
+@Getter
+@EqualsAndHashCode
+public class AttributeEntry {
     private String key;
-    private boolean active;
+    private String code;
 }

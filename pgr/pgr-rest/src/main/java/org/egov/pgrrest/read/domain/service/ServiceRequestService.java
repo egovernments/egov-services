@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ComplaintService {
+public class ServiceRequestService {
 
     private static final String SYSTEM_USER = "SYSTEM";
     private ComplaintRepository complaintRepository;
@@ -24,9 +24,9 @@ public class ComplaintService {
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
 
     @Autowired
-    public ComplaintService(ComplaintRepository complaintRepository,
-            SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
-            ComplaintJpaRepository complaintJpaRepository) {
+    public ServiceRequestService(ComplaintRepository complaintRepository,
+                                 SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
+                                 ComplaintJpaRepository complaintJpaRepository) {
         this.complaintRepository = complaintRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;

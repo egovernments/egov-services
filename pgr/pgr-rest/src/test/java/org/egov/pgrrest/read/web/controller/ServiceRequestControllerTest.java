@@ -10,7 +10,7 @@ import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
 import org.egov.pgrrest.read.domain.model.*;
-import org.egov.pgrrest.read.domain.service.ComplaintService;
+import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ComplaintController.class)
+@WebMvcTest(ServiceRequestController.class)
 @Import(TestConfiguration.class)
-public class ComplaintControllerTest {
+public class ServiceRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,14 +44,14 @@ public class ComplaintControllerTest {
     private UserRepository userRepository;
 
     @MockBean
-    private ComplaintService complaintService;
+    private ServiceRequestService serviceRequestService;
 
     @Test
     public void test_should_return_error_response_when_tenant_id_is_not_present_on_creating_a_complaint()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
         Complaint invalidComplaint = getComplaintWithNoTenantId();
-        doThrow(new InvalidComplaintException(invalidComplaint)).when(complaintService).save(any(Complaint.class),
+        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(Complaint.class),
             any(SevaRequest.class));
 
         mockMvc.perform(post("/seva/_create")
@@ -118,7 +118,7 @@ public class ComplaintControllerTest {
         String location = "Election Ward No 1";
         String childLocation = "Gadu Veedhi";
         String stateId = "1";
-        String assigneeId = "2";
+        Long assigneeId = 2L;
         String address = null;
         List<String> mediaUrls = new ArrayList<>();
         mediaUrls.add(null);
@@ -157,7 +157,7 @@ public class ComplaintControllerTest {
             .receivingMode(receivingMode)
             .complaintStatus("FORWARDED")
             .childLocation("Gadu Veedhi")
-            .department("3")
+            .department(3L)
             .tenantId("tenantId")
             .build();
         ComplaintSearchCriteria criteria = ComplaintSearchCriteria.builder()
@@ -179,7 +179,7 @@ public class ComplaintControllerTest {
             .build();
 
         List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
-        when(complaintService.findAll(criteria)).thenReturn(complaints);
+        when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
 
         String content = new TestResourceReader().readResource("getServiceRequests.json");
         String expectedContent = String.format(content, crn, complaintType, complainant, receivingMode, receivingCenter,
@@ -215,6 +215,6 @@ public class ComplaintControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(resources.getFileContents("updateLastAccessTimeRequest.json"))
         ).andExpect(status().isOk());
-        verify(complaintService).updateLastAccessedTime("crn","tenantId");
+        verify(serviceRequestService).updateLastAccessedTime("crn","tenantId");
     }
 }

@@ -33,6 +33,40 @@ class AgreementSearch extends React.Component {
   }
 
   componentWillMount() {
+    try {
+      locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality"));
+    } catch (e) {
+        console.log(e);
+        locality = [];
+    }
+
+    try {
+      electionwards = !localStorage.getItem("ward") || localStorage.getItem("ward") == "undefined" ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("ward"))) : JSON.parse(localStorage.getItem("ward"));
+    } catch (e) {
+        console.log(e);
+        electionwards = [];
+    }
+
+    try {
+      revenueWards = !localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined" ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueWard"))) : JSON.parse(localStorage.getItem("revenueWard"));
+    } catch (e) {
+        console.log(e);
+        revenueWards = [];
+    }
+
+    try {
+      assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories"));
+    } catch (e) {
+        console.log(e);
+        assetCategories = [];
+    }
+    
+    this.setState({
+      assetCategories,
+      locality,
+      electionwards,
+      revenueWards
+    })
 
   }
 
@@ -43,14 +77,9 @@ class AgreementSearch extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+
     let _this = this;
-    this.setState({
-      assetCategories,
-      locality,
-      electionwards,
-      revenueWards
-    })
+
 
     //Fetch allottee name suggestions
     $( "#name" ).autocomplete({

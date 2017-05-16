@@ -1145,7 +1145,7 @@ class CreateAsset extends React.Component {
           <select name={item.name} multiple={multi ? true : false}
                   onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly}>
                   <option value="">Select</option>
-                  {renderOption(item.values.split(','))}
+                  {item.values ? renderOption(item.values.split(',')) : ""}
           </select>
         )
       } else {
@@ -1168,7 +1168,7 @@ class CreateAsset extends React.Component {
                 <select name={item.name} multiple={multi ? true : false}
                   defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly}>
                   <option value="">Select</option>
-                  {renderOption(item.values.split(','))}
+                  {item.values ? renderOption(item.values.split(',')) : ""}
                 </select>
               </div>
             </div>

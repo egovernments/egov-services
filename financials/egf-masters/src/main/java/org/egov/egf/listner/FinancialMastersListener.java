@@ -10,19 +10,18 @@ import org.egov.egf.producer.FinancialProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FinancialMastersListener {
 
-	@Value("${kafka.topics.egf.master.completed.topic}")
+	@Value("${kafka.topics.egf.masters.completed.topic}")
 	private String completedTopic;
 
-	@Value("${kafka.topics.egf.master.bank.completed.key}")
+	@Value("${kafka.topics.egf.masters.bank.completed.key}")
 	private String bankCompletedKey;
 
-	@Value("${kafka.topics.egf.master.bankbranch.completed.key}")
+	@Value("${kafka.topics.egf.masters.bankbranch.completed.key}")
 	private String bankBranchCompletedKey;
 
 	private BankService bankService;
@@ -37,25 +36,18 @@ public class FinancialMastersListener {
 		this.bankBranchService = bankBranchService;
 	}
 
-	@KafkaListener(id = "${kafka.topics.egf.master.bank.validated.id}", topicPartitions = {
-			@TopicPartition(topic = "${kafka.topics.egf.master.validated.topic}", partitions = {
-					"0" }) }, group = "${kafka.topics.egf.master.validated.group}")
-	public void listenPartition0(HashMap<String, Object> financialContractRequestMap) {
-		if (financialContractRequestMap.get("Bank") != null) {
+	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
+	public void process(HashMap<String, Object> financialContractRequestMap) {
+		if (financialContractRequestMap.get("BankCreate") != null) {
 			BankContractResponse bankContractResponse = bankService.create(financialContractRequestMap);
 			financialProducer.sendMessage(completedTopic, bankCompletedKey, bankContractResponse);
 		}
-	}
-
-	@KafkaListener(id = "${kafka.topics.egf.master.bankbranch.validated.id}", topicPartitions = {
-			@TopicPartition(topic = "${kafka.topics.egf.master.validated.topic}", partitions = {
-					"1" }) }, group = "${kafka.topics.egf.master.validated.group}")
-	public void listenPartition1(HashMap<String, Object> financialContractRequestMap) {
-		if (financialContractRequestMap.get("BankBranch") != null) {
+		if (financialContractRequestMap.get("BankBranchCreate") != null) {
 			BankBranchContractResponse bankBranchContractResponse = bankBranchService
 					.create(financialContractRequestMap);
 			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponse);
 		}
+
 	}
 
 }

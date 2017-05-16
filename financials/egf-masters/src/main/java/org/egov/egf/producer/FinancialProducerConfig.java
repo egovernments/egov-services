@@ -31,7 +31,6 @@ public class FinancialProducerConfig {
 		props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-		props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, "org.egov.egf.producer.FinancialCustomPatitioner");
 		return props;
 	}
 

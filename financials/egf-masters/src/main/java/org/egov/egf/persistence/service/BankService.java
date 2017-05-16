@@ -56,7 +56,7 @@ public class BankService {
 	@Transactional
 	public BankContractResponse create(HashMap<String, Object> financialContractRequestMap) {
 		final BankContractRequest bankContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("Bank"), BankContractRequest.class);
+				.convertValue(financialContractRequestMap.get("BankCreate"), BankContractRequest.class);
 		BankContractResponse bankContractResponse = new BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
 		ModelMapper modelMapper = new ModelMapper();

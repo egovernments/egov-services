@@ -14,15 +14,15 @@ public class BankBranchQueueRepository {
 	@Autowired
 	private FinancialProducer financialProducer;
 
-	@Value("${kafka.topics.egf.master.validated.topic}")
+	@Value("${kafka.topics.egf.masters.validated.topic}")
 	private String bankBranchValidatedTopic;
 
-	@Value("${kafka.topics.egf.master.bankbranch.validated.key}")
+	@Value("${kafka.topics.egf.masters.bankbranch.validated.key}")
 	private String bankBranchValidatedKey;
 
 	public void push(BankBranchContractRequest bankBranchContractRequest) {
 		HashMap<String, Object> bankBranchContractRequestMap = new HashMap<String, Object>();
-		bankBranchContractRequestMap.put("BankBranch", bankBranchContractRequest);
+		bankBranchContractRequestMap.put("BankBranchCreate", bankBranchContractRequest);
 		financialProducer.sendMessage(bankBranchValidatedTopic, bankBranchValidatedKey, bankBranchContractRequestMap);
 	}
 }

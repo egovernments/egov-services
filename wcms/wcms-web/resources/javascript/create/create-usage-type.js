@@ -81,9 +81,8 @@ addOrUpdate(e,mode){
                       'auth-token': authToken
                     },
                     success: function(res) {
-                      console.log(hii);
                           showSuccess("Usage Type Modified successfully.");
-                          // window.location.href = 'app/common/show-usage-type.html?type=Update';
+                           window.location.href = 'app/common/show-usage-type.html?type=Update';
                     },
                     error: function(err) {
                         showError(err);

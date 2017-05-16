@@ -192,6 +192,24 @@ class CreateAsset extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
+    $("#calHoiday").on("hidden.bs.modal", function () {
+      _this.setState({
+        column:{
+             "name": "",
+             "type": "",
+             "isActive": false,
+             "isMandatory": false,
+             "values": "",
+             "localText": "",
+             "regExFormate": "",
+             "url": "",
+             "order": "",
+             "columns": []
+        }
+      })
+    });
+
+
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
 
@@ -395,7 +413,7 @@ class CreateAsset extends React.Component {
           //   typeList:[]
           //
           // })
-          window.location.href=`app/asset/create-asset-ack.html?name = ${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
         } else {
           showError(response["statusText"]);
         }
@@ -494,12 +512,14 @@ class CreateAsset extends React.Component {
   }
 
   renderDelEvent(index,to="") {
-    if (to=="column") {
+    if (to==="column") {
       var columns = this.state.customField.columns;
       columns.splice(index, 1);
       this.setState({
-        ...this.state.customField,
-        columns
+        customField:{
+          ...this.state.customField,
+          columns
+        }
       });
     } else {
       var assetFieldsDefination = this.state.assetCategory.assetFieldsDefination;
@@ -516,6 +536,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
+    console.log(this.state.column);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
 
@@ -598,7 +619,7 @@ class CreateAsset extends React.Component {
                   */}
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,column)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
+                                <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,"column")}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -849,6 +870,7 @@ class CreateAsset extends React.Component {
                   <table className="table table-bordered">
                       <thead>
                       <tr>
+                        <th>Sl No.</th>
                          <th>Name</th>
                          <th>Data Type</th>
                          <th>RegEx format</th>
@@ -1041,7 +1063,7 @@ class CreateAsset extends React.Component {
                     <label for="version"> Version   </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text"  name="version" value={version} onChange={(e)=>{handleChange(e,"version")}} required/>
+                    <input type="text"  name="version" value={version} onChange={(e)=>{handleChange(e,"version")}}/>
                   </div>
                 </div>
               </div>

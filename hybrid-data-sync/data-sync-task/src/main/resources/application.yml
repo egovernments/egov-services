@@ -1105,23 +1105,6 @@ sync:
           shouldSync: false
           defaultValue: 0
 
-    - sourceTable: eg_userrole
-      destinationTable: eg_userrole
-      sourceTimeZone: UTC
-      columns:
-        - source: roleid
-          destination: roleid
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: userid
-          destination: userid
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-
     - sourceTable: eg_uom
       destinationTable: eg_uom
       sourceTimeZone: UTC

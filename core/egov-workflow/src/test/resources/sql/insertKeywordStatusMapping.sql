@@ -1,0 +1,3 @@
+insert into keyword_service_status (keyword,tenantId,servicestatuscode,version,createdby,createddate,lastmodifiedby,lastmodifieddate) values('Complaint','default','REGISTERED',0,0,now(),0,now());
+insert into keyword_service_status (keyword,tenantId,servicestatuscode,version,createdby,createddate,lastmodifiedby,lastmodifieddate) values('Complaint','default','FORWARDED',0,0,now(),0,now());
+insert into keyword_service_status (keyword,tenantId,servicestatuscode,version,createdby,createddate,lastmodifiedby,lastmodifieddate) values('Deliverable_service','default','DC',0,0,now(),0,now());

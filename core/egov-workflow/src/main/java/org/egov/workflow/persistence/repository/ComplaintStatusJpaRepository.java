@@ -11,4 +11,6 @@ public interface ComplaintStatusJpaRepository extends JpaRepository<ComplaintSta
     ComplaintStatus findByName(String name);
 
     List<ComplaintStatus> findByCodeInAndTenantId(List<String> code, String tenantId);
+
+    ComplaintStatus findByCodeAndTenantId(String code, String tenantId);
 }

@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ComplaintStatusMappingJpaRepository extends JpaRepository<ComplaintStatusMapping, Long> {
 
-    List<ComplaintStatusMapping> findByCurrentStatusIdAndRoleInOrderByOrderNoAsc(Long currentStatus, List<Long> role);
+    List<ComplaintStatusMapping> findByCurrentStatusIdAndRoleInAndTenantIdOrderByOrderNoAsc(Long currentStatus, List<Long> role, String tenantId);
 }

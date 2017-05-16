@@ -1,0 +1,228 @@
+masterList:
+ propertyType:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ usageMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ occupancyMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ taxRateMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ wallTypeMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ roofTypeMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ floorTypeMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ woodTypeMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ apartmentMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ structureMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ documentTypeMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ mutationReasonMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building
+ mutationRateMaster:
+  - tenantId: ap.kurnool
+    code: 1111
+    name: Vacant Land
+    description: Vacant Land
+  - tenantId: ap.guntur
+    code: '1111'
+    name: Independent Building
+    description: Independent Building
+  - tenantId: ap.ongole
+    code: 1111
+    name: Flats in Multi-Storied Building
+    description: Flats in Multi-Storied Building
+  - tenantId: '11126'
+    code: ap.kadapa
+    name: Commerical Building
+    description: Commerical Building   
+
+
+
+
+   
+ 

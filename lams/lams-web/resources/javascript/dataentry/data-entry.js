@@ -219,12 +219,12 @@ var commomFieldsRules = {
     timePeriod: {
         required: true
     },
-    collectedGoodWillAmount{
+    collectedGoodWillAmount: {
       required: true
     },
-    collectedSecurityDeposit{
+    collectedSecurityDeposit: {
       required: true
-    },
+    }
 
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {

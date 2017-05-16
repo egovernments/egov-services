@@ -73,8 +73,18 @@ public class ComplaintWriteRepository {
             final SubmissionAttributeKey attributeKey =
                 new SubmissionAttributeKey(a.getCode(), a.getKey(), record.getCRN(), record.getTenantId());
             SubmissionAttribute attribute = findAttribute(attributeKey, keyToAttributeListMap);
+            updateAuditFields(record, attribute);
             submissionAttributeJpaRepository.save(attribute);
         });
+    }
+
+    private void updateAuditFields(ComplaintRecord record, SubmissionAttribute attribute) {
+        if (attribute.getCreatedBy() == null)
+            attribute.setCreatedBy(record.getCreatedBy());
+        if (attribute.getCreatedDate() == null)
+            attribute.setCreatedDate(new Date());
+        attribute.setLastModifiedDate(new Date());
+        attribute.setLastModifiedBy(record.getLastModifiedBy());
     }
 
     private List<SubmissionAttribute> getAttributesToDelete(Map<String, List<SubmissionAttribute>>

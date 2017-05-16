@@ -38,6 +38,9 @@ public class ComplaintStatusMapping extends AbstractPersistable<Long> {
     @Column(name="orderno")
     private Integer orderNo;
 
+    @Column(name = "tenantid")
+    private String tenantId;
+
     @Override
     public Long getId() {
         return id;

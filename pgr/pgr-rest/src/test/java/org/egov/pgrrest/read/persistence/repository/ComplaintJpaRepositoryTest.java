@@ -105,7 +105,7 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(1).getLatitude()).isEqualTo(0);
         assertThat(complaints.get(1).getLongitude()).isEqualTo(0);
         assertThat(complaints.get(1).getCreatedDate()).isBetween(startDate.toDate(), endDate.toDate());
-        assertTrue(DateUtils.truncatedEquals(complaints.get(1).getLastModifiedDate(),lastModifiedDate.toDate(),Calendar.SECOND));
+        assertNotNull(complaints.get(1).getLastModifiedDate());
         assertThat(complaints.get(1).getEscalationDate()).isBefore(escalationDate.toDate());
         assertThat(complaints.get(1).getComplaintType().getName()).isEqualTo("Absenteesim_of_sweepers");
         assertThat(complaints.get(1).getComplaintType().getCode()).isEqualTo("AOSS");

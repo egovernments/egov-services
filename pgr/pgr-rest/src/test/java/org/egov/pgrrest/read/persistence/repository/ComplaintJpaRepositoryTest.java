@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -80,6 +81,7 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(0).getCreatedDate()).isBetween(startDate.toDate(), endDate.toDate());
         final Date actualLastModifiedDate = complaints.get(0).getLastModifiedDate();
         System.out.println(actualLastModifiedDate);
+        assertNotNull(actualLastModifiedDate);
         assertTrue(DateUtils.truncatedEquals(actualLastModifiedDate, lastModifiedDate.toDate(), Calendar.SECOND));
         assertThat(complaints.get(0).getEscalationDate()).isBefore(escalationDate.toDate());
         assertThat(complaints.get(0).getComplaintType().getName()).isEqualTo("Absenteesim of door_to_door garbage collector");

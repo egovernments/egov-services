@@ -1,4 +1,4 @@
-class CreateUsageType extends React.Component {
+class CreatePipeSize extends React.Component {
   constructor(props) {
     super(props);
     this.state={searchSet:{
@@ -156,7 +156,7 @@ addOrUpdate(e,mode){
 
 
 ReactDOM.render(
-  <CreateUsageType />,
+  <CreatePipeSize />,
   document.getElementById('root')
 );
 //

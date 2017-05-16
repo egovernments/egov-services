@@ -3,6 +3,7 @@ package org.egov.egf.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.egf.config.PropertiesManager;
@@ -74,6 +75,8 @@ public class EmployeeService {
 		AccountDetailKeyContract accDetailKey = new AccountDetailKeyContract();
 				accDetailKey.setKey(employeeId);
 				accDetailKey.setAccountDetailType(accDetailType);
+				accDetailKey.setCreatedBy(Long.parseLong(requestInfo.getRequesterId()));
+				accDetailKey.setCreatedDate(new Date());
 				accDetailKey.setTenantId(tenantId);
 
 		List<AccountDetailKeyContract> accDetailKeyContracts = new ArrayList<>();

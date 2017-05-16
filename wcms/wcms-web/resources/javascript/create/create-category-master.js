@@ -85,7 +85,7 @@ addOrUpdate(e,mode){
                           window.location.href = 'app/common/show-category-master.html?type=Update';
                     },
                     error: function(err) {
-                        showError("Duplicate Usage Type are not allowed");
+                        showError("Duplicate Category are not allowed");
 
                     }
                 });
@@ -101,7 +101,7 @@ addOrUpdate(e,mode){
                       'auth-token': authToken
                     },
                     success: function(res) {
-                            showSuccess("Usage Type Created successfully.");
+                            showSuccess("Category Type Created successfully.");
                             _this.setState({searchSet:{
                             name:"",
                             description:"",
@@ -111,7 +111,7 @@ addOrUpdate(e,mode){
 
                     },
                     error: function(err) {
-                        showError("Try To create another Category. Duplication Is not allowed");
+                        showError("Entered Category Type  already exist");
 
                     }
                 });

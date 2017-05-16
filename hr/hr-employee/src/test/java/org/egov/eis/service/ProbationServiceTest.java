@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.Probation;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeDocumentsRepository;

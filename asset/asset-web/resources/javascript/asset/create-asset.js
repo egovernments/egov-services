@@ -958,7 +958,10 @@ class CreateAsset extends React.Component {
         if(list) {
             if (list.length) {
               list.sort(function(item1, item2) {
-                return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
+                if(item1.name && item2.name)
+                  return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
+                else
+                  return 0;
               });
 
               return list.map((item, ind)=> {

@@ -303,14 +303,15 @@ class CreateAsset extends React.Component {
     })
   }
 
-  selectRef(e, id, name) {
+  selectRef(e, asset) {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
       assetSet: {
         ...this.state.assetSet,
-        assetReference: id,
-        assetReferenceName: name
+        assetReference: asset.id,
+        assetReferenceName: asset.name,
+        locationDetails: asset.locationDetails
       },
       refSet: {
         tenantId: tenantId,
@@ -1462,7 +1463,7 @@ class CreateAsset extends React.Component {
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td data-label="action">
-                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>
+                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
                         </td>
                       </tr>
               );

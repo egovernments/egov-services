@@ -71,7 +71,7 @@ addOrUpdate(e,mode){
             },_this=this;
             if (type == "Update") {
                             $.ajax({
-                   url:baseUrl+"/wcms-masters/category/" + this.state.searchSet.id + "/" + "_update?tenantId=" + tenantId,
+                   url:baseUrl+"/wcms-masters/category/_update/"+ this.state.searchSet.code + "?" +"tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -82,10 +82,10 @@ addOrUpdate(e,mode){
                     },
                     success: function(res) {
                           showSuccess("Usage Type Modified successfully.");
-                          window.location.href = 'app/common/show-usage-type.html?type=Update';
+                          window.location.href = 'app/common/show-category-master.html?type=Update';
                     },
                     error: function(err) {
-                        showError("Duplicate Usage Type are not allowed");
+                        showError("Duplicate Category are not allowed");
 
                     }
                 });
@@ -101,7 +101,7 @@ addOrUpdate(e,mode){
                       'auth-token': authToken
                     },
                     success: function(res) {
-                            showSuccess("Usage Type Created successfully.");
+                            showSuccess("Category Type Created successfully.");
                             _this.setState({searchSet:{
                             name:"",
                             description:"",
@@ -111,7 +111,7 @@ addOrUpdate(e,mode){
 
                     },
                     error: function(err) {
-                        showError("Try To create another Category. Duplication Is not allowed");
+                        showError("Entered Category Type  already exist");
 
                     }
                 });

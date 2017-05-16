@@ -267,11 +267,15 @@ class CreateAsset extends React.Component {
     this.handleRefSearch = this.handleRefSearch.bind(this);
     this.selectRef = this.selectRef.bind(this);
     this.removeRow = this.removeRow.bind(this);
-
+    this.handleClick = this.handleClick.bind(this);
   }
   close() {
       // widow.close();
       open(location, '_self').close();
+  }
+
+  handleClick(asset) {
+    window.open(`app/asset/create-asset.html?id=${asset.id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   getCategory(id) {
@@ -301,6 +305,7 @@ class CreateAsset extends React.Component {
 
   selectRef(e, id, name) {
     e.preventDefault();
+    e.stopPropagation();
     this.setState({
       assetSet: {
         ...this.state.assetSet,
@@ -344,11 +349,13 @@ class CreateAsset extends React.Component {
 
   handleRefSearch(e) {
     e.preventDefault();
-    if(!this.state.refSet.assetCategory) return;
     var assets = [];
     var res = commonApiPost("asset-services","assets","_search", this.state.refSet);
     if(res.responseJSON && res.responseJSON["Assets"]) {
       assets = res.responseJSON["Assets"];
+      assets.sort(function(item1, item2) {
+        return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+      });
       this.setState({
         references: assets
       })
@@ -853,7 +860,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
+    let {handleChange, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
     let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments} = this.state;
     let {
       assetCategory,
@@ -947,11 +954,13 @@ class CreateAsset extends React.Component {
     }
 
     const renderOption = function(list, assetCatBool) {
-        if(list)
-        {
+        if(list) {
             if (list.length) {
-              return list.map((item, ind)=>
-              {
+              list.sort(function(item1, item2) {
+                return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
+              });
+
+              return list.map((item, ind)=> {
                   if(typeof item == "object") {
                     return (<option key={ind} data={assetCatBool ? item.version : ""} value={item.id}>
                           {item.name}
@@ -964,8 +973,7 @@ class CreateAsset extends React.Component {
               })
 
             } else {
-              return Object.keys(list).map((k, index)=>
-              {
+              return Object.keys(list).map((k, index)=> {
                 return (<option key={index} value={k}>
                         {list[k]}
                   </option>)
@@ -1442,8 +1450,11 @@ class CreateAsset extends React.Component {
 
     const renderRefBody = function() {
       if (references.length > 0) {
+        references.sort(function(item1, item2) {
+          return item1.code > item2.code ? 1 : item1.code < item2.code ? -1 : 0;
+        });
         return references.map((item, index) => {
-              return (<tr key={index}>
+              return (<tr key={index} onClick={(e) => handleClick(item)}>
                         <td>{index+1}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>
@@ -1820,11 +1831,11 @@ class CreateAsset extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label for="refSet.assetCategory">Asset Category <span>*</span> </label>
+                              <label for="refSet.assetCategory">Asset Category </label>
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <select id="refSet.assetCategory" required name="refSet.assetCategory" value={refSet.assetCategory} onChange={(e) => {handleReferenceChange(e, "assetCategory")}}>
+                              <select id="refSet.assetCategory" name="refSet.assetCategory" value={refSet.assetCategory} onChange={(e) => {handleReferenceChange(e, "assetCategory")}}>
                                     <option value="">Select Asset Category</option>
                                     {renderOption(this.state.assetCategories)}
                                 </select>

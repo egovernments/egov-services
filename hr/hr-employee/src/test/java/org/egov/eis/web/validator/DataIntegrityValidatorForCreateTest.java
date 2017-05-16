@@ -1,11 +1,15 @@
 package org.egov.eis.web.validator;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
@@ -14,13 +18,11 @@ import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.utils.FileUtils;
 import org.egov.eis.web.contract.EmployeeResponse;
-import org.egov.eis.web.validator.DataIntegrityValidatorForCreate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BindException;

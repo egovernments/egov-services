@@ -20,7 +20,7 @@ public class SevaRequest {
     private static final String CITIZEN = "CITIZEN";
     private static final String VALUES_CITIZENFEEDBACK = "citizenFeedback";
     public static final String ATTRIBUTE_ENTRY_KEY = "key";
-    public static final String ATTRIBUTE_ENTRY_CODE = "code";
+    public static final String ATTRIBUTE_ENTRY_NAME = "name";
 
     private HashMap<String, Object> sevaRequestMap;
     private ObjectMapper objectMapper;
@@ -67,7 +67,7 @@ public class SevaRequest {
     }
 
     private AttributeEntry mapToAttributeEntry(HashMap<String, String> entry) {
-        return new AttributeEntry(entry.get(ATTRIBUTE_ENTRY_KEY), entry.get(ATTRIBUTE_ENTRY_CODE));
+        return new AttributeEntry(entry.get(ATTRIBUTE_ENTRY_KEY), entry.get(ATTRIBUTE_ENTRY_NAME));
     }
 
     @SuppressWarnings("unchecked")

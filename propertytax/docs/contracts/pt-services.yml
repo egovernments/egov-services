@@ -1,0 +1,1145 @@
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: eGov PTIS Masters (Leases And Agreements System)
+  description: eGov PTIS Masters manages all the masters belongs to property tax.
+  contact:
+    name:  Ramakrishna (Ramki)
+    email: ramakrishna@egovernments.org
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/[API endpoint]'
+paths:
+    /properties/_create:
+      post:
+        summary: Create  new  properties
+        description: Create  new properties
+        tags: 
+          - demand
+          - Property
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: propertyRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/PropertyRequest'
+        responses:
+          201:
+            description: Property created Successfully
+            schema:
+              $ref: '#/definitions/PropertyResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+definitions:
+
+
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Address
+        tenantId:
+          type: string
+          description: tenant id of the Address
+          maxLength: 128
+          minLength: 4
+        houseNoBldgApt:
+          type: string
+          description: house no bldg apt of the Address
+          maxLength: 32
+          minLength: 4
+        streetRoadLine:
+          type: string
+          description: street road line of the Address
+          maxLength: 256
+          minLength: 4
+        landmark:
+          type: string
+          description: landmark of the Address
+          maxLength: 256
+          minLength: 4
+        areaLocalitySector:
+          type: string
+          description: area locality sector of the Address
+          maxLength: 256
+          minLength: 4
+        cityTownVillage:
+          type: string
+          description: city town village of the Address
+          maxLength: 256
+          minLength: 4
+        district:
+          type: string
+          description: district of the Address
+          maxLength: 100
+          minLength: 4
+        subDistrict:
+          type: string
+          description: sub district of the Address
+          maxLength: 100
+          minLength: 4
+        postOffice:
+          type: string
+          description: post office of the Address
+          maxLength: 100
+          minLength: 4
+        state:
+          type: string
+          description: state of the Address
+          maxLength: 100
+          minLength: 4
+        country:
+          type: string
+          description: country of the Address
+          maxLength: 50
+          minLength: 4
+        pinCode:
+          type: string
+          description: pin code of the Address
+          maxLength: 10
+          minLength: 6
+        type:
+          type: string
+          description: type of the Address
+          maxLength: 50
+          minLength: 4
+        createdBy:
+          type: string
+          description: created by of the Address
+          maxLength: 16
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the Address
+        lastModifiedBy:
+          type: string
+          description: last modified by of the Address
+          maxLength: 16
+          minLength: 1
+        lastModifiedDate:
+          type: string
+          format: date
+          description: last modified date of the Address
+      required:
+      - tenantId
+    AddressRequest:
+      description: Contract class to receive request. Array of Address items  are used in case of create . Where as single Address item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        addresses:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Address'
+    AddressResponse:
+      description: Contract class to send response. Array of Address items  are used in case of search results or response for create. Where as single Address item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        addresses:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Address'
+        page:
+          $ref: '#/definitions/Page'
+
+    Attributes:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key of the Attributes
+          maxLength: 32
+          minLength: 1
+        type:
+          type: string
+          description: type of the Attributes
+          maxLength: 32
+          minLength: 1
+        value:
+          type: 
+          description: value of the Attributes
+          maxLength: 128
+          minLength: 1
+    AttributesRequest:
+      description: Contract class to receive request. Array of Attributes items  are used in case of create . Where as single Attributes item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        attributeses:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Attributes'
+    AttributesResponse:
+      description: Contract class to send response. Array of Attributes items  are used in case of search results or response for create. Where as single Attributes item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        attributeses:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Attributes'
+        page:
+          $ref: '#/definitions/Page'
+
+    Property:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Property
+        tenantId:
+          type: string
+          description: tenant id of the Property
+          maxLength: 128
+          minLength: 4
+        upicNo:
+          type: string
+          description: upic no of the Property
+          maxLength: 128
+          minLength: 8
+        oldUpicNo:
+          type: string
+          description: old upic no of the Property
+          maxLength: 128
+          minLength: 4
+        vltUpicNo:
+          type: string
+          description: vlt upic no of the Property
+          maxLength: 128
+          minLength: 4
+        creationReason:
+          type: string
+          description: creation reason of the Property
+          maxLength: 256
+          minLength: 1
+        address:
+          $ref: "#/definitions/Address"
+        assessmentDate:
+          type: string
+          format: date
+          description: assessment date of the Property
+        occupancyDate:
+          type: string
+          format: date
+          description: occupancy date of the Property
+        gisRefNo:
+          type: string
+          description: gis ref no of the Property
+          maxLength: 32
+          minLength: 4
+        isAuthorised:
+          type: boolean
+          description: is authorised of the Property
+        isUnderWorkflow:
+          type: boolean
+          description: is under workflow of the Property
+        boundary:
+          $ref: "#/definitions/PropertyBoundary"
+        channel:
+          type: string
+          description: channel of the Property
+          maxLength: 16
+          minLength: 4
+        createdBy:
+          type: string
+          description: created by of the Property
+          maxLength: 16
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the Property
+        lastModifiedBy:
+          type: string
+          description: last modified by of the Property
+          maxLength: 16
+          minLength: 1
+        lastModifiedDate:
+          type: string
+          format: date
+          description: last modified date of the Property
+      required:
+      - tenantId
+      - upicNo
+      - creationReason
+      - address
+      - assessmentDate
+      - occupancyDate
+      - channel
+    PropertyRequest:
+      description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        properties:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Property'
+    PropertyResponse:
+      description: Contract class to send response. Array of Property items  are used in case of search results or response for create. Where as single Property item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        properties:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Property'
+        page:
+          $ref: '#/definitions/Page'
+
+    Boundary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Boundary
+        name:
+          type: string
+          description: name of the Boundary
+          maxLength: 256
+          minLength: 4
+    BoundaryRequest:
+      description: Contract class to receive request. Array of Boundary items  are used in case of create . Where as single Boundary item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        boundaries:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Boundary'
+    BoundaryResponse:
+      description: Contract class to send response. Array of Boundary items  are used in case of search results or response for create. Where as single Boundary item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        boundaries:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Boundary'
+        page:
+          $ref: '#/definitions/Page'
+
+    Floor:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Floor
+        tenantId:
+          type: string
+          description: tenant id of the Floor
+          maxLength: 128
+          minLength: 4
+        floorNo:
+          type: string
+          description: floor no of the Floor
+          maxLength: 16
+          minLength: 1
+        unitNo:
+          type: string
+          description: unit no of the Floor
+          maxLength: 8
+          minLength: 1
+        type:
+          type: string
+          description: type of the Floor
+          maxLength: 16
+          minLength: 1
+        length:
+          type: number
+          format: double
+          description: length of the Floor
+        width:
+          type: number
+          format: double
+          description: width of the Floor
+        builtupArea:
+          type: number
+          format: double
+          description: builtup area of the Floor
+        assessableArea:
+          type: number
+          format: double
+          description: assessable area of the Floor
+        bpaBuiltupArea:
+          type: number
+          format: double
+          description: bpa builtup area of the Floor
+        category:
+          type: string
+          description: category of the Floor
+          maxLength: 16
+          minLength: 1
+        usage:
+          type: string
+          description: usage of the Floor
+          maxLength: 16
+          minLength: 1
+        occupancy:
+          type: string
+          description: occupancy of the Floor
+          maxLength: 16
+          minLength: 1
+        structure:
+          type: string
+          description: structure of the Floor
+          maxLength: 16
+          minLength: 1
+        depreciation:
+          type: string
+          description: depreciation of the Floor
+          maxLength: 16
+          minLength: 1
+        occupierName:
+          type: string
+          description: occupier name of the Floor
+          maxLength: 128
+          minLength: 1
+        firmName:
+          type: string
+          description: firm name of the Floor
+          maxLength: 128
+          minLength: 1
+        rentCollected:
+          type: number
+          format: double
+          description: rent collected of the Floor
+        exemptionReason:
+          type: string
+          description: exemption reason of the Floor
+          maxLength: 32
+          minLength: 1
+        isStructured:
+          type: boolean
+          description: is structured of the Floor
+        occupancyDate:
+          type: string
+          format: date
+          description: occupancy date of the Floor
+        constCompletionDate:
+          type: string
+          format: date
+          description: const completion date of the Floor
+        bpaNo:
+          type: string
+          description: bpa no of the Floor
+          maxLength: 16
+          minLength: 1
+        bpaDate:
+          type: string
+          format: date
+          description: bpa date of the Floor
+        manualArv:
+          type: number
+          format: double
+          description: manual arv of the Floor
+        arv:
+          type: number
+          format: double
+          description: arv of the Floor
+        electricMeterNo:
+          type: string
+          description: electric meter no of the Floor
+          maxLength: 64
+          minLength: 1
+        waterMeterNo:
+          type: string
+          description: water meter no of the Floor
+          maxLength: 64
+          minLength: 1
+        createdBy:
+          type: string
+          description: created by of the Floor
+          maxLength: 16
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the Floor
+        lastModifiedBy:
+          type: string
+          description: last modified by of the Floor
+          maxLength: 16
+          minLength: 1
+        lastModifiedDate:
+          type: string
+          format: date
+          description: last modified date of the Floor
+      required:
+      - id
+      - tenantId
+      - floorNo
+      - builtupArea
+      - usage
+      - occupancy
+      - structure
+    FloorRequest:
+      description: Contract class to receive request. Array of Floor items  are used in case of create . Where as single Floor item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        floors:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Floor'
+    FloorResponse:
+      description: Contract class to send response. Array of Floor items  are used in case of search results or response for create. Where as single Floor item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        floors:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Floor'
+        page:
+          $ref: '#/definitions/Page'
+
+    PropertyDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the PropertyDetail
+        tenantId:
+          type: string
+          description: tenant id of the PropertyDetail
+          maxLength: 128
+          minLength: 4
+        regdDocNo:
+          type: string
+          description: regd doc no of the PropertyDetail
+          maxLength: 64
+          minLength: 1
+        regdDocDate:
+          type: string
+          format: date
+          description: regd doc date of the PropertyDetail
+        occupancyDate:
+          type: string
+          format: date
+          description: occupancy date of the PropertyDetail
+        reason:
+          type: string
+          description: reason of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        status:
+          type: string
+          description: status of the PropertyDetail
+          maxLength: 4
+          minLength: 1
+        isVerified:
+          type: boolean
+          description: is verified of the PropertyDetail
+        verificationDate:
+          type: string
+          format: date
+          description: verification date of the PropertyDetail
+        isExempted:
+          type: boolean
+          description: is exempted of the PropertyDetail
+        exemptionReason:
+          type: string
+          description: exemption reason of the PropertyDetail
+          maxLength: 32
+          minLength: 1
+        propertyType:
+          type: string
+          description: property type of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        category:
+          type: string
+          description: category of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        usage:
+          type: string
+          description: usage of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        department:
+          type: string
+          description: department of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        apartment:
+          type: string
+          description: apartment of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        length:
+          type: number
+          format: double
+          description: length of the PropertyDetail
+        breadth:
+          type: number
+          format: double
+          description: breadth of the PropertyDetail
+        sitalArea:
+          type: number
+          format: double
+          description: sital area of the PropertyDetail
+        totalBuiltupArea:
+          type: number
+          format: double
+          description: total builtup area of the PropertyDetail
+        undividedShare:
+          type: number
+          format: double
+          description: undivided share of the PropertyDetail
+        noOfFloors:
+          type: integer
+          format: int64
+          description: no of floors of the PropertyDetail
+        isSuperStructure:
+          type: boolean
+          description: is super structure of the PropertyDetail
+        landOwner:
+          type: string
+          description: land owner of the PropertyDetail
+          maxLength: 128
+          minLength: 1
+        floorType:
+          type: string
+          description: floor type of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        woodType:
+          type: string
+          description: wood type of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        roofType:
+          type: string
+          description: roof type of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        wallType:
+          type: string
+          description: wall type of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        vacantLand:
+          $ref: "#/definitions/VacantLandProperty"
+        channel:
+          type: string
+          description: channel of the PropertyDetail
+          maxLength: 16
+          minLength: 4
+        applicationNo:
+          type: string
+          description: application no of the PropertyDetail
+          maxLength: 32
+          minLength: 1
+        createdBy:
+          type: string
+          description: created by of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the PropertyDetail
+        lastModifiedBy:
+          type: string
+          description: last modified by of the PropertyDetail
+          maxLength: 16
+          minLength: 1
+        lastModifiedDate:
+          type: string
+          format: date
+          description: last modified date of the PropertyDetail
+      required:
+      - tenantId
+      - channel
+    PropertyDetailRequest:
+      description: Contract class to receive request. Array of PropertyDetail items  are used in case of create . Where as single PropertyDetail item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        propertyDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PropertyDetail'
+    PropertyDetailResponse:
+      description: Contract class to send response. Array of PropertyDetail items  are used in case of search results or response for create. Where as single PropertyDetail item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        propertyDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PropertyDetail'
+        page:
+          $ref: '#/definitions/Page'
+
+    PropertyBoundary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the PropertyBoundary
+        tenantId:
+          type: string
+          description: tenant id of the PropertyBoundary
+          maxLength: 128
+          minLength: 4
+        longitude:
+          type: number
+          format: double
+          description: longitude of the PropertyBoundary
+        latitude:
+          type: number
+          format: double
+          description: latitude of the PropertyBoundary
+        revenueZone:
+          type: integer
+          format: int64
+          description: revenue zone of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        revenueWard:
+          type: string
+          description: revenue ward of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        revenueBlock:
+          type: string
+          description: revenue block of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        area:
+          type: string
+          description: area of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        locality:
+          type: string
+          description: locality of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        street:
+          type: string
+          description: street of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        adminWard:
+          type: string
+          description: admin ward of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        northBoundedBy:
+          type: string
+          description: north bounded by of the PropertyBoundary
+          maxLength: 256
+          minLength: 1
+        eastBoundedBy:
+          type: string
+          description: east bounded by of the PropertyBoundary
+          maxLength: 256
+          minLength: 1
+        westBoundedBy:
+          type: string
+          description: west bounded by of the PropertyBoundary
+          maxLength: 256
+          minLength: 1
+        southBoundedBy:
+          type: string
+          description: south bounded by of the PropertyBoundary
+          maxLength: 256
+          minLength: 1
+        createdBy:
+          type: string
+          description: created by of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the PropertyBoundary
+        lastModifiedBy:
+          type: string
+          description: last modified by of the PropertyBoundary
+          maxLength: 16
+          minLength: 1
+        lastModifiedDate:
+          type: string
+          format: date
+          description: last modified date of the PropertyBoundary
+      required:
+      - tenantId
+    PropertyBoundaryRequest:
+      description: Contract class to receive request. Array of PropertyBoundary items  are used in case of create . Where as single PropertyBoundary item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        propertyBoundaries:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PropertyBoundary'
+    PropertyBoundaryResponse:
+      description: Contract class to send response. Array of PropertyBoundary items  are used in case of search results or response for create. Where as single PropertyBoundary item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        propertyBoundaries:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PropertyBoundary'
+        page:
+          $ref: '#/definitions/Page'
+
+    Role:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the Role
+          maxLength: 32
+          minLength: 1
+        code:
+          type: string
+          description: code of the Role
+          maxLength: 32
+          minLength: 1
+    RoleRequest:
+      description: Contract class to receive request. Array of Role items  are used in case of create . Where as single Role item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        roles:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Role'
+    RoleResponse:
+      description: Contract class to send response. Array of Role items  are used in case of search results or response for create. Where as single Role item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        roles:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Role'
+        page:
+          $ref: '#/definitions/Page'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the User
+        tenantId:
+          type: string
+          description: tenant id of the User
+          maxLength: 128
+          minLength: 4
+        username:
+          type: string
+          description: username of the User
+          maxLength: 64
+          minLength: 1
+        title:
+          type: string
+          description: title of the User
+          maxLength: 8
+          minLength: 1
+        salutation:
+          type: string
+          description: salutation of the User
+          maxLength: 5
+          minLength: 1
+        guardian:
+          type: string
+          description: guardian of the User
+          maxLength: 100
+          minLength: 1
+        guardianRelation:
+          type: string
+          description: guardian relation of the User
+          maxLength: 32
+          minLength: 1
+        name:
+          type: string
+          description: name of the User
+          maxLength: 100
+          minLength: 1
+        gender:
+          type: string
+          description: gender of the User
+          maxLength: 8
+          minLength: 1
+        mobileNumber:
+          type: string
+          description: mobile number of the User
+          maxLength: 10
+          minLength: 1
+        emailId:
+          type: string
+          description: email id of the User
+          maxLength: 128
+          minLength: 1
+        pan:
+          type: string
+          description: pan of the User
+          maxLength: 10
+          minLength: 10
+        aadhaarNumber:
+          type: string
+          description: aadhaar number of the User
+          maxLength: 12
+          minLength: 12
+        type:
+          type: string
+          description: type of the User
+          maxLength: 16
+          minLength: 1
+      required:
+      - tenantId
+    UserRequest:
+      description: Contract class to receive request. Array of User items  are used in case of create . Where as single User item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        users:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/User'
+    UserResponse:
+      description: Contract class to send response. Array of User items  are used in case of search results or response for create. Where as single User item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        users:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/User'
+        page:
+          $ref: '#/definitions/Page'
+
+    VacantLandProperty:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the VacantLandProperty
+        tenantId:
+          type: string
+          description: tenant id of the VacantLandProperty
+          maxLength: 128
+          minLength: 4
+        surveyNumber:
+          type: string
+          description: survey number of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        pattaNumber:
+          type: string
+          description: patta number of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        marketValue:
+          type: number
+          format: double
+          description: market value of the VacantLandProperty
+        capitalValue:
+          type: number
+          format: double
+          description: capital value of the VacantLandProperty
+        layoutApprovedAuth:
+          type: string
+          description: layout approved auth of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        layoutPermissionNo:
+          type: string
+          description: layout permission no of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        layoutPermissionDate:
+          type: string
+          format: date
+          description: layout permission date of the VacantLandProperty
+        resdPlotArea:
+          type: number
+          format: double
+          description: resd plot area of the VacantLandProperty
+        nonResdPlotArea:
+          type: number
+          format: double
+          description: non resd plot area of the VacantLandProperty
+        createdBy:
+          type: string
+          description: created by of the VacantLandProperty
+          maxLength: 16
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the VacantLandProperty
+        lastModifiedBy:
+          type: string
+          description: last modified by of the VacantLandProperty
+          maxLength: 16
+          minLength: 1
+        lastModifiedDate:
+          type: string
+          format: date
+          description: last modified date of the VacantLandProperty
+      required:
+      - tenantId
+    VacantLandPropertyRequest:
+      description: Contract class to receive request. Array of VacantLandProperty items  are used in case of create . Where as single VacantLandProperty item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        vacantLandProperties:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/VacantLandProperty'
+    VacantLandPropertyResponse:
+      description: Contract class to send response. Array of VacantLandProperty items  are used in case of search results or response for create. Where as single VacantLandProperty item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        vacantLandProperties:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/VacantLandProperty'
+        page:
+          $ref: '#/definitions/Page'
+          
+  RequestInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp dd-MM-yyyy HH:mm:ss (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msgId:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requesterId:
+        type: string
+        description: UserId of the user calling
+      authToken:
+        type: string
+        description: //session/jwt/saml token/oauth token
+      userInfo:
+        $ref: '#/definitions/UserInfo'
+
+    required:
+      - apiId
+      - ver
+      - ts
+      
+  ResponseInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp dd-MM-yyyy HH:mm:ss (timezone defaulted to
+          +5.30)
+      resMsgId:
+        type: string
+        description: unique response message id (UUID)
+      msgId:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - apiId
+      - ver
+      - ts
+      - status
+      
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      filelds:
+        type: object
+    required:
+      - code
+      - message
+      
+  ErrorRes:
+    properties:
+      ResposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object

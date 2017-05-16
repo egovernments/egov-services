@@ -92,5 +92,9 @@ public class LeaveOpeningBalance {
 	private String errorMsg;
 	
 	private String employeeName;
+	
+	private String employeeCode;
+	
+	private String departmentName;
 
 }

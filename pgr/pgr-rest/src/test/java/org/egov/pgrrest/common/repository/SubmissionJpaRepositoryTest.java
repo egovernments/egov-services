@@ -3,6 +3,7 @@ package org.egov.pgrrest.common.repository;
 import org.egov.pgr.common.date.Date;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.common.entity.Submission;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +27,11 @@ public class SubmissionJpaRepositoryTest {
 
     @Autowired
     private SubmissionJpaRepository submissionJpaRepository;
+
+    @Before
+    public void before() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Calcutta"));
+    }
 
     @Test
     @Sql(scripts = {

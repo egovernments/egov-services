@@ -108,6 +108,14 @@ class EditDemand extends React.Component {
   // //     e.preventDefault();
   // //   }
   // }
+  componentDidMount() {
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
+       }
+     }
+  }
 
   componentWillMount()
   {
@@ -191,7 +199,7 @@ class EditDemand extends React.Component {
                     //        "isActualDemand" : null,
                     //        tenantId
                     //  }
-                    
+
                     date.setMonth(date.getMonth() + 1);
                     i++;
                 }

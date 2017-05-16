@@ -71,19 +71,22 @@ public class EmployeeRepository {
 			+ " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
 			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled,"
 			+ " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
-			+ " placeOfBirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " placeOfBirth, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee"
 			+ " SET (dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
 			+ " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
 			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled,"
-			+ " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
-			+ " placeOfBirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ? AND tenantId = ?";
+			+ " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount,"
+			+ " groupId, placeOfBirth, lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+			+ " WHERE id = ? AND tenantId = ?";
 
 	public static final String EMPLOYEE_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
 			+ " WHERE id = ? AND tenantId = ?)";
 	
-	public static final String GET_LIST_OF_IDS_QUERY = "SELECT id FROM  $table  WHERE employeeId = ? AND tenantId = ?";
+	public static final String GET_LIST_OF_IDS_QUERY = "SELECT id FROM $table WHERE employeeId = ? AND tenantId = ?";
 	
 	public static final String GET_ID_QUERY = "SELECT id FROM $table WHERE $column = ? AND tenantId = ?";
 
@@ -91,7 +94,8 @@ public class EmployeeRepository {
 			+ " id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
 			+ " recruitmentTypeId, recruitmentQuotaId, maritalStatus, retirementAge, dateOfResignation, dateOfTermination,"
 			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled, placeOfBirth,"
-			+ " medicalReportProduced, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId, tenantId"
+			+ " medicalReportProduced, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
+			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
 			+ " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";
 	
 		public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ?"
@@ -159,7 +163,8 @@ public class EmployeeRepository {
 				employee.getCategory(), employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
 				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
 				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
-				employee.getPlaceOfBirth(), employee.getTenantId() };
+				employee.getPlaceOfBirth(), employee.getCreatedBy(), employee.getCreatedDate(),
+				employee.getLastModifiedBy(), employee.getLastModifiedDate(), employee.getTenantId() };
 
 		if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()) {
 			documentsRepository.save(employee.getId(), employee.getDocuments(),
@@ -178,7 +183,8 @@ public class EmployeeRepository {
 				employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
 				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
 				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
-				employee.getPlaceOfBirth(), employee.getId(), employee.getTenantId() };
+				employee.getPlaceOfBirth(), employee.getLastModifiedBy(), employee.getLastModifiedDate(),
+				employee.getId(), employee.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_EMPLOYEE_QUERY, obj);
 	}

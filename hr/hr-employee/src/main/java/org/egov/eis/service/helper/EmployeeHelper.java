@@ -115,6 +115,8 @@ public class EmployeeHelper {
 		String requesterId = requestInfo.getRequesterId();
 		String tenantId = employee.getTenantId();
 
+		populateDefaultDataForNewEmployee(employee, requesterId);
+
 		employee.getAssignments().forEach((assignment) -> {
 			populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
 		});
@@ -156,6 +158,9 @@ public class EmployeeHelper {
 		String requesterId = requestInfo.getRequesterId();
 		// FIXME : Check - will allow us to set updated tenantId for every object, if employee tenantId is updated
 		String tenantId = employee.getTenantId();
+
+		employee.setLastModifiedBy(Long.parseLong(requesterId));
+		employee.setLastModifiedDate((new Date()));
 
 		employee.getAssignments().forEach((assignment) -> {
 			if (assignment.getId() == null)
@@ -225,6 +230,13 @@ public class EmployeeHelper {
 		}
 	}
 
+	private void populateDefaultDataForNewEmployee(Employee employee, String requesterId) {
+		employee.setCreatedBy(Long.parseLong(requesterId));
+		employee.setCreatedDate(new Date());
+		employee.setLastModifiedBy(Long.parseLong(requesterId));
+		employee.setLastModifiedDate((new Date()));
+	}
+
 	private void populateDefaultDataForNewTechnical(TechnicalQualification technical, String requesterId,
 			String tenantId) {
 		technical.setId(employeeRepository.generateSequence(Sequences.TECHNICALQUALIFICATION.toString()));
@@ -233,7 +245,6 @@ public class EmployeeHelper {
 		technical.setCreatedDate(new Date());
 		technical.setLastModifiedBy(Long.parseLong(requesterId));
 		technical.setLastModifiedDate((new Date()));
-
 	}
 
 	private void populateDefaultDataForNewServiceHistory(ServiceHistory serviceHistory, String requesterId,
@@ -244,7 +255,6 @@ public class EmployeeHelper {
 		serviceHistory.setCreatedDate(new Date());
 		serviceHistory.setLastModifiedBy(Long.parseLong(requesterId));
 		serviceHistory.setLastModifiedDate((new Date()));
-
 	}
 
 	private void populateDefaultDataForNewRegularisation(Regularisation regularisation, String requesterId,
@@ -255,7 +265,6 @@ public class EmployeeHelper {
 		regularisation.setCreatedDate(new Date());
 		regularisation.setLastModifiedBy(Long.parseLong(requesterId));
 		regularisation.setLastModifiedDate((new Date()));
-
 	}
 
 	private void populateDefaultDataForNewProbation(Probation probation, String requesterId, String tenantId) {
@@ -265,7 +274,6 @@ public class EmployeeHelper {
 		probation.setCreatedDate(new Date());
 		probation.setLastModifiedBy(Long.parseLong(requesterId));
 		probation.setLastModifiedDate((new Date()));
-
 	}
 
 	private void populateDefaultDataForNewTest(DepartmentalTest test, String requesterId, String tenantId) {
@@ -275,7 +283,6 @@ public class EmployeeHelper {
 		test.setCreatedDate(new Date());
 		test.setLastModifiedBy(Long.parseLong(requesterId));
 		test.setLastModifiedDate((new Date()));
-
 	}
 
 	private void populateDefaultDataForNewEducation(EducationalQualification education, String requesterId,
@@ -286,7 +293,6 @@ public class EmployeeHelper {
 		education.setCreatedDate(new Date());
 		education.setLastModifiedBy(Long.parseLong(requesterId));
 		education.setLastModifiedDate((new Date()));
-
 	}
 
 	private void populateDefaultDataForNewAssignment(Assignment assignment, String requesterId, String tenantId) {
@@ -351,5 +357,4 @@ public class EmployeeHelper {
 			}
 		}
 	}
-
 }

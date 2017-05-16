@@ -1,3 +1,17 @@
+try {
+  var natureOfAllotments = !localStorage.getItem("natureOfAllotments") || localStorage.getItem("natureOfAllotments") == "undefined" ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services", "", "getnatureofallotment", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("natureOfAllotments"))) : JSON.parse(localStorage.getItem("natureOfAllotments"));
+} catch (e) {
+    console.log(e);
+    var natureOfAllotments = {};
+}
+try {
+  var paymentCycle = !localStorage.getItem("paymentCycle") || localStorage.getItem("paymentCycle") == "undefined" ? (localStorage.setItem("paymentCycle", JSON.stringify(commonApiPost("lams-services", "", "getpaymentcycle", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("paymentCycle"))) : JSON.parse(localStorage.getItem("paymentCycle"));
+} catch (e) {
+    console.log(e);
+  var paymentCycle = {};
+}
+
+
 $('#close').on("click", function() {
     window.close();
 })
@@ -205,12 +219,12 @@ var commomFieldsRules = {
     timePeriod: {
         required: true
     },
-    collectedGoodWillAmount{
+    collectedGoodWillAmount: {
       required: true
     },
-    collectedSecurityDeposit{
+    collectedSecurityDeposit: {
       required: true
-    },
+    }
 
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {

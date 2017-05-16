@@ -85,7 +85,7 @@ class ViewApply extends React.Component {
 
 
   render() {
-    let {list}=this.state;
+    let {list,_status}=this.state;
     let {employee,name,code,leaveType,fromDate,toDate,availableDays,leaveDays,reason}=this.state.leaveSet;
 
 

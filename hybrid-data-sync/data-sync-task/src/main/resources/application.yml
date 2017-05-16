@@ -1162,14 +1162,14 @@ sync:
           shouldSource: True
           shouldSync: True
 
-       - source: NA
+        - source: NA
           destination: active
           Type: Boolean
           shouldSource: False
           shouldSync: True
           defaultValue: 1
 
-       - source: lastmodifiedby
+        -  source: lastmodifiedby
           destination: lastmodifiedby
           type: Integer
           shouldSource: True

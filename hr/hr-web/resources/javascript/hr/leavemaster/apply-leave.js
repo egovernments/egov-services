@@ -353,6 +353,12 @@ addOrUpdate(e,mode)
       }
 
     }
+    const showActionButton=function() {
+      if(mode==="create" ||mode==="update")
+      {
+        return (<button type="submit" className="btn btn-submit">Apply</button>);
+      }
+    };
 
 
     return (
@@ -484,7 +490,7 @@ addOrUpdate(e,mode)
 
 
             <div className="text-center">
-            <button type="submit" className="btn btn-submit">Apply</button> &nbsp;&nbsp;
+            {showActionButton()} &nbsp;&nbsp;
             <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

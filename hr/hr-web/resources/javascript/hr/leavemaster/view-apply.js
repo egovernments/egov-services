@@ -29,7 +29,13 @@ class ViewApply extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-     
+
+     try{
+       var _status = commonApiPost("hr-masters","hrstatuses","_search",{tenantId}).responseJSON["LeaveApplication"]
+     }catch(e){
+       var _status = [];
+     }
+
     var employee = getUrlVars()["id"];
     var leaveApp = commonApiPost("hr-leave","leaveapplications","_search",{employee,tenantId}).responseJSON["LeaveApplication"] ;
     var empIds = [];
@@ -94,7 +100,7 @@ class ViewApply extends React.Component {
               <td data-label="toDate">{item.toDate}</td>
               <td data-label="availableDays">{item.availableDays}</td>
               <td data-label="leaveDays">{item.leaveDays}</td>
-              <td data-label="status">{item.status}</td>
+              <td data-label="status">{getNameById(_status,item.status,"code")}</td>
               <td data-label="action">
                 <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}&type=view`}>View-Details</a>
               </td>

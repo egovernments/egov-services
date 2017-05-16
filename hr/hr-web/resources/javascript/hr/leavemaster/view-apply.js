@@ -60,7 +60,8 @@ class ViewApply extends React.Component {
       }
     }
     this.setState({
-      list: leaveApp
+      list: leaveApp,
+      _status
     });
   }
 

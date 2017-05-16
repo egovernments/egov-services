@@ -49,7 +49,7 @@ public class SevaRequestMapFactory {
     private static HashMap<String, String> toMap(String key, String code) {
         final HashMap<String, String> map = new HashMap<>();
         map.put("key", key);
-        map.put("code", code);
+        map.put("name", code);
         return map;
     }
 }

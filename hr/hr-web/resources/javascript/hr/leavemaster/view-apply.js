@@ -31,7 +31,7 @@ class ViewApply extends React.Component {
      }
 
      try{
-       var _status = commonApiPost("hr-masters","hrstatuses","_search",{tenantId}).responseJSON["LeaveApplication"]
+       var _status = commonApiPost("hr-masters","hrstatuses","_search",{tenantId}).responseJSON["HRStatus"]
      }catch(e){
        var _status = [];
      }

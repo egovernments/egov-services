@@ -431,13 +431,15 @@ class CreateAsset extends React.Component {
 
     if(!to && (!customField.name || !customField.type)) {
       return this.setState({
-        showMsg: true
+        showMsg: true,
+        readonly: false
       })
     } else {
       var _this = this;
       setTimeout(function() {
         _this.setState({
-          showMsg: false
+          showMsg: false,
+          readonly: false
         });
       }, 300);
     }
@@ -448,7 +450,8 @@ class CreateAsset extends React.Component {
       assetCategory["assetFieldsDefination"][index] = customField
       this.setState({
         assetCategory,
-        isEdit: false
+        isEdit: false,
+        readonly: false
       })
       //this.setState({isEdit:false})
     } else {
@@ -460,6 +463,7 @@ class CreateAsset extends React.Component {
         temp.columns.push(column);
         this.setState({
           customField: temp,
+          readonly: false,
           column:{
                "name": null,
                "type": null,
@@ -478,6 +482,7 @@ class CreateAsset extends React.Component {
         temp.assetFieldsDefination.push(customField);
         this.setState({
           assetCategory: temp,
+          readonly: false,
           customField: {
                "name": null,
                "type": null,

@@ -190,6 +190,7 @@ public class LeaveOpeningBalanceService {
 						+ " does not exist in the system";
 			} else {
 				leaveOpeningBalance.setEmployeeName(employeeMap.get(leaveOpeningBalance.getEmployee()).getName());
+				leaveOpeningBalance.setEmployeeCode(employeeMap.get(leaveOpeningBalance.getEmployee()).getCode());
 			}
 			if (leaveTypeMap.get(leaveOpeningBalance.getLeaveType().getId()) == null) {
 				errorMsg = errorMsg + " Leave Type with id " + leaveOpeningBalance.getLeaveType().getId()

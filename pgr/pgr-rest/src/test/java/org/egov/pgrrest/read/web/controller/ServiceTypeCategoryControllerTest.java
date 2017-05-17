@@ -1,7 +1,8 @@
 package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
-import org.egov.pgrrest.read.domain.service.ComplaintTypeCategoryService;
+import org.egov.pgrrest.common.entity.ServiceTypeCategory;
+import org.egov.pgrrest.read.domain.service.ServiceTypeCategoryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ComplaintTypeCategoryController.class)
+@WebMvcTest(ServiceTypeCategoryController.class)
 @Import(org.egov.pgrrest.TestConfiguration.class)
-public class ComplaintTypeCategoryControllerTest {
+public class ServiceTypeCategoryControllerTest {
 
     @MockBean
-    private ComplaintTypeCategoryService complaintTypeCategoryService;
+    private ServiceTypeCategoryService serviceTypeCategoryService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,7 +36,7 @@ public class ComplaintTypeCategoryControllerTest {
 
     @Test
     public void getComplaintTypeCategory() throws Exception {
-        when(complaintTypeCategoryService.getAll("ap.public")).thenReturn(getComplaintTypeCategoryEntity());
+        when(serviceTypeCategoryService.getAll("ap.public")).thenReturn(getComplaintTypeCategoryEntity());
         mockMvc.perform(post("/complaintTypeCategories/_search?tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -43,9 +44,9 @@ public class ComplaintTypeCategoryControllerTest {
             .andExpect(content().json(resources.getFileContents("complaintTypeCategoryResponse.json")));
     }
 
-    private List<org.egov.pgrrest.common.entity.ComplaintTypeCategory> getComplaintTypeCategoryEntity() {
-        List<org.egov.pgrrest.common.entity.ComplaintTypeCategory> complaintTypeCategoryList = new ArrayList<org.egov.pgrrest.common.entity.ComplaintTypeCategory>();
-        org.egov.pgrrest.common.entity.ComplaintTypeCategory complaintTypeCategory = new org.egov.pgrrest.common.entity.ComplaintTypeCategory();
+    private List<ServiceTypeCategory> getComplaintTypeCategoryEntity() {
+        List<ServiceTypeCategory> complaintTypeCategoryList = new ArrayList<ServiceTypeCategory>();
+        ServiceTypeCategory complaintTypeCategory = new ServiceTypeCategory();
         complaintTypeCategory.setName("Administration");
         complaintTypeCategory.setDescription("Administration");
         complaintTypeCategory.setTenantId("ap.public");

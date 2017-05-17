@@ -8,10 +8,10 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ComplaintTypeCategoryResponse {
+public class ServiceTypeCategoryResponse {
 
     private ResponseInfo responseInfo;
 
-    private List<ComplaintTypeCategory> complaintTypeCategories;
+    private List<ServiceTypeCategory> complaintTypeCategories;
 
 }

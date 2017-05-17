@@ -1,7 +1,7 @@
 package org.egov.pgrrest.common.repository;
 
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.common.entity.ComplaintType;
+import org.egov.pgrrest.common.entity.ServiceType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestConfiguration.class)
-public class ComplaintTypeJpaRepositoryTest {
+public class ServiceTypeJpaRepositoryTest {
 
     @Autowired
     private ComplaintTypeJpaRepository repository;
@@ -29,7 +29,7 @@ public class ComplaintTypeJpaRepositoryTest {
     @Sql(scripts = {"/sql/clearComplaintType.sql", "/sql/InsertComplaintType.sql"})
     public void test_should_find_all_active_complaint_types_for_given_category() {
         final long categoryId = 4L;
-        final List<ComplaintType> complaintTypes = repository.findActiveComplaintTypes(categoryId, "tenantId");
+        final List<ServiceType> complaintTypes = repository.findActiveComplaintTypes(categoryId, "tenantId");
 
         assertNotNull(complaintTypes);
         assertEquals(1, complaintTypes.size());

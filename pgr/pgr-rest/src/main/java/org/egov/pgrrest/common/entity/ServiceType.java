@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import static org.egov.pgrrest.common.entity.ComplaintType.SEQ_COMPLAINTTYPE;
+import static org.egov.pgrrest.common.entity.ServiceType.SEQ_SERVICE_TYPE;
 
 @Getter
 @Setter
@@ -15,12 +15,12 @@ import static org.egov.pgrrest.common.entity.ComplaintType.SEQ_COMPLAINTTYPE;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "egpgr_complainttype")
-@SequenceGenerator(name = SEQ_COMPLAINTTYPE, sequenceName = SEQ_COMPLAINTTYPE, allocationSize = 1)
-public class ComplaintType extends AbstractAuditable<Long> {
-	public static final String SEQ_COMPLAINTTYPE = "SEQ_EGPGR_COMPLAINTTYPE";
+@SequenceGenerator(name = SEQ_SERVICE_TYPE, sequenceName = SEQ_SERVICE_TYPE, allocationSize = 1)
+public class ServiceType extends AbstractAuditable<Long> {
+	public static final String SEQ_SERVICE_TYPE = "SEQ_EGPGR_COMPLAINTTYPE";
 	private static final long serialVersionUID = 8904645810221559541L;
 	@Id
-	@GeneratedValue(generator = SEQ_COMPLAINTTYPE, strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = SEQ_SERVICE_TYPE, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@Column(name = "name")
@@ -44,7 +44,7 @@ public class ComplaintType extends AbstractAuditable<Long> {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "category")
-	private ComplaintTypeCategory category;
+	private ServiceTypeCategory category;
 
 	@Column(name = "metadata")
 	private boolean metadata;
@@ -53,8 +53,6 @@ public class ComplaintType extends AbstractAuditable<Long> {
 
 	private String keywords;
 
-//	private String attributes;
-	
 	@Column(name = "tenantid")
 	private String tenantId;
 

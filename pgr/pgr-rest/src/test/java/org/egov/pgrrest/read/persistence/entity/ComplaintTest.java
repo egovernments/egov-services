@@ -20,7 +20,7 @@ public class ComplaintTest {
 
     @Test
     public void test_should_map_from_entity_to_domain() {
-        final ComplaintType complaintType = new ComplaintType();
+        final ServiceType complaintType = new ServiceType();
         complaintType.setName("complaintName");
         complaintType.setCode("complaintCode");
         complaintType.setTenantId("tenantId");

@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.web.contract;
 import lombok.Getter;
 
 @Getter
-public class ComplaintType {
+public class ServiceType {
     private Long id;
     private String serviceName;
     private String serviceCode;
@@ -16,7 +16,7 @@ public class ComplaintType {
     private Integer slaHours;
     private String tenantId;
 
-    public ComplaintType(org.egov.pgrrest.common.entity.ComplaintType domainComplaintType) {
+    public ServiceType(org.egov.pgrrest.common.entity.ServiceType domainComplaintType) {
         this.id = domainComplaintType.getId();
         this.serviceName = domainComplaintType.getName();
         this.serviceCode = domainComplaintType.getCode();

@@ -32,7 +32,7 @@ public class Complaint extends AbstractAuditable<Long> {
 
     @ManyToOne
     @JoinColumn(name = "complainttype")
-    private ComplaintType complaintType;
+    private ServiceType complaintType;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "complainant", nullable = false)

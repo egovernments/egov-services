@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.common.entity.ComplaintType;
-import org.egov.pgrrest.read.domain.model.ComplaintTypeSearchCriteria;
+import org.egov.pgrrest.common.entity.ServiceType;
+import org.egov.pgrrest.read.domain.model.ServiceTypeSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ComplaintTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,25 +9,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ComplaintTypeService {
+public class ServiceRequestTypeService {
 
     private final ComplaintTypeRepository complaintTypeRepository;
 
     @Autowired
-    public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
+    public ServiceRequestTypeService(final ComplaintTypeRepository complaintTypeRepository) {
         this.complaintTypeRepository = complaintTypeRepository;
     }
 
-    public ComplaintType getComplaintType(String complaintTypeCode, String tenantId) {
+    public ServiceType getComplaintType(String complaintTypeCode, String tenantId) {
         return complaintTypeRepository.getComplaintType(complaintTypeCode, tenantId);
     }
 
-    public List<ComplaintType> findByCriteria(ComplaintTypeSearchCriteria searchCriteria) {
+    public List<ServiceType> findByCriteria(ServiceTypeSearchCriteria searchCriteria) {
         searchCriteria.validate();
         return findComplaintTypesByCriteria(searchCriteria);
     }
 
-    private List<ComplaintType> findComplaintTypesByCriteria(ComplaintTypeSearchCriteria searchCriteria) {
+    private List<ServiceType> findComplaintTypesByCriteria(ServiceTypeSearchCriteria searchCriteria) {
         if (searchCriteria.isCategorySearch()) {
             return complaintTypeRepository.findActiveComplaintTypesByCategoryAndTenantId(searchCriteria.getCategoryId(),
                     searchCriteria.getTenantId());

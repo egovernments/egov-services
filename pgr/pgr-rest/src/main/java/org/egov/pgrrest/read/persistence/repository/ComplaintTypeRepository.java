@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.entity.ComplaintType;
+import org.egov.pgrrest.common.entity.ServiceType;
 import org.egov.pgrrest.common.repository.ComplaintTypeJpaRepository;
 import org.egov.pgrrest.common.entity.Complaint;
 import org.hibernate.Criteria;
@@ -29,11 +29,11 @@ public class ComplaintTypeRepository {
         this.complaintTypeJpaRepository = complaintTypeJpaRepository;
     }
 
-    public List<ComplaintType> findActiveComplaintTypesByCategoryAndTenantId(Long categoryId, String tenantId) {
+    public List<ServiceType> findActiveComplaintTypesByCategoryAndTenantId(Long categoryId, String tenantId) {
         return complaintTypeJpaRepository.findActiveComplaintTypes(categoryId, tenantId);
     }
 
-    public List<ComplaintType> getFrequentlyFiledComplaints(Integer count, String tenantId) {
+    public List<ServiceType> getFrequentlyFiledComplaints(Integer count, String tenantId) {
 
         DateTime previousDate = new DateTime();
         final DateTime currentDate = new DateTime();
@@ -49,21 +49,21 @@ public class ComplaintTypeRepository {
         criteria.add(Restrictions.eq("complaint.tenantId", tenantId));
         criteria.setMaxResults(count).addOrder(Order.desc("count"));
         final List<Object> resultList = criteria.list();
-        final List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
+        final List<ServiceType> complaintTypeList = new ArrayList<ServiceType>();
 
         for (final Object row : resultList) {
             final Object[] columns = (Object[]) row;
-            complaintTypeList.add((ComplaintType) columns[0]);
+            complaintTypeList.add((ServiceType) columns[0]);
         }
         return complaintTypeList;
 
     }
 
-    public ComplaintType getComplaintType(String complaintTypeCode, String tenantId) {
+    public ServiceType getComplaintType(String complaintTypeCode, String tenantId) {
         return complaintTypeJpaRepository.findByCodeAndTenantId(complaintTypeCode, tenantId);
     }
     
-    public List<ComplaintType> getAllComplaintTypes(){
+    public List<ServiceType> getAllComplaintTypes(){
     	return complaintTypeJpaRepository.findAll();
     }
 }

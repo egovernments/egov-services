@@ -15,14 +15,16 @@ import java.util.List;
 @Setter
 @Entity(name = "complainttypecategory_write")
 @Table(name = "egpgr_complainttype_category")
-@SequenceGenerator(name = ComplaintTypeCategory.SEQ_COMP_TYPE_CATEGORY, sequenceName = ComplaintTypeCategory.SEQ_COMP_TYPE_CATEGORY, allocationSize = 1)
-public class ComplaintTypeCategory extends AbstractPersistable<Long> {
+@SequenceGenerator(name = ServiceTypeCategory.SEQ_SERVICE_TYPE_CATEGORY,
+    sequenceName = ServiceTypeCategory.SEQ_SERVICE_TYPE_CATEGORY,
+    allocationSize = 1)
+public class ServiceTypeCategory extends AbstractPersistable<Long> {
     private static final long serialVersionUID = 2739365086791183614L;
 
-    public static final String SEQ_COMP_TYPE_CATEGORY = "SEQ_EGPGR_COMPLAINTTYPE_CATEGORY";
+    public static final String SEQ_SERVICE_TYPE_CATEGORY = "SEQ_EGPGR_COMPLAINTTYPE_CATEGORY";
 
     @Id
-    @GeneratedValue(generator = SEQ_COMP_TYPE_CATEGORY, strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = SEQ_SERVICE_TYPE_CATEGORY, strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull
@@ -35,18 +37,9 @@ public class ComplaintTypeCategory extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnore
-    private List<ComplaintType> complaintTypes;
+    private List<ServiceType> complaintTypes;
     
     @Column(name = "tenantid")
     private String tenantId;
 
-    @Override
-    protected void setId(final Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
 }

@@ -22,8 +22,8 @@ public class ComplaintSpecification implements Specification<Complaint> {
                                  CriteriaBuilder criteriaBuilder) {
         Path<String> crn = root.get(Complaint_.crn);
         Path<String> tenantId = root.get(Complaint_.tenantId);
-        Path<ComplaintType> complaintType = root.get(Complaint_.complaintType);
-        Path<String> code = complaintType.get(ComplaintType_.code);
+        Path<ServiceType> complaintType = root.get(Complaint_.complaintType);
+        Path<String> code = complaintType.get(ServiceType_.code);
         Path<String> status = root.get(Complaint_.status);
         Path<Date> createdDate = root.get(AbstractAuditable_.createdDate);
         Path<Date> lastModifiedDate = root.get(AbstractAuditable_.lastModifiedDate);

@@ -1,10 +1,10 @@
 package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
-import org.egov.pgrrest.common.entity.ComplaintType;
-import org.egov.pgrrest.common.entity.ComplaintTypeCategory;
-import org.egov.pgrrest.read.domain.model.ComplaintTypeSearchCriteria;
-import org.egov.pgrrest.read.domain.service.ComplaintTypeService;
+import org.egov.pgrrest.common.entity.ServiceType;
+import org.egov.pgrrest.common.entity.ServiceTypeCategory;
+import org.egov.pgrrest.read.domain.model.ServiceTypeSearchCriteria;
+import org.egov.pgrrest.read.domain.service.ServiceRequestTypeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ComplaintTypeController.class)
+@WebMvcTest(ServiceTypeController.class)
 @Import(org.egov.pgrrest.TestConfiguration.class)
-public class ComplaintTypeControllerTest {
+public class ServiceTypeControllerTest {
 
     public static final String AP_PUBLIC = "ap.public";
     public static final String FREQUENCY = "FREQUENCY";
@@ -34,7 +34,7 @@ public class ComplaintTypeControllerTest {
     public static final String ALL = "ALL";
 
     @MockBean
-    private ComplaintTypeService complaintTypeService;
+    private ServiceRequestTypeService serviceRequestTypeService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +43,7 @@ public class ComplaintTypeControllerTest {
 
     @Test
     public void getComplaintTypes() throws Exception {
-        when(complaintTypeService.getComplaintType("BPS", AP_PUBLIC)).thenReturn(getComplaintType());
+        when(serviceRequestTypeService.getComplaintType("BPS", AP_PUBLIC)).thenReturn(getComplaintType());
 
         mockMvc.perform(post("/services/BPS/_search?tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
@@ -54,7 +54,7 @@ public class ComplaintTypeControllerTest {
 
     @Test
     public void getComplaintTypesWhereTypeIsFrequency() throws Exception {
-        when(complaintTypeService.findByCriteria(getSearchCriteria(FREQUENCY))).thenReturn(getComplaintTypeList());
+        when(serviceRequestTypeService.findByCriteria(getSearchCriteria(FREQUENCY))).thenReturn(getComplaintTypeList());
 
         mockMvc.perform(post("/services/_search?type=FREQUENCY&count=2&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
@@ -65,7 +65,7 @@ public class ComplaintTypeControllerTest {
 
     @Test
     public void getAllComplaintTypes() throws Exception {
-        when(complaintTypeService.findByCriteria(getSearchCriteria(ALL))).thenReturn(getAllComplaintType());
+        when(serviceRequestTypeService.findByCriteria(getSearchCriteria(ALL))).thenReturn(getAllComplaintType());
 
         mockMvc.perform(post("/services/_search?type=ALL&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
@@ -76,7 +76,7 @@ public class ComplaintTypeControllerTest {
 
     @Test
     public void getComplaintTypesByCategory() throws Exception {
-        when(complaintTypeService.findByCriteria(getSearchCriteria(CATEGORY))).thenReturn(getComplaintTypeListForCategoryIdSearch());
+        when(serviceRequestTypeService.findByCriteria(getSearchCriteria(CATEGORY))).thenReturn(getComplaintTypeListForCategoryIdSearch());
 
         mockMvc.perform(post("/services/_search?type=CATEGORY&categoryId=1&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
@@ -85,8 +85,8 @@ public class ComplaintTypeControllerTest {
             .andExpect(content().json(resources.getFileContents("complaintTypeResponse.json")));
     }
 
-    private ComplaintType getComplaintType() {
-        ComplaintType complaintType = new ComplaintType();
+    private ServiceType getComplaintType() {
+        ServiceType complaintType = new ServiceType();
         complaintType.setTenantId(AP_PUBLIC);
         complaintType.setName("Building plan sanction");
         complaintType.setDescription("Building plan sanction");
@@ -95,33 +95,33 @@ public class ComplaintTypeControllerTest {
         return complaintType;
     }
 
-    private ComplaintTypeCategory getComplaintTypeCategory() {
-        ComplaintTypeCategory complaintTypeCategory = new ComplaintTypeCategory();
+    private ServiceTypeCategory getComplaintTypeCategory() {
+        ServiceTypeCategory complaintTypeCategory = new ServiceTypeCategory();
         complaintTypeCategory.setDescription("Administration");
         complaintTypeCategory.setTenantId(AP_PUBLIC);
 
         return complaintTypeCategory;
     }
 
-    private ComplaintTypeSearchCriteria getSearchCriteria(String type) {
+    private ServiceTypeSearchCriteria getSearchCriteria(String type) {
         if (type.equalsIgnoreCase(FREQUENCY))
-            return ComplaintTypeSearchCriteria.builder().complaintTypeSearch(FREQUENCY).count(2).tenantId(AP_PUBLIC).build();
+            return ServiceTypeSearchCriteria.builder().complaintTypeSearch(FREQUENCY).count(2).tenantId(AP_PUBLIC).build();
         else if (type.equalsIgnoreCase(CATEGORY))
-            return ComplaintTypeSearchCriteria.builder().complaintTypeSearch(CATEGORY).categoryId(1L).tenantId(AP_PUBLIC).build();
+            return ServiceTypeSearchCriteria.builder().complaintTypeSearch(CATEGORY).categoryId(1L).tenantId(AP_PUBLIC).build();
         else
-            return ComplaintTypeSearchCriteria.builder().complaintTypeSearch(ALL).tenantId(AP_PUBLIC).build();
+            return ServiceTypeSearchCriteria.builder().complaintTypeSearch(ALL).tenantId(AP_PUBLIC).build();
     }
 
-    private List<ComplaintType> getComplaintTypeList() {
-        List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
+    private List<ServiceType> getComplaintTypeList() {
+        List<ServiceType> complaintTypeList = new ArrayList<ServiceType>();
 
-        ComplaintType complaintTypeBRKNB = new ComplaintType();
+        ServiceType complaintTypeBRKNB = new ServiceType();
         complaintTypeBRKNB.setName("Broken Bin");
         complaintTypeBRKNB.setCode("BRKNB");
         complaintTypeBRKNB.setTenantId(AP_PUBLIC);
         complaintTypeBRKNB.setCategory(getComplaintTypeCategory());
 
-        ComplaintType complaintTypeBPS = new ComplaintType();
+        ServiceType complaintTypeBPS = new ServiceType();
         complaintTypeBPS.setName("Building plan sanction");
         complaintTypeBPS.setCode("BPS");
         complaintTypeBPS.setTenantId(AP_PUBLIC);
@@ -133,22 +133,22 @@ public class ComplaintTypeControllerTest {
         return complaintTypeList;
     }
 
-    private List<ComplaintType> getAllComplaintType() {
-        List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
+    private List<ServiceType> getAllComplaintType() {
+        List<ServiceType> complaintTypeList = new ArrayList<ServiceType>();
 
-        ComplaintType complaintTypeBRKNB = new ComplaintType();
+        ServiceType complaintTypeBRKNB = new ServiceType();
         complaintTypeBRKNB.setName("Broken Bin");
         complaintTypeBRKNB.setCode("BRKNB");
         complaintTypeBRKNB.setTenantId(AP_PUBLIC);
         complaintTypeBRKNB.setCategory(getComplaintTypeCategory());
 
-        ComplaintType complaintTypeBPS = new ComplaintType();
+        ServiceType complaintTypeBPS = new ServiceType();
         complaintTypeBPS.setName("Building plan sanction");
         complaintTypeBPS.setCode("BPS");
         complaintTypeBPS.setTenantId(AP_PUBLIC);
         complaintTypeBPS.setCategory(getComplaintTypeCategory());
 
-        ComplaintType complaintTypeOOWF = new ComplaintType();
+        ServiceType complaintTypeOOWF = new ServiceType();
         complaintTypeOOWF.setName("Obstruction of water flow");
         complaintTypeOOWF.setCode("OOWF");
         complaintTypeOOWF.setTenantId(AP_PUBLIC);
@@ -161,10 +161,10 @@ public class ComplaintTypeControllerTest {
         return complaintTypeList;
     }
 
-    private List<ComplaintType> getComplaintTypeListForCategoryIdSearch() {
-        List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
+    private List<ServiceType> getComplaintTypeListForCategoryIdSearch() {
+        List<ServiceType> complaintTypeList = new ArrayList<ServiceType>();
 
-        ComplaintType complaintTypeBPS = new ComplaintType();
+        ServiceType complaintTypeBPS = new ServiceType();
         complaintTypeBPS.setId(1L);
         complaintTypeBPS.setName("Building plan sanction");
         complaintTypeBPS.setCode("BPS");

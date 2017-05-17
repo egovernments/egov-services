@@ -192,7 +192,7 @@ public class ComplaintWriteRepository {
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Complaint complaint) {
-        ComplaintType complaintType = complaintTypeJpaRepository
+        ServiceType complaintType = complaintTypeJpaRepository
             .findByCodeAndTenantId(complaintRecord.getComplaintTypeCode(), complaintRecord.getTenantId());
         complaint.setComplaintType(complaintType);
     }

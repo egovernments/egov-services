@@ -12,7 +12,7 @@ import java.util.Objects;
 @Value
 @Builder
 @AllArgsConstructor
-public class ComplaintTypeSearchCriteria {
+public class ServiceTypeSearchCriteria {
 
     private static final List<String> KNOWN_SEARCH_TYPES = Arrays.asList("category", "frequency","all");
     private static final int DEFAULT_FREQUENCY_COUNT = 5;

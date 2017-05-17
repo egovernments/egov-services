@@ -629,6 +629,19 @@ class CreateAsset extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
+      $("#refModal").on("hidden.bs.modal", function () {
+        _this.setState({
+          refSet: {
+            tenantId: tenantId,
+            name: "",
+            department: "",
+            assetCategory: "",
+            status: "",
+            code: ""
+          },
+          references: []
+        })
+      });
 
 			if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
 

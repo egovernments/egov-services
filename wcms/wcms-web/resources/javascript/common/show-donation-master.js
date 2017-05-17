@@ -1,8 +1,15 @@
-class ShowPipeSize extends React.Component {
+
+class ShowDonationMaster extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],searchSet:{sizeInMilimeter:"",code:"",
-    sizeInInch:"",active:""}}
+    this.state={list:[],donationSet:{
+    "id": "",
+    "department":"",
+    "designation":"",
+    "fromDate":"",
+    "toDate":"",
+   "tenantId":tenantId
+  }}
 
   }
 
@@ -15,14 +22,14 @@ class ShowPipeSize extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-    try {
-        var _PipeSize = commonApiPost("wcms-masters","pipesize","_search",{tenantId}).responseJSON["PipeSize"] || [];
-    } catch(e) {
-        var _PipeSize = [];
-    }
-    this.setState({
-      list:_PipeSize
-    });
+    // try {
+    //     var _UsageType = commonApiPost("wcms-masters","usagetype","_search",{tenantId}).responseJSON["UsageType"] || [];
+    // } catch(e) {
+    //     var _UsageType = [];
+    // }
+    // this.setState({
+    //   list:_UsageType
+    // });
 
   }
 
@@ -31,7 +38,7 @@ class ShowPipeSize extends React.Component {
   {
       if (prevState.list.length!=this.state.list.length) {
 
-          $('#pipeSizeTable').DataTable({
+          $('#donationMasterTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                       'excel', 'pdf', 'print'
@@ -49,19 +56,19 @@ class ShowPipeSize extends React.Component {
 
   render() {
     let {list}=this.state;
-    let {sizeInInch,sizeInMilimeter,code,active}=this.state.searchSet;
+    let {department,designation,fromDate,toDate,id}=this.state.donationSet;
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
       if (type==="Update") {
 
               return (
-                      <a href={`app/create/create-pipe-size.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`app/create/create-donation-master.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`app/create/create-pipe-size.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/create/create-donation-master.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -73,10 +80,10 @@ class ShowPipeSize extends React.Component {
       {
             return (<tr key={index}>
                     <td>{index+1}</td>
-                    <td data-label="sizeInMilimeter">{item.sizeInMilimeter}</td>
-                    <td data-label="sizeInInch">{item.sizeInInch}</td>
-                    <td data-label="code">{item.code}</td>
-                    <td data-label="active">{item.active?"true":"false"}</td>
+                    <td data-label="fromDate">{item.fromDate}</td>
+                    <td data-label="department">{item.department}</td>
+                    <td data-label="designation">{item.designation}</td>
+                    <td data-label="toDate">{item.toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>
@@ -87,21 +94,24 @@ class ShowPipeSize extends React.Component {
     }
 
       return (<div>
-        <h3>{titleCase(getUrlVars()["type"])} Pipe  Size </h3>
-        <table id="pipeSizeTable" className="table table-bordered">
+        <h3>{titleCase(getUrlVars()["type"])}  Donation Master </h3>
+        <table id="donationMasterTable" className="table table-bordered">
             <thead>
                 <tr>
                     <th>Sl No.</th>
-                    <th>H.S.C Pipe Size (mm)</th>
-                    <th>H.S.C Pipe Size(inch)</th>
-                    <th>Code </th>
-                    <th>Active</th>
+                    <th>Property Type</th>
+                    <th>Category</th>
+                    <th>Usage Type</th>
+                    <th>Max Pipe Size</th>
+                    <th> Min Pipe Size </th>
+                    <th> Donation Amount </th>
+                    <th>From Date</th>
+                    <th> To Date</th>
                     <th>Action</th>
-
                 </tr>
             </thead>
 
-            <tbody id="pipeSizeTableResultBoday">
+            <tbody id="donationMasterTableResulltBody">
                 {
                     renderBody()
                 }
@@ -118,6 +128,6 @@ class ShowPipeSize extends React.Component {
 
 
 ReactDOM.render(
-  <ShowPipeSize />,
+  <ShowDonationMaster />,
   document.getElementById('root')
 );

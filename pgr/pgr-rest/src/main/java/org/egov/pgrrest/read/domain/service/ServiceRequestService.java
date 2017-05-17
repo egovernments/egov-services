@@ -18,23 +18,23 @@ import org.springframework.stereotype.Service;
 public class ServiceRequestService {
 
     private static final String SYSTEM_USER = "SYSTEM";
-    private ServiceRequestRepository complaintRepository;
+    private ServiceRequestRepository serviceRequestRepository;
 	private ComplaintJpaRepository complaintJpaRepository;
 	private UserRepository userRepository;
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
 
     @Autowired
-    public ServiceRequestService(ServiceRequestRepository complaintRepository,
+    public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
                                  SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
                                  ComplaintJpaRepository complaintJpaRepository) {
-        this.complaintRepository = complaintRepository;
+        this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
         this.complaintJpaRepository = complaintJpaRepository;
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return complaintRepository.findAll(serviceRequestSearchCriteria);
+        return serviceRequestRepository.findAll(serviceRequestSearchCriteria);
     }
 
 	public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
@@ -43,7 +43,7 @@ public class ServiceRequestService {
 		complaint.setCrn(crn);
 		sevaRequest.update(complaint);
 		setUserIdForAnonymousUser(sevaRequest);
-		complaintRepository.save(sevaRequest);
+		serviceRequestRepository.save(sevaRequest);
 	}
 
 	private void setUserIdForAnonymousUser(SevaRequest sevaRequest) {
@@ -67,7 +67,7 @@ public class ServiceRequestService {
 		complaint.validate();
 		sevaRequest.update(complaint);
 		setUserIdForAnonymousUser(sevaRequest);
-		complaintRepository.update(sevaRequest);
+		serviceRequestRepository.update(sevaRequest);
 	}
 
     public void updateLastAccessedTime(String crn, String tenantId) {
@@ -76,7 +76,7 @@ public class ServiceRequestService {
 
     public List<ServiceRequest> getAllModifiedCitizenComplaints(Long userId, String tenantId) {
         if (userId != null) {
-            return complaintRepository.getAllModifiedServiceRequestsForCitizen(userId, tenantId);
+            return serviceRequestRepository.getAllModifiedServiceRequestsForCitizen(userId, tenantId);
         }
         return new ArrayList<>();
     }

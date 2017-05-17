@@ -44,7 +44,8 @@ public class ServiceRequestController {
         final ServiceRequest complaint = request.toDomainForUpdateRequest();
         serviceRequestService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
-        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract.ServiceRequest(complaint)));
+        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract
+            .ServiceRequest(complaint)));
     }
 
     @PostMapping(value = "/_search")
@@ -74,6 +75,8 @@ public class ServiceRequestController {
                                               @RequestParam(value = "locationId", required = false) Long locationId,
                                               @RequestParam(value = "childLocationId", required = false) Long
                                                   childLocationId,
+                                              @RequestParam(value = "useNewSchema", required = false) boolean
+                                                  isNewSchemaEnabled,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
@@ -93,6 +96,7 @@ public class ServiceRequestController {
             .locationId(locationId)
             .childLocationId(childLocationId)
             .tenantId(tenantId)
+            .useNewSchema(isNewSchemaEnabled)
             .build();
         final List<ServiceRequest> complaints = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(complaints);
@@ -103,7 +107,7 @@ public class ServiceRequestController {
     public void updateLastAccessedTime(@RequestParam final String serviceRequestId,
                                        @RequestBody RequestInfoBody requestInfo,
                                        @RequestParam(value = "tenantId") final String tenantId) {
-        serviceRequestService.updateLastAccessedTime(serviceRequestId,tenantId);
+        serviceRequestService.updateLastAccessedTime(serviceRequestId, tenantId);
     }
 
     private ServiceResponse createResponse(List<ServiceRequest> complaints) {

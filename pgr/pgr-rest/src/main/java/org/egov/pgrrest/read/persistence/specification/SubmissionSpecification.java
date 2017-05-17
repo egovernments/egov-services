@@ -1,0 +1,100 @@
+package org.egov.pgrrest.read.persistence.specification;
+
+import org.egov.pgrrest.common.entity.AbstractAuditable_;
+import org.egov.pgrrest.common.entity.Submission;
+import org.egov.pgrrest.common.entity.Submission_;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
+import org.joda.time.DateTime;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class SubmissionSpecification implements Specification<Submission> {
+    private ServiceRequestSearchCriteria criteria;
+
+    public SubmissionSpecification(ServiceRequestSearchCriteria criteria) {
+        this.criteria = criteria;
+    }
+
+    @Override
+    public Predicate toPredicate(Root<Submission> root, CriteriaQuery<?> criteriaQuery,
+                                 CriteriaBuilder criteriaBuilder) {
+        Path<String> crn = root.get(Submission_.id);
+        Path<String> tenantId = root.get(Submission_.tenantId);
+        Path<String> code = root.get(Submission_.serviceCode);
+        Path<String> status = root.get(Submission_.status);
+        Path<Date> createdDate = root.get(AbstractAuditable_.createdDate);
+        Path<Date> lastModifiedDate = root.get(AbstractAuditable_.lastModifiedDate);
+        Path<Long> assignmentId = root.get(Submission_.assignee);
+        Path<Long> userId = root.get(AbstractAuditable_.createdBy);
+        Path<String> name = root.get(Submission_.name);
+        Path<String> emailId = root.get(Submission_.email);
+        Path<String> mobileNumber = root.get(Submission_.mobile);
+        Path <Date> escalationDate=root.get(Submission_.escalationDate);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (criteria.getTenantId() != null && !criteria.getTenantId().isEmpty()) {
+            predicates.add(criteriaBuilder.equal(tenantId, criteria.getTenantId()));
+        }
+        
+        if (criteria.getServiceRequestId() != null) {
+            predicates.add(criteriaBuilder.equal(crn, criteria.getServiceRequestId()));
+        }
+
+        if (criteria.getServiceCode() != null) {
+            predicates.add(criteriaBuilder.equal(code, criteria.getServiceCode()));
+        }
+
+        if (criteria.getStatus() != null) {
+           predicates.add(status.in(criteria.getStatus()));
+
+        }
+
+        if (criteria.getStartDate() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(createdDate, criteria.getStartDate()));
+        }
+
+        if (criteria.getEndDate() != null) {
+            predicates.add(
+                criteriaBuilder.lessThan(createdDate, new DateTime(criteria.getEndDate()).plusDays(1).toDate()));
+        }
+
+        if (criteria.getLastModifiedDatetime() != null) {
+            predicates.add(criteriaBuilder.greaterThan(lastModifiedDate, criteria.getLastModifiedDatetime()));
+        }
+        if (criteria.getUserId() != null) {
+
+            predicates.add(criteriaBuilder.equal(userId, criteria.getUserId()));
+        }
+
+        if (criteria.getAssignmentId() != null) {
+
+            predicates.add(criteriaBuilder.equal(assignmentId, criteria.getAssignmentId()));
+        }
+
+        if (criteria.getName() != null) {
+            predicates.add(criteriaBuilder.equal(name, criteria.getName()));
+        }
+
+        if (criteria.getEmailId() != null) {
+            predicates.add(criteriaBuilder.equal(emailId, criteria.getEmailId()));
+        }
+
+        if (criteria.getMobileNumber() != null) {
+            predicates.add(criteriaBuilder.equal(mobileNumber, criteria.getMobileNumber()));
+        }
+
+        if(criteria.getEscalationDate() !=null)
+        {
+        	predicates.add(criteriaBuilder.lessThan(escalationDate, criteria.getEscalationDate()));
+        }
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+    }
+}
+
+
+

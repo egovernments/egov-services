@@ -29,6 +29,5 @@ public class ServiceRequestSearchCriteria {
 	private Long locationId;
 	private Long childLocationId;
 	private String tenantId;
-
-
+    private boolean useNewSchema;
 }

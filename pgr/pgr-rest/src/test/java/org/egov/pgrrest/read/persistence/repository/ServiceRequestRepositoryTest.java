@@ -34,6 +34,9 @@ public class ServiceRequestRepositoryTest {
     @Mock
     private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
 
+    @Mock
+    private SubmissionRepository submissionRepository;
+
     @Captor
     private ArgumentCaptor<SevaRequest> sevaRequestArgumentCaptor;
 
@@ -41,7 +44,8 @@ public class ServiceRequestRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        complaintRepository = new ServiceRequestRepository(complaintJpaRepository, serviceRequestMessageQueueRepository);
+        complaintRepository =
+            new ServiceRequestRepository(complaintJpaRepository, serviceRequestMessageQueueRepository, submissionRepository);
     }
 
     @Test

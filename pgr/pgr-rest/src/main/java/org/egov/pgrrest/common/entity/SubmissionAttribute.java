@@ -1,6 +1,7 @@
 package org.egov.pgrrest.common.entity;
 
 import lombok.*;
+import org.egov.pgrrest.common.model.AttributeEntry;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -24,6 +25,14 @@ public class SubmissionAttribute extends AbstractAuditable<SubmissionAttributeKe
 
     public String getKey() {
         return id.getKey();
+    }
+
+    public String getCrn() {
+        return id.getCrn();
+    }
+
+    public AttributeEntry toDomain() {
+        return new AttributeEntry(id.getKey(), id.getCode());
     }
 }
 

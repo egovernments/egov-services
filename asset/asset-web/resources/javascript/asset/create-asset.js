@@ -630,6 +630,7 @@ class CreateAsset extends React.Component {
         }
       }
       $("#refModal").on("hidden.bs.modal", function () {
+        flag = 1;
         _this.setState({
           refSet: {
             tenantId: tenantId,

@@ -100,14 +100,14 @@ public class AssetQueryBuilder {
 
 		if (searchAsset.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.name = ?");
-			preparedStatementValues.add(searchAsset.getName());
+			selectQuery.append(" ASSET.name like ?");
+			preparedStatementValues.add("%"+searchAsset.getName()+"%");
 		}
 
 		if (searchAsset.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.code = ?");
-			preparedStatementValues.add(searchAsset.getCode());
+			selectQuery.append(" ASSET.code like ?");
+			preparedStatementValues.add("%"+searchAsset.getCode()+"%");
 		}
 
 		if (searchAsset.getDepartment() != null) {
@@ -174,6 +174,12 @@ public class AssetQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.doorno = ?");
 			preparedStatementValues.add(searchAsset.getDoorNo());
+		}
+		
+		if (searchAsset.getAssetReference() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ASSET.assetreference = ?");
+			preparedStatementValues.add(searchAsset.getAssetReference());
 		}
 
 	}

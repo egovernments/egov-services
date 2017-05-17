@@ -125,8 +125,7 @@ public class EmployeeService {
 		accDetailKeyContracts.add(accDetailKey);
 
 		AccountDetailKeyContractRequest accDetailKeyRequest = AccountDetailKeyContractRequest.builder()
-				.requestInfo(requestInfo).accountDetailKeys(accDetailKeyContracts)
-				.accountDetailKey(accDetailKey).build();
+				.requestInfo(requestInfo).accountDetailKeys(accDetailKeyContracts).build();
 
 		LOGGER.debug("AccountDetailKeyContractRequest : " + accDetailKeyRequest);
 

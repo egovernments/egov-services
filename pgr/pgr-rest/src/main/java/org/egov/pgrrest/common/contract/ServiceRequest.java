@@ -7,7 +7,6 @@ import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Complainant;
-import org.egov.pgrrest.read.domain.model.Complaint;
 import org.egov.pgrrest.read.domain.model.ComplaintLocation;
 import org.egov.pgrrest.read.domain.model.ComplaintType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
@@ -103,7 +102,7 @@ public class ServiceRequest {
 
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
-    public ServiceRequest(Complaint complaint) {
+    public ServiceRequest(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         crn = complaint.getCrn();
         status = complaint.isClosed();
         complaintTypeName = complaint.getComplaintType().getName();
@@ -125,7 +124,7 @@ public class ServiceRequest {
         tenantId = complaint.getTenantId();
     }
 
-    private List<AttributeEntry> getAttributeValues(Complaint complaint) {
+    private List<AttributeEntry> getAttributeValues(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         final ArrayList<AttributeEntry> attributeEntries = new ArrayList<>();
         attributeEntries.add(new AttributeEntry("receivingMode", complaint.getReceivingMode()));
         attributeEntries.add(new AttributeEntry("complaintStatus", complaint.getComplaintStatus()));
@@ -150,7 +149,7 @@ public class ServiceRequest {
         attributeEntries.add(new AttributeEntry(key, name));
     }
 
-    private Map<String, String> getAdditionalValues(Complaint complaint) {
+    private Map<String, String> getAdditionalValues(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         final HashMap<String, String> map = new HashMap<>();
         map.put("receivingMode", complaint.getReceivingMode());
         map.put("complaintStatus", complaint.getComplaintStatus());
@@ -170,18 +169,18 @@ public class ServiceRequest {
         }
     }
 
-    public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
+    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
         return toDomain(authenticatedUser, false);
     }
 
-    public Complaint toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
+    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
         return toDomain(authenticatedUser, true);
     }
 
-    private Complaint toDomain(AuthenticatedUser authenticatedUser, boolean isUpdate) {
+    private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser, boolean isUpdate) {
         final ComplaintLocation complaintLocation = getComplaintLocation();
         final Complainant complainant = getComplainant();
-        return Complaint.builder()
+        return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .authenticatedUser(authenticatedUser)
             .crn(crn)
             .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode, tenantId))

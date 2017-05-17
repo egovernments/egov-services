@@ -17,7 +17,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Complaint {
+public class ServiceRequest {
     private static final String MANUAL_RECEIVING_MODE = "MANUAL";
     @NonNull
     private AuthenticatedUser authenticatedUser;

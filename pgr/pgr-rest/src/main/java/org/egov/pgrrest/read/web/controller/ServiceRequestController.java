@@ -2,9 +2,8 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.common.contract.ServiceRequest;
 import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.read.domain.model.Complaint;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
@@ -33,7 +32,7 @@ public class ServiceRequestController {
     @PostMapping(value = "/_create")
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
-        final Complaint complaint = request.toDomainForCreateRequest();
+        final ServiceRequest complaint = request.toDomainForCreateRequest();
         serviceRequestService.save(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
         return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
@@ -42,10 +41,10 @@ public class ServiceRequestController {
     @PostMapping(value = "/_update")
     @ResponseStatus(HttpStatus.OK)
     public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
-        final Complaint complaint = request.toDomainForUpdateRequest();
+        final ServiceRequest complaint = request.toDomainForUpdateRequest();
         serviceRequestService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
-        return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
+        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract.ServiceRequest(complaint)));
     }
 
     @PostMapping(value = "/_search")
@@ -95,7 +94,7 @@ public class ServiceRequestController {
             .childLocationId(childLocationId)
             .tenantId(tenantId)
             .build();
-        final List<Complaint> complaints = serviceRequestService.findAll(serviceRequestSearchCriteria);
+        final List<ServiceRequest> complaints = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(complaints);
     }
 
@@ -107,8 +106,9 @@ public class ServiceRequestController {
         serviceRequestService.updateLastAccessedTime(serviceRequestId,tenantId);
     }
 
-    private ServiceResponse createResponse(List<Complaint> complaints) {
-        final List<ServiceRequest> serviceRequests = complaints.stream().map(ServiceRequest::new)
+    private ServiceResponse createResponse(List<ServiceRequest> complaints) {
+        final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = complaints.stream().map(org
+            .egov.pgrrest.common.contract.ServiceRequest::new)
             .collect(Collectors.toList());
         return new ServiceResponse(null, serviceRequests);
     }

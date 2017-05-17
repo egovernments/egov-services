@@ -44,7 +44,7 @@ public class ReceivingCenterControllerTest {
     public void testGetReceivingCentersWhenIdIsNotProvided() throws Exception {
         String tenantId = "ap.public";
         List<ReceivingCenter> recievingCenters =getReceivingCenters();
-        String expectedContent = readResource("getServiceRequests.json");
+        String expectedContent = readResource();
         when(mockReceivingCenterService.getAllReceivingCenters(tenantId)).thenReturn(recievingCenters);
         mockMvc.perform(post("/receivingcenter/_search?tenantId=ap.public"))
             .andExpect(status().isOk())
@@ -52,7 +52,7 @@ public class ReceivingCenterControllerTest {
     		.andExpect(content().json(expectedContent));
     }
 
-    private String readResource(String string) throws Exception {
+    private String readResource() throws Exception {
     	 File file = ResourceUtils.getFile(this.getClass().getResource("/getReceivingCenters.json"));
 	        return new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 

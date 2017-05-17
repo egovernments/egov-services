@@ -89,9 +89,9 @@ public class Submission extends AbstractAuditable<String> {
 //                .valueOf(getStatus()) == org.egov.pgrrest.common.entity.enums.ComplaintStatus.COMPLETED;
 //    }
 //
-//    public org.egov.pgrrest.read.domain.model.Complaint toDomain() {
+//    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomain() {
 //        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
-//        return org.egov.pgrrest.read.domain.model.Complaint.builder()
+//        return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
 //                .complaintLocation(new ComplaintLocation(coordinates, null, null, tenantId))
 //                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
 //                .address(landmarkDetails)

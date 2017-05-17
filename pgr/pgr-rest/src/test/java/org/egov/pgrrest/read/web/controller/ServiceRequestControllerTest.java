@@ -50,8 +50,8 @@ public class ServiceRequestControllerTest {
     public void test_should_return_error_response_when_tenant_id_is_not_present_on_creating_a_complaint()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
-        Complaint invalidComplaint = getComplaintWithNoTenantId();
-        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(Complaint.class),
+        ServiceRequest invalidComplaint = getComplaintWithNoTenantId();
+        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(ServiceRequest.class),
             any(SevaRequest.class));
 
         mockMvc.perform(post("/seva/_create")
@@ -86,7 +86,7 @@ public class ServiceRequestControllerTest {
             .andExpect(content().json(resources.getFileContents("updateComplaintResponse.json")));
     }
 
-    public Complaint getComplaintWithNoTenantId() {
+    public ServiceRequest getComplaintWithNoTenantId() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(11.22d, 12.22d, null)).build();
         final Complainant complainant = Complainant.builder()
@@ -94,7 +94,7 @@ public class ServiceRequestControllerTest {
             .firstName("first name")
             .mobile("mobile number")
             .build();
-        return Complaint.builder()
+        return ServiceRequest.builder()
             .complainant(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
@@ -141,7 +141,7 @@ public class ServiceRequestControllerTest {
             .build();
         final Complainant domainComplainant = new Complainant("kumar", null, null, "mico layout", "user", "tenantId");
         final ComplaintLocation complaintLocation = new ComplaintLocation(new Coordinates(0.0, 0.0, "tenantId"), null, "34", "tenantId");
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
             .complaintType(new ComplaintType("abc", "complaintCode", "tenantId"))
@@ -178,7 +178,7 @@ public class ServiceRequestControllerTest {
             .tenantId("tenantId")
             .build();
 
-        List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
+        List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
         when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
 
         String content = new TestResourceReader().readResource("getServiceRequests.json");

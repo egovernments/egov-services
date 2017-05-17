@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.web.adapters.error;
 
-import org.egov.pgrrest.read.domain.model.Complaint;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.web.contract.Error;
 import org.egov.pgrrest.read.web.contract.ErrorField;
 import org.egov.pgrrest.read.web.contract.ErrorResponse;
@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
+public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
 
     private static final String INVALID_SEVA_REQUEST_MESSAGE = "SevaRequest is invalid";
 
@@ -65,12 +65,12 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
 	private static final String DESCRIPTION_LENGTH_MESSAGE = "Description must have minimum 10 characters";
 
     @Override
-    public ErrorResponse adapt(Complaint model) {
+    public ErrorResponse adapt(ServiceRequest model) {
         final Error error = getError(model);
         return new ErrorResponse(null, error);
     }
 
-    private Error getError(Complaint model) {
+    private Error getError(ServiceRequest model) {
         List<ErrorField> errorFields = getErrorFields(model);
         return Error.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
@@ -79,7 +79,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(Complaint model) {
+    private List<ErrorField> getErrorFields(ServiceRequest model) {
         List<ErrorField> errorFields = new ArrayList<>();
         addRawLocationValidationErrors(model, errorFields);
         addLocationIdValidationErrors(model, errorFields);
@@ -95,7 +95,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         return errorFields;
     }
 
-    private void addCRNValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addCRNValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isCrnAbsent()) {
             return;
         }
@@ -107,7 +107,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addTenantIdValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addTenantIdValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isTenantIdAbsent()) {
             return;
         }
@@ -119,7 +119,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addComplaintTypeCodeValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addComplaintTypeCodeValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isComplaintTypeAbsent()) {
             return;
         }
@@ -131,7 +131,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addDescriptionValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addDescriptionValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isDescriptionAbsent()) {
             return;
         }
@@ -143,7 +143,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addReceivingModeValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addReceivingModeValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isReceivingModeAbsent()) {
             return;
         }
@@ -155,7 +155,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addReceivingCenterValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addReceivingCenterValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.isReceivingCenterAbsent()) {
             return;
         }
@@ -167,7 +167,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addComplainantFirstNameValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addComplainantFirstNameValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!(model.isComplainantAbsent() && model.isComplainantFirstNameAbsent())) {
             return;
         }
@@ -179,7 +179,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addComplainantMobileValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addComplainantMobileValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!(model.isComplainantAbsent() && model.isComplainantPhoneAbsent())) {
             return;
         }
@@ -191,7 +191,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
 
-    private void addRawLocationValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addRawLocationValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!(model.isLocationAbsent() && model.isRawLocationAbsent())) {
             return;
         }
@@ -215,7 +215,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(crossHierarchyErrorField);
     }
 
-    private void addLocationIdValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addLocationIdValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!(model.isLocationAbsent() && model.isLocationIdAbsent())) {
             return;
         }
@@ -227,7 +227,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         errorFields.add(errorField);
     }
     
-    private void addDescriptionLengthValidationErrors(Complaint model, List<ErrorField> errorFields) {
+    private void addDescriptionLengthValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
         if (!model.descriptionLength()) {
             return;
         }

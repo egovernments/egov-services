@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
-import org.egov.pgrrest.read.domain.model.Complaint;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
@@ -33,11 +33,11 @@ public class ServiceRequestService {
         this.complaintJpaRepository = complaintJpaRepository;
     }
 
-    public List<Complaint> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+    public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         return complaintRepository.findAll(serviceRequestSearchCriteria);
     }
 
-	public void save(Complaint complaint, SevaRequest sevaRequest) {
+	public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
 		complaint.validate();
 		final String crn = sevaNumberGeneratorService.generate();
 		complaint.setCrn(crn);
@@ -63,7 +63,7 @@ public class ServiceRequestService {
         return userRepository.getUserByUserName("anonymous",tenantId); 
     }
 
-    public void update(Complaint complaint, SevaRequest sevaRequest) {
+    public void update(ServiceRequest complaint, SevaRequest sevaRequest) {
 		complaint.validate();
 		sevaRequest.update(complaint);
 		setUserIdForAnonymousUser(sevaRequest);
@@ -74,7 +74,7 @@ public class ServiceRequestService {
         complaintJpaRepository.updateLastAccessedTime(new Date(), crn, tenantId);
     }
 
-    public List<Complaint> getAllModifiedCitizenComplaints(Long userId, String tenantId) {
+    public List<ServiceRequest> getAllModifiedCitizenComplaints(Long userId, String tenantId) {
         if (userId != null) {
             return complaintRepository.getAllModifiedServiceRequestsForCitizen(userId, tenantId);
         }

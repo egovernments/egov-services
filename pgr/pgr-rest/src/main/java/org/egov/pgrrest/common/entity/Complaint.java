@@ -4,6 +4,7 @@ import lombok.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.model.ComplaintLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -116,12 +117,12 @@ public class Complaint extends AbstractAuditable<Long> {
         return crossHierarchyId == null ? null : crossHierarchyId.toString();
     }
 
-    public org.egov.pgrrest.read.domain.model.Complaint toDomain() {
+    public ServiceRequest toDomain() {
         final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
         final String locationId = getLocationId();
         final org.egov.pgrrest.read.domain.model.ComplaintType complaintType =
                 new org.egov.pgrrest.read.domain.model.ComplaintType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
-        return org.egov.pgrrest.read.domain.model.Complaint.builder()
+        return ServiceRequest.builder()
                 .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())

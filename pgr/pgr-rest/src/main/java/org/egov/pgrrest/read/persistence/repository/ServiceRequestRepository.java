@@ -2,7 +2,7 @@ package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
-import org.egov.pgrrest.read.domain.model.Complaint;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.specification.ComplaintSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class ServiceRequestRepository {
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
-	public List<Complaint> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+	public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
 		final ComplaintSpecification specification = new ComplaintSpecification(serviceRequestSearchCriteria);
 		final Sort sort = new Sort(Direction.DESC, "lastModifiedDate");
 		return this.complaintJpaRepository.findAll(specification, sort).stream()
@@ -50,7 +50,7 @@ public class ServiceRequestRepository {
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
-	public List<Complaint> getAllModifiedServiceRequestsForCitizen(Long userId, String tenantId) {
+	public List<ServiceRequest> getAllModifiedServiceRequestsForCitizen(Long userId, String tenantId) {
 		return this.complaintJpaRepository.getAllModifiedComplaintsForCitizen(userId, tenantId).stream()
 				.map(org.egov.pgrrest.common.entity.Complaint::toDomain).collect(Collectors.toList());
 	}

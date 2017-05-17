@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ComplaintTest {
+public class ServiceRequestTest {
 
     @Test
     public void testShouldNotFailValidationWhenCitizenCreatesValidComplaint() {
@@ -21,7 +21,7 @@ public class ComplaintTest {
             .mobile("mobile number")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
@@ -43,7 +43,7 @@ public class ComplaintTest {
             .mobile("mobile number")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
@@ -61,7 +61,7 @@ public class ComplaintTest {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .locationId(null)
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(Complainant.builder().build())
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
@@ -76,7 +76,7 @@ public class ComplaintTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenNeitherCrossHierarchyIdNorCoordinatesArePresentOnCreatingComplaint() {
-        Complaint complaint = getComplaintWithNoLocationData();
+        ServiceRequest complaint = getComplaintWithNoLocationData();
 
         assertTrue(complaint.isLocationAbsent());
         assertTrue(complaint.isRawLocationAbsent());
@@ -93,7 +93,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName(null)
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
@@ -113,7 +113,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName(null)
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(complainant)
             .authenticatedUser(getEmployee())
             .complaintLocation(complaintLocation)
@@ -133,7 +133,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .mobile(null)
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
@@ -154,7 +154,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .mobile(null)
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .authenticatedUser(getEmployee())
                 .complaintLocation(complaintLocation)
@@ -176,7 +176,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .complaintLocation(complaintLocation)
@@ -199,7 +199,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .authenticatedUser(getEmployee())
                 .complaintLocation(complaintLocation)
@@ -222,7 +222,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .tenantId(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
@@ -245,7 +245,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .tenantId("tenantId")
                 .description(null)
@@ -268,7 +268,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
             .complainant(complainant)
             .tenantId("tenantId")
             .description("description")
@@ -291,7 +291,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .tenantId("tenantId")
                 .description("description")
@@ -314,7 +314,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .tenantId("tenantId")
                 .description("description")
@@ -339,7 +339,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .tenantId("tenantId")
                 .description("description")
@@ -364,7 +364,7 @@ public class ComplaintTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
-        Complaint complaint = Complaint.builder()
+        ServiceRequest complaint = ServiceRequest.builder()
                 .complainant(complainant)
                 .tenantId("tenantId")
                 .description("description")
@@ -380,15 +380,15 @@ public class ComplaintTest {
     }
 
 
-    private Complaint getComplaintWithNoLocationData() {
+    private ServiceRequest getComplaintWithNoLocationData() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
                 .coordinates(new Coordinates(0d, 0d, "tenantId"))
                 .build();
         return getComplaint(complaintLocation);
     }
 
-    private Complaint getComplaint(ComplaintLocation complaintLocation) {
-        return Complaint.builder()
+    private ServiceRequest getComplaint(ComplaintLocation complaintLocation) {
+        return ServiceRequest.builder()
                 .complainant(Complainant.builder().build())
                 .authenticatedUser(getCitizen())
                 .complaintLocation(complaintLocation)

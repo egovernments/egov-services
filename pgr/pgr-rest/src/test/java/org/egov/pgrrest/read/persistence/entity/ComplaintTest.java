@@ -4,6 +4,7 @@ import org.egov.pgrrest.common.entity.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.model.ComplaintLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -41,7 +42,7 @@ public class ComplaintTest {
         entityComplaint.setLastModifiedDate(toDate(lastModifiedDateTime));
         entityComplaint.setCreatedDate(toDate(createdDateTime));
 
-        final org.egov.pgrrest.read.domain.model.Complaint domainComplaint = entityComplaint.toDomain();
+        final ServiceRequest domainComplaint = entityComplaint.toDomain();
 
         assertNotNull(domainComplaint);
         final ComplaintLocation complaintLocation = domainComplaint.getComplaintLocation();

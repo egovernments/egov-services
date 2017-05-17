@@ -199,7 +199,7 @@ public class UsageTypeController {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.USAGETYPE_NAME_UNIQUE_CODE)
                     .message(WcmsConstants.USAGETYPE_UNQ_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_NAME_FIELD_NAME)
+                    .field(WcmsConstants.USAGETYPE_NAME_UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
    } else return;

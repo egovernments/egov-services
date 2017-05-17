@@ -37,47 +37,59 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.model;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class UsageTypeGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class PipeSize {
 
-    private List<Long> id;
+    public static final String SEQ_PIPESIZE = "SEQ_EGWTR_PIPESIZE";
 
-    @Length(min=3, max=100)
-    private String name;
-
-    @Length(min=3, max=20)
-    private String code;
-
-    private Boolean active;
+    private Long id;
 
     @NotNull
+    @Length(min = 3, max = 20)
+    private String code;
+
+    @NotNull
+    private double sizeInInch;
+
+    @NotNull
+    private double sizeInMilimeter;
+
+    @NotNull
+    private Boolean active;
+
+    @JsonIgnore
+    private Long createdBy;
+
+    @JsonIgnore
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
+
+    @JsonIgnore
+    private Long lastModifiedBy;
+
+    @JsonIgnore
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
+
+    @Length(max = 250)
+    @NotNull
     private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
-
 
 }

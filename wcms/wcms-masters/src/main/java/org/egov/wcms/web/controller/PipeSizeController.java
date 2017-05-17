@@ -37,15 +37,15 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.wcms.web.controller;
 
-import org.egov.common.contract.request.*;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.ConnectionCategory;
-import org.egov.wcms.service.ConnectionCategoryService;
+import org.egov.wcms.model.PipeSize;
+import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.*;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
@@ -65,15 +65,14 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/category")
-public class ConnectionCategoryController {
+@RequestMapping("/pipesize")
+public class PipeSizeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConnectionCategoryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PipeSizeController.class);
 
-   @Autowired
-    private ConnectionCategoryService categoryService;
+    @Autowired
+    private PipeSizeService pipeSizeService;
 
     @Autowired
     private ErrorHandler errHandler;
@@ -85,51 +84,51 @@ public class ConnectionCategoryController {
     private ApplicationProperties applicationProperties;
 
 
-   @PostMapping(value = "/_create")
+    @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final ConnectionCategoryRequest categoryRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid  final PipeSizeRequest pipeSizeRequest,
                                     final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("categoryRequest::" + categoryRequest);
+        logger.info("pipeSizeRequest::" + pipeSizeRequest);
 
-        final List<ErrorResponse> errorResponses = validateCategoryRequest(categoryRequest);
+        final List<ErrorResponse> errorResponses = validatePipeSizeRequest(pipeSizeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ConnectionCategory category = categoryService.createCategory(applicationProperties.getCreateCategoryTopicName(),"category-create", categoryRequest);
-        List<ConnectionCategory> categories = new ArrayList<>();
-        categories.add(category);
-        return getSuccessResponse(categories, categoryRequest.getRequestInfo());
+        final PipeSize pipeSize = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),"pipesize-create", pipeSizeRequest);
+        List<PipeSize> pipeSizes = new ArrayList<>();
+        pipeSizes.add(pipeSize);
+        return getSuccessResponse(pipeSizes, pipeSizeRequest.getRequestInfo());
 
     }
 
     @PostMapping(value = "/_update/{code}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final ConnectionCategoryRequest categoryRequest, final BindingResult errors, @PathVariable("code") String code) {
+    public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeRequest pipeSizeRequest, final BindingResult errors, @PathVariable("code") String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("categoryRequest::" + categoryRequest);
-        categoryRequest.getCategory().setCode(code);
+        logger.info("pipeSizeRequest::" + pipeSizeRequest);
+        pipeSizeRequest.getPipeSize().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validateCategoryRequest(categoryRequest);
+        final List<ErrorResponse> errorResponses = validatePipeSizeRequest(pipeSizeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ConnectionCategory category = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),"category-update",categoryRequest);
-        List<ConnectionCategory> categories = new ArrayList<>();
-        categories.add(category);
-        return getSuccessResponse(categories, categoryRequest.getRequestInfo());
+        final PipeSize pipeSize = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),"pipesize-update",pipeSizeRequest);
+        List<PipeSize> pipeSizes = new ArrayList<>();
+        pipeSizes.add(pipeSize);
+        return getSuccessResponse(pipeSizes, pipeSizeRequest.getRequestInfo());
     }
 
 
-   @PostMapping("_search")
+    @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid CategoryGetRequest categoryGetRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid PipeSizeGetRequest pipeSizeGetRequest,
                                     BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
                                     BindingResult requestBodyBindingResult) {
         RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -145,68 +144,69 @@ public class ConnectionCategoryController {
         }
 
         // Call service
-        List<ConnectionCategory> categoryList = null;
+        List<PipeSize> pipeSizeList = null;
         try {
-            categoryList = categoryService.getCategories(categoryGetRequest);
+            pipeSizeList = pipeSizeService.getPipeSizes(pipeSizeGetRequest);
         } catch (Exception exception) {
-            logger.error("Error while processing request " + categoryGetRequest, exception);
+            logger.error("Error while processing request " + pipeSizeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponse(categoryList, requestInfo);
+        return getSuccessResponse(pipeSizeList, requestInfo);
 
     }
 
-   private List<ErrorResponse> validateCategoryRequest(final ConnectionCategoryRequest categoryRequest) {
+    private List<ErrorResponse> validatePipeSizeRequest(final PipeSizeRequest pipeSizeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(categoryRequest);
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = getError(pipeSizeRequest);
         errorResponse.setError(error);
         if(!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
+
         return errorResponses;
     }
 
 
-   private Error getError(final ConnectionCategoryRequest categoryRequest) {
-        ConnectionCategory category = categoryRequest.getCategory();
-        List<ErrorField> errorFields = getErrorFields(categoryRequest);
+    private Error getError(final PipeSizeRequest pipeSizeRequest) {
+        PipeSize pipeSize = pipeSizeRequest.getPipeSize();
+        List<ErrorField> errorFields = getErrorFields(pipeSizeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE)
+                .message(WcmsConstants.INVALID_PIPESIZE_REQUEST_MESSAGE)
                 .errorFields(errorFields)
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(final ConnectionCategoryRequest categoryRequest) {
+    private List<ErrorField> getErrorFields(final PipeSizeRequest pipeSizeRequest) {
         List<ErrorField> errorFields = new ArrayList<>();
-        addCategoryNameValidationErrors(categoryRequest, errorFields);
-        addTeanantIdValidationErrors(categoryRequest,errorFields);
-        addActiveValidationErrors(categoryRequest,errorFields);
+        addPipeSizeInmmValidationErrors(pipeSizeRequest, errorFields);
+        addTeanantIdValidationErrors(pipeSizeRequest,errorFields);
+        addActiveValidationErrors(pipeSizeRequest,errorFields);
         return errorFields;
     }
 
-    private void addCategoryNameValidationErrors(ConnectionCategoryRequest categoryRequest, List<ErrorField> errorFields) {
-        ConnectionCategory category=categoryRequest.getCategory();
-        if (category.getName() == null || category.getName().isEmpty()) {
+    private void addPipeSizeInmmValidationErrors(final PipeSizeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
+        PipeSize pipeSize=pipeSizeRequest.getPipeSize();
+        if (pipeSize.getSizeInMilimeter() == 0 ) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME)
+                    .code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
+                    .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if (!categoryService.getCategoryByNameAndCode(category.getCode(),category.getName(),category.getTenantId())) {
+        } else if (!pipeSizeService.getPipeSizeInmmAndCode(pipeSize.getCode(),pipeSize.getSizeInMilimeter(),pipeSize.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.CATEGORY_NAME_UNIQUE_CODE)
-                    .message(WcmsConstants.CATEGORY_UNQ_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_UNQ_FIELD_NAME)
+                    .code(WcmsConstants.PIPESIZE_SIZEINMM_UNIQUE_CODE)
+                    .message(WcmsConstants.PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_SIZEINMM__UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         } else return;
     }
 
-    private void addTeanantIdValidationErrors(ConnectionCategoryRequest categoryRequest, List<ErrorField> errorFields){
-        ConnectionCategory category=categoryRequest.getCategory();
-        if(category.getTenantId()==null || category.getTenantId().isEmpty()){
+    private void addTeanantIdValidationErrors(final PipeSizeRequest pipeSizeRequest, final List<ErrorField> errorFields){
+        PipeSize pipeSize=pipeSizeRequest.getPipeSize();
+        if(pipeSize.getTenantId()==null || pipeSize.getTenantId().isEmpty()){
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TEANANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TEANANTID_MANADATORY_ERROR_MESSAGE)
@@ -216,9 +216,9 @@ public class ConnectionCategoryController {
         } else return;
     }
 
-    private void addActiveValidationErrors(ConnectionCategoryRequest categoryRequest, List<ErrorField> errorFields){
-        ConnectionCategory category=categoryRequest.getCategory();
-        if(category.getActive()==null){
+    private void addActiveValidationErrors(final PipeSizeRequest pipeSizeRequest, final List<ErrorField> errorFields){
+        PipeSize pipeSize=pipeSizeRequest.getPipeSize();
+        if(pipeSize.getActive()==null){
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
@@ -242,13 +242,13 @@ public class ConnectionCategoryController {
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(List<ConnectionCategory> categoryList, RequestInfo requestInfo) {
-        ConnectionCategoryResponse categoryResponse = new ConnectionCategoryResponse();
-        categoryResponse.setCategories(categoryList);
+    private ResponseEntity<?> getSuccessResponse(final List<PipeSize> pipeSizeList, final RequestInfo requestInfo) {
+        PipeSizeResponse pipeSizeResponse = new PipeSizeResponse();
+        pipeSizeResponse.setPipeSizes(pipeSizeList);
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        categoryResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<ConnectionCategoryResponse>(categoryResponse, HttpStatus.OK);
+        pipeSizeResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<PipeSizeResponse>(pipeSizeResponse, HttpStatus.OK);
 
     }
 

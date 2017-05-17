@@ -56,31 +56,29 @@ public class BankController {
 		}
 
 		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
-
+		bankContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return bankContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public BankContractResponse update(@RequestBody @Valid BankContractRequest bankContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
-
+		ModelMapper modelMapper = new ModelMapper();
 		bankService.validate(bankContractRequest, "update", errors);
-
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		bankService.fetchRelatedContracts(bankContractRequest);
-		Bank bankFromDb = bankService.findOne(uniqueId);
-
-		BankContract bank = bankContractRequest.getBank();
-		// ignoring internally passed id if the put has id in url
-		bank.setId(uniqueId);
-		ModelMapper model = new ModelMapper();
-		model.map(bank, bankFromDb);
-		bankFromDb = bankService.update(bankFromDb);
+		bankContractRequest.getBank().setId(uniqueId);
+		bankService.push(bankContractRequest);
 		BankContractResponse bankContractResponse = new BankContractResponse();
-		bankContractResponse.setBank(bank);
+		bankContractResponse.setBanks(new ArrayList<BankContract>());
+
+		Bank bankEntity = modelMapper.map(bankContractRequest.getBank(), Bank.class);
+		BankContract resp = modelMapper.map(bankEntity, BankContract.class);
+		bankContractResponse.setBank(resp);
+
 		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
 		bankContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return bankContractResponse;

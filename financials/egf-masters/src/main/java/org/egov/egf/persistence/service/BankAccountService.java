@@ -90,6 +90,22 @@ public class BankAccountService {
 		return bankAccountContractResponse;
 	}
 
+	@Transactional
+	public BankAccountContractResponse update(HashMap<String, Object> financialContractRequestMap) {
+		final BankAccountContractRequest bankAccountContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("BankAccountUpdate"), BankAccountContractRequest.class);
+		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
+		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
+		bankAccountEntity.setVersion(bankAccountJpaRepository.findOne(bankAccountEntity.getId()).getVersion());
+		bankAccountJpaRepository.save(bankAccountEntity);
+		BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
+		bankAccountContractResponse.setBankAccount(resp);
+		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
+		return bankAccountContractResponse;
+	}
+
 	public void push(final BankAccountContractRequest bankAccountContractRequest) {
 		bankAccountQueueRepository.push(bankAccountContractRequest);
 	}

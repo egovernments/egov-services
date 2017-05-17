@@ -53,9 +53,7 @@ public class BankBranchController {
 		for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
 
 			BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
-			// bankBranchEntity = bankBranchService.create(bankBranchEntity);
 			BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
-			// bankBranchContract.setId(bankBranchEntity.getId());
 			bankBranchContractResponse.getBankBranches().add(resp);
 		}
 
@@ -69,22 +67,21 @@ public class BankBranchController {
 	public BankBranchContractResponse update(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
 
+		ModelMapper modelMapper = new ModelMapper();
 		bankBranchService.validate(bankBranchContractRequest, "update", errors);
-
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
-		BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
-
-		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
-		// ignoring internally passed id if the put has id in url
-		bankBranch.setId(uniqueId);
-		ModelMapper model = new ModelMapper();
-		model.map(bankBranch, bankBranchFromDb);
-		bankBranchFromDb = bankBranchService.update(bankBranchFromDb);
+		bankBranchContractRequest.getBankBranch().setId(uniqueId);
+		bankBranchService.push(bankBranchContractRequest);
 		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
-		bankBranchContractResponse.setBankBranch(bankBranch);
+		bankBranchContractResponse.setBankBranch(new BankBranchContract());
+
+		BankBranch bankBranchEntity = new BankBranch(bankBranchContractRequest.getBankBranch());
+		BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
+		bankBranchContractResponse.setBankBranch(resp);
+
 		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
 		bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return bankBranchContractResponse;

@@ -48,8 +48,14 @@ public class FinancialMastersListener {
 
 	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
 	public void process(HashMap<String, Object> financialContractRequestMap) {
+
 		if (financialContractRequestMap.get("BankCreate") != null) {
 			BankContractResponse bankContractResponse = bankService.create(financialContractRequestMap);
+			financialProducer.sendMessage(completedTopic, bankCompletedKey, bankContractResponse);
+		}
+
+		if (financialContractRequestMap.get("BankUpdate") != null) {
+			BankContractResponse bankContractResponse = bankService.update(financialContractRequestMap);
 			financialProducer.sendMessage(completedTopic, bankCompletedKey, bankContractResponse);
 		}
 
@@ -59,9 +65,21 @@ public class FinancialMastersListener {
 			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponse);
 		}
 
+		if (financialContractRequestMap.get("BankBranchUpdate") != null) {
+			BankBranchContractResponse bankBranchContractResponse = bankBranchService
+					.update(financialContractRequestMap);
+			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponse);
+		}
+
 		if (financialContractRequestMap.get("BankAccountCreate") != null) {
 			BankAccountContractResponse bankAccountContractResponse = bankAccountService
 					.create(financialContractRequestMap);
+			financialProducer.sendMessage(completedTopic, bankAccountCompletedKey, bankAccountContractResponse);
+		}
+
+		if (financialContractRequestMap.get("BankAccountUpdate") != null) {
+			BankAccountContractResponse bankAccountContractResponse = bankAccountService
+					.update(financialContractRequestMap);
 			financialProducer.sendMessage(completedTopic, bankAccountCompletedKey, bankAccountContractResponse);
 		}
 

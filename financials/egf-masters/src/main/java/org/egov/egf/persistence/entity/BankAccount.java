@@ -120,6 +120,7 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
 	}
 
 	public BankAccount(BankAccountContract contract) {
+		this.setId(contract.getId());
 		this.setBankBranch(contract.getBankBranch() != null ? contract.getBankBranch().getId() : null);
 		this.setChartOfAccount(contract.getChartOfAccount() != null ? contract.getChartOfAccount().getId() : null);
 		this.setFund(contract.getFund() != null ? contract.getFund().getId() : null);

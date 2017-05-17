@@ -52,14 +52,12 @@ public class BankAccountController {
 		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
 
 			BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
-			// bankAccountEntity = bankAccountService.create(bankAccountEntity);
 			BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-			// bankAccountContract.setId(bankAccountEntity.getId());
 			bankAccountContractResponse.getBankAccounts().add(resp);
 		}
 
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
-
+		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return bankAccountContractResponse;
 	}
 
@@ -68,25 +66,25 @@ public class BankAccountController {
 	public BankAccountContractResponse update(@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
 
+		ModelMapper modelMapper = new ModelMapper();
 		bankAccountService.validate(bankAccountContractRequest, "update", errors);
-
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
-		BankAccount bankAccountFromDb = bankAccountService.findOne(uniqueId);
-
-		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
-		// ignoring internally passed id if the put has id in url
-		bankAccount.setId(uniqueId);
-		ModelMapper model = new ModelMapper();
-		model.map(bankAccount, bankAccountFromDb);
-		bankAccountFromDb = bankAccountService.update(bankAccountFromDb);
+		bankAccountContractRequest.getBankAccount().setId(uniqueId);
+		bankAccountService.push(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
-		bankAccountContractResponse.setBankAccount(bankAccount);
+		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
+		BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
+		BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
+		bankAccountContractResponse.setBankAccount(resp);
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		
+
 		return bankAccountContractResponse;
+
 	}
 
 	@GetMapping(value = "/{uniqueId}")

@@ -63,7 +63,7 @@ public class SevaRequestErrorAdapterTest {
 
     @Test
     public void testShouldSetErrorWhenFirstNameIsNotPresent() {
-        when(complaint.isComplainantAbsent()).thenReturn(true);
+        when(complaint.isRequesterAbsent()).thenReturn(true);
         when(complaint.isComplainantFirstNameAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -78,7 +78,7 @@ public class SevaRequestErrorAdapterTest {
 
     @Test
     public void testShouldSetErrorWhenMobileNumberIsNotPresent() {
-        when(complaint.isComplainantAbsent()).thenReturn(true);
+        when(complaint.isRequesterAbsent()).thenReturn(true);
         when(complaint.isComplainantPhoneAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);

@@ -117,10 +117,10 @@ public class ServiceRequest {
         crossHierarchyId = complaint.getComplaintLocation().getCrossHierarchyId();
         latitude = complaint.getComplaintLocation().getCoordinates().getLatitude();
         longitude = complaint.getComplaintLocation().getCoordinates().getLongitude();
-        firstName = complaint.getComplainant().getFirstName();
+        firstName = complaint.getRequester().getFirstName();
         lastName = null;
-        phone = complaint.getComplainant().getMobile();
-        email = complaint.getComplainant().getEmail();
+        phone = complaint.getRequester().getMobile();
+        email = complaint.getRequester().getEmail();
         values = getAdditionalValues(complaint);
         if(CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
             attribValues = getAttributeValues(complaint);
@@ -196,12 +196,12 @@ public class ServiceRequest {
             .address(address)
             .mediaUrls(mediaUrls)
             .complaintLocation(complaintLocation)
-            .complainant(complainant)
+            .requester(complainant)
             .tenantId(tenantId)
             .description(description)
             .receivingMode(getReceivingMode())
             .receivingCenter(getReceivingCenter())
-            .modifyComplaint(isUpdate)
+            .modifyServiceRequest(isUpdate)
             .build();
     }
 

@@ -58,7 +58,7 @@ public class ComplaintTest {
         assertEquals(Collections.emptyList(), domainComplaint.getMediaUrls());
         assertEquals("crn", domainComplaint.getCrn());
         assertEquals("complaint description", domainComplaint.getDescription());
-        final org.egov.pgrrest.common.model.Complainant domainComplainant = domainComplaint.getComplainant();
+        final org.egov.pgrrest.common.model.Complainant domainComplainant = domainComplaint.getRequester();
         assertNotNull(domainComplainant);
         assertEquals("firstName", domainComplainant.getFirstName());
         assertEquals("mobileNumber", domainComplainant.getMobile());

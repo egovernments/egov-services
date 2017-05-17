@@ -78,7 +78,7 @@ public class Submission extends AbstractAuditable<String> {
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .address(landmarkDetails)
             .description(details)
-            .complainant(getComplainant())
+            .requester(getComplainant())
             .complaintType(getDomainComplaintType())
             .crn(id)
             .createdDate(getCreatedDate())

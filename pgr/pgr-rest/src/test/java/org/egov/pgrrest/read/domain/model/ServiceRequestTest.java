@@ -22,7 +22,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
             .tenantId("tenantId")
@@ -44,7 +44,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
             .tenantId("tenantId")
@@ -62,10 +62,10 @@ public class ServiceRequestTest {
             .locationId(null)
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(Complainant.builder().build())
+            .requester(Complainant.builder().build())
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
-            .modifyComplaint(true)
+            .modifyServiceRequest(true)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
 
@@ -94,12 +94,12 @@ public class ServiceRequestTest {
             .firstName(null)
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
-        assertTrue(complaint.isComplainantAbsent());
+        assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
     }
 
@@ -114,12 +114,12 @@ public class ServiceRequestTest {
             .firstName(null)
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(getEmployee())
             .complaintLocation(complaintLocation)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
-        assertTrue(complaint.isComplainantAbsent());
+        assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
     }
 
@@ -134,13 +134,13 @@ public class ServiceRequestTest {
             .mobile(null)
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
 
-        assertTrue(complaint.isComplainantAbsent());
+        assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
     }
 
@@ -155,13 +155,13 @@ public class ServiceRequestTest {
             .mobile(null)
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .authenticatedUser(getEmployee())
                 .complaintLocation(complaintLocation)
                 .complaintType(new ComplaintType(null, null, "tenantId"))
                 .build();
 
-        assertTrue(complaint.isComplainantAbsent());
+        assertTrue(complaint.isRequesterAbsent());
         assertTrue(complaint.isComplainantPhoneAbsent());
         complaint.validate();
     }
@@ -177,7 +177,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .complaintLocation(complaintLocation)
                 .tenantId("tenantId")
@@ -185,7 +185,7 @@ public class ServiceRequestTest {
                 .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
                 .build();
 
-        assertFalse(complaint.isComplainantAbsent());
+        assertFalse(complaint.isRequesterAbsent());
         complaint.validate();
     }
 
@@ -200,7 +200,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .authenticatedUser(getEmployee())
                 .complaintLocation(complaintLocation)
                 .tenantId("tenantId")
@@ -223,7 +223,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .tenantId(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .complaintLocation(complaintLocation)
@@ -246,7 +246,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .tenantId("tenantId")
                 .description(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
@@ -269,7 +269,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .tenantId("tenantId")
             .description("description")
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
@@ -292,7 +292,7 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .tenantId("tenantId")
                 .description("description")
                 .complaintType(new ComplaintType("type", null, "tenantId"))
@@ -315,12 +315,12 @@ public class ServiceRequestTest {
             .firstName("first name")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
+                .requester(complainant)
                 .tenantId("tenantId")
                 .description("description")
                 .complaintType(new ComplaintType("type", "complaintTypeCode", "tenantId"))
                 .crn(null)
-                .modifyComplaint(true)
+                .modifyServiceRequest(true)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .complaintLocation(complaintLocation)
                 .build();
@@ -328,57 +328,6 @@ public class ServiceRequestTest {
         assertTrue(complaint.isCrnAbsent());
         complaint.validate();
     }
-
-    @Test(expected = InvalidComplaintException.class)
-    public void testShouldFailValidationWhenReceivingModeIsNotPresentWhenEmployeeCreatesComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
-                .build();
-        final Complainant complainant = Complainant.builder()
-            .mobile("mobile number")
-            .email("foo@bar.com")
-            .firstName("first name")
-            .build();
-        ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
-                .tenantId("tenantId")
-                .description("description")
-                .complaintType(new ComplaintType("type", "complaintTypeCode", "tenantId"))
-                .receivingCenter(null)
-                .receivingMode(null)
-                .authenticatedUser(getEmployee())
-                .complaintLocation(complaintLocation)
-                .build();
-
-        assertTrue(complaint.isReceivingModeAbsent());
-        complaint.validate();
-    }
-
-    @Test(expected = InvalidComplaintException.class)
-    public void testShouldFailValidationWhenReceivingCenterIsNotPresentWhenEmployeeCreatesComplaintWithManualReceivingMode() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
-                .build();
-        final Complainant complainant = Complainant.builder()
-            .mobile("mobile number")
-            .email("foo@bar.com")
-            .firstName("first name")
-            .build();
-        ServiceRequest complaint = ServiceRequest.builder()
-                .complainant(complainant)
-                .tenantId("tenantId")
-                .description("description")
-                .complaintType(new ComplaintType("type", "complaintTypeCode", "tenantId"))
-                .receivingCenter(null)
-                .receivingMode("MANUAL")
-                .authenticatedUser(getEmployee())
-                .complaintLocation(complaintLocation)
-                .build();
-
-        assertTrue(complaint.isReceivingCenterAbsent());
-        complaint.validate();
-    }
-
 
     private ServiceRequest getComplaintWithNoLocationData() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
@@ -389,7 +338,7 @@ public class ServiceRequestTest {
 
     private ServiceRequest getComplaint(ComplaintLocation complaintLocation) {
         return ServiceRequest.builder()
-                .complainant(Complainant.builder().build())
+                .requester(Complainant.builder().build())
                 .authenticatedUser(getCitizen())
                 .complaintLocation(complaintLocation)
                 .tenantId("tenantId")

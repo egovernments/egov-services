@@ -24,7 +24,7 @@ public class ServiceRequest {
     @NonNull
     private ComplaintLocation complaintLocation;
     @NonNull
-    private Complainant complainant;
+    private Complainant requester;
     private String crn;
     @NonNull
     private ComplaintType complaintType;
@@ -37,7 +37,7 @@ public class ServiceRequest {
     private Date lastModifiedDate;
     private Date escalationDate;
     private boolean closed;
-    private boolean modifyComplaint;
+    private boolean modifyServiceRequest;
     private String receivingMode;
     private String receivingCenter;
     private Long department;
@@ -48,20 +48,20 @@ public class ServiceRequest {
     private String citizenFeedback;
     private List<AttributeEntry> attributeEntries;
 
-    public boolean isComplainantAbsent() {
-        return complainant.isAbsent();
+    public boolean isRequesterAbsent() {
+        return requester.isAbsent();
     }
 
     public boolean isComplainantPhoneAbsent() {
-        return complainant.isMobileAbsent();
+        return requester.isMobileAbsent();
     }
 
     public boolean isComplainantFirstNameAbsent() {
-        return complainant.isFirstNameAbsent();
+        return requester.isFirstNameAbsent();
     }
 
     public boolean isLocationAbsent() {
-        if (isModifyComplaint()) {
+        if (isModifyServiceRequest()) {
             return complaintLocation.isLocationIdAbsent();
         }
         return complaintLocation.isRawLocationAbsent();
@@ -76,14 +76,11 @@ public class ServiceRequest {
     }
 
     public void validate() {
-        if (isLocationAbsent()
-            || isComplainantAbsent()
+        if (isRequesterAbsent()
             || isTenantIdAbsent()
             || isComplaintTypeAbsent()
             || isDescriptionAbsent()
             || isCrnAbsent()
-            || isReceivingCenterAbsent()
-            || isReceivingModeAbsent()
             || descriptionLength()) {
             throw new InvalidComplaintException(this);
         }
@@ -102,7 +99,7 @@ public class ServiceRequest {
     }
 
     public boolean isCrnAbsent() {
-        return isModifyComplaint() && isEmpty(crn);
+        return isModifyServiceRequest() && isEmpty(crn);
     }
 
     public void setCrn(String crn) {

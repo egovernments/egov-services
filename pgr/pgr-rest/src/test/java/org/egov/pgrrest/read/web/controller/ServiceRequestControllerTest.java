@@ -95,7 +95,7 @@ public class ServiceRequestControllerTest {
             .mobile("mobile number")
             .build();
         return ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
             .tenantId(null)
@@ -148,7 +148,7 @@ public class ServiceRequestControllerTest {
             .address(address)
             .mediaUrls(mediaUrls)
             .complaintLocation(complaintLocation)
-            .complainant(domainComplainant)
+            .requester(domainComplainant)
             .tenantId(jurisdictionId)
             .description(description)
             .state(stateId)

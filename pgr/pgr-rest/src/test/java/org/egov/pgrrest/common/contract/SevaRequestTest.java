@@ -31,7 +31,7 @@ public class SevaRequestTest {
                 .crossHierarchyId("id").build();
 
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder().tenantId(TENANT_ID).authenticatedUser(user)
-                .complainant(Complainant.builder().build()).crn(CRN).complaintLocation(complaintLocation)
+                .requester(Complainant.builder().build()).crn(CRN).complaintLocation(complaintLocation)
                 .complaintType(new ComplaintType(null, null, TENANT_ID)).build();
     }
 

@@ -168,7 +168,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
     }
 
     private void addComplainantFirstNameValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!(model.isComplainantAbsent() && model.isComplainantFirstNameAbsent())) {
+        if (!(model.isRequesterAbsent() && model.isComplainantFirstNameAbsent())) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
@@ -180,7 +180,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
     }
 
     private void addComplainantMobileValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!(model.isComplainantAbsent() && model.isComplainantPhoneAbsent())) {
+        if (!(model.isRequesterAbsent() && model.isComplainantPhoneAbsent())) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()

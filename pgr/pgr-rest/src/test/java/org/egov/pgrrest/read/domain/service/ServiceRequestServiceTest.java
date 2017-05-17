@@ -203,7 +203,7 @@ public class ServiceRequestServiceTest {
             .mobile("mobile number")
             .build();
         return ServiceRequest.builder()
-            .complainant(complainant)
+            .requester(complainant)
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
             .tenantId(TENANT_ID)

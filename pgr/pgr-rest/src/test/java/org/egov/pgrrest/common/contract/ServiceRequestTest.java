@@ -251,7 +251,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(complainantUserId, complaint.getComplainant().getUserId());
+        assertEquals(complainantUserId, complaint.getRequester().getUserId());
     }
 
     @Test
@@ -265,7 +265,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals("userId", complaint.getComplainant().getUserId());
+        assertEquals("userId", complaint.getRequester().getUserId());
     }
 
     @Test
@@ -278,7 +278,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(firstName, complaint.getComplainant().getFirstName());
+        assertEquals(firstName, complaint.getRequester().getFirstName());
     }
 
     @Test
@@ -291,7 +291,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(email, complaint.getComplainant().getEmail());
+        assertEquals(email, complaint.getRequester().getEmail());
     }
 
     @Test
@@ -304,7 +304,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(mobileNumber, complaint.getComplainant().getMobile());
+        assertEquals(mobileNumber, complaint.getRequester().getMobile());
     }
 
     @Test
@@ -317,7 +317,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals("address", complaint.getComplainant().getAddress());
+        assertEquals("address", complaint.getRequester().getAddress());
     }
 
     @Test
@@ -330,7 +330,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals("address", complaint.getComplainant().getAddress());
+        assertEquals("address", complaint.getRequester().getAddress());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertFalse(complaint.isModifyComplaint());
+        assertFalse(complaint.isModifyServiceRequest());
     }
 
     @Test
@@ -369,7 +369,7 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForUpdateRequest(getAuthenticatedUser());
 
-        assertTrue(complaint.isModifyComplaint());
+        assertTrue(complaint.isModifyServiceRequest());
     }
 
     @Test
@@ -384,7 +384,7 @@ public class ServiceRequestTest {
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintType(new ComplaintType("name", "code", "tenantId"))
-            .complainant(complainant)
+            .requester(complainant)
             .complaintLocation(complaintLocation)
             .receivingMode("receivingModeName")
             .complaintStatus("complaintStatusName")
@@ -397,7 +397,8 @@ public class ServiceRequestTest {
             .citizenFeedback("citizenFeedback")
             .build();
 
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
+        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest =
+            new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
 
         assertNotNull(serviceRequest);
         final List<AttributeEntry> attributeEntries = serviceRequest.getAttribValues();
@@ -433,7 +434,7 @@ public class ServiceRequestTest {
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintType(new ComplaintType("name", "code", "tenantId"))
-            .complainant(complainant)
+            .requester(complainant)
             .complaintLocation(complaintLocation)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
@@ -472,7 +473,7 @@ public class ServiceRequestTest {
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintType(new ComplaintType("name", "code", "tenantId"))
-            .complainant(complainant)
+            .requester(complainant)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
             .complaintLocation(complaintLocation)
@@ -498,13 +499,14 @@ public class ServiceRequestTest {
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintType(new ComplaintType("name", "code", "tenantId"))
-            .complainant(complainant)
+            .requester(complainant)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
             .complaintLocation(complaintLocation)
             .build();
 
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
+        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest =
+            new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
 
         final List<AttributeEntry> attributeEntries = serviceRequest.getAttribValues();
         assertEquals(2, attributeEntries.size());

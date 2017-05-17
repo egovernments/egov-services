@@ -126,7 +126,7 @@ public class Complaint extends AbstractAuditable<Long> {
                 .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complainant(complainant.toDomain())
+                .requester(complainant.toDomain())
                 .address(landmarkDetails)
                 .description(details)
                 .crn(crn)

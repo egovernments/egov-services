@@ -74,13 +74,13 @@ public class PositionHierarchyQueryBuilder {
 			+ " tpDesig.description AS tpDesig_description, tpDesig.chartOfaccounts AS tpDesig_chartOfAccounts,"
 			+ " tpDesig.active AS tpDesig_active"
 			+ " FROM egeis_positionHierarchy ph"
-			+ " JOIN egeis_objectType ot ON ph.objectTypeId = ot.id"
-			+ " JOIN egeis_position fp ON ph.fromPositionId = fp.id"
-			+ " JOIN egeis_departmentDesignation fpDepDes ON fp.deptDesigId = fpDepDes.id"
-			+ " JOIN egeis_designation fpDesig ON fpDepDes.designationid = fpDesig.id"
-			+ " JOIN egeis_position tp ON ph.toPositionId = tp.id"
-			+ " JOIN egeis_departmentDesignation tpDepDes ON tp.deptDesigId = tpDepDes.id"
-			+ " JOIN egeis_designation tpDesig ON tpDepDes.designationid = tpDesig.id";
+			+ " JOIN egeis_objectType ot ON ph.objectTypeId = ot.id AND ot.tenantId = ph.tenantId"
+			+ " JOIN egeis_position fp ON ph.fromPositionId = fp.id AND fp.tenantId = ph.tenantId"
+			+ " JOIN egeis_departmentDesignation fpDepDes ON fp.deptDesigId = fpDepDes.id AND fpDepDes.tenantId = ph.tenantId"
+			+ " JOIN egeis_designation fpDesig ON fpDepDes.designationid = fpDesig.id AND fpDesig.tenantId = ph.tenantId"
+			+ " JOIN egeis_position tp ON ph.toPositionId = tp.id AND tp.tenantId = ph.tenantId"
+			+ " JOIN egeis_departmentDesignation tpDepDes ON tp.deptDesigId = tpDepDes.id AND tpDepDes.tenantId = ph.tenantId"
+			+ " JOIN egeis_designation tpDesig ON tpDepDes.designationid = tpDesig.id AND tpDesig.tenantId = ph.tenantId";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(PositionHierarchyGetRequest positionHierarchyGetRequest, List preparedStatementValues) {
@@ -111,27 +111,6 @@ public class PositionHierarchyQueryBuilder {
 		if (positionHierarchyGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" ph.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ot.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" fp.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" fpDepDes.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" fpDesig.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" tp.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" tpDepDes.tenantId = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" tpDesig.tenantId = ?");
 			preparedStatementValues.add(positionHierarchyGetRequest.getTenantId());
 		}
 

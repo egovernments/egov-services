@@ -4,6 +4,7 @@ import lombok.*;
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.model.ComplaintLocation;
+import org.egov.pgrrest.read.domain.model.ComplaintType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
@@ -67,6 +68,9 @@ public class Submission extends AbstractAuditable<String> {
     @Transient
     private List<SubmissionAttribute> attributeValues;
 
+    @Transient
+    private ServiceType serviceType;
+
     public ServiceRequest toDomain() {
         final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
         return ServiceRequest.builder()
@@ -75,6 +79,7 @@ public class Submission extends AbstractAuditable<String> {
             .address(landmarkDetails)
             .description(details)
             .complainant(getComplainant())
+            .complaintType(getDomainComplaintType())
             .crn(id)
             .createdDate(getCreatedDate())
             .lastModifiedDate(getLastModifiedDate())
@@ -87,7 +92,13 @@ public class Submission extends AbstractAuditable<String> {
             .tenantId(tenantId)
             .complaintStatus(status)
             .attributeEntries(getAttributeEntries())
-                .build();
+            .build();
+    }
+
+    private ComplaintType getDomainComplaintType() {
+        return new ComplaintType(this.serviceType.getName(),
+            this.serviceType.getCode(),
+            this.serviceType.getTenantId());
     }
 
     private org.egov.pgrrest.common.model.Complainant getComplainant() {

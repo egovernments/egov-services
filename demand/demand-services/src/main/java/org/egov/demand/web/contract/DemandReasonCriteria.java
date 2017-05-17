@@ -4,15 +4,16 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+
 public class DemandReasonCriteria {
 	private String moduleName;
 	private String taxCategory;
+	private String taxReason;
 	private String taxPeriod;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date fromDate;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date toDate;
-	private String installmentType;
 	private String tenantId;
 
 	public String getModuleName() {
@@ -37,6 +38,14 @@ public class DemandReasonCriteria {
 
 	public void setTaxPeriod(String taxPeriod) {
 		this.taxPeriod = taxPeriod;
+	}
+
+	public String getTaxReason() {
+		return taxReason;
+	}
+
+	public void setTaxReason(String taxReason) {
+		this.taxReason = taxReason;
 	}
 
 	public String getTenantId() {

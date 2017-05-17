@@ -2,6 +2,7 @@ package org.egov.lams.repository.helper;
 
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ public class DemandHelper {
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
 		urlParams.append("&tenantId=" + agreement.getTenantId());
+		if (agreement.getSource().equals(Source.DATA_ENTRY))
+			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonName());
 		return urlParams.toString();
 	}
 }

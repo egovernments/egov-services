@@ -13,7 +13,8 @@ info:
   # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
   # Definition must start with Upper case followed by camel case.
   # Every model will have tenantId. Validate tenantId on create.
-  #Parameter name must start with small case followed by camel case.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
   ######################################################
   
   title: Water Charges Management-Master APIs

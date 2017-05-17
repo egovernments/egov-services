@@ -74,6 +74,7 @@ public class Submission extends AbstractAuditable<String> {
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .address(landmarkDetails)
             .description(details)
+            .complainant(getComplainant())
             .crn(id)
             .createdDate(getCreatedDate())
             .lastModifiedDate(getLastModifiedDate())
@@ -87,6 +88,16 @@ public class Submission extends AbstractAuditable<String> {
             .complaintStatus(status)
             .attributeEntries(getAttributeEntries())
                 .build();
+    }
+
+    private org.egov.pgrrest.common.model.Complainant getComplainant() {
+        return org.egov.pgrrest.common.model.Complainant.builder()
+            .firstName(name)
+            .mobile(mobile)
+            .email(email)
+            .address(requesterAddress)
+            .tenantId(tenantId)
+            .build();
     }
 
     private boolean isCompleted() {

@@ -929,7 +929,7 @@ class CreateAsset extends React.Component {
         }
     };
 
-    const renderRadio = function(list, name, isMandatory) {
+    /*const renderRadio = function(list, name, isMandatory) {
         if(list && list.length) {
             return list.map((item, ind) => {
                 return (
@@ -952,7 +952,7 @@ class CreateAsset extends React.Component {
             })
         }
 
-    }
+    }*/
 
     const renderOption = function(list, assetCatBool) {
         if(list) {
@@ -1079,7 +1079,7 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <input style={{"margin-bottom": 0}} name={item.name} type="text" maxLength= "200"
-                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
         );
       } else {
         var type = getUrlVars()["type"];
@@ -1100,7 +1100,7 @@ class CreateAsset extends React.Component {
               </div>
               <div className="col-sm-6">
                 <input name={item.name} type="text" maxLength= "200"
-                  defaultValue={_values || item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                  defaultValue={_values || item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
               </div>
             </div>
           </div>
@@ -1112,7 +1112,7 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <input  className="custom-date-picker" name={item.name} type="text"
-            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
         )
       } else {
         var type = getUrlVars()["type"];
@@ -1132,7 +1132,7 @@ class CreateAsset extends React.Component {
                       </div>
                       <div className="col-sm-6">
                           <input  className="custom-date-picker" name={item.name} type="text"
-                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
                       </div>
                   </div>
               </div>)
@@ -1143,7 +1143,7 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <select name={item.name} multiple={multi ? true : false}
-                  onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly}>
+                  onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}>
                   <option value="">Select</option>
                   {item.values ? renderOption(item.values.split(',')) : ""}
           </select>
@@ -1166,7 +1166,7 @@ class CreateAsset extends React.Component {
               </div>
               <div className="col-sm-6">
                 <select name={item.name} multiple={multi ? true : false}
-                  defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly}>
+                  defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}>
                   <option value="">Select</option>
                   {item.values ? renderOption(item.values.split(',')) : ""}
                 </select>
@@ -1210,7 +1210,7 @@ class CreateAsset extends React.Component {
     const showFile = function(item, index, ifTable) {
       if(ifTable) {
         return (
-          <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly} multiple/>
+          <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1} multiple/>
         )
       } else {
         return (<div className="col-sm-6" key={index}>
@@ -1219,7 +1219,7 @@ class CreateAsset extends React.Component {
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "File", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
+                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "File", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1} multiple/>
                     </div>
                 </div>
             </div>)
@@ -1249,6 +1249,7 @@ class CreateAsset extends React.Component {
               <td style={{"padding-top": "12px"}}>{len ? (len+ind+ ( tblSet.removeCustom ? 0 : 1)) : (ind+( tblSet.removeCustom ? 1 : 2))}</td>
               {item.columns.map((itemOne, index) => {
               itemOne.parent = item.name;
+              itemOne.isActive = item.isActive;
               return (
                 <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
@@ -1285,6 +1286,7 @@ class CreateAsset extends React.Component {
                         var newItem = Object.assign({}, item.columns[i]);
                         newItem.values = _itm.value;
                         newItem.parent = name;
+                        newItem.isActive = item.isActive;
                         return (
                           <td>{checkFields(newItem, ind, true)}</td>
                         );
@@ -1344,7 +1346,7 @@ class CreateAsset extends React.Component {
              <div className="form-section row">
                 <div className="row">
                    <div className="col-md-8">
-                      <h3 className="categoryType">{item.name}</h3>
+                      <h3 className="categoryType">{item.name} {showStart(item.isMandatory)}</h3>
                    </div>
                    <div className="col-md-4 text-right">
 
@@ -1370,7 +1372,7 @@ class CreateAsset extends React.Component {
                 </div>
              </div>
              <div className="row text-right">
-                <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
+                <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view" || [true, "true"].indexOf(item.isActive) == -1}>Add</button>
              </div>
           </div>
         )

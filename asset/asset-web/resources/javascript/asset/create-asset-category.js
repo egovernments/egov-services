@@ -787,7 +787,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Active</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isActive" disabled={readonly}  value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
+                      <input type="checkbox" name="isActive" value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
                     </div>
                   </div>
                 </div>
@@ -800,7 +800,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Mandatory</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isMandatory" disabled={readonly}  value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
+                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                     </div>
                   </div>
                 </div>

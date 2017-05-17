@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.model;
 
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
 import org.junit.Test;
@@ -13,10 +13,10 @@ public class ServiceRequestTest {
 
     @Test
     public void testShouldNotFailValidationWhenCitizenCreatesValidComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(12.22d, 11.22d, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .userId("userId")
             .mobile("mobile number")
             .firstName("first name")
@@ -24,7 +24,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .tenantId("tenantId")
             .description("description")
             .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
@@ -35,10 +35,10 @@ public class ServiceRequestTest {
 
     @Test
     public void testShouldNotFailValidationWhenCitizenUpdatesComplaintWithAllValidAttributes() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId("locationId")
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .userId("userId")
             .mobile("mobile number")
             .firstName("first name")
@@ -46,7 +46,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .tenantId("tenantId")
             .description("description")
             .crn("crn")
@@ -58,13 +58,13 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenLocationIdIsNotProvidedOnUpdatingComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId(null)
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
-            .requester(Complainant.builder().build())
+            .requester(Requester.builder().build())
             .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .modifyServiceRequest(true)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
@@ -85,10 +85,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenFirstNameIsNotPresentWhenCreatingAnAnonymousComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName(null)
@@ -96,7 +96,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
         assertTrue(complaint.isRequesterAbsent());
@@ -105,10 +105,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenFirstNameIsNotPresentWhenEmployeeCreatesComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName(null)
@@ -116,7 +116,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getEmployee())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
         assertTrue(complaint.isRequesterAbsent());
@@ -125,10 +125,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenCreatingAnAnonymousComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .firstName("first name")
             .email("foo@bar.com")
             .mobile(null)
@@ -136,7 +136,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
 
@@ -146,10 +146,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenEmployeeCreatesComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .firstName("first name")
             .email("foo@bar.com")
             .mobile(null)
@@ -157,7 +157,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .authenticatedUser(getEmployee())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .complaintType(new ComplaintType(null, null, "tenantId"))
                 .build();
 
@@ -168,10 +168,10 @@ public class ServiceRequestTest {
 
     @Test
     public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentWhenCreatingAnAnonymousComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -179,7 +179,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
                 .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
@@ -191,10 +191,10 @@ public class ServiceRequestTest {
 
     @Test
     public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentOnComplaintCreationByEmployee() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -202,7 +202,7 @@ public class ServiceRequestTest {
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .authenticatedUser(getEmployee())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
                 .receivingMode("receivingMode")
@@ -214,10 +214,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenTenantIdIsAbsentWhenCreatingComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -226,7 +226,7 @@ public class ServiceRequestTest {
                 .requester(complainant)
                 .tenantId(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .description("description")
                 .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
                 .build();
@@ -237,10 +237,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenDescriptionIsAbsentWhenCreatingComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -250,7 +250,7 @@ public class ServiceRequestTest {
                 .tenantId("tenantId")
                 .description(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .complaintType(new ComplaintType(null, null, "tenantId"))
                 .build();
 
@@ -260,10 +260,10 @@ public class ServiceRequestTest {
     
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenDescriptionLengthIsLessWhenCreatingComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2,"ap.public"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -273,7 +273,7 @@ public class ServiceRequestTest {
             .tenantId("tenantId")
             .description("description")
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .complaintType(new ComplaintType(null, null, null)) 
             .build();
 
@@ -283,10 +283,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenComplaintTypeCodeIsAbsentWhenCreatingComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -297,7 +297,7 @@ public class ServiceRequestTest {
                 .description("description")
                 .complaintType(new ComplaintType("type", null, "tenantId"))
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .build();
 
         assertTrue(complaint.isComplaintTypeAbsent());
@@ -306,10 +306,10 @@ public class ServiceRequestTest {
 
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenCrnIsAbsentWhenUpdatingComplaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
                 .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
@@ -322,7 +322,7 @@ public class ServiceRequestTest {
                 .crn(null)
                 .modifyServiceRequest(true)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .build();
 
         assertTrue(complaint.isCrnAbsent());
@@ -330,17 +330,17 @@ public class ServiceRequestTest {
     }
 
     private ServiceRequest getComplaintWithNoLocationData() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
                 .coordinates(new Coordinates(0d, 0d, "tenantId"))
                 .build();
-        return getComplaint(complaintLocation);
+        return getComplaint(serviceRequestLocation);
     }
 
-    private ServiceRequest getComplaint(ComplaintLocation complaintLocation) {
+    private ServiceRequest getComplaint(ServiceRequestLocation serviceRequestLocation) {
         return ServiceRequest.builder()
-                .requester(Complainant.builder().build())
+                .requester(Requester.builder().build())
                 .authenticatedUser(getCitizen())
-                .complaintLocation(complaintLocation)
+                .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
                 .complaintType(new ComplaintType(null, "complaintTypeCode", "tenantId"))

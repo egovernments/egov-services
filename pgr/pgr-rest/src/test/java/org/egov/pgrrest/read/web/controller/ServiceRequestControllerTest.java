@@ -5,7 +5,7 @@ import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.TestResourceReader;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
@@ -87,9 +87,9 @@ public class ServiceRequestControllerTest {
     }
 
     public ServiceRequest getComplaintWithNoTenantId() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(11.22d, 12.22d, null)).build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .userId("userId")
             .firstName("first name")
             .mobile("mobile number")
@@ -97,7 +97,7 @@ public class ServiceRequestControllerTest {
         return ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .tenantId(null)
             .description("description")
             .complaintType(new ComplaintType(null, "complaintCode", null))
@@ -139,15 +139,15 @@ public class ServiceRequestControllerTest {
             .type(UserType.CITIZEN)
             .tenantId("tenantId")
             .build();
-        final Complainant domainComplainant = new Complainant("kumar", null, null, "mico layout", "user", "tenantId");
-        final ComplaintLocation complaintLocation = new ComplaintLocation(new Coordinates(0.0, 0.0, "tenantId"), null, "34", "tenantId");
+        final Requester domainComplainant = new Requester("kumar", null, null, "mico layout", "user", "tenantId");
+        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(new Coordinates(0.0, 0.0, "tenantId"), null, "34", "tenantId");
         ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
             .complaintType(new ComplaintType("abc", "complaintCode", "tenantId"))
             .address(address)
             .mediaUrls(mediaUrls)
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .requester(domainComplainant)
             .tenantId(jurisdictionId)
             .description(description)

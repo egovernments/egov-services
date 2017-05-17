@@ -2,7 +2,7 @@ package org.egov.pgrrest.common.entity;
 
 import lombok.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.read.domain.model.ComplaintLocation;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
@@ -123,7 +123,7 @@ public class Complaint extends AbstractAuditable<Long> {
         final org.egov.pgrrest.read.domain.model.ComplaintType complaintType =
                 new org.egov.pgrrest.read.domain.model.ComplaintType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
         return ServiceRequest.builder()
-                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
+                .serviceRequestLocation(new ServiceRequestLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .requester(complainant.toDomain())

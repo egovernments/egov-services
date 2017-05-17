@@ -2,10 +2,10 @@ package org.egov.pgrrest.common.contract;
 
 import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.read.domain.model.ComplaintLocation;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.ComplaintType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.junit.Test;
@@ -21,34 +21,37 @@ public class ServiceRequestTest {
         String expectedLocationId = "12";
         Map<String, String> values = new HashMap<>();
         values.put("locationId", expectedLocationId);
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(expectedLocationId, complaint.getComplaintLocation().getLocationId());
+        assertEquals(expectedLocationId, complaint.getServiceRequestLocation().getLocationId());
     }
 
     @Test
     public void test_should_set_location_id_to_null_when_not_provided() {
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertNull(complaint.getComplaintLocation().getCrossHierarchyId());
-        assertNull(complaint.getComplaintLocation().getCoordinates().getLatitude());
-        assertNull(complaint.getComplaintLocation().getCoordinates().getLongitude());
-        assertNull(complaint.getComplaintLocation().getLocationId());
+        assertNull(complaint.getServiceRequestLocation().getCrossHierarchyId());
+        assertNull(complaint.getServiceRequestLocation().getCoordinates().getLatitude());
+        assertNull(complaint.getServiceRequestLocation().getCoordinates().getLongitude());
+        assertNull(complaint.getServiceRequestLocation().getLocationId());
     }
 
     @Test
     public void test_should_return_receiving_center_from_values_field_when_flag_is_disabled() {
         final HashMap<String, String> values = new HashMap<>();
         values.put("receivingCenter", "receivingCenter");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
@@ -61,18 +64,20 @@ public class ServiceRequestTest {
     public void test_should_return_location_id_from_values_field_when_flag_is_disabled() {
         final HashMap<String, String> values = new HashMap<>();
         values.put("locationId", "location");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals("location", complaint.getComplaintLocation().getLocationId());
+        assertEquals("location", complaint.getServiceRequestLocation().getLocationId());
     }
 
     @Test
     public void test_should_return_location_id_from_attribute_values_field_when_flag_is_enabled() {
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .attribValues(Collections.singletonList(new AttributeEntry("locationId", "location")))
             .attribValuesPopulated(true)
             .values(new HashMap<>())
@@ -80,13 +85,14 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals("location", complaint.getComplaintLocation().getLocationId());
+        assertEquals("location", complaint.getServiceRequestLocation().getLocationId());
     }
 
     @Test
     public void test_should_return_receiving_center_from_attribute_values_field_when_flag_is_enabled() {
         final AttributeEntry attributeEntry = new AttributeEntry("receivingCenter", "receivingCenter");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .attribValues(Collections.singletonList(attributeEntry))
             .attribValuesPopulated(true)
             .values(new HashMap<>())
@@ -101,7 +107,8 @@ public class ServiceRequestTest {
     public void test_should_return_receiving_mode_from_values_field_when_flag_is_disabled() {
         final HashMap<String, String> values = new HashMap<>();
         values.put("receivingMode", "receivingMode");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
@@ -113,7 +120,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_return_receiving_mode_from_attribute_values_field_when_flag_is_enabled() {
         final AttributeEntry attributeEntry = new AttributeEntry("receivingMode", "receivingMode");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .attribValues(Collections.singletonList(attributeEntry))
             .attribValuesPopulated(true)
             .values(new HashMap<>())
@@ -127,7 +135,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_over_location_coordinates_to_domain_complaint() {
         Double lat = 12.343, lng = 23.243;
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .latitude(lat)
             .longitude(lng)
             .values(new HashMap<>())
@@ -135,28 +144,30 @@ public class ServiceRequestTest {
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(lat, complaint.getComplaintLocation().getCoordinates().getLatitude());
-        assertEquals(lng, complaint.getComplaintLocation().getCoordinates().getLongitude());
+        assertEquals(lat, complaint.getServiceRequestLocation().getCoordinates().getLatitude());
+        assertEquals(lng, complaint.getServiceRequestLocation().getCoordinates().getLongitude());
     }
 
     @Test
     public void test_should_copy_cross_hierarchy_id_to_domain_complaint() {
         String crossHierarchyId = "12";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .crossHierarchyId(crossHierarchyId)
             .values(new HashMap<>())
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
 
-        assertEquals(crossHierarchyId, complaint.getComplaintLocation().getCrossHierarchyId());
+        assertEquals(crossHierarchyId, complaint.getServiceRequestLocation().getCrossHierarchyId());
     }
 
     @Test
     public void test_should_copy_complaint_type_to_domain_complaint() {
         final String complaintTypeCode = "complaintTypeCode";
         final String complaintTypeName = "complaintTypeName";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .complaintTypeCode(complaintTypeCode)
             .complaintTypeName(complaintTypeName)
@@ -172,7 +183,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_tenant_id_to_domain_complaint() {
         final String tenantId = "tenantId";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .tenantId(tenantId)
             .build();
@@ -186,7 +198,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_address_to_domain_complaint() {
         final String address = "address";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .address(address)
             .build();
@@ -199,7 +212,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_description_to_domain_complaint() {
         final String description = "description";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .address(description)
             .build();
@@ -212,7 +226,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_media_urls_to_domain_complaint() {
         final List<String> mediaUrls = Arrays.asList("url1", "url2");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .mediaUrls(mediaUrls)
             .build();
@@ -230,7 +245,8 @@ public class ServiceRequestTest {
         final HashMap<String, String> values = new HashMap<>();
         values.put("receivingMode", receivingMode);
         values.put("receivingCenter", receivingCenter);
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
@@ -245,7 +261,8 @@ public class ServiceRequestTest {
         final HashMap<String, String> values = new HashMap<>();
         final String complainantUserId = "userId";
         values.put("userId", complainantUserId);
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
@@ -257,7 +274,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_user_id_to_domain_complaint_from_attribute_values_field_when_flag_is_enabled() {
         final HashMap<String, String> values = new HashMap<>();
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .attribValues(Collections.singletonList(new AttributeEntry("userId", "userId")))
             .attribValuesPopulated(true)
@@ -271,7 +289,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_complainant_first_name_to_domain_complaint() {
         final String firstName = "first Name";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .firstName(firstName)
             .build();
@@ -284,7 +303,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_complainant_email_to_domain_complaint() {
         final String email = "email";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .email(email)
             .build();
@@ -297,7 +317,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_complainant_mobile_number_to_domain_complaint() {
         final String mobileNumber = "mobileNumber";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .phone(mobileNumber)
             .build();
@@ -311,7 +332,8 @@ public class ServiceRequestTest {
     public void test_should_copy_complainant_address_from_values_field_when_flag_is_disabled() {
         final HashMap<String, String> values = new HashMap<>();
         values.put("complainantAddress", "address");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(values)
             .build();
 
@@ -322,7 +344,8 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_copy_complainant_address_from_attribute_values_field_when_flag_is_enabled() {
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .attribValues(Collections.singletonList(new AttributeEntry("complainantAddress", "address")))
             .values(new HashMap<>())
             .attribValuesPopulated(true)
@@ -336,7 +359,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_crn_to_domain_complaint() {
         String crn = "crn";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .crn(crn)
             .build();
@@ -349,7 +373,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_set_modify_flag_to_false_when_creating_domain_complaint_from_create_seva_request() {
         String crn = "crn";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .ServiceRequest.builder()
             .values(new HashMap<>())
             .crn(crn)
             .build();
@@ -362,10 +387,11 @@ public class ServiceRequestTest {
     @Test
     public void test_should_set_modify_flag_to_true_when_creating_domain_complaint_from_update_seva_request() {
         String crn = "crn";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder()
-            .values(new HashMap<>())
-            .crn(crn)
-            .build();
+        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest =
+            org.egov.pgrrest.common.contract.ServiceRequest.builder()
+                .values(new HashMap<>())
+                .crn(crn)
+                .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForUpdateRequest(getAuthenticatedUser());
 
@@ -374,22 +400,21 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_populate_attribute_values_field_in_service_request_from_domain_complaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId("locationIdName")
             .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .address("complainantAddress")
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintType(new ComplaintType("name", "code", "tenantId"))
             .requester(complainant)
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .receivingMode("receivingModeName")
             .complaintStatus("complaintStatusName")
             .receivingCenter("receivingCenterName")
-            .complaintLocation(complaintLocation)
             .childLocation("childLocationIdName")
             .state("stateName")
             .assignee(2L)
@@ -424,22 +449,21 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_populate_values_field_in_service_request_from_domain_complaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId("locationId")
             .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .address("complainantAddress")
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintType(new ComplaintType("name", "code", "tenantId"))
             .requester(complainant)
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
             .receivingCenter("receivingCenter")
-            .complaintLocation(complaintLocation)
             .childLocation("childLocation")
             .state("state")
             .assignee(2L)
@@ -447,7 +471,8 @@ public class ServiceRequestTest {
             .citizenFeedback("citizenFeedback")
             .build();
 
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
+        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest =
+            new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
 
         assertNotNull(serviceRequest);
         final Map<String, String> values = serviceRequest.getValues();
@@ -464,10 +489,10 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_populate_values_field_with_non_null_values_from_domain_complaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .address("complainantAddress")
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
@@ -476,10 +501,11 @@ public class ServiceRequestTest {
             .requester(complainant)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .build();
 
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = new org.egov.pgrrest.common.contract.ServiceRequest(complaint);
+        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = new org.egov.pgrrest.common.contract
+            .ServiceRequest(complaint);
 
         final Map<String, String> values = serviceRequest.getValues();
         final HashSet<String> expectedKeys = new HashSet<>();
@@ -490,10 +516,10 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_populate_attribute_values_field_with_non_null_values_from_domain_complaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
             .build();
-        final Complainant complainant = Complainant.builder()
+        final Requester complainant = Requester.builder()
             .address("complainantAddress")
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
@@ -502,7 +528,7 @@ public class ServiceRequestTest {
             .requester(complainant)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .build();
 
         final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest =

@@ -9,7 +9,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @AllArgsConstructor
 @Value
 @Builder
-public class ComplaintLocation {
+public class ServiceRequestLocation {
     private Coordinates coordinates;
     private String crossHierarchyId;
     private String locationId;

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
 
 import java.util.Date;
@@ -22,9 +22,9 @@ public class ServiceRequest {
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
-    private ComplaintLocation complaintLocation;
+    private ServiceRequestLocation serviceRequestLocation;
     @NonNull
-    private Complainant requester;
+    private Requester requester;
     private String crn;
     @NonNull
     private ComplaintType complaintType;
@@ -62,17 +62,17 @@ public class ServiceRequest {
 
     public boolean isLocationAbsent() {
         if (isModifyServiceRequest()) {
-            return complaintLocation.isLocationIdAbsent();
+            return serviceRequestLocation.isLocationIdAbsent();
         }
-        return complaintLocation.isRawLocationAbsent();
+        return serviceRequestLocation.isRawLocationAbsent();
     }
 
     public boolean isLocationIdAbsent() {
-        return complaintLocation.isLocationIdAbsent();
+        return serviceRequestLocation.isLocationIdAbsent();
     }
 
     public boolean isRawLocationAbsent() {
-        return complaintLocation.isRawLocationAbsent();
+        return serviceRequestLocation.isRawLocationAbsent();
     }
 
     public void validate() {

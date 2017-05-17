@@ -2,6 +2,7 @@
 package org.egov.pgrrest.common.entity;
 
 import lombok.*;
+import org.egov.pgrrest.common.model.Requester;
 
 import javax.persistence.*;
 
@@ -47,8 +48,8 @@ public class Complainant extends AbstractPersistable<Long> {
         this.id = id;
     }
 
-    public org.egov.pgrrest.common.model.Complainant toDomain() {
-        return org.egov.pgrrest.common.model.Complainant.builder()
+    public Requester toDomain() {
+        return Requester.builder()
             .firstName(name)
             .mobile(mobile)
             .email(email)

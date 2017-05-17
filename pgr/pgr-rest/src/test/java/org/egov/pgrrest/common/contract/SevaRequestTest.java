@@ -2,7 +2,7 @@ package org.egov.pgrrest.common.contract;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.read.domain.model.*;
 import org.junit.Test;
@@ -27,11 +27,11 @@ public class SevaRequestTest {
     private org.egov.pgrrest.read.domain.model.ServiceRequest getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
         final Coordinates coordinates = new Coordinates(0d, 0d, TENANT_ID);
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder().coordinates(coordinates)
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder().coordinates(coordinates)
                 .crossHierarchyId("id").build();
 
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder().tenantId(TENANT_ID).authenticatedUser(user)
-                .requester(Complainant.builder().build()).crn(CRN).complaintLocation(complaintLocation)
+                .requester(Requester.builder().build()).crn(CRN).serviceRequestLocation(serviceRequestLocation)
                 .complaintType(new ComplaintType(null, null, TENANT_ID)).build();
     }
 

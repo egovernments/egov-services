@@ -2,7 +2,8 @@ package org.egov.pgrrest.read.persistence.entity;
 
 import org.egov.pgrrest.common.entity.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.read.domain.model.ComplaintLocation;
+import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.junit.Test;
@@ -45,11 +46,11 @@ public class ComplaintTest {
         final ServiceRequest domainComplaint = entityComplaint.toDomain();
 
         assertNotNull(domainComplaint);
-        final ComplaintLocation complaintLocation = domainComplaint.getComplaintLocation();
-        assertNotNull(complaintLocation);
-        assertEquals("3", complaintLocation.getLocationId());
-        assertEquals("4", complaintLocation.getCrossHierarchyId());
-        assertEquals(new Coordinates(1.0, 2.0, "tenantId"), complaintLocation.getCoordinates());
+        final ServiceRequestLocation serviceRequestLocation = domainComplaint.getServiceRequestLocation();
+        assertNotNull(serviceRequestLocation);
+        assertEquals("3", serviceRequestLocation.getLocationId());
+        assertEquals("4", serviceRequestLocation.getCrossHierarchyId());
+        assertEquals(new Coordinates(1.0, 2.0, "tenantId"), serviceRequestLocation.getCoordinates());
         assertEquals(toDate(lastAccessedDateTime), domainComplaint.getLastAccessedTime());
         assertEquals(toDate(lastModifiedDateTime), domainComplaint.getLastModifiedDate());
         assertEquals(toDate(createdDateTime), domainComplaint.getCreatedDate());
@@ -58,7 +59,7 @@ public class ComplaintTest {
         assertEquals(Collections.emptyList(), domainComplaint.getMediaUrls());
         assertEquals("crn", domainComplaint.getCrn());
         assertEquals("complaint description", domainComplaint.getDescription());
-        final org.egov.pgrrest.common.model.Complainant domainComplainant = domainComplaint.getRequester();
+        final Requester domainComplainant = domainComplaint.getRequester();
         assertNotNull(domainComplainant);
         assertEquals("firstName", domainComplainant.getFirstName());
         assertEquals("mobileNumber", domainComplainant.getMobile());

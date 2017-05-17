@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.domain.service;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
@@ -196,8 +196,8 @@ public class ServiceRequestServiceTest {
 
     private ServiceRequest getComplaint() {
         final Coordinates coordinates = new Coordinates(0d, 0d, "tenantId");
-        final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, "id", null, "tenantId");
-        final Complainant complainant = Complainant.builder()
+        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(coordinates, "id", null, "tenantId");
+        final Requester complainant = Requester.builder()
             .userId("userId")
             .firstName("first name")
             .mobile("mobile number")
@@ -205,7 +205,7 @@ public class ServiceRequestServiceTest {
         return ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .tenantId(TENANT_ID)
             .description("description")
             .crn("crn")

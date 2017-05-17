@@ -7,11 +7,11 @@ import lombok.Getter;
 import static org.springframework.util.StringUtils.isEmpty;
 
 
-//A person who made a complaint
+//A person who made a service request
 @Getter
 @AllArgsConstructor
 @Builder
-public class Complainant {
+public class Requester {
     private String firstName;
     private String mobile;
     private String email;

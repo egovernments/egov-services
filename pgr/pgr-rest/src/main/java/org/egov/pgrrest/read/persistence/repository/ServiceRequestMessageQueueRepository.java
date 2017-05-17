@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ComplaintMessageQueueRepository {
+public class ServiceRequestMessageQueueRepository {
 
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     private String topicName;
 
     @Autowired
-    public ComplaintMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
-                                           @Value("${outgoing.queue.name}") String topicName) {
+    public ServiceRequestMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
+                                                @Value("${outgoing.queue.name}") String topicName) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicName = topicName;
     }

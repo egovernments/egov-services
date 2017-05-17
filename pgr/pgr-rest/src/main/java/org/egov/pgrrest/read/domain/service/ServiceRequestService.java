@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.read.domain.model.Complaint;
-import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.read.persistence.repository.ComplaintRepository;
+import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import org.springframework.stereotype.Service;
 public class ServiceRequestService {
 
     private static final String SYSTEM_USER = "SYSTEM";
-    private ComplaintRepository complaintRepository;
+    private ServiceRequestRepository complaintRepository;
 	private ComplaintJpaRepository complaintJpaRepository;
 	private UserRepository userRepository;
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
 
     @Autowired
-    public ServiceRequestService(ComplaintRepository complaintRepository,
+    public ServiceRequestService(ServiceRequestRepository complaintRepository,
                                  SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
                                  ComplaintJpaRepository complaintJpaRepository) {
         this.complaintRepository = complaintRepository;
@@ -33,8 +33,8 @@ public class ServiceRequestService {
         this.complaintJpaRepository = complaintJpaRepository;
     }
 
-    public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
-        return complaintRepository.findAll(complaintSearchCriteria);
+    public List<Complaint> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return complaintRepository.findAll(serviceRequestSearchCriteria);
     }
 
 	public void save(Complaint complaint, SevaRequest sevaRequest) {
@@ -76,7 +76,7 @@ public class ServiceRequestService {
 
     public List<Complaint> getAllModifiedCitizenComplaints(Long userId, String tenantId) {
         if (userId != null) {
-            return complaintRepository.getAllModifiedComplaintsForCitizen(userId, tenantId);
+            return complaintRepository.getAllModifiedServiceRequestsForCitizen(userId, tenantId);
         }
         return new ArrayList<>();
     }

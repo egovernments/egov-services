@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode
 
-public class ComplaintSearchCriteria {
+public class ServiceRequestSearchCriteria {
 	private String serviceRequestId;
 	private String serviceCode;
 	private Date startDate;

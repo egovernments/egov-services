@@ -14,25 +14,25 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ComplaintMessageQueueRepositoryTest {
+public class ServiceRequestMessageQueueRepositoryTest {
 
     private static final String TOPIC_NAME = "topic";
 
     @Mock
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    private ComplaintMessageQueueRepository complaintMessageQueueRepository;
+    private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
 
     @Before
     public void before() {
-        complaintMessageQueueRepository = new ComplaintMessageQueueRepository(kafkaTemplate, TOPIC_NAME);
+        serviceRequestMessageQueueRepository = new ServiceRequestMessageQueueRepository(kafkaTemplate, TOPIC_NAME);
     }
 
     @Test
     public void test_should_send_message_to_kafka() {
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), null);
 
-        complaintMessageQueueRepository.save(sevaRequest);
+        serviceRequestMessageQueueRepository.save(sevaRequest);
 
         verify(kafkaTemplate).send(TOPIC_NAME, sevaRequest);
     }

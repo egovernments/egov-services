@@ -5,7 +5,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgrrest.common.contract.ServiceRequest;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.read.domain.model.Complaint;
-import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
@@ -77,7 +77,7 @@ public class ServiceRequestController {
                                                   childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
-        ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .assignmentId(assignmentId)
             .endDate(endDate)
             .lastModifiedDatetime(lastModifiedDate)
@@ -95,7 +95,7 @@ public class ServiceRequestController {
             .childLocationId(childLocationId)
             .tenantId(tenantId)
             .build();
-        final List<Complaint> complaints = serviceRequestService.findAll(complaintSearchCriteria);
+        final List<Complaint> complaints = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(complaints);
     }
 

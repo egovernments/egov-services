@@ -1,10 +1,9 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.common.entity.Complaint;
-import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgrrest.read.persistence.specification.SevaSpecification;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
+import org.egov.pgrrest.read.persistence.specification.ComplaintSpecification;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +50,7 @@ public class ComplaintJpaRepositoryTest {
         DateTime escalationDate = new DateTime(2016, 12, 24, 0, 0, 0, 0);
 
 
-        ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
                 .status(Arrays.asList("REGISTERED","FORWARDED"))
                 .receivingMode(5L)
                 .locationId(1L)
@@ -65,7 +64,7 @@ public class ComplaintJpaRepositoryTest {
                 .tenantId("ap.public")
                 .build();
 
-        SevaSpecification specification = new SevaSpecification(complaintSearchCriteria);
+        ComplaintSpecification specification = new ComplaintSpecification(serviceRequestSearchCriteria);
         List<Complaint> complaints = complaintJpaRepository.findAll(specification);
         
         assertThat(complaints.size()).isEqualTo(2);

@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.persistence.specification;
 
 import org.egov.pgrrest.common.entity.*;
-import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SevaSpecification implements Specification<Complaint> {
-    private ComplaintSearchCriteria criteria;
+public class ComplaintSpecification implements Specification<Complaint> {
+    private ServiceRequestSearchCriteria criteria;
 
-    public SevaSpecification(ComplaintSearchCriteria criteria) {
+    public ComplaintSpecification(ServiceRequestSearchCriteria criteria) {
         this.criteria = criteria;
     }
 

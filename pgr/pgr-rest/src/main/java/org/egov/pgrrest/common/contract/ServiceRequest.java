@@ -103,10 +103,6 @@ public class ServiceRequest {
 
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
-//  Short term feature flag - to support persisting to complaint table or new submission table.
-    @JsonProperty("isForNewSchema")
-    private boolean useNewSchema;
-
     public ServiceRequest(Complaint complaint) {
         crn = complaint.getCrn();
         status = complaint.isClosed();

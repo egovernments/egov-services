@@ -4,7 +4,7 @@ import org.egov.pgrrest.common.contract.ServiceRequest;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.entity.Complaint;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
-import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,22 +26,22 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComplaintRepositoryTest {
+public class ServiceRequestRepositoryTest {
 
     @Mock
     private ComplaintJpaRepository complaintJpaRepository;
 
     @Mock
-    private ComplaintMessageQueueRepository complaintMessageQueueRepository;
+    private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
 
     @Captor
     private ArgumentCaptor<SevaRequest> sevaRequestArgumentCaptor;
 
-    private ComplaintRepository complaintRepository;
+    private ServiceRequestRepository complaintRepository;
 
     @Before
     public void setUp() throws Exception {
-        complaintRepository = new ComplaintRepository(complaintJpaRepository, complaintMessageQueueRepository);
+        complaintRepository = new ServiceRequestRepository(complaintJpaRepository, serviceRequestMessageQueueRepository);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ComplaintRepositoryTest {
 
        complaintRepository.save(sevaRequest);
 
-        verify(complaintMessageQueueRepository).save(sevaRequestArgumentCaptor.capture());
+        verify(serviceRequestMessageQueueRepository).save(sevaRequestArgumentCaptor.capture());
 
         SevaRequest actual = sevaRequestArgumentCaptor.getValue();
         assertThat(actual.getRequestInfo().getAction()).isEqualTo("POST");
@@ -67,7 +67,7 @@ public class ComplaintRepositoryTest {
 
         complaintRepository.update(sevaRequest);
 
-        verify(complaintMessageQueueRepository).save(sevaRequestArgumentCaptor.capture());
+        verify(serviceRequestMessageQueueRepository).save(sevaRequestArgumentCaptor.capture());
         SevaRequest actual = sevaRequestArgumentCaptor.getValue();
         assertThat(actual.getRequestInfo().getAction()).isEqualTo("PUT");
         assertThat(actual.getServiceRequest().getLastModifiedDate()).isNotNull();
@@ -76,7 +76,7 @@ public class ComplaintRepositoryTest {
     @Test
     public void test_find_all_complaints_using_specification() {
         final Sort sort = new Sort(Sort.Direction.DESC, "lastModifiedDate");
-        ComplaintSearchCriteria complaintSearchCriteria = mock(ComplaintSearchCriteria.class);
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = mock(ServiceRequestSearchCriteria.class);
         Complaint complaintEntityMock1 = mock(Complaint.class);
         Complaint complaintEntityMock2 = mock(Complaint.class);
         org.egov.pgrrest.read.domain.model.Complaint complaintModelMock1 = mock(org.egov.pgrrest.read.domain.model.Complaint.class);
@@ -88,7 +88,7 @@ public class ComplaintRepositoryTest {
         when(complaintJpaRepository.findAll(Matchers.<Specification<Complaint>> any(), eq(sort)))
                 .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
 
-        List<org.egov.pgrrest.read.domain.model.Complaint> actual = complaintRepository.findAll(complaintSearchCriteria);
+        List<org.egov.pgrrest.read.domain.model.Complaint> actual = complaintRepository.findAll(serviceRequestSearchCriteria);
 
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
     }
@@ -110,7 +110,7 @@ public class ComplaintRepositoryTest {
                 .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
 
         List<org.egov.pgrrest.read.domain.model.Complaint> actual = complaintRepository
-                .getAllModifiedComplaintsForCitizen(1L, "tenantId");
+                .getAllModifiedServiceRequestsForCitizen(1L, "tenantId");
 
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
     }

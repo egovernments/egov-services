@@ -9,7 +9,7 @@ import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
-import org.egov.pgrrest.read.persistence.repository.ComplaintRepository;
+import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class ServiceRequestServiceTest {
     private static final String CRN = "crn";
     private static final String TENANT_ID = "tenantId";
     @Mock
-    private ComplaintRepository complaintRepository;
+    private ServiceRequestRepository complaintRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -162,7 +162,7 @@ public class ServiceRequestServiceTest {
 
     @Test
     public void testShouldFindAllComplaintsBySearchCriteria() {
-        final ComplaintSearchCriteria searchCriteria = ComplaintSearchCriteria.builder().build();
+        final ServiceRequestSearchCriteria searchCriteria = ServiceRequestSearchCriteria.builder().build();
         final Complaint expectedComplaint = getComplaint();
         when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
 
@@ -180,7 +180,7 @@ public class ServiceRequestServiceTest {
     
     public void test_should_fetch_all_modified_citizen_complaints_by_user_id() {
         final Complaint expectedComplaint = getComplaint();
-        when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Long.class),any(String.class)))
+        when(complaintRepository.getAllModifiedServiceRequestsForCitizen(any(Long.class),any(String.class)))
             .thenReturn(Collections.singletonList(expectedComplaint));
         final List<Complaint> actualComplaints = serviceRequestService.getAllModifiedCitizenComplaints(1L, "tenantId");
         assertEquals(1, actualComplaints.size());
@@ -189,7 +189,7 @@ public class ServiceRequestServiceTest {
 
     @Test
     public void test_should_fetch_empty_list_for_invalid_userid() {
-        when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Long.class),any(String.class)))
+        when(complaintRepository.getAllModifiedServiceRequestsForCitizen(any(Long.class),any(String.class)))
             .thenReturn(new ArrayList<>());
         final List<Complaint> actualComplaints = serviceRequestService.getAllModifiedCitizenComplaints(1L, "tenantId");
         assertEquals(0, actualComplaints.size());

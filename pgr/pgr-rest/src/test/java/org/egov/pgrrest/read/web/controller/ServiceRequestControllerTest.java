@@ -160,7 +160,7 @@ public class ServiceRequestControllerTest {
             .department(3L)
             .tenantId("tenantId")
             .build();
-        ComplaintSearchCriteria criteria = ComplaintSearchCriteria.builder()
+        ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
             .assignmentId(10L)
             .endDate(null)
             .escalationDate(null)

@@ -12,7 +12,8 @@ import java.util.List;
 @Repository
 public interface ValueDefinitionJpaRepository extends JpaRepository<ValueDefinition, ValueDefinitionKey> {
 
-    @Query("select v from ValueDefinition v where v.id.attributeCode in :attributeCodes and v.id.tenantId = :tenantId")
-    List<ValueDefinition> findByAttributeCodesAndTenantId(@Param("attributeCodes") List<String> attributeCodes,
-                                                          @Param("tenantId") String tenantId);
+    @Query("select v from ValueDefinition v where v.id.attributeCode in :attributeCodes and v.id.tenantId = :tenantId and v.serviceCode =:serviceCode")
+    List<ValueDefinition> findByAttributeCodesAndTenantIdAndServiceCode(@Param("attributeCodes") List<String> attributeCodes,
+                                                          @Param("tenantId") String tenantId,
+                                                                                    @Param("serviceCode") String serviceCode);
 }

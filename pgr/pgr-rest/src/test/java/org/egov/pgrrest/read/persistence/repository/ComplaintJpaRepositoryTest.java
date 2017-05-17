@@ -41,6 +41,7 @@ public class ComplaintJpaRepositoryTest {
     @Test
     @Sql(scripts = {
             "/sql/clearComplaint.sql",
+            "/sql/clearComplaintType.sql",
             "/sql/InsertComplaintData.sql"
           })
     public void testShouldFindAllComplaints() throws ParseException {

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository 
-public interface BankAccountRepository extends JpaRepository<BankAccount,java.lang.Long>,JpaSpecificationExecutor<BankAccount>  {
+public interface BankAccountJpaRepository extends JpaRepository<BankAccount,java.lang.Long>,JpaSpecificationExecutor<BankAccount>  {
 
 }

@@ -145,7 +145,6 @@ public class BankBranch extends AbstractAuditable {
 	}
 
 	public BankBranch(BankBranchContract contract) {
-		BankBranch bankBranch = new BankBranch();
 		this.setBank(contract.getBank() != null ? contract.getBank().getId() : null);
 		this.setName(contract.getName());
 		this.setActive(contract.getActive());
@@ -153,7 +152,7 @@ public class BankBranch extends AbstractAuditable {
 		this.setAddress2(contract.getAddress2());
 		this.setCode(contract.getCode());
 		this.setCity(contract.getCity());
-		this.setContactPerson(bankBranch.getContactPerson());
+		this.setContactPerson(contract.getContactPerson());
 		this.setDescription(contract.getDescription());
 		this.setFax(contract.getFax());
 		this.setMicr(contract.getMicr());

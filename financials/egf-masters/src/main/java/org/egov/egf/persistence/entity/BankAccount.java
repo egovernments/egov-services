@@ -39,8 +39,6 @@
  */
 package org.egov.egf.persistence.entity;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -48,17 +46,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.egov.egf.persistence.entity.enums.BankAccountType;
+import org.egov.egf.persistence.queue.contract.BankAccountContract;
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -71,62 +65,71 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"bankBranch","chartOfAccount","fund","type"},callSuper=false)
+@EqualsAndHashCode(exclude = { "bankBranch", "chartOfAccount", "fund", "type" }, callSuper = false)
 
 @Table(name = "egf_bankaccount")
 @SequenceGenerator(name = BankAccount.SEQ_BANKACCOUNT, sequenceName = BankAccount.SEQ_BANKACCOUNT, allocationSize = 1)
 public class BankAccount extends AbstractAuditable implements java.io.Serializable {
 
-    public static final String SEQ_BANKACCOUNT = "seq_egf_bankaccount";
+	public static final String SEQ_BANKACCOUNT = "seq_egf_bankaccount";
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(generator = SEQ_BANKACCOUNT, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@Id
+	@GeneratedValue(generator = SEQ_BANKACCOUNT, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-//    @ManyToOne
-    @Column(name = "branchid")
-    private Long bankBranch;
+	// @ManyToOne
+	@Column(name = "branchid")
+	private Long bankBranch;
 
-//    @JsonProperty(access = Access.WRITE_ONLY)
-//    @ManyToOne
-//    @JoinColumn(name = "glcodeid")
-    @Column(name="glcodeid")
-    private Long chartOfAccount;
+	// @JsonProperty(access = Access.WRITE_ONLY)
+	// @ManyToOne
+	// @JoinColumn(name = "glcodeid")
+	@Column(name = "glcodeid")
+	private Long chartOfAccount;
 
-//    @JsonProperty(access = Access.WRITE_ONLY)
-//    @ManyToOne
-    @Column(name = "fundid")
-    private Long fund;
+	// @JsonProperty(access = Access.WRITE_ONLY)
+	// @ManyToOne
+	@Column(name = "fundid")
+	private Long fund;
 
-    @NotNull
-    @Length(max=25)
-    private String accountNumber;
+	@NotNull
+	@Length(max = 25)
+	private String accountNumber;
 
-    // is this required ?
-    private String accountType;
-    @Length(max=256)
-    private String description;
+	// is this required ?
+	private String accountType;
+	@Length(max = 256)
+	private String description;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    @Length(max=100)
-    private String payTo;  
+	@Length(max = 100)
+	private String payTo;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private BankAccountType type;
-    
-    @Override
-    public Long getId()
-    {
-    	return this.id;
-    }
-    
- 
-   
-    
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type")
+	private BankAccountType type;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public BankAccount(BankAccountContract contract) {
+		this.setBankBranch(contract.getBankBranch() != null ? contract.getBankBranch().getId() : null);
+		this.setChartOfAccount(contract.getChartOfAccount() != null ? contract.getChartOfAccount().getId() : null);
+		this.setFund(contract.getFund() != null ? contract.getFund().getId() : null);
+		this.setAccountNumber(contract.getAccountNumber());
+		this.setAccountType(contract.getAccountType());
+		this.setDescription(contract.getDescription());
+		this.setActive(contract.getActive());
+		this.setPayTo(contract.getPayTo());
+		this.setType(contract.getType());
+		this.setTenantId(contract.getTenantId());
+	}
+
 }

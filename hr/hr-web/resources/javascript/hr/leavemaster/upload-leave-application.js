@@ -144,6 +144,14 @@ class UploadLeaveApplication extends React.Component{
       reader.readAsBinaryString(oFile);
   }
 
+  isSecondSat (d) {
+    return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 2);
+  }
+
+  isFourthSat (d) {
+    return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 4);
+  }
+
   close(){
       // widow.close();
       open(location, '_self').close();
@@ -158,9 +166,12 @@ class UploadLeaveApplication extends React.Component{
           var serverObject = [],errorObject=[],finalValidatedServerObject=[],finalSuccessObject=[];
           var tempInfo=Object.assign([],this.state.temp);
           var duplicateInfo = Object.assign([],this.state.duplicate);
-          var holidayList = Object.assign([],this.state.allHolidayList);
-          //console.log(holidayList);
-          //console.log("TEMP ",tempInfo);
+          var allHolidayList = Object.assign([],this.state.allHolidayList);
+          var hrConfigurations = Object.assign([],this.state.hrConfigurations);
+
+
+          console.log(hrConfigurations);
+          console.log("TEMP ",allHolidayList);
           duplicateInfo.forEach(function(d){
             errorObject.push(d);
           });
@@ -199,229 +210,77 @@ class UploadLeaveApplication extends React.Component{
             var d = tempInfo[k];
 
 
-          ////console.log("d----->",d);
 
             ////console.log("from",d.fromDate);
             ////console.log("to",d.toDate);
 
+            
 
 
-              var from = d.fromDate;
-              var to = d.toDate;
-              var dateParts = from.split("/");
-              var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-              var date1 = new Date(newDateStr);
-              //console.log("date1",date1);
-              var dateParts = to.split("/");
-              var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-              var date2 = new Date(newDateStr);
-              //console.log("date2",date2);
-              d.errorMessage = "";
-              if (date1 > date2) {
-                d.errorMessage = "from date is greater than to date ";
+
+
+              var _from = d.fromDate;
+              var _to = d.toDate;
+              var _triggerId = e.target.id;
+              if(_from && _to) {
+                var dateParts1 = _from.split("/");
+                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                var date1 = new Date(newDateStr);
+                var dateParts2 = _to.split("/");
+                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                var date2 = new Date(newDateStr);
+                if (date1 > date2) {
+                  console.log("From date must be before End date.");
+                  showError("From date must be before End date.");
+                  $('#' + _triggerId).val("");
+                } else {
+                  var holidayList = [], m1 = dateParts1[1], m2 = dateParts2[1], y1 = dateParts1[2], y2 = dateParts2[2];
+                  for(var i=0; i<allHolidayList.length;i++) {
+                    if(allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
+                      holidayList.push(new Date(allHolidayList[i].applicableOn.split("/")[2], allHolidayList[i].applicableOn.split("/")[1]-1, allHolidayList[i].applicableOn.split("/")[0]).getTime());
+                    }
+                  }
+                  //Calculate working days
+                  var _days = 0;
+                  var parts1 = _from.split("/");
+                  var parts2 = _to.split("/");
+                  var startDate = new Date(parts1[2], (+parts1[1]-1), parts1[0]);
+                  var endDate = new Date(parts2[2], (+parts2[1]-1), parts2[0]);
+
+                  if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week") {
+                    for (var p = startDate ; p <= endDate; p.setDate(p.getDate() + 1)) {
+                        if(holidayList.indexOf(p.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !(p.getDay()===0||p.getDay()===6))
+                            _days++;
+                     }
+                  } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd Saturday holiday") {
+                    for (var p = startDate ; p <= endDate; p.setDate(p.getDate() + 1)) {
+                        if(holidayList.indexOf(p.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !_this.isSecondSat(p) && p.getDay() != 0)
+                            _days++;
+                    }
+                  } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd and 4th Saturday holiday"){
+                    for (var p = startDate ; p <= endDate; p.setDate(p.getDate() + 1)) {
+                        if(holidayList.indexOf(p.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && p.getDay() != 0 && !_this.isSecondSat(p) && !_this.isFourthSat(p))
+                            _days++;
+                    }
+                  } else {
+                    for (var p = startDate ; p <= endDate; p.setDate(p.getDate() + 1)) {
+                        if(holidayList.indexOf(p.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]!="Y" && !(p.getDay()===0))
+                          _days++;
+                    }
+                  }
+                  console.log(_days);
+                }
+              }
+              if(_days===0){
+                d.errorMessage = "Leave applied on a Holiday";
                 error=1;
-                  showError("From date must be before of End date");
-                  //console.log("Greater");
+                post=1;
               }
 
-              if(date1.getTime() === date2.getTime()){
-                //console.log("same day");
-                var month = "";
-                var mon =  date1.getMonth();
-                switch(mon){
-                  case 0: month= "January";
-                          break;
-                 case 1: month= "February";
-                                  break;
-                 case 2: month= "March";
-                                 break;
-                 case 3: month= "April";
-                                    break;
-                 case 4: month= "May";
-                                   break;
-                 case 5: month= "June";
-                                   break;
-                 case 6: month= "July";
-                                   break;
-                 case 7: month= "August";
-                                  break;
-                 case 8: month= "September";
-                                   break;
-                 case 9: month= "October";
-                                   break;
-                 case 10: month= "November";
-                                 break;
-                 case 11: month= "December";
-                                   break;
-                }
-                var year = date1.getFullYear();
-                var saturdays =  calculate(month,year);
-                console.log("Holiday",saturdays);
-                var firstSat = new Date(saturdays[0]);
-                var secSat = new Date(saturdays[1]);
-                if(date1.getTime() === firstSat.getTime()){
-                    console.log("saturday1");
-                    error=1;
-                    d.errorMessage = "Leave applied on first saturday which is Holiday "+firstSat;
-
-                }
-                if(date1.getTime() === secSat.getTime()){
-                  console.log("saturday1");
-                  error=1;
-                  d.errorMessage = "Leave applied on Second saturday which is Holiday "+secSat;
-                }
-                numberOfLeave = 1;
-                d.successMessage = "Leaves applied successfully ";
-
-              }
+              console.log("d----->",d);
+              d.leaveDays = _days;
 
 
-
-              Date.prototype.addDays = function(days) {
-                var dat = new Date(this.valueOf());
-                dat.setDate(dat.getDate() + days);
-                return dat;
-              }
-
-          function calculate(mon,year) {
-            var mon = mon;
-            var yea = year;
-            var dat = 1;
-            var myDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-            var myDate = new Date(eval('"' + dat + ',' + mon + ',' + yea + '"'))
-            var first = myDays[myDate.getDay()];
-            var secnd;
-            var forth;
-            switch (first) {
-                case "Sunday":
-                    secnd = "14-" + mon + '-' + yea;
-                    forth = "28-" + mon + '-' + yea;
-                    break;
-                case "Monday":
-                    secnd = "13-" + mon + '-' + yea;
-                    forth = "27-" + mon + '-' + yea;
-                    break;
-                case "Tuesday":
-                    secnd = "12-" + mon + '-' + yea;
-                    forth = "26-" + mon + '-' + yea;
-                    break;
-                case "Wednesday":
-                    secnd = "11-" + mon + '-' + yea;
-                    forth = "25-" + mon + '-' + yea;
-                    break;
-                case "Thursday":
-                    secnd = "10-" + mon + '-' + yea;
-                    forth = "24-" + mon + '-' + yea;
-                    break;
-                case "Friday":
-                    secnd = "9-" + mon + '-' + yea;
-                    forth = "23-" + mon + '-' + yea;
-                    break;
-                case "Saturday":
-                    secnd = "8-" + mon + '-' + yea;
-                    forth = "22-" + mon + '-' + yea;
-                    break;
-                default:
-                    break;
-            }
-            //console.log("secnd",secnd);
-            //console.log("forth",forth);
-            return [secnd,forth];
-        }
-         var month = "";
-         var mon =  date1.getMonth();
-         var year = date1.getFullYear();
-
-         switch(mon){
-           case 0: month= "January";
-                   break;
-          case 1: month= "February";
-                           break;
-          case 2: month= "March";
-                          break;
-          case 3: month= "April";
-                             break;
-          case 4: month= "May";
-                            break;
-          case 5: month= "June";
-                            break;
-          case 6: month= "July";
-                            break;
-          case 7: month= "August";
-                           break;
-          case 8: month= "September";
-                            break;
-          case 9: month= "October";
-                            break;
-          case 10: month= "November";
-                          break;
-          case 11: month= "December";
-                            break;
-         }
-         //console.log("MONTH",month);
-         //console.log("MONTH",year);
-        var saturdays =  calculate(month,year);
-        console.log(saturdays);
-        numberOfLeave=1;
-        while(date1 < date2){
-            if(mon!=date1.getMonth())
-            {
-              console.log("month cahnge");
-              mon=date1.getMonth();
-              switch(mon){
-                case 0: month= "January";
-                        break;
-               case 1: month= "February";
-                                break;
-               case 2: month= "March";
-                               break;
-               case 3: month= "April";
-                                  break;
-               case 4: month= "May";
-                                 break;
-               case 5: month= "June";
-                                 break;
-               case 6: month= "July";
-                                 break;
-               case 7: month= "August";
-                                break;
-               case 8: month= "September";
-                                 break;
-               case 9: month= "October";
-                                 break;
-               case 10: month= "November";
-                               break;
-               case 11: month= "December";
-                                 break;
-              }
-              saturdays= calculate(month,year);
-              console.log(saturdays);
-            }
-            var day =  date1.getDay();
-                  console.log(day);
-                  console.log(date1);
-                  var firstSat = new Date(saturdays[0]);
-                  var secSat = new Date(saturdays[1]);
-                  if(date1.getTime() === firstSat.getTime()){
-                      console.log("saturday1");
-                      numberOfLeave--;
-                  }
-                  if(date1.getTime() === secSat.getTime()){
-                    console.log("saturday2");
-                    numberOfLeave--;
-                  }
-
-
-                date1 = date1.addDays(1);
-                //console.log("next day",date1);
-                //console.log("final day",date2);
-              if(day !== 6){
-                numberOfLeave++;
-                console.log("------------"+numberOfLeave+"----------");
-              }
-
-        }
-              console.log("numberOfLeave",numberOfLeave);
 
             noOfDays = parseInt(d.noOfDays)
             leaveName = d.leaveType.id;
@@ -491,9 +350,11 @@ class UploadLeaveApplication extends React.Component{
                               "reason": d.reason,
                               "fromDate": d.fromDate,
                               "toDate": d.toDate,
-                              "leaveDays":numberOfLeave,
+                              "leaveDays":d.leaveDays,
                               "successMessage" : d.successMessage
             });
+
+
           }else{
             errorObject.push(d);
             error = 0;
@@ -502,127 +363,74 @@ class UploadLeaveApplication extends React.Component{
       console.log("Success Objects",serverObject);
       console.log("Error Objects",errorObject);
 
-        for(i=0;i<serverObject.length;i++){
-          try{
-             var leaveType = serverObject[i].leaveType["id"];
-             var asOnDate = serverObject[i].toDate;
-             var employeeid = serverObject[i].employee;
-             ////console.log(leaveType,asOnDate,employeeid);
-             var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
-              ////console.log(object);
+      serverObject.forEach(function(d){
 
-              }
-              catch (e){
-                ////console.log(e);
-              }
-          }
-
-
-
-            ////console.log("HR",hrConfigurations);
-            ////console.log("all",allHolidayList);
-
-
-
-
-          // var calenderYearApi = serverObject[0].calendarYear;
-          //
-          // try {
-          //     var leaveBal = commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
-          //         tenantId,
-          //         pageSize: 500,
-          //         year : calenderYearApi
-          //       }).responseJSON["LeaveOpeningBalance"] || [];
-          // } catch(e) {
-          //     var leaveBal = [];
-          // }
-
-        ////console.log(leaveBal);
-          var errorLeaveOpening=[]
-          var exists = false;
-          for(var i=0;i<serverObject.length;i++){
-          ////console.log("Success Object-->",serverObject[i]);
-                var calendarNumber = parseInt(serverObject[i].calendarYear);
-                exists = false;
-                for(var j=0;j<leaveBal.length;j++){
-                  if(calendarNumber===leaveBal[j].calendarYear){
-                     if(serverObject[i].employee===leaveBal[j].employee){
-                         if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
-                         ////console.log("Duplicate object from server -->",serverObject[i]);
-                                 exists=true;
-                                 serverObject[i].errorMessage = "Leave opening balance already present in the system for this Employee";
-                                 errorLeaveOpening.push(serverObject[i]);
-                                 break;
-                            }
-                      }
-                    }
-                  }
-
-                  if(exists===false){
-                  ////console.log("finalSuccessObject-->",serverObject[i]);
-                    serverObject[i].successMessage = "Employee leaves created successfully";
-                    finalValidatedServerObject.push(serverObject[i]);
-                  }
-
-          }
-        ////console.log("Data already present",errorLeaveOpening);
-
-          errorLeaveOpening.forEach(function(d){
-            errorObject.push(d);
+          finalSuccessObject.push({
+            "employee": d.employee,
+            "leaveType": {
+              "id": d.leaveType["id"]
+            },
+            "fromDate": d.fromDate,
+            "toDate": d.toDate,
+            "availableDays": 0,
+            "leaveDays": d.leaveDays,
+            "reason":  d.reason,
+            "status": "",
+            "stateId": "",
+            "tenantId": tenantId,
+            "workflowDetails": {
+              "department": "",
+              "designation": "",
+              "assignee": "",
+              "action": "",
+              "status": ""
+            }
           });
 
-        ////console.log("Final Server Object After Validation",finalValidatedServerObject);
-        ////console.log("Final Error Object After Validation",errorObject);
+        });
+            console.log("finalSuccessObject",finalSuccessObject);
+          // var ep1=new ExcelPlus();
+          // var b=0;
+          //
+          //   ep1.createFile("Success");
+          //   ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
+          //   for(b=0;b<finalValidatedServerObject.length;b++){
+          //     ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].calendarYear,finalValidatedServerObject[b].noOfDays,finalValidatedServerObject[b].successMessage])
+          //   }
+          //   ep1.saveAs("success.xlsx");
+          //
+          // var ep2=new ExcelPlus();
+          // var b=0;
+          //
+          //   ep2.createFile("Error");
+          //   ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+          //   for(b=0;b<errorObject.length;b++){
+          //     ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMessage])
+          //   }
+          //   ep2.saveAs("error.xlsx");
+          //
+          //
+          //   finalValidatedServerObject.forEach(function(d){
+          //   ////console.log(d);
+          //       finalSuccessObject.push({"employee": d.employee,
+          //                       "calendarYear": d.calendarYear,
+          //                       "leaveType":  { "id": d.leaveType["id"]},
+          //                       "noOfDays" : d.noOfDays,
+          //                       "tenantId": d.tenantId
+          //                     });
+          //   });
+          //console.log("FINSSL SNJNCJ",finalSuccessObject);
 
-          var ep1=new ExcelPlus();
-          var b=0;
+          if(serverObject.length!==0){
 
-            ep1.createFile("Success");
-            ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
-            for(b=0;b<finalValidatedServerObject.length;b++){
-              ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].calendarYear,finalValidatedServerObject[b].noOfDays,finalValidatedServerObject[b].successMessage])
-            }
-            ep1.saveAs("success.xlsx");
-
-          var ep2=new ExcelPlus();
-          var b=0;
-
-            ep2.createFile("Error");
-            ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
-            for(b=0;b<errorObject.length;b++){
-              ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMessage])
-            }
-            ep2.saveAs("error.xlsx");
-
-
-            finalValidatedServerObject.forEach(function(d){
-            ////console.log(d);
-                finalSuccessObject.push({"employee": d.employee,
-                                "calendarYear": d.calendarYear,
-                                "leaveType":  { "id": d.leaveType["id"]},
-                                "noOfDays" : d.noOfDays,
-                                "tenantId": d.tenantId
-                              });
-            });
-          ////console.log("FINSSL SNJNCJ",finalSuccessObject);
-
-          if(finalSuccessObject.length!==0){
-
-          // try {
-          //   employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
-          // } catch (e) {
-          //   employees = [];
-          // }
-
-
-          var body={
+            var body={
               "RequestInfo":requestInfo,
               "LeaveOpeningBalance":finalSuccessObject
             },_this=this;
 
             $.ajax({
 
-                  url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId,
+                  url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
                   type: 'POST',
                   dataType: 'json',
                   data:JSON.stringify(body),
@@ -631,7 +439,7 @@ class UploadLeaveApplication extends React.Component{
                     'auth-token': authToken
                   },
                   success: function(res) {
-                          showSuccess("File Uploaded successfully.");           
+                          showSuccess("File Uploaded successfully.");
                           _this.setState({
                             LeaveType:{
                               "id": "",
@@ -649,8 +457,8 @@ class UploadLeaveApplication extends React.Component{
             }else{
               showError("No vaild data in the Uploaded Excel");
             }
-    }
 
+}
   render()
   {
     let {addOrUpdate,filePicked}=this;

@@ -1,10 +1,9 @@
 package org.egov.pgrrest.read.persistence.repository;
 
+import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
-import org.egov.pgrrest.common.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.Complaint;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
-import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.read.persistence.specification.ComplaintSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -22,14 +21,13 @@ public class ServiceRequestRepository {
 	private static final String PUT = "PUT";
 	private ComplaintJpaRepository complaintJpaRepository;
 	private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
-	private SubmissionJpaRepository submissionJpaRepository;
 
-	@Autowired
+    @Autowired
 	public ServiceRequestRepository(ComplaintJpaRepository complaintJpaRepository,
                                     ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository) {
 		this.complaintJpaRepository = complaintJpaRepository;
 		this.serviceRequestMessageQueueRepository = serviceRequestMessageQueueRepository;
-	}
+    }
 
     public void save(SevaRequest sevaRequest) {
         Date date = Calendar.getInstance().getTime();

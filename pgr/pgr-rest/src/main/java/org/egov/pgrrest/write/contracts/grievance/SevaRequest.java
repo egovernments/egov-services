@@ -19,8 +19,8 @@ public class SevaRequest {
     private static final String REQUEST_INFO = "RequestInfo";
     private static final String CITIZEN = "CITIZEN";
     private static final String VALUES_CITIZENFEEDBACK = "citizenFeedback";
-    public static final String ATTRIBUTE_ENTRY_KEY = "key";
-    public static final String ATTRIBUTE_ENTRY_NAME = "name";
+    private static final String ATTRIBUTE_ENTRY_KEY = "key";
+    private static final String ATTRIBUTE_ENTRY_NAME = "name";
 
     private HashMap<String, Object> sevaRequestMap;
     private ObjectMapper objectMapper;

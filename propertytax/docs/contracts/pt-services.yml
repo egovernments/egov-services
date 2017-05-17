@@ -283,6 +283,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/User'
+      propertyDetail:
+        $ref: "#/definitions/PropertyDetail"
       assessmentDate:
         type: string
         format: date
@@ -865,6 +867,11 @@ definitions:
         description: type of the User
         maxLength: 16
         minLength: 1
+      roles:
+        description: Owners
+        type: array
+        items:
+          $ref: '#/definitions/Role'
     required:
     - tenantId
 

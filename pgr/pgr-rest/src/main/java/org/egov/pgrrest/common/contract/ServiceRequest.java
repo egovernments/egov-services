@@ -10,8 +10,10 @@ import org.egov.pgrrest.common.model.Complainant;
 import org.egov.pgrrest.read.domain.model.ComplaintLocation;
 import org.egov.pgrrest.read.domain.model.ComplaintType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -120,7 +122,14 @@ public class ServiceRequest {
         phone = complaint.getComplainant().getMobile();
         email = complaint.getComplainant().getEmail();
         values = getAdditionalValues(complaint);
-        attribValues = getAttributeValues(complaint);
+        if(CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
+            attribValues = getAttributeValues(complaint);
+        } else {
+            attribValues = complaint.getAttributeEntries()
+                .stream()
+                .map(attribute -> new AttributeEntry(attribute.getKey(), attribute.getCode()))
+                .collect(Collectors.toList());
+        }
         tenantId = complaint.getTenantId();
     }
 

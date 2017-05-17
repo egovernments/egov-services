@@ -154,7 +154,15 @@
 											<div class="row">
 												<i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i>
 												<h3 class="col-sm-11 col-xs-10">
-												Grievance Redressal<span class="msg-status">{{values.complaintStatus}}</span> </h3> 
+												Grievance Redressal
+													<span class="msg-status">
+														{{#each attribValues}}
+														    {{#if (contains this.key "complaintStatus")}}
+																{{this.name}}
+														    {{/if}}
+														{{/each}}
+													</span> 
+												</h3> 
 											</div>
 											<div class="msg-info">
 												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
@@ -164,7 +172,17 @@
 										</header>
 										<div class="msg-content collapse in">
 											<p> 
-												Grievance No. {{serviceRequestId}} regarding {{serviceName}} in {{values.complaintStatus}} status. 
+												Grievance No. 
+												{{serviceRequestId}} 
+												regarding 
+												{{serviceName}} 
+												in 
+												{{#each attribValues}}
+												    {{#if (contains this.key "complaintStatus")}}
+														{{this.name}}
+												    {{/if}}
+												{{/each}} 
+												status. 
 											</p>
 										</div>
 									</div> 

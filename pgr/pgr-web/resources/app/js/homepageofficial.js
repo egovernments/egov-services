@@ -451,7 +451,12 @@ function worklist(){
 		{ "title":dt_now, "width": "20%", "render": function ( data, type, full, meta ) {
 			return 'Grievance';
 	    } },
-		{ "title":dt_status, "data": "values.complaintStatus","width": "24%"},
+		{ "title":dt_status, "width": "24%", "render": function ( data, type, full, meta ) {
+			for (var item of full.attribValues) {
+				if(item['key']=='complaintStatus')
+					return item['name'];
+			}
+	    } },
 		{ "title":dt_comments, "width": "20%", "render": function ( data, type, full, meta ) {
 			var text = 'Complaint Number '+(full.serviceRequestId)+' for '+(full.serviceName)+' filed on '+(full.requestedDatetime)+'. Date of Resolution is '+(full.expectedDatetime);
 			return text;

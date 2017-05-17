@@ -223,3 +223,8 @@ function search(elem) {
 		});
 	}
 };
+
+Handlebars.registerHelper('contains', function(string, checkString) {
+	var n = string.includes(checkString);
+	return n;
+});

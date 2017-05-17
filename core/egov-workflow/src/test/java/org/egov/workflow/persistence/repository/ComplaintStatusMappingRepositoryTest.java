@@ -35,11 +35,11 @@ public class ComplaintStatusMappingRepositoryTest {
 
         when(
                 complaintStatusMappingJpaRepository.
-                        findByCurrentStatusIdAndRoleInOrderByOrderNoAsc(currentStatusId, roles)
+                    findByCurrentStatusIdAndRoleInAndTenantIdOrderByOrderNoAsc(currentStatusId, roles,"default")
         ).thenReturn(complaintStatusMappingEntities);
 
         List<org.egov.workflow.domain.model.ComplaintStatus> result =
-                complaintStatusMappingRepository.getNextStatuses(currentStatusId, roles);
+                complaintStatusMappingRepository.getNextStatuses(currentStatusId, roles,"default");
 
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getName()).isEqualTo("PROCESSING");
@@ -48,18 +48,18 @@ public class ComplaintStatusMappingRepositoryTest {
 
 
     private List<ComplaintStatusMapping> getListOfComplaintStatusMappingEntities() {
-        ComplaintStatus registered = new ComplaintStatus(1L, "REGISTERED");
-        ComplaintStatus processing = new ComplaintStatus(2L, "PROCESSING");
-        ComplaintStatus completed = new ComplaintStatus(3L, "COMPLETED");
+        ComplaintStatus registered = new ComplaintStatus(1L, "REGISTERED","default","0001");
+        ComplaintStatus processing = new ComplaintStatus(2L, "PROCESSING","default","0002");
+        ComplaintStatus completed = new ComplaintStatus(3L, "COMPLETED","default","0003");
 
         ComplaintStatusMapping complaintStatusMapping1 =
-                new ComplaintStatusMapping(1L, registered, processing, 1L, 1);
+                new ComplaintStatusMapping(1L, registered, processing, 1L, 1,"default");
 
         ComplaintStatusMapping complaintStatusMapping2 =
-                new ComplaintStatusMapping(2L, processing, completed, 2L, 2);
+                new ComplaintStatusMapping(2L, processing, completed, 2L, 2,"default");
 
         ComplaintStatusMapping complaintStatusMapping3 =
-                new ComplaintStatusMapping(3L, completed, processing, 2L, 3);
+                new ComplaintStatusMapping(3L, completed, processing, 2L, 3, "default");
 
         return asList(complaintStatusMapping1, complaintStatusMapping2, complaintStatusMapping3);
     }

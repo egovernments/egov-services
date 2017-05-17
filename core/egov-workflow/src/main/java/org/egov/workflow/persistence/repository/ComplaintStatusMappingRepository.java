@@ -1,7 +1,7 @@
 package org.egov.workflow.persistence.repository;
 
-import org.egov.workflow.domain.model.ComplaintStatus;
 import org.egov.workflow.persistence.entity.ComplaintStatusMapping;
+import org.egov.workflow.persistence.entity.ComplaintStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +16,12 @@ public class ComplaintStatusMappingRepository {
         this.complaintStatusMappingJpaRepository = complaintStatusMappingJpaRepository;
     }
 
-    public List<ComplaintStatus> getNextStatuses(Long currentStatusId, List<Long> roles) {
+    public List<org.egov.workflow.domain.model.ComplaintStatus> getNextStatuses(Long currentStatusId
+        , List<Long> roles, String tenantId) {
         return complaintStatusMappingJpaRepository
-                .findByCurrentStatusIdAndRoleInOrderByOrderNoAsc(currentStatusId, roles).stream()
+                .findByCurrentStatusIdAndRoleInAndTenantIdOrderByOrderNoAsc(currentStatusId, roles,tenantId).stream()
                 .map(ComplaintStatusMapping::getShowStatus)
-                .map(org.egov.workflow.persistence.entity.ComplaintStatus::toDomain)
+                .map(ComplaintStatus::toDomain)
                 .distinct()
                 .collect(Collectors.toList());
     }

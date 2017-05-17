@@ -21,7 +21,7 @@ public class AgreementQueryBuilder {
 				+ "created_by=?,last_modified_by=?,created_date=?,last_modified_date=?,"
 				+ "allottee=?,asset=?,Rent_Increment_Method=?,"
 				+ "AcknowledgementNumber=?,stateid=?,Tenant_id=?,goodwillamount=?,timeperiod=?,"
-				+ "collectedsecuritydeposit=?,collectedgoodwillamount=?,source=?,"
+				+ "collectedsecuritydeposit=?,collectedgoodwillamount=?,source=?"
 				+ " WHERE acknowledgementNumber=? and Tenant_id=?";
 	}
 }

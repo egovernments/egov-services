@@ -267,11 +267,15 @@ class CreateAsset extends React.Component {
     this.handleRefSearch = this.handleRefSearch.bind(this);
     this.selectRef = this.selectRef.bind(this);
     this.removeRow = this.removeRow.bind(this);
-
+    this.handleClick = this.handleClick.bind(this);
   }
   close() {
       // widow.close();
       open(location, '_self').close();
+  }
+
+  handleClick(asset) {
+    window.open(`app/asset/create-asset.html?id=${asset.id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   getCategory(id) {
@@ -299,13 +303,15 @@ class CreateAsset extends React.Component {
     })
   }
 
-  selectRef(e, id, name) {
+  selectRef(e, asset) {
     e.preventDefault();
+    e.stopPropagation();
     this.setState({
       assetSet: {
         ...this.state.assetSet,
-        assetReference: id,
-        assetReferenceName: name
+        assetReference: asset.id,
+        assetReferenceName: asset.name,
+        locationDetails: asset.locationDetails
       },
       refSet: {
         tenantId: tenantId,
@@ -344,11 +350,13 @@ class CreateAsset extends React.Component {
 
   handleRefSearch(e) {
     e.preventDefault();
-    if(!this.state.refSet.assetCategory) return;
     var assets = [];
     var res = commonApiPost("asset-services","assets","_search", this.state.refSet);
     if(res.responseJSON && res.responseJSON["Assets"]) {
       assets = res.responseJSON["Assets"];
+      assets.sort(function(item1, item2) {
+        return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+      });
       this.setState({
         references: assets
       })
@@ -853,7 +861,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
+    let {handleChange, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
     let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments} = this.state;
     let {
       assetCategory,
@@ -921,7 +929,7 @@ class CreateAsset extends React.Component {
         }
     };
 
-    const renderRadio = function(list, name, isMandatory) {
+    /*const renderRadio = function(list, name, isMandatory) {
         if(list && list.length) {
             return list.map((item, ind) => {
                 return (
@@ -944,14 +952,19 @@ class CreateAsset extends React.Component {
             })
         }
 
-    }
+    }*/
 
     const renderOption = function(list, assetCatBool) {
-        if(list)
-        {
+        if(list) {
             if (list.length) {
-              return list.map((item, ind)=>
-              {
+              list.sort(function(item1, item2) {
+                if(item1.name && item2.name)
+                  return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
+                else
+                  return 0;
+              });
+
+              return list.map((item, ind)=> {
                   if(typeof item == "object") {
                     return (<option key={ind} data={assetCatBool ? item.version : ""} value={item.id}>
                           {item.name}
@@ -964,8 +977,7 @@ class CreateAsset extends React.Component {
               })
 
             } else {
-              return Object.keys(list).map((k, index)=>
-              {
+              return Object.keys(list).map((k, index)=> {
                 return (<option key={index} value={k}>
                         {list[k]}
                   </option>)
@@ -1067,7 +1079,7 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <input style={{"margin-bottom": 0}} name={item.name} type="text" maxLength= "200"
-                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
         );
       } else {
         var type = getUrlVars()["type"];
@@ -1088,7 +1100,7 @@ class CreateAsset extends React.Component {
               </div>
               <div className="col-sm-6">
                 <input name={item.name} type="text" maxLength= "200"
-                  defaultValue={_values || item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                  defaultValue={_values || item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
               </div>
             </div>
           </div>
@@ -1100,7 +1112,7 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <input  className="custom-date-picker" name={item.name} type="text"
-            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
         )
       } else {
         var type = getUrlVars()["type"];
@@ -1120,7 +1132,7 @@ class CreateAsset extends React.Component {
                       </div>
                       <div className="col-sm-6">
                           <input  className="custom-date-picker" name={item.name} type="text"
-                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
                       </div>
                   </div>
               </div>)
@@ -1131,9 +1143,9 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <select name={item.name} multiple={multi ? true : false}
-                  onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly}>
+                  onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}>
                   <option value="">Select</option>
-                  {renderOption(item.values.split(','))}
+                  {item.values ? renderOption(item.values.split(',')) : ""}
           </select>
         )
       } else {
@@ -1154,9 +1166,9 @@ class CreateAsset extends React.Component {
               </div>
               <div className="col-sm-6">
                 <select name={item.name} multiple={multi ? true : false}
-                  defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly}>
+                  defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}>
                   <option value="">Select</option>
-                  {renderOption(item.values.split(','))}
+                  {item.values ? renderOption(item.values.split(',')) : ""}
                 </select>
               </div>
             </div>
@@ -1198,7 +1210,7 @@ class CreateAsset extends React.Component {
     const showFile = function(item, index, ifTable) {
       if(ifTable) {
         return (
-          <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly} multiple/>
+          <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1} multiple/>
         )
       } else {
         return (<div className="col-sm-6" key={index}>
@@ -1207,7 +1219,7 @@ class CreateAsset extends React.Component {
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "File", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
+                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "File", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1} multiple/>
                     </div>
                 </div>
             </div>)
@@ -1237,6 +1249,7 @@ class CreateAsset extends React.Component {
               <td style={{"padding-top": "12px"}}>{len ? (len+ind+ ( tblSet.removeCustom ? 0 : 1)) : (ind+( tblSet.removeCustom ? 1 : 2))}</td>
               {item.columns.map((itemOne, index) => {
               itemOne.parent = item.name;
+              itemOne.isActive = item.isActive;
               return (
                 <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
@@ -1273,6 +1286,7 @@ class CreateAsset extends React.Component {
                         var newItem = Object.assign({}, item.columns[i]);
                         newItem.values = _itm.value;
                         newItem.parent = name;
+                        newItem.isActive = item.isActive;
                         return (
                           <td>{checkFields(newItem, ind, true)}</td>
                         );
@@ -1317,6 +1331,7 @@ class CreateAsset extends React.Component {
                 <td  style={{"padding-top": "12px"}}>1</td>
                 {item.columns.map((itemOne, index) => {
                 itemOne.parent = item.name;
+                itemOne.isActive = item.isActive;
                 return (
                   <td>{checkFields(itemOne, 0, true)}</td>
                 )
@@ -1332,7 +1347,7 @@ class CreateAsset extends React.Component {
              <div className="form-section row">
                 <div className="row">
                    <div className="col-md-8">
-                      <h3 className="categoryType">{item.name}</h3>
+                      <h3 className="categoryType">{item.name} {showStart(item.isMandatory)}</h3>
                    </div>
                    <div className="col-md-4 text-right">
 
@@ -1358,7 +1373,7 @@ class CreateAsset extends React.Component {
                 </div>
              </div>
              <div className="row text-right">
-                <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
+                <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view" || [true, "true"].indexOf(item.isActive) == -1}>Add</button>
              </div>
           </div>
         )
@@ -1442,8 +1457,11 @@ class CreateAsset extends React.Component {
 
     const renderRefBody = function() {
       if (references.length > 0) {
+        references.sort(function(item1, item2) {
+          return item1.code > item2.code ? 1 : item1.code < item2.code ? -1 : 0;
+        });
         return references.map((item, index) => {
-              return (<tr key={index}>
+              return (<tr key={index} onClick={(e) => handleClick(item)}>
                         <td>{index+1}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>
@@ -1451,7 +1469,7 @@ class CreateAsset extends React.Component {
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td data-label="action">
-                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>
+                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
                         </td>
                       </tr>
               );
@@ -1820,11 +1838,11 @@ class CreateAsset extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label for="refSet.assetCategory">Asset Category <span>*</span> </label>
+                              <label for="refSet.assetCategory">Asset Category </label>
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <select id="refSet.assetCategory" required name="refSet.assetCategory" value={refSet.assetCategory} onChange={(e) => {handleReferenceChange(e, "assetCategory")}}>
+                              <select id="refSet.assetCategory" name="refSet.assetCategory" value={refSet.assetCategory} onChange={(e) => {handleReferenceChange(e, "assetCategory")}}>
                                     <option value="">Select Asset Category</option>
                                     {renderOption(this.state.assetCategories)}
                                 </select>

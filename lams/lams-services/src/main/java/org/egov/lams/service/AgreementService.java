@@ -149,18 +149,20 @@ public class AgreementService {
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
-
+		//FIXME remove after fixing tenantidf set to default for now 
+		agreement.getLegacyDemands().get(0).setTenantId("default");
+		
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-
+			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
-			agreement.setDemands(updateDemnad(agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
-
+			agreement.setDemands(updateDemnad(agreement.getDemands(),agreement.getLegacyDemands(), agreementRequest.getRequestInfo()));
+			logger.info("the id from demand save call :: "+agreement.getDemands());
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 
 			if (workFlowDetails != null) {
-
+				logger.info("updateagreementservice Source.SYSTEM");
 				logger.info("the workflow details status :: " + workFlowDetails.getAction());
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
@@ -176,7 +178,7 @@ public class AgreementService {
 				}
 			}
 		}
-
+		logger.info("kafkatopic value :: "+ kafkaTopic);
 		try {
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
@@ -194,13 +196,13 @@ public class AgreementService {
 		return agreement;
 	}
 
-	private List<String> updateDemnad(List<Demand> demands, RequestInfo requestInfo) {
+	private List<String> updateDemnad(List<String> demands,List<Demand> legacydemands, RequestInfo requestInfo) {
 
 		DemandResponse demandResponse = null;
 		if (demands == null)
-			demandResponse = demandRepository.createDemand(demands, requestInfo);
+			demandResponse = demandRepository.createDemand(legacydemands, requestInfo);
 		else
-			demandResponse = demandRepository.updateDemand(demands, requestInfo);
+			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
 		return demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 	}
@@ -218,7 +220,8 @@ public class AgreementService {
 			legacyDemands = demandRepository.getDemandList(agreementRequest, demandReasons);
 		} else {
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.getLong(demandIds.get(0)));
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			logger.info("the demand search id :: "+demandSearchCriteria.getDemandId());
 			legacyDemands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 					.getDemands();
 		}

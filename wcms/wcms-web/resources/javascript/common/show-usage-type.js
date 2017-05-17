@@ -32,10 +32,10 @@ class ShowUsageType extends React.Component {
   {
       if (prevState.list.length!=this.state.list.length) {
 
-          $('#designationTable').DataTable({
+          $('#usagetyepTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
+                      'excel', 'pdf', 'print'
              ],
              ordering: false
           });
@@ -89,7 +89,7 @@ class ShowUsageType extends React.Component {
 
       return (<div>
         <h3>{titleCase(getUrlVars()["type"])} Usage Type </h3>
-        <table id="designationTable" className="table table-bordered">
+        <table id="usagetyepTable" className="table table-bordered">
             <thead>
                 <tr>
                     <th>Sl No.</th>
@@ -102,7 +102,7 @@ class ShowUsageType extends React.Component {
                 </tr>
             </thead>
 
-            <tbody id="employeeSearchResultTableBody">
+            <tbody id="usagetypeTableResultBody">
                 {
                     renderBody()
                 }

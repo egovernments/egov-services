@@ -1,11 +1,11 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.common.entity.Complaint;
-import org.egov.pgrrest.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgrrest.read.persistence.specification.SevaSpecification;
+import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
+import org.egov.pgrrest.read.persistence.specification.ComplaintSpecification;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -33,9 +32,15 @@ public class ComplaintJpaRepositoryTest {
     @Autowired
     private org.egov.pgrrest.common.repository.ComplaintJpaRepository complaintJpaRepository;
 
+    @Before
+    public void before() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Calcutta"));
+    }
+
     @Test
     @Sql(scripts = {
             "/sql/clearComplaint.sql",
+            "/sql/clearComplaintType.sql",
             "/sql/InsertComplaintData.sql"
           })
     public void testShouldFindAllComplaints() throws ParseException {
@@ -43,10 +48,9 @@ public class ComplaintJpaRepositoryTest {
         DateTime endDate = new DateTime(2016, 12, 21, 0, 0, 0, 0);
         DateTime lastModifiedDate = new DateTime(2016, 12, 21, 0, 0, 0, 0);
         DateTime escalationDate = new DateTime(2016, 12, 24, 0, 0, 0, 0);
-        int count=2; 
-       
 
-        ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
+
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
                 .status(Arrays.asList("REGISTERED","FORWARDED"))
                 .receivingMode(5L)
                 .locationId(1L)
@@ -60,10 +64,10 @@ public class ComplaintJpaRepositoryTest {
                 .tenantId("ap.public")
                 .build();
 
-        SevaSpecification specification = new SevaSpecification(complaintSearchCriteria);
+        ComplaintSpecification specification = new ComplaintSpecification(serviceRequestSearchCriteria);
         List<Complaint> complaints = complaintJpaRepository.findAll(specification);
         
-        assertThat(complaints.size()).isEqualTo(count);
+        assertThat(complaints.size()).isEqualTo(2);
         assertThat(complaints.get(0).getCrn()).isEqualTo("0005-2017-AB");
         assertThat(complaints.get(0).getComplainant()).isNotNull();
         assertThat(complaints.get(0).getComplainant().getName()).isEqualTo("kumar");
@@ -75,7 +79,7 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(0).getLatitude()).isEqualTo(0);
         assertThat(complaints.get(0).getLongitude()).isEqualTo(0);
         assertThat(complaints.get(0).getCreatedDate()).isBetween(startDate.toDate(), endDate.toDate());
-        assertTrue(DateUtils.truncatedEquals(complaints.get(0).getLastModifiedDate(),lastModifiedDate.toDate(),Calendar.SECOND));
+        assertNotNull(complaints.get(0).getLastModifiedDate());
         assertThat(complaints.get(0).getEscalationDate()).isBefore(escalationDate.toDate());
         assertThat(complaints.get(0).getComplaintType().getName()).isEqualTo("Absenteesim of door_to_door garbage collector");
         assertThat(complaints.get(0).getComplaintType().getCode()).isEqualTo("AODTDGCC");
@@ -101,7 +105,7 @@ public class ComplaintJpaRepositoryTest {
         assertThat(complaints.get(1).getLatitude()).isEqualTo(0);
         assertThat(complaints.get(1).getLongitude()).isEqualTo(0);
         assertThat(complaints.get(1).getCreatedDate()).isBetween(startDate.toDate(), endDate.toDate());
-        assertTrue(DateUtils.truncatedEquals(complaints.get(1).getLastModifiedDate(),lastModifiedDate.toDate(),Calendar.SECOND));
+        assertNotNull(complaints.get(1).getLastModifiedDate());
         assertThat(complaints.get(1).getEscalationDate()).isBefore(escalationDate.toDate());
         assertThat(complaints.get(1).getComplaintType().getName()).isEqualTo("Absenteesim_of_sweepers");
         assertThat(complaints.get(1).getComplaintType().getCode()).isEqualTo("AOSS");

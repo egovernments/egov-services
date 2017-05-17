@@ -14,5 +14,5 @@ public class ComplaintStatusRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    private String tenantId;
+//    private String tenantId;
 }

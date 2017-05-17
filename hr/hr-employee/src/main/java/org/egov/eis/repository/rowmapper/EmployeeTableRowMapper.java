@@ -89,6 +89,8 @@ public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 		employee.setBankAccount(rs.getString("bankaccount"));
 		employee.setGroup((Long) rs.getObject("groupid"));
 		employee.setPlaceOfBirth(rs.getString("placeofbirth"));
+		employee.setCreatedBy((Long) rs.getObject("createdBy"));
+		employee.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
 		employee.setTenantId(rs.getString("tenantid"));
 		try {
 			Date date = isEmpty(rs.getDate("dateofappointment")) ? null
@@ -105,6 +107,12 @@ public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 			date = isEmpty(rs.getDate("dateoftermination")) ? null
 					: sdf.parse(sdf.format(rs.getDate("dateoftermination")));
 			employee.setDateOfTermination(date);
+			date = isEmpty(rs.getDate("createdDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("createdDate")));
+			employee.setCreatedDate(date);
+			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
+			employee.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

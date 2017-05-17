@@ -4,6 +4,7 @@ import org.egov.workflow.persistence.entity.ComplaintStatusMapping;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ComplaintStatusMappingJpaRepositoryTest {
 
     @Autowired
@@ -28,7 +30,7 @@ public class ComplaintStatusMappingJpaRepositoryTest {
             "/sql/insertComplaintStatusMapping.sql"})
     public void test_should_find_next_status_given_current_status_and_roles_ordered_by_order_no_ascending() {
         List<ComplaintStatusMapping> result = complaintStatusMappingJpaRepository.
-                findByCurrentStatusIdAndRoleInOrderByOrderNoAsc(1L, Arrays.asList(1L, 7L));
+            findByCurrentStatusIdAndRoleInAndTenantIdOrderByOrderNoAsc(1L, Arrays.asList(1L, 7L),"default");
 
         assertThat(result.size()).isEqualTo(6);
         assertThat(result.get(0).getId()).isEqualTo(16);

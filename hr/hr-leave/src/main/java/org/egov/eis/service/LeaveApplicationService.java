@@ -89,8 +89,9 @@ public class LeaveApplicationService {
     @Autowired
     private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
 
-    public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
-        return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
+    public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
+            final RequestInfo requestInfo) {
+        return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
     }
 
     public List<LeaveApplication> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
@@ -133,7 +134,8 @@ public class LeaveApplicationService {
         final List<Long> ids = new ArrayList<>();
         ids.add(leaveApplication.getId());
         leaveApplicationGetRequest.setId(ids);
-        final List<LeaveApplication> leaveApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
+        final List<LeaveApplication> leaveApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest,
+                leaveApplicationRequest.getRequestInfo());
         leaveApplication.setStatus(leaveApplications.get(0).getStatus());
         leaveApplication.setStateId(leaveApplications.get(0).getStateId());
         String leaveApplicationRequestJson = null;

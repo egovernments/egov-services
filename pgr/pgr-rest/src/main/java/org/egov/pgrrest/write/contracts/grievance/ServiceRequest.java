@@ -89,7 +89,7 @@ public class ServiceRequest {
     }
 
     @SuppressWarnings("unchecked")
-    private List<HashMap<String, String>> getAttributeValues() {
+    public List<HashMap<String, String>> getAttributeValues() {
         final List<HashMap<String, String>> attributeValues =
             (List<HashMap<String, String>>) this.serviceRequestMap.get(ATTRIBUTE_VALUES);
         return attributeValues == null ? Collections.emptyList() : attributeValues;

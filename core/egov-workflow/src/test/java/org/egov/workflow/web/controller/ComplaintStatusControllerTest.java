@@ -6,7 +6,10 @@ import org.egov.workflow.domain.exception.InvalidComplaintStatusException;
 import org.egov.workflow.domain.exception.InvalidComplaintStatusSearchException;
 import org.egov.workflow.domain.model.ComplaintStatus;
 import org.egov.workflow.domain.model.ComplaintStatusSearchCriteria;
+import org.egov.workflow.domain.model.KeywordStatusMapping;
+import org.egov.workflow.domain.model.KeywordStatusMappingSearchCriteria;
 import org.egov.workflow.domain.service.ComplaintStatusService;
+import org.egov.workflow.domain.service.KeywordStatusMappingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +38,30 @@ public class ComplaintStatusControllerTest {
     @MockBean
     private ComplaintStatusService complaintStatusService;
 
+    @MockBean
+    private KeywordStatusMappingService keywordStatusMappingService;
+
     Resources resources = new Resources();
 
     @Test
     public void findAllStatusTest() throws Exception {
         List<ComplaintStatus> complaintStatuses = Collections.singletonList(
-                new ComplaintStatus(1L, "REGISTERED")
+                org.egov.workflow.domain.model.ComplaintStatus.builder()
+                    .code("REGISTERED").id(1L)
+                    .name("REGISTERED").tenantId("default").build()
         );
 
-        when(complaintStatusService.findAll()).thenReturn(complaintStatuses);
+        KeywordStatusMappingSearchCriteria searchCriteria = KeywordStatusMappingSearchCriteria.builder()
+            .tenantId("default")
+            .keyword("Complaint")
+            .build();
+
+        when(keywordStatusMappingService.getStatusForKeyword(searchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
                     post("/statuses/_search")
+                        .param("tenantId", "default")
+                        .param("keyword", "Complaint")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(resources.getFileContents("complaintStatusRequest.json"))
                 )
@@ -58,11 +73,11 @@ public class ComplaintStatusControllerTest {
     public void testComplaintStatusMappingService() throws Exception {
         String status = "REGISTERED";
         List<ComplaintStatus> complaintStatuses = Collections.singletonList(
-                new ComplaintStatus(1L, "REGISTERED")
+                new ComplaintStatus(1L, "REGISTERED","default","0001")
         );
 
         ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L));
+                new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L),"default");
         when(complaintStatusService.getNextStatuses(complaintStatusSearchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
@@ -79,7 +94,7 @@ public class ComplaintStatusControllerTest {
     public void should_return_400_when_request_fields_are_invalid() throws Exception {
         InvalidComplaintStatusSearchException exception =
                 new InvalidComplaintStatusSearchException(
-                        new ComplaintStatusSearchCriteria("", Collections.emptyList())
+                        new ComplaintStatusSearchCriteria("", Collections.emptyList(),"default")
                 );
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
@@ -96,8 +111,7 @@ public class ComplaintStatusControllerTest {
     @Test
     public void should_return_400_when_current_status_does_not_exist() throws Exception {
         final String CURRENT_STATUS = "SLEEPING";
-        ComplaintStatus complaintStatus = new ComplaintStatus(0L, CURRENT_STATUS);
-        InvalidComplaintStatusException exception = new InvalidComplaintStatusException(complaintStatus);
+        InvalidComplaintStatusException exception = new InvalidComplaintStatusException();
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
         mockMvc.perform(

@@ -43,7 +43,7 @@ public class ComplaintStatusSearchErrorAdaptor implements ErrorAdapter<Complaint
     }
 
     private void addNameValidationErrors(ComplaintStatusSearchCriteria model, List<ErrorField> errorFields) {
-        if(!model.isNameAbsent()) return;
+        if(!model.isCodeAbsent()) return;
 
         errorFields.add(
                 new ErrorField("", CURRENT_STATUS_IS_REQUIRED_MESSAGE, "")

@@ -13,6 +13,7 @@ import org.egov.lams.model.Asset;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,11 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 				agreement.setCouncilDate(rs.getTimestamp("council_date"));
 				agreement.setCouncilNumber(rs.getString("council_number"));
 				agreement.setExpiryDate(rs.getTimestamp("expiry_date"));
+				
+				String source = rs.getString("source");
+				agreement.setSource(Source.fromValue(source));
+				agreement.setCollectedGoodWillAmount((Double)rs.getObject("collectedGoodWillAmount"));
+				agreement.setCollectedSecurityDeposit((Double)rs.getObject("collectedSecurityDeposit"));
 				
 				String natureOfAllotment = rs.getString("nature_of_allotment");
 				agreement.setNatureOfAllotment(NatureOfAllotment.fromValue(natureOfAllotment));

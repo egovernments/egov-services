@@ -12,17 +12,18 @@ import java.util.List;
 @EqualsAndHashCode
 public class ComplaintStatusSearchCriteria {
 
-    private String complaintStatusName;
+    private String complaintStatusCode;
     private List<Long> roles;
+    private String tenantId;
 
     public void validate() {
-        if (isNameAbsent() || isRolesAbsent()) {
+        if (isCodeAbsent() || isRolesAbsent()) {
             throw new InvalidComplaintStatusSearchException(this);
         }
     }
 
-    public boolean isNameAbsent() {
-        return complaintStatusName==null || complaintStatusName.isEmpty();
+    public boolean isCodeAbsent() {
+        return complaintStatusCode==null || complaintStatusCode.isEmpty();
     }
 
     public boolean isRolesAbsent() {

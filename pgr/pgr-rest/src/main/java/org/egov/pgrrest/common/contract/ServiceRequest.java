@@ -96,7 +96,7 @@ public class ServiceRequest {
     
     private Map<String, String> values = new HashMap<>();
 
-//  Short term hack - to support values and attribValues usage
+//  Short term feature flag - to support values and attribValues usage
 //  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
     @JsonProperty("isAttribValuesPopulated")
     private boolean attribValuesPopulated;
@@ -133,10 +133,14 @@ public class ServiceRequest {
         addAttributeEntryIfPresent(attributeEntries, "locationId", complaint.getComplaintLocation().getLocationId());
         addAttributeEntryIfPresent(attributeEntries, "childLocationId", complaint.getChildLocation());
         addAttributeEntryIfPresent(attributeEntries, "stateId", complaint.getState());
-        addAttributeEntryIfPresent(attributeEntries, "assigneeId", complaint.getAssignee());
-        addAttributeEntryIfPresent(attributeEntries, "departmentId", complaint.getDepartment());
+        addAttributeEntryIfPresent(attributeEntries, "assigneeId", toString(complaint.getAssignee()));
+        addAttributeEntryIfPresent(attributeEntries, "departmentId", toString(complaint.getDepartment()));
         addAttributeEntryIfPresent(attributeEntries, "citizenFeedback",complaint.getCitizenFeedback());
         return attributeEntries;
+    }
+
+    private String toString(Long longValue) {
+        return longValue == null ? null : longValue.toString();
     }
 
     private void addAttributeEntryIfPresent(ArrayList<AttributeEntry> attributeEntries, String key, String name) {
@@ -154,8 +158,8 @@ public class ServiceRequest {
         addEntryIfPresent(map, "locationId", complaint.getComplaintLocation().getLocationId());
         addEntryIfPresent(map, "childLocationId", complaint.getChildLocation());
         addEntryIfPresent(map, "stateId", complaint.getState());
-        addEntryIfPresent(map, "assigneeId", complaint.getAssignee());
-        addEntryIfPresent(map, "departmentId", complaint.getDepartment());
+        addEntryIfPresent(map, "assigneeId", toString(complaint.getAssignee()));
+        addEntryIfPresent(map, "departmentId", toString(complaint.getDepartment()));
         addEntryIfPresent(map, "citizenFeedback",complaint.getCitizenFeedback());
         return map;
     }

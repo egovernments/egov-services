@@ -91,7 +91,7 @@ public class ServiceDefinitionControllerTest {
     }
 
     private List<ValueDefinition> getValues() {
-        return Arrays.asList(new ValueDefinition("name1", "key1"),
-            new ValueDefinition("name2", "key2"));
+        return Arrays.asList(new ValueDefinition("name1", "key1", true),
+            new ValueDefinition("name2", "key2", false));
     }
 }

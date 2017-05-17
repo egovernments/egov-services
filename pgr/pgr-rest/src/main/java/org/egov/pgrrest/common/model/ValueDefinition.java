@@ -8,4 +8,5 @@ import lombok.Getter;
 public class ValueDefinition {
     private String name;
     private String key;
+    private boolean active;
 }

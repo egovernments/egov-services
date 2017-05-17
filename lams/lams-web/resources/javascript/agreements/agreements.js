@@ -1,3 +1,25 @@
+try {
+  var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+} catch (e) {
+    console.log(e);
+    var department = [];
+}
+
+try {
+  var natureOfAllotments = !localStorage.getItem("natureOfAllotments") || localStorage.getItem("natureOfAllotments") == "undefined" ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services", "", "getnatureofallotment", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("natureOfAllotments"))) : JSON.parse(localStorage.getItem("natureOfAllotments"));
+} catch (e) {
+    console.log(e);
+    var natureOfAllotments = {};
+}
+try {
+  var paymentCycle = !localStorage.getItem("paymentCycle") || localStorage.getItem("paymentCycle") == "undefined" ? (localStorage.setItem("paymentCycle", JSON.stringify(commonApiPost("lams-services", "", "getpaymentcycle", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("paymentCycle"))) : JSON.parse(localStorage.getItem("paymentCycle"));
+} catch (e) {
+    console.log(e);
+  var paymentCycle = {};
+}
+
+
+
 $('#close').on("click", function() {
     window.close();
 })
@@ -869,7 +891,7 @@ finalValidatinRules["messages"] = {
 // $("#"+name).val("murali");
 
 var assetDetails = commonApiPost("asset-services", "assets", "_search", { id: getUrlVars()["assetId"], tenantId }).responseJSON["Assets"][0] || {};
-// var natureOfAllotments=commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON ||{};
+// var otments=commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON ||{};
 // var designation= getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [];
 // var department= getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [];
 

@@ -35,7 +35,7 @@ class ShowCategoryType extends React.Component {
           $('#designationTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
+                      'excel', 'pdf', 'print'
              ],
              ordering: false
           });
@@ -88,7 +88,7 @@ class ShowCategoryType extends React.Component {
     }
 
       return (<div>
-        <h3>{titleCase(getUrlVars()["type"])} Usage Type </h3>
+        <h3>{titleCase(getUrlVars()["type"])} Category Type </h3>
         <table id="designationTable" className="table table-bordered">
             <thead>
                 <tr>

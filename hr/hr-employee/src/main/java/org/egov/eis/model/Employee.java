@@ -176,6 +176,18 @@ public class Employee {
 
 	private List<String> documents = new ArrayList<String>();
 
+	private Long createdBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
 	@Valid
 	@NotNull
 	private User user;

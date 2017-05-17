@@ -2,8 +2,10 @@ package org.egov.pgrrest.write.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.egov.pgrrest.common.model.AttributeEntry;
 
 import java.util.Date;
+import java.util.List;
 
 /*
     Represents a complaint to be created or updated.
@@ -37,4 +39,5 @@ public class ComplaintRecord {
     private Long department;
     private String tenantId;
     private String citizenFeedback;
+    private List<AttributeEntry> attributeEntries;
 }

@@ -17,7 +17,7 @@ public class ComplaintTypeCategoryController {
     @Autowired
     private ComplaintTypeCategoryService complaintTypeCategoryService;
 
-    @PostMapping
+    @PostMapping(value ="/_search")
     public ComplaintTypeCategoryResponse getAllCompaintTypeCategory(
         @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,
         @RequestBody RequestInfoBody requestInfo) {

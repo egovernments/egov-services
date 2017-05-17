@@ -22,7 +22,7 @@ public class ComplaintTypeRepository {
     }
 
     public ComplaintType fetchComplaintTypeByCode(String code, String tenantId) {
-        String url = this.complaintTypeServiceHostname + "pgr/services/{serviceCode}?tenantId={tenantId}";
+        String url = this.complaintTypeServiceHostname + "pgr/services/{serviceCode}/_search?tenantId={tenantId}";
         return getComplaintTypeServiceResponse(url, code, tenantId).getComplaintTypes().get(0);
     }
 

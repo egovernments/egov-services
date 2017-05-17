@@ -1,10 +1,12 @@
 package org.egov.pgrrest.write.contracts.grievance;
 
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.write.model.ComplaintRecord;
 import org.junit.Test;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -98,6 +100,11 @@ public class SevaRequestTest {
         assertEquals(Long.valueOf(8), complaintRecord.getChildLocation());
         assertEquals(Long.valueOf(9), complaintRecord.getWorkflowStateId());
         assertEquals("ap.public", complaintRecord.getTenantId());
+        final List<AttributeEntry> actualAttributeEntries = complaintRecord.getAttributeEntries();
+        assertEquals(3, actualAttributeEntries.size());
+        assertEquals(new AttributeEntry("receivingMode", "receiving mode"), actualAttributeEntries.get(0));
+        assertEquals(new AttributeEntry("receivingCenter", "5"), actualAttributeEntries.get(1));
+        assertEquals(new AttributeEntry("stateId", "9"), actualAttributeEntries.get(2));
     }
 
     @Test

@@ -78,9 +78,11 @@ public class LeaveApplicationRepository {
     @Autowired
     private HRStatusService hrStatusService;
 
-    public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
+    public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest,
+            final RequestInfo requestInfo) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
-        final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues);
+        final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues,
+                requestInfo);
         final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 leaveApplicationRowMapper);
         return leaveApplications;
@@ -103,7 +105,7 @@ public class LeaveApplicationRepository {
                     leaveApplication.getLeaveDays(),
                     leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
                     leaveApplication.getReason(),
-                    leaveApplication.getStatus().toString(), leaveApplication.getStateId(),
+                    leaveApplication.getStatus(), leaveApplication.getStateId(),
                     leaveApplicationRequest.getRequestInfo().getUserInfo().getId(),
                     now, leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getTenantId() };
             jdbcTemplate.update(leaveApplicationInsertQuery, obj);
@@ -124,7 +126,7 @@ public class LeaveApplicationRepository {
                 leaveApplication.getLeaveDays(),
                 leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
                 leaveApplication.getReason(),
-                leaveApplication.getStatus().toString(), Long.valueOf(task.getId()),
+                leaveApplication.getStatus(), Long.valueOf(task.getId()),
                 leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getId(),
                 leaveApplication.getTenantId() };
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Complainant;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
@@ -39,12 +40,13 @@ public class Complaint {
     private boolean modifyComplaint;
     private String receivingMode;
     private String receivingCenter;
-    private String department;
+    private Long department;
     private Date lastAccessedTime;
     private String childLocation;
-    private String assignee;
+    private Long assignee;
     private String state;
     private String citizenFeedback;
+    private List<AttributeEntry> attributeEntries;
 
     public boolean isComplainantAbsent() {
         return complainant.isAbsent();
@@ -74,8 +76,15 @@ public class Complaint {
     }
 
     public void validate() {
-        if (isLocationAbsent() || isComplainantAbsent() || isTenantIdAbsent() || isComplaintTypeAbsent()
-            || isDescriptionAbsent() || isCrnAbsent() || isReceivingCenterAbsent() || isReceivingModeAbsent() || descriptionLength()) {
+        if (isLocationAbsent()
+            || isComplainantAbsent()
+            || isTenantIdAbsent()
+            || isComplaintTypeAbsent()
+            || isDescriptionAbsent()
+            || isCrnAbsent()
+            || isReceivingCenterAbsent()
+            || isReceivingModeAbsent()
+            || descriptionLength()) {
             throw new InvalidComplaintException(this);
         }
     }

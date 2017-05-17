@@ -78,8 +78,9 @@ public class ServiceDefinitionRepository {
         final List<String> attributeCodes = attributeDefinitions.stream()
             .map(a -> a.getId().getCode())
             .collect(Collectors.toList());
+        final String serviceCode=attributeDefinitions.get(0).getId().getServiceCode();
         final List<ValueDefinition> values = valueDefinitionJpaRepository
-            .findByAttributeCodesAndTenantId(attributeCodes, tenantId);
+            .find(attributeCodes, tenantId ,serviceCode);
         if (CollectionUtils.isEmpty(values)) {
             return null;
         }

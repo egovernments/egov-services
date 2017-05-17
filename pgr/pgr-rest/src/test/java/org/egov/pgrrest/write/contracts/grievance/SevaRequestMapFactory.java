@@ -20,6 +20,9 @@ public class SevaRequestMapFactory {
         serviceRequestMap.put("tenantId", "ap.public");
         serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        attributeValues.add(toMap("receivingMode", "receiving mode"));
+        attributeValues.add(toMap("receivingCenter", "5"));
+        attributeValues.add(toMap("stateId", "9"));
         serviceRequestMap.put("attribValues", attributeValues);
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("departmentId", "29");
@@ -41,5 +44,12 @@ public class SevaRequestMapFactory {
         requestInfoMap.put("userInfo", userInfoMap);
         sevaRequestMap.put("RequestInfo", requestInfoMap);
         return sevaRequestMap;
+    }
+
+    private static HashMap<String, String> toMap(String key, String code) {
+        final HashMap<String, String> map = new HashMap<>();
+        map.put("key", key);
+        map.put("name", code);
+        return map;
     }
 }

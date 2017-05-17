@@ -12,17 +12,18 @@ public class FinancialProducer {
 	@Autowired
 	private KafkaTemplate<String, Object> kafkaTemplate;
 
-	public void sendMessage(String topic, Object message) {
-		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, message);
+	public void sendMessage(String topic, String key, Object message) {
+
+		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
+
+		// Handle success or failure of sending
 		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
 			@Override
 			public void onSuccess(SendResult<String, Object> stringTSendResult) {
-
 			}
 
 			@Override
 			public void onFailure(Throwable throwable) {
-
 			}
 		});
 	}

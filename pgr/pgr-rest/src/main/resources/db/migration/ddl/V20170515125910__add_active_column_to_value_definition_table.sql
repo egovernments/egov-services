@@ -1,0 +1,1 @@
+ALTER TABLE value_definition ADD COLUMN active CHAR NOT NULL DEFAULT 'Y';

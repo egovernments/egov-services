@@ -103,7 +103,7 @@ public class LeaveApplicationController {
         // Call service
         List<LeaveApplication> leaveApplicationsList = null;
         try {
-            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
+            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);

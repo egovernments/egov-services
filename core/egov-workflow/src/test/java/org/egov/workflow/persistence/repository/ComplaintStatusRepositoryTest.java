@@ -41,7 +41,7 @@ public class ComplaintStatusRepositoryTest {
     @Test
     public void test_should_find_status_by_name() {
         when(complaintStatusJpaRepository.findByName("REJECTED"))
-                .thenReturn(new ComplaintStatus(1L, "REJECTED"));
+                .thenReturn(new ComplaintStatus(1L, "REJECTED","default","0001"));
 
         org.egov.workflow.domain.model.ComplaintStatus result = complaintStatusRepository.findByName("REJECTED");
 
@@ -49,10 +49,21 @@ public class ComplaintStatusRepositoryTest {
         assertThat(result.getName()).isEqualTo("REJECTED");
     }
 
+    @Test
+    public void test_should_status_by_code_and_tenantId(){
+        when(complaintStatusJpaRepository.findByCodeAndTenantId("REGISTERED","default"))
+            .thenReturn(new ComplaintStatus(1L, "REGISTERED","default","0001"));
+
+        org.egov.workflow.domain.model.ComplaintStatus status = complaintStatusRepository.findByCodeAndTenantId("REGISTERED","default");
+
+        assertThat(status.getId()).isEqualTo(1L);
+        assertThat(status.getName()).isEqualTo("REGISTERED");
+    }
+
     private List<ComplaintStatus> getListOfComplaintStatusEntities() {
         return Arrays.asList(
-                new ComplaintStatus(1L, "FORWARDED"),
-                new ComplaintStatus(2L, "WITHDRAWN")
+                new ComplaintStatus(1L, "FORWARDED","default","0001"),
+                new ComplaintStatus(2L, "WITHDRAWN","default","0002")
         );
     }
 }

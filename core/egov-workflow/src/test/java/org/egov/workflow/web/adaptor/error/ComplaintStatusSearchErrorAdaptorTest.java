@@ -25,7 +25,7 @@ public class ComplaintStatusSearchErrorAdaptorTest {
 
     @Test
     public void should_set_error_fields_when_name_is_not_present() {
-        when(complaintStatusSearchCriteria.isNameAbsent()).thenReturn(true);
+        when(complaintStatusSearchCriteria.isCodeAbsent()).thenReturn(true);
 
         ErrorResponse errorResponse = complaintStatusSearchErrorAdaptor.adapt(complaintStatusSearchCriteria);
 

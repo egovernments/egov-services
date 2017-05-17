@@ -1,0 +1,10 @@
+{
+    "responseInfo": null,
+    "statuses": [
+        {
+            "id": 1,
+            "name": "REGISTERED",
+            "code": "00001"
+        }
+    ]
+}

@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">EIS</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">Water Charges</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -242,17 +242,17 @@
     <script src="resources/javascript/js.cookies.js"></script>
     <script>
         var menuItems = [{
-            title: 'All Categories',
+             title: 'Application',
             id: 'menuID',
             // icon: 'fa fa-reorder',
             items: [
                 {
-                    name: 'Water Charges',
+                    name: 'Water Charge Management',
                     id: 'itemID',
                     icon: 'fa fa-laptop',
                     link: '#',
                     items: [{
-                        title: 'Water Charges',
+                        title: 'Water Charge Management',
                         icon: 'fa fa-laptop',
                         items: [{
                                 name: 'Masters',
@@ -314,6 +314,59 @@
                                             ]
                                           }]
                                         },
+                                        {
+                                            name: 'Pipe Size',
+                                            icon: 'fa fa-phone',
+                                            link: '#',
+                                            items: [{
+                                              title: 'Pipe Size',
+                                              icon: 'fa fa-desktop',
+                                              link: '#',
+                                              items: [{
+                                                    name: 'Create',
+                                                    icon: 'fa fa-phone',
+                                                    link: './app/create/create-pipe-size.html'
+                                                },
+                                                {
+                                                    name: 'Update',
+                                                    icon: 'fa fa-phone',
+                                                    link: './app/common/show-pipe-size.html?type=Update'
+                                                },
+                                                {
+                                                    name: 'View',
+                                                    icon: 'fa fa-phone',
+                                                    link: './app/common/show-pipe-size.html?type=View'
+                                                }
+                                            ]
+                                          }]
+                                        },
+                                        {
+                                            name: 'Donation Master',
+                                            icon: 'fa fa-phone',
+                                            link: '#',
+                                            items: [{
+                                              title: 'Donation Master',
+                                              icon: 'fa fa-desktop',
+                                              link: '#',
+                                              items: [{
+                                                    name: 'Create',
+                                                    icon: 'fa fa-phone',
+                                                    link: './app/create/create-dnation-master.html'
+                                                },
+                                                {
+                                                    name: 'Update',
+                                                    icon: 'fa fa-phone',
+                                                    link: './app/common/show-donation-master.html?type=Update'
+                                                },
+                                                {
+                                                    name: 'View',
+                                                    icon: 'fa fa-phone',
+                                                    link: './app/common/show-donation-master.html?type=View'
+                                                }
+                                            ]
+                                          }]
+                                        },
+
 
 
 
@@ -343,12 +396,12 @@
 
     <script type="text/javascript">
     var response=$.ajax({
-          url: window.location.origin+"/user/_login?tenantId=ap.public&username=manas&password=demo&grant_type=password&scope=read",
+          url: window.location.origin+"/user/oauth/token",
           type: 'POST',
           dataType: 'json',
-          data:JSON.stringify({}),
+          data:'username=manas&password=demo&tenantId=default&grant_type=password&scope=read',
           async: false,
-          contentType: 'application/json',
+          contentType: 'application/x-www-form-urlencoded',
           headers:{
             'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
           }

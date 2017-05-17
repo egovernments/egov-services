@@ -192,6 +192,24 @@ class CreateAsset extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
+    $("#calHoiday").on("hidden.bs.modal", function () {
+      _this.setState({
+        column:{
+             "name": "",
+             "type": "",
+             "isActive": false,
+             "isMandatory": false,
+             "values": "",
+             "localText": "",
+             "regExFormate": "",
+             "url": "",
+             "order": "",
+             "columns": []
+        }
+      })
+    });
+
+
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
 
@@ -395,7 +413,7 @@ class CreateAsset extends React.Component {
           //   typeList:[]
           //
           // })
-          window.location.href=`app/asset/create-asset-ack.html?name = ${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
         } else {
           showError(response["statusText"]);
         }
@@ -413,13 +431,15 @@ class CreateAsset extends React.Component {
 
     if(!to && (!customField.name || !customField.type)) {
       return this.setState({
-        showMsg: true
+        showMsg: true,
+        readonly: false
       })
     } else {
       var _this = this;
       setTimeout(function() {
         _this.setState({
-          showMsg: false
+          showMsg: false,
+          readonly: false
         });
       }, 300);
     }
@@ -430,7 +450,8 @@ class CreateAsset extends React.Component {
       assetCategory["assetFieldsDefination"][index] = customField
       this.setState({
         assetCategory,
-        isEdit: false
+        isEdit: false,
+        readonly: false
       })
       //this.setState({isEdit:false})
     } else {
@@ -442,6 +463,7 @@ class CreateAsset extends React.Component {
         temp.columns.push(column);
         this.setState({
           customField: temp,
+          readonly: false,
           column:{
                "name": null,
                "type": null,
@@ -460,6 +482,7 @@ class CreateAsset extends React.Component {
         temp.assetFieldsDefination.push(customField);
         this.setState({
           assetCategory: temp,
+          readonly: false,
           customField: {
                "name": null,
                "type": null,
@@ -494,12 +517,14 @@ class CreateAsset extends React.Component {
   }
 
   renderDelEvent(index,to="") {
-    if (to=="column") {
+    if (to==="column") {
       var columns = this.state.customField.columns;
       columns.splice(index, 1);
       this.setState({
-        ...this.state.customField,
-        columns
+        customField:{
+          ...this.state.customField,
+          columns
+        }
       });
     } else {
       var assetFieldsDefination = this.state.assetCategory.assetFieldsDefination;
@@ -516,6 +541,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
+    console.log(this.state.column);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
 
@@ -598,7 +624,7 @@ class CreateAsset extends React.Component {
                   */}
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,column)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
+                                <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,"column")}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -761,7 +787,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Active</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isActive" disabled={readonly}  value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
+                      <input type="checkbox" name="isActive" value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
                     </div>
                   </div>
                 </div>
@@ -774,7 +800,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Mandatory</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isMandatory" disabled={readonly}  value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
+                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                     </div>
                   </div>
                 </div>
@@ -849,6 +875,7 @@ class CreateAsset extends React.Component {
                   <table className="table table-bordered">
                       <thead>
                       <tr>
+                        <th>Sl No.</th>
                          <th>Name</th>
                          <th>Data Type</th>
                          <th>RegEx format</th>
@@ -1041,7 +1068,7 @@ class CreateAsset extends React.Component {
                     <label for="version"> Version   </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text"  name="version" value={version} onChange={(e)=>{handleChange(e,"version")}} required/>
+                    <input type="text"  name="version" value={version} onChange={(e)=>{handleChange(e,"version")}}/>
                   </div>
                 </div>
               </div>

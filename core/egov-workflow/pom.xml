@@ -35,6 +35,12 @@
 
         <dependency>
             <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>0.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
             <artifactId>services-common</artifactId>
             <version>0.6.0</version>
         </dependency>
@@ -178,6 +184,10 @@
                                         <exclude>org.egov.workflow.persistence.producer.*</exclude>
                                         <exclude>org.egov.workflow.web.controller.WorkflowControllerAdvice</exclude>
                                         <exclude>org.egov.workflow.persistence.repository.RequestInfoBody</exclude>
+                                        <exclude>org.egov.workflow.domain.model.KeywordStatusMappingSearchCriteria</exclude>
+                                        <exclude>org.egov.workflow.domain.model.KeywordStatusMappingSearchCriteria.KeywordStatusMappingSearchCriteriaBuilder</exclude>
+                                        <exclude>org.egov.workflow.domain.model.KeywordStatusMapping</exclude>
+                                        <exclude>org.egov.workflow.domain.model.KeywordStatusMapping.KeywordStatusMappingBuilder</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

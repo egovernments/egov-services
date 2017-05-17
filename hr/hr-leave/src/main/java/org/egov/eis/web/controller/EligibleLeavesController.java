@@ -183,6 +183,8 @@ public class EligibleLeavesController {
         leaveApplicationGetRequest.setLeaveType(leaveType);
 
         leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
+        
+        leaveApplicationGetRequest.setTenantId(tenantId);
 
         leaveApplicationGetRequest
                 .setFromDate(Date.from(yearStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -191,7 +193,7 @@ public class EligibleLeavesController {
 
         List<LeaveApplication> leaveApplicationsList = null;
         try {
-            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
+            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest,requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

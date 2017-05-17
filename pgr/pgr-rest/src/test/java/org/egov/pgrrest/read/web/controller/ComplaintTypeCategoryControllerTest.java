@@ -36,7 +36,7 @@ public class ComplaintTypeCategoryControllerTest {
     @Test
     public void getComplaintTypeCategory() throws Exception {
         when(complaintTypeCategoryService.getAll("ap.public")).thenReturn(getComplaintTypeCategoryEntity());
-        mockMvc.perform(post("/complaintTypeCategories?tenantId=ap.public")
+        mockMvc.perform(post("/complaintTypeCategories/_search?tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())

@@ -7,7 +7,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 @AllArgsConstructor
 @Value
-public class ComplaintType {
+public class ServiceRequestType {
     private String name;
     private String code;
     private String tenantId;

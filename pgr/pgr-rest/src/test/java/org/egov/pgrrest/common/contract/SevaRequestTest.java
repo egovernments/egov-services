@@ -32,7 +32,7 @@ public class SevaRequestTest {
 
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder().tenantId(TENANT_ID).authenticatedUser(user)
                 .requester(Requester.builder().build()).crn(CRN).serviceRequestLocation(serviceRequestLocation)
-                .complaintType(new ComplaintType(null, null, TENANT_ID)).build();
+                .complaintType(new ServiceRequestType(null, null, TENANT_ID)).build();
     }
 
     private AuthenticatedUser getAuthenticatedUser() {

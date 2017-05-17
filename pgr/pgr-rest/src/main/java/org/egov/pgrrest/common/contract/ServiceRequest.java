@@ -8,7 +8,7 @@ import org.egov.pgr.common.contract.AttributeValues;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
-import org.egov.pgrrest.read.domain.model.ComplaintType;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.springframework.util.CollectionUtils;
 
@@ -192,7 +192,7 @@ public class ServiceRequest {
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .authenticatedUser(authenticatedUser)
             .crn(crn)
-            .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode, tenantId))
+            .complaintType(new ServiceRequestType(complaintTypeName, complaintTypeCode, tenantId))
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)

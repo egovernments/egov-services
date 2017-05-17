@@ -27,7 +27,7 @@ public class ServiceRequest {
     private Requester requester;
     private String crn;
     @NonNull
-    private ComplaintType complaintType;
+    private ServiceRequestType complaintType;
     private String complaintStatus;
     private String address;
     private List<String> mediaUrls;

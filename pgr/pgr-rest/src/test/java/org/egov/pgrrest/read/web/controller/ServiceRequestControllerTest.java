@@ -100,7 +100,7 @@ public class ServiceRequestControllerTest {
             .serviceRequestLocation(serviceRequestLocation)
             .tenantId(null)
             .description("description")
-            .complaintType(new ComplaintType(null, "complaintCode", null))
+            .complaintType(new ServiceRequestType(null, "complaintCode", null))
             .build();
     }
 
@@ -144,7 +144,7 @@ public class ServiceRequestControllerTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
-            .complaintType(new ComplaintType("abc", "complaintCode", "tenantId"))
+            .complaintType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)

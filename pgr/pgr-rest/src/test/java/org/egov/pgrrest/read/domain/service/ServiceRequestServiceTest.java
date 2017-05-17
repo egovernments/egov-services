@@ -211,7 +211,7 @@ public class ServiceRequestServiceTest {
             .crn("crn")
             .lastAccessedTime(new Date())
             .department(2L)
-            .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
+            .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
             .build();
     }
 

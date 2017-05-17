@@ -6,7 +6,7 @@ import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
-import org.egov.pgrrest.read.domain.model.ComplaintType;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.junit.Test;
 
@@ -409,7 +409,7 @@ public class ServiceRequestTest {
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complaintType(new ServiceRequestType("name", "code", "tenantId"))
             .requester(complainant)
             .serviceRequestLocation(serviceRequestLocation)
             .receivingMode("receivingModeName")
@@ -458,7 +458,7 @@ public class ServiceRequestTest {
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complaintType(new ServiceRequestType("name", "code", "tenantId"))
             .requester(complainant)
             .serviceRequestLocation(serviceRequestLocation)
             .receivingMode("receivingMode")
@@ -497,7 +497,7 @@ public class ServiceRequestTest {
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complaintType(new ServiceRequestType("name", "code", "tenantId"))
             .requester(complainant)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")
@@ -524,7 +524,7 @@ public class ServiceRequestTest {
             .build();
         final ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintType(new ComplaintType("name", "code", "tenantId"))
+            .complaintType(new ServiceRequestType("name", "code", "tenantId"))
             .requester(complainant)
             .receivingMode("receivingMode")
             .complaintStatus("complaintStatus")

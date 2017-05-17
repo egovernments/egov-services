@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.read.domain.model.ComplaintRegistrationNumber;
+import org.egov.pgrrest.read.domain.model.ServiceRequestRegistrationNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CrnRepository {
         this.crnServiceUrl = crnServiceUrl;
     }
 
-    public ComplaintRegistrationNumber getCrn() {
-        return restTemplate.getForObject(crnServiceUrl, ComplaintRegistrationNumber.class);
+    public ServiceRequestRegistrationNumber getCrn() {
+        return restTemplate.getForObject(crnServiceUrl, ServiceRequestRegistrationNumber.class);
     }
 }

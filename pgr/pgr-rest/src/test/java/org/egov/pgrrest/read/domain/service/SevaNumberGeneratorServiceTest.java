@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.read.domain.model.ComplaintRegistrationNumber;
+import org.egov.pgrrest.read.domain.model.ServiceRequestRegistrationNumber;
 import org.egov.pgrrest.read.persistence.repository.CrnRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public class SevaNumberGeneratorServiceTest {
 
     @Test
     public void shouldGetCrn() {
-        ComplaintRegistrationNumber expected = new ComplaintRegistrationNumber("crn");
+        ServiceRequestRegistrationNumber expected = new ServiceRequestRegistrationNumber("crn");
         SevaNumberGeneratorService  sevaNumberGeneratorService = new SevaNumberGeneratorService(crnRepository);
         when(crnRepository.getCrn()).thenReturn(expected);
 

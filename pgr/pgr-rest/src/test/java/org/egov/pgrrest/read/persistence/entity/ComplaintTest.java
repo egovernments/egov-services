@@ -6,6 +6,7 @@ import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -68,7 +69,7 @@ public class ComplaintTest {
         final AuthenticatedUser authenticatedUser = domainComplaint.getAuthenticatedUser();
         assertNotNull(authenticatedUser);
         assertTrue(authenticatedUser.isAnonymousUser());
-        final org.egov.pgrrest.read.domain.model.ComplaintType expectedComplaintType = new org.egov.pgrrest.read.domain.model.ComplaintType(
+        final ServiceRequestType expectedComplaintType = new ServiceRequestType(
                 "complaintName", "complaintCode", "tenantId");
         assertEquals(expectedComplaintType, domainComplaint.getComplaintType());
         assertEquals("EMAIL", domainComplaint.getReceivingMode());

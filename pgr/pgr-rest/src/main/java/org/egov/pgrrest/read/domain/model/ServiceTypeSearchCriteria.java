@@ -23,8 +23,8 @@ public class ServiceTypeSearchCriteria {
     private Long categoryId;
     private String tenantId;
 
-    public ComplaintTypeSearch getComplaintTypeSearch() {
-        return ComplaintTypeSearch.valueOf(complaintTypeSearch.toUpperCase());
+    public ServiceRequestTypeSearch getComplaintTypeSearch() {
+        return ServiceRequestTypeSearch.valueOf(complaintTypeSearch.toUpperCase());
     }
 
     public int getCount() {
@@ -37,7 +37,7 @@ public class ServiceTypeSearchCriteria {
     }
 
     private void validateCategorySearchType() {
-        if (getComplaintTypeSearch() == ComplaintTypeSearch.CATEGORY && Objects.isNull(categoryId)) {
+        if (getComplaintTypeSearch() == ServiceRequestTypeSearch.CATEGORY && Objects.isNull(categoryId)) {
             throw new InvalidComplaintTypeSearchException(CATEGORY_ID_IS_NOT_PRESENT);
         }
     }
@@ -49,15 +49,15 @@ public class ServiceTypeSearchCriteria {
     }
 
     public boolean isCategorySearch() {
-        return getComplaintTypeSearch() == ComplaintTypeSearch.CATEGORY;
+        return getComplaintTypeSearch() == ServiceRequestTypeSearch.CATEGORY;
     }
 
     public boolean isFrequencySearch() {
-        return getComplaintTypeSearch() == ComplaintTypeSearch.FREQUENCY;
+        return getComplaintTypeSearch() == ServiceRequestTypeSearch.FREQUENCY;
     }
     
     public boolean isReturnAll(){
-    	return getComplaintTypeSearch() == ComplaintTypeSearch.ALL;
+    	return getComplaintTypeSearch() == ServiceRequestTypeSearch.ALL;
     }
 }
 

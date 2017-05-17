@@ -1,11 +1,12 @@
 package org.egov.pgrrest.read.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ComplaintStatus {
-    private Long id;
-    private String name;
+@Builder
+public class ServiceRequestRegistrationNumber {
+    private String value;
 }

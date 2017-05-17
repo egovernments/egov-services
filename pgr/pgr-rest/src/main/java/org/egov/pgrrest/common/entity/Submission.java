@@ -5,7 +5,7 @@ import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
-import org.egov.pgrrest.read.domain.model.ComplaintType;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
@@ -96,8 +96,8 @@ public class Submission extends AbstractAuditable<String> {
             .build();
     }
 
-    private ComplaintType getDomainComplaintType() {
-        return new ComplaintType(this.serviceType.getName(),
+    private ServiceRequestType getDomainComplaintType() {
+        return new ServiceRequestType(this.serviceType.getName(),
             this.serviceType.getCode(),
             this.serviceType.getTenantId());
     }

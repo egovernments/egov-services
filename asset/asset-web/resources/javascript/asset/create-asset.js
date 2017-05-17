@@ -1331,6 +1331,7 @@ class CreateAsset extends React.Component {
                 <td  style={{"padding-top": "12px"}}>1</td>
                 {item.columns.map((itemOne, index) => {
                 itemOne.parent = item.name;
+                itemOne.isActive = item.isActive;
                 return (
                   <td>{checkFields(itemOne, 0, true)}</td>
                 )

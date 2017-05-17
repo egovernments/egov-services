@@ -359,8 +359,6 @@ definitions:
         type:  array
         items:
           $ref: '#/definitions/Property'
-      page:
-        $ref: '#/definitions/Page'
         
   Floor:
     type: object

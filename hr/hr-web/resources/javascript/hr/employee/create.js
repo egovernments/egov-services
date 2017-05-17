@@ -1025,344 +1025,171 @@ $("input[name='user.dob']").datepicker({
 // $("input[name='user.dob']").on("change", function(e) {
 //       fillValueToObject(this);
 //   });
-
-$('#dateOfAppointment').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
+$('#dateOfAppointment, #dateOfRetirement').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
 });
 
-$('#dateOfAppointment').on("change", function(e) {
-
-  var date_received = $("#dateOfAppointment").val();
-  var date_completed = $("#dateOfRetirement").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Appointment date must be before Retirement date");
-    $("#dateOfAppointment").val("");
+$('#dateOfAppointment, #dateOfRetirement').on("change", function(e) {
+  var _from = $('#dateOfAppointment').val();
+  var _to = $('#dateOfRetirement').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Appointment Date must be before Retirement Date.");
+      $('#' + _triggerId).val("");
+    }
   }
-
 });
 
-$('#dateOfRetirement').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
+$('#dateOfAppointment, #dateOfTermination').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
 });
 
-$('#dateOfRetirement').on("change", function(e) {
-  //  fillValueToObject(this);
-
-  var date_received = $("#dateOfAppointment").val();
-  var date_completed = $("#dateOfRetirement").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Retirement date must be after Appointment date");
-    $("#dateOfRetirement").val("");
-  } else {}
-});
-
-
-
-$('#dateOfAppointment').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfAppointment').on("change", function(e) {
-  // fillValueToObject(this);
-  // $('#dateOfJoining').val(this.value);
-  // this.id="dateOfJoining";
-  // fillValueToObject(this);
-  var date_received = $("#dateOfAppointment").val();
-  var date_completed = $("#dateOfTermination").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Appointment date must be before Termination date");
-    $("#dateOfAppointment").val("");
+$('#dateOfAppointment, #dateOfTermination').on("change", function(e) {
+  var _from = $('#dateOfAppointment').val();
+  var _to = $('#dateOfTermination').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Appointment Date must be before Termination Date.");
+      $('#' + _triggerId).val("");
+    }
   }
-
 });
 
-$('#dateOfTermination').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
+
+$('#dateOfAppointment, #dateOfResignation').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
 });
 
-$('#dateOfTermination').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfAppointment").val();
-  var date_completed = $("#dateOfTermination").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Termination date must be after Appointment date");
-    $("#dateOfTermination").val("");
+$('#dateOfAppointment, #dateOfResignation').on("change", function(e) {
+  var _from = $('#dateOfAppointment').val();
+  var _to = $('#dateOfResignation').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Appointment Date must be before Resignation Date.");
+      $('#' + _triggerId).val("");
+    }
   }
-
 });
 
 
-$('#dateOfAppointment').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
+$('#dateOfJoining, #dateOfAppointment').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
 });
 
-$('#dateOfAppointment').on("change", function(e) {
-  // fillValueToObject(this);
-  // $('#dateOfJoining').val(this.value);
-  // this.id="dateOfJoining";
-  // fillValueToObject(this);
-  var date_received = $("#dateOfAppointment").val();
-  var date_completed = $("#dateOfResignation").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Appointment date must be before Resignation date");
-    $("#dateOfAppointment").val("");
+$('#dateOfJoining, #dateOfAppointment').on("change", function(e) {
+  var _from = $('#dateOfJoining').val();
+  var _to = $('#dateOfAppointment').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Joining Date must be before Appointment Date.");
+      $('#' + _triggerId).val("");
+    }
   }
-
 });
 
-$('#dateOfResignation').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
+
+$('#dateOfJoining, #dateOfRetirement').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
 });
 
-$('#dateOfResignation').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfAppointment").val();
-  var date_completed = $("#dateOfResignation").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Resignation date must be after Appointment date");
-    $("#dateOfResignation").val("");
+$('#dateOfJoining, #dateOfRetirement').on("change", function(e) {
+  var _from = $('#dateOfJoining').val();
+  var _to = $('#dateOfRetirement').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Joining Date must be before Retirement Date.");
+      $('#' + _triggerId).val("");
+    }
   }
 });
 
 
 
+$('#dateOfJoining, #dateOfTermination').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
 
-$('#dateOfJoining').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
 });
-
-$('#dateOfJoining').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfAppointment").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 < date2) {
-    showError("Appointment date must be before Joining date");
-    $("#dateOfAppointment").val("");
+$('#dateOfJoining, #dateOfTermination').on("change", function(e) {
+  var _from = $('#dateOfJoining').val();
+  var _to = $('#dateOfTermination').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Joining Date must be before Termination Date.");
+      $('#' + _triggerId).val("");
+    }
   }
-
 });
 
-$('#dateOfAppointment').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
+
+$('#dateOfJoining, #dateOfResignation').datepicker({
+    format: 'dd/mm/yyyy',
+    autoclose:true
+
 });
-
-$('#dateOfAppointment').on("change", function(e) {
-  // fillValueToObject(this);
-  // $('#dateOfJoining').val(this.value);
-  // this.id="dateOfJoining";
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfAppointment").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 < date2) {
-    showError("Appointment date must be before Joining date");
-    $("#dateOfAppointment").val("");
+$('#dateOfJoining, #dateOfResignation').on("change", function(e) {
+  var _from = $('#dateOfJoining').val();
+  var _to = $('#dateOfResignation').val();
+  var _triggerId = e.target.id;
+  if(_from && _to) {
+    var dateParts1 = _from.split("/");
+    var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+    var date1 = new Date(newDateStr);
+    var dateParts2 = _to.split("/");
+    var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+    var date2 = new Date(newDateStr);
+    if (date1 > date2) {
+      showError("Joining Date must be before Resignation Date.");
+      $('#' + _triggerId).val("");
+    }
   }
-
-});
-
-$('#dateOfJoining').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfJoining').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfRetirement").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 >= date2) {
-    showError("Date of retairement must be after Joining date");
-    $("#dateOfRetirement").val("");
-  }
-
-});
-
-
-
-$('#dateOfRetirement').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfRetirement').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfRetirement").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Retirement date must be after Joining date");
-    $("#dateOfRetirement").val("");
-  } else {}
-});
-
-
-
-$('#dateOfJoining').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfJoining').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfTermination").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 >= date2) {
-    showError("Date of Termination must be after Joining date");
-    $("#dateOfTermination").val("");
-  }
-
-});
-
-
-$('#dateOfTermination').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfTermination').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfTermination").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Termination date must be after Joining date");
-    $("#dateOfTermination").val("");
-  }
-
-});
-
-$('#dateOfJoining').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfJoining').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfResignation").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 >= date2) {
-    showError("Date of Designation  must be after Joining date");
-    $("#dateOfResignation").val("");
-  }
-
-});
-
-$('#dateOfResignation').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose: true
-});
-
-$('#dateOfResignation').on("change", function(e) {
-  // fillValueToObject(this);
-  var date_received = $("#dateOfJoining").val();
-  var date_completed = $("#dateOfResignation").val();
-  var dateParts = date_received.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-  var date1 = new Date(newDateStr);
-
-  var dateParts = date_completed.split("/");
-  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-  var date2 = new Date(newDateStr);
-  if (date1 > date2) {
-    showError("Resignation date must be after Joining date");
-    $("#dateOfResignation").val("");
-  } else {}
 });
 
 

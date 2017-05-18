@@ -122,6 +122,7 @@ public class ServiceRequest {
         phone = complaint.getRequester().getMobile();
         email = complaint.getRequester().getEmail();
         values = getAdditionalValues(complaint);
+        attribValuesPopulated = true;
         if(CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
             attribValues = getAttributeValues(complaint);
         } else {

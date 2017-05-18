@@ -217,7 +217,7 @@ class CreateAsset extends React.Component {
 
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
-    var count = 3, _this = this, _state = {};
+    var count = 8, _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -238,7 +238,7 @@ class CreateAsset extends React.Component {
       if(res2){
         getDropdown("assetAccount", function(res) {
           for(var i= 0; i<res.length; i++) {
-            res[i].name = res.glcode + "-" + res.name;
+            res[i].name = res[i].glcode + "-" + res[i].name;
           }
           checkCountNCall("assetAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
@@ -248,7 +248,7 @@ class CreateAsset extends React.Component {
       if(res2){
         getDropdown("accumulatedDepreciationAccount", function(res) {
           for(var i= 0; i<res.length; i++) {
-            res[i].name = res.glcode + "-" + res.name;
+            res[i].name = res[i].glcode + "-" + res[i].name;
           }
           checkCountNCall("accumulatedDepreciationAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
@@ -258,7 +258,7 @@ class CreateAsset extends React.Component {
       if(res2){
         getDropdown("revaluationReserveAccount", function(res) {
           for(var i= 0; i<res.length; i++) {
-            res[i].name = res.glcode + "-" + res.name;
+            res[i].name = res[i].glcode + "-" + res[i].name;
           }
           checkCountNCall("revaluationReserveAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
@@ -270,7 +270,7 @@ class CreateAsset extends React.Component {
       if(res2){
         getDropdown("depreciationExpenseAccount", function(res) {
           for(var i= 0; i<res.length; i++) {
-            res[i].name = res.glcode + "-" + res.name;
+            res[i].name = res[i].glcode + "-" + res[i].name;
           }
           checkCountNCall("depreciationExpenseAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});

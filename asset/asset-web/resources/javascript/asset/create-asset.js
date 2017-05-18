@@ -1513,7 +1513,7 @@ class CreateAsset extends React.Component {
                   <th>Asset Category Type</th>
                   <th>Department</th>
                   <th>Status</th>
-                  {showActionTh()}
+                  {showActionTh(isRelated)}
               </tr>
               </thead>
               <tbody id="tblRef">

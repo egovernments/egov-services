@@ -58,25 +58,6 @@ public class SevaRequest {
         return getDynamicSingleValue(VALUES_STATUS);
     }
 
-    @SuppressWarnings("unchecked")
-    private HashMap<String, String> getValues() {
-        return (HashMap<String, String>) this.serviceRequest.get(VALUES);
-    }
-
-    public String getFormattedCreatedDate() {
-        return new SimpleDateFormat(DATE_FORMAT).format(getCreatedDate());
-
-    }
-
-    private Date getCreatedDate() {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        try {
-            return dateFormat.parse((String) this.serviceRequest.get(REQUESTED_DATE));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String getDetails() {
         return (String) this.serviceRequest.get(DESCRIPTION);
     }
@@ -86,8 +67,25 @@ public class SevaRequest {
     }
 
     public String getComplainantName() {
-	    //TODO: Remove default once retrieval of FirstName from userInfo is implemented.
-        return (String) this.serviceRequest.getOrDefault(FIRST_NAME, "placeholder");
+        return (String) this.serviceRequest.get(FIRST_NAME);
+    }
+
+    public String getFormattedCreatedDate() {
+        return new SimpleDateFormat(DATE_FORMAT).format(getCreatedDate());
+    }
+
+    @SuppressWarnings("unchecked")
+    private HashMap<String, String> getValues() {
+        return (HashMap<String, String>) this.serviceRequest.get(VALUES);
+    }
+
+    private Date getCreatedDate() {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try {
+            return dateFormat.parse((String) this.serviceRequest.get(REQUESTED_DATE));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean isAttributeValuesPopulated() {

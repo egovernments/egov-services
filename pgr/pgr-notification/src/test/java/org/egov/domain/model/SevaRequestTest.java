@@ -150,17 +150,6 @@ public class SevaRequestTest {
         assertEquals("firstName", sevaRequest.getComplainantName());
     }
 
-    //TODO: Remove once UserInfo is used to set firstName in PGR-REST
-    @Test
-    public void test_should_return_place_holder_value_when_first_name_not_present_in_request_map() {
-        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("ServiceRequest", new HashMap<String, Object>());
-
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-
-        assertEquals("placeholder", sevaRequest.getComplainantName());
-    }
-
     @Test
     public void test_should_return_location_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();

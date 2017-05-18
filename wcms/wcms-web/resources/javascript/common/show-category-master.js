@@ -91,12 +91,12 @@ class ShowCategoryType extends React.Component {
         <table id="designationTable" className="table table-bordered">
             <thead>
                 <tr>
-                    <th>Sl No.</th>
-                    <th>Code</th>
+                    <th><center>Sl No.</center></th>
+                    <th><center>Code</center></th>
 
-                    <th>Category Type</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th><center>Category Type</center></th>
+                    <th><center>Status</center></th>
+                    <th><center>Action</center></th>
 
                 </tr>
             </thead>

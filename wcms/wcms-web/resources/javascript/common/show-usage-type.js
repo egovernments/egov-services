@@ -92,11 +92,11 @@ class ShowUsageType extends React.Component {
         <table id="usagetyepTable" className="table table-bordered">
             <thead>
                 <tr>
-                    <th>Sl No.</th>
-                    <th>Code</th>
-                    <th>Usage Type</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th><center>Code</center></th>
+                    <th><center>Sl No.</center></th>
+                    <th><center>Usage Type</center></th>
+                    <th><center>Status</center></th>
+                    <th><center>Action</center></th>
 
                 </tr>
             </thead>

@@ -92,11 +92,11 @@ class ShowPipeSize extends React.Component {
         <table id="pipeSizeTable" className="table table-bordered">
             <thead>
                 <tr>
-                    <th>Sl No.</th>
-                    <th>Code</th>
-                    <th>H.S.C Pipe Size (mm)</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th><center>Sl No.</center></th>
+                    <th><center>Code</center></th>
+                    <th><center>H.S.C Pipe Size (mm)</center></th>
+                    <th><center>Status</center></th>
+                    <th><center>Action</center></th>
 
                 </tr>
             </thead>

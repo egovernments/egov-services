@@ -1498,7 +1498,7 @@ class CreateAsset extends React.Component {
 
     const showActionTh = function(isRelated) {
       if(!isRelated)
-        return (<th>Action</th>));
+        return (<th>Action</th>);
     }
 
     const renderRefTable = function(isRelated) {

@@ -122,8 +122,7 @@
 //         ]
 //       }
 //     ]
-var flag = 0;
-
+var flag = 0, flag1 = 0
 const makeAjaxUpload = function(file, cb) {
     let formData = new FormData();
     formData.append("jurisdictionId", tenantId);
@@ -256,7 +255,8 @@ class CreateAsset extends React.Component {
 				assetAttribute:{},
         readonly: false,
         newRows: {},
-        references: []
+        references: [],
+        relatedAssets: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -333,12 +333,25 @@ class CreateAsset extends React.Component {
     if(flag == 1) {
       flag = 0;
       $('#refTable').dataTable().fnDestroy();
+    } else if(flag1 == 1) {
+      flag1 = 0;
+      $('#relatedTable').dataTable().fnDestroy();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
       if (prevState.references.length != this.state.references.length) {
           $('#refTable').DataTable({
+             dom: 'Bfrtip',
+             ordering: false,
+             bDestroy: true,
+             language: {
+                "emptyTable": "No Records"
+             },
+             buttons: []
+          });
+      } else if(prevState.relatedAssets.length != this.state.relatedAssets.length) {
+          $('#relatedTable').DataTable({
              dom: 'Bfrtip',
              ordering: false,
              bDestroy: true,
@@ -636,7 +649,7 @@ class CreateAsset extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
-      $("#refModal, #relatedAssetsModal").on("hidden.bs.modal", function () {
+      $("#refModal").on("hidden.bs.modal", function () {
         flag = 1;
         _this.setState({
           refSet: {
@@ -847,8 +860,9 @@ class CreateAsset extends React.Component {
     var _this = this;
     commonApiPost("asset-services", "assets", "_search", {tenantId, assetReference: this.state.assetSet.id}, function(err, res) {
       if(res) {
+        flag1 = 1;
         _this.setState({
-          references: res["Assets"]
+          relatedAssets: res["Assets"]
         })
       }
     })
@@ -875,7 +889,7 @@ class CreateAsset extends React.Component {
 
   render() {
     let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments} = this.state;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1468,15 +1482,7 @@ class CreateAsset extends React.Component {
 
 		}
 
-    const showIfNotRelated = function(isRelated) {
-      if(!isRelated)
-        return (
-          <td data-label="action">
-                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
-                        </td>
-        )
-    }
-    const renderRefBody = function(isRelated) {
+    const renderRefBody = function() {
       if (references.length > 0) {
         references.sort(function(item1, item2) {
           return item1.code > item2.code ? 1 : item1.code < item2.code ? -1 : 0;
@@ -1489,19 +1495,59 @@ class CreateAsset extends React.Component {
                         <td>{item.assetCategory.name}</td>
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
-                        {showIfNotRelated(isRelated)}
+                        <td data-label="action">
+                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
+                        </td>
                       </tr>
               );
         })
       }
     }
 
-    const showActionTh = function(isRelated) {
-      if(!isRelated)
-        return (<th>Action</th>);
+    const renderRelatedBody = function() {
+      if (relatedAssets.length > 0) {
+        relatedAssets.sort(function(item1, item2) {
+          return item1.code > item2.code ? 1 : item1.code < item2.code ? -1 : 0;
+        });
+        return relatedAssets.map((item, index) => {
+              return (<tr key={index} onClick={(e) => handleClick(item)}>
+                        <td>{index+1}</td>
+                        <td>{item.code}</td>
+                        <td>{item.name}</td>
+                        <td>{item.assetCategory.name}</td>
+                        <td>{getNameById(departments, item.department.id)}</td>
+                        <td>{item.status}</td>
+                      </tr>
+              );
+        })
+      }
     }
 
-    const renderRefTable = function(isRelated) {
+    const renderRelatedTable = function() {
+      if(relatedAssets) {
+        return (
+          <table id="relatedTable" className="table table-bordered">
+              <thead>
+              <tr>
+                  <th>Sr. No.</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Asset Category Type</th>
+                  <th>Department</th>
+                  <th>Status</th>
+              </tr>
+              </thead>
+              <tbody id="tblRef">
+                  {
+                      renderRelatedBody()
+                  }
+              </tbody>
+         </table>
+            )
+      }
+    }
+
+    const renderRefTable = function() {
       if(references) {
         return (
           <table id="refTable" className="table table-bordered">
@@ -1513,12 +1559,12 @@ class CreateAsset extends React.Component {
                   <th>Asset Category Type</th>
                   <th>Department</th>
                   <th>Status</th>
-                  {showActionTh(isRelated)}
+                  <th>Action</th>
               </tr>
               </thead>
               <tbody id="tblRef">
                   {
-                      renderRefBody(isRelated)
+                      renderRefBody()
                   }
               </tbody>
          </table>
@@ -1954,7 +2000,7 @@ class CreateAsset extends React.Component {
                 <h4 className="modal-title">Related Assets</h4>
               </div>
               <div className="modal-body">
-                {renderRefTable(true)}
+                {renderRelatedTable()}
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>

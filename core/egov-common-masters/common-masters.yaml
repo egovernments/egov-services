@@ -1,11 +1,6 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
 swagger: '2.0'
-
-# This is your document metadata
 info:
-  version: "1.0.0"
+  version: 1.0.0
   title: Common Master APIs
   description: All APIs available for common master definitions.
   contact:
@@ -13,18 +8,12 @@ info:
 schemes:
   - https
 basePath: '/egov-common-masters/[API endpoint]'
-
-# Describe your paths here
 paths:
-  # This is a path endpoint. Change it.
   /languages/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of language defined in the system.
       description: |
         Get the language master data.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -32,7 +21,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: name
           in: query
           required: false
@@ -41,7 +30,10 @@ paths:
           description: Name of the language.
         - name: active
           in: query
-          description: True will be set in cases where only active languages are needed and False will be set when inactive languages are needed and no value will be set when all languages are needed.
+          description: >-
+            True will be set in cases where only active languages are needed and
+            False will be set when inactive languages are needed and no value
+            will be set when all languages are needed.
           required: false
           type: boolean
           format: varchar
@@ -52,13 +44,15 @@ paths:
           description: Unique Id of language
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by name ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -68,27 +62,24 @@ paths:
             type: string
           pattern: '[-+](name|active)'
           default:
-           - +name
-      # Expected responses for this operation:
+            - +name
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/LanguageRes"
+            $ref: '#/definitions/LanguageRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
-       - Language
-       
-  /languages/_create:      
+      tags:
+        - Language
+  /languages/_create:
     post:
       summary: Create a new Language in the system.
-      description: To create a new Language we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new Language we can use POST and set all the required and
+        non-mandatory parameters.
       parameters:
         - name: language
           in: body
@@ -96,7 +87,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/LanguageReq'
-
       tags:
         - Language
       responses:
@@ -108,10 +98,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /language/{name}/_update:   
+  '/language/{name}/_update':
     parameters:
-      - $ref: "#/parameters/languageName"
+      - $ref: '#/parameters/languageName'
     post:
       summary: Update existing language data for the name passed
       description: To update an existing language master data.
@@ -133,15 +122,11 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /religions/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of religion defined in the system.
       description: |
         Get the religion master data for the parameters passed.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -149,7 +134,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: name
           in: query
           required: false
@@ -158,10 +143,13 @@ paths:
           minLength: 0
           maxLength: 256
           exclusiveMinimum: true
-          exclusiveMaximum: false 
+          exclusiveMaximum: false
         - name: active
           in: query
-          description: True will be set in cases where only active religions are needed and False will be set when inactive religions are needed and no value will be set when all religions are needed.
+          description: >-
+            True will be set in cases where only active religions are needed and
+            False will be set when inactive religions are needed and no value
+            will be set when all religions are needed.
           required: false
           type: boolean
           format: varchar
@@ -178,7 +166,9 @@ paths:
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by name ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -188,26 +178,24 @@ paths:
             type: string
           pattern: '[-+](name|active)'
           default:
-           - +name
-      # Expected responses for this operation:
+            - +name
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response.
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/ReligionRes"
+            $ref: '#/definitions/ReligionRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
-       - Religion
-  /religions/_create:       
+      tags:
+        - Religion
+  /religions/_create:
     post:
       summary: Create a new religion in the system.
-      description: To create a new religion we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new religion we can use POST and set all the required and
+        non-mandatory parameters.
       parameters:
         - name: religion
           in: body
@@ -226,10 +214,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /religion/{name}/_update: 
+  '/religion/{name}/_update':
     parameters:
-      - $ref: "#/parameters/religionName"
+      - $ref: '#/parameters/religionName'
     post:
       summary: Update existing religion data for the name passed
       description: To update an existing religion master data.
@@ -251,15 +238,11 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /communities/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of community defined in the system.
       description: |
         Get the community master data for any any given search filters.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -267,21 +250,24 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: name
           in: query
           description: Name of the community.
           required: false
           type: string
-          format: varchar 
+          format: varchar
         - name: active
           in: query
-          description: True will be set in cases where only active communities are needed and False will be set when inactive communities are needed and no value will be set when all communities are needed.
+          description: >-
+            True will be set in cases where only active communities are needed
+            and False will be set when inactive communities are needed and no
+            value will be set when all communities are needed.
           required: false
           type: boolean
           format: varchar
           default: true
-          allowEmptyValue: true  
+          allowEmptyValue: true
         - name: id
           in: query
           description: Unique Id of communities
@@ -293,7 +279,9 @@ paths:
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by name ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -303,27 +291,24 @@ paths:
             type: string
           pattern: '[-+](name|active)'
           default:
-           - +name 
-      # Expected responses for this operation:
+            - +name
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/CommunityRes"
+            $ref: '#/definitions/CommunityRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
-      tags: 
-       - Community
-  /communities/_create:      
+      tags:
+        - Community
+  /communities/_create:
     post:
       summary: Create a new community.
-      description: To create a new community we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new community we can use POST and set all the required and
+        non-mandatory parameters.
       parameters:
         - name: community
           in: body
@@ -342,10 +327,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /community/{name}/_update:
+  '/community/{name}/_update':
     parameters:
-      - $ref: "#/parameters/communityName"
+      - $ref: '#/parameters/communityName'
     post:
       summary: Update existing community
       description: To update an existing community master data.
@@ -367,14 +351,12 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /departments/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of departments defined in the system or a particular department.
+      summary: >-
+        Get the list of departments defined in the system or a particular
+        department.
       description: Get the department master data for the parameter values.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -382,7 +364,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: code
           in: query
           description: Code of the department.
@@ -391,7 +373,10 @@ paths:
           format: varchar
         - name: active
           in: query
-          description: True will be set in cases where only active departments are needed and False will be set when inactive departments are needed and no value will be set when all departments are needed.
+          description: >-
+            True will be set in cases where only active departments are needed
+            and False will be set when inactive departments are needed and no
+            value will be set when all departments are needed.
           required: false
           type: boolean
           format: varchar
@@ -408,7 +393,9 @@ paths:
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by name ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -418,25 +405,19 @@ paths:
             type: string
           pattern: '[-+](name|code)'
           default:
-           - +code  
-      # Expected responses for this operation:
+            - +code
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/DepartmentRes"
+            $ref: '#/definitions/DepartmentRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
-      tags: 
-       - Department
-       
-  /departments/_create:       
+      tags:
+        - Department
+  /departments/_create:
     post:
       summary: Create a new Department into the system.
       description: To create a new department we need to call POST.
@@ -458,10 +439,10 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-  /department/{code}/_update: 
-   parameters:
-    - $ref: "#/parameters/departmentCode"
-   post:
+  '/department/{code}/_update':
+    parameters:
+      - $ref: '#/parameters/departmentCode'
+    post:
       summary: Update existing department data for the code passed
       description: To update an existing department master data.
       parameters:
@@ -482,15 +463,11 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /calendarYears/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of calendar years defined in the system.
       description: |
         Get the calendar year master data.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -498,8 +475,8 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
-        - $ref: "#/parameters/sortCalendarYear"
+        - $ref: '#/parameters/tenantId'
+        - $ref: '#/parameters/sortCalendarYear'
         - name: name
           in: query
           required: false
@@ -508,7 +485,10 @@ paths:
           description: Name of the calendar year.
         - name: active
           in: query
-          description: True will be set in cases where only active calendar year are needed and False will be set when inactive calendar year are needed and no value will be set when all calendar year are needed.
+          description: >-
+            True will be set in cases where only active calendar year are needed
+            and False will be set when inactive calendar year are needed and no
+            value will be set when all calendar year are needed.
           required: false
           type: boolean
           format: varchar
@@ -523,28 +503,23 @@ paths:
             type: integer
           format: int64
           maxItems: 50
-
-      # Expected responses for this operation:
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/CalendarYearRes"
+            $ref: '#/definitions/CalendarYearRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
-      tags: 
-       - Calendar Year
-
-  /calendarYears/_create:      
+      tags:
+        - Calendar Year
+  /calendarYears/_create:
     post:
       summary: Create a new calendar year data in the system.
-      description: To create a new calendar year we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new calendar year we can use POST and set all the required
+        and non-mandatory parameters.
       parameters:
         - name: calendarYear
           in: body
@@ -563,10 +538,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /calendarYear/{name}/_update:   
+  '/calendarYear/{name}/_update':
     parameters:
-      - $ref: "#/parameters/calendarYearName"
+      - $ref: '#/parameters/calendarYearName'
     post:
       summary: Update existing calendar year data for the name
       description: To update an existing calendar year master data.
@@ -588,14 +562,12 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /holidays/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of holidays defined in the system for a particular year or across years.
+      summary: >-
+        Get the list of holidays defined in the system for a particular year or
+        across years.
       description: Get the holidays defined for the year and based on the parameter values.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -603,8 +575,8 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
-        - $ref: "#/parameters/sortHolidays"
+        - $ref: '#/parameters/tenantId'
+        - $ref: '#/parameters/sortHolidays'
         - name: year
           in: query
           description: Name of the calendar year.
@@ -617,7 +589,7 @@ paths:
           required: false
           type: array
           items:
-           type: integer
+            type: integer
           format: int64
           maxItems: 50
         - name: applicableOn
@@ -648,23 +620,27 @@ paths:
           required: false
           type: string
           format: date
-      # Expected responses for this operation:
+        - name: optional
+          in: query
+          description: >-
+            Get list of optional holidays alone if the value is set to true, get
+            the list of all holidays if value is not set or if value is set to
+            false.
+          required: false
+          type: boolean
+          default: true
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/HolidayRes"
+            $ref: '#/definitions/HolidayRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
-      tags: 
-       - Holiday
-  /holidays/_create:      
+      tags:
+        - Holiday
+  /holidays/_create:
     post:
       summary: Create a new holiday master data for a calendar year.
       description: To create a holiday in the system we need to call POST.
@@ -686,11 +662,10 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
-  /holiday/{applicableOn}/_update: 
-   parameters:
-      - $ref: "#/parameters/applicableOn"
-   post:
+  '/holiday/{applicableOn}/_update':
+    parameters:
+      - $ref: '#/parameters/applicableOn'
+    post:
       summary: Update existing holiday data for the date passed
       description: To update an existing holiday data.
       parameters:
@@ -700,7 +675,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/HolidayReq'
-
       tags:
         - Holiday
       responses:
@@ -712,15 +686,11 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /categories/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of all employee categories defined in the system.
       description: |
         Get the employee category data.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -728,7 +698,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: active
           in: query
           description: Get list of active /inactive categories.
@@ -741,7 +711,7 @@ paths:
           description: Name of the category.
           required: false
           type: string
-          format: varchar 
+          format: varchar
         - name: id
           in: query
           description: List of unique Ids of the category.
@@ -749,11 +719,13 @@ paths:
           type: array
           items:
             type: integer
-          format: int64 
+          format: int64
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by name ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -763,26 +735,24 @@ paths:
             type: string
           pattern: '[-+](name|active)'
           default:
-           - +name
-      # Expected responses for this operation:
+            - +name
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response.
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/CategoryRes"
+            $ref: '#/definitions/CategoryRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
-       - Category
-  /categories/_create:      
+      tags:
+        - Category
+  /categories/_create:
     post:
       summary: Create a new employee category.
-      description: To create a new category we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new category we can use POST and set all the required and
+        non-mandatory parameters.
       parameters:
         - name: category
           in: body
@@ -790,7 +760,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/CategoryReq'
-
       tags:
         - Category
       responses:
@@ -802,10 +771,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /categories/{name}/_update:
+  '/categories/{name}/_update':
     parameters:
-      - $ref: "#/parameters/category"
+      - $ref: '#/parameters/category'
     post:
       summary: Update existing Category for the name passed
       description: To update an existing category master data with the name passed.
@@ -827,7 +795,6 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /module/_search:
     post:
       summary: Get the list of module defined in the system.
@@ -840,8 +807,8 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
-        - $ref: "#/parameters/sortModule"
+        - $ref: '#/parameters/tenantId'
+        - $ref: '#/parameters/sortModule'
         - name: name
           in: query
           required: false
@@ -849,7 +816,10 @@ paths:
           description: Name of the module.
         - name: enabled
           in: query
-          description: True will be set in cases where only enabled modules are needed and False will be set when disabled modules are needed and no value will be set when all module are needed.
+          description: >-
+            True will be set in cases where only enabled modules are needed and
+            False will be set when disabled modules are needed and no value will
+            be set when all module are needed.
           required: false
           type: boolean
           format: varchar
@@ -864,24 +834,23 @@ paths:
             type: integer
           format: int64
           maxItems: 50
-
       responses:
-        200:
+        '200':
           description: Successful response
           schema:
-            $ref: "#/definitions/ModuleRes"
+            $ref: '#/definitions/ModuleRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
-      tags: 
-       - Module
-
-  /module/_create:      
+      tags:
+        - Module
+  /module/_create:
     post:
       summary: Create a new module in the system.
-      description: To create a module we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a module we can use POST and set all the required and
+        non-mandatory parameters.
       parameters:
         - name: module
           in: body
@@ -900,7 +869,6 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
   /module/_update:
     post:
       summary: Update existing module for the name
@@ -923,15 +891,12 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /uomcategories/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of uom categories defined in the system.
-      description: |
-        Get the unit of measurement categories master data defined in the system.
-      # This is array of GET operation parameters:
+      description: >
+        Get the unit of measurement categories master data defined in the
+        system.
       parameters:
         - name: requestInfo
           in: body
@@ -939,7 +904,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: name
           in: query
           required: false
@@ -948,7 +913,10 @@ paths:
           description: Name of the category.
         - name: active
           in: query
-          description: True will be set in cases where only active categories are needed and False will be set when inactive categories are needed and no value will be set when all categories are needed.
+          description: >-
+            True will be set in cases where only active categories are needed
+            and False will be set when inactive categories are needed and no
+            value will be set when all categories are needed.
           required: false
           type: boolean
           format: varchar
@@ -959,13 +927,15 @@ paths:
           description: List of Unique Ids of category.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by name ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -975,27 +945,24 @@ paths:
             type: string
           pattern: '[-+](name|active)'
           default:
-           - +name
-      # Expected responses for this operation:
+            - +name
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/UOMCategoryRes"
+            $ref: '#/definitions/UOMCategoryRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
-       - Unit of Measurement (UOM)
-       
-  /uomcategory/_create:      
+      tags:
+        - Unit of Measurement (UOM)
+  /uomcategory/_create:
     post:
       summary: Create a new unit of measurement category in the system.
-      description: To create a new UOM category we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new UOM category we can use POST and set all the required
+        and non-mandatory parameters.
       parameters:
         - name: uomcategory
           in: body
@@ -1003,7 +970,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UOMCategoryReq'
-
       tags:
         - Unit of Measurement (UOM)
       responses:
@@ -1015,8 +981,7 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /uomcategory/{categoryId}/_update:   
+  '/uomcategory/{categoryId}/_update':
     post:
       summary: Update existing UOM category data for the name passed.
       description: To update an existing category master data.
@@ -1026,7 +991,7 @@ paths:
           description: Request header for the uom category with new of values.
           required: true
           schema:
-            $ref: "#/definitions/UOMCategoryReq"
+            $ref: '#/definitions/UOMCategoryReq'
         - name: categoryId
           in: path
           required: true
@@ -1044,15 +1009,11 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /uoms/_search:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
       summary: Get the list of unit of measurements defined in the system.
       description: |
         Get the unit of measurement master data defined in the system.
-      # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
           in: body
@@ -1060,7 +1021,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: '#/parameters/tenantId'
         - name: code
           in: query
           required: false
@@ -1069,7 +1030,10 @@ paths:
           description: code of the unit of measurement.
         - name: active
           in: query
-          description: True will be set in cases where only active UOMs are needed and False will be set when inactive UOMs are needed and no value will be set when all UOMs are needed.
+          description: >-
+            True will be set in cases where only active UOMs are needed and
+            False will be set when inactive UOMs are needed and no value will be
+            set when all UOMs are needed.
           required: false
           type: boolean
           format: varchar
@@ -1080,7 +1044,7 @@ paths:
           description: List of Unique Ids of UOMs.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 50
@@ -1089,13 +1053,15 @@ paths:
           description: List of Unique category Ids of UOMs.
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
           maxItems: 50
         - name: sort
           in: query
-          description: Result will be sorted by code ascending by default if this parameter is not provided.
+          description: >-
+            Result will be sorted by code ascending by default if this parameter
+            is not provided.
           type: array
           uniqueItems: true
           minItems: 1
@@ -1105,27 +1071,24 @@ paths:
             type: string
           pattern: '[-+](name|active|category)'
           default:
-           - +code
-      # Expected responses for this operation:
+            - +code
       responses:
-        # Response code
-        200:
+        '200':
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
-            $ref: "#/definitions/UOMRes"
+            $ref: '#/definitions/UOMRes'
         '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
-       - Unit of Measurement (UOM)
-       
-  /uom/_create:      
+      tags:
+        - Unit of Measurement (UOM)
+  /uom/_create:
     post:
       summary: Create a new unit of measurement in the system.
-      description: To create a new UOM we can use POST and set all the required and non-mandatory parameters.
+      description: >-
+        To create a new UOM we can use POST and set all the required and
+        non-mandatory parameters.
       parameters:
         - name: uom
           in: body
@@ -1133,7 +1096,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UOMReq'
-
       tags:
         - Unit of Measurement (UOM)
       responses:
@@ -1145,8 +1107,7 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-            
-  /uom/{uomid}/_update:   
+  '/uom/{uomid}/_update':
     post:
       summary: Update existing UOM data for the name passed.
       description: To update an existing unit of measurement master data.
@@ -1156,7 +1117,7 @@ paths:
           description: Request header for the uom category with new of values.
           required: true
           schema:
-            $ref: "#/definitions/UOMReq"
+            $ref: '#/definitions/UOMReq'
         - name: uomid
           in: path
           required: true
@@ -1174,16 +1135,15 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-                        
 definitions:
   Language:
     title: Language in the system
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the language.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the language.
       name:
         type: string
         description: The Name of the language.
@@ -1205,15 +1165,14 @@ definitions:
       - tenantId
       - name
       - active
-
   UOMCategory:
     title: List of UOM categories in the system
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the UOM Category.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the UOM Category.
       name:
         type: string
         description: The Name of the category.
@@ -1234,15 +1193,15 @@ definitions:
     required:
       - tenantId
       - name
-      - active      
+      - active
   UOM:
     title: List of UOMs in the system
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the UOM.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the UOM.
       code:
         type: string
         description: The code of the uom.
@@ -1252,11 +1211,11 @@ definitions:
         type: string
         description: The description of the unit of measurement.
         maxLength: 250
-      category: 
+      category:
         type: object
         description: category to which this unit of measurement belongs.
         items:
-          $ref: "#/definitions/UOMCategory"
+          $ref: '#/definitions/UOMCategory'
       active:
         type: boolean
         format: varchar
@@ -1265,35 +1224,40 @@ definitions:
       coversionFactor:
         type: number
         format: float
-        description: What is the conversion factor of this unit of measurement with the base UOM. For Base UOM the conversion factor will be 1.
+        description: >-
+          What is the conversion factor of this unit of measurement with the
+          base UOM. For Base UOM the conversion factor will be 1.
       baseuom:
         type: boolean
         format: varchar
-        description: TRUE if this particular UOM is the base UOM and FALSE if it not the base UOM.
+        description: >-
+          TRUE if this particular UOM is the base UOM and FALSE if it not the
+          base UOM.
         default: false
       tenantId:
-        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        description: >-
+          Unique Identifier of which tenant this data is defined. For example,
+          AP, AP-Kurnool etc.
         maxLength: 256
       createdBy:
         type: string
-        description: Id of the user who created the record. 
+        description: Id of the user who created the record.
       createdDate:
         type: string
         format: date
         description: Date on which the uom master data was added into the system.
       lastModifiedBy:
         type: string
-        description: Id of the user who last modified the record. 
+        description: Id of the user who last modified the record.
       lastModifiedDate:
         type: string
         format: date
-        description: Date on which the uom master data was last modified.        
+        description: Date on which the uom master data was last modified.
     required:
       - tenantId
       - code
-      - active            
+      - active
       - category
-
   UOMCategoryRes:
     type: object
     properties:
@@ -1301,16 +1265,15 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       UOMCategory:
         type: array
-        items: 
-         $ref: '#/definitions/UOMCategory'  
-         
+        items:
+          $ref: '#/definitions/UOMCategory'
   UOMCategoryReq:
     type: object
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       UOMCategory:
-        $ref: '#/definitions/UOMCategory'  
+        $ref: '#/definitions/UOMCategory'
     required:
       - RequestInfo
       - UOMCategory
@@ -1321,20 +1284,18 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       UOM:
         type: array
-        items: 
-         $ref: '#/definitions/UOM'  
-         
+        items:
+          $ref: '#/definitions/UOM'
   UOMReq:
     type: object
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       UOM:
-        $ref: '#/definitions/UOM'  
+        $ref: '#/definitions/UOM'
     required:
       - RequestInfo
-      - UOM      
-      
+      - UOM
   RequestInfo:
     type: object
     properties:
@@ -1399,7 +1360,6 @@ definitions:
       - ver
       - ts
       - status
-      
   Error:
     type: object
     properties:
@@ -1422,15 +1382,14 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
     type: object
-
   Religion:
     title: Religion in the system
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the religion.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the religion.
       name:
         type: string
         description: The Name of the religion.
@@ -1451,15 +1410,14 @@ definitions:
       - tenantId
       - name
       - active
-      
   Community:
     title: Community in the system
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the community.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the community.
       name:
         type: string
         description: The Name of the community.
@@ -1480,7 +1438,6 @@ definitions:
       - tenantId
       - name
       - active
-
   LanguageRes:
     type: object
     properties:
@@ -1488,21 +1445,18 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Language:
         type: array
-        items: 
-         $ref: '#/definitions/Language'  
-         
+        items:
+          $ref: '#/definitions/Language'
   LanguageReq:
     type: object
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Language:
-        $ref: '#/definitions/Language'  
+        $ref: '#/definitions/Language'
     required:
       - RequestInfo
       - Language
-      
-        
   ReligionRes:
     type: object
     properties:
@@ -1510,8 +1464,8 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Religion:
         type: array
-        items: 
-         $ref: '#/definitions/Religion'  
+        items:
+          $ref: '#/definitions/Religion'
   ReligionReq:
     type: object
     properties:
@@ -1526,7 +1480,6 @@ definitions:
       - tenantId
       - RequestInfo
       - Religion
-      
   CommunityRes:
     type: object
     properties:
@@ -1534,9 +1487,8 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Community:
         type: array
-        items: 
-         $ref: '#/definitions/Community'  
-         
+        items:
+          $ref: '#/definitions/Community'
   CommunityReq:
     type: object
     properties:
@@ -1547,15 +1499,14 @@ definitions:
     required:
       - RequestInfo
       - Community
-      
   Department:
     title: Department in the system
     type: object
     properties:
       id:
-       type: integer
-       format: int64
-       description : Unique identifier of the department.
+        type: integer
+        format: int64
+        description: Unique identifier of the department.
       name:
         type: string
         description: Unique Department name.
@@ -1578,7 +1529,6 @@ definitions:
       - name
       - code
       - active
-      
   DepartmentRes:
     type: object
     properties:
@@ -1586,9 +1536,8 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Department:
         type: array
-        items: 
-         $ref: '#/definitions/Department' 
-         
+        items:
+          $ref: '#/definitions/Department'
   DepartmentReq:
     type: object
     properties:
@@ -1599,19 +1548,18 @@ definitions:
     required:
       - RequestInfo
       - Department
-      
   CalendarYear:
     title: Calendar year definition in the system
     type: object
     properties:
       id:
-       type: integer
-       format: int64
-       description : Unique identifier of the calendar.
+        type: integer
+        format: int64
+        description: Unique identifier of the calendar.
       name:
         type: integer
         format: int32
-        description: Unique Name of the year. For example 2000, 2017 etc.
+        description: 'Unique Name of the year. For example 2000, 2017 etc.'
       startDate:
         type: string
         format: date
@@ -1622,7 +1570,9 @@ definitions:
         description: Last date of the year. It should be always December 31st.
       active:
         type: boolean
-        description: if this year is active then value will be TRUE, else value will be FALSE.
+        description: >-
+          if this year is active then value will be TRUE, else value will be
+          FALSE.
       tenantId:
         description: Unique id for for a tenant.
         type: string
@@ -1639,8 +1589,8 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       CalendarYear:
         type: array
-        items: 
-         $ref: '#/definitions/CalendarYear' 
+        items:
+          $ref: '#/definitions/CalendarYear'
   CalendarYearReq:
     type: object
     properties:
@@ -1656,23 +1606,28 @@ definitions:
     type: object
     properties:
       id:
-       type: integer
-       format: int64
-       description : Unique identifier of the holiday list.
+        type: integer
+        format: int64
+        description: Unique identifier of the holiday list.
       calendarYear:
         type: object
         description: Year for which the holiday belongs to.
         items:
-          $ref: "#/definitions/CalendarYear"
+          $ref: '#/definitions/CalendarYear'
       name:
         type: string
-        description: Name of the holiday, for example Diwali, Ramzan etc.
+        description: 'Name of the holiday, for example Diwali, Ramzan etc.'
         minLength: 3
         maxLength: 200
       applicableOn:
         type: string
         format: date
         description: Date on which the holiday is applicable.
+      optional:
+        type: boolean
+        description: >-
+          If a holiday can be optional, the value will be true and if its not an
+          optional holiday the value will be false.
       tenantId:
         description: Unique id for for a tenant.
         type: string
@@ -1681,6 +1636,7 @@ definitions:
       - calendarYear
       - name
       - applicableOn
+      - optional
   HolidayRes:
     type: object
     properties:
@@ -1688,26 +1644,26 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Holiday:
         type: array
-        items: 
-         $ref: '#/definitions/Holiday' 
+        items:
+          $ref: '#/definitions/Holiday'
   HolidayReq:
     type: object
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Holiday:
-        $ref: '#/definitions/Holiday'            
+        $ref: '#/definitions/Holiday'
     required:
       - RequestInfo
-      - Holiday     
+      - Holiday
   Category:
-    title: Various Categories in the system like ST, SC
+    title: 'Various Categories in the system like ST, SC'
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the category.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the category.
       name:
         type: string
         description: The Name of the category.
@@ -1720,7 +1676,10 @@ definitions:
       active:
         type: string
         format: boolean
-        description: Shows if this category data is active or not. If the value is TRUE, then this data is active one. If this needs to be marked as a deleted data then the value will be FALSE.       
+        description: >-
+          Shows if this category data is active or not. If the value is TRUE,
+          then this data is active one. If this needs to be marked as a deleted
+          data then the value will be FALSE.
       tenantId:
         description: Unique id for for a tenant.
         type: string
@@ -1735,8 +1694,8 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Category:
         type: array
-        items: 
-         $ref: '#/definitions/Category'  
+        items:
+          $ref: '#/definitions/Category'
   CategoryReq:
     type: object
     properties:
@@ -1747,15 +1706,14 @@ definitions:
     required:
       - RequestInfo
       - Category
-      
   Module:
     title: Module in the system
     type: object
     properties:
-      id: 
-       type: integer
-       format: int64
-       description : Unique identifier of the module.
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the module.
       name:
         type: string
         description: The Name of the module.
@@ -1769,21 +1727,20 @@ definitions:
         type: boolean
         format: varchar
         description: TRUE for active module and FALSE for inactive module.
-      parentmodule: 
+      parentmodule:
         type: integer
         format: int64
-        description : There can be sub modules, this is parent module id.
-      orderNumber: 
+        description: 'There can be sub modules, this is parent module id.'
+      orderNumber:
         type: integer
         format: int64
-        description : order bumber
+        description: order bumber
       tenantId:
         description: Unique id for for a tenant.
         type: string
     required:
       - tenantId
       - name
-
   ModuleRes:
     type: object
     properties:
@@ -1791,20 +1748,18 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Module:
         type: array
-        items: 
-         $ref: '#/definitions/Module'  
-         
+        items:
+          $ref: '#/definitions/Module'
   ModuleReq:
     type: object
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Module:
-        $ref: '#/definitions/Module'  
+        $ref: '#/definitions/Module'
     required:
       - RequestInfo
       - Module
-      
 parameters:
   tenantId:
     name: tenantid
@@ -1823,7 +1778,6 @@ parameters:
     maxLength: 256
     exclusiveMinimum: true
     exclusiveMaximum: false
-
   languageName:
     name: name
     in: path
@@ -1833,7 +1787,7 @@ parameters:
     minLength: 0
     maxLength: 256
     exclusiveMinimum: true
-    exclusiveMaximum: false    
+    exclusiveMaximum: false
   religionName:
     name: name
     in: path
@@ -1843,7 +1797,7 @@ parameters:
     minLength: 0
     maxLength: 256
     exclusiveMinimum: true
-    exclusiveMaximum: false   
+    exclusiveMaximum: false
   communityName:
     name: name
     in: path
@@ -1853,8 +1807,7 @@ parameters:
     minLength: 0
     maxLength: 256
     exclusiveMinimum: true
-    exclusiveMaximum: false 
-
+    exclusiveMaximum: false
   calendarYearName:
     name: name
     in: path
@@ -1864,11 +1817,13 @@ parameters:
     minLength: 0
     maxLength: 4
     exclusiveMinimum: true
-    exclusiveMaximum: false 
+    exclusiveMaximum: false
   sortCalendarYear:
     name: sort
     in: query
-    description: Calendar data results will be sorted by name descending by default if this parameter is not provided.
+    description: >-
+      Calendar data results will be sorted by name descending by default if this
+      parameter is not provided.
     type: array
     uniqueItems: true
     minItems: 1
@@ -1878,8 +1833,7 @@ parameters:
       type: string
       pattern: '[-+](name|startDate)'
     default:
-      - -name
-
+      - '-name'
   applicableOn:
     name: applicableOn
     in: path
@@ -1890,7 +1844,7 @@ parameters:
     minLength: 0
     maxLength: 10
     exclusiveMinimum: true
-    exclusiveMaximum: false 
+    exclusiveMaximum: false
   category:
     name: name
     in: path
@@ -1904,7 +1858,9 @@ parameters:
   sortHolidays:
     name: sort
     in: query
-    description: Holiday results will be sorted by calendar year and applicable on descending by default if this parameter is not provided.
+    description: >-
+      Holiday results will be sorted by calendar year and applicable on
+      descending by default if this parameter is not provided.
     type: array
     uniqueItems: true
     minItems: 1
@@ -1914,13 +1870,14 @@ parameters:
       type: string
       pattern: '[-+](calendarYear|applicableOn|name)'
     default:
-      - -calendarYear
-      - -applicableOn
-      
+      - '-calendarYear'
+      - '-applicableOn'
   sortModule:
     name: sort
     in: query
-    description: Module will be sorted by orderNumber descending by default if this parameter is not provided.
+    description: >-
+      Module will be sorted by orderNumber descending by default if this
+      parameter is not provided.
     type: array
     uniqueItems: true
     minItems: 1
@@ -1930,4 +1887,4 @@ parameters:
       type: string
       pattern: '[-+](name|contextRoot|orderNumber)'
     default:
-      - -orderNumber
+      - '-orderNumber'

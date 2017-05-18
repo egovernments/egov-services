@@ -51,7 +51,6 @@ public class ServiceTypeController {
         return new ServiceTypeResponse(null, getComplaintType(complaintType));
     }
 
-
     private List<ServiceType> getComplaintType(org.egov.pgrrest.common.entity.ServiceType complaintType) {
         if (complaintType == null)
             return Collections.emptyList();

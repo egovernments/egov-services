@@ -1,5 +1,6 @@
 package org.egov.lams.repository.helper;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.enums.Source;
@@ -20,19 +21,19 @@ public class DemandHelper {
 	private PropertiesManager propertiesManager;
 
 	public String getDemandReasonUrlParams(AgreementRequest agreementRequest) {
-	
+
 		Agreement agreement = agreementRequest.getAgreement();
-	
+
 		logger.info("the criteria for demandReasonSearch are ::: " + "?moduleName="
 				+ propertiesManager.getDemandModuleName() + "&taxPeriod=" + agreement.getTimePeriod() + "&fromDate="
 				+ agreement.getCommencementDate() + "&toDate=" + agreement.getExpiryDate() + "&installmentType="
 				+ agreement.getPaymentCycle().toString() + "&taxCategory=" + propertiesManager.getTaxCategoryName());
-	
+
 		StringBuilder urlParams = new StringBuilder();
 		urlParams.append("?moduleName=" + propertiesManager.getDemandModuleName());
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
-		urlParams.append("&fromDate=" + agreement.getCommencementDate());
-		urlParams.append("&toDate=" + agreement.getExpiryDate());
+		urlParams.append("&fromDate=" + DateFormatUtils.format(agreement.getCommencementDate(), "dd/MM/yyyy"));
+		urlParams.append("&toDate=" + DateFormatUtils.format(agreement.getExpiryDate(), "dd/MM/yyyy"));
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
 		urlParams.append("&tenantId=" + agreement.getTenantId());

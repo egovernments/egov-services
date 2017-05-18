@@ -90,7 +90,7 @@ class SearchAsset extends React.Component {
       if(count == 0)
         _this.setInitialState(_state);
     }
-    
+
     getDropdown("assetCategories", function(res) {
       checkCountNCall("assetCategories", res);
     });

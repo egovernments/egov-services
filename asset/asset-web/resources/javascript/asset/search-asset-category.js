@@ -9,6 +9,7 @@ class SearchAssetCategory extends React.Component {
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   search(e) {
@@ -47,7 +48,7 @@ class SearchAssetCategory extends React.Component {
       }
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
-    
+
     var count = 3, _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       count--;
@@ -92,6 +93,15 @@ class SearchAssetCategory extends React.Component {
       }
   }
 
+  handleClick(type, id) {
+    if (type === "update") {
+      window.location.href = `app/asset/create-asset-category.html?id=${id}&type=update`;
+    } else if(type) {
+      window.location.href = `app/asset/create-asset-category.html?id=${id}&type=${type}`;
+    } else {
+      window.location.href = `app/asset/create-asset-category.html?id=${id}&type=view`;
+    }
+  }
 
 
   handleChange(e,name) {
@@ -104,7 +114,7 @@ class SearchAssetCategory extends React.Component {
   }
 
   render() {
-    let {handleChange,search}=this;
+    let {handleChange,search,handleClick}=this;
     let {assetCategoryType,name}=this.state.searchSet;
     let {isSearchClicked, list, assignments_unitOfMeasurement, assetCategories}=this.state;
 
@@ -138,16 +148,12 @@ class SearchAssetCategory extends React.Component {
       if (list.length>0) {
         return list.map((item,index)=>
         {
-              return (<tr key={index}>
+              return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
                                   <td>{item.code}</td>
                                   <td>{item.name}</td>
                                   <td>{item.assetCategoryType}</td>
                                   <td>{getNameById(assetCategories,item.parent)}</td>
                                   <td>{getNameById(assignments_unitOfMeasurement,item.unitOfMeasurement,"narration")}</td>
-
-                                  <td data-label="action">
-                      {renderAction(getUrlVars()["type"],item.id)}
-                      </td>
                               </tr>  );
         })
       }
@@ -187,7 +193,6 @@ class SearchAssetCategory extends React.Component {
                     <th>Asset Category Type</th>
                     <th>Parent Category</th>
                     <th>Unit Of Measurment</th>
-                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody id="agreementSearchResultTableBody">

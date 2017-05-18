@@ -960,11 +960,11 @@ if (assetDetails && Object.keys(assetDetails).length) {
     $("#locationDetails\\.electionWard").val(getNameById(electionwards, assetDetails["locationDetails"]["electionWard"]));
 }
 
-$('.datetimepicker').datetimepicker({
+$('.datepicker').datepicker({
     format: 'DD/MM/YYYY'
 });
 
-$(".datetimepicker").on("dp.change", function() {
+$(".datepicker").on("dp.change", function() {
     // alert('hey');
     fillValueToObject(this);
 });

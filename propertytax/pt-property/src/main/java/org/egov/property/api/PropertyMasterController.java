@@ -1,11 +1,12 @@
 package org.egov.property.api;
 
+import org.egov.models.RequestInfo;
+import org.egov.models.ResponseInfo;
 import org.egov.property.model.MasterModel;
 import org.egov.property.model.MasterResponse;
-import org.egov.property.model.RequestInfo;
-import org.egov.property.model.ResponseInfo;
 import org.egov.property.services.Masterservice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getPropertyTypes(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -38,7 +41,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getApartmentMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -48,7 +53,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getFloorTypeMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -58,7 +65,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getOcupancyMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -68,7 +77,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getRoofTypeMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	@RequestMapping(path="/taxRateMaster/_search",method=RequestMethod.POST)
@@ -77,7 +88,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getTaxRateMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	@RequestMapping(path="/wallTypeMaster/_search",method=RequestMethod.POST)
@@ -86,7 +99,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getWallTypeMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	@RequestMapping(path="/woodTypeMaster/_search",method=RequestMethod.POST)
@@ -95,7 +110,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getWoodTypeMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -105,7 +122,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getUsageMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -115,7 +134,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getStructureMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -125,7 +146,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getDocumentTypeMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -135,7 +158,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getMutationReasonMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	
@@ -145,7 +170,9 @@ public class PropertyMasterController {
 		MasterModel	masterModel=	masterService.getMutationRateMaster(tenantId, code);
 		MasterResponse masterResponse=new MasterResponse();
 		masterResponse.setMasterModel(masterModel);
-		masterResponse.setResonseInfo(new ResponseInfo());
+		ResponseInfo responseInfo=new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		masterResponse.setResonseInfo(responseInfo);
 		return masterResponse;
 	}
 	

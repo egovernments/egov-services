@@ -26,4 +26,5 @@ public class DemandReasonCriteria {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date toDate;
 	private String tenantId;
+	private String installmentType;
 }

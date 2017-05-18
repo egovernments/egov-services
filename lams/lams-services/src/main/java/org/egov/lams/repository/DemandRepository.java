@@ -12,6 +12,7 @@ import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
 import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.DemandReasonCriteria;
 import org.egov.lams.web.contract.DemandReasonResponse;
 import org.egov.lams.web.contract.DemandRequest;
 import org.egov.lams.web.contract.DemandResponse;
@@ -37,14 +38,15 @@ public class DemandRepository {
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
 
-		//FIXME overriding tenantid as default due to unavailability of ramki 
-		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
-				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
+		// FIXME overriding tenantid as default due to unavailability of ramki
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath();
+		DemandReasonCriteria demandReasonCriteria = demandHelper.getDemandReasonUrlParams(agreementRequest);
 
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {
-			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),DemandReasonResponse.class);
+			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
+					DemandReasonResponse.class,demandReasonCriteria);
 			System.err.println(demandReasonResponse);
 		} catch (Exception exception) {
 			exception.printStackTrace();

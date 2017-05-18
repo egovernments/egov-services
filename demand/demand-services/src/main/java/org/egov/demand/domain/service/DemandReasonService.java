@@ -37,6 +37,9 @@ public class DemandReasonService {
 		if (!demandReasonCriteria.getTaxReason().isEmpty()) {
 			queryStr.append(" and dr.egDemandReasonMaster.code=:taxReason");
 		}
+		if (!demandReasonCriteria.getInstallmentType().isEmpty()) {
+			queryStr.append(" and dr.egInstallmentMaster.installment_type=:installmenttype");
+		}
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());
 		if (!demandReasonCriteria.getModuleName().isEmpty()) {
@@ -47,6 +50,9 @@ public class DemandReasonService {
 		}
 		if (!demandReasonCriteria.getTaxReason().isEmpty()) {
 			query.setString("taxReason", demandReasonCriteria.getTaxReason());
+		}
+		if (!demandReasonCriteria.getInstallmentType().isEmpty()) {
+			query.setString("installmenttype", demandReasonCriteria.getInstallmentType());
 		}
 		return (List<EgDemandReason>) query.list();
 	}

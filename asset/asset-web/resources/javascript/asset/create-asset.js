@@ -422,7 +422,6 @@ class CreateAsset extends React.Component {
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify(_body),
-                async: false,
                 contentType: 'application/json',
                 headers:{
                     'auth-token' :authToken
@@ -437,6 +436,8 @@ class CreateAsset extends React.Component {
                     for(var key in err["responseJSON"].Error.fields) {
                       _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
                     }
+                    showError(_err);
+                  } else if(_err) {
                     showError(_err);
                   } else {
                     showError(err["statusText"]);
@@ -724,7 +725,7 @@ class CreateAsset extends React.Component {
       });
 
       if (type === "view" || type === "update") {
-          getCommonMasterById("asset-services", "assets", "Assets", id, function(err, res) {
+          getCommonMasterById("asset-services", "assets", id, function(err, res) {
             if(res) {
               let asset = res["Assets"][0];
               var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
@@ -761,7 +762,7 @@ class CreateAsset extends React.Component {
               }
 
               if(asset.assetReference) {
-                getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference, function(res1) {
+                getCommonMasterById("asset-services", "assets", asset.assetReference, function(res1) {
                   if(res1 && res1["Assets"] && res1["Assets"][0]) {
                     var _this = this;
                     setTimeout(function() {

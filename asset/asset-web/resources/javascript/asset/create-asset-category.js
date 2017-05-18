@@ -373,7 +373,6 @@ class CreateAsset extends React.Component {
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(body),
-            async: false,
             contentType: 'application/json',
             headers:{
               'auth-token': authToken
@@ -387,6 +386,8 @@ class CreateAsset extends React.Component {
                 for(var key in err["responseJSON"].Error.fields) {
                   _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
                 }
+                showError(_err);
+              } else if(_err) {
                 showError(_err);
               } else {
                 showError(err["statusText"]);

@@ -119,12 +119,12 @@ public class Complaint extends AbstractAuditable<Long> {
     }
 
     public ServiceRequest toDomain() {
-        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
+        final Coordinates coordinates = new Coordinates(latitude, longitude);
         final String locationId = getLocationId();
         final ServiceRequestType complaintType =
                 new ServiceRequestType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
         return ServiceRequest.builder()
-                .serviceRequestLocation(new ServiceRequestLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
+                .serviceRequestLocation(new ServiceRequestLocation(coordinates, getCrossHierarchyId(), locationId))
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .requester(complainant.toDomain())

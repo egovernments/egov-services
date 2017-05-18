@@ -22,10 +22,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "submission")
-public class Submission extends AbstractAuditable<String> {
-    @Id
-    @Column(name = "crn", unique = true)
-    private String id;
+public class Submission extends AbstractAuditable<SubmissionKey> {
+    @EmbeddedId
+    private SubmissionKey id;
 
     @Column(name = "servicecode")
     private String serviceCode;
@@ -63,25 +62,26 @@ public class Submission extends AbstractAuditable<String> {
 
     private Long department;
 
-    @Column(name = "tenantid")
-    private String tenantId;
-
     @Transient
     private List<SubmissionAttribute> attributeValues;
 
     @Transient
     private ServiceType serviceType;
 
+    public String getCrn() {
+        return id.getCrn();
+    }
+
     public ServiceRequest toDomain() {
-        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
+        final Coordinates coordinates = new Coordinates(latitude, longitude);
         return ServiceRequest.builder()
-            .serviceRequestLocation(new ServiceRequestLocation(coordinates, null, null, tenantId))
+            .serviceRequestLocation(new ServiceRequestLocation(coordinates, null, null))
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .address(landmarkDetails)
             .description(details)
             .requester(getComplainant())
             .complaintType(getDomainComplaintType())
-            .crn(id)
+            .crn(id.getCrn())
             .createdDate(getCreatedDate())
             .lastModifiedDate(getLastModifiedDate())
             .mediaUrls(Collections.emptyList())
@@ -90,7 +90,7 @@ public class Submission extends AbstractAuditable<String> {
             .department(getDepartment())
             .lastAccessedTime(getLastModifiedDate())
             .assignee(getAssignee())
-            .tenantId(tenantId)
+            .tenantId(id.getTenantId())
             .complaintStatus(status)
             .attributeEntries(getAttributeEntries())
             .build();
@@ -108,7 +108,6 @@ public class Submission extends AbstractAuditable<String> {
             .mobile(mobile)
             .email(email)
             .address(requesterAddress)
-            .tenantId(tenantId)
             .build();
     }
 

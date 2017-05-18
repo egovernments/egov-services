@@ -88,7 +88,7 @@ public class ServiceRequestControllerTest {
 
     public ServiceRequest getComplaintWithNoTenantId() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(11.22d, 12.22d, null)).build();
+            .coordinates(new Coordinates(11.22d, 12.22d)).build();
         final Requester complainant = Requester.builder()
             .userId("userId")
             .firstName("first name")
@@ -139,8 +139,8 @@ public class ServiceRequestControllerTest {
             .type(UserType.CITIZEN)
             .tenantId("tenantId")
             .build();
-        final Requester domainComplainant = new Requester("kumar", null, null, "mico layout", "user", "tenantId");
-        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(new Coordinates(0.0, 0.0, "tenantId"), null, "34", "tenantId");
+        final Requester domainComplainant = new Requester("kumar", null, null, "mico layout", "user");
+        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(new Coordinates(0.0, 0.0), null, "34");
         ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)

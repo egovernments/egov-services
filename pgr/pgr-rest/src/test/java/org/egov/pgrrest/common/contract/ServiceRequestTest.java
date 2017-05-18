@@ -402,7 +402,7 @@ public class ServiceRequestTest {
     public void test_should_populate_attribute_values_field_in_service_request_from_domain_complaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId("locationIdName")
-            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .coordinates(new Coordinates(1.0, 2.0))
             .build();
         final Requester complainant = Requester.builder()
             .address("complainantAddress")
@@ -451,7 +451,7 @@ public class ServiceRequestTest {
     public void test_should_populate_values_field_in_service_request_from_domain_complaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId("locationId")
-            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .coordinates(new Coordinates(1.0, 2.0))
             .build();
         final Requester complainant = Requester.builder()
             .address("complainantAddress")
@@ -490,7 +490,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_populate_values_field_with_non_null_values_from_domain_complaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .coordinates(new Coordinates(1.0, 2.0))
             .build();
         final Requester complainant = Requester.builder()
             .address("complainantAddress")
@@ -517,7 +517,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_populate_attribute_values_field_with_non_null_values_from_domain_complaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.0, 2.0, "tenantId"))
+            .coordinates(new Coordinates(1.0, 2.0))
             .build();
         final Requester complainant = Requester.builder()
             .address("complainantAddress")

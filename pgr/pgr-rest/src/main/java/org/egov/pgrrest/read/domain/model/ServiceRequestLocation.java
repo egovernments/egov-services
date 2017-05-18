@@ -13,7 +13,6 @@ public class ServiceRequestLocation {
     private Coordinates coordinates;
     private String crossHierarchyId;
     private String locationId;
-    private String tenantId;
 
     public boolean isRawLocationAbsent() {
         return isCoordinatesAbsent() && isHierarchyAbsent();

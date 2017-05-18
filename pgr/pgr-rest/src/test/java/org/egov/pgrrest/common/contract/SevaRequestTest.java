@@ -26,7 +26,7 @@ public class SevaRequestTest {
 
     private org.egov.pgrrest.read.domain.model.ServiceRequest getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
-        final Coordinates coordinates = new Coordinates(0d, 0d, TENANT_ID);
+        final Coordinates coordinates = new Coordinates(0d, 0d);
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder().coordinates(coordinates)
                 .crossHierarchyId("id").build();
 

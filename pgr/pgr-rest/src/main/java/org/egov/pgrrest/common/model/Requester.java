@@ -17,7 +17,6 @@ public class Requester {
     private String email;
     private String address;
     private String userId;
-    private String tenantId;
 
     public boolean isAbsent() {
         return isFirstNameAbsent() || isMobileAbsent();

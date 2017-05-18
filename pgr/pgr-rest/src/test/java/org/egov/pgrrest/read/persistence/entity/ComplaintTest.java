@@ -51,7 +51,7 @@ public class ComplaintTest {
         assertNotNull(serviceRequestLocation);
         assertEquals("3", serviceRequestLocation.getLocationId());
         assertEquals("4", serviceRequestLocation.getCrossHierarchyId());
-        assertEquals(new Coordinates(1.0, 2.0, "tenantId"), serviceRequestLocation.getCoordinates());
+        assertEquals(new Coordinates(1.0, 2.0), serviceRequestLocation.getCoordinates());
         assertEquals(toDate(lastAccessedDateTime), domainComplaint.getLastAccessedTime());
         assertEquals(toDate(lastModifiedDateTime), domainComplaint.getLastModifiedDate());
         assertEquals(toDate(createdDateTime), domainComplaint.getCreatedDate());

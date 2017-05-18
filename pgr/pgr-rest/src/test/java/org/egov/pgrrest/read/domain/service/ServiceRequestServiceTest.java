@@ -190,13 +190,15 @@ public class ServiceRequestServiceTest {
     public void test_should_fetch_empty_list_for_invalid_userid() {
         when(complaintRepository.getAllModifiedServiceRequestsForCitizen(any(Long.class),any(String.class)))
             .thenReturn(new ArrayList<>());
-        final List<ServiceRequest> actualComplaints = serviceRequestService.getAllModifiedCitizenComplaints(1L, "tenantId");
+        final List<ServiceRequest> actualComplaints = serviceRequestService
+            .getAllModifiedCitizenComplaints(1L, "tenantId");
         assertEquals(0, actualComplaints.size());
     }
 
     private ServiceRequest getComplaint() {
-        final Coordinates coordinates = new Coordinates(0d, 0d, "tenantId");
-        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(coordinates, "id", null, "tenantId");
+        final Coordinates coordinates = new Coordinates(0d, 0d);
+        final ServiceRequestLocation serviceRequestLocation =
+            new ServiceRequestLocation(coordinates, "id", null);
         final Requester complainant = Requester.builder()
             .userId("userId")
             .firstName("first name")

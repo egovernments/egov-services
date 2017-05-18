@@ -14,7 +14,7 @@ public class ServiceRequestTest {
     @Test
     public void testShouldNotFailValidationWhenCitizenCreatesValidComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(12.22d, 11.22d, "tenantId"))
+                .coordinates(new Coordinates(12.22d, 11.22d))
                 .build();
         final Requester complainant = Requester.builder()
             .userId("userId")
@@ -86,7 +86,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenFirstNameIsNotPresentWhenCreatingAnAnonymousComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+            .coordinates(new Coordinates(1.1, 2.2))
             .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -106,7 +106,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenFirstNameIsNotPresentWhenEmployeeCreatesComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+            .coordinates(new Coordinates(1.1, 2.2))
             .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -126,7 +126,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenCreatingAnAnonymousComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+            .coordinates(new Coordinates(1.1, 2.2))
             .build();
         final Requester complainant = Requester.builder()
             .firstName("first name")
@@ -147,7 +147,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenEmployeeCreatesComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+            .coordinates(new Coordinates(1.1, 2.2))
             .build();
         final Requester complainant = Requester.builder()
             .firstName("first name")
@@ -169,7 +169,7 @@ public class ServiceRequestTest {
     @Test
     public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentWhenCreatingAnAnonymousComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .coordinates(new Coordinates(1.1, 2.2))
                 .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -192,7 +192,7 @@ public class ServiceRequestTest {
     @Test
     public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentOnComplaintCreationByEmployee() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .coordinates(new Coordinates(1.1, 2.2))
                 .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -215,7 +215,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenTenantIdIsAbsentWhenCreatingComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .coordinates(new Coordinates(1.1, 2.2))
                 .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -238,7 +238,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenDescriptionIsAbsentWhenCreatingComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .coordinates(new Coordinates(1.1, 2.2))
                 .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -261,7 +261,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenDescriptionLengthIsLessWhenCreatingComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2,"ap.public"))
+            .coordinates(new Coordinates(1.1, 2.2))
             .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -284,7 +284,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenComplaintTypeCodeIsAbsentWhenCreatingComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .coordinates(new Coordinates(1.1, 2.2))
                 .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -307,7 +307,7 @@ public class ServiceRequestTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenCrnIsAbsentWhenUpdatingComplaint() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .coordinates(new Coordinates(1.1, 2.2))
                 .build();
         final Requester complainant = Requester.builder()
             .mobile("mobile number")
@@ -331,7 +331,7 @@ public class ServiceRequestTest {
 
     private ServiceRequest getComplaintWithNoLocationData() {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-                .coordinates(new Coordinates(0d, 0d, "tenantId"))
+                .coordinates(new Coordinates(0d, 0d))
                 .build();
         return getComplaint(serviceRequestLocation);
     }

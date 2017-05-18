@@ -54,7 +54,6 @@ public class Complainant extends AbstractPersistable<Long> {
             .mobile(mobile)
             .email(email)
             .address(address)
-            .tenantId(tenantId)
             .build();
     }
 

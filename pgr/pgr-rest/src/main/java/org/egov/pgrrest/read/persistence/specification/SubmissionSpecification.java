@@ -1,8 +1,6 @@
 package org.egov.pgrrest.read.persistence.specification;
 
-import org.egov.pgrrest.common.entity.AbstractAuditable_;
-import org.egov.pgrrest.common.entity.Submission;
-import org.egov.pgrrest.common.entity.Submission_;
+import org.egov.pgrrest.common.entity.*;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,8 +20,9 @@ public class SubmissionSpecification implements Specification<Submission> {
     @Override
     public Predicate toPredicate(Root<Submission> root, CriteriaQuery<?> criteriaQuery,
                                  CriteriaBuilder criteriaBuilder) {
-        Path<String> crn = root.get(Submission_.id);
-        Path<String> tenantId = root.get(Submission_.tenantId);
+        Path<SubmissionKey> key = root.get(Submission_.id);
+        Path<String> crn = key.get(SubmissionKey_.crn);
+        Path<String> tenantId = key.get(SubmissionKey_.tenantId);
         Path<String> code = root.get(Submission_.serviceCode);
         Path<String> status = root.get(Submission_.status);
         Path<Date> createdDate = root.get(AbstractAuditable_.createdDate);

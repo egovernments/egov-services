@@ -226,12 +226,11 @@ public class ComplaintWriteRepository {
     }
 
     private void setBasicInfo(ComplaintRecord complaintRecord, Submission submission) {
-        submission.setId(complaintRecord.getCRN());
+        submission.setId(new SubmissionKey(complaintRecord.getCRN(), complaintRecord.getTenantId()));
         submission.setLatitude(complaintRecord.getLatitude());
         submission.setLongitude(complaintRecord.getLongitude());
         submission.setDetails(complaintRecord.getDescription());
         submission.setLandmarkDetails(complaintRecord.getLandmarkDetails());
-        submission.setTenantId(complaintRecord.getTenantId());
     }
 
     private void setAuditFields(ComplaintRecord complaintRecord, Complaint complaint) {
@@ -269,7 +268,6 @@ public class ComplaintWriteRepository {
         submission.setMobile(complaintRecord.getComplainantMobileNumber());
         submission.setEmail(complaintRecord.getComplainantEmail());
         submission.setRequesterAddress(complaintRecord.getComplainantAddress());
-        submission.setTenantId(complaintRecord.getTenantId());
     }
 
     private Complaint getComplaint(ComplaintRecord complaintRecord) {
@@ -280,7 +278,7 @@ public class ComplaintWriteRepository {
 
     private Submission getSubmission(ComplaintRecord complaintRecord) {
         final Submission existingSubmission = submissionJpaRepository
-            .findByIdAndTenantId(complaintRecord.getCRN(), complaintRecord.getTenantId());
+            .findOne(new SubmissionKey(complaintRecord.getCRN(), complaintRecord.getTenantId()));
         return existingSubmission == null ? new Submission() : existingSubmission;
     }
 }

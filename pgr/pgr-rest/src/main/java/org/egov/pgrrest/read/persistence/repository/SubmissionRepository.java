@@ -85,7 +85,7 @@ public class SubmissionRepository {
     private Map<String, List<SubmissionAttribute>> getSubmissionAttributes(
         ServiceRequestSearchCriteria searchCriteria, List<Submission> submissions) {
         final List<String> crnList = submissions.stream()
-            .map(Submission::getId)
+            .map(Submission::getCrn)
             .collect(Collectors.toList());
         final List<SubmissionAttribute> submissionAttributes = submissionAttributeJpaRepository
             .findByCrnListAndTenantId(crnList, searchCriteria.getTenantId());

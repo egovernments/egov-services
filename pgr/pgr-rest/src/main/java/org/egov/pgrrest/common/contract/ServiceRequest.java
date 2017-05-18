@@ -214,17 +214,15 @@ public class ServiceRequest {
             .email(email)
             .userId(complainantUserId)
             .address(complainantAddress)
-            .tenantId(tenantId)
             .build();
     }
 
     private ServiceRequestLocation getComplaintLocation() {
-        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
+        final Coordinates coordinates = new Coordinates(latitude, longitude);
         return ServiceRequestLocation.builder()
             .coordinates(coordinates)
             .crossHierarchyId(crossHierarchyId)
             .locationId(getLocationId())
-            .tenantId(tenantId)
             .build();
     }
 

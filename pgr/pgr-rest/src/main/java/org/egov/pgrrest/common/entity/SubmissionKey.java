@@ -13,11 +13,8 @@ import java.io.Serializable;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class SubmissionAttributeKey implements Serializable {
-    private String code;
-    private String key;
+public class SubmissionKey implements Serializable {
     private String crn;
     @Column(name = "tenantid")
     private String tenantId;
 }
-

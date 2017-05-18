@@ -354,7 +354,7 @@ class CreateAsset extends React.Component {
     var assets = [], _this = this;
     commonApiPost("asset-services","assets","_search", this.state.refSet, function(err, res) {
       if(res && res["Assets"]) {
-          assets = res.responseJSON["Assets"];
+          assets = res["Assets"];
           assets.sort(function(item1, item2) {
             return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
           });
@@ -418,17 +418,17 @@ class CreateAsset extends React.Component {
         } else {
             commonApiPost("asset-services", "assets", (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create"), {tenantId}, function(err, res) {
               if(err) {
-                var _err = err["responseJSON"].Error.message || "";
-                if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
-                  for(var key in err["responseJSON"].Error.fields) {
-                    _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                var _err = err.Error.message || "";
+                if(err.Error.fields && Object.keys(err.Error.fields).length) {
+                  for(var key in err.Error.fields) {
+                    _err += "\n " + key + "- " + err.Error.fields[key] + " "; //HERE
                   }
                   showError(_err);
                 } else {
                   showError(err["statusText"]);
                 }
               } else {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${response["responseJSON"] && response["responseJSON"].Assets && response["responseJSON"].Assets[0] && response["responseJSON"].Assets[0].code ?  response["responseJSON"].Assets[0].code : ""}`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${res && res.Assets && res.Assets[0] && res.Assets[0].code ?  res.Assets[0].code : ""}`;
               }
             })
         }
@@ -714,7 +714,7 @@ class CreateAsset extends React.Component {
       if (type === "view" || type === "update") {
           getCommonMasterById("asset-services", "assets", "Assets", id, function(err, res) {
             if(res) {
-              let asset = res.responseJSON["Assets"][0];
+              let asset = res["Assets"][0];
               var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
               setTimeout(function() {
                 _this.setState({
@@ -750,13 +750,13 @@ class CreateAsset extends React.Component {
 
               if(asset.assetReference) {
                 getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference, function(res1) {
-                  if(res1 && res1.responseJSON && res1.responseJSON["Assets"] && res1.responseJSON["Assets"][0]) {
+                  if(res1 && res1["Assets"] && res1["Assets"][0]) {
                     var _this = this;
                     setTimeout(function() {
                       _this.setState({
                         assetSet: {
                             ..._this.state.assetSet,
-                            assetReferenceName: res1.responseJSON["Assets"][0].name
+                            assetReferenceName: res1["Assets"][0].name
                         }
                       })
                     }, 200);
@@ -1495,7 +1495,14 @@ class CreateAsset extends React.Component {
         <form onSubmit={(e)=>
             {addOrUpdate(e)}}>
             <div className="form-section">
-              <h3 className="categoryType">Header Details </h3>
+              <div className="row">
+                <div className="col-md-8">
+                  <h3 className="categoryType">Header Details </h3>
+                </div>
+                <div className="col-md-4 text-right">
+                  <button class="btn btn-close">Test</button>
+                </div>
+              </div>
               <div className="form-section-inner">
                   <div className="row">
                     <div className="col-sm-6">

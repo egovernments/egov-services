@@ -231,11 +231,11 @@ function showError(message) {
 }
 
 
-function getDropdown(name, cb) {
+function getDropdown(name, cb, params = {}) {
     switch (name) {
         case 'assetCategories':
             if(!localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined") {
-                commonApiPost("asset-services", "assetCategories", "_search", {tenantId}, function(err, res) {
+                commonApiPost("asset-services", "assetCategories", "_search", {tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("assetCategories", JSON.stringify(res["AssetCategory"]));
                     cb(res["AssetCategory"]);
@@ -249,7 +249,7 @@ function getDropdown(name, cb) {
             break;
         case 'locality':
             if(!localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId}, function(err, res) {
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("locality", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -263,7 +263,7 @@ function getDropdown(name, cb) {
             break;
         case 'electionwards':
             if(!localStorage.getItem("electionwards") || localStorage.getItem("electionwards") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId}, function(err, res) {
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("electionwards", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -291,7 +291,7 @@ function getDropdown(name, cb) {
             break;
         case 'acquisitionList':
             if(!localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined") {
-                commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {tenantId}, function(err, res) {
+                commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("acquisitionList", JSON.stringify(res));
                     cb(res);
@@ -305,7 +305,7 @@ function getDropdown(name, cb) {
             break;
         case 'revenueZone':
             if(!localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" ,tenantId}, function(err, res) {
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" ,tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("revenueZone", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -319,7 +319,7 @@ function getDropdown(name, cb) {
             break;
         case 'street':
             if(!localStorage.getItem("street") || localStorage.getItem("street") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId}, function(err, res) {
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("street", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -333,7 +333,7 @@ function getDropdown(name, cb) {
             break;
         case 'revenueWard':
             if(!localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId}, function(err, res) {
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("revenueWard", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -347,7 +347,7 @@ function getDropdown(name, cb) {
             break;
         case 'revenueBlock':
             if(!localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId}, function(err, res) {
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("revenueBlock", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -361,7 +361,7 @@ function getDropdown(name, cb) {
             break;
         case 'statusList':
             if(!localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined") {
-                commonApiGet("asset-services", "", "GET_STATUS", {tenantId}, function(err, res) {
+                commonApiGet("asset-services", "", "GET_STATUS", {tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("statusList", JSON.stringify(res));
                     cb(res);
@@ -375,7 +375,7 @@ function getDropdown(name, cb) {
             break;
         case 'asset_category_type':
             if(!localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined") {
-                commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}, function(err, res) {
+                commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("asset_category_type", JSON.stringify(res));
                     cb(res);
@@ -389,7 +389,7 @@ function getDropdown(name, cb) {
             break;
         case 'assignments_unitOfMeasurement':
             if(!localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined") {
-                commonApiPost("egov-common-masters", "uoms", "_search", {tenantId}, function(err, res) {
+                commonApiPost("egov-common-masters", "uoms", "_search", {tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(res["uoms"]));
                     cb(res["uoms"]);
@@ -403,7 +403,7 @@ function getDropdown(name, cb) {
             break;
         case 'depreciationMethod':
             if(!localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined") {
-                commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId}, function(err, res) {
+                commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("depreciationMethod", JSON.stringify(res));
                     cb(res);
@@ -417,7 +417,7 @@ function getDropdown(name, cb) {
             break;
         case 'assetAccount':
             if(!localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }, function(err, res) {
+                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params}, function(err, res) {
                   if(res) {
                     localStorage.setItem("assetAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);
@@ -431,7 +431,7 @@ function getDropdown(name, cb) {
             break;
         case 'accumulatedDepreciationAccount':
             if(!localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }, function(err, res) {
+                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params }, function(err, res) {
                   if(res) {
                     localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);
@@ -445,7 +445,7 @@ function getDropdown(name, cb) {
             break;
         case 'revaluationReserveAccount':
             if(!localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }, function(err, res) {
+                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params }, function(err, res) {
                   if(res) {
                     localStorage.setItem("revaluationReserveAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);
@@ -459,7 +459,7 @@ function getDropdown(name, cb) {
             break;
         case 'depreciationExpenseAccount':
             if(!localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }, function(err, res) {
+                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params }, function(err, res) {
                   if(res) {
                     localStorage.setItem("depreciationExpenseAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);

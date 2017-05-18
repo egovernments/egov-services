@@ -72,14 +72,15 @@ class ShowPipeSize extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td>{index+1}</td>
-                    <td data-label="sizeInMilimeter">{item.sizeInMilimeter}</td>
-                    <td data-label="sizeInInch">{item.sizeInInch}</td>
-                    <td data-label="code">{item.code}</td>
-                    <td data-label="active">{item.active?"true":"false"}</td>
-                    <td data-label="action">
+                    <td><center>{index+1}</center></td>
+                    <td data-label="code"><center>{item.code}</center></td>
+                    <td data-label="sizeInMilimeter"><center>{item.sizeInMilimeter}</center></td>
+
+
+                    <td data-label="active"><center>{item.active?"ACTIVE":"INACTIVE"}</center></td>
+                    <td data-label="action"><center>
                     {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
+                  </center>  </td>
                 </tr>
             );
 
@@ -92,10 +93,9 @@ class ShowPipeSize extends React.Component {
             <thead>
                 <tr>
                     <th>Sl No.</th>
+                    <th>Code</th>
                     <th>H.S.C Pipe Size (mm)</th>
-                    <th>H.S.C Pipe Size(inch)</th>
-                    <th>Code </th>
-                    <th>Active</th>
+                    <th>Status</th>
                     <th>Action</th>
 
                 </tr>

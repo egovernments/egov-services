@@ -53,18 +53,18 @@ $("select").on("change", function() {
         }
     }
 
-    if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
-        employees = commonApiPost("hr-employee", "employees", "_search", {
-            tenantId,
-            departmentId: $("#approverDepartment").val(),
-            designationId: $("#approverDesignation").val()
-        }).responseJSON["Employee"] || [];
-        //$(`#approverName`).html(`<option value=''>Select</option>`)
-
-        for (var i = 0; i < employees.length; i++) {
-            $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
-        }
-    }
+    // if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
+    //     employees = commonApiPost("hr-employee", "employees", "_search", {
+    //         tenantId,
+    //         departmentId: $("#approverDepartment").val(),
+    //         designationId: $("#approverDesignation").val()
+    //     }).responseJSON["Employee"] || [];
+    //     //$(`#approverName`).html(`<option value=''>Select</option>`)
+    //
+    //     for (var i = 0; i < employees.length; i++) {
+    //         $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+    //     }
+    // }
 
     // agreement[this.id] = this.value;
     fillValueToObject(this);
@@ -908,12 +908,12 @@ for (var variable in paymentCycle) {
     }
 }
 
-$(`#approverDepartment`).html(`<option value=''>Select</option>`);
-for (var variable in department) {
-    $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
-
-}
-$(`#approverDesignation`).html(`<option value=''>Select</option>`)
+// $(`#approverDepartment`).html(`<option value=''>Select</option>`);
+// for (var variable in department) {
+//     $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
+//
+// }
+// $(`#approverDesignation`).html(`<option value=''>Select</option>`)
 
 /*for (var variable in designation) {
 

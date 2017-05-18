@@ -49,7 +49,7 @@ public class ServiceRequestTypeRepository {
             .add(Projections.count("submission.serviceCode").as("count"))
             .add(Projections.groupProperty("submission.serviceCode")));
         criteria.add(Restrictions.between("submission.createdDate", previousDate.toDate(), currentDate.toDate()));
-        criteria.add(Restrictions.eq("submission.tenantId", tenantId));
+        criteria.add(Restrictions.eq("submission.id.tenantId", tenantId));
         criteria.setMaxResults(count)
             .addOrder(Order.desc("count"));
         final List resultList = criteria.list();

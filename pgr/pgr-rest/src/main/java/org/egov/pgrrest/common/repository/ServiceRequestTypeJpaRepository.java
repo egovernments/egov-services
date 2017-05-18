@@ -16,4 +16,7 @@ public interface ServiceRequestTypeJpaRepository extends JpaRepository<ServiceTy
     ServiceType findByCodeAndTenantId(String code, String tenantId);
 
     List<ServiceType> findByCodeInAndTenantId(List<String> codes, String tenantId);
+
+    @Query("select c from ServiceType c where c.code in :codes and c.active = 't' and c.tenantId = :tenantId order by c.name")
+    List<ServiceType> findActiveServiceTypes(@Param("codes") List<String> codes, @Param("tenantId") String tenantId);
 }

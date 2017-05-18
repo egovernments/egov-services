@@ -11,18 +11,41 @@
 		<meta http-equiv="pragma" content="no-cache" />
 	    <title>eGov Urban Portal</title>
 		<link rel="icon" href="../resources/global/images/favicon.png" sizes="32x32">
+		<link rel="stylesheet" href="../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
 	    <link rel="stylesheet" href="../resources/global/css/bootstrap/bootstrap.css">
-	    <link rel="stylesheet" href="../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="../resources/global/css/egov/custom.css">
-		
-		<script src="../resources/global/js/jquery/jquery.js"></script>
-		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
-		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
-		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
-		<script	src="../resources/global/js/handlebars/handlebars-v4.0.5.js"></script>
-        <script src="../resources/global/js/egov/custom.js"></script>
-        <script src="../resources/app/js/homepagecitizen.js"></script>
-
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+        	.services-item [class*='col-'].services .content{
+        		padding: 10px;
+				box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+				color: #333;
+				font-size: 16px;
+        	}
+        	[class*='col-'].services .content.a{
+        		border-left: 5px solid #CCDB38; 
+        	}
+        	.action-bar {
+	            text-align: right;
+	            margin-bottom: 25px;
+	            margin-right: 15px; 
+	        }
+	        .action-bar .action-item {
+              color: #9CA1A7;
+              cursor: pointer;
+              height: 28px;
+              display: inline-block;
+              vertical-align: top; 
+          	}
+          	.action-bar .action-item input[type="text"] {
+                font-size: 16px;
+                border: none;
+                border-bottom: 2px solid #e4e4e4;
+                outline: 0;
+                padding: 5px;
+                color: #333; 
+            }
+        </style>
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
@@ -32,12 +55,8 @@
 	</head>
     <body class="page-body" oncontextmenu="return false;" cz-shortcut-listen="true">
     	<div class="page-container login-page">
-    	
 
-
-
-
-<header><!-- set fixed position by adding class "navbar-fixed-top" -->
+			<header><!-- set fixed position by adding class "navbar-fixed-top" -->
 				
 				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
 					<div class="container-fluid">
@@ -54,11 +73,9 @@
 						</div>
 						<div class="nav-menu col-lg-4 col-xs-12">
 							<ul class="hr-menu text-center">
-								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)" data-show-screen="#inbox-template"> <span class="title" data-translate="core.lbl.inbox"></span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
+								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)"  data-show-screen="#inbox-template"> <span class="title" data-translate="core.lbl.inbox"></span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
 								<span class="separator">|</span>
-								<li><a class="menu-item" href="javascript:void(0);" data-show-screen="#myaccount" data-translate="core.lbl.myaccount"></a></li>
-								<span class="separator">|</span>
-								<li><a class="menu-item" href="javascript:void(0);" data-show-screen="#newreq" data-translate="core.lbl.newrequest"></a></li>
+								<li class="newServices"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newservicesContent">Services</a></li>
 							</ul>
 						</div><!--/.nav-collapse -->
 						
@@ -95,477 +112,97 @@
 				</nav>
 				
 			</header>
-                <div class="main-content login-page with-hr-menu">
-                    
 
+            <div class="main-content login-page with-hr-menu">
+                
 
-
-
-
-
-		<script type="text/javascript">
-			/*function onBodyLoad(){
-				var unreadMessageCount = "0";
-				document.getElementById("unreadMessageCount").innerHTML=unreadMessageCount;
-			}
-			function refreshInbox(obj, elem){
-				$.ajax({
-					url: "/portal/home/refreshInbox",
-					type : "GET",
-					data: {
-						citizenInboxId : obj
-					},
-					success : function(response) {
-						document.getElementById("unreadMessageCount").innerHTML=response;
-		            }
-		        });
-				$(elem).find("i").removeClass('unread-msg').addClass('read-msg');
-			}*/
-			
-		</script>
-		<div class="citizen-screens" id="inbox-template">
-						
-						<div class="row padding-tb"><!-- padding-tb -->
-							<div class="search-box col-md-12 col-sm-12">
-								<i class="fa fa-search"></i>
-								<input type="text" class="form-control searchinbox" data-translate="core.lbl.search" onkeyup="search(this)">
-							</div>
-							<!-- <div class="col-md-3 col-sm-4 text-center xs-margin-top-10">
-								<div class="btn-group btn-input clearfix" id="sortby_drop">
-									<button type="button" class="btn btn-default dropdown-toggle form-control" data-toggle="dropdown">
-										<span data-bind="label">Sort by : <b><i class="fa fa-clock-o"></i> Recent Messages</b></span> <span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" role="menu">
-										<li><a href="#"><i class="fa fa-clock-o"></i> Recent Messages</a></li>
-										<li><a href="#"><i class="user-msg fa fa-user"></i> User Messages</a></li>
-										<li><a href="#"><i class="fa fa-database"></i> System Notifications</a></li>
-									</ul>
-								</div>
-							</div> -->
+				<div class="citizen-screens" id="inbox-template">
+					
+					<div class="row padding-tb"><!-- padding-tb -->
+						<div class="search-box col-md-12 col-sm-12">
+							<i class="fa fa-search"></i>
+							<input type="text" class="form-control searchinbox" data-translate="core.lbl.search" onkeyup="search(this)">
 						</div>
+						<!-- <div class="col-md-3 col-sm-4 text-center xs-margin-top-10">
+							<div class="btn-group btn-input clearfix" id="sortby_drop">
+								<button type="button" class="btn btn-default dropdown-toggle form-control" data-toggle="dropdown">
+									<span data-bind="label">Sort by : <b><i class="fa fa-clock-o"></i> Recent Messages</b></span> <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="#"><i class="fa fa-clock-o"></i> Recent Messages</a></li>
+									<li><a href="#"><i class="user-msg fa fa-user"></i> User Messages</a></li>
+									<li><a href="#"><i class="fa fa-database"></i> System Notifications</a></li>
+								</ul>
+							</div>
+						</div> -->
+					</div>
+					
+					<div class="row container-msgs">
 						
-						<div class="row container-msgs">
-							
-							<section class="col-lg-12 grievanceresponse">
-								<script id="grievance-template" type="text/template">
-									{{#each this}}
-									<div class="msg reloadtemplate" data-toggle="collapse" data-target="#4275" aria-expanded="true">
-										<header>
-											<div class="row">
-												<i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i>
-												<h3 class="col-sm-11 col-xs-10">
-												Grievance Redressal
-													<span class="msg-status">
-														{{#each attribValues}}
-														    {{#if (contains this.key "complaintStatus")}}
-																{{this.name}}
-														    {{/if}}
-														{{/each}}
-													</span> 
-												</h3> 
-											</div>
-											<div class="msg-info">
-												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
-												
-												<span class="msg-date">{{requestedDatetime}}</span>
-											</div>
-										</header>
-										<div class="msg-content collapse in">
-											<p> 
-												Grievance No. 
-												{{serviceRequestId}} 
-												regarding 
-												{{serviceName}} 
-												in 
-												{{#each attribValues}}
-												    {{#if (contains this.key "complaintStatus")}}
-														{{this.name}}
-												    {{/if}}
-												{{/each}} 
-												status. 
-											</p>
+						<section class="col-lg-12 grievanceresponse">
+							<script id="grievance-template" type="text/template">
+								{{#each this}}
+								<div class="msg reloadtemplate" data-toggle="collapse" data-target="#4275" aria-expanded="true">
+									<header>
+										<div class="row">
+											<i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i>
+											<h3 class="col-sm-11 col-xs-10">
+											Grievance Redressal
+												<span class="msg-status">
+													{{#each attribValues}}
+													    {{#if (contains this.key "complaintStatus")}}
+															{{this.name}}
+													    {{/if}}
+													{{/each}}
+												</span> 
+											</h3> 
 										</div>
-									</div> 
-									{{/each}}
-								</script>
-							</section>
-					</div>
-					
+										<div class="msg-info">
+											<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
+											
+											<span class="msg-date">{{requestedDatetime}}</span>
+										</div>
+									</header>
+									<div class="msg-content collapse in">
+										<p> 
+											Grievance No. 
+											{{serviceRequestId}} 
+											regarding 
+											{{serviceName}} 
+											in 
+											{{#each attribValues}}
+											    {{#if (contains this.key "complaintStatus")}}
+													{{this.name}}
+											    {{/if}}
+											{{/each}} 
+											status. 
+										</p>
+									</div>
+								</div> 
+								{{/each}}
+							</script>
+						</section>
 				</div>
 				
-				<div class="citizen-screens tabs tabs-style-topline myacc display-hide" id="myaccount">
-					<nav>
-						<ul>
-							<li class="tab-current-myacc" data-section="myaccount" data-myaccount-section="#section-myaccount-1">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-book"></i></div>
-									<span class="hidden-sm hidden-xs" data-translate="pgr.lbl.grievance.citizen"></span>
-								</a>
-							</li>
-						</ul>
-					</nav>
-					<div class="content-wrap">
-						<section id="section-myaccount-1" class="content-current-myacc">
-							<div class="visible-xs visible-sm add-margin" data-translate="pgr.lbl.grievance.citizen"></div>
-						</section>
-					</div>
+			</div>
+			<div class="citizen-screens tabs tabs-style-topline display-hide" id="newservicesContent">
+				<div class="content-wrap">
+					<div class="action-bar">
+		              <div class="action-item"><input type="text" id="search" placeholder="Search"></div>
+		              <div class="action-item"><i class="material-icons">search</i></div>
+		            </div>
+					<form action="">
+						<div class="form-group row services-item" id="service_list">
+			            </div>
+					</form>
 				</div>
-				
-				<div class="citizen-screens tabs tabs-style-topline newrequest display-hide" id="newreq">
-					<nav>
-						<ul>
-							<li class="tab-current-newreq features" data-section="newrequest" data-newreq-section="#section-newrequest-1" id="pgr">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-book"></i></div>
-									<span class="hidden-sm hidden-xs" data-translate="pgr.lbl.grievance.redressal"></span>
-								</a>
-							</li>
-							<!-- <li data-section="newrequest" data-newreq-section="#section-newrequest-2" id="ptis" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-rupee"></i></div>
-									<span class="hidden-sm hidden-xs">Property Tax</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-11" id="wats" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-rupee"></i></div>
-									<span class="hidden-sm hidden-xs">Water Charge Management</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-3" id="bpa" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-building-o"></i></div>
-									<span class="hidden-sm hidden-xs">Building Plan Approval</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-4" id="bnd" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-medkit"></i></div>
-									<span class="hidden-sm hidden-xs">Birth &amp; Death</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-5" id="tl" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-text-width"></i></div>
-									<span class="hidden-sm hidden-xs">Trade Licence</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-6" id="proftax" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-rupee"></i></div>
-									<span class="hidden-sm hidden-xs">Professional Tax</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-7" id="comptax" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-rupee"></i></div>
-									<span class="hidden-sm hidden-xs">Company Tax</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-8" id="shops" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-money"></i></div>
-									<span class="hidden-sm hidden-xs">Shops</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-9" id="advtax" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-adn"></i></div>
-									<span class="hidden-sm hidden-xs">Advertisement</span>
-								</a>
-							</li>
-							<li data-section="newrequest" data-newreq-section="#section-newrequest-10" id="other" class="features" style="display: block;">
-								<a href="javascript:void(0);">
-									<div class="text-center"><i class="fa fa-hand-o-right"></i></div>
-									<span class="hidden-sm hidden-xs">Others</span>
-								</a>
-							</li> -->
-						</ul>
-					</nav>
-					<script>
-						$(".features").hide();
-					</script>
-					
-						<script>
-						var feature = 'all';
-						if (feature === 'all') { $(".features").show(); } else { $("#"+feature).show();}
-						</script>
-					
-					<script>
-					$('.tabs-style-topline nav li').click(function(){
-						if($(this).attr('data-section') == "newrequest"){
-							$('.tabs-style-topline nav li').removeClass('tab-current-newreq');
-							$(this).addClass('tab-current-newreq');
-							$('.content-wrap section.newreq').removeClass('content-current-newreq');
-							$($(this).data('newreq-section')).addClass('content-current-newreq');
-						}
-					});
-					</script>
-					<div class="content-wrap">
-						<section id="section-newrequest-1" class="newreq content-current-newreq">
-							<div class="visible-xs visible-sm add-margin" data-translate="pgr.lbl.grievance.redressal"></div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" data-href="create-complaint.html" data-name="registergrievance" class="col-sm-11 col-xs-10 open-popup" data-translate="pgr.lbl.register.grievance"></a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" data-href="search-complaint.html" data-name="searchgrievance" class="col-sm-11 col-xs-10 open-popup" data-translate="pgr.lbl.view.grievance"></a>
-									</div>
-								</header>
-							</div>
-						</section>
-						<!-- <section id="section-newrequest-2" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Property Tax</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">File New Assessment</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Pay Property Tax</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-external-link col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Link Property to My Account</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-search col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Search Property</a>
-									</div>
-								</header>
-							</div>
-						</section>
-						
-						<section id="section-newrequest-11" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Water Charge Management</div>
-							
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="/wtms/search/waterSearch/" target="_blank" class="col-sm-11 col-xs-10">Pay Charges</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="/wtms/elastic/appSearch/" target="_blank" class="col-sm-11 col-xs-10">Pay Fees</a>
-									</div>
-								</header>
-							</div>
-						</section>
-						
-						<section id="section-newrequest-3" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Building Plan Approval</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Application for Additional Construction</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Application for Demolition and Reconstruction</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Application for Demolition Only</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Application for New Building Permit</a>
-									</div>
-								</header>
-							</div>
-						</section>
-						<section id="section-newrequest-4" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Birth &amp; Death</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Application for Birth/Death Certificate</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-search col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Search for Birth/Death records</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Apply for Name Inclusion</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Record Correction</a>
-									</div>
-								</header>
-							
-						</div></section>
-						<section id="section-newrequest-5" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Trade Licence</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Apply For Trade Licence</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Renew Licence</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-external-link col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Link Licence to my Account</a>
-									</div>
-								</header>
-							</div> 
-						</section>
-						<section id="section-newrequest-6" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Professional Tax</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">File New Assessment</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Pay Professional Tax</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-external-link col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Link Profession to my Account</a>
-									</div>
-								</header>
-							</div> 
-						</section>
-						<section id="section-newrequest-7" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Company Tax</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">File New Assessment</a>
-									</div>
-								</header>
-							</div> 
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Pay Company Tax</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-external-link col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Link Company to my Account</a>
-									</div>
-								</header>
-							</div>
-						</section>
-						<section id="section-newrequest-8" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Shops</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Pay Fees</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-external-link col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Link Shop to my Account</a>
-									</div>
-								</header>
-							</div> 
-						</section>
-						<section id="section-newrequest-9" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Advertisement</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Pay Fees</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-external-link col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Link Hoarding to my Account</a>
-									</div>
-								</header>
-							</div> 
-						</section>
-						<section id="section-newrequest-10" class="newreq">
-							<div class="visible-xs visible-sm add-margin">Others</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-rupee col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Online Payment For Challans</a>
-									</div>
-								</header>
-							</div>
-							<div class="msg">
-								<header>
-									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" class="col-sm-11 col-xs-10">Apply For Road Cut</a>
-									</div>
-								</header>
-							</div> 
-						</section> -->
-					</div>
-				</div>
+			</div>					
 
+            </div>
+         
 
-																																																			
-
-                </div>
-             
-
-				<footer class="main" data-include="footer">
-				</footer>
+			<footer class="main" data-include="footer">
+			</footer>
 
         </div>
         <div class="modal fade change-password" data-backdrop="static" data-keyboard="false">
@@ -614,5 +251,12 @@
 				</div>
 			</div>
 		</div>
-    
+    	<script src="../resources/global/js/jquery/jquery.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
+		<script	src="../resources/global/js/handlebars/handlebars-v4.0.5.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
+        <script src="../resources/global/js/egov/custom.js"></script>
+        <script src="../resources/app/js/homepagecitizen.js"></script>
 </body></html>

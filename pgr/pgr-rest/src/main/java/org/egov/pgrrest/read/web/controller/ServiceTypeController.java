@@ -23,10 +23,12 @@ public class ServiceTypeController {
     }
 
     @PostMapping(value = "/_search")
-    public ServiceTypeResponse getComplaintTypes(@RequestParam String type,
-                                                 @RequestParam(required = false) Long categoryId, @RequestParam(required = false) Integer count,
-                                                 @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,
-                                                 @RequestBody RequestInfoBody requestInfo) {
+    public ServiceTypeResponse getServiceTypes(@RequestParam String type,
+                                               @RequestParam(required = false) Long categoryId,
+                                               @RequestParam(required = false) Integer count,
+                                               @RequestParam(value = "tenantId", defaultValue = "default")
+                                                   final String tenantId,
+                                               @RequestBody RequestInfoBody requestInfo) {
         final ServiceTypeSearchCriteria searchCriteria = ServiceTypeSearchCriteria.builder()
             .categoryId(categoryId).count(count).tenantId(tenantId).complaintTypeSearch(type).build();
         List<ServiceType> serviceTypes = serviceRequestTypeService.findByCriteria(searchCriteria)
@@ -37,9 +39,10 @@ public class ServiceTypeController {
     }
 
     @PostMapping("/{serviceCode}/_search")
-    public ServiceTypeResponse getComplaintTypes(@PathVariable(name = "serviceCode") String complaintTypeCode,
-                                                 @RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
-                                                 @RequestBody RequestInfoBody requestInfo) {
+    public ServiceTypeResponse getServiceTypes(@PathVariable(name = "serviceCode") String complaintTypeCode,
+                                               @RequestParam(value = "tenantId", defaultValue = "default")
+                                                   String tenantId,
+                                               @RequestBody RequestInfoBody requestInfo) {
         org.egov.pgrrest.common.entity.ServiceType complaintType = serviceRequestTypeService
             .getComplaintType(complaintTypeCode, tenantId);
         return new ServiceTypeResponse(null, getComplaintType(complaintType));

@@ -1468,7 +1468,15 @@ class CreateAsset extends React.Component {
 
 		}
 
-    const renderRefBody = function() {
+    const showIfNotRelated = function(isRelated) {
+      if(isRelated)
+        return (
+          <td data-label="action">
+                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
+                        </td>
+        )
+    }
+    const renderRefBody = function(isRelated) {
       if (references.length > 0) {
         references.sort(function(item1, item2) {
           return item1.code > item2.code ? 1 : item1.code < item2.code ? -1 : 0;
@@ -1481,16 +1489,14 @@ class CreateAsset extends React.Component {
                         <td>{item.assetCategory.name}</td>
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
-                        <td data-label="action">
-                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
-                        </td>
+                        {showIfNotRelated(isRelated)}
                       </tr>
               );
         })
       }
     }
 
-    const renderRefTable = function() {
+    const renderRefTable = function(isRelated) {
       if(references) {
         return (
           <table id="refTable" className="table table-bordered">
@@ -1502,12 +1508,12 @@ class CreateAsset extends React.Component {
                   <th>Asset Category Type</th>
                   <th>Department</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  {isRelated ? "" : `<th>Action</th>`}
               </tr>
               </thead>
               <tbody id="tblRef">
                   {
-                      renderRefBody()
+                      renderRefBody(isRelated)
                   }
               </tbody>
          </table>
@@ -1531,10 +1537,10 @@ class CreateAsset extends React.Component {
             {addOrUpdate(e)}}>
             <div className="form-section">
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-8 col-sm-8">
                   <h3 className="categoryType">Header Details </h3>
                 </div>
-                <div className="col-md-4 text-right">
+                <div className="col-md-4 col-sm-4 text-right">
                   {showRelatedAssetsBtn()}
                 </div>
               </div>
@@ -1943,7 +1949,7 @@ class CreateAsset extends React.Component {
                 <h4 className="modal-title">Related Assets</h4>
               </div>
               <div className="modal-body">
-                {renderRefTable()}
+                {renderRefTable(true)}
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>

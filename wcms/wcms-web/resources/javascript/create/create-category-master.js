@@ -149,7 +149,7 @@ addOrUpdate(e,mode){
     };
 
     const showActionButtons=function() {
-      if((!mode) ||mode==="Update")
+      if((!mode) )
       {
         return (<button type="button" className="btn btn-reset" onClick={(e)=>{reset(e)}}>{mode?"Reset":"Reset"}</button>);
       }
@@ -208,7 +208,7 @@ addOrUpdate(e,mode){
                          <div className="text-center">
                     {showActionButton()} &nbsp;&nbsp;
                     {showActionButtons()} &nbsp;&nbsp;
-                    
+
                     <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
                     </form>

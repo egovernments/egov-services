@@ -159,7 +159,7 @@ addOrUpdate(e,mode){
     };
 
     const showActionButtons=function() {
-      if((!mode) ||mode==="Update")
+      if((!mode) )
       {
         return (<button type="button" className="btn btn-reset" onClick={(e)=>{reset(e)}}>{mode?"Reset":"Reset"}</button>);
       }

@@ -234,18 +234,50 @@ class CreateAsset extends React.Component {
     getDropdown("depreciationMethod", function(res) {
       checkCountNCall("depreciationMethod", res);
     });
-    getDropdown("assetAccount", function(res) {
-      checkCountNCall("assetAccount", res);
-    });
-    getDropdown("accumulatedDepreciationAccount", function(res) {
-      checkCountNCall("accumulatedDepreciationAccount", res);
-    });
-    getDropdown("revaluationReserveAccount", function(res) {
-      checkCountNCall("revaluationReserveAccount", res);
-    });
-    getDropdown("depreciationExpenseAccount", function(res) {
-      checkCountNCall("depreciationExpenseAccount", res);
-    });
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Fixed Assets"},function(err,res2){
+      if(res2){
+        getDropdown("assetAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res.glcode + "-" + res.name;
+          }
+          checkCountNCall("assetAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Accumulated Depreciation"},function(err,res2){
+      if(res2){
+        getDropdown("accumulatedDepreciationAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res.glcode + "-" + res.name;
+          }
+          checkCountNCall("accumulatedDepreciationAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Revaluation Reserve Account"},function(err,res2){
+      if(res2){
+        getDropdown("revaluationReserveAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res.glcode + "-" + res.name;
+          }
+          checkCountNCall("revaluationReserveAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+
+
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Depreciation Expense Account"},function(err,res2){
+      if(res2){
+        getDropdown("depreciationExpenseAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res.glcode + "-" + res.name;
+          }
+          checkCountNCall("depreciationExpenseAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+
+
     getDropdown("assignments_unitOfMeasurement", function(res) {
       checkCountNCall("assignments_unitOfMeasurement", res);
     });

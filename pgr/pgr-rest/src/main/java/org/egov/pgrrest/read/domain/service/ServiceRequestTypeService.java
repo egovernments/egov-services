@@ -24,10 +24,10 @@ public class ServiceRequestTypeService {
 
     public List<ServiceType> findByCriteria(ServiceTypeSearchCriteria searchCriteria) {
         searchCriteria.validate();
-        return findComplaintTypesByCriteria(searchCriteria);
+        return findServiceTypesByCriteria(searchCriteria);
     }
 
-    private List<ServiceType> findComplaintTypesByCriteria(ServiceTypeSearchCriteria searchCriteria) {
+    private List<ServiceType> findServiceTypesByCriteria(ServiceTypeSearchCriteria searchCriteria) {
         if (searchCriteria.isCategorySearch()) {
             return serviceRequestTypeRepository.findActiveServiceRequestTypesByCategoryAndTenantId(searchCriteria.getCategoryId(),
                     searchCriteria.getTenantId());

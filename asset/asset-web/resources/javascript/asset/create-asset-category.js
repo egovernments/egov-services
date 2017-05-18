@@ -182,6 +182,11 @@ class CreateAsset extends React.Component {
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
     this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
+  }
+
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
   componentDidMount() {
@@ -212,85 +217,54 @@ class CreateAsset extends React.Component {
 
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
+    var count = 3, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+      count--;
+      _state[key] = res;
+      if(count == 0)
+        _this.setInitialState(_state);
+    };
 
-    try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
-        console.log(e);
-        asset_category_type = {};
-    }
-
-    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
-        console.log(e);
-        assetCategories = [];
-    }
-
-    try { depreciationMethod = !localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined" ? (localStorage.setItem("depreciationMethod", JSON.stringify(commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("depreciationMethod"))) : JSON.parse(localStorage.getItem("depreciationMethod")); } catch (e) {
-        console.log(e);
-        depreciationMethod = {};
-    }
-
-    try { assetAccount = !localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined" ? (localStorage.setItem("assetAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("assetAccount"))) : JSON.parse(localStorage.getItem("assetAccount")); } catch (e) {
-        console.log(e);
-        assetAccount = [];
-    }
-
-    try { accumulatedDepreciationAccount = !localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined" ? (localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("accumulatedDepreciationAccount"))) : JSON.parse(localStorage.getItem("accumulatedDepreciationAccount")); } catch (e) {
-        console.log(e);
-        accumulatedDepreciationAccount = [];
-    }
-
-    try { revaluationReserveAccount = !localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined" ? (localStorage.setItem("revaluationReserveAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("revaluationReserveAccount"))) : JSON.parse(localStorage.getItem("revaluationReserveAccount")); } catch (e) {
-        console.log(e);
-        revaluationReserveAccount = [];
-    }
-
-    try { depreciationExpenseAccount = !localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined" ? (localStorage.setItem("depreciationExpenseAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("depreciationExpenseAccount"))) : JSON.parse(localStorage.getItem("depreciationExpenseAccount")); } catch (e) {
-        console.log(e);
-        depreciationExpenseAccount = [];
-    }
-
-    try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uoms", "_search", {tenantId}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
-        console.log(e);
-        assignments_unitOfMeasurement = [];
-    }
-
-    this.setState({
-      asset_category_type,
-      assetCategories,
-      depreciationMethod,
-      assetAccount,
-      accumulatedDepreciationAccount,
-      revaluationReserveAccount,
-      depreciationExpenseAccount,
-      assignments_unitOfMeasurement
+    getDropdown("asset_category_type", function(res) {
+      checkCountNCall("asset_category_type", res);
+    });
+    getDropdown("assetCategories", function(res) {
+      checkCountNCall("assetCategories", res);
+    });
+    getDropdown("depreciationMethod", function(res) {
+      checkCountNCall("depreciationMethod", res);
+    });
+    getDropdown("assetAccount", function(res) {
+      checkCountNCall("assetAccount", res);
+    });
+    getDropdown("accumulatedDepreciationAccount", function(res) {
+      checkCountNCall("accumulatedDepreciationAccount", res);
+    });
+    getDropdown("revaluationReserveAccount", function(res) {
+      checkCountNCall("revaluationReserveAccount", res);
+    });
+    getDropdown("depreciationExpenseAccount", function(res) {
+      checkCountNCall("depreciationExpenseAccount", res);
+    });
+    getDropdown("assignments_unitOfMeasurement", function(res) {
+      checkCountNCall("assignments_unitOfMeasurement", res);
     });
 
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
     if (getUrlVars()["type"] === "view") {
-      // for (var variable in this.state.assetCategory)
-      //   // document.getElementById(variable).disabled = true;
-      //   console.log($('#'+variable).length);
       $("input,select").prop("disabled", true);
     }
     if (type === "view" || type === "update") {
-      // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
       setTimeout(function(){
-        _this.setState({
-          assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
+        getCommonMasterById("asset-services", "assetCategories", id, function(err, res) {
+          if(res && res["AssetCategory"])
+            _this.setState({
+              assetCategory: res["AssetCategory"][0]
+            })
         })
       }, 100);
     }
-    // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
-    // this.setState({
-    //   assetCategories,
-    //   asset_category_type,
-    //   depreciationMethod,
-    //   assetAccount,
-    //   accumulatedDepreciationAccount,
-    //   revaluationReserveAccount,
-    //   depreciationExpenseAccount,
-    //   assignments_unitOfMeasurement
-    // })
   }
 
   close() {
@@ -357,66 +331,18 @@ class CreateAsset extends React.Component {
         // console.log(this.state.assetCategory);
         var tempInfo=this.state.assetCategory;
         // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
-        var body={
+        var body = {
             "RequestInfo":requestInfo,
             "AssetCategory":tempInfo
-          };
+        };
 
-        var response=$.ajax({
-              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(body),
-              async: false,
-              contentType: 'application/json',
-              headers:{
-                'auth-token': authToken
-              }
-          });
-
-        if(response["status"]==  201 || response["status"]==  200) {
-          // this.setState({
-          //   assetCategory:{
-          //     "tenantId": tenantId,
-          //     "name": "",
-          //     "assetCategoryType": "",
-          //     "parent":"",
-          //     "depreciationMethod": "",
-          //     "assetAccount": "",
-          //     "accumulatedDepreciationAccount": "",
-          //     "revaluationReserveAccount": "",
-          //     "depreciationExpenseAccount": "",
-          //     "unitOfMeasurement": "",
-          //     "depreciationRate": null,
-          //     "assetFieldsDefination":[]
-          //   },
-          //   customField: {
-          //     "name": null,
-          //     "type": null,
-          //     "isActive": false,
-          //     "isMandatory": false,
-          //     "values": null,
-          //     "localText": null,
-          //     "regExFormate": null,
-          //     "url": null,
-          //     "order": null,
-          //     "columns": null
-          //   },
-          //   asset_category_type:[],
-          //   assetCategories:[],
-          //   depreciationMethod:{},
-          //   assetAccount:[],
-          //   accumulatedDepreciationAccount:[],
-          //   revaluationReserveAccount:[],
-          //   depreciationExpenseAccount:[],
-          //   assignments_unitOfMeasurement:[],
-          //   typeList:[]
-          //
-          // })
-          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
-        } else {
-          showError(response["statusText"]);
-        }
+        commonApiPost("asset-services", "assetCategories", "_create", {tenantId}, function(err, res) {
+          if(err) {
+            showError(err["statusText"]);
+          } else {
+            window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+          }
+        })
   }
 
   addAsset(to="") {
@@ -541,7 +467,6 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    console.log(this.state.column);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
 

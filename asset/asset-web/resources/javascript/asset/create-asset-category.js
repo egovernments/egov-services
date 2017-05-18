@@ -731,10 +731,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">RegEx Format</label>
+                      <label htmlFor="">Mandatory</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="regExFormate" value={customField.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","regExFormate")}} disabled={readonly}/>
+                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                     </div>
                   </div>
                 </div>
@@ -754,33 +754,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Mandatory</label>
+                      <label htmlFor="">Order</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for="values">Value</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label htmlFor="">Local Text</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <input type="text" name="localText" disabled={readonly}  value={customField.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","localText")}}/>
+                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
                     </div>
                   </div>
                 </div>
@@ -800,10 +777,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Order</label>
+                      <label for="values">Value</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
+                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
                     </div>
                   </div>
                 </div>
@@ -1079,10 +1056,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">RegEx Format</label>
+                              <label htmlFor="">Mandatory</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="text" name="regExFormate" id="regExFormate" value={column.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"column","regExFormate")}}/>
+                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
                             </div>
                           </div>
                         </div>
@@ -1102,33 +1079,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Mandatory</label>
+                              <label htmlFor="">Order</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="values">Value</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label htmlFor="">Local Text</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <input type="text" name="localText" id="localText" value={column.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"column","localText")}}/>
+                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
                             </div>
                           </div>
                         </div>
@@ -1148,10 +1102,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Order</label>
+                              <label for="values">Value</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
+                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
                             </div>
                           </div>
                         </div>

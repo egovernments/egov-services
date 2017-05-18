@@ -269,6 +269,7 @@ class CreateAsset extends React.Component {
     this.removeRow = this.removeRow.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.openRelatedAssetMdl = this.openRelatedAssetMdl.bind(this);
   }
   close() {
       // widow.close();
@@ -623,7 +624,7 @@ class CreateAsset extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
-      $("#refModal").on("hidden.bs.modal", function () {
+      $("#refModal, #relatedAssetsModal").on("hidden.bs.modal", function () {
         flag = 1;
         _this.setState({
           refSet: {
@@ -828,6 +829,20 @@ class CreateAsset extends React.Component {
     }*/
   }
 
+  openRelatedAssetMdl(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var _this = this;
+    commonApiPost("asset-services", "assets", "_search", {tenantId, assetReference: this.state.assetSet.id}, function(err, res) {
+      if(res) {
+        _this.setState({
+          references: res["Assets"]
+        })
+      }
+    })
+    $("#relatedAssetsModal").modal('show');
+  }
+
   addNewRow(e, name) {
     e.preventDefault();
     if(!this.state.newRows[name])
@@ -847,7 +862,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
+    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
     let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments} = this.state;
     let {
       assetCategory,
@@ -1500,7 +1515,7 @@ class CreateAsset extends React.Component {
                   <h3 className="categoryType">Header Details </h3>
                 </div>
                 <div className="col-md-4 text-right">
-                  <button className="btn btn-close">Test</button>
+                  <button className="btn btn-close" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
                 </div>
               </div>
               <div className="form-section-inner">
@@ -1893,6 +1908,22 @@ class CreateAsset extends React.Component {
                   </form>
                     <br/>
                     {renderRefTable()}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" tabindex="-1" role="dialog" id="relatedAssetsModal">
+          <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title">Related Assets</h4>
+              </div>
+              <div className="modal-body">
+                {renderRefTable()}
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>

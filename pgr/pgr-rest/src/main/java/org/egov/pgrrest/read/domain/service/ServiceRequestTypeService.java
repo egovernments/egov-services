@@ -35,7 +35,7 @@ public class ServiceRequestTypeService {
             return serviceRequestTypeRepository.getFrequentlyFiledServiceRequests(searchCriteria.getCount(),
                     searchCriteria.getTenantId());
         } else if (searchCriteria.isReturnAll()) {
-            return serviceRequestTypeRepository.getAllServiceTypes();
+            return serviceRequestTypeRepository.getAllServiceTypes(searchCriteria.getTenantId());
         }
         return null;
     }

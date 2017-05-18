@@ -83,7 +83,7 @@ public class DemandReasonConroller {
 			 BindingResult bindingResult) {
 		List<EgDemandReason> egDemandReasons = null;
 		DemandReason demandReason = null;
-		List<DemandReason> demandReasons = new ArrayList<DemandReason>();
+		List<DemandReason> demandReasons = new ArrayList<>();
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
 		}

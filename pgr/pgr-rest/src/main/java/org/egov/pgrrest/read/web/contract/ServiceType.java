@@ -2,6 +2,8 @@ package org.egov.pgrrest.read.web.contract;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class ServiceType {
     private Long id;
@@ -10,23 +12,23 @@ public class ServiceType {
     private String description;
     private boolean metadata;
     private String type;
-    private String keywords;
+    private List<String> keywords;
     private Long groupId;
     private String groups;
     private Integer slaHours;
     private String tenantId;
 
-    public ServiceType(org.egov.pgrrest.common.entity.ServiceType domainComplaintType) {
-        this.id = domainComplaintType.getId();
-        this.serviceName = domainComplaintType.getName();
-        this.serviceCode = domainComplaintType.getCode();
-        this.description = domainComplaintType.getDescription();
-        this.metadata = domainComplaintType.isMetadata();
-        this.type = domainComplaintType.getType();
-        this.keywords = domainComplaintType.getKeywords();
-        this.groups = domainComplaintType.getCategory().getName();
-        this.groupId = domainComplaintType.getCategory().getId();
-        this.slaHours = domainComplaintType.getSlaHours();
-        this.tenantId = domainComplaintType.getTenantId();
+    public ServiceType(org.egov.pgrrest.common.entity.ServiceType entityServiceType) {
+        this.id = entityServiceType.getId();
+        this.serviceName = entityServiceType.getName();
+        this.serviceCode = entityServiceType.getCode();
+        this.description = entityServiceType.getDescription();
+        this.metadata = entityServiceType.isMetadata();
+        this.type = entityServiceType.getType();
+        this.keywords = entityServiceType.getKeywords();
+        this.groups = entityServiceType.getCategory().getName();
+        this.groupId = entityServiceType.getCategory().getId();
+        this.slaHours = entityServiceType.getSlaHours();
+        this.tenantId = entityServiceType.getTenantId();
     }
 }

@@ -34,6 +34,7 @@ class SearchAsset extends React.Component {
     e.preventDefault();
     try {
       //call api call
+      var _this = this;
       commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
         if(res) {
           var list = res["Assets"];
@@ -41,7 +42,7 @@ class SearchAsset extends React.Component {
             return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
           })
           flag = 1;
-          this.setState({
+          _this.setState({
             isSearchClicked: true,
             list
           })

@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.util.List;
+
 import static org.egov.pgrrest.common.entity.ServiceType.SEQ_SERVICE_TYPE;
 
 @Getter
@@ -51,7 +53,8 @@ public class ServiceType extends AbstractAuditable<Long> {
 
 	private String type;
 
-	private String keywords;
+	@Transient
+	private List<String> keywords;
 
 	@Column(name = "tenantid")
 	private String tenantId;

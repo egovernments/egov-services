@@ -54,7 +54,7 @@ class EditDemand extends React.Component {
         contentType: 'application/json'
     });
     if (response["status"] === 201) {
-        showError(response["Demand added Successfully"]);
+        showError("Demand updated successfully");
         // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, _agrmntDet["assignee"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
     } else {
         showError(response["statusText"]);

@@ -217,7 +217,7 @@ class CreateAsset extends React.Component {
 
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
-    var count = 3, _this = this, _state = {};
+    var count = 8, _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -234,18 +234,50 @@ class CreateAsset extends React.Component {
     getDropdown("depreciationMethod", function(res) {
       checkCountNCall("depreciationMethod", res);
     });
-    getDropdown("assetAccount", function(res) {
-      checkCountNCall("assetAccount", res);
-    });
-    getDropdown("accumulatedDepreciationAccount", function(res) {
-      checkCountNCall("accumulatedDepreciationAccount", res);
-    });
-    getDropdown("revaluationReserveAccount", function(res) {
-      checkCountNCall("revaluationReserveAccount", res);
-    });
-    getDropdown("depreciationExpenseAccount", function(res) {
-      checkCountNCall("depreciationExpenseAccount", res);
-    });
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Fixed Assets"},function(err,res2){
+      if(res2){
+        getDropdown("assetAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("assetAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Accumulated Depreciation"},function(err,res2){
+      if(res2){
+        getDropdown("accumulatedDepreciationAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("accumulatedDepreciationAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Revaluation Reserve Account"},function(err,res2){
+      if(res2){
+        getDropdown("revaluationReserveAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("revaluationReserveAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+
+
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Depreciation Expense Account"},function(err,res2){
+      if(res2){
+        getDropdown("depreciationExpenseAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("depreciationExpenseAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+
+
     getDropdown("assignments_unitOfMeasurement", function(res) {
       checkCountNCall("assignments_unitOfMeasurement", res);
     });
@@ -336,12 +368,31 @@ class CreateAsset extends React.Component {
             "AssetCategory":tempInfo
         };
 
-        commonApiPost("asset-services", "assetCategories", "_create", {tenantId}, function(err, res) {
-          if(err) {
-            showError(err["statusText"]);
-          } else {
-            window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
-          }
+        $.ajax({
+            url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(body),
+            contentType: 'application/json',
+            headers:{
+              'auth-token': authToken
+            },
+            success: function(res) {
+              window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+            },
+            error: function(err) {
+              var _err = err["responseJSON"].Error.message || "";
+              if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                for(var key in err["responseJSON"].Error.fields) {
+                  _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                }
+                showError(_err);
+              } else if(_err) {
+                showError(_err);
+              } else {
+                showError(err["statusText"]);
+              }
+            }
         })
   }
 
@@ -699,10 +750,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">RegEx Format</label>
+                      <label htmlFor="">Mandatory</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="regExFormate" value={customField.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","regExFormate")}} disabled={readonly}/>
+                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                     </div>
                   </div>
                 </div>
@@ -722,33 +773,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Mandatory</label>
+                      <label htmlFor="">Order</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for="values">Value</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label htmlFor="">Local Text</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <input type="text" name="localText" disabled={readonly}  value={customField.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","localText")}}/>
+                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
                     </div>
                   </div>
                 </div>
@@ -768,10 +796,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Order</label>
+                      <label for="values">Value</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
+                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
                     </div>
                   </div>
                 </div>
@@ -1047,10 +1075,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">RegEx Format</label>
+                              <label htmlFor="">Mandatory</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="text" name="regExFormate" id="regExFormate" value={column.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"column","regExFormate")}}/>
+                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
                             </div>
                           </div>
                         </div>
@@ -1070,33 +1098,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Mandatory</label>
+                              <label htmlFor="">Order</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="values">Value</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label htmlFor="">Local Text</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <input type="text" name="localText" id="localText" value={column.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"column","localText")}}/>
+                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
                             </div>
                           </div>
                         </div>
@@ -1116,10 +1121,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Order</label>
+                              <label for="values">Value</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
+                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
                             </div>
                           </div>
                         </div>

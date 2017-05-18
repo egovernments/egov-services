@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,9 +19,15 @@ import org.egov.lams.web.contract.DemandRequest;
 import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.UserErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class DemandRepository {
@@ -46,10 +53,31 @@ public class DemandRepository {
 		DemandReasonResponse demandReasonResponse = null;
 		try {
 			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),DemandReasonResponse.class);
-			System.err.println(demandReasonResponse);
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			throw new RuntimeException("DemandRepository : " + exception.getMessage(), exception.getCause());
+			LOGGER.info(demandReasonResponse);
+		} catch (HttpClientErrorException e) {
+			String errorResponseBody = e.getResponseBodyAsString();
+			LOGGER.info("Following exception occurred: " + e.getResponseBodyAsString());
+			UserErrorResponse userErrorResponse = null;
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+			} catch (JsonMappingException jme) {
+				LOGGER.error("Following Exception Occurred While Mapping JSON Response From User Service : "
+						+ jme.getMessage());
+				jme.printStackTrace();
+			} catch (JsonProcessingException jpe) {
+				LOGGER.error("Following Exception Occurred While Processing JSON Response From User Service : "
+						+ jpe.getMessage());
+				jpe.printStackTrace();
+			} catch (IOException ioe) {
+				LOGGER.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+			 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
+				LOGGER.error("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
+		} catch (Exception e) {
+			LOGGER.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			e.printStackTrace();
 		}
 		System.out.println("demandReasonResponse:" + demandReasonResponse);
 		// Todo if api returns exception object

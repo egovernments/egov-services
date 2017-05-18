@@ -1575,7 +1575,7 @@ class CreateAsset extends React.Component {
     const showRelatedAssetsBtn = function() {
       if(["update", "view"].indexOf(getUrlVars()["type"]) > -1) {
         return (
-          <button className="btn btn-close" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
+          <button className="btn btn-submit" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
         );
       }
     }

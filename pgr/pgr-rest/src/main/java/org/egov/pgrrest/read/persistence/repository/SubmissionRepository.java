@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.persistence.repository;
 import org.egov.pgrrest.common.entity.ServiceType;
 import org.egov.pgrrest.common.entity.Submission;
 import org.egov.pgrrest.common.entity.SubmissionAttribute;
-import org.egov.pgrrest.common.repository.ComplaintTypeJpaRepository;
+import org.egov.pgrrest.common.repository.ServiceRequestTypeJpaRepository;
 import org.egov.pgrrest.common.repository.SubmissionAttributeJpaRepository;
 import org.egov.pgrrest.common.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class SubmissionRepository {
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
-    private ComplaintTypeJpaRepository serviceTypeJpaRepository;
+    private ServiceRequestTypeJpaRepository serviceTypeJpaRepository;
 
     public SubmissionRepository(SubmissionJpaRepository submissionJpaRepository,
                                 SubmissionAttributeJpaRepository submissionAttributeJpaRepository,
-                                ComplaintTypeJpaRepository serviceTypeJpaRepository) {
+                                ServiceRequestTypeJpaRepository serviceTypeJpaRepository) {
         this.submissionJpaRepository = submissionJpaRepository;
         this.submissionAttributeJpaRepository = submissionAttributeJpaRepository;
         this.serviceTypeJpaRepository = serviceTypeJpaRepository;

@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.pgrrest.common.entity.ServiceType;
-import org.egov.pgrrest.common.repository.ComplaintTypeJpaRepository;
+import org.egov.pgrrest.common.repository.ServiceRequestTypeJpaRepository;
 import org.egov.pgrrest.common.entity.Complaint;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -18,22 +18,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ComplaintTypeRepository {
+public class ServiceRequestTypeRepository {
 
-    private ComplaintTypeJpaRepository complaintTypeJpaRepository;
+    private ServiceRequestTypeJpaRepository serviceRequestTypeJpaRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public ComplaintTypeRepository(ComplaintTypeJpaRepository complaintTypeJpaRepository) {
-        this.complaintTypeJpaRepository = complaintTypeJpaRepository;
+    public ServiceRequestTypeRepository(ServiceRequestTypeJpaRepository serviceRequestTypeJpaRepository) {
+        this.serviceRequestTypeJpaRepository = serviceRequestTypeJpaRepository;
     }
 
-    public List<ServiceType> findActiveComplaintTypesByCategoryAndTenantId(Long categoryId, String tenantId) {
-        return complaintTypeJpaRepository.findActiveComplaintTypes(categoryId, tenantId);
+    public List<ServiceType> findActiveServiceRequestTypesByCategoryAndTenantId(Long categoryId, String tenantId) {
+        return serviceRequestTypeJpaRepository.findActiveServiceTypes(categoryId, tenantId);
     }
 
-    public List<ServiceType> getFrequentlyFiledComplaints(Integer count, String tenantId) {
+    public List<ServiceType> getFrequentlyFiledServiceRequests(Integer count, String tenantId) {
 
         DateTime previousDate = new DateTime();
         final DateTime currentDate = new DateTime();
@@ -41,13 +41,15 @@ public class ComplaintTypeRepository {
 
         final Criteria criteria = entityManager.unwrap(Session.class).createCriteria(Complaint.class, "complaint");
         criteria.createAlias("complaint.complaintType", "compType");
-        criteria.setProjection(Projections.projectionList().add(Projections.property("complaint.complaintType"))
-                .add(Projections.count("complaint.complaintType").as("count"))
-                .add(Projections.groupProperty("complaint.complaintType")));
+        criteria.setProjection(Projections.projectionList()
+            .add(Projections.property("complaint.complaintType"))
+            .add(Projections.count("complaint.complaintType").as("count"))
+            .add(Projections.groupProperty("complaint.complaintType")));
         criteria.add(Restrictions.between("complaint.createdDate", previousDate.toDate(), currentDate.toDate()));
         criteria.add(Restrictions.eq("compType.active", Boolean.TRUE));
         criteria.add(Restrictions.eq("complaint.tenantId", tenantId));
-        criteria.setMaxResults(count).addOrder(Order.desc("count"));
+        criteria.setMaxResults(count)
+            .addOrder(Order.desc("count"));
         final List<Object> resultList = criteria.list();
         final List<ServiceType> complaintTypeList = new ArrayList<ServiceType>();
 
@@ -56,14 +58,13 @@ public class ComplaintTypeRepository {
             complaintTypeList.add((ServiceType) columns[0]);
         }
         return complaintTypeList;
-
     }
 
-    public ServiceType getComplaintType(String complaintTypeCode, String tenantId) {
-        return complaintTypeJpaRepository.findByCodeAndTenantId(complaintTypeCode, tenantId);
+    public ServiceType getServiceRequestType(String complaintTypeCode, String tenantId) {
+        return serviceRequestTypeJpaRepository.findByCodeAndTenantId(complaintTypeCode, tenantId);
     }
-    
-    public List<ServiceType> getAllComplaintTypes(){
-    	return complaintTypeJpaRepository.findAll();
+
+    public List<ServiceType> getAllServiceTypes() {
+        return serviceRequestTypeJpaRepository.findAll();
     }
 }

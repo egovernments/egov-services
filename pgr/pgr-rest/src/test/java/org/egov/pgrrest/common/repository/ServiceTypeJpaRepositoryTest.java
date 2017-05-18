@@ -23,13 +23,13 @@ import static org.junit.Assert.assertNotNull;
 public class ServiceTypeJpaRepositoryTest {
 
     @Autowired
-    private ComplaintTypeJpaRepository repository;
+    private ServiceRequestTypeJpaRepository repository;
 
     @Test
     @Sql(scripts = {"/sql/clearComplaintType.sql", "/sql/InsertComplaintType.sql"})
     public void test_should_find_all_active_complaint_types_for_given_category() {
         final long categoryId = 4L;
-        final List<ServiceType> complaintTypes = repository.findActiveComplaintTypes(categoryId, "tenantId");
+        final List<ServiceType> complaintTypes = repository.findActiveServiceTypes(categoryId, "tenantId");
 
         assertNotNull(complaintTypes);
         assertEquals(1, complaintTypes.size());

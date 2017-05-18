@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ComplaintTypeJpaRepository extends JpaRepository<ServiceType, Long> {
+public interface ServiceRequestTypeJpaRepository extends JpaRepository<ServiceType, Long> {
     @Query("select c from ServiceType c where c.category.id = :categoryId and c.active = 't' and c.tenantId = :tenantId order by c.name")
-    List<ServiceType> findActiveComplaintTypes(@Param("categoryId") Long categoryId, @Param("tenantId") String tenantId);
+    List<ServiceType> findActiveServiceTypes(@Param("categoryId") Long categoryId, @Param("tenantId") String tenantId);
+
     ServiceType findByCodeAndTenantId(String code, String tenantId);
+
     List<ServiceType> findByCodeInAndTenantId(List<String> codes, String tenantId);
 }

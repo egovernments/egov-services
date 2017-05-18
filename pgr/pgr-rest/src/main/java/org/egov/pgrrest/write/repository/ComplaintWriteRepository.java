@@ -18,7 +18,7 @@ public class ComplaintWriteRepository {
     private ComplaintJpaRepository complaintJpaRepository;
     private ReceivingModeJpaRepository receivingModeRepository;
     private ReceivingCenterJpaRepository receivingCenterRepository;
-    private ComplaintTypeJpaRepository complaintTypeJpaRepository;
+    private ServiceRequestTypeJpaRepository serviceRequestTypeJpaRepository;
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
 
@@ -26,13 +26,13 @@ public class ComplaintWriteRepository {
     public ComplaintWriteRepository(ComplaintJpaRepository complaintJpaRepository,
                                     ReceivingModeJpaRepository receivingModeRepository,
                                     ReceivingCenterJpaRepository receivingCenterRepository,
-                                    ComplaintTypeJpaRepository complaintTypeJpaRepository,
+                                    ServiceRequestTypeJpaRepository serviceRequestTypeJpaRepository,
                                     SubmissionJpaRepository submissionJpaRepository,
                                     SubmissionAttributeJpaRepository submissionAttributeJpaRepository) {
         this.complaintJpaRepository = complaintJpaRepository;
         this.receivingModeRepository = receivingModeRepository;
         this.receivingCenterRepository = receivingCenterRepository;
-        this.complaintTypeJpaRepository = complaintTypeJpaRepository;
+        this.serviceRequestTypeJpaRepository = serviceRequestTypeJpaRepository;
         this.submissionJpaRepository = submissionJpaRepository;
         this.submissionAttributeJpaRepository = submissionAttributeJpaRepository;
     }
@@ -192,7 +192,7 @@ public class ComplaintWriteRepository {
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Complaint complaint) {
-        ServiceType complaintType = complaintTypeJpaRepository
+        ServiceType complaintType = serviceRequestTypeJpaRepository
             .findByCodeAndTenantId(complaintRecord.getComplaintTypeCode(), complaintRecord.getTenantId());
         complaint.setComplaintType(complaintType);
     }

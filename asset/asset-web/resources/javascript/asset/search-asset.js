@@ -13,10 +13,10 @@ class SearchAsset extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
   }
 
-  handleChange(e,name) {
-
+  handleChange(e, name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -26,18 +26,26 @@ class SearchAsset extends React.Component {
 
   }
 
+  setInitialState(initState) {
+    this.setState(initState);
+  }
+
   search(e) {
     e.preventDefault();
     try {
       //call api call
-      var list = commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}).responseJSON["Assets"];
-      list.sort(function(item1, item2) {
-        return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-      })
-      flag = 1;
-      this.setState({
-        isSearchClicked:true,
-        list
+      commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
+        if(res) {
+          var list = res["Assets"];
+          list.sort(function(item1, item2) {
+            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+          })
+          flag = 1;
+          this.setState({
+            isSearchClicked: true,
+            list
+          })
+        }
       })
     } catch(e) {
       console.log(e);
@@ -66,9 +74,6 @@ class SearchAsset extends React.Component {
       }
   }
 
-
-
-
   componentDidMount() {
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -77,27 +82,23 @@ class SearchAsset extends React.Component {
       }
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
-    var assetCategories, departments, statusList;
-    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
-        console.log(e);
-        assetCategories = [];
+    var count = 3, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+      count--;
+      _state[key] = res;
+      if(count == 0)
+        _this.setInitialState(_state);
     }
-
-    try { departments = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department")); } catch (e) {
-        console.log(e);
-        departments = [];
-    }
-
-    try { statusList = !localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined" ? (localStorage.setItem("statusList", JSON.stringify(commonApiGet("asset-services", "", "GET_STATUS", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("statusList"))) : JSON.parse(localStorage.getItem("statusList")); } catch (e) {
-        console.log(e);
-        statusList = {};
-    }
-
-    this.setState({
-      assetCategories,
-      departments,
-      statusList
-    })
+    
+    getDropdown("assetCategories", function(res) {
+      checkCountNCall("assetCategories", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountNCall("departments", res);
+    });
+    getDropdown("statusList", function(res) {
+      checkCountNCall("statusList", res);
+    });
   }
 
   close() {

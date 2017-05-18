@@ -1469,7 +1469,7 @@ class CreateAsset extends React.Component {
 		}
 
     const showIfNotRelated = function(isRelated) {
-      if(isRelated)
+      if(!isRelated)
         return (
           <td data-label="action">
                           <button className="btn btn-close" onClick={(e) => {selectRef(e, item)}}>Select</button>
@@ -1496,6 +1496,11 @@ class CreateAsset extends React.Component {
       }
     }
 
+    const showActionTh = function(isRelated) {
+      if(!isRelated)
+        return (<th>Action</th>));
+    }
+
     const renderRefTable = function(isRelated) {
       if(references) {
         return (
@@ -1508,7 +1513,7 @@ class CreateAsset extends React.Component {
                   <th>Asset Category Type</th>
                   <th>Department</th>
                   <th>Status</th>
-                  {isRelated ? "" : `<th>Action</th>`}
+                  {showActionTh()}
               </tr>
               </thead>
               <tbody id="tblRef">
@@ -1522,7 +1527,7 @@ class CreateAsset extends React.Component {
     }
 
     const showRelatedAssetsBtn = function() {
-      if(["update", "view"].indexOf(getUrlVars()["type"])) {
+      if(["update", "view"].indexOf(getUrlVars()["type"]) > -1) {
         return (
           <button className="btn btn-close" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
         );

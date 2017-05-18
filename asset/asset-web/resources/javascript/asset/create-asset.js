@@ -1514,7 +1514,7 @@ class CreateAsset extends React.Component {
       }
     }
 
-    const showRelatedAssetsBtn() {
+    const showRelatedAssetsBtn = function() {
       if(["update", "view"].indexOf(getUrlVars()["type"])) {
         return (
           <button className="btn btn-close" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>

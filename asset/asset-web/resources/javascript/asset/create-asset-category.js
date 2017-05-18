@@ -368,12 +368,30 @@ class CreateAsset extends React.Component {
             "AssetCategory":tempInfo
         };
 
-        commonApiPost("asset-services", "assetCategories", "_create", {tenantId}, function(err, res) {
-          if(err) {
-            showError(err["statusText"]);
-          } else {
-            window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
-          }
+        $.ajax({
+            url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(body),
+            async: false,
+            contentType: 'application/json',
+            headers:{
+              'auth-token': authToken
+            },
+            success: function(res) {
+              window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+            },
+            error: function(err) {
+              var _err = err["responseJSON"].Error.message || "";
+              if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                for(var key in err["responseJSON"].Error.fields) {
+                  _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                }
+                showError(_err);
+              } else {
+                showError(err["statusText"]);
+              }
+            }
         })
   }
 

@@ -407,7 +407,7 @@ class CreateAsset extends React.Component {
         }
       }
 
-      //return console.log(tempInfo);
+      
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -417,20 +417,31 @@ class CreateAsset extends React.Component {
         if(err) {
             showError(err);
         } else {
-            commonApiPost("asset-services", "assets", (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create"), {tenantId}, function(err, res) {
-              if(err) {
-                var _err = err.Error.message || "";
-                if(err.Error.fields && Object.keys(err.Error.fields).length) {
-                  for(var key in err.Error.fields) {
-                    _err += "\n " + key + "- " + err.Error.fields[key] + " "; //HERE
+            $.ajax({
+                url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(_body),
+                async: false,
+                contentType: 'application/json',
+                headers:{
+                    'auth-token' :authToken
+                },
+                success: function(res) {
+                  window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${res && res.Assets && res.Assets[0] && res.Assets[0].code ?  res.Assets[0].code : ""}`;
+                },
+                error: function(err) {
+                  console.log(err);
+                  var _err = err["responseJSON"].Error.message || "";
+                  if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                    for(var key in err["responseJSON"].Error.fields) {
+                      _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                    }
+                    showError(_err);
+                  } else {
+                    showError(err["statusText"]);
                   }
-                  showError(_err);
-                } else {
-                  showError(err["statusText"]);
                 }
-              } else {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${res && res.Assets && res.Assets[0] && res.Assets[0].code ?  res.Assets[0].code : ""}`;
-              }
             })
         }
       })
@@ -1503,6 +1514,14 @@ class CreateAsset extends React.Component {
       }
     }
 
+    const showRelatedAssetsBtn() {
+      if(["update", "view"].indexOf(getUrlVars()["type"])) {
+        return (
+          <button className="btn btn-close" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
+        );
+      }
+    }
+
     return (
       <div>
         <h3 > {getType()} Asset  </h3>
@@ -1515,7 +1534,7 @@ class CreateAsset extends React.Component {
                   <h3 className="categoryType">Header Details </h3>
                 </div>
                 <div className="col-md-4 text-right">
-                  <button className="btn btn-close" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
+                  {showRelatedAssetsBtn()}
                 </div>
               </div>
               <div className="form-section-inner">

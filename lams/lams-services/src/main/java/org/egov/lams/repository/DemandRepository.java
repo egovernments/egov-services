@@ -37,16 +37,15 @@ public class DemandRepository {
 	DemandHelper demandHelper;
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
-
-		// FIXME overriding tenantid as default due to unavailability of ramki
-		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath();
-		DemandReasonCriteria demandReasonCriteria = demandHelper.getDemandReasonUrlParams(agreementRequest);
-
+	
+		//FIXME overriding tenantid as default due to unavailability of ramki 
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
+				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
+	
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {
-			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
-					DemandReasonResponse.class,demandReasonCriteria);
+			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),DemandReasonResponse.class);
 			System.err.println(demandReasonResponse);
 		} catch (Exception exception) {
 			exception.printStackTrace();

@@ -19,23 +19,25 @@ public class DemandHelper {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public DemandReasonCriteria getDemandReasonUrlParams(AgreementRequest agreementRequest) {
-
+	public String getDemandReasonUrlParams(AgreementRequest agreementRequest) {
+	
 		Agreement agreement = agreementRequest.getAgreement();
-		DemandReasonCriteria demandReasonCriteria = new DemandReasonCriteria();
-
-		logger.info("the criteria for demandReasonSearch are ::: " + demandReasonCriteria);
-
-		demandReasonCriteria.setModuleName(propertiesManager.getDemandModuleName());
-		demandReasonCriteria.setTaxPeriod(agreement.getTimePeriod().toString());
-		demandReasonCriteria.setFromDate(agreement.getCommencementDate());
-		demandReasonCriteria.setToDate(agreement.getExpiryDate());
-		demandReasonCriteria.setInstallmentType(agreement.getPaymentCycle().toString());
-		demandReasonCriteria.setTaxCategory(propertiesManager.getTaxCategoryName());
-		demandReasonCriteria.setTenantId(agreement.getTenantId());
+	
+		logger.info("the criteria for demandReasonSearch are ::: " + "?moduleName="
+				+ propertiesManager.getDemandModuleName() + "&taxPeriod=" + agreement.getTimePeriod() + "&fromDate="
+				+ agreement.getCommencementDate() + "&toDate=" + agreement.getExpiryDate() + "&installmentType="
+				+ agreement.getPaymentCycle().toString() + "&taxCategory=" + propertiesManager.getTaxCategoryName());
+	
+		StringBuilder urlParams = new StringBuilder();
+		urlParams.append("?moduleName=" + propertiesManager.getDemandModuleName());
+		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
+		urlParams.append("&fromDate=" + agreement.getCommencementDate());
+		urlParams.append("&toDate=" + agreement.getExpiryDate());
+		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
+		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
+		urlParams.append("&tenantId=" + agreement.getTenantId());
 		if (agreement.getSource().equals(Source.DATA_ENTRY))
-			demandReasonCriteria.setTaxReason(propertiesManager.getTaxReasonName());
-
-		return demandReasonCriteria;
+			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonName());
+		return urlParams.toString();
 	}
 }

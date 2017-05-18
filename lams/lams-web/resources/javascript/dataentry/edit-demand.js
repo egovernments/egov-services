@@ -36,7 +36,7 @@ class EditDemand extends React.Component {
         tempt.push(demands[variable]);
     }
 
-    agreementDetail["legacyDemands"]["demandDetails"]=tempt;
+    agreementDetail["legacyDemands"][0]["demandDetails"]=tempt;
 
     // api call update method
     var response = $.ajax({

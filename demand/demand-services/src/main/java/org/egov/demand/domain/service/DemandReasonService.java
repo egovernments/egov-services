@@ -32,13 +32,13 @@ public class DemandReasonService {
 			queryStr.append(" and dr.egInstallmentMaster.module=:moduleName");
 		}
 		if (!demandReasonCriteria.getTaxCategory().isEmpty()) {
-			queryStr.append(" and dr.egReasonCategory.code=:reasonCategory");
+			queryStr.append(" and dr.egDemandReasonMaster.egReasonCategory.code=:reasonCategory");
 		}
 		if (!demandReasonCriteria.getTaxReason().isEmpty()) {
 			queryStr.append(" and dr.egDemandReasonMaster.code=:taxReason");
 		}
 		if (!demandReasonCriteria.getInstallmentType().isEmpty()) {
-			queryStr.append(" and dr.egInstallmentMaster.installment_type=:installmenttype");
+			queryStr.append(" and dr.egInstallmentMaster.installmentType=:installmenttype");
 		}
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());

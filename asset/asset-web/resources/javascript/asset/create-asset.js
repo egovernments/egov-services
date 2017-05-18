@@ -1500,7 +1500,7 @@ class CreateAsset extends React.Component {
                   <h3 className="categoryType">Header Details </h3>
                 </div>
                 <div className="col-md-4 text-right">
-                  <button class="btn btn-close">Test</button>
+                  <button className="btn btn-close">Test</button>
                 </div>
               </div>
               <div className="form-section-inner">

@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken": authToken
 };
 
-var tenantId = "ap.kurnool"//"ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 
 function titleCase(field) {
     if (field) {
@@ -68,8 +68,7 @@ function getCommonMaster(mainRoute, resource, cb) {
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),
         headers: {
-            'auth-token': authToken,
-            'Authorization': 'Basic Og=='
+            'auth-token': authToken
         },
         contentType: 'application/json',
         success: function(res) {
@@ -95,8 +94,7 @@ function commonApiPost(context, resource = "", action = "", queryObject = {}, cb
         data: JSON.stringify({ RequestInfo: requestInfo }),
         contentType: 'application/json',
         headers: {
-            'auth-token': authToken,
-            'Authorization': 'Basic Og=='
+            'auth-token': authToken
         },
         success: function(res) {
             cb(null, res);
@@ -119,8 +117,7 @@ function commonApiGet(context, resource = "", action = "", queryObject = {}, cb)
         type: 'GET',
         dataType: 'json',
         headers: {
-            'auth-token': authToken,
-            'Authorization': 'Basic Og=='
+            'auth-token': authToken
         },
         contentType: 'application/json',
         success: function(res) {
@@ -151,8 +148,7 @@ function getCommonMasterById(mainRoute, resource, id, cb) {
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),
         headers: {
-            'auth-token': authToken,
-            'Authorization': 'Basic Og=='
+            'auth-token': authToken
         },
         contentType: 'application/json',
         success: function(res) {
@@ -231,11 +227,14 @@ function showError(message) {
 }
 
 
-function getDropdown(name, cb, params = {}) {
+function getDropdown(name, cb, params) {
     switch (name) {
         case 'assetCategories':
             if(!localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined") {
-                commonApiPost("asset-services", "assetCategories", "_search", {tenantId, ...params}, function(err, res) {
+                var queryString = {tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("asset-services", "assetCategories", "_search", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("assetCategories", JSON.stringify(res["AssetCategory"]));
                     cb(res["AssetCategory"]);
@@ -249,7 +248,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'locality':
             if(!localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId, ...params}, function(err, res) {
+                var queryString = {boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("locality", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -263,7 +265,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'electionwards':
             if(!localStorage.getItem("electionwards") || localStorage.getItem("electionwards") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId, ...params}, function(err, res) {
+                var queryString = {boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("electionwards", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -291,7 +296,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'acquisitionList':
             if(!localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined") {
-                commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {tenantId, ...params}, function(err, res) {
+                var queryString = {tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("acquisitionList", JSON.stringify(res));
                     cb(res);
@@ -305,7 +313,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'revenueZone':
             if(!localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" ,tenantId, ...params}, function(err, res) {
+                var queryString = {boundaryTypeName: "ZONE", hierarchyTypeName: "ADMINISTRATION" ,tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("revenueZone", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -319,7 +330,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'street':
             if(!localStorage.getItem("street") || localStorage.getItem("street") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId, ...params}, function(err, res) {
+                var queryString = { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("street", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -333,7 +347,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'revenueWard':
             if(!localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId, ...params}, function(err, res) {
+                var queryString = { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("revenueWard", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -347,7 +364,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'revenueBlock':
             if(!localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined") {
-                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId, ...params}, function(err, res) {
+                var queryString = { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("revenueBlock", JSON.stringify(res["Boundary"]));
                     cb(res["Boundary"]);
@@ -361,7 +381,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'statusList':
             if(!localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined") {
-                commonApiGet("asset-services", "", "GET_STATUS", {tenantId, ...params}, function(err, res) {
+                var queryString = {tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiGet("asset-services", "", "GET_STATUS", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("statusList", JSON.stringify(res));
                     cb(res);
@@ -375,7 +398,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'asset_category_type':
             if(!localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined") {
-                commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId, ...params}, function(err, res) {
+                var queryString = {tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("asset_category_type", JSON.stringify(res));
                     cb(res);
@@ -389,7 +415,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'assignments_unitOfMeasurement':
             if(!localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined") {
-                commonApiPost("egov-common-masters", "uoms", "_search", {tenantId, ...params}, function(err, res) {
+                var queryString = {tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egov-common-masters", "uoms", "_search", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(res["uoms"]));
                     cb(res["uoms"]);
@@ -403,7 +432,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'depreciationMethod':
             if(!localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined") {
-                commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId, ...params}, function(err, res) {
+                var queryString = {tenantId};
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("depreciationMethod", JSON.stringify(res));
                     cb(res);
@@ -417,7 +449,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'assetAccount':
             if(!localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params}, function(err, res) {
+                var queryString = { tenantId, classification: 4 };
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("assetAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);
@@ -431,7 +466,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'accumulatedDepreciationAccount':
             if(!localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params }, function(err, res) {
+                var queryString = { tenantId, classification: 4 };
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);
@@ -445,7 +483,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'revaluationReserveAccount':
             if(!localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params }, function(err, res) {
+                var queryString = { tenantId, classification: 4 };
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("revaluationReserveAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);
@@ -459,7 +500,10 @@ function getDropdown(name, cb, params = {}) {
             break;
         case 'depreciationExpenseAccount':
             if(!localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined") {
-                commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, ...params }, function(err, res) {
+                var queryString = { tenantId, classification: 4 };
+                if(params && typeof params == "object") 
+                    queryString = queryString.concat(params);
+                commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
                   if(res) {
                     localStorage.setItem("depreciationExpenseAccount", JSON.stringify(res["chartOfAccounts"]));
                     cb(res["chartOfAccounts"]);

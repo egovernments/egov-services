@@ -25,9 +25,13 @@ import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Index;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.context.annotation.Configuration;
 
 
 @Service
+@Configuration
+@EnableKafka
 public class Consumer {
 
 

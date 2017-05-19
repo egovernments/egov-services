@@ -43,6 +43,8 @@ package org.egov.egf.domain.model.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,6 +58,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AccountDetailKeyContractRequest {
 
 	private RequestInfo requestInfo = new RequestInfo();

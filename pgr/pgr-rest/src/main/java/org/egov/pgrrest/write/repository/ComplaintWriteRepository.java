@@ -18,7 +18,7 @@ public class ComplaintWriteRepository {
     private ComplaintJpaRepository complaintJpaRepository;
     private ReceivingModeJpaRepository receivingModeRepository;
     private ReceivingCenterJpaRepository receivingCenterRepository;
-    private ComplaintTypeJpaRepository complaintTypeJpaRepository;
+    private ServiceRequestTypeJpaRepository serviceRequestTypeJpaRepository;
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
 
@@ -26,13 +26,13 @@ public class ComplaintWriteRepository {
     public ComplaintWriteRepository(ComplaintJpaRepository complaintJpaRepository,
                                     ReceivingModeJpaRepository receivingModeRepository,
                                     ReceivingCenterJpaRepository receivingCenterRepository,
-                                    ComplaintTypeJpaRepository complaintTypeJpaRepository,
+                                    ServiceRequestTypeJpaRepository serviceRequestTypeJpaRepository,
                                     SubmissionJpaRepository submissionJpaRepository,
                                     SubmissionAttributeJpaRepository submissionAttributeJpaRepository) {
         this.complaintJpaRepository = complaintJpaRepository;
         this.receivingModeRepository = receivingModeRepository;
         this.receivingCenterRepository = receivingCenterRepository;
-        this.complaintTypeJpaRepository = complaintTypeJpaRepository;
+        this.serviceRequestTypeJpaRepository = serviceRequestTypeJpaRepository;
         this.submissionJpaRepository = submissionJpaRepository;
         this.submissionAttributeJpaRepository = submissionAttributeJpaRepository;
     }
@@ -192,7 +192,7 @@ public class ComplaintWriteRepository {
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Complaint complaint) {
-        ComplaintType complaintType = complaintTypeJpaRepository
+        ServiceType complaintType = serviceRequestTypeJpaRepository
             .findByCodeAndTenantId(complaintRecord.getComplaintTypeCode(), complaintRecord.getTenantId());
         complaint.setComplaintType(complaintType);
     }
@@ -226,12 +226,11 @@ public class ComplaintWriteRepository {
     }
 
     private void setBasicInfo(ComplaintRecord complaintRecord, Submission submission) {
-        submission.setId(complaintRecord.getCRN());
+        submission.setId(new SubmissionKey(complaintRecord.getCRN(), complaintRecord.getTenantId()));
         submission.setLatitude(complaintRecord.getLatitude());
         submission.setLongitude(complaintRecord.getLongitude());
         submission.setDetails(complaintRecord.getDescription());
         submission.setLandmarkDetails(complaintRecord.getLandmarkDetails());
-        submission.setTenantId(complaintRecord.getTenantId());
     }
 
     private void setAuditFields(ComplaintRecord complaintRecord, Complaint complaint) {
@@ -269,7 +268,6 @@ public class ComplaintWriteRepository {
         submission.setMobile(complaintRecord.getComplainantMobileNumber());
         submission.setEmail(complaintRecord.getComplainantEmail());
         submission.setRequesterAddress(complaintRecord.getComplainantAddress());
-        submission.setTenantId(complaintRecord.getTenantId());
     }
 
     private Complaint getComplaint(ComplaintRecord complaintRecord) {
@@ -280,7 +278,7 @@ public class ComplaintWriteRepository {
 
     private Submission getSubmission(ComplaintRecord complaintRecord) {
         final Submission existingSubmission = submissionJpaRepository
-            .findByIdAndTenantId(complaintRecord.getCRN(), complaintRecord.getTenantId());
+            .findOne(new SubmissionKey(complaintRecord.getCRN(), complaintRecord.getTenantId()));
         return existingSubmission == null ? new Submission() : existingSubmission;
     }
 }

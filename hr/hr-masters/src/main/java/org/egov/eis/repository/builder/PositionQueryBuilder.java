@@ -64,8 +64,8 @@ public class PositionQueryBuilder {
 			+ " des.description AS des_description, des.chartOfaccounts AS des_chartOfAccounts,"
 			+ " des.active AS des_active"
 			+ " FROM egeis_position p"
-			+ " JOIN egeis_departmentDesignation depDes ON p.deptDesigId = depDes.id"
-			+ " JOIN egeis_designation des ON depDes.designationid = des.id";
+			+ " JOIN egeis_departmentDesignation depDes ON p.deptDesigId = depDes.id AND depDes.tenantId = p.tenantId"
+			+ " JOIN egeis_designation des ON depDes.designationid = des.id AND des.tenantId = p.tenantId";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(PositionGetRequest positionGetRequest, List preparedStatementValues) {
@@ -94,12 +94,6 @@ public class PositionQueryBuilder {
 		if (positionGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" p.tenantId = ?");
-			preparedStatementValues.add(positionGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" depDes.tenantId = ?");
-			preparedStatementValues.add(positionGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" des.tenantId = ?");
 			preparedStatementValues.add(positionGetRequest.getTenantId());
 		}
 

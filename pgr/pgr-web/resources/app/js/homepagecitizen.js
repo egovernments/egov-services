@@ -66,38 +66,6 @@ $(document).ready(function()
 		}
 	});
 	
-	$('.menu-item').click(function(e)
-	{
-		$('.citizen-screens').hide();
-		$('.hr-menu li').removeClass('active');
-		$(this).parent().addClass('active');
-		$($(this).data('show-screen')).show();
-	});
-	
-	$("#sortby_drop li a").click(function(){
-		$("#sortby_drop > .btn > span > b").html($(this).html());
-	});
-	
-	$('.tabs-style-topline nav li').click(function(){
-		if($(this).attr('data-section') == "newrequest")
-		{
-			if($(this).attr('data-newreq-section') == '#section-newrequest-1')
-			{
-				$('.tabs-style-topline nav li').removeClass('tab-current-newreq');
-				$('.content-wrap section').removeClass('content-current-newreq');
-				$(this).addClass('tab-current-newreq');
-				$($(this).attr('data-newreq-section')).addClass('content-current-newreq');
-			}
-			
-		}else if($(this).attr('data-section') == "myaccount")
-		{
-			$('.tabs-style-topline nav li').removeClass('tab-current-myacc');
-			$('.content-wrap section').removeClass('content-current-myacc');
-			$(this).addClass('tab-current-myacc');
-			$($(this).attr('data-myaccount-section')).addClass('content-current-myacc');
-		}
-	});
-	
 	$(".ico-menu").bind('mouseover', function () {
 		$(this).addClass('open');
 	});
@@ -106,12 +74,23 @@ $(document).ready(function()
 		$(this).removeClass('open');
 	});
 
+	$('.menu-item').click(function(e){
+		$('.citizen-screens').hide();
+		$('.hr-menu li').removeClass('active');
+		$(this).parent().addClass('active');
+		$($(this).data('show-screen')).show();
+	});
+
 	loadComplaints();
 
 	$('.inboxLoad').click(function(){
 		loadComplaints();
 	});
 	
+	$('.newServices').click(function(){
+		getAllServices();
+	});
+
 	$(document).on('click','.open_popup',function(e){
 		var srn = $(this).data('srn');
 		openPopUp('view-complaint.html?srn='+srn,srn);
@@ -172,7 +151,29 @@ $(document).ready(function()
 
 		}
 	});
+
+	$('.services .content').matchHeight();
+
+	$('#search').keyup(function(e){
+		var rule = '*'+$(this).val()+'*';
+		if(e.keyCode == 8){
+		  $('.services').show();
+		}
+		$(".services-item .services:visible").each(function(){
+		  var testStr = $(this).find('.content').html().toLowerCase();
+		  console.log(testStr, rule, matchRuleShort(testStr, rule))
+		  if(matchRuleShort(testStr, rule))
+		    $(this).show();
+		  else
+		    $(this).hide();
+		});
+	});
 		
+});
+
+$(document).on('click','.services .content',function(){
+	sCode = $(this).data('code');
+	openPopUp('create-complaint.html?code='+sCode,sCode);
 });
 
 function loadComplaints(){
@@ -222,4 +223,39 @@ function search(elem) {
 			$this.show();
 		});
 	}
-};
+}
+
+function getAllServices(){
+	$.ajax({
+		url: "/pgr/services/_search?type=all&tenantId=default",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		beforeSend : function(){
+			showLoader();
+		},
+		success : function(data) {
+			$('#service_list').html('');
+			$.each(data.complaintTypes, function(i,obj){
+				$('#service_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'">'+obj.serviceName+'</div> </a></div>');
+			});
+			$('.services .content').matchHeight();
+		},
+		complete : function(){
+			hideLoader();
+			search($('.searchinbox'));
+		}
+	});
+}
+
+Handlebars.registerHelper('contains', function(string, checkString) {
+	var n = string.includes(checkString);
+	return n;
+});
+
+//Short code
+function matchRuleShort(str, rule) {
+  return new RegExp("^" + rule.split("*").join(".*") + "$").test(str);
+}

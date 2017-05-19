@@ -20,3 +20,4 @@ public class SubmissionAttributeKey implements Serializable {
     @Column(name = "tenantid")
     private String tenantId;
 }
+

@@ -144,14 +144,26 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 				{data: 'serviceName'},
 				{data: 'firstName'},
 				{"render": function ( data, type, full, meta ) {
-					var wardname = getBoundariesbyId(full.values.locationId);
-					var localityname = getBoundariesbyId(full.values.childLocationId);
-					return (wardname+' - '+localityname);
+					var wardname,localityname;
+					for (var item of full.attribValues) {
+						if(item['key']=='locationId')
+							wardname = getBoundariesbyId(item['name']);
+						else if(item['key']=='childLocationId')
+							localityname = getBoundariesbyId(item['name']);
+					}
+					return wardname+' - '+localityname;
 			    } },
-				{data: 'values.complaintStatus'},
+				{data: 'values.complaintStatus', "render": function ( data, type, full, meta ) {
+					for (var item of full.attribValues) {
+						if(item['key']=='complaintStatus')
+							return item['name'];
+					}
+			    }},
 				{data: 'values.departmentId', "render": function ( data, type, full, meta ) {
-					var depart = getDepartmentbyId(full.values.departmentId);
-					return depart;
+					for (var item of full.attribValues) {
+						if(item['key']=='departmentId')
+							return getDepartmentbyId(item['name']);
+					}
 			    } },
 				{data : 'requestedDatetime'}
 			]
@@ -279,7 +291,7 @@ function loadReceivingMode(){
 
 function complaintType(){
 	$.ajax({
-		url: "/pgr/services?type=all&tenantId=ap.public",
+		url: "/pgr/services/_search?type=all&tenantId=ap.public",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -298,7 +310,7 @@ function complaintType(){
 
 function loadStatus(){
 	$.ajax({
-		url: "/workflow/statuses/_search",
+		url: "/workflow/v1/statuses/_search?tenantId=default",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -308,8 +320,8 @@ function loadStatus(){
 		loadDD.load({
 			element:$('#status'),
 			placeholder : 'Select Status',
-			data:data,
-			keyValue:'name',
+			data:data.statuses,
+			keyValue:'code',
 			keyDisplayName:'name'
 		});
 	});

@@ -198,7 +198,7 @@ public class ConnectionCategoryController {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.CATEGORY_NAME_UNIQUE_CODE)
                     .message(WcmsConstants.CATEGORY_UNQ_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_FIELD_NAME)
+                    .field(WcmsConstants.CATEGORY_NAME_UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         } else return;

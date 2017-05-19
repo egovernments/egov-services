@@ -98,7 +98,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			if (grossValue == 0)
 				asset.setGrossValue(null);
 			else
-				asset.setGrossValue(accumulatedDepreciation);
+				asset.setGrossValue(grossValue);
 			asset.setAssetReference((Long) rs.getObject("assetreference"));
 			asset.setVersion(rs.getString("version"));
 

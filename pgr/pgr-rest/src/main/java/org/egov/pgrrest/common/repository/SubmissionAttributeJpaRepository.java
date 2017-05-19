@@ -13,5 +13,9 @@ import java.util.List;
 public interface SubmissionAttributeJpaRepository extends JpaRepository<SubmissionAttribute, SubmissionAttributeKey> {
     @Query("select a from SubmissionAttribute a where a.id.crn = :crn and a.id.tenantId = :tenantId")
     List<SubmissionAttribute> findByCrnAndTenantId(@Param("crn") String crn, @Param("tenantId") String tenantId);
+
+    @Query("select a from SubmissionAttribute a where a.id.crn in :crns and a.id.tenantId = :tenantId")
+    List<SubmissionAttribute> findByCrnListAndTenantId(@Param("crns") List<String> crns,
+                                                       @Param("tenantId") String tenantId);
 }
 

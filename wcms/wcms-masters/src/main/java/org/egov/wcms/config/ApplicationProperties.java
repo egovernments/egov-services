@@ -68,6 +68,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.category.update.name}")
 	private String updateCategoryTopicName;
 
+	@Value("${kafka.topics.pipesize.create.name}")
+	private String createPipeSizeTopicName;
+
+	@Value("${kafka.topics.pipesize.update.name}")
+	private String updatePipeSizeTopicName;
+
 	@Autowired
 	private Environment environment;
 
@@ -98,6 +104,14 @@ public class ApplicationProperties {
 
 	public String getUpdateCategoryTopicName(){
 		return updateCategoryTopicName;
+	}
+
+	public String getCreatePipeSizetopicName(){
+		return createPipeSizeTopicName;
+	}
+
+	public String getUpdatePipeSizeTopicName(){
+		return updatePipeSizeTopicName;
 	}
 
 }

@@ -10,6 +10,8 @@ class CreateCategoryType extends React.Component {
     }
      this.handleChange=this.handleChange.bind(this);
      this.addOrUpdate=this.addOrUpdate.bind(this);
+     this.reset=this.reset.bind(this);
+
 
   }
   handleChange(e,name){
@@ -35,6 +37,17 @@ class CreateCategoryType extends React.Component {
       // widow.close();
       open(location, '_self').close();
   }
+  reset(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var _this=this;
+    _this.setState({searchSet:{
+    name:"",
+    description:"",
+    },
+  })
+
+}
   componentDidMount(){
     if(window.opener && window.opener.document) {
          var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -123,7 +136,7 @@ addOrUpdate(e,mode){
 
 
   render() {
-    let {handleChange,addOrUpdate}=this;
+    let {handleChange,addOrUpdate,reset}=this;
     let {list}=this.state;
     let {name,code,description,active}=this.state.searchSet;
     let mode=getUrlVars()["type"];
@@ -131,16 +144,22 @@ addOrUpdate(e,mode){
     const showActionButton=function() {
       if((!mode) ||mode==="Update")
       {
-        return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+        return (<button type="submit" className="btn btn-submit">{mode?"Save":"Save"}</button>);
+      }
+    };
+
+    const showActionButtons=function() {
+      if((!mode) )
+      {
+        return (<button type="button" className="btn btn-reset" onClick={(e)=>{reset(e)}}>{mode?"Reset":"Reset"}</button>);
       }
     };
 
 
 
-
     return (
     <div>
-    <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Category Type</h3>
+    <h3> Category Type Details</h3>
 
     <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
 
@@ -188,6 +207,8 @@ addOrUpdate(e,mode){
 
                          <div className="text-center">
                     {showActionButton()} &nbsp;&nbsp;
+                    {showActionButtons()} &nbsp;&nbsp;
+
                     <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
                     </form>
@@ -204,6 +225,3 @@ ReactDOM.render(
   <CreateCategoryType />,
   document.getElementById('root')
 );
-//
-// <button type="submit" className="btn btn-submit">Add</button>
-// &nbsp;

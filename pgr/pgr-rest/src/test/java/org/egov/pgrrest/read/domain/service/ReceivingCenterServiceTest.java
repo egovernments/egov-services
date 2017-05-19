@@ -39,7 +39,7 @@ public class ReceivingCenterServiceTest {
 
     @Test
     public void testShouldFindReceivingCenterById() {
-        ReceivingCenter expectedResult = ReceivingCenter.builder().id(1L).name("Complaint Cell").tenantId("ap.public")
+        ReceivingCenter expectedResult = ReceivingCenter.builder().id(1L).name("ServiceRequest Cell").tenantId("ap.public")
                 .crnRequired(true).orderNo(8L).build();
         when(receivingCenterRepository.findReceivingCenterByIdAndTenantId(1L, "ap.public")).thenReturn(expectedResult);
         final ReceivingCenter receivingCenter = receivingCenterService.getReceivingCenterById("ap.public", 1L);

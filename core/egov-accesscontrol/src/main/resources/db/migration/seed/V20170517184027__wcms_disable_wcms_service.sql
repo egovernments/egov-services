@@ -1,0 +1,1 @@
+update service set enabled=false where code='WCMS' and enabled=true and tenantId='default';

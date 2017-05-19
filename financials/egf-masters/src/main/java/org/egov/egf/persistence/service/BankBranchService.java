@@ -76,6 +76,23 @@ public class BankBranchService {
 	}
 
 	@Transactional
+	public BankBranchContractResponse update(HashMap<String, Object> financialContractRequestMap) {
+		final BankBranchContractRequest bankBranchContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("BankBranchUpdate"), BankBranchContractRequest.class);
+		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
+		ModelMapper modelMapper = new ModelMapper();
+
+		BankBranch bankBranchEntity = new BankBranch(bankBranchContractRequest.getBankBranch());
+		bankBranchEntity.setVersion(bankBranchJpaRepository.findOne(bankBranchEntity.getId()).getVersion());
+		bankBranchJpaRepository.save(bankBranchEntity);
+		BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
+		bankBranchContractResponse.setBankBranch(resp);
+		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
+		return bankBranchContractResponse;
+	}
+
+	@Transactional
 	public BankBranch create(final BankBranch bankBranch) {
 		setBankBranch(bankBranch);
 		return bankBranchJpaRepository.save(bankBranch);

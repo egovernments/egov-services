@@ -61,7 +61,7 @@ public class UsageTypeGetRequest {
     @Length(min=3, max=100)
     private String name;
 
-    @Length(min=3, max=25)
+    @Length(min=3, max=20)
     private String code;
 
     private Boolean active;

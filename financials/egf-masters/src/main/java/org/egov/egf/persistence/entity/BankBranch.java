@@ -39,17 +39,11 @@
  */
 package org.egov.egf.persistence.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -132,12 +126,12 @@ public class BankBranch extends AbstractAuditable {
 	@Column(name = "micr")
 	private String micr;
 
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bankBranch", targetEntity = BankAccount.class)
+/*	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bankBranch", targetEntity = BankAccount.class)
 	private Set<BankAccount> bankAccounts = new HashSet<>(0);
 
 	public boolean isAccountsExist() {
 		return bankAccounts != null && !bankAccounts.isEmpty();
-	}
+	}*/
 
 	@Override
 	public Long getId() {
@@ -145,7 +139,7 @@ public class BankBranch extends AbstractAuditable {
 	}
 
 	public BankBranch(BankBranchContract contract) {
-		BankBranch bankBranch = new BankBranch();
+		this.setId(contract.getId());
 		this.setBank(contract.getBank() != null ? contract.getBank().getId() : null);
 		this.setName(contract.getName());
 		this.setActive(contract.getActive());
@@ -153,7 +147,7 @@ public class BankBranch extends AbstractAuditable {
 		this.setAddress2(contract.getAddress2());
 		this.setCode(contract.getCode());
 		this.setCity(contract.getCity());
-		this.setContactPerson(bankBranch.getContactPerson());
+		this.setContactPerson(contract.getContactPerson());
 		this.setDescription(contract.getDescription());
 		this.setFax(contract.getFax());
 		this.setMicr(contract.getMicr());

@@ -194,11 +194,13 @@
                                         <exclude>org.egov.pgrrest.write.contracts.*</exclude>
                                         <exclude>org.egov.pgrrest.write.repository.ComplaintWriteRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
+                                        <exclude>org.egov.pgrrest.read.persistence.specification.SubmissionSpecification</exclude>
+                                        <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.UnauthorizedAccessException
                                         </exclude>
                                         <exclude>org.egov.pgrrest.read.web.interceptor.CorrelationIdAwareRestTemplate
                                         </exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.ComplaintTypeRepository
+                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestTypeRepository
                                         </exclude>
                                         <exclude>org.egov.pgrrest.common.repository.UserRepository</exclude>
                                         <exclude>org.egov.pgrrest.common.model.Role</exclude>

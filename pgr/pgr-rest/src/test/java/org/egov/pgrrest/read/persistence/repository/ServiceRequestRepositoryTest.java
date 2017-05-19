@@ -34,6 +34,9 @@ public class ServiceRequestRepositoryTest {
     @Mock
     private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
 
+    @Mock
+    private SubmissionRepository submissionRepository;
+
     @Captor
     private ArgumentCaptor<SevaRequest> sevaRequestArgumentCaptor;
 
@@ -41,7 +44,8 @@ public class ServiceRequestRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        complaintRepository = new ServiceRequestRepository(complaintJpaRepository, serviceRequestMessageQueueRepository);
+        complaintRepository =
+            new ServiceRequestRepository(complaintJpaRepository, serviceRequestMessageQueueRepository, submissionRepository);
     }
 
     @Test
@@ -79,8 +83,8 @@ public class ServiceRequestRepositoryTest {
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = mock(ServiceRequestSearchCriteria.class);
         Complaint complaintEntityMock1 = mock(Complaint.class);
         Complaint complaintEntityMock2 = mock(Complaint.class);
-        org.egov.pgrrest.read.domain.model.Complaint complaintModelMock1 = mock(org.egov.pgrrest.read.domain.model.Complaint.class);
-       org.egov.pgrrest.read.domain.model.Complaint complaintModelMock2 = mock(org.egov.pgrrest.read.domain.model.Complaint.class);
+        org.egov.pgrrest.read.domain.model.ServiceRequest complaintModelMock1 = mock(org.egov.pgrrest.read.domain.model.ServiceRequest.class);
+       org.egov.pgrrest.read.domain.model.ServiceRequest complaintModelMock2 = mock(org.egov.pgrrest.read.domain.model.ServiceRequest.class);
 
         when(complaintEntityMock1.toDomain()).thenReturn(complaintModelMock1);
         when(complaintEntityMock2.toDomain()).thenReturn(complaintModelMock2);
@@ -88,7 +92,7 @@ public class ServiceRequestRepositoryTest {
         when(complaintJpaRepository.findAll(Matchers.<Specification<Complaint>> any(), eq(sort)))
                 .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
 
-        List<org.egov.pgrrest.read.domain.model.Complaint> actual = complaintRepository.findAll(serviceRequestSearchCriteria);
+        List<org.egov.pgrrest.read.domain.model.ServiceRequest> actual = complaintRepository.findAll(serviceRequestSearchCriteria);
 
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
     }
@@ -98,10 +102,10 @@ public class ServiceRequestRepositoryTest {
         Date lastAccessedTime = Calendar.getInstance().getTime();
         Complaint complaintEntityMock1 = mock(Complaint.class);
         Complaint complaintEntityMock2 = mock(Complaint.class);
-        org.egov.pgrrest.read.domain.model.Complaint complaintModelMock1 = mock(
-                org.egov.pgrrest.read.domain.model.Complaint.class);
-        org.egov.pgrrest.read.domain.model.Complaint complaintModelMock2 = mock(
-                org.egov.pgrrest.read.domain.model.Complaint.class);
+        org.egov.pgrrest.read.domain.model.ServiceRequest complaintModelMock1 = mock(
+                org.egov.pgrrest.read.domain.model.ServiceRequest.class);
+        org.egov.pgrrest.read.domain.model.ServiceRequest complaintModelMock2 = mock(
+                org.egov.pgrrest.read.domain.model.ServiceRequest.class);
 
         when(complaintEntityMock1.toDomain()).thenReturn(complaintModelMock1);
         when(complaintEntityMock2.toDomain()).thenReturn(complaintModelMock2);
@@ -109,7 +113,7 @@ public class ServiceRequestRepositoryTest {
         when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(1L, "tenantId"))
                 .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
 
-        List<org.egov.pgrrest.read.domain.model.Complaint> actual = complaintRepository
+        List<org.egov.pgrrest.read.domain.model.ServiceRequest> actual = complaintRepository
                 .getAllModifiedServiceRequestsForCitizen(1L, "tenantId");
 
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);

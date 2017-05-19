@@ -2,8 +2,10 @@ package org.egov.pgrrest.common.entity;
 
 import lombok.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.read.domain.model.ComplaintLocation;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -32,7 +34,7 @@ public class Complaint extends AbstractAuditable<Long> {
 
     @ManyToOne
     @JoinColumn(name = "complainttype")
-    private ComplaintType complaintType;
+    private ServiceType complaintType;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "complainant", nullable = false)
@@ -116,16 +118,16 @@ public class Complaint extends AbstractAuditable<Long> {
         return crossHierarchyId == null ? null : crossHierarchyId.toString();
     }
 
-    public org.egov.pgrrest.read.domain.model.Complaint toDomain() {
-        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
+    public ServiceRequest toDomain() {
+        final Coordinates coordinates = new Coordinates(latitude, longitude);
         final String locationId = getLocationId();
-        final org.egov.pgrrest.read.domain.model.ComplaintType complaintType =
-                new org.egov.pgrrest.read.domain.model.ComplaintType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
-        return org.egov.pgrrest.read.domain.model.Complaint.builder()
-                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
+        final ServiceRequestType complaintType =
+                new ServiceRequestType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
+        return ServiceRequest.builder()
+                .serviceRequestLocation(new ServiceRequestLocation(coordinates, getCrossHierarchyId(), locationId))
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complainant(complainant.toDomain())
+                .requester(complainant.toDomain())
                 .address(landmarkDetails)
                 .description(details)
                 .crn(crn)

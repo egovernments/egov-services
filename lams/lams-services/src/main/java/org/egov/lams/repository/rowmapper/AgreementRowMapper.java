@@ -27,95 +27,96 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 	@Override
 	public List<Agreement> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-		Map<Long,Agreement> AgreementMap = new HashMap<>();
-		logger.info("after creating map object ::: "+AgreementMap.size());
+		Map<Long, Agreement> AgreementMap = new HashMap<>();
+		logger.info("after creating map object ::: " + AgreementMap.size());
 		String AgreementIdRsName = "lamsagreementid";
-		
-		while(rs.next()){
-			
-			Long agreementId = (Long)rs.getObject(AgreementIdRsName);
-			logger.info("agreementid in row mapper"+agreementId);
-			Agreement agreement = AgreementMap.get(agreementId);
-			
-			if(agreement == null){
-				
-				agreement = new Agreement();
-				agreement.setId((Long)rs.getObject(AgreementIdRsName));
-				agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
-				agreement.setStateId(rs.getString("stateid"));
-				agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));
-				//agreement.setCloseDate(rs.getDate("closedate"));
-				agreement.setTimePeriod((Long)rs.getObject("timePeriod"));
-				agreement.setAgreementDate(rs.getTimestamp("agreement_date"));
-				agreement.setAgreementNumber(rs.getString("agreement_no"));
-				agreement.setBankGuaranteeAmount(rs.getDouble("bank_guarantee_amount"));
-				agreement.setBankGuaranteeDate(rs.getTimestamp("bank_guarantee_date"));
-				agreement.setCaseNo(rs.getString("case_no"));
-				agreement.setCommencementDate(rs.getTimestamp("commencement_date"));
-				agreement.setCouncilDate(rs.getTimestamp("council_date"));
-				agreement.setCouncilNumber(rs.getString("council_number"));
-				agreement.setExpiryDate(rs.getTimestamp("expiry_date"));
-				
-				String source = rs.getString("source");
-				agreement.setSource(Source.fromValue(source));
-				agreement.setCollectedGoodWillAmount((Double)rs.getObject("collectedGoodWillAmount"));
-				agreement.setCollectedSecurityDeposit((Double)rs.getObject("collectedSecurityDeposit"));
-				
-				String natureOfAllotment = rs.getString("nature_of_allotment");
-				agreement.setNatureOfAllotment(NatureOfAllotment.fromValue(natureOfAllotment));
-				agreement.setOrderDate(rs.getTimestamp("order_date"));
-				agreement.setOrderDetails(rs.getString("order_details"));
-				agreement.setOrderNo(rs.getString("order_no"));
-				
-				String PaymentCycleValue = rs.getString("payment_cycle");
-				agreement.setPaymentCycle(PaymentCycle.fromValue(PaymentCycleValue));
-				agreement.setRegistrationFee(rs.getDouble("registration_fee"));
-				agreement.setRemarks(rs.getString("remarks"));
-				agreement.setRent(rs.getDouble("rent"));
-				agreement.setRrReadingNo(rs.getString("rr_reading_no"));
-				
-				String status = rs.getString("status");
-				agreement.setStatus(Status.fromValue(status));
-				agreement.setTinNumber(rs.getString("tin_number"));
-				agreement.setTenantId(rs.getString("tenant_id"));
-				agreement.setTenderDate(rs.getTimestamp("tender_date"));
-				agreement.setTenderNumber(rs.getString("tender_number"));
-				agreement.setSecurityDeposit(rs.getDouble("security_deposit"));
-				agreement.setSecurityDepositDate(rs.getTimestamp("security_deposit_date"));
-				agreement.setSolvencyCertificateDate(rs.getTimestamp("solvency_certificate_date"));
-				agreement.setSolvencyCertificateNo(rs.getString("solvency_certificate_no"));
-				agreement.setTradelicenseNumber(rs.getString("trade_license_number"));
-				
-				
-				RentIncrementType rentIncrementType=new RentIncrementType();
-				rentIncrementType.setId((Long)rs.getObject("rent_increment_method"));
-				agreement.setRentIncrementMethod(rentIncrementType);
 
-				Allottee allottee = new Allottee();
-				allottee.setId((Long)rs.getObject("allottee"));
-				agreement.setAllottee(allottee);
+		while (rs.next()) {
 
-				Asset asset = new Asset();
-				asset.setId((Long)rs.getObject("asset"));
-				agreement.setAsset(asset);
-				
-				AgreementMap.put(agreementId,agreement);
+			try {
+
+				Long agreementId = (Long) rs.getObject(AgreementIdRsName);
+				logger.info("agreementid in row mapper" + agreementId);
+				Agreement agreement = AgreementMap.get(agreementId);
+
+				if (agreement == null) {
+
+					agreement = new Agreement();
+					agreement.setId((Long) rs.getObject(AgreementIdRsName));
+					agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
+					agreement.setStateId(rs.getString("stateid"));
+					agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));
+					// agreement.setCloseDate(rs.getDate("closedate"));
+					agreement.setTimePeriod((Long) rs.getObject("timePeriod"));
+					agreement.setAgreementDate(rs.getTimestamp("agreement_date"));
+					agreement.setAgreementNumber(rs.getString("agreement_no"));
+					agreement.setBankGuaranteeAmount(rs.getDouble("bank_guarantee_amount"));
+					agreement.setBankGuaranteeDate(rs.getTimestamp("bank_guarantee_date"));
+					agreement.setCaseNo(rs.getString("case_no"));
+					agreement.setCommencementDate(rs.getTimestamp("commencement_date"));
+					agreement.setCouncilDate(rs.getTimestamp("council_date"));
+					agreement.setCouncilNumber(rs.getString("council_number"));
+					agreement.setExpiryDate(rs.getTimestamp("expiry_date"));
+
+					String source = rs.getString("source");
+					agreement.setSource(Source.fromValue(source));
+					agreement.setCollectedGoodWillAmount(rs.getDouble("collectedGoodWillAmount"));
+					agreement.setCollectedSecurityDeposit(rs.getDouble("collectedSecurityDeposit"));
+
+					String natureOfAllotment = rs.getString("nature_of_allotment");
+					agreement.setNatureOfAllotment(NatureOfAllotment.fromValue(natureOfAllotment));
+					agreement.setOrderDate(rs.getTimestamp("order_date"));
+					agreement.setOrderDetails(rs.getString("order_details"));
+					agreement.setOrderNo(rs.getString("order_no"));
+
+					String PaymentCycleValue = rs.getString("payment_cycle");
+					agreement.setPaymentCycle(PaymentCycle.fromValue(PaymentCycleValue));
+					agreement.setRegistrationFee(rs.getDouble("registration_fee"));
+					agreement.setRemarks(rs.getString("remarks"));
+					agreement.setRent(rs.getDouble("rent"));
+					agreement.setRrReadingNo(rs.getString("rr_reading_no"));
+
+					String status = rs.getString("status");
+					agreement.setStatus(Status.fromValue(status));
+					agreement.setTinNumber(rs.getString("tin_number"));
+					agreement.setTenantId(rs.getString("tenant_id"));
+					agreement.setTenderDate(rs.getTimestamp("tender_date"));
+					agreement.setTenderNumber(rs.getString("tender_number"));
+					agreement.setSecurityDeposit(rs.getDouble("security_deposit"));
+					agreement.setSecurityDepositDate(rs.getTimestamp("security_deposit_date"));
+					agreement.setSolvencyCertificateDate(rs.getTimestamp("solvency_certificate_date"));
+					agreement.setSolvencyCertificateNo(rs.getString("solvency_certificate_no"));
+					agreement.setTradelicenseNumber(rs.getString("trade_license_number"));
+
+					RentIncrementType rentIncrementType = new RentIncrementType();
+					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));
+					agreement.setRentIncrementMethod(rentIncrementType);
+
+					Allottee allottee = new Allottee();
+					allottee.setId((Long) rs.getObject("allottee"));
+					agreement.setAllottee(allottee);
+
+					Asset asset = new Asset();
+					asset.setId((Long) rs.getObject("asset"));
+					agreement.setAsset(asset);
+
+					AgreementMap.put(agreementId, agreement);
+				}
+
+				List<String> demandIdList = agreement.getDemands();
+				String demandId = rs.getString("demandid");
+				if (demandId != null) {
+					if (demandIdList == null)
+						demandIdList = new ArrayList<>();
+					demandIdList.add(demandId);
+				}
+				agreement.setDemands(demandIdList);
+			} catch (Exception e) {
+				logger.info("exception in agreementRoqwMapper : " + e);
+				throw new RuntimeException("error while mapping object from reult set : " + e.getCause());
 			}
-			
-			List<String> demandIdList = agreement.getDemands();
-			String demandId = rs.getString("demandid");
-			if(demandId!=null){
-				if(demandIdList == null)
-					demandIdList = new ArrayList<>();
-				demandIdList.add(demandId);
-			}
-			
-			agreement.setDemands(demandIdList);
 		}
-		logger.info("converting map to list object ::: "+AgreementMap.values());
+		logger.info("converting map to list object ::: " + AgreementMap.values());
 		return new ArrayList<>(AgreementMap.values());
 	}
-
-	
-
 }

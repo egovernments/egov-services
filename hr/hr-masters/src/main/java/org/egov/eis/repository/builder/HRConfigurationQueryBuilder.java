@@ -58,7 +58,8 @@ public class HRConfigurationQueryBuilder {
 	private ApplicationProperties applicationProperties;
 
 	private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value"
-			+ " FROM egeis_hrConfiguration ck JOIN egeis_hrConfigurationValues cv ON ck.id = cv.keyId";
+			+ " FROM egeis_hrConfiguration ck"
+			+ " JOIN egeis_hrConfigurationValues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(HRConfigurationGetRequest hrConfigurationGetRequest, List preparedStatementValues) {
@@ -86,9 +87,6 @@ public class HRConfigurationQueryBuilder {
 		if (hrConfigurationGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" ck.tenantId = ?");
-			preparedStatementValues.add(hrConfigurationGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" cv.tenantId = ?");
 			preparedStatementValues.add(hrConfigurationGetRequest.getTenantId());
 		}
 

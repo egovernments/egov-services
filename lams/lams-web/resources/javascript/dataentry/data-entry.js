@@ -10,6 +10,35 @@ try {
     console.log(e);
   var paymentCycle = {};
 }
+try { locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality")); } catch (e) {
+    console.log(e);
+    locality = [];
+}
+try { electionwards = !localStorage.getItem("ward") || localStorage.getItem("ward") == "undefined" ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("ward"))) : JSON.parse(localStorage.getItem("ward")); } catch (e) {
+    console.log(e);
+    electionwards = [];
+}
+try { street = !localStorage.getItem("street") || localStorage.getItem("street") == "undefined" ? (localStorage.setItem("street", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("street"))) : JSON.parse(localStorage.getItem("street")); } catch (e) {
+    console.log(e);
+    street = [];
+}
+try { revenueWards = !localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined" ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueWard"))) : JSON.parse(localStorage.getItem("revenueWard")); } catch (e) {
+    console.log(e);
+    revenueWards = [];
+}
+try { revenueZone = !localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined" ? (localStorage.setItem("revenueZone", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueZone"))) : JSON.parse(localStorage.getItem("revenueZone")); } catch (e) {
+    console.log(e);
+    revenueZone = [];
+}
+try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined" ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueBlock"))) : JSON.parse(localStorage.getItem("revenueBlock")); } catch (e) {
+    console.log(e);
+    revenueBlock = [];
+}
+try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+    console.log(e);
+    assetCategories = [];
+}
+
 
 
 $('#close').on("click", function() {
@@ -53,20 +82,6 @@ $("select").on("change", function() {
         }
     }
 
-    if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
-        employees = commonApiPost("hr-employee", "employees", "_search", {
-            tenantId,
-            departmentId: $("#approverDepartment").val(),
-            designationId: $("#approverDesignation").val()
-        }).responseJSON["Employee"] || [];
-        //$(`#approverName`).html(`<option value=''>Select</option>`)
-
-        for (var i = 0; i < employees.length; i++) {
-            $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
-        }
-    }
-
-    // agreement[this.id] = this.value;
     fillValueToObject(this);
 
 });
@@ -890,9 +905,6 @@ finalValidatinRules["messages"] = {
 // $("#"+name).val("murali");
 
 var assetDetails = commonApiPost("asset-services", "assets", "_search", { id: getUrlVars()["assetId"], tenantId }).responseJSON["Assets"][0] || {};
-// var natureOfAllotments=commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON ||{};
-// var designation= getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [];
-// var department= getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [];
 
 for (var variable in natureOfAllotments) {
     if (natureOfAllotments.hasOwnProperty(variable)) {
@@ -908,20 +920,6 @@ for (var variable in paymentCycle) {
     }
 }
 
-$(`#approverDepartment`).html(`<option value=''>Select</option>`);
-for (var variable in department) {
-    $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
-
-}
-$(`#approverDesignation`).html(`<option value=''>Select</option>`)
-
-/*for (var variable in designation) {
-
-
-    $(`#approverDesignation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
-
-
-}*/
 
 getDesignations(null, function(designations) {
     for (let variable in designations) {
@@ -934,9 +932,6 @@ getDesignations(null, function(designations) {
     }
 });
 
-// var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
-// var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
-// var revenueWardss=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
 if (assetDetails && Object.keys(assetDetails).length) {
     $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
 
@@ -959,11 +954,14 @@ if (assetDetails && Object.keys(assetDetails).length) {
     $("#locationDetails\\.electionWard").val(getNameById(electionwards, assetDetails["locationDetails"]["electionWard"]));
 }
 
-$('.datetimepicker').datetimepicker({
-    format: 'DD/MM/YYYY'
-});
 
-$(".datetimepicker").on("dp.change", function() {
+$('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose:true
+
+        });
+
+$(".datepicker").on("dp.change", function() {
     // alert('hey');
     fillValueToObject(this);
 });

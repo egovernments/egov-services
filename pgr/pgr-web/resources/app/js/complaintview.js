@@ -167,23 +167,29 @@ function getComplaint(){
 							if (lat != '0' && lng != '0')
 								getAddressbyLatLng(lat, lng, response);
 
-							var receivingcenter = response.serviceRequests[0].values.receivingCenter;
+							var AV_locationId, AV_childLocationId, AV_receivingcenter, AV_departmentId;
 
-							if(receivingcenter)
-								getReceivingCenterbyId(receivingcenter, response);
+							for (var item of response.serviceRequests[0].attribValues) {
+							    if(item['key']=='receivingCenter')
+							    	AV_receivingcenter = item['name'];
+							    else if(item['key']=='departmentId')
+							    	AV_departmentId = item['name'];
+						    	else if(item['key']=='locationId')
+						    		AV_locationId = item['name'];
+					    		else if(item['key']=='childLocationId')
+					    			AV_childLocationId = item['name'];
+							}
 
-							var departmentId = response.serviceRequests[0].values.departmentId;
+							getDepartmentbyId(AV_departmentId, response);
 
-							getDepartmentbyId(departmentId, response);
+							if(AV_receivingcenter)
+								getReceivingCenterbyId(AV_receivingcenter, response);
 
-							var locationId = response.serviceRequests[0].values.locationId;
-							var childLocationId = response.serviceRequests[0].values.childLocationId;
+							if(AV_locationId)
+								getBoundarybyId(AV_locationId,'LocationName', response);
 
-							if(locationId)
-								getBoundarybyId(locationId,'LocationName', response);
-
-							if(childLocationId)
-								getBoundarybyId(childLocationId, 'ChildLocationName', response);
+							if(AV_childLocationId)
+								getBoundarybyId(AV_childLocationId, 'ChildLocationName', response);
 
 							response['files'] = fileresponse.files;
 							var source   = $("#viewcomplaint-script").html();
@@ -200,8 +206,8 @@ function getComplaint(){
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								$('#status').attr('required','required');
-								var wardId = response.serviceRequests[0].values.locationId;
-								var localityid = response.serviceRequests[0].values.childLocationId;
+								var wardId = AV_locationId;
+								var localityid = AV_childLocationId;
 								var serviceName = response.serviceRequests[0].serviceName;
 								complaintType(loadDD, serviceName);
 								getWard(loadDD, wardId);
@@ -251,20 +257,35 @@ function complaintUpdate(obj){
 	var date = dat.split("/").join("-");
 	req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
 	req_obj.serviceRequest['tenantId'] = 'default';
-	req_obj.serviceRequest.values['complaintStatus'] = $('#status').val() ? $('#status').val() : status;
-	req_obj.serviceRequest.values['approvalComments'] = $('#approvalComment').val();
-	if(localStorage.getItem('type') == 'CITIZEN')
-		req_obj.serviceRequest.values['userId'] = localStorage.getItem('id');
-	req_obj.serviceRequest.values['assignmentId'] = req_obj.serviceRequest.values['assigneeId'];
-	delete req_obj.serviceRequest.values['assigneeId'];
-	req_obj.serviceRequest.values['status'] = req_obj.serviceRequest.values['complaintStatus'];
-	delete req_obj.serviceRequest.values['complaintStatus'];
+	req_obj.serviceRequest['isAttribValuesPopulated'] = true;
 
-	if($("#approvalDepartment").val())
-		req_obj.serviceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
-	if($("#approvalPosition").val())
-		req_obj.serviceRequest.values['assignmentId'] = $("#approvalPosition").val();
+	for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
+		if(req_obj.serviceRequest.attribValues[i]['key'] == 'complaintStatus'){
+			req_obj.serviceRequest.attribValues[i]['key'] = 'status';
+			req_obj.serviceRequest.attribValues[i]['name'] = $('#status').val() ? $('#status').val() : status;
+		}
+		else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assigneeId'){
+			req_obj.serviceRequest.attribValues[i]['key'] = 'assignmentId';
+			if($("#approvalPosition").val())
+				req_obj.serviceRequest.attribValues[i]['name'] = $("#approvalPosition").val();
+		}
+	}
 
+	var finobj = {};
+	finobj = {
+	    key: 'approvalComments',
+	    name: $('#approvalComment').val()
+	};
+	req_obj.serviceRequest.attribValues.push(finobj);
+
+	if($("#approvalDepartment").val()){
+		finobj = {
+		    key: 'departmentName',
+		    name: $("#approvalDepartment option:selected").text()
+		};
+		req_obj.serviceRequest.attribValues.push(finobj);
+	}
+	
 	$.ajax({
 		url: "/pgr/seva/_update",
 		type : 'POST',
@@ -330,7 +351,7 @@ function complaintUpdate(obj){
 
 function complaintType(loadDD, serviceName){
 	$.ajax({
-		url: "/pgr/services?type=ALL&tenantId=default",
+		url: "/pgr/services/_search?type=ALL&tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -353,18 +374,17 @@ function complaintType(loadDD, serviceName){
 
 function nextStatus(loadDD){
 	$.ajax({
-		url : '/workflow/nextstatuses/_search?currentStatus='+status,
+		url : '/workflow/v1/nextstatuses/_search?tenantId=default&currentStatusCode='+status,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
-		console.log(JSON.stringify(data))
 		loadDD.load({
 			element:$('#status'),
-			data:data,
-			keyValue:'name',
+			data:data.statuses,
+			keyValue:'code',
 			keyDisplayName:'name'
 		});
 		$('#status').val(status);
@@ -504,7 +524,7 @@ function getReceivingCenterbyId(receivingcenter, response){
 		data : JSON.stringify(requestInfo)
 ,		async : false,
 		success : function(centerReponse){
-			response.serviceRequests[0].values['recCenterText'] = centerReponse.name;
+			response.serviceRequests[0].values['recCenterText'] = centerReponse.receivingCenters[0].name;
 		}
 	});
 }

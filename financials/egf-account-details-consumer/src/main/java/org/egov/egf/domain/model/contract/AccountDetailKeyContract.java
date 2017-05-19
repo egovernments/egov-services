@@ -65,6 +65,6 @@ public class AccountDetailKeyContract extends AuditableContract {
 
     private Integer key;
    
-    private AccountDetailTypeContract accountDetailType;
+    private AccountDetailTypeContract accountDetailType = new AccountDetailTypeContract();
 
 }

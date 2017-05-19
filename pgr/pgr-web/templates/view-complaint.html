@@ -90,7 +90,11 @@
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.filedvia"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{values.receivingMode}}
+										{{#each attribValues}}
+										    {{#if (contains this.key "receivingMode")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
 									</div>
 								</div>
 								<div class="row add-border">

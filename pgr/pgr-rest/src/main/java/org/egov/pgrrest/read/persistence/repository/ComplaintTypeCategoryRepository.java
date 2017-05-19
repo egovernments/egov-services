@@ -2,15 +2,15 @@ package org.egov.pgrrest.read.persistence.repository;
 
 import java.util.List;
 
-import org.egov.pgrrest.common.entity.ComplaintTypeCategory;
+import org.egov.pgrrest.common.entity.ServiceTypeCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComplaintTypeCategoryRepository extends JpaRepository<ComplaintTypeCategory, Long> {
+public interface ComplaintTypeCategoryRepository extends JpaRepository<ServiceTypeCategory, Long> {
 
-    ComplaintTypeCategory findByName(String name);
+    ServiceTypeCategory findByName(String name);
     
-    List<ComplaintTypeCategory> findAllByTenantIdOrderByNameAsc(String tenantId);
+    List<ServiceTypeCategory> findAllByTenantIdOrderByNameAsc(String tenantId);
 
 }

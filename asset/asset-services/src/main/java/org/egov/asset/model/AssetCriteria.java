@@ -32,6 +32,7 @@ public class AssetCriteria {
 	private Long electionWard;
 	private String doorNo;
 	private Long pinCode;
+	private Long assetReference;
 	@NotNull
 	private String tenantId;
 	private Long size;

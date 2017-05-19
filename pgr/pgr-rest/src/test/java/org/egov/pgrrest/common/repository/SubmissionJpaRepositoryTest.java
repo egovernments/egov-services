@@ -3,6 +3,7 @@ package org.egov.pgrrest.common.repository;
 import org.egov.pgr.common.date.Date;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.common.entity.Submission;
+import org.egov.pgrrest.common.entity.SubmissionKey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +40,12 @@ public class SubmissionJpaRepositoryTest {
         "/sql/insertSubmissions.sql"
     })
     public void test_should_retrieve_submissions_for_given_crn() {
-        final Submission actualSubmission = submissionJpaRepository.findByIdAndTenantId("crn1", "tenant1");
+        final SubmissionKey key = new SubmissionKey("crn1", "tenant1");
+        final Submission actualSubmission = submissionJpaRepository.findOne(key);
 
         assertNotNull(actualSubmission);
-        assertEquals("crn1", actualSubmission.getId());
-        assertEquals("tenant1", actualSubmission.getTenantId());
+        assertEquals("crn1", actualSubmission.getId().getCrn());
+        assertEquals("tenant1", actualSubmission.getId().getTenantId());
         final Date expectedEscalationDate =
             new Date(LocalDateTime.of(1994, 11, 29, 0, 0));
         assertEquals(expectedEscalationDate.toDate(), actualSubmission.getEscalationDate());

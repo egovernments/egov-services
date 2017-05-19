@@ -2,8 +2,11 @@ package org.egov.pgrrest.read.persistence.entity;
 
 import org.egov.pgrrest.common.entity.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.read.domain.model.ComplaintLocation;
+import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -20,7 +23,7 @@ public class ComplaintTest {
 
     @Test
     public void test_should_map_from_entity_to_domain() {
-        final ComplaintType complaintType = new ComplaintType();
+        final ServiceType complaintType = new ServiceType();
         complaintType.setName("complaintName");
         complaintType.setCode("complaintCode");
         complaintType.setTenantId("tenantId");
@@ -41,14 +44,14 @@ public class ComplaintTest {
         entityComplaint.setLastModifiedDate(toDate(lastModifiedDateTime));
         entityComplaint.setCreatedDate(toDate(createdDateTime));
 
-        final org.egov.pgrrest.read.domain.model.Complaint domainComplaint = entityComplaint.toDomain();
+        final ServiceRequest domainComplaint = entityComplaint.toDomain();
 
         assertNotNull(domainComplaint);
-        final ComplaintLocation complaintLocation = domainComplaint.getComplaintLocation();
-        assertNotNull(complaintLocation);
-        assertEquals("3", complaintLocation.getLocationId());
-        assertEquals("4", complaintLocation.getCrossHierarchyId());
-        assertEquals(new Coordinates(1.0, 2.0, "tenantId"), complaintLocation.getCoordinates());
+        final ServiceRequestLocation serviceRequestLocation = domainComplaint.getServiceRequestLocation();
+        assertNotNull(serviceRequestLocation);
+        assertEquals("3", serviceRequestLocation.getLocationId());
+        assertEquals("4", serviceRequestLocation.getCrossHierarchyId());
+        assertEquals(new Coordinates(1.0, 2.0), serviceRequestLocation.getCoordinates());
         assertEquals(toDate(lastAccessedDateTime), domainComplaint.getLastAccessedTime());
         assertEquals(toDate(lastModifiedDateTime), domainComplaint.getLastModifiedDate());
         assertEquals(toDate(createdDateTime), domainComplaint.getCreatedDate());
@@ -57,7 +60,7 @@ public class ComplaintTest {
         assertEquals(Collections.emptyList(), domainComplaint.getMediaUrls());
         assertEquals("crn", domainComplaint.getCrn());
         assertEquals("complaint description", domainComplaint.getDescription());
-        final org.egov.pgrrest.common.model.Complainant domainComplainant = domainComplaint.getComplainant();
+        final Requester domainComplainant = domainComplaint.getRequester();
         assertNotNull(domainComplainant);
         assertEquals("firstName", domainComplainant.getFirstName());
         assertEquals("mobileNumber", domainComplainant.getMobile());
@@ -66,7 +69,7 @@ public class ComplaintTest {
         final AuthenticatedUser authenticatedUser = domainComplaint.getAuthenticatedUser();
         assertNotNull(authenticatedUser);
         assertTrue(authenticatedUser.isAnonymousUser());
-        final org.egov.pgrrest.read.domain.model.ComplaintType expectedComplaintType = new org.egov.pgrrest.read.domain.model.ComplaintType(
+        final ServiceRequestType expectedComplaintType = new ServiceRequestType(
                 "complaintName", "complaintCode", "tenantId");
         assertEquals(expectedComplaintType, domainComplaint.getComplaintType());
         assertEquals("EMAIL", domainComplaint.getReceivingMode());

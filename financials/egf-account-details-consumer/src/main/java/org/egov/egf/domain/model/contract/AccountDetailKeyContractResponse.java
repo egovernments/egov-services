@@ -40,6 +40,7 @@
 
 package org.egov.egf.domain.model.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -59,9 +60,9 @@ public class AccountDetailKeyContractResponse {
 
 	private ResponseInfo responseInfo;
 
-	private List<AccountDetailKeyContract> accountDetailKeys;
+	private List<AccountDetailKeyContract> accountDetailKeys = new ArrayList<>();
 
-	private AccountDetailKeyContract accountDetailKey;
+	private AccountDetailKeyContract accountDetailKey = new AccountDetailKeyContract();
 
 	private Pagination page;
 

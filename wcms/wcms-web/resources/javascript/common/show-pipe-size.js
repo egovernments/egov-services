@@ -1,9 +1,8 @@
-
 class ShowPipeSize extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],searchSet:{inputmm:"",
-    code:"",inputinc:"",active:""}}
+    this.state={list:[],searchSet:{sizeInMilimeter:"",code:"",
+    sizeInInch:"",active:""}}
 
   }
 
@@ -16,14 +15,14 @@ class ShowPipeSize extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-    // try {
-    //     var _UsageType = commonApiPost("wcms-masters","usagetype","_search",{tenantId}).responseJSON["UsageType"] || [];
-    // } catch(e) {
-    //     var _UsageType = [];
-    // }
-    // this.setState({
-    //   list:_UsageType
-    // });
+    try {
+        var _PipeSize = commonApiPost("wcms-masters","pipesize","_search",{tenantId}).responseJSON["PipeSize"] || [];
+    } catch(e) {
+        var _PipeSize = [];
+    }
+    this.setState({
+      list:_PipeSize
+    });
 
   }
 
@@ -41,7 +40,7 @@ class ShowPipeSize extends React.Component {
           });
       }
   }
-  
+
 
   close(){
       // widow.close();
@@ -50,7 +49,7 @@ class ShowPipeSize extends React.Component {
 
   render() {
     let {list}=this.state;
-    let {inputinc,inputmm,code,active}=this.state.searchSet;
+    let {sizeInInch,sizeInMilimeter,code,active}=this.state.searchSet;
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
@@ -73,14 +72,15 @@ class ShowPipeSize extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td>{index+1}</td>
-                    <td data-label="inputmm">{item.inputmm}</td>
-                    <td data-label="code">{item.code}</td>
-                    <td data-label="inputinc">{item.inputinc}</td>
-                    <td data-label="active">{item.active?"true":"false"}</td>
-                    <td data-label="action">
+                    <td><center>{index+1}</center></td>
+                    <td data-label="code"><center>{item.code}</center></td>
+                    <td data-label="sizeInMilimeter"><center>{item.sizeInMilimeter}</center></td>
+
+
+                    <td data-label="active"><center>{item.active?"ACTIVE":"INACTIVE"}</center></td>
+                    <td data-label="action"><center>
                     {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
+                  </center>  </td>
                 </tr>
             );
 
@@ -92,12 +92,11 @@ class ShowPipeSize extends React.Component {
         <table id="pipeSizeTable" className="table table-bordered">
             <thead>
                 <tr>
-                    <th>Sl No.</th>
-                    <th>H.S.C Pipe Size (mm)</th>
-                    <th>H.S.C Pipe Size(inch)</th>
-                    <th>Code</th>
-                    <th>Active</th>
-                    <th>Action</th>
+                    <th><center>Sl No.</center></th>
+                    <th><center>Code</center></th>
+                    <th><center>H.S.C Pipe Size (mm)</center></th>
+                    <th><center>Status</center></th>
+                    <th><center>Action</center></th>
 
                 </tr>
             </thead>

@@ -1,18 +1,16 @@
 package org.egov.pgrrest.common.contract;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.User;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.read.domain.model.Complaint;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
+import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
 @Getter
 @Setter
@@ -22,15 +20,15 @@ public class SevaRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    private ServiceRequest serviceRequest;
+    private org.egov.pgrrest.common.contract.ServiceRequest serviceRequest;
 
     @JsonIgnore
-    public Complaint toDomainForUpdateRequest() {
+    public ServiceRequest toDomainForUpdateRequest() {
         return serviceRequest.toDomainForUpdateRequest(toAuthenticatedUser());
     }
 
     @JsonIgnore
-    public Complaint toDomainForCreateRequest() {
+    public ServiceRequest toDomainForCreateRequest() {
         return serviceRequest.toDomainForCreateRequest(toAuthenticatedUser());
     }
 
@@ -59,7 +57,7 @@ public class SevaRequest {
         return requestInfo.getUserInfo();
     }
 
-    public void update(Complaint complaint) {
+    public void update(ServiceRequest complaint) {
         serviceRequest.setCrn(complaint.getCrn());
     }
 }

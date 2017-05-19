@@ -73,14 +73,13 @@ class ShowCategoryType extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td>{index+1}</td>
-                    <td data-label="name">{item.name}</td>
-                    <td data-label="code">{item.code}</td>
-                    <td data-label="description">{item.description}</td>
-                    <td data-label="active">{item.active?"true":"false"}</td>
-                    <td data-label="action">
+                    <td><center>{index+1}</center></td>
+                    <td data-label="code"><center>{item.code}</center></td>
+                    <td data-label="name"><center>{item.name}</center></td>
+                    <td data-label="active"><center>{item.active?"ACTIVE":"INACTIVE"}</center></td>
+                    <td data-label="action"><center>
                     {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
+                    </center></td>
                 </tr>
             );
 
@@ -92,12 +91,12 @@ class ShowCategoryType extends React.Component {
         <table id="designationTable" className="table table-bordered">
             <thead>
                 <tr>
-                    <th>Sl No.</th>
-                    <th>Category Type</th>
-                    <th>Code</th>
-                    <th>Description</th>
-                    <th>Active</th>
-                    <th>Action</th>
+                    <th><center>Sl No.</center></th>
+                    <th><center>Code</center></th>
+
+                    <th><center>Category Type</center></th>
+                    <th><center>Status</center></th>
+                    <th><center>Action</center></th>
 
                 </tr>
             </thead>

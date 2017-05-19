@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.web.adapters.error;
 
 
-import org.egov.pgrrest.read.domain.model.Complaint;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.web.contract.ErrorField;
 import org.egov.pgrrest.read.web.contract.ErrorResponse;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class SevaRequestErrorAdapterTest {
 
     @Mock
-    private Complaint complaint;
+    private ServiceRequest complaint;
 
     @InjectMocks
     private SevaRequestErrorAdapter errorAdapter;
@@ -63,7 +63,7 @@ public class SevaRequestErrorAdapterTest {
 
     @Test
     public void testShouldSetErrorWhenFirstNameIsNotPresent() {
-        when(complaint.isComplainantAbsent()).thenReturn(true);
+        when(complaint.isRequesterAbsent()).thenReturn(true);
         when(complaint.isComplainantFirstNameAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -78,7 +78,7 @@ public class SevaRequestErrorAdapterTest {
 
     @Test
     public void testShouldSetErrorWhenMobileNumberIsNotPresent() {
-        when(complaint.isComplainantAbsent()).thenReturn(true);
+        when(complaint.isRequesterAbsent()).thenReturn(true);
         when(complaint.isComplainantPhoneAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);

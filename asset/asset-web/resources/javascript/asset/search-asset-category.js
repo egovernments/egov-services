@@ -8,18 +8,24 @@ class SearchAssetCategory extends React.Component {
    },isSearchClicked:false,asset_category_type:[], assetCategories: [], assignments_unitOfMeasurement: []}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
-
+    this.setInitialState = this.setInitialState.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   search(e) {
     e.preventDefault();
+    var _this = this;
     try {
       //call api call
-      var list = commonApiPost("asset-services","assetCategories","_search",{...this.state.searchSet,tenantId,pageSize:500}).responseJSON["AssetCategory"];
-      flag = 1;
-      this.setState({
-        isSearchClicked:true,
-        list
+      commonApiPost("asset-services", "assetCategories", "_search", {...this.state.searchSet ,tenantId, pageSize:500}, function(err, res) {
+        if(res) {
+          var list = res["AssetCategory"];
+          flag = 1;
+          _this.setState({
+            isSearchClicked: true,
+            list
+          })
+        }
       })
     } catch(e) {
       console.log(e);
@@ -30,6 +36,10 @@ class SearchAssetCategory extends React.Component {
       open(location, '_self').close();
   }
 
+  setInitialState(initState) {
+    this.setState(initState);
+  }
+
   componentDidMount() {
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -38,28 +48,26 @@ class SearchAssetCategory extends React.Component {
       }
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
-    
-    var asset_category_type, assetCategories, assignments_unitOfMeasurement;
-    try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
-        console.log(e);
-        asset_category_type = {};
+
+    var count = 3, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+      count--;
+      _state[key] = res;
+      if(count == 0)
+        _this.setInitialState(_state);
     }
 
-    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
-        console.log(e);
-        assetCategories = [];
-    }
+    getDropdown("asset_category_type", function(res) {
+      checkCountNCall("asset_category_type", res);
+    });
 
-    try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uoms", "_search", {tenantId}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
-        console.log(e);
-        assignments_unitOfMeasurement = [];
-    }
+    getDropdown("assetCategories", function(res) {
+      checkCountNCall("assetCategories", res);
+    });
 
-    this.setState({
-      asset_category_type,
-      assetCategories,
-      assignments_unitOfMeasurement
-    })
+    getDropdown("assignments_unitOfMeasurement", function(res) {
+      checkCountNCall("assignments_unitOfMeasurement", res);
+    });
   }
 
   componentWillUpdate() {
@@ -85,22 +93,28 @@ class SearchAssetCategory extends React.Component {
       }
   }
 
+  handleClick(type, id) {
+    if (type === "update") {
+      window.open(`app/asset/create-asset-category.html?id=${id}&type=update`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    } else if(type) {
+      window.open(`app/asset/create-asset-category.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    } else {
+      window.open(`app/asset/create-asset-category.html?id=${id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }
+  }
 
 
-  handleChange(e,name)
-  {
-
+  handleChange(e,name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
               [name]:e.target.value
           }
       })
-
   }
 
   render() {
-    let {handleChange,search}=this;
+    let {handleChange,search,handleClick}=this;
     let {assetCategoryType,name}=this.state.searchSet;
     let {isSearchClicked, list, assignments_unitOfMeasurement, assetCategories}=this.state;
 
@@ -134,16 +148,12 @@ class SearchAssetCategory extends React.Component {
       if (list.length>0) {
         return list.map((item,index)=>
         {
-              return (<tr key={index}>
+              return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
                                   <td>{item.code}</td>
                                   <td>{item.name}</td>
                                   <td>{item.assetCategoryType}</td>
                                   <td>{getNameById(assetCategories,item.parent)}</td>
                                   <td>{getNameById(assignments_unitOfMeasurement,item.unitOfMeasurement,"narration")}</td>
-
-                                  <td data-label="action">
-                      {renderAction(getUrlVars()["type"],item.id)}
-                      </td>
                               </tr>  );
         })
       }
@@ -183,7 +193,6 @@ class SearchAssetCategory extends React.Component {
                     <th>Asset Category Type</th>
                     <th>Parent Category</th>
                     <th>Unit Of Measurment</th>
-                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody id="agreementSearchResultTableBody">

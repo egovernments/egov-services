@@ -64,8 +64,8 @@ public class VacantPositionsQueryBuilder {
 			+ " des.description AS des_description, des.chartOfaccounts AS des_chartOfAccounts,"
 			+ " des.active AS des_active"
 			+ " FROM egeis_position p"
-			+ " JOIN egeis_departmentDesignation depDes ON p.deptDesigId = depDes.id"
-			+ " JOIN egeis_designation des ON depDes.designationid = des.id";
+			+ " JOIN egeis_departmentDesignation depDes ON p.deptDesigId = depDes.id AND depDes.tenantId = p.tenantId"
+			+ " JOIN egeis_designation des ON depDes.designationid = des.id AND des.tenantId = p.tenantId";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(VacantPositionsGetRequest vacantPositionsGetRequest, List preparedStatementValues) {
@@ -93,12 +93,6 @@ public class VacantPositionsQueryBuilder {
 		if (vacantPositionsGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" p.tenantId = ?");
-			preparedStatementValues.add(vacantPositionsGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" depDes.tenantId = ?");
-			preparedStatementValues.add(vacantPositionsGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" des.tenantId = ?");
 			preparedStatementValues.add(vacantPositionsGetRequest.getTenantId());
 		}
 

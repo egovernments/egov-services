@@ -5,7 +5,7 @@ import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.TestResourceReader;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Complainant;
+import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
@@ -50,8 +50,8 @@ public class ServiceRequestControllerTest {
     public void test_should_return_error_response_when_tenant_id_is_not_present_on_creating_a_complaint()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
-        Complaint invalidComplaint = getComplaintWithNoTenantId();
-        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(Complaint.class),
+        ServiceRequest invalidComplaint = getComplaintWithNoTenantId();
+        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(ServiceRequest.class),
             any(SevaRequest.class));
 
         mockMvc.perform(post("/seva/_create")
@@ -86,21 +86,21 @@ public class ServiceRequestControllerTest {
             .andExpect(content().json(resources.getFileContents("updateComplaintResponse.json")));
     }
 
-    public Complaint getComplaintWithNoTenantId() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(11.22d, 12.22d, null)).build();
-        final Complainant complainant = Complainant.builder()
+    public ServiceRequest getComplaintWithNoTenantId() {
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
+            .coordinates(new Coordinates(11.22d, 12.22d)).build();
+        final Requester complainant = Requester.builder()
             .userId("userId")
             .firstName("first name")
             .mobile("mobile number")
             .build();
-        return Complaint.builder()
-            .complainant(complainant)
+        return ServiceRequest.builder()
+            .requester(complainant)
             .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
+            .serviceRequestLocation(serviceRequestLocation)
             .tenantId(null)
             .description("description")
-            .complaintType(new ComplaintType(null, "complaintCode", null))
+            .complaintType(new ServiceRequestType(null, "complaintCode", null))
             .build();
     }
 
@@ -139,16 +139,16 @@ public class ServiceRequestControllerTest {
             .type(UserType.CITIZEN)
             .tenantId("tenantId")
             .build();
-        final Complainant domainComplainant = new Complainant("kumar", null, null, "mico layout", "user", "tenantId");
-        final ComplaintLocation complaintLocation = new ComplaintLocation(new Coordinates(0.0, 0.0, "tenantId"), null, "34", "tenantId");
-        Complaint complaint = Complaint.builder()
+        final Requester domainComplainant = new Requester("kumar", null, null, "mico layout", "user");
+        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(new Coordinates(0.0, 0.0), null, "34");
+        ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
-            .complaintType(new ComplaintType("abc", "complaintCode", "tenantId"))
+            .complaintType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
             .address(address)
             .mediaUrls(mediaUrls)
-            .complaintLocation(complaintLocation)
-            .complainant(domainComplainant)
+            .serviceRequestLocation(serviceRequestLocation)
+            .requester(domainComplainant)
             .tenantId(jurisdictionId)
             .description(description)
             .state(stateId)
@@ -178,7 +178,7 @@ public class ServiceRequestControllerTest {
             .tenantId("tenantId")
             .build();
 
-        List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
+        List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
         when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
 
         String content = new TestResourceReader().readResource("getServiceRequests.json");

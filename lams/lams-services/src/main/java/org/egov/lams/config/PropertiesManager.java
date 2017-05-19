@@ -58,6 +58,9 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.taxCategoryName}")
 	private String taxCategoryName;
+	
+	@Value("${egov.services.demand_service.taxreasonName}")
+	private String taxReasonName;
 
 	@Value("${kafka.topics.start.workflow}")
 	private String startWorkflowTopic;

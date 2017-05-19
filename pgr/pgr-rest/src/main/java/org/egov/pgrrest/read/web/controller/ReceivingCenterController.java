@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.egov.pgrrest.read.domain.service.ReceivingCenterService;
 import org.egov.pgrrest.read.web.contract.ReceivingCenterResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/receivingcenter")
 public class ReceivingCenterController {
 
-    @Autowired
     private ReceivingCenterService receivingCenterService;
+
+    public ReceivingCenterController(ReceivingCenterService receivingCenterService) {
+        this.receivingCenterService = receivingCenterService;
+    }
 
     @PostMapping("/_search")
     public ReceivingCenterResponse getAllReceivingCenters(

@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.persistence;
 
-import org.egov.pgrrest.read.domain.model.ComplaintRegistrationNumber;
+import org.egov.pgrrest.read.domain.model.ServiceRequestRegistrationNumber;
 import org.egov.pgrrest.read.persistence.repository.CrnRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,16 +22,16 @@ public class CrnRepositoryTest {
     public void shouldGetCrn() {
         final String CRN_SERVICE_URL = "http://localhost:8088/";
         final String CRN = "crn_number";
-        final ComplaintRegistrationNumber expected = new ComplaintRegistrationNumber(CRN);
-        when(restTemplate.getForObject(CRN_SERVICE_URL, ComplaintRegistrationNumber.class))
+        final ServiceRequestRegistrationNumber expected = new ServiceRequestRegistrationNumber(CRN);
+        when(restTemplate.getForObject(CRN_SERVICE_URL, ServiceRequestRegistrationNumber.class))
                 .thenReturn(expected);
 
         CrnRepository crnRepository = new CrnRepository(restTemplate, CRN_SERVICE_URL);
 
-        ComplaintRegistrationNumber actual = crnRepository.getCrn();
+        ServiceRequestRegistrationNumber actual = crnRepository.getCrn();
 
         assertEquals(expected, actual);
 
-        verify(restTemplate).getForObject(CRN_SERVICE_URL, ComplaintRegistrationNumber.class);
+        verify(restTemplate).getForObject(CRN_SERVICE_URL, ServiceRequestRegistrationNumber.class);
     }
 }

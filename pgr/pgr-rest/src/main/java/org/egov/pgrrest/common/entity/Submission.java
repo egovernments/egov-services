@@ -1,12 +1,19 @@
 package org.egov.pgrrest.common.entity;
 
 import lombok.*;
+import org.egov.pgrrest.common.model.AttributeEntry;
+import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
+import org.egov.pgrrest.read.domain.model.Coordinates;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -15,10 +22,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "submission")
-public class Submission extends AbstractAuditable<String> {
-    @Id
-    @Column(name = "crn", unique = true)
-    private String id;
+public class Submission extends AbstractAuditable<SubmissionKey> {
+    @EmbeddedId
+    private SubmissionKey id;
 
     @Column(name = "servicecode")
     private String serviceCode;
@@ -37,12 +43,6 @@ public class Submission extends AbstractAuditable<String> {
 
     private Long assignee;
 
-//    @Column(name = "location")
-//    private Long location;
-
-//    @Column(name = "childlocation")
-//    private Long childLocation;
-
     @Column(name = "status")
     private String status;
 
@@ -50,14 +50,6 @@ public class Submission extends AbstractAuditable<String> {
 
     @Column(name = "landmarkdetails")
     private String landmarkDetails;
-
-//	@ManyToOne
-//	@JoinColumn(name = "receivingmode")
-//	private ReceivingMode receivingMode;
-
-//    @ManyToOne
-//    @JoinColumn(name = "receivingcenter")
-//    private ReceivingCenter receivingCenter;
 
     @Column(name = "longitude")
     private double longitude;
@@ -70,48 +62,64 @@ public class Submission extends AbstractAuditable<String> {
 
     private Long department;
 
-//    @Column(name = "citizenfeedback")
-//    @Enumerated(EnumType.ORDINAL)
-//    private org.egov.pgrrest.common.entity.enums.CitizenFeedback citizenFeedback;
+    @Transient
+    private List<SubmissionAttribute> attributeValues;
 
-//    @Transient
-//    private Long crossHierarchyId;
+    @Transient
+    private ServiceType serviceType;
 
-//    @Column(name = "state_id")
-//    private Long stateId;
-//
+    public String getCrn() {
+        return id.getCrn();
+    }
 
-	@Column(name = "tenantid")
-	private String tenantId;
+    public ServiceRequest toDomain() {
+        final Coordinates coordinates = new Coordinates(latitude, longitude);
+        return ServiceRequest.builder()
+            .serviceRequestLocation(new ServiceRequestLocation(coordinates, null, null))
+            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+            .address(landmarkDetails)
+            .description(details)
+            .requester(getComplainant())
+            .complaintType(getDomainComplaintType())
+            .crn(id.getCrn())
+            .createdDate(getCreatedDate())
+            .lastModifiedDate(getLastModifiedDate())
+            .mediaUrls(Collections.emptyList())
+            .escalationDate(getEscalationDate())
+            .closed(isCompleted())
+            .department(getDepartment())
+            .lastAccessedTime(getLastModifiedDate())
+            .assignee(getAssignee())
+            .tenantId(id.getTenantId())
+            .complaintStatus(status)
+            .attributeEntries(getAttributeEntries())
+            .build();
+    }
 
-//    public boolean isCompleted() {
-//        return org.egov.pgrrest.common.entity.enums.ComplaintStatus
-//                .valueOf(getStatus()) == org.egov.pgrrest.common.entity.enums.ComplaintStatus.COMPLETED;
-//    }
-//
-//    public org.egov.pgrrest.read.domain.model.Complaint toDomain() {
-//        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
-//        return org.egov.pgrrest.read.domain.model.Complaint.builder()
-//                .complaintLocation(new ComplaintLocation(coordinates, null, null, tenantId))
-//                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-//                .address(landmarkDetails)
-//                .description(details)
-//                .crn(id)
-//                .createdDate(getCreatedDate())
-//                .lastModifiedDate(getLastModifiedDate())
-//                .mediaUrls(Collections.emptyList())
-//                .escalationDate(getEscalationDate())
-//                .closed(isCompleted())
-//                .department(getDepartment())
-//                .lastAccessedTime(getLastModifiedDate())
-//                .assignee(getAssignee())
-//                .tenantId(tenantId)
-//                .complaintStatus(getComplaintStatus())
-//                .build();
-//    }
+    private ServiceRequestType getDomainComplaintType() {
+        return new ServiceRequestType(this.serviceType.getName(),
+            this.serviceType.getCode(),
+            this.serviceType.getTenantId());
+    }
 
-//    private String getComplaintStatus(){
-//    	return status;
-//    }
+    private Requester getComplainant() {
+        return Requester.builder()
+            .firstName(name)
+            .mobile(mobile)
+            .email(email)
+            .address(requesterAddress)
+            .build();
+    }
+
+    private boolean isCompleted() {
+        return org.egov.pgrrest.common.entity.enums.ComplaintStatus
+            .valueOf(getStatus()) == org.egov.pgrrest.common.entity.enums.ComplaintStatus.COMPLETED;
+    }
+
+    private List<AttributeEntry> getAttributeEntries() {
+        return attributeValues.stream()
+            .map(SubmissionAttribute::toDomain)
+            .collect(Collectors.toList());
+    }
 
 }

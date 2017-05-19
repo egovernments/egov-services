@@ -182,6 +182,11 @@ class CreateAsset extends React.Component {
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
     this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
+  }
+
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
   componentDidMount() {
@@ -212,85 +217,86 @@ class CreateAsset extends React.Component {
 
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
+    var count = 8, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+      count--;
+      _state[key] = res;
+      if(count == 0)
+        _this.setInitialState(_state);
+    };
 
-    try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
-        console.log(e);
-        asset_category_type = {};
-    }
+    getDropdown("asset_category_type", function(res) {
+      checkCountNCall("asset_category_type", res);
+    });
+    getDropdown("assetCategories", function(res) {
+      checkCountNCall("assetCategories", res);
+    });
+    getDropdown("depreciationMethod", function(res) {
+      checkCountNCall("depreciationMethod", res);
+    });
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Fixed Assets"},function(err,res2){
+      if(res2){
+        getDropdown("assetAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("assetAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Accumulated Depreciation"},function(err,res2){
+      if(res2){
+        getDropdown("accumulatedDepreciationAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("accumulatedDepreciationAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Revaluation Reserve Account"},function(err,res2){
+      if(res2){
+        getDropdown("revaluationReserveAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("revaluationReserveAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
 
-    try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
-        console.log(e);
-        assetCategories = [];
-    }
 
-    try { depreciationMethod = !localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined" ? (localStorage.setItem("depreciationMethod", JSON.stringify(commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("depreciationMethod"))) : JSON.parse(localStorage.getItem("depreciationMethod")); } catch (e) {
-        console.log(e);
-        depreciationMethod = {};
-    }
+    commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Depreciation Expense Account"},function(err,res2){
+      if(res2){
+        getDropdown("depreciationExpenseAccount", function(res) {
+          for(var i= 0; i<res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          checkCountNCall("depreciationExpenseAccount", res);
+        }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      }
+    })
 
-    try { assetAccount = !localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined" ? (localStorage.setItem("assetAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("assetAccount"))) : JSON.parse(localStorage.getItem("assetAccount")); } catch (e) {
-        console.log(e);
-        assetAccount = [];
-    }
 
-    try { accumulatedDepreciationAccount = !localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined" ? (localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("accumulatedDepreciationAccount"))) : JSON.parse(localStorage.getItem("accumulatedDepreciationAccount")); } catch (e) {
-        console.log(e);
-        accumulatedDepreciationAccount = [];
-    }
-
-    try { revaluationReserveAccount = !localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined" ? (localStorage.setItem("revaluationReserveAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("revaluationReserveAccount"))) : JSON.parse(localStorage.getItem("revaluationReserveAccount")); } catch (e) {
-        console.log(e);
-        revaluationReserveAccount = [];
-    }
-
-    try { depreciationExpenseAccount = !localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined" ? (localStorage.setItem("depreciationExpenseAccount", JSON.stringify(commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4 }).responseJSON["chartOfAccounts"] || [])), JSON.parse(localStorage.getItem("depreciationExpenseAccount"))) : JSON.parse(localStorage.getItem("depreciationExpenseAccount")); } catch (e) {
-        console.log(e);
-        depreciationExpenseAccount = [];
-    }
-
-    try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uoms", "_search", {tenantId}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
-        console.log(e);
-        assignments_unitOfMeasurement = [];
-    }
-
-    this.setState({
-      asset_category_type,
-      assetCategories,
-      depreciationMethod,
-      assetAccount,
-      accumulatedDepreciationAccount,
-      revaluationReserveAccount,
-      depreciationExpenseAccount,
-      assignments_unitOfMeasurement
+    getDropdown("assignments_unitOfMeasurement", function(res) {
+      checkCountNCall("assignments_unitOfMeasurement", res);
     });
 
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
     if (getUrlVars()["type"] === "view") {
-      // for (var variable in this.state.assetCategory)
-      //   // document.getElementById(variable).disabled = true;
-      //   console.log($('#'+variable).length);
       $("input,select").prop("disabled", true);
     }
     if (type === "view" || type === "update") {
-      // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
       setTimeout(function(){
-        _this.setState({
-          assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
+        getCommonMasterById("asset-services", "assetCategories", id, function(err, res) {
+          if(res && res["AssetCategory"])
+            _this.setState({
+              assetCategory: res["AssetCategory"][0]
+            })
         })
       }, 100);
     }
-    // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
-    // this.setState({
-    //   assetCategories,
-    //   asset_category_type,
-    //   depreciationMethod,
-    //   assetAccount,
-    //   accumulatedDepreciationAccount,
-    //   revaluationReserveAccount,
-    //   depreciationExpenseAccount,
-    //   assignments_unitOfMeasurement
-    // })
   }
 
   close() {
@@ -357,66 +363,37 @@ class CreateAsset extends React.Component {
         // console.log(this.state.assetCategory);
         var tempInfo=this.state.assetCategory;
         // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
-        var body={
+        var body = {
             "RequestInfo":requestInfo,
             "AssetCategory":tempInfo
-          };
+        };
 
-        var response=$.ajax({
-              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(body),
-              async: false,
-              contentType: 'application/json',
-              headers:{
-                'auth-token': authToken
+        $.ajax({
+            url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(body),
+            contentType: 'application/json',
+            headers:{
+              'auth-token': authToken
+            },
+            success: function(res) {
+              window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
+            },
+            error: function(err) {
+              var _err = err["responseJSON"].Error.message || "";
+              if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                for(var key in err["responseJSON"].Error.fields) {
+                  _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                }
+                showError(_err);
+              } else if(_err) {
+                showError(_err);
+              } else {
+                showError(err["statusText"]);
               }
-          });
-
-        if(response["status"]==  201 || response["status"]==  200) {
-          // this.setState({
-          //   assetCategory:{
-          //     "tenantId": tenantId,
-          //     "name": "",
-          //     "assetCategoryType": "",
-          //     "parent":"",
-          //     "depreciationMethod": "",
-          //     "assetAccount": "",
-          //     "accumulatedDepreciationAccount": "",
-          //     "revaluationReserveAccount": "",
-          //     "depreciationExpenseAccount": "",
-          //     "unitOfMeasurement": "",
-          //     "depreciationRate": null,
-          //     "assetFieldsDefination":[]
-          //   },
-          //   customField: {
-          //     "name": null,
-          //     "type": null,
-          //     "isActive": false,
-          //     "isMandatory": false,
-          //     "values": null,
-          //     "localText": null,
-          //     "regExFormate": null,
-          //     "url": null,
-          //     "order": null,
-          //     "columns": null
-          //   },
-          //   asset_category_type:[],
-          //   assetCategories:[],
-          //   depreciationMethod:{},
-          //   assetAccount:[],
-          //   accumulatedDepreciationAccount:[],
-          //   revaluationReserveAccount:[],
-          //   depreciationExpenseAccount:[],
-          //   assignments_unitOfMeasurement:[],
-          //   typeList:[]
-          //
-          // })
-          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
-        } else {
-          showError(response["statusText"]);
-        }
+            }
+        })
   }
 
   addAsset(to="") {
@@ -541,7 +518,6 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    console.log(this.state.column);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
 
@@ -774,10 +750,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">RegEx Format</label>
+                      <label htmlFor="">Mandatory</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="regExFormate" value={customField.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","regExFormate")}} disabled={readonly}/>
+                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                     </div>
                   </div>
                 </div>
@@ -797,33 +773,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Mandatory</label>
+                      <label htmlFor="">Order</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isMandatory" value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for="values">Value</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label htmlFor="">Local Text</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <input type="text" name="localText" disabled={readonly}  value={customField.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","localText")}}/>
+                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
                     </div>
                   </div>
                 </div>
@@ -843,10 +796,10 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Order</label>
+                      <label for="values">Value</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
+                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
                     </div>
                   </div>
                 </div>
@@ -1122,10 +1075,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">RegEx Format</label>
+                              <label htmlFor="">Mandatory</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="text" name="regExFormate" id="regExFormate" value={column.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"column","regExFormate")}}/>
+                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
                             </div>
                           </div>
                         </div>
@@ -1145,33 +1098,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Mandatory</label>
+                              <label htmlFor="">Order</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="values">Value</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label htmlFor="">Local Text</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <input type="text" name="localText" id="localText" value={column.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"column","localText")}}/>
+                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
                             </div>
                           </div>
                         </div>
@@ -1191,10 +1121,10 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Order</label>
+                              <label for="values">Value</label>
                             </div>
                             <div className="col-sm-6">
-                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
+                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
                             </div>
                           </div>
                         </div>

@@ -1,6 +1,7 @@
 FROM nginx:1.11.10-alpine
 
 ENV WEB_DIR=/var/web
+RUN mkdir -p ${WEB_DIR}
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./asset-web ${WEB_DIR}/asset-web
 COPY ./collections-web ${WEB_DIR}/collections-web

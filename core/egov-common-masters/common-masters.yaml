@@ -620,15 +620,6 @@ paths:
           required: false
           type: string
           format: date
-        - name: optional
-          in: query
-          description: >-
-            Get list of optional holidays alone if the value is set to true, get
-            the list of all holidays if value is not set or if value is set to
-            false.
-          required: false
-          type: boolean
-          default: true
       responses:
         '200':
           description: Successful response

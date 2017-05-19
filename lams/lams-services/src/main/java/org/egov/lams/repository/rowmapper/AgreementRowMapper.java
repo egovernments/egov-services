@@ -58,8 +58,8 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 				
 				String source = rs.getString("source");
 				agreement.setSource(Source.fromValue(source));
-				agreement.setCollectedGoodWillAmount((Double)rs.getObject("collectedGoodWillAmount"));
-				agreement.setCollectedSecurityDeposit((Double)rs.getObject("collectedSecurityDeposit"));
+				agreement.setCollectedGoodWillAmount(rs.getDouble("collectedGoodWillAmount"));
+				agreement.setCollectedSecurityDeposit(rs.getDouble("collectedSecurityDeposit"));
 				
 				String natureOfAllotment = rs.getString("nature_of_allotment");
 				agreement.setNatureOfAllotment(NatureOfAllotment.fromValue(natureOfAllotment));

@@ -95,8 +95,7 @@ public class AgreementDao {
 			List<Object[]> documentBatchArgs = new ArrayList<>();
 			
 			for (Document document : documents) {
-				Object[] documentRecord = { document.getDocumentType().getId(), agreement.getId(),
-						document.getFileStore(), agreement.getTenantId() };
+				Object[] documentRecord = { agreement.getId(),document.getFileStore(), agreement.getTenantId() };
 				documentBatchArgs.add(documentRecord);
 			}
 		

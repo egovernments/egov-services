@@ -993,7 +993,7 @@ $('.datepicker').datepicker({
     format: 'DD/MM/YYYY'
 });
 
-$(".datepicker").on("dp.change", function() {
+$(".datepicker").on(".change", function() {
     // alert('hey');
     fillValueToObject(this);
 });

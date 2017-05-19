@@ -14,7 +14,7 @@ $(document).ready(function() {
        document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
      }
    }
-    $('.datetimepicker').datetimepicker({
+    $('.datepicker').datepicker({
         format: 'DD/MM/YYYY'
     });
     $("#viewDcb").on("click", function() {

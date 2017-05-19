@@ -990,7 +990,8 @@ if (assetDetails && Object.keys(assetDetails).length) {
 }
 
 $('.datepicker').datepicker({
-    format: 'DD/MM/YYYY'
+      format: 'dd/mm/yyyy',
+      autoclose:true
 });
 
 $(".datepicker").on("dp.change", function() {

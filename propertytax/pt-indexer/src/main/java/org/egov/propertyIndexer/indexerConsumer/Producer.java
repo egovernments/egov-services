@@ -14,13 +14,20 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.stereotype.Service;
 
 @Configuration
+@Service
 public class Producer {
 
 	@Autowired
 	private Environment environment;
-	
+
+	@Autowired
+	KafkaTemplate<String, Property> kafkaTemplate;
+
+
+
 	@Bean
 	public Map<String,Object> producerConfig(){
 		Map<String,Object> producerProperties=new HashMap<String,Object>();
@@ -29,15 +36,18 @@ public class Producer {
 		producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		return producerProperties;
 	}
-	
+
 	@Bean
 	public ProducerFactory<String, Property> producerFactory(){
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
-	
+
 	@Bean
 	public KafkaTemplate<String, Property> kafkaTemplate(){
 		return new KafkaTemplate<>(producerFactory());
 	}
-	
+
+	public void send(String topic,Property property){
+		kafkaTemplate.send(topic, property);
+	}
 }

@@ -718,14 +718,16 @@ class CreateAsset extends React.Component {
 
       var id = getUrlVars()["id"];
       $(document).on('focus',".custom-date-picker", function(){
-            $(this).datetimepicker({
-                format: 'DD/MM/YYYY'
+            $(this).datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true
             });
       });
 
-      $('#dateOfCreation').datetimepicker({
-          format: 'DD/MM/YYYY',
-          maxDate: new Date()
+      $('#dateOfCreation').datepicker({
+          format: 'dd/mm/yyyy',
+          maxDate: new Date(),
+          autoclose: true
       });
 
       $('#dateOfCreation').on("dp.change", function(e) {

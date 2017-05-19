@@ -91,8 +91,8 @@ public class AgreementDao {
 		if(documents != null){
 			String sql = "INSERT INTO eglams_document (id,documenttype,agreement,filestore,tenantid) values "
 					+ "(nextval('seq_eglams_document'),(select id from eglams_documenttype where "
-					+ "name='Agreement Docs' and application='CREATE' and "
-					+ agreement.getTenantId()+"),?,?,?);";
+					+ "name='Agreement Docs' and application='CREATE' and tenantid='"
+					+ agreement.getTenantId()+"'),?,?,?);";
 			LOGGER.info("the insert query for agreement docs : "+sql);
 			List<Object[]> documentBatchArgs = new ArrayList<>();
 			

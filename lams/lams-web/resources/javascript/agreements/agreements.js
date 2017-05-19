@@ -1081,6 +1081,7 @@ $("#createAgreementForm").validate({
         agreement["rentIncrementMethod"] = {};
         agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         agreement["tenantId"] = tenantId;
+        agreement["source"] = "SYSTEM";
         uploadFiles(agreement, function(err, _agreement) {
             if (err) {
                 //Handle error

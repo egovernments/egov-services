@@ -1,0 +1,17 @@
+{
+    "ResponseInfo":{
+        "apiId" : "org.egov.collection",
+     	"ver" : "1.0",
+        "resMsgId":"placeholder",
+        "status":"true"
+    },
+    "BusinessCategoryInfo":[
+        {
+            "name":"serviceName",
+            "code":"serviceCode",
+            "isactive":true,
+            "tenantId":"default"
+        }
+    ]
+
+}

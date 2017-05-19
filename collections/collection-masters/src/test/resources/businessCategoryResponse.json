@@ -1,0 +1,23 @@
+{
+    "ResponseInfo":
+    {
+        "resMsgId": "placeholder",
+    "msgId": "654654",
+    "status": "true",
+    "apiId": "org.egov.collection",
+    "ver": "1.0"
+    },
+     "BusinessCategoryInfo":[
+        {"code":"TL",
+        "tenantId":"default"
+        },
+        {
+        "code":"STAX",
+        "tenantId":"default"
+        },
+        {
+        "code":"ADTAX",
+        "tenantId":"default"
+        }
+   ]
+}

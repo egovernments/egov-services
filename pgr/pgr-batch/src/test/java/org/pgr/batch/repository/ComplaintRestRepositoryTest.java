@@ -3,6 +3,7 @@ package org.pgr.batch.repository;
 import org.junit.Before;
 import org.junit.Test;
 import org.pgr.batch.repository.contract.ServiceRequest;
+import org.pgr.batch.repository.contract.ServiceResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -19,7 +20,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class ComplaintRestRepositoryTest {
 
 	private static final String HOST = "http://host";
-	private static final String COMPLAINT_BY_CRN = "/pgr/seva?jurisdiction_id={tenantId}";
+	private static final String COMPLAINT_BY_CRN = "/pgr/seva?tenantId={tenantId}";
 
 	private ComplaintRestRepository complaintRestRepositoryRepository;
 	private MockRestServiceServer server;
@@ -34,13 +35,13 @@ public class ComplaintRestRepositoryTest {
 	@Test
 	public void testShouldGetComplaintsEligibleForEscalation() {
 		server.expect(once(),
-				requestTo("http://host/pgr/seva?jurisdiction_id=" + 1L))
-				.andExpect(method(HttpMethod.GET))
+				requestTo("http://host/pgr/seva?tenantId=default"))
+				.andExpect(method(HttpMethod.POST))
 				.andRespond(withSuccess(new Resources().getFileContents("complaintSearchResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
-		final List<ServiceRequest> serviceRequests = complaintRestRepositoryRepository.getComplaintsEligibleForEscalation(1L);
+		final ServiceResponse response= complaintRestRepositoryRepository.getComplaintsEligibleForEscalation("default");
 		server.verify();
-		assertTrue(serviceRequests != null);
+		assertTrue(response.getServiceRequests() != null);
 	}
 
 }

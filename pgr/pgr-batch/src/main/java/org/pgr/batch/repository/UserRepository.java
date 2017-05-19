@@ -22,9 +22,10 @@ public class UserRepository {
         this.getUserByUserNameUrl = getUserByUserNameUrl;
     }
 
-    public User getUserByUserName(String userName) {
+    public User getUserByUserName(String userName,String tenantId) {
         UserRequest request = new UserRequest();
         request.setUserName(userName);
+        request.setTenantId(tenantId);
         String url = userHost + getUserByUserNameUrl;
         return restTemplate.postForObject(url, request, UserResponse.class).getUser().get(0);
     }

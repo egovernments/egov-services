@@ -1,0 +1,1885 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Employee Information System APIs- Employee
+  description: >-
+    All APIs available from Employee Information System  for employee services
+    are listed here.
+  contact:
+    name: Elzan Mathew
+externalDocs:
+  description: Complete documentation describing the functionality of these APIs.
+  url: >-
+    http://182.74.137.193/docs/products/eGov%20EIS/ProdSpecs/eGov%20EIS_PSD_OS.doc
+schemes:
+  - https
+basePath: '/hr-employee/[API endpoint]'
+paths:
+  /employees/_search:
+    post:
+      summary: Get the list of employees defined in the system.
+      description: >
+        Get the employee list based on the input parameters. Response will give
+        the minimum set of information related to the employee.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: code
+          in: query
+          required: false
+          description: The employee's code.
+          type: string
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: assignment.departmentId
+          in: query
+          description: Unique Department id for the employee assignment.
+          required: false
+          type: integer
+          format: int64
+        - name: assignment.designationId
+          in: query
+          description: Unique Designation Id for the employee assignment.
+          required: false
+          type: integer
+          format: int64
+        - name: asOnDate
+          in: query
+          description: >-
+            The date as on which employee assignment has to be checked against.
+            Assignment will be for a date range and hence `as_on_date` should
+            fall within the assignment from_date and to_date.
+          required: false
+          type: string
+          format: date
+        - name: assignment.isPrimary
+          in: query
+          description: >-
+            True will be set in cases where only Primary assignments are needed
+            and False will be set when all temporary types of assignments are
+            needed.Do not set any value when both type of assignments are
+            needed.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+        - name: id
+          in: query
+          description: List of Unique Id of employee
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 100
+        - name: employeestatus
+          in: query
+          description: List of Unique Id of employee status
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 10
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: '#/parameters/sortEmployees'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/EmployeeInfoRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags:
+        - Employee
+  /employees/_create:
+    post:
+      summary: >-
+        Create a new employee in the system along with all the related
+        informations like - assignment, jurisdiction, service, education and
+        probation
+      description: >-
+        To create a new employee we can use POST and set all the required and
+        non-mandatory parameters. When an employee is created, an user is also
+        created along with it. Type value in object will be "EMPLOYEE".
+      parameters:
+        - name: employee
+          in: body
+          description: Details for the new employee.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+      tags:
+        - Employee
+      responses:
+        '201':
+          description: Employee created sucessfully.
+          schema:
+            $ref: '#/definitions/EmployeeRes'
+        '400':
+          description: Invalid Input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  '/employees/{id}/_search':
+    parameters:
+      - $ref: '#/parameters/id'
+    post:
+      summary: Search for a particular Employee to get all the employee data.
+      description: >-
+        To get the existing employee's employee details and all other details
+        like assignment, jurisdiction, qualification service details and
+        porbation for which the code is passed.
+      parameters:
+        - name: employee
+          in: body
+          description: Request header for the employee with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+      tags:
+        - Employee
+      responses:
+        '200':
+          description: Employee updated.
+          schema:
+            $ref: '#/definitions/EmployeeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  '/employees/{id}/_update':
+    parameters:
+      - $ref: '#/parameters/id'
+    post:
+      summary: Update Employee data for a particular employee
+      description: >-
+        To update an existing employee's employee details and all other details
+        like assignment, jurisdiction, qualification service details and
+        porbation for which the code is passed.
+      parameters:
+        - name: employee
+          in: body
+          description: Request header for the employee with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+      tags:
+        - Employee
+      responses:
+        '200':
+          description: Employee updated.
+          schema:
+            $ref: '#/definitions/EmployeeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  /hod/employees/_search:
+    post:
+      summary: >-
+        Get the list of employees defined in the system who are the head of the
+        department.
+      description: >
+        There can be one or more head of department for a department as on any
+        given date. This API will give the employee details who are HOD.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: departmentId
+          in: query
+          description: Unique id of the department for which the HOD needs to be searched.
+          required: true
+          type: integer
+          format: int64
+        - name: asOnDate
+          in: query
+          description: >-
+            The date as on which employee assignment has to be checked against.
+            Assignment will be for a date range and hence `as_on_date` should
+            fall within the assignment from_date and to_date.
+          required: true
+          type: string
+          format: date
+          pattern: '[dd/mm/yyyy]'
+        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: '#/parameters/sortEmployees'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/EmployeeInfoRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags:
+        - Employee
+  '/employees/{id}/assignments/_search':
+    parameters:
+      - $ref: '#/parameters/id'
+    post:
+      summary: Get the employee assignment data by passing employee code.
+      description: >
+        Gets Employee assignment information for the employee. There can be
+        multiple assignments for an employee for over a period of time. Also
+        there can be multiple assignments for a given date.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: '#/parameters/assignmentId'
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: '#/parameters/sortAssignments'
+        - name: asOnDate
+          in: query
+          description: >-
+            The date as on which employee assignment has to be checked against.
+            Assignment will be for a date range and hence `as_on_date` should
+            fall within the assignment from_date and to_date.
+          required: false
+          type: string
+          format: date
+        - name: isPrimary
+          in: query
+          description: >-
+            True will be set in cases where only Primary assignments are needed
+            and False will be set when all temporary types of assignments are
+            needed.Do not set any value when both type of assignments are
+            needed.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AssignmentRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags:
+        - Assignment
+  '/employees/{id}/positions/_search':
+    parameters:
+      - $ref: '#/parameters/id'
+    post:
+      summary: >-
+        Get the employee Position data by passing employee code and other
+        parameters.
+      description: >
+        Gets Employee position information for the given date and other optional
+        parameters. Employee may have multiple positions for any given date.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee position.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - name: asOnDate
+          in: query
+          description: >-
+            The date as on which employee assignment has to be checked against.
+            Assignment will be for a date range and hence `as_on_date` should
+            fall within the assignment from_date and to_date.
+          required: true
+          type: string
+          format: date
+        - name: isPrimary
+          in: query
+          description: >-
+            True will be set in cases where only Primary assignments are needed
+            and False will be set when all temporary types of assignments are
+            needed.Do not set any value when both type of assignments are
+            needed.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+        - name: departmentId
+          in: query
+          description: Unique Id of the department.
+          required: false
+          type: integer
+          format: int64
+        - name: designationId
+          in: query
+          description: Unique Id of the designation.
+          required: false
+          type: integer
+          format: int64
+        - name: id
+          in: query
+          description: List of Unique Ids of Positions.
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 50
+        - $ref: '#/parameters/sortAssignments'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/PositionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags:
+        - Assignment
+  /nonvacantpositions/_search:
+    post:
+      summary: >-
+        Get the list of vacant positions. This will be required when creating a
+        new employee assignment.
+      description: >
+        For a given department and designation and for an given date, it will
+        return the list of vacant positions. For checking a position is vacant,
+        system should check against primary assignments alone.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting vacant position.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: '#/parameters/sortPositions'
+        - name: asOnDate
+          in: query
+          description: >-
+            The date as on which a position needs to be checked for vacant or
+            not.
+          required: true
+          type: string
+          format: date
+        - name: departmentId
+          in: query
+          description: Unique Department id for the position belongs to.
+          required: true
+          type: integer
+          format: int64
+        - name: designationId
+          in: query
+          description: Unique Designation Id for the designation belongs to.
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/PositionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags:
+        - Assignment
+        
+  /nominees/_search:
+    post:
+      summary: Get the list of nominees/family members for the list of employees defined in the system.
+      description: >
+        Get the list of all the family members or only the nominee who is nominated for availing an employee's benefits. We can get the list of nominees for a list of employees as well.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting nominee.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: name
+          in: query
+          required: false
+          description: The nominee's name.
+          type: string
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: nominated
+          in: query
+          description: >-
+            True will be set in cases where only family members who are nominated are required
+            and False will be set when family members who are not nominated are required.Do not set any value when this property need not be checked.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+        - name: id
+          in: query
+          description: List of Unique Id of nominee
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 100
+        - name: employeeId
+          in: query
+          description: List of Unique Id of employee for whom the nominee details are to be searched.
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 100
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: '#/parameters/sortNominees'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NomineeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags:
+        - Nominee
+  /nominees/_create:
+    post:
+      summary: >-
+        Create a new family member/nominee for an employee in the system.
+      description: >-
+        Create a list of new family members for an existing employee in the system.
+      parameters:
+        - name: nominee
+          in: body
+          description: Details for the new family member/nominee.
+          required: true
+          schema:
+            $ref: '#/definitions/NomineeReq'
+      tags:
+        - Nominee
+      responses:
+        '201':
+          description: Nominees created sucessfully.
+          schema:
+            $ref: '#/definitions/NomineeRes'
+        '400':
+          description: Invalid Input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  /nominees/_update:
+    post:
+      summary: >-
+        Update a family member/nominee details for an employee in the system.
+      description: >-
+        Update a list of family members for an existing employee in the system.
+      parameters:
+        - name: nominee
+          in: body
+          description: Details for the family member/nominee.
+          required: true
+          schema:
+            $ref: '#/definitions/NomineeReq'
+      tags:
+        - Nominee
+      responses:
+        '201':
+          description: Nominees Updated sucessfully.
+          schema:
+            $ref: '#/definitions/NomineeRes'
+        '400':
+          description: Invalid Input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+definitions:
+  Employee:
+    title: Employee of the system
+    description: >-
+      An employee is by default User of the system. User will be created from
+      employee.
+    type: object
+    allOf:
+      - $ref: 'swagger-yaml/User.yaml/#/definitions/User'
+    properties:
+      code:
+        type: string
+        description: >-
+          The unique code for an employee. This will autogenerated if
+          configuration flag "Autogenerate employee code" is 'Yes'. In that
+          case, this field needs not be shown in the create mode. In case of
+          value 'No', user will have to input a unique code.
+        minLength: 1
+        maxLength: 256
+      dateOfAppointment:
+        type: string
+        format: date
+        description: Date of appointment of the employee.
+      dateOfJoining:
+        type: string
+        format: date
+        description: Date of Joining of the employee.
+      dateOfRetirement:
+        type: string
+        format: date
+        description: Date of retirement of the employee.
+      employeeStatus:
+        description: >-
+          Status of the employee from the status master where object type is
+          "Employee Master". Default value will be "EMPLOYED". Possible status
+          list for employee are - EMPLOYED,RETIRED,SUSPENDED and DECEASED
+        type: integer
+        format: int64
+      recruitmentMode:
+        type: integer
+        format: int64
+        description: >-
+          The mode of recruitment by which this employee came into the
+          organization.Example- UPSC, Department Exams.
+      recruitmentType:
+        type: integer
+        format: int64
+        description: >-
+          The type of recruitment by which this employee came into the
+          organization.Example- Direct, Transfer, Compensatory.
+      recruitmentQuota:
+        type: integer
+        format: int64
+        description: >-
+          The Quota of recruitment by which this employee came into the
+          organization.Example- Sports Quota, Ex-Serviceman, Handicapped etc.
+      retirementAge:
+        type: string
+        format: int32
+        description: >-
+          What is the age of retirement of this employee. This should be lesser
+          than 100.
+      dateOfResignation:
+        type: string
+        format: date
+        description: Date of regisnation of the employee.
+      dateOfTermination:
+        type: string
+        format: date
+        description: Date of termination of the employee.
+      employeeType:
+        type: integer
+        format: int64
+        description: Type of employment of the employee from the EmployeeType.
+      assignments:
+        type: array
+        description: List of assignments for the employee.
+        items:
+          $ref: '#/definitions/Assignment'
+      jurisdictions:
+        type: array
+        description: >-
+          List of Jurisdictions (boundary codes) for which this employee has
+          access to.
+        minItems: 1
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: integer
+      motherTongue:
+        type: integer
+        format: int64
+        description: Unique id of Mother tongue language of the employee.
+      religion:
+        type: integer
+        format: int64
+        description: Unique id of which religion the employee belongs to.
+      community:
+        type: integer
+        format: int64
+        description: Unique id of which community does the employee belongs to.
+      category:
+        type: integer
+        format: int64
+        description: >-
+          Unique id of which category the employee belongs to like -General, ST,
+          SC, OBC.
+      physicallyDisabled:
+        type: boolean
+        description: True if the employee is physically disabled and False if not.
+      medicalReportProduced:
+        type: boolean
+        description: >-
+          This will be required to be captured when the employee is physically
+          disabled True. If medical reports are avaialble then the value will be
+          set to True and if not available value will be False.
+      languagesKnown:
+        type: array
+        format: int64
+        description: List of unique id languages the employee knows.
+        maxItems: 20
+        uniqueItems: true
+        items:
+          type: integer
+      maritalStatus:
+        type: string
+        description: >-
+          Defines if a person is currently married or single or anything other
+          than that.
+        items:
+          type: string
+          enum:
+            - MARRIED
+            - UNMARRIED
+            - WIDOW
+            - WIDOWER
+            - DIVORCED
+      passportNo:
+        type: string
+        description: The unique passport number of an employee.
+      gpfNo:
+        type: string
+        description: The unique GPF Number of an employee.
+      bank:
+        type: string
+        description: Bank id in which the employee has account.
+      bankBranch:
+        type: string
+        description: Bank branch id in which the employee has account.
+      bankAccount:
+        type: string
+        description: The unique bank account Number of an employee has account.
+        maxLength: 20
+      group:
+        type: integer
+        format: int64
+        description: >-
+          What is the employee group he/she belongs to. For example-
+          State,Central,Local.
+      placeOfBirth:
+        type: string
+        description: Name of the district/city in which the employee was born.
+        maxLength: 200
+      serviceHistory:
+        type: array
+        description: List of service history for the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/ServiceHistory'
+      probation:
+        type: array
+        description: List of probation data for the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/Probation'
+      regularisation:
+        type: array
+        description: List of regularisation data for the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/Regularisation'
+      technical:
+        type: array
+        description: List of technical skill data for the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/TechnicalQualification'
+      education:
+        type: array
+        description: List of educational qualification for the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/EducationalQualification'
+      test:
+        type: array
+        description: List of departmental tests qualified by the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/DepartmentalTest'
+      tenantId:
+        type: string
+        description: >-
+          Unique Identifier of which tenant this data is defined. For example,
+          AP, AP-Kurnool etc.
+        maxLength: 256
+      documents:
+        type: array
+        description: List of all the documents associated with an employee.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/EmployeeDocuments'
+      createdBy:
+        type: string
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.
+    required:
+      - jurisdictions
+      - assignments
+      - employeeStatus
+      - employeeType
+      - tenantId
+  HODDepartment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the hod department.
+      department:
+        type: integer
+        format: int64
+        description: Departments for which HOD is defined.
+    required:
+      - department
+  Assignment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the assignment.
+      position:
+        type: integer
+        format: int64
+        description: Position Id associated with the assignment.
+      fund:
+        type: integer
+        format: int64
+        description: Fund Id associated with the assignment.
+      functionary:
+        type: string
+        format: int64
+        description: Functionary Id associated with the assignment.
+      function:
+        type: string
+        format: int64
+        description: Function Id associated with the assignment.
+      designation:
+        type: integer
+        format: int64
+        description: Designation Id associated with the assignment.
+      department:
+        type: integer
+        format: int64
+        description: Unique id of the Department associated with the assignment.
+      hod:
+        type: array
+        description: List of departments HOD.
+        items:
+          $ref: '#/definitions/HODDepartment'
+      primary:
+        type: boolean
+        description: >-
+          True if it is primary assignment and False if it is temporary
+          assignment.
+      fromDate:
+        type: string
+        format: date
+        description: From Date of assignment period.
+      toDate:
+        type: string
+        format: date
+        description: Till Date of assignment period.
+      grade:
+        type: string
+        format: int64
+        description: which grade does the employee belong to.
+      govtOrderNumber:
+        type: string
+        description: >-
+          The order number issued for any transfer, promotion, demotion or
+          delegation of power.
+      documents:
+        type: array
+        description: List of all the documents associated with assignment.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - fromDate
+      - toDate
+      - primary
+      - department
+      - designation
+      - position
+  ServiceHistory:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the service details.
+      serviceInfo:
+        type: string
+        description: Detail of the service that the employee has done.
+      serviceFrom:
+        type: string
+        format: date
+        description: The date on which this service was applicable from.
+      remarks:
+        type: string
+        description: Any remarks to be captured for this service change.
+      orderNo:
+        type: string
+        description: The government order number passed for the service change.
+      documents:
+        type: array
+        description: List of all the documents associated with service.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - serviceInfo
+      - serviceFrom
+  Probation:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the probation details.
+      designation:
+        type: integer
+        format: int64
+        description: The designated post in which probation was done for that employee.
+      declaredOn:
+        type: string
+        format: date
+        description: The date on which probation was initiated.
+      orderNo:
+        type: string
+        description: The government order number passed for the probation.
+      orderDate:
+        type: string
+        format: date
+        description: The date on which GO over was given.
+      remarks:
+        type: string
+        description: Any remarks to be captured for probation.
+      documents:
+        type: array
+        description: List of all the documents associated with probation.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - designation
+      - declaredOn
+  Regularisation:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the regularisation details.
+      designation:
+        type: integer
+        format: int64
+        description: The designated post in which probation was done for that employee.
+      declaredOn:
+        type: string
+        format: date
+        description: The date on which regularisation was declared.
+      orderNo:
+        type: string
+        description: The government order number passed for the regularisation.
+      orderDate:
+        type: string
+        format: date
+        description: The date on which GO over was given.
+      remarks:
+        type: string
+        description: Any remarks to be captured for regularisation.
+      documents:
+        type: array
+        description: List of all the documents associated with regularisation.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - designation
+      - declaredOn
+  EducationalQualification:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the qualification details.
+      qualification:
+        type: string
+        description: Name of the qualifying degree.
+      majorSubject:
+        type: string
+        description: The main subject studies as part of the qualifying degree.
+      yearOfPassing:
+        type: integer
+        format: int32
+        description: The year in which the employee has finished the qualification.
+      university:
+        type: string
+        description: >-
+          Name of the university/board from which the mentioned qualification
+          was acquired.
+      documents:
+        type: array
+        description: List of all the documents associated with education.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - qualification
+      - yearOfPassing
+  TechnicalQualification:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the technical qualification details.
+      skill:
+        type: string
+        description: Name of the skill acquired.
+      grade:
+        type: string
+        description: >-
+          What was the grade obtained for the skill mentioned. Values will be
+          First Class, Second Class, A, A+, B etc.
+      yearOfPassing:
+        type: integer
+        format: int32
+        description: The year in which the employee has finished the skill course.
+      remarks:
+        type: string
+        description: Any remarks to be captured for this technical qualification.
+      documents:
+        type: array
+        description: List of all the documents associated with technical qualification.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - skill
+  DepartmentalTest:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the departmental test details.
+      test:
+        type: string
+        description: Name of the Test taken.
+      yearOfPassing:
+        type: integer
+        format: int32
+        description: The year in which the employee has qualified this test.
+      remarks:
+        type: string
+        description: Any general remarks.
+      documents:
+        type: array
+        description: List of all the documents associated with department test.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - test
+      - yearOfPassing
+  EmployeeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      Employee:
+        type: array
+        items:
+          $ref: '#/definitions/Employee'
+    required:
+      - RequestInfo
+      - Employee
+  EmployeeInfo:
+    title: Main employee details of the Employee of the system
+    description: This object will have only the main or most frequently queried info.
+    type: object
+    properties:
+      code:
+        type: string
+        description: The unique code for an employee.
+      employeeStatus:
+        description: >-
+          Status of the employee from the status master where object type is
+          "Employee Master". Default value will be "EMPLOYED". Possible status
+          list for employee are - EMPLOYED,RETIRED,SUSPENDED and DECEASED
+        type: integer
+        format: int64
+      employeeType:
+        type: integer
+        format: int64
+        description: Type of employment of the employee from the EmployeeType.
+      assignments:
+        type: array
+        description: List of assignments for the employee.
+        items:
+          $ref: '#/definitions/Assignment'
+      jurisdictions:
+        type: array
+        description: >-
+          List of Jurisdictions (boundary codes) for which this employee has
+          access to.
+        minItems: 1
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: integer
+      bank:
+        type: string
+        description: which bank does the employee has account.
+      bankBranch:
+        type: string
+        description: which bank branch does the employee has account.
+      bankAccount:
+        type: string
+        description: The unique bank account Number of an employee has account.
+      documents:
+        type: string
+        description: Documents related to employee any general stuff.
+      id:
+        type: integer
+        format: int64
+        description: The unique id of an user.
+      userName:
+        type: string
+        description: The unique username used for user login.
+      salutation:
+        type: string
+        description: 'The salutation of user name. Example- Mr, Miss, Mrs'
+      name:
+        type: string
+        description: The full name of the user.
+      gender:
+        type: array
+        description: Gender of the user.
+        items:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHERS
+      mobileNumber:
+        type: string
+        description: Mobile number ofuser the user
+      emailId:
+        type: string
+        description: Email address of the user
+      pan:
+        type: string
+        description: PAN number of the user
+      aadhaarNumber:
+        type: number
+        description: Aadhaar number of the user
+      active:
+        type: boolean
+        description: True if the user is active and False if the user is inactive.
+      type:
+        type: string
+        description: >-
+          System set value internally. For employee value will be always
+          "EMPLOYEE". For citizen value will be "CITIZEN".
+        items:
+          type: string
+          enum:
+            - EMPLOYEE
+            - CITIZEN
+            - SYSTEM
+  EmployeeCompleteInfo:
+    title: Complete Employee information of the employee excluding the password.
+    description: An employee is by default User of the system.
+    type: object
+    allOf:
+      - $ref: '#/definitions/UserInfo'
+    properties:
+      code:
+        type: string
+        description: The unique code for an employee.
+      dateOfAppointment:
+        type: string
+        format: date
+        description: Date of appointment of the employee.
+      dateOfJoining:
+        type: string
+        format: date
+        description: Date of Joining of the employee.
+      dateOfRetirement:
+        type: string
+        format: date
+        description: Date of retirement of the employee.
+      employeeStatus:
+        description: >-
+          Status of the employee from the status master where object type is
+          "Employee Master". Default value will be "EMPLOYED". Possible status
+          list for employee are - EMPLOYED,RETIRED,SUSPENDED and DECEASED
+        type: integer
+        format: int64
+      recruitmentMode:
+        type: integer
+        format: int64
+        description: >-
+          The mode of recruitment by which this employee came into the
+          organization.Example- UPSC, Department Exams.
+      recruitmentType:
+        type: integer
+        format: int64
+        description: >-
+          The type of recruitment by which this employee came into the
+          organization
+      recruitmentQuota:
+        type: integer
+        format: int64
+        description: >-
+          The Quota of recruitment by which this employee came into the
+          organization.Example- Sports Quota, Ex-Serviceman, Handicapped etc.
+      retirementAge:
+        type: string
+        format: int32
+        description: What is the age of retirement of this employee.
+      dateOfResignation:
+        type: string
+        format: date
+        description: Date of regisnation of the employee.
+      dateOfTermination:
+        type: string
+        format: date
+        description: Date of termination of the employee.
+      employeeType:
+        type: integer
+        format: int64
+        description: Type of employment of the employee from the EmployeeType.
+      assignments:
+        type: array
+        description: List of assignments for the employee.
+        items:
+          $ref: '#/definitions/Assignment'
+      jurisdictions:
+        type: array
+        description: >-
+          List of Jurisdictions (boundary codes) for which this employee has
+          access to.
+        minItems: 1
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: integer
+      motherTongue:
+        type: integer
+        format: int64
+        description: Unique id of Mother tongue language of the employee.
+      religion:
+        type: integer
+        format: int64
+        description: Unique id of which religion the employee belongs to.
+      community:
+        type: integer
+        format: int64
+        description: Unique id of which community does the employee belongs to.
+      category:
+        type: integer
+        format: int64
+        description: >-
+          Unique id of which category the employee belongs to like -General, ST,
+          SC, OBC.
+      physicallyDisabled:
+        type: boolean
+        description: True if the employee is physically disabled and False if not.
+      medicalReportProduced:
+        type: boolean
+        description: >-
+          This will be required to be captured when the employee is physically
+          disabled True. If medical reports are avaialble then the value will be
+          set to True and if not available value will be False.
+      languagesKnown:
+        type: array
+        format: int64
+        description: List of unique id languages the employee knows.
+        maxItems: 20
+        uniqueItems: true
+        items:
+          type: integer
+      maritalStatus:
+        type: object
+        description: >-
+          Defines if a person is currently married or single or anything other
+          than that.
+        items:
+          type: string
+          enum:
+            - MARRIED
+            - UNMARRIED
+            - WIDOW
+            - WIDOWER
+            - DIVORCED
+      passportNo:
+        type: string
+        description: The unique passport number of an employee.
+      gpfNo:
+        type: string
+        description: The unique GPF Number of an employee.
+      bank:
+        type: string
+        description: Bank id in which the employee has account.
+      bankBranch:
+        type: string
+        description: Bank branch id in which the employee has account.
+      bankAccount:
+        type: string
+        description: The unique bank account Number of an employee has account.
+      group:
+        type: integer
+        format: int64
+        description: >-
+          What is the employee group he/she belongs to. For example-
+          State,Central,Local.
+      placeOfBirth:
+        type: string
+        description: Name of the district/city in which the employee was born.
+      documents:
+        type: array
+        description: All Documents related to employee except signature and Photo.
+        items:
+          $ref: '#/definitions/EmployeeDocuments'
+      serviceHistory:
+        type: array
+        description: List of service history for the employee.
+        items:
+          $ref: '#/definitions/ServiceHistory'
+      probation:
+        type: array
+        description: List of probation data for the employee.
+        items:
+          $ref: '#/definitions/Probation'
+      regularisation:
+        type: array
+        description: List of regularisation data for the employee.
+        items:
+          $ref: '#/definitions/Regularisation'
+      technical:
+        type: array
+        description: List of technical skill data for the employee.
+        items:
+          $ref: '#/definitions/TechnicalQualification'
+      education:
+        type: array
+        description: List of educational qualification for the employee.
+        items:
+          $ref: '#/definitions/EducationalQualification'
+      test:
+        type: array
+        description: List of departmental tests qualified by the employee.
+        items:
+          $ref: '#/definitions/DepartmentalTest'
+      tenantId:
+        type: string
+        description: >-
+          Unique Identifier of which tenant this data is defined. For example,
+          AP, AP-Kurnool etc.
+        maxLength: 256
+    required:
+      - code
+      - jurisdictions
+      - assignments
+      - employeeStatus
+      - employeeType
+      - tenantId
+  EmployeeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      Employee:
+        type: array
+        items:
+          $ref: '#/definitions/EmployeeCompleteInfo'
+  EmployeeInfoRes:
+    type: object
+    description: >-
+      This object will have restricted information of the employee as part of
+      response.
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      Employee:
+        type: array
+        items:
+          $ref: '#/definitions/EmployeeInfo'
+  AssignmentRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      Assignment:
+        type: array
+        items:
+          $ref: '#/definitions/Assignment'
+  UserInfo:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id of an user.
+      userName:
+        type: string
+        description: The unique username used for user login.
+      salutation:
+        type: string
+        description: 'The salutation of user name. Example- Mr, Miss, Mrs'
+      name:
+        type: string
+        description: The full name of the user.
+      gender:
+        type: string
+        description: Gender of the user.
+        items:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHERS
+      mobileNumber:
+        type: string
+        description: Mobile number ofuser the user
+      emailId:
+        type: string
+        description: Email address of the user
+      altContactNumber:
+        type: string
+        description: Alternate contact number of the user
+      pan:
+        type: string
+        description: PAN number of the user
+      aadhaarNumber:
+        type: number
+        description: Aadhaar number of the user
+      permanentAddress:
+        type: string
+        description: Permanent address of the user.
+      permanentCity:
+        type: string
+        description: City of the permanent address.
+      permanentPincode:
+        type: string
+        description: Permanent address pincode.
+      correspondenceCity:
+        type: string
+        description: City of the correspondence address.
+      CorrespondencePincode:
+        type: string
+        description: Permanent address pincode.
+      correspondenceAddress:
+        type: string
+        description: Correspondence address of the user.
+      active:
+        type: boolean
+        description: True if the user is active and False if the user is inactive.
+      dob:
+        type: string
+        format: date
+        description: Data of bith of the user in mm/dd/yyyy format.
+      pwdExpiryDate:
+        type: string
+        format: date
+        description: Date on which the password registered will expire.
+      locale:
+        type: string
+        description: Value will be set to "en_IN".
+      type:
+        type: string
+        description: >-
+          System set value internally. For employee value will be always
+          "EMPLOYEE". For citizen value will be "CITIZEN".
+        items:
+          type: string
+          enum:
+            - EMPLOYEE
+            - CITIZEN
+            - SYSTEM
+      signature:
+        type: string
+        description: Image to be loaded for the signature of the employee
+      accountLocked:
+        type: boolean
+        description: >-
+          Set to True if account is locked after several incorrect password
+          attempt. False if account is not locked.
+      roles:
+        type: array
+        items:
+          type: integer
+        description: List of roles ids that are attached to the user.
+      fatherOrHusbandName:
+        type: string
+        description: Name of user's father or husband.
+      bloodGroup:
+        type: string
+        description: Blood group of the user.
+        items:
+          type: string
+          enum:
+            - A+
+            - B+
+            - O+
+            - AB+
+            - A-
+            - B-
+            - AB-
+            - O-
+      identificationMark:
+        type: string
+        description: Any identification mark of the person.
+      photo:
+        type: string
+        description: Image to be loaded for the photo of the user
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+      tenantId:
+        type: string
+        description: >-
+          Unique Identifier of which tenant this data is defined. For example,
+          AP, AP-Kurnool etc.
+        maxLength: 256
+  EmployeeDocuments:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id of this object.
+      employeeId:
+        type: integer
+        format: int64
+        description: The unique id of employee.
+      document:
+        type: string
+        description: The unique url for the document attached.
+      referenceType:
+        type: string
+        description: >-
+          Each details in Employee can have multiple documents attached. Based
+          on the reference type we are differentiate which document is relevant
+          from which details.
+        items:
+          type: string
+          enum:
+            - HEADER
+            - ASSIGNMENT
+            - JURISDICTION
+            - SERVICE
+            - TECHNICAL
+            - EDUCATION
+            - TEST
+            - REGULARISATION
+            - PROBATION
+      referenceId:
+        type: integer
+        format: int64
+        description: >-
+          The unique id of reference type. For instance if its a document for
+          the first row in employee assignment, then it will have the value of
+          assignment id.
+    required:
+      - employeeId
+      - document
+  Nominee:
+    type: object
+    title: Nominees/Family details of the employees of the system
+    description: Family member details of all the employees in the system. Each employee can have one or more nominees defined in the system.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id of the nominee master.
+      employeeid:
+        type: object
+        description: The employee for whom the family member is related to.
+        items:
+          $ref: '#/definitions/Employee'
+      name:
+        type: string
+        description: The full name of the family member.
+        maxLength: 100
+        minLength: 3
+      gender:
+        type: string
+        description: Gender of the family member.
+        items:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHERS
+      dateOfBirth:
+        type: string
+        format: date
+        description: Date of bith of the family member.
+      maritalStatus:
+        type: string
+        description: >-
+          Defines if this family member is currently married or single or anything other
+          than that.
+        items:
+          type: string
+          enum:
+            - MARRIED
+            - UNMARRIED
+            - WIDOW
+            - WIDOWER
+            - DIVORCED
+      relationship:
+       type: string
+       description: >-
+          Defines the relationship this family member holds with the associated employee.
+       items:
+        type: string
+        enum:
+          - Father
+          - Mother
+          - Spouse
+          - Son
+          - Daughter
+          - Other
+      bank:
+        type: string
+        description: Bank id in which the family member has account. Bank ids will be referenced from the Bank Master
+      bankBranch:
+        type: string
+        description: Bank branch id in which the family member has account. Bank branch will be referenced from the BankBranch  Master.
+      bankAccount:
+        type: string
+        description: The unique bank account Number of an family member has account.
+        maxLength: 20
+      nominated:
+        type: boolean
+        description: True if it this family member is nominated for availing the employee benefits and False if this person is not nominated for availing the employee benefits.
+      employed:
+        type: boolean
+        description: True if it this family member has an employment and False if this person is not currently employed.
+      createdBy:
+        type: string
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.
+      
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example AP, AP-Kurnool etc
+        maxLength: 256
+    required:
+      - name
+      - dateOfBirth
+      - relationship
+      - maritalStatus
+      - gender
+      - nominated
+      - employed
+      
+  NomineeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      Nominee:
+        type: array
+        items:
+          $ref: '#/definitions/Nominee'
+    required:
+      - RequestInfo
+      - Nominee      
+  NomineeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      Nominee:
+        type: array
+        items:
+          $ref: '#/definitions/Nominee'  
+          
+parameters:
+  pageSize:
+    name: pagesize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pagenumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  id:
+    name: id
+    in: path
+    required: true
+    description: The employee's Unique Id.
+    type: string
+    format: integer
+  assignmentId:
+    name: assignmentId
+    in: query
+    description: List of Unique ids of assignments.
+    required: false
+    type: array
+    items:
+      type: integer
+    format: int64
+    maxItems: 50
+  sortEmployees:
+    name: sort
+    in: query
+    description: >-
+      Result will be sorted by name ascending by default if this parameter is
+      not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+  sortAssignments:
+    name: sort
+    in: query
+    description: >-
+      Result will be sorted by fromDate descending and primary descending by
+      default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](fromDate|toDate|primary|department)'
+    default:
+      - '-fromDate'
+      - '-primary'
+  sortPositions:
+    name: sort
+    in: query
+    description: Result will be sorted by psotion name ascending.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 1
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name)'
+    default:
+      - '-name'
+  sortNominees:
+    name: sort
+    in: query
+    description: >-
+      Result will be sorted by name ascending by default if this parameter is
+      not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|nominated)'
+    default:
+      - +name
+tags:
+  - name: Employee
+    description: Everything you need to handle Employee along with employee details.
+  - name: Assignment
+    description: For getting just the assignment and position information of an employee.

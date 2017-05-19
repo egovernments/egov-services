@@ -26,9 +26,9 @@ public class UserServiceTest {
         User expectedUser = User.builder()
                 .userName("system")
                 .build();
-        when(userRepository.getUserByUserName("system")).thenReturn(expectedUser);
+        when(userRepository.getUserByUserName("system","tenantId")).thenReturn(expectedUser);
 
-        User user = userService.getUserByUserName("system");
+        User user = userService.getUserByUserName("system","tenantId");
 
         assertEquals(user.getUserName(),expectedUser.getUserName());
     }

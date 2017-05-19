@@ -71,7 +71,7 @@ public class EmployeeRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        List<Employee> employees = employeeRepository.getByRoleName("Grievance Officer");
+        List<Employee> employees = employeeRepository.getByRoleName("Grievance Officer","tenantId");
         server.verify();
         assertEquals(1, employees.size());
     }

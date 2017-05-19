@@ -37,7 +37,7 @@ public class UserRepositoryTest {
         server.expect(once(), requestTo("http://host/user/_search")).andExpect(method(HttpMethod.POST)).andRespond(
                 withSuccess(new Resources().getFileContents("userResponse.json"), MediaType.APPLICATION_JSON_UTF8));
 
-        final User user = userRepository.getUserByUserName("system");
+        final User user = userRepository.getUserByUserName("system","tenantId");
         server.verify();
         assertEquals("system", user.getUserName());
 

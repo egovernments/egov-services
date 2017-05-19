@@ -146,7 +146,7 @@ public class ComplaintRouterService {
                 positionHierarchies = positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint",
                         complaintTypeCode, assigneeId);
                 if (positionHierarchies.isEmpty() || positionHierarchies.contains(null)) {
-                    final List<Employee> employees = employeeRepository.getByRoleName("Grievance Routing Officer");
+                    final List<Employee> employees = employeeRepository.getByRoleName("Grievance Routing Officer","default");
                     if (!employees.isEmpty())
                         employeeResponse = employees.iterator().next();
                     if (employeeResponse != null)

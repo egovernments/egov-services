@@ -13,7 +13,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserByUserName(String userName){
-        return userRepository.getUserByUserName("system");
+    public User getUserByUserName(String userName, String tenantId){
+        return userRepository.getUserByUserName(userName,tenantId);
     }
 }

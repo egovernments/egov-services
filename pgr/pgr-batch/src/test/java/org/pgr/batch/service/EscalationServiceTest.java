@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.pgr.batch.repository.ComplaintRestRepository;
 import org.pgr.batch.repository.contract.ServiceRequest;
+import org.pgr.batch.repository.contract.ServiceResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -43,8 +44,9 @@ public class EscalationServiceTest {
     @Test
     public void test_should_check_that_complaint_gets_escalated() throws Exception {
         List<ServiceRequest> serviceRequestList = asList(new ServiceRequest(), new ServiceRequest());
-        when(complaintRestRepository.getComplaintsEligibleForEscalation(1L)).thenReturn(serviceRequestList);
-        when(userService.getUserByUserName("system")).thenReturn(User.builder().id(1L).build());
+        ServiceResponse serviceResponse = new ServiceResponse(null,serviceRequestList);
+        when(complaintRestRepository.getComplaintsEligibleForEscalation("default")).thenReturn(serviceResponse);
+        when(userService.getUserByUserName("system","default")).thenReturn(User.builder().id(1L).build());
 
         escalationService.escalateComplaint();
 

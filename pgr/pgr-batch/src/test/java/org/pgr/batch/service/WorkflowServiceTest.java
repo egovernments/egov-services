@@ -2,6 +2,7 @@ package org.pgr.batch.service;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -71,15 +72,21 @@ public class WorkflowServiceTest {
 
     private ServiceRequest getServiceRequest(){
 
-        Map<String,String>  values = new HashMap<>();
-        values.put("stateId","1");
-        values.put(COMPLAINT_STATUS, REGISTERED);
+        List<AttributeEntry> attribValues = new ArrayList<>();
+        attribValues.add(new AttributeEntry(COMPLAINT_STATUS,REGISTERED));
+        attribValues.add(new AttributeEntry("stateId","1"));
+
+//        Map<String,String>  values = new HashMap<>();
+//        values.put("stateId","1");
+//        values.put(COMPLAINT_STATUS, REGISTERED);
 
      return ServiceRequest.builder()
              .address("central city")
              .complaintTypeCode("BRKBN")
              .complaintTypeName("Broken Bin")
-             .values(values)
+//             .values(values)
+             .attribValuesPopulated(true)
+             .attribValues(attribValues)
              .build();
     }
 

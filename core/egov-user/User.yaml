@@ -69,6 +69,13 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: roleCodes
+          in: query
+          required: false
+          description: roles assigned to the user(roleCodes).Search response will have all users having all roles specified in the request.
+          type: array
+          items:
+            type: string
       # Expected responses for this operation:
       responses:
         # Response code

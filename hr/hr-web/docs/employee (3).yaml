@@ -1,0 +1,2125 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Employee Information System APIs- Employee
+  description: All APIs available from Employee Information System  for employee services are listed here.
+  contact:
+    name: Elzan Mathew
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /employees:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of employees.
+      description: |
+        Get the employee list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - name: code
+          in: query
+          required: false
+          description: The employee's code.
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: assignment.department_code
+          in: query
+          description: Department code for the employee assignment.
+          required: false
+          type: string
+          format: varchar
+        - name: assignment.designation_code
+          in: query
+          description: Designation code for the employee assignment.
+          required: false
+          type: string
+          format: varchar
+        - name: as_on_date
+          in: query
+          description: The date as on which employee assignment has to be checked against. Assignment will be for a date range and hence `as_on_date` should fall within the assignment from_date and to_date.
+          required: false
+          type: string
+          format: date
+        - name: assignment.is_primary
+          in: query
+          description: True will be set in cases where only Primary assignments are needed and False will be set when all temporary types of assignments are needed.Do not set any value when both type of assignments are needed.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageSize"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageNumber"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/EmployeeInfoRes"
+
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          $ref: "#/responses/EmployeeDoesNotExistResponse"
+      tags: 
+       - Employee
+    post:
+      summary: Create a new employee in the system along with all the related informations like - assignment, jurisdiction, service, education and probation
+      description: To create a new employee we can use POST and set all the required and non-mandatory parameters. When an employee is created, an user is also created along with it. Type value in object will be "EMPLOYEE".
+      parameters:
+        - name: employee
+          in: body
+          description: Details for the new employee.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - $ref: '#/parameters/sortEmployees'
+      tags:
+        - Employee
+      responses:
+        '201':
+          description: Employee created sucessfully.
+          schema:
+            $ref: '#/definitions/EmployeeRes'
+        '400':
+          description: Invalid Input.
+
+  /employees/{code}:  
+    parameters:
+      - $ref: "#/parameters/code"
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get a particualr employee information by passing employee code.
+      description: |
+        Gets `Employee` objects for the employee code passed
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/EmployeeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          $ref: "#/responses/EmployeeDoesNotExistResponse"
+
+      tags: 
+       - Employee
+    put:
+      summary: Update Employee data for a particular employee
+      description: To update an existing employee's employee details and all other details like assignment, jurisdiction, qualification service details and porbation for which the code is passed.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: employee
+          in: body
+          description: Request header for the employee with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+      tags:
+        - Employee
+      responses:
+        '200':
+          description: Employee updated.
+          schema:
+            $ref: '#/definitions/EmployeeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          $ref: "#/responses/EmployeeDoesNotExistResponse"
+         
+    delete:
+      summary: Delete the employee data for the employee code passed.
+      description: Our system does not physically delete any employee master data. Instead this data will be marked as inactive and will not be available for further use.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: employee
+          in: body
+          description: Request header for the employee to be deleted
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      tags:
+        - Employee
+      responses:
+        '204':
+          description: Employee deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          $ref: "#/responses/EmployeeDoesNotExistResponse"
+
+  /employees/{code}/assignments:
+    parameters:
+      - $ref: "#/parameters/code"
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the employee assignment data by passing employee code.
+      description: |
+        Gets Employee assignment information for the employee. There can be multiple assignments for an employee for over a period of time. Also there can be multiple assignments for a given date.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "#/parameters/assignmentId"    
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageSize"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageNumber"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - $ref: "#/parameters/sortAssignments"
+        - name: as_on_date
+          in: query
+          description: The date as on which employee assignment has to be checked against. Assignment will be for a date range and hence `as_on_date` should fall within the assignment from_date and to_date.
+          required: false
+          type: string
+          format: date
+        - name: is_primary
+          in: query
+          description: True will be set in cases where only Primary assignments are needed and False will be set when all temporary types of assignments are needed.Do not set any value when both type of assignments are needed.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/AssignmentRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Assignment not found.
+
+      tags: 
+       - Assignment
+
+  /employees/{code}/positions:
+    parameters:
+      - $ref: "#/parameters/code"
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the employee Position data by passing employee code and other parameters.
+      description: |
+        Gets Employee position information for the given date and other optional parameters. Employee may have multiple positions for any given date.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting employee position.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageSize"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageNumber"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: as_on_date
+          in: query
+          description: The date as on which employee assignment has to be checked against. Assignment will be for a date range and hence `as_on_date` should fall within the assignment from_date and to_date.
+          required: true
+          type: string
+          format: date
+        - name: is_primary
+          in: query
+          description: True will be set in cases where only Primary assignments are needed and False will be set when all temporary types of assignments are needed.Do not set any value when both type of assignments are needed.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
+        - name: department_code
+          in: query
+          description: Unique code of the department.
+          required: false
+          type: string
+          format: varchar
+        - name: designation_code
+          in: query
+          description: Unique code of the designation.
+          required: false
+          type: string
+          format: varchar
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/PositionRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Position not found.
+      tags: 
+       - Assignment       
+
+  /grades:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of grades defined.
+      description: |
+        Get the grade master data. To get a particular grade one can pass the grade name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting grade.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the grade.
+          required: false
+          type: string
+          format: varchar 
+        - name: active
+          in: query
+          description: Get list of active /inactive grades.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/GradeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Grade not found.
+
+      tags: 
+       - Grade
+
+    post:
+      summary: Create a new grade to the master list.
+      description: To create a new grade we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: grade
+          in: body
+          description: Details for the new grade .
+          required: true
+          schema:
+            $ref: '#/definitions/GradeReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Grade
+      responses:
+        '201':
+          description: Grade created sucessfully.
+          schema:
+            $ref: '#/definitions/GradeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+  /grades/{name}:
+    parameters:
+      - $ref: "#/parameters/name"
+    put:
+      summary: Update existing grade for the name
+      description: To update an existing grade master data.
+      parameters:
+        - name: grade
+          in: body
+          description: Request header for the grade to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/GradeReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Grade
+      responses:
+        '200':
+          description: Grade updated.
+          schema:
+            $ref: '#/definitions/GradeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Grade not found.
+          
+    delete:
+      summary: Delete the grade data for the grade name.
+      description: To delete an existing grade one can pass the code.Data will not be deleted physically from the system. Instead it will be made inactive.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: grade
+          in: body
+          description: Request header for the grade to be deleted
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      tags:
+        - Grade
+      responses:
+        '204':
+          description: Grade deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Grade not found.
+
+  /categories:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of all employee categories defined in the system.
+      description: |
+        Get the employee category data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting category.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: active
+          in: query
+          description: Get list of active /inactive categories.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+        - name: name
+          in: query
+          description: Name of the category.
+          required: false
+          type: string
+          format: varchar                           
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/CategoryRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Category not found.
+      tags: 
+       - Category
+       
+    post:
+      summary: Create a new employee category.
+      description: To create a new category we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: category
+          in: body
+          description: Details for the new category .
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Category
+      responses:
+        '201':
+          description: Category created sucessfully.
+          schema:
+            $ref: '#/definitions/CategoryRes'
+        '400':
+          description: Invalid input.
+  /categories/{name}:
+    parameters:
+      - $ref: "#/parameters/category"
+    put:
+      summary: Update existing Category for the name passed
+      description: To update an existing category master data with the name passed.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: category
+          in: body
+          description: Request header for the category with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryReq'
+      tags:
+        - Category
+      responses:
+        '200':
+          description: Category updated.
+          schema:
+            $ref: '#/definitions/CategoryRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Category not found.
+          
+    delete:
+      summary: Delete the category data for the name.
+      description: To delete an existing category we need to set the active flag to FALSE. There will not be any physical delete of data from the system.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: category
+          in: body
+          description: Request header for the category to be deleted
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      tags:
+        - Category  
+      responses:
+        '204':
+          description: Category deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Categoty not found.
+
+  /employeetypes:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of employee types defined in the system.
+      description: |
+        Get the employee type data. To get a particular employee type one can pass the name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting employee type.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the employee type.
+          required: false
+          type: string
+          format: varchar 
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/EmployeeTypeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Employee Type not found.
+
+      tags: 
+       - Employee Type
+
+    post:
+      summary: Create a new employee type to the master list.
+      description: To create a new employee type we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: employee_type
+          in: body
+          description: Details for the new employee type .
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeTypeReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Employee Type
+      responses:
+        '201':
+          description: Employee Type created sucessfully.
+          schema:
+            $ref: '#/definitions/EmployeeTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+  /employeetype/{name}:
+    put:
+      summary: Update an existing employee type.
+      description: To update an existing employee type master data.
+      parameters:
+        - name: employee_type
+          in: body
+          description: Request header for the employee type to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeTypeReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: path
+          required: true
+          description: The name of the employee type
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      tags:
+        - Employee Type
+      responses:
+        '200':
+          description: Employee Type updated.
+          schema:
+            $ref: '#/definitions/EmployeeTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Employee type not found.
+
+  /Groups:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of employee groups defined in the system.
+      description: |
+        Get the employee group data. To get a particular employee group one can pass the name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting employee group.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the employee group.
+          required: false
+          type: string
+          format: varchar 
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/GroupRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Employee group not found.
+
+      tags: 
+       - Employee Group
+
+    post:
+      summary: Create a new employee group to the master list.
+      description: To create a new employee group we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: employee_group
+          in: body
+          description: Details for the new employee group .
+          required: true
+          schema:
+            $ref: '#/definitions/GroupReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Employee Group
+      responses:
+        '201':
+          description: Employee group created sucessfully.
+          schema:
+            $ref: '#/definitions/GroupRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+  /Group/{name}:
+    put:
+      summary: Update an existing employee group.
+      description: To update an existing employee group master data.
+      parameters:
+        - name: employee_group
+          in: body
+          description: Request header for the employee group to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/GroupReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: path
+          required: true
+          description: The name of the employee group
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      tags:
+        - Employee Group
+      responses:
+        '200':
+          description: Employee group updated.
+          schema:
+            $ref: '#/definitions/GroupRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Employee group not found.
+          
+  /recruitmentquotas:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of recruitment quotas defined in the system.
+      description: |
+        Get the recruitment quota data. To get a particular recruitment quota one can pass the recruitment quota name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting recruitment quota.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the recruitment quota.
+          required: false
+          type: string
+          format: varchar 
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RecruitmentQuotaRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Recruitment quota not found.
+
+      tags: 
+       - Recruitment Quota
+
+    post:
+      summary: Create a new recruitment quota to the master list.
+      description: To create a new recruitment quota we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: recruitment_quota
+          in: body
+          description: Details for the new recruitment quota .
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Recruitment Quota
+      responses:
+        '201':
+          description: Recruitment quota created sucessfully.
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+  /recruitmentquota/{name}:
+    put:
+      summary: Update an existing recruitment quota.
+      description: To update an existing recruitment quota master data.
+      parameters:
+        - name: recruitment_quota
+          in: body
+          description: Request header for the recruitment quota to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: path
+          required: true
+          description: The name of the recruitment quota
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      tags:
+        - Recruitment Quota
+      responses:
+        '200':
+          description: Recruitment quota updated.
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Recruitment quota not found.        
+          
+  /recruitmentType:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of recruitment types defined in the system.
+      description: |
+        Get the recruitment type data. To get a particular receruitment type one can pass the recruitment type name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting recrutiment type.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the recruitment type.
+          required: false
+          type: string
+          format: varchar 
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RecruitmentTypeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Recruitment type not found.
+
+      tags: 
+       - Recruitment Type
+
+    post:
+      summary: Create a new recruitment type to the master list.
+      description: To create a new recruitment type we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: recruitment_type
+          in: body
+          description: Details for the new recruitment type .
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentTypeReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Recruitment Type
+      responses:
+        '201':
+          description: Recruitment type created sucessfully.
+          schema:
+            $ref: '#/definitions/RecruitmentTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+  /recruitmenttype/{name}:
+    put:
+      summary: Update an existing recruitment type.
+      description: To update an existing recruitment type master data.
+      parameters:
+        - name: recruitment_type
+          in: body
+          description: Request header for the recruitment type to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentTypeReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: path
+          required: true
+          description: The name of the recruitment type
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      tags:
+        - Recruitment Type
+      responses:
+        '200':
+          description: Recruitment type updated.
+          schema:
+            $ref: '#/definitions/RecruitmentTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Recruitment type not found.
+     
+  /recruitmentmodes:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of recruitment modes defined in the system.
+      description: |
+        Get the recruitment mode data. To get a particular recruitment mode one can pass the recruitment mode name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting recruitment mode.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the recruitment mode.
+          required: false
+          type: string
+          format: varchar 
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RecruitmentModeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Recruitment mode not found.
+
+      tags: 
+       - Recruitment Mode
+
+    post:
+      summary: Create a new recruitment mode to the master list.
+      description: To create a new recruitment mode we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: recruitment_modes
+          in: body
+          description: Details for the new recruitment mode .
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentModeReq'
+
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Recruitment Mode
+      responses:
+        '201':
+          description: Recruitment mode created sucessfully.
+          schema:
+            $ref: '#/definitions/RecruitmentModeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+  /recruitmentmode/{name}:
+    put:
+      summary: Update an existing recruitment mode.
+      description: To update an existing recruitment mode master data.
+      parameters:
+        - name: recruitment_mode
+          in: body
+          description: Request header for the recruitment mode to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentModeReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: name
+          in: path
+          required: true
+          description: The name of the recruitment mode
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      tags:
+        - Recruitment Mode
+      responses:
+        '200':
+          description: Recruitment mode updated.
+          schema:
+            $ref: '#/definitions/RecruitmentModeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Recruitment mode not found.     
+          
+definitions:
+
+  Employee:
+    title: Employee of the system
+    description: An employee is by default User of the system. User will be created from employee.
+    type: object
+    allOf: 
+    - $ref: 'http://localhost:8081/swagger-yaml/user.yaml/#/definitions/User'
+
+    properties:
+      code:
+        type: string
+        description: The unique code for an employee.
+      dateOfAppointment:
+        type: string
+        format: date
+        description: Date of appointment of the employee.
+      dateOfJoining:
+        type: string
+        format: date
+        description: Date of Joining of the employee.
+      dateOfRetirement:
+        type: string
+        format: date
+        description: Date of retirement of the employee.
+      employeeStatus:
+        type: object
+        description: Status of the employee from the EmployeeStatus enum. Default value will be "EMPLOYED".
+        items:
+          type: string
+          enum:
+           - EMPLOYED
+           - RETIRED
+           - SUSPENDED
+           - DECEASED
+      recruitmentMode:
+        type: object
+        description: The mode of recruitment by which this employee came into the organization.Example- UPSC, Department Exams.
+        items:
+          $ref: "#/definitions/RecruitmentMode"
+      recruitmentType:
+        type: object
+        description: The type of recruitment by which this employee came into the organization.Example- Direct, Transfer, Compensatory.
+        items:
+          $ref: "#/definitions/RecruitmentType"
+      recruitmentQuota:
+        type: object
+        description: The Quota of recruitment by which this employee came into the organization.Example- Sports Quota, Ex-Serviceman, Handicapped etc.
+        items:
+          $ref: "#/definitions/RecruitmentQuota" 
+      retirementAge:
+        type: string
+        format: int64
+        description: What is the age of retirement of this employee.
+      dateOfResignation:
+        type: string
+        format: date
+        description: Date of regisnation of the employee.
+      dateOfTermination:
+        type: string
+        format: date
+        description: Date of termination of the employee.
+      employeeType:
+        type: object
+        description: Type of employment of the employee from the EmployeeType.
+        items:
+          $ref: "#/definitions/EmployeeType"
+      assignments:
+        type: array
+        description: List of assignments for the employee.
+        items:
+          $ref: "#/definitions/Assignment"
+      jurisdictions:
+        type: array
+        description: List of Jurisdictions (boundary codes) for which this employee has access to.
+        minItems: 1
+        maxItems: 50
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/Jurisdiction"
+      motherTounge:
+        type: object
+        description: Mother toungue language of the employee.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Language"
+      religion:
+        type: object
+        description: which religion the employee belongs to.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Religion"
+      community:
+        type: object
+        description: which community does the employee belongs to.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Community"
+      category:
+        type: object
+        description: which category the employee belongs to like -General, ST, SC, OBC.
+        items:
+          $ref: "#/definitions/Category"
+      physicallyDisabled:
+        type: boolean
+        description: True if the employee is physically disabled and False if not.
+      medicalReportProduced:
+        type: boolean
+        description: This will be required to be captured when the employee is physically disabled True. If medical reports are avaialble then the value will be set to True and if not available value will be False.
+      languagesKnow:
+        type: array
+        description: List of languages the employee knows.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Language"
+      maritalStatus:
+        type: object
+        description: Defines if a person is currently married or single or anything other than that.
+        items:
+          type: string
+          enum:
+           - MARRIED
+           - UNMARRIED
+           - WIDOW
+           - WIDOWER
+           - DIVORCED
+      passportNo:
+        type: string
+        description: The unique passport number of an employee.
+      gpfNo:
+        type: string
+        description: The unique GPF Number of an employee.
+      bank:
+        type: string
+        description: which bank does the employee has account.
+      bankBranch:
+        type: string
+        description: which bank branch does the employee has account.
+
+      bankAccount:
+        type: string
+        description: The unique bank account Number of an employee has account.
+      group:
+        type: object
+        description: What is the employee group he/she belongs to. For example- State,Central,Local.
+        items:
+          $ref: "#/definitions/Group"
+      placeOfBirth:
+        type: string
+        description: Name of the district/city in which the employee was born.
+      
+      documents:
+        type: string
+        format: byte
+        description : Documents related to employee any general stuff.
+      serviceHistory:
+        type: array
+        description: List of service history for the employee.
+        items:
+          $ref: "#/definitions/ServiceHistory"
+      probation:
+        type: array
+        description: List of probation data for the employee.
+        items:
+          $ref: "#/definitions/Probation"
+      regularisation:
+        type: array
+        description: List of regularisation data for the employee.
+        items:
+          $ref: "#/definitions/Regularisation"
+      technical:
+        type: array
+        description: List of technical skill data for the employee.
+        items:
+          $ref: "#/definitions/TechnicalQualification"
+      education:
+        type: array
+        description: List of educational qualification for the employee.
+        items:
+          $ref: "#/definitions/EducationalQualification"
+      test:
+        type: array
+        description: List of departmental tests qualified by the employee.
+        items:
+          $ref: "#/definitions/DepartmentalTest"
+
+    required:
+     - code
+     - jurisdictions
+     - assignments
+     - employeeStatus
+     - employeeType
+
+     
+  Group:
+    type: object
+    description: Employee group master
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the group master
+      name:
+        type: string
+        description: Name of the group. For example- State, Central , Local.
+      description:
+        type: string
+        description: Brief description of what this group means.
+    required:
+      - id
+      - name
+  
+  RecruitmentMode:
+    type: object
+    description: Mode of recruitment of the employee
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the mode of recruitment master.
+      name:
+        type: string
+        description: Name of the mode of recruitment. For example- UPSC, Department Exams, Direct
+      description:
+        type: string
+        description: Brief description of the mode of recruitment. For example- UPSC, Department Exams, Direct
+    required:
+      - id
+      - name
+   
+  RecruitmentType:
+    type: object 
+    description: Various types of recruitment of an employee
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the type of recruitment.
+      name:
+        type: string
+        description: Name of the type of recruitment. For example-Direct, Transfer, Compensatory
+      description:
+        type: string
+        description: Description of the type of recruitment. For example-Direct, Transfer, Compensatory    
+    required:
+      - id
+      - name
+      
+  RecruitmentQuota:
+    type: object
+    description: Various quota for recruitment of an employee
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the type of recruitment quota.
+      name:
+        type: string
+        description: Name of the quota for recruitment. For example-Sports Quota, Ex-Serviceman, Handicapped, Others
+      description:
+        type: string
+        description: Name of the quota for recruitment. For example-Sports Quota, Ex-Serviceman, Handicapped, Others
+    required:
+      - id
+      - name  
+      
+  HODDepartment:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the hod department.
+      department:
+        type: object
+        description: Departments for which HOD is defined.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Department"
+    required:
+        - id
+        - department
+        
+  Assignment:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the assignment.
+      position:
+        type: object
+        description: Position associated with the assignment.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Position"
+      fund:
+        type: string
+        description: Fund associated with the assignment.
+      functionary:
+        type: string
+        description: Functionary associated with the assignment.
+      function:
+        type: string
+        description: Function associated with the assignment.
+      designation:
+        type: object
+        description: Designation associated with the assignment.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Designation"
+      department:
+        type: object
+        description: Department associated with the assignment.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Department"
+      hod:
+        type: array
+        description: List of departments HOD.
+        items:
+          $ref: "#/definitions/HODDepartment"
+
+      primary:
+        type: boolean
+        description: True if it is primary assignment and False if it is temporary assignment.
+      fromDate:
+        type: string
+        format: date
+        description: From Date of assignment period.
+      toDate:
+        type: string
+        format: date
+        description: Till Date of assignment period.
+      grade:
+        type: object
+        description: which grade does the employee belong to.
+        items:
+          $ref: "#/definitions/Grade"
+      govtOrderNumber:
+        type: string
+        description: The order number issued for any transfer, promotion, demotion or delegation of power.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to assignment.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - fromDate
+      - toDate
+      - primary
+      - id
+      - department
+      - designation
+      - position
+      - createdBy
+      - createdDate
+      
+  ServiceHistory:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description: Unique identifier of the service details.
+ 
+      serviceInfo:
+        type: string
+        description: Detail of the service that the employee has done.
+      serviceFrom:
+        type: string
+        format: date
+        description: The date on which this service was applicable from.
+      remarks:
+        type: string
+        description: Any remarks to be captured for this service change.
+      orderNo:
+        type: string
+        description: The government order number passed for the service change.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to service history.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - serviceInfo
+      - serviceFrom
+      - createdBy
+      - createdDate
+      
+  Probation:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description: Unique identifier of the probation details.
+      designation:
+        type: object
+        description: The designated post in which probation was done for that employee.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Designation"
+      declaredOn:
+        type: string
+        format: date
+        description: The date on which probation was initiated.
+      orderNo:
+        type: string
+        description: The government order number passed for the probation.
+      orderDate:
+        type: string
+        format: date
+        description: The date on which GO over was given.
+      remarks:
+        type: string
+        description: Any remarks to be captured for this service change.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to probation.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - designation
+      - declaredOn 
+      - createdBy
+      - createdDate
+  Regularisation:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description: Unique identifier of the regularisation details.
+      designation:
+        type: object
+        description: The designated post in which probation was done for that employee.
+        items:
+          $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/Designation"
+      declaredOn:
+        type: string
+        format: date
+        description: The date on which regularisation was declared.
+      orderNo:
+        type: string
+        description: The government order number passed for the regularisation.
+      orderDate:
+        type: string
+        format: date
+        description: The date on which GO over was given.
+      remarks:
+        type: string
+        description: Any remarks to be captured for this service change.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to probation.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - designation
+      - declaredOn 
+      - createdBy
+      - createdDate     
+      
+  EducationalQualification:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description: Unique identifier of the qualification details.
+      qualification:
+        type: string
+        description: Name of the qualifying degree.
+      majorSubject:
+        type: string
+        description: The main subject studies as part of the qualifying degree.
+      yearOfPassing:
+        type: string
+        description: The year in which the employee has finished the qualification.
+      university:
+        type: string
+        description: Name of the university/board from which the mentioned qualification was acquired.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to educational qualification.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - qualification
+      - yearOfPassing  
+      - createdBy
+      - createdDate
+  TechnicalQualification:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description: Unique identifier of the technical qualification details.
+      skill:
+        type: string
+        description: Name of the skill acquired.
+      grade:
+        type: string
+        description: What was the grade obtained for the skill mentioned. Values will be First Class, Second Class, A, A+, B etc.
+      yearOfPassing:
+        type: string
+        description: The year in which the employee has finished the skill course.
+      remarks:
+        type: string
+        description: Any remarks to be captured for this service change.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to educational qualification.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - skill
+      - createdBy
+      - createdDate
+  DepartmentalTest:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description: Unique identifier of the departmental test details.
+      test:
+        type: string
+        description: Name of the Test taken.
+      yearOfPassing:
+        type: string
+        description: The year in which the employee has qualified this test.
+      remarks:
+        type: string
+        description: Any general remarks.
+      documents:
+        type: string
+        format: byte
+        description: Documents related to test like copy of certificates.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - test
+      - yearOfPassing  
+      - createdBy
+      - createdDate
+
+      
+  EmployeeType:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the employee type.
+      name:
+       type: string
+       description: Value for the employee type like -Permanent, Contract, Labour, Staff.
+      chartOfAccounts:
+        type: string
+        description: chartofaccount glcode associated with this employee type
+    required:
+      - id
+      - name
+      
+  Jurisdiction:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the juridiction.
+      boundary:
+       type: string
+       description: Boundary code of the Boundaries for which the employee can act upon.
+  Grade:   
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the grade.
+      name:
+        type: string
+        description: The Name of the grade.  
+      description:
+        type: string
+        description: The description of the grade.
+      orderno:
+        type: integer
+        description: order of hierarchy can be defined as a numeric value. Highest will have value 1.
+      active:
+        type: string
+        format: boolean
+        description: Shows if this grade data is active or not. If the value is TRUE, then this data is active one. If this needs to be marked as a deleted data then the value will be FALSE.
+    required:
+      - id
+      - name
+      - active
+      
+  EmployeeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      Employee:
+        $ref: '#/definitions/Employee'
+        
+  EmployeeInfo:
+    title: Main employee details of the Employee of the system
+    description: This object will have only the main or most frequently queried info.
+    type: object
+    properties:
+      code:
+        type: string
+        description: The unique code for an employee.
+      employeeStatus:
+        type: object
+        description: Status of the employee from the EmployeeStatus enum. Default value will be "EMPLOYED".
+        items:
+          type: string
+          enum:
+           - EMPLOYED
+           - RETIRED
+           - SUSPENDED
+           - DECEASED
+      employeeType:
+        type: object
+        description: Type of employment of the employee from the EmployeeType.
+        items:
+          $ref: "#/definitions/EmployeeType"
+      assignments:
+        type: array
+        description: List of assignments for the employee.
+        items:
+          $ref: "#/definitions/Assignment"
+      jurisdictions:
+        type: array
+        description: List of Jurisdictions (boundary codes) for which this employee has access to.
+        minItems: 1
+        maxItems: 50
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/Jurisdiction"
+      bank:
+        type: string
+        description: which bank does the employee has account.
+        
+      bankBranch:
+        type: string
+        description: which bank branch does the employee has account.
+   
+      bankAccount:
+        type: string
+        description: The unique bank account Number of an employee has account.
+      documents:
+        type: string
+        format: byte
+        description : Documents related to employee any general stuff.
+      id:
+        type: integer
+        format: int64
+        description: The unique id an user.
+      userName:
+        type: string
+        description: The unique username used for user login.
+      password:
+        type: string
+        format: password
+        description: Password for user login.
+      salutation:
+        type: string
+        description: The salutation of user name. Example- Mr, Miss, Mrs
+      name:
+        type: string
+        description: The full name of the user.
+      gender:
+        type: array
+        description: Gender of the user.
+        items:
+          type: string
+          enum:
+           - MALE
+           - FEMALE
+           - OTHERS
+      mobileNumber:
+        type: string
+        description: Mobile number ofuser the user
+      emailId:
+        type: string
+        description: Email address of the user
+      pan:
+        type: string
+        description: PAN number of the user
+      aadhaarNumber:
+        type: string
+        description: Aadhaar number of the user
+      active:
+        type: boolean
+        description: True if the user is active and False if the user is inactive.
+      type:
+        type: array
+        description : System set value internally. For employee value will be always "EMPLOYEE". For citizen value will be "CITIZEN".
+        items:
+          type: string
+          enum:
+           - EMPLOYEE
+           - CITIZEN
+           - SYSTEM
+    required:
+     - code
+     - jurisdictions
+     - assignments
+     - employeeStatus
+     - employeeType
+     - id
+     - userName
+     - name
+     - gender
+     - mobileNumber
+     - active
+     
+  EmployeeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      Employee:
+        type: array
+        items:
+          $ref: '#/definitions/Employee'
+  EmployeeInfoRes:
+    type: object
+    description: This object will have restricted information of the employee as part of response.
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      Employee:
+        type: array
+        items:
+          $ref: '#/definitions/EmployeeInfo'        
+
+  AssignmentRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      Assignment:
+        type: array
+        items: 
+         $ref: '#/definitions/Assignment'
+
+        
+  GradeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      Grade:
+        type: array
+        items: 
+         $ref: '#/definitions/Grade'  
+  GradeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      Grade:
+        $ref: '#/definitions/Grade'
+  RecruitmentModeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      RecruitmentMode:
+        $ref: '#/definitions/RecruitmentMode'
+  RecruitmentModeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      RecruitmentMode:
+        type: array
+        items: 
+         $ref: '#/definitions/RecruitmentMode'  
+  
+  RecruitmentTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      RecruitmentType:
+        $ref: '#/definitions/RecruitmentType'
+        
+  RecruitmentTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      RecruitmentType:
+        type: array
+        items: 
+         $ref: '#/definitions/RecruitmentType'  
+         
+  RecruitmentQuotaReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      RecruitmentQuota:
+        $ref: '#/definitions/RecruitmentQuota'
+  EmployeeTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      EmployeeType:
+        type: array
+        items: 
+         $ref: '#/definitions/EmployeeType'         
+  EmployeeTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      EmployeeType:
+        $ref: '#/definitions/EmployeeType'
+ 
+  GroupRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      Group:
+        type: array
+        items: 
+         $ref: '#/definitions/Group' 
+         
+  GroupReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      Group:
+        $ref: '#/definitions/Group'
+        
+  RecruitmentQuotaRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      RecruitmentQuota:
+        type: array
+        items: 
+         $ref: '#/definitions/RecruitmentQuota'         
+         
+
+  Category:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the category.
+      name:
+        type: string
+        description: The Name of the category.  
+      description:
+        type: string
+        description: The description of the category.
+      active:
+        type: string
+        format: boolean
+        description: Shows if this category data is active or not. If the value is TRUE, then this data is active one. If this needs to be marked as a deleted data then the value will be FALSE.       
+
+  CategoryRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      Category:
+        type: array
+        items: 
+         $ref: '#/definitions/Category'  
+  CategoryReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      Category:
+        $ref: '#/definitions/Category'
+
+parameters:
+  code:
+    name: code
+    in: path
+    required: true
+    description: The employee's code.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  name:
+    name: name
+    in: path
+    required: true
+    description: The name of the grade
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  category:
+    name: name
+    in: path
+    required: true
+    description: The name of the category
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  assignmentId:
+    name: assignmentId
+    in: query
+    description: Unique id of an assignment.
+    required: false
+    type: integer
+    format: int64
+  sortEmployees:
+    name: sort
+    in: query
+    description: Result will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+  sortAssignments:
+    name: sort
+    in: query
+    description: Result will be sorted by fromDate descending and primary descending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](fromDate|toDate|primary|department)'
+    default:
+      - -fromDate
+      - -primary
+#  $ref: http://localhost:8081/swagger-yaml/leave.yaml
+responses:
+  EmployeeDoesNotExistResponse:
+    description: Employee does not exist.
+tags:
+  - name: Employee
+    description: Everything you need to handle Employee and Users along with employee details.
+  - name: Assignment
+    description: For getting just the assignment and position information of an employee.
+  - name: Grade
+    description: Everything you need to handle Grade Master data.
+  - name: Category
+    description: Everything you need to handle in employee category master data.

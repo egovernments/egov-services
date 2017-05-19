@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 public class UserRequest {
-	@JsonProperty("RequestInfo")
+	@JsonProperty("requestInfo")
 	private RequestInfo requestInfo;
 
 	@JsonProperty("id")
@@ -18,7 +18,4 @@ public class UserRequest {
 
 	@JsonProperty("userName")
 	private String userName;
-
-	@JsonProperty("tenantId")
-	private String tenantId;
 }

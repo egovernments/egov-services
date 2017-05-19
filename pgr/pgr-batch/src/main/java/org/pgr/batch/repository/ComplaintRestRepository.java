@@ -1,10 +1,7 @@
 package org.pgr.batch.repository;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.pgr.batch.repository.contract.ComplaintResponse;
-import org.pgr.batch.repository.contract.RequestInfoBody;
 import org.pgr.batch.repository.contract.ServiceRequest;
-import org.pgr.batch.repository.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,15 +27,23 @@ public class ComplaintRestRepository {
 		this.url = pgrRestHost + url;
 	}
 
-    public ServiceResponse getComplaintsEligibleForEscalation(final String tenantId) {
+    public List<ServiceRequest> getComplaintsEligibleForEscalation(final Long tenantId) {
 
-        String status = String.join(",", Arrays.asList("FORWARDED","REGISTERED","INPROGRESS","REOPENED"));
+        String complaintStatus = String.join(",", Arrays.asList("FORWARDED","REGISTERED","INPROGRESS","REOPENED"));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String escalationDate = simpleDateFormat.format(new Date());
 
-        final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
-
-        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
-        return restTemplate.postForObject(url, request, ServiceResponse.class, tenantId, status,escalationDate);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("api_id", "org.egov.pgr");
+        headers.set("ver","1");
+        headers.set("action", "GET");
+        headers.set("ts","");
+        headers.set("did", "");
+        headers.set("key","");
+        headers.set("msg_id", "");
+        headers.set("requester_id", "");
+        headers.set("auth_token", null);
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        return restTemplate.exchange(url, HttpMethod.GET, entity, ComplaintResponse.class,tenantId,complaintStatus,escalationDate).getBody().getServiceRequests();
     }
 }

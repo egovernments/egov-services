@@ -10,9 +10,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -24,23 +22,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Index;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.context.annotation.Configuration;
 
 
+@Service
 @Configuration
 @EnableKafka
-@Service
 public class Consumer {
 
+
+
 	// TODO Hey there need to read topic name from application properties via environment
-	@Autowired
-	private  Environment environment;
+
 
 	@Autowired
-	JestClient client=null;
+	private Environment environment;
 
-	//public static final String topic=getTopic();
+	@Autowired
+	JestClient client;
 
 
 	@Bean
@@ -70,30 +73,33 @@ public class Consumer {
 
 	@Bean
 	public JestClient getClient() {
-		String url=	"http://"+environment.getProperty("elasticsearch.host")+":"+environment.getProperty("elasticsearch.port");
 		if (this.client==null){
 			JestClientFactory factory = new JestClientFactory();
 			factory.setHttpClientConfig(new HttpClientConfig
-					.Builder(url)
+					.Builder("http://"+environment.getProperty("elasticsearch.host")+":"+environment.getProperty("elasticsearch.port"))
 					.multiThreaded(Boolean.valueOf(environment.getProperty("multiThread")))
 					.readTimeout(Integer.valueOf(environment.getProperty("timeout")))
 					.build());
 			this.client = factory.getObject();
+
 		}
 
 		return this.client;
 	}
 
-	@KafkaListener(topics="#{environment.getProperty('propertyIndexer.create')}")
-	public void receive(Property property) throws IOException{
-		String propertyData=	new ObjectMapper().writeValueAsString(property);
-		client.execute(
+    @KafkaListener(topics="${propertyIndexer.create}")
+	public JestResult recive(Property property) throws IOException{
+    	
+    String propertyData=	new ObjectMapper().writeValueAsString(property);
+    	JestResult result = client.execute(
 				new Index.Builder(propertyData)
 				.index(environment.getProperty("property.index"))
 				.type(environment.getProperty("property.indexType"))
-				.build()
+	             .build()
 				);
-		client.shutdownClient();
 
+    	return result;
 	}
+
+
 }

@@ -1,13 +1,10 @@
 package org.pgr.batch.repository.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.common.contract.AttributeEntry;
-import org.egov.pgr.common.contract.AttributeValues;
 
 import java.util.*;
 
@@ -30,44 +27,49 @@ public class ServiceRequest {
 
     private String tenantId;
 
-    @JsonProperty("serviceRequestId")
+    @JsonProperty("service_request_id")
     @Setter
     private String crn;
 
     @JsonProperty("status")
     private Boolean status;
 
-    @JsonProperty("serviceName")
+    @JsonProperty("service_name")
     private String complaintTypeName;
 
-    @JsonProperty("serviceCode")
+    @JsonProperty("service_code")
     private String complaintTypeCode;
 
+    @JsonProperty("description")
     private String description;
 
+    @JsonProperty("agency_responsible")
     private String agencyResponsible;
 
+    @JsonProperty("service_notice")
     private String serviceNotice;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    @JsonProperty("requestedDatetime")
+    @JsonProperty("requested_datetime")
     @Setter
     private Date createdDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    @JsonProperty("updatedDatetime")
+    @JsonProperty("updated_datetime")
     @Setter
     private Date lastModifiedDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    @JsonProperty("expectedDatetime")
+    @JsonProperty("expected_datetime")
     private Date escalationDate;
 
+    @JsonProperty("address")
     private String address;
 
-    @JsonProperty("addressId")
+    @JsonProperty("address_id")
     private String crossHierarchyId;
 
+    @JsonProperty("zipcode")
     private Integer zipcode;
 
     @JsonProperty("lat")
@@ -101,35 +103,23 @@ public class ServiceRequest {
     @JsonProperty("values")
     private Map<String, String> values = new HashMap<>();
 
-    //  Short term feature flag - to support values and attribValues usage
-//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
-    @JsonProperty("isAttribValuesPopulated")
-    private boolean attribValuesPopulated;
-
-    private List<AttributeEntry> attribValues = new ArrayList<>();
-
     private void setAssignee(String assignee) {
-        AttributeValues.createOrUpdateAttributeEntry(attribValues,VALUES_ASSIGNEE_ID,assignee);
+        getValues().put(VALUES_ASSIGNEE_ID, assignee);
     }
 
     private void setStateId(String stateId) {
-        AttributeValues.createOrUpdateAttributeEntry(attribValues,VALUES_STATE_ID,stateId);
-    }
-
-    @JsonIgnore
-    public String getAssigneeId(){
-        return getDynamicSingleValue(VALUES_ASSIGNEE_ID);
+        getValues().put(VALUES_STATE_ID, stateId);
     }
 
     public WorkflowRequest getWorkFlowRequestForEscalation(RequestInfo requestInfo){
-//        String complaintType = this.complaintTypeCode;
+        String complaintType = this.complaintTypeCode;
         String crn = this.getCrn();
-        Map<String, Attribute> valuesToSet = getWorkFlowRequestValues();
-        valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, getDynamicSingleValue(VALUES_ASSIGNEE_ID)));
+        Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
+        valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, values.get(VALUES_ASSIGNEE_ID)));
 
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
                 .assignee(null)
-                .action(WorkflowRequest.Action.forComplaintStatus(getDynamicSingleValue(STATUS)))
+                .action(WorkflowRequest.Action.forComplaintStatus(values.get(STATUS)))
                 .requestInfo(requestInfo)
                 .values(valuesToSet)
                 .status(ESCALATION_STATUS)
@@ -141,16 +131,16 @@ public class ServiceRequest {
         return workflowRequestBuilder.build();
     }
 
-    private Map<String, Attribute> getWorkFlowRequestValues() {
+    private Map<String, Attribute> getWorkFlowRequestValues(Map<String, String> values, String complaintType) {
         Map<String, Attribute> valuesToSet = new HashMap<>();
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
-        valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId()));
+        valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId(values)));
         valuesToSet.put(VALUES_APPROVAL_COMMENT_KEY, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT_KEY, VALUES_APPROVAL_COMMENT_VALUE));
         return valuesToSet;
     }
 
-    private String getCurrentStateId() {
-        return Objects.isNull(getDynamicSingleValue(VALUES_STATE_ID)) ? null : getDynamicSingleValue(VALUES_STATE_ID);
+    private String getCurrentStateId(Map<String, String> values) {
+        return Objects.isNull(values.get(VALUES_STATE_ID)) ? null : values.get(VALUES_STATE_ID);
     }
 
     public void update(WorkflowResponse workflowResponse){
@@ -158,11 +148,4 @@ public class ServiceRequest {
         setStateId(workflowResponse.getValueForKey(VALUES_STATE_ID));
     }
 
-    private String getDynamicSingleValue(String key) {
-        if (attribValuesPopulated) {
-            return AttributeValues.getAttributeSingleValue(attribValues, key);
-        } else {
-            return values.get(key);
-        }
-    }
 }

@@ -10,8 +10,6 @@ import java.util.List;
 @Service
 public class EscalationService {
 
-    public static final String PREVIOUS_ASSIGNEE = "previousAssignee";
-
     private ComplaintRestRepository complaintRestRepository;
 
     private WorkflowService workflowService;
@@ -27,18 +25,13 @@ public class EscalationService {
     }
 
     public void escalateComplaint(){
-        List<ServiceRequest> serviceRequests = complaintRestRepository.getComplaintsEligibleForEscalation("default").getServiceRequests();
+        List<ServiceRequest> serviceRequests = complaintRestRepository.getComplaintsEligibleForEscalation(1L);
         serviceRequests.forEach(serviceRequest -> escalate(serviceRequest));
     }
 
     private void escalate(ServiceRequest serviceRequest){
-
-        serviceRequest.getValues().put(PREVIOUS_ASSIGNEE, serviceRequest.getAssigneeId());
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.setUserInfo(userService.getUserByUserName("system","default"));
+        requestInfo.setUserInfo(userService.getUserByUserName("system"));
         serviceRequest =  workflowService.enrichWorkflowForEscalation(serviceRequest,requestInfo);
-
-        //Escalation should not be done if next assignee is same.
-//        if()
     }
 }

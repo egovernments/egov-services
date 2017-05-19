@@ -1,0 +1,883 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Employee Information System- Leave
+  contact:
+    name: Elzan Mathew
+externalDocs: 
+  description: Complete documentation describing the functionality of Leave module.
+  url: http://182.74.137.193/docs/products/eGov%20EIS/ProdSpecs/eGov%20EIS_PSD_OS.doc
+basePath: '/hr-leave/[API endpoint]'
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /leavetypes/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the Leave Types defined in the system.
+      description: |
+        All the leave type master data can be fetched one shot using GET, or else by passing name/id one can get a specific leave data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting leave types.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
+        - name: id
+          description: List of Unique id for leave type.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: active
+          description: Will be set to TRUE only if active leave types are required.
+          in: query
+          required: false
+          type: string
+        - $ref: "#/parameters/sortLeaveTypes"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveTypeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags: 
+       - Leave Type
+       
+  /leavetypes/_create:       
+    post:
+      summary: Create a new leave type.
+      description: To create a leave type master data we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: leaveType
+          in: body
+          description: Details for the new leave type .
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveTypeReq'
+
+      tags:
+        - Leave Type
+      responses:
+        '201':
+          description: Leave Type created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            
+  /leavetype/{leavetypeId}/_update:
+    parameters:
+      - $ref: "#/parameters/leaveType"
+    post:
+      summary: Update existing leave type details.
+      description: To update an existing leave type master data.
+      parameters:
+        - name: leaveType
+          in: body
+          description: Request header for the leave type with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveTypeReq'
+      tags:
+        - Leave Type
+      responses:
+        '200':
+          description: Leave Type updated.
+          schema:
+            $ref: '#/definitions/LeaveTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
+  /leaveallotments/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the leave allocation defined in the system.
+      description: |
+        Get the leave allocation defined in the system for each leave type for each designation. If leave is allocated irrespective of designation then one set of data will be present.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting leave allocation.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
+        - name: leaveType
+          description: List of Unique id of the leave type.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: designationId
+          description: List of Unique id for designation.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: id
+          description: List of Unique id for leave allotment.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - $ref: "#/parameters/sortLeaveTypes"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveAllotmentRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags: 
+       - Leave Allotment
+  /leaveallotments/_create:       
+    post:
+      summary: Create new set of leave allocation.
+      description: To create a new set of leave allocation designation wise one can use POST. One can create a single set if leave allotment for the entire employees irrespective of desgiantion.
+      parameters:
+        - name: leaveAllotment
+          in: body
+          description: Details for the new set of leave allotment data designation wise.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveAllotmentReq'
+      tags:
+        - Leave Allotment
+      responses:
+        '201':
+          description: Leave allotment created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveAllotmentRes'
+        '400':
+          description: Invalid input.    
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+ 
+  /leavesallotments/{leavetypeId}/_update: 
+    parameters:
+      - $ref: "#/parameters/leaveType"
+    post:
+      summary: Update existing leave details for the designation and leave type
+      description: To update a set of leave allocation for a particular leave type or for updating a specific leave types' data for a specific designation we can use this API.
+      parameters:
+        - $ref: "#/parameters/designation"
+        - name: leaveAllocation
+          in: body
+          description: Request header for the leave allotment with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveAllotmentReq'
+      tags:
+        - Leave Allotment
+      responses:
+        '200':
+          description: Leave Allotment updated.
+          schema:
+            $ref: '#/definitions/LeaveAllotmentRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
+  /leaveopeningbalances/_search:
+   # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the employee leave opening balances defined in the system.
+      description: |
+        Get the employee leave opening balances defined in the system for any year leave type wise.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting leave opening balance.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: year
+          description: Unique id for calendar year.
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: id
+          description: List of Unique id for leave opening balance.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: leaveType
+          description: List of Unique id of the leave type.
+          required: false
+          in: query
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: employee
+          description: List of Unique id for employee.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer 
+          format: int64
+        - $ref: "#/parameters/sortLeaveOpeningBalance"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveOpeningBalanceRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags: 
+       - Leave Opening Balance   
+  /leaveopeningbalances/_create:       
+    post:
+      summary: Create a new set of leave opening balances for an employee for a year.
+      description: To create a new set of leave opening balance leave type wise for an employee for any year one can use POST.
+      parameters:
+        - name: leaveOpeningBalance
+          in: body
+          description: Details for the new set of leave opening balance data leave type and employee wise.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceReq'
+      tags:
+        - Leave Opening Balance
+      responses:
+        '201':
+          description: Leave opening balance created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceRes'
+        '400':
+          description: Invalid input.            
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  /leaveopeningbalances/{employeeId}/_update: 
+    parameters:
+      - $ref: "#/parameters/employee"
+    post:
+      summary: Update existing leave opening balances for an employee.
+      description: To update a set of leave the leave opening balances for a specific employee for any year and for any leave types.
+      parameters:
+        - name: leaveOpeningBalance
+          in: body
+          description: Request header for the leave opening balance with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceReq'
+        - name: year
+          description: Unique name of calendar year.
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: leaveType
+          description: Unique id of the leave type.
+          in: query
+          required: false
+          type: integer
+          format: int64
+
+      tags:
+        - Leave Opening Balance
+      responses:
+        '200':
+          description: Leave Opening balance updated.
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
+
+  /leaveapplications/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the employee leave applications defined in the system.
+      description: |
+        Get the employee leave applications defined in the system for a leave type for any date or date range.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting leave application.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: applicationNumber
+          description: Unique id of the leave application.
+          in: query
+          required: false
+          type: string
+        - name: employee
+          description: List of Unique id for employee.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: fromDate
+          description: Date from which the leave is applied.
+          in: query
+          required: false
+          type: string
+          format: date
+        - name: toDate
+          description: Date to which the leave is applied.
+          in: query
+          required: false
+          type: string
+          format: date
+        - name: leaveType
+          description: Unique id for leave type.
+          in: query
+          required: false
+          type: string
+        - name: id
+          description: List of Unique id for leave allotment.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - $ref: "#/parameters/sortLeaveApplications"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveApplicationRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags: 
+       - Leave Application
+       
+  /leaveapplications/_create:       
+    post:
+      summary: Create a new leave application for an employee for a date range.
+      description: To create a new leave application for a leave type for an employee for any date one can use POST.
+      parameters:
+        - name: leaveApplication
+          in: body
+          description: Details for the new leave application data for a leave type and employee.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveApplicationReq'
+      tags:
+        - Leave Application
+      responses:
+        '201':
+          description: Leave application created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveApplicationRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+           
+  /leaveapplication/{applicationNumber}/_update: 
+    post:
+      summary: Update an existing leave application of an employee.
+      description: To update a particular leave application using the application number.
+      parameters:
+        - name: leaveApplication
+          in: body
+          description: Request header for the leave opening application with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveApplicationSingleReq'
+        - name: applicationNumber
+          description: Unique leave application number.
+          in: path
+          required: true
+          type: string
+      tags:
+        - Leave Application
+      responses:
+        '200':
+          description: Leave application updated.
+          schema:
+            $ref: '#/definitions/LeaveApplicationRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
+       
+definitions:
+  LeaveType:
+    title: Master of all leave types with its properties.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id a leave type.
+      name:
+        type: string
+        description: The unique name of Leave type.
+        minLength: 1
+        maxLength: 50
+      description:
+        type: string
+        description: Brief description of Leave type.
+        maxLength: 250
+      halfdayAllowed:
+        type: boolean
+        description: If half day leave is allowed for this leave type then the value will be TRUE, else the value will be FALSE.
+      payEligible:
+        type: boolean
+        description: Indicates if the leave type created is eligible for pay or not. This decides if the salary has to be deducted for this kind of leave. Set TRUE in case of pay eligible and FALSE if pay not eligible.
+      accumulative:
+        type: boolean
+        description: Indicates if the leave type is accumulative or unused days in employees account expire on closure of the year. Set TRUE if leave can be accumuated and FALSE if leave cannot be accumulated to next year.
+      encashable:
+        type: boolean
+        description: Indicates if the leave type created is eligible for encashment. Set TRUE in case it is encashable and FALSE if not encashable.
+      active:
+        type: boolean
+        description: If this leave type needs to be shown for selection in leave application, it needs to be set to TRUE, else it will be FALSE.
+        default: TRUE
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
+    required:
+      - name
+      - halfdayAllowed
+      - payEligible
+      - accumulative
+      - encashable
+      - tenantId
+      
+  LeaveTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      LeaveType:
+        type: array
+        items: 
+         $ref: "#/definitions/LeaveType"
+         
+  LeaveTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      LeaveType:
+        type: array
+        items:
+          $ref: "#/definitions/LeaveType"  
+        
+  LeaveAllotment:
+    title: This is a set up master which defined how many leaves are alloted for each leave type.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id of leave allotment.
+      designation:
+        type: integer
+        format: int64
+        description: Unique Designation id
+      leaveType:
+        type: object
+        description: which leave type the leaves are allocated.
+        items:
+          $ref: "#/definitions/LeaveType"
+      noOfDays:
+        type: number
+        format: float
+        description: Number of days of leaves allocated. Only whole number and 0.5 to be allowed. Allow maximum value till 2000.
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
+    required:
+      - leaveType
+      - noOfDays
+      - tenantId
+  LeaveAllotmentRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      LeaveAllotment:
+        type: array
+        items: 
+         $ref: '#/definitions/LeaveAllotment'  
+  LeaveAllotmentReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      LeaveAllotment:
+        type: array
+        items:
+          $ref: '#/definitions/LeaveAllotment'
+          
+  LeaveOpeningBalance:
+    title: Each employee's leave balance carry forwarded from previous year will be captured here.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id of leave opening balance.
+      employee:
+        type: integer
+        format: int64
+        description: Unique id of the employee for whom the leave is applicable.
+      calendarYear:
+        type: integer
+        format: int32
+        description: Unique name of the calandar year for which leave opening balance is captured.
+      leaveType:
+        type: object
+        description: which leave type the leaves are allocated.
+        items:
+          $ref: "#/definitions/LeaveType"
+      noOfDays:
+        type: number
+        format: float
+        description: Available number of years as of the year.Only whole number and 0.5 to be allowed. Allow maximum value till 2000.
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
+    required:
+      - employee
+      - calendarYear
+      - leaveType
+      - noOfDays
+      - tenantId
+  LeaveOpeningBalanceRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      LeaveOpeningBalance:
+        type: array
+        items: 
+         $ref: '#/definitions/LeaveOpeningBalance'  
+  LeaveOpeningBalanceReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      LeaveOpeningBalance:
+        type: array
+        items:
+          $ref: '#/definitions/LeaveOpeningBalance'
+        
+  LeaveApplication:
+    title: All leave applications will be captured here.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id an employee leave.
+      applicationNumber:
+        type: string
+        description: The unique leave application number. This will be auto-generated mandatorily for each leave application.
+        maxLength: 100
+      employee:
+        type: integer
+        format: int64
+        description: Unique id of the employee who has applied for leave.
+      leaveType:
+        type: object
+        description: which leave type the leaves are allocated.
+        items:
+          $ref: "#/definitions/LeaveType"
+      fromDate:
+        type: string
+        format: date
+        description: Date from which the leave is applied for.
+      toDate:
+        type: string
+        format: date
+        description: Date to which the leave is applied for.
+      compensatoryForDate:
+        type: string
+        format: date
+        description: Date worked on for which compensatory leave is applied for. This value will be given only when applying for compensatory leave.
+      leaveDays:
+        type: number
+        format: float
+        description: Number of days for which leaves are applied for. Only whole number and 0.5 to be allowed. Allow maximum value till 2000.
+      availableDays:
+        type: number
+        format: float
+        description: Number of days available for the employee at the time of applying for leave. Only whole number and 0.5 to be allowed. Allow maximum value till 2000.
+      halfdays:
+        type: integer
+        format: int32
+        description: If the leave type allows for half day leave then, this info needs to be captured if user is opting for half day leave.
+      firstHalfleave:
+        type: boolean
+        description: If the leave is applied for the first half of the day, value will be set to TRUE and if its applied for second half then value will FALSE.
+      reason:
+        type: string
+        description: Reason for applying leave.
+        minLength: 5
+        maxLength: 500
+      status:
+        type: object
+        description: Current status of leave. Possible values are- Applied, Approved, Rejected, Cancelled.
+        items:
+          $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/HRStatus'
+      stateId:
+        type: integer
+        format: int64
+        description: The unique id of the workflow table to track the current state of the leave.
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
+    required:
+      - employee
+      - leaveType
+      - fromDate
+      - toDate
+      - status
+      - tenantId
+  LeaveApplicationRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      LeaveApplication:
+        type: array
+        items: 
+         $ref: '#/definitions/LeaveApplication'  
+  LeaveApplicationReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      LeaveApplication:
+        type: array
+        items:
+          $ref: '#/definitions/LeaveApplication'
+          
+  LeaveApplicationSingleReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      LeaveApplication:
+        $ref: '#/definitions/LeaveApplication'
+parameters:
+  sortLeaveTypes:
+    name: sort
+    in: query
+    description: Result will be sorted by leave name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|id)'
+    default:
+      - +name
+  sortLeaveOpeningBalance:
+    name: sort
+    in: query
+    description: Result will be sorted by year and  leave type ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](year|employee|leaveType)'
+    default:
+      - +year
+  sortLeaveApplications:
+    name: sort
+    in: query
+    description: Result will be sorted by leave type and  date ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](fromDate|employee|leaveType)'
+    default:
+      - +leaveType
+      - +fromDate
+  designation:
+    name: designationId
+    in: query
+    required: false
+    description: The id of the designation master.
+    type: integer
+    format: int64
+
+  leaveType:
+    name: leavetypeId
+    in: path
+    required: true
+    description: The id of the leave type master.
+    type: integer
+    format: int64
+  employee:
+    name: employeeId
+    in: path
+    required: true
+    description: The unique id of the employee master.
+    type: integer
+    format: int64
+    
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 1000
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 50
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+tags:
+  - name: Leave Type
+    description: Everything you need to handle Leave Type master.
+  - name: Leave Allotment
+    description: Everything you need to handle Leave Allotment designation wise for each leave type.
+  - name: Leave Opening Balance
+    description: Everything you need to handle for employee Leave opening balance.
+  - name: Leave Application
+    description: Everything you need to handle for employee Leave applying and approval.

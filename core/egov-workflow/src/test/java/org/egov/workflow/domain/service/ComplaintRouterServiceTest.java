@@ -77,8 +77,7 @@ public class ComplaintRouterServiceTest {
 
     @Test
     public void test_should_return_assignee_for_complaint_without_positionhierarchy() {
-        when(employeeRepository.getByRoleName("Grievance Routing Officer","default")).thenReturn(getEmplyees());
-        when(positionRepository.getByEmployeeCode("C001")).thenReturn(getPositions());
+        when(employeeRepository.getByRoleName("Grievance Routing Officer")).thenReturn(getEmplyees());
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
@@ -184,7 +183,6 @@ public class ComplaintRouterServiceTest {
         employee.setId(1L);
         employee.setName("narasappa");
         employee.setUsername("egovernments");
-        employee.setTenantId("tenantId");
         employees.add(employee);
         return employees;
     }

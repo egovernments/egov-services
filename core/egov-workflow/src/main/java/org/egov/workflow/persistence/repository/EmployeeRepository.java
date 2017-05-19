@@ -32,8 +32,8 @@ public class EmployeeRepository {
         this.employeesByRoleNameurl = eisServiceHostname + employeesByRoleNameurl;
     }
 
-    public List<Employee> getByRoleName(final String roleName, final String tenantId) {
-        final EmployeeRes employeeRes = restTemplate.getForObject(employeesByRoleNameurl, EmployeeRes.class, roleName,tenantId);
+    public List<Employee> getByRoleName(final String roleName) {
+        final EmployeeRes employeeRes = restTemplate.getForObject(employeesByRoleNameurl, EmployeeRes.class, roleName);
         return employeeRes.getEmployees();
     }
 

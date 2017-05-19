@@ -89,7 +89,9 @@ public class AgreementDao {
 		
 		List<Document> documents = agreement.getDocuments();
 		if(documents != null){
-			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";
+			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),select id from eglams_documenttype where name='Agreement Docs' and application='CREATE'"
+					+ "and tenantid="+agreement.getTenantId()+",?,?,?)";
+			LOGGER.info("the insert query for agreement docs : "+sql);
 			List<Object[]> documentBatchArgs = new ArrayList<>();
 			
 			for (Document document : documents) {
@@ -165,7 +167,7 @@ public class AgreementDao {
 		}
 		
 		
-		List<Document> documents = agreement.getDocuments();
+	/*	List<Document> documents = agreement.getDocuments();
 		if(documents != null){
 			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";
 			List<Object[]> documentBatchArgs = new ArrayList<>();
@@ -182,7 +184,7 @@ public class AgreementDao {
 				ex.printStackTrace();
 				throw new RuntimeException(ex.getMessage());
 			}
-		}
+		}*/
 	
 	}
 }

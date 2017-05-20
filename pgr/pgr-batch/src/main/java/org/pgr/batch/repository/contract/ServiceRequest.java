@@ -8,8 +8,11 @@ import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
+import org.pgr.batch.service.model.Position;
 
 import java.util.*;
+
+import static org.egov.pgr.common.contract.AttributeValues.createOrUpdateAttributeEntry;
 
 
 @Getter
@@ -24,9 +27,11 @@ public class ServiceRequest {
     private static final String WORKFLOW_TYPE = "Complaint";
     public static final String STATUS = "complaintStatus";
     public static final String VALUES_APPROVAL_COMMENT_KEY = "approvalComments";
-    private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
+    private static final String PREVIOUS_ASSIGNEE = "previousAssigneeId";
     private static final String ESCALATION_STATUS = "IN PROGRESS";
     private static final String  VALUES_APPROVAL_COMMENT_VALUE= "Complaint is escalated";
+    private static final String VALUES_DESIGNATION_ID = "designationId";
+    private static final String VALUES_DEPARTMENT_ID = "departmentId";
 
     private String tenantId;
 
@@ -109,11 +114,15 @@ public class ServiceRequest {
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
     private void setAssignee(String assignee) {
-        AttributeValues.createOrUpdateAttributeEntry(attribValues,VALUES_ASSIGNEE_ID,assignee);
+        createOrUpdateAttributeEntry(attribValues,VALUES_ASSIGNEE_ID,assignee);
     }
 
     private void setStateId(String stateId) {
-        AttributeValues.createOrUpdateAttributeEntry(attribValues,VALUES_STATE_ID,stateId);
+        createOrUpdateAttributeEntry(attribValues,VALUES_STATE_ID,stateId);
+    }
+
+    public void setPreviousAssignee(String previousAssignee){
+        createOrUpdateAttributeEntry(attribValues,PREVIOUS_ASSIGNEE,previousAssignee);
     }
 
     @JsonIgnore
@@ -121,8 +130,15 @@ public class ServiceRequest {
         return getDynamicSingleValue(VALUES_ASSIGNEE_ID);
     }
 
+    public void setDesignation(String designationId) {
+        createOrUpdateAttributeEntry(attribValues,VALUES_DESIGNATION_ID, designationId);
+    }
+
+    public void setDepartment(String departmentId) {
+        createOrUpdateAttributeEntry(attribValues,VALUES_DEPARTMENT_ID, departmentId);
+    }
+
     public WorkflowRequest getWorkFlowRequestForEscalation(RequestInfo requestInfo){
-//        String complaintType = this.complaintTypeCode;
         String crn = this.getCrn();
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues();
         valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, getDynamicSingleValue(VALUES_ASSIGNEE_ID)));
@@ -156,6 +172,11 @@ public class ServiceRequest {
     public void update(WorkflowResponse workflowResponse){
         setAssignee(workflowResponse.getAssignee());
         setStateId(workflowResponse.getValueForKey(VALUES_STATE_ID));
+    }
+
+    public void update(Position position){
+        setDesignation(position.getDesignationId());
+        setDepartment(position.getDepartmentId());
     }
 
     private String getDynamicSingleValue(String key) {

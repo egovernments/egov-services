@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.pgr.batch.repository.ComplaintRestRepository;
 import org.pgr.batch.repository.contract.ServiceRequest;
 import org.pgr.batch.repository.contract.ServiceResponse;
+import org.pgr.batch.service.model.Position;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class EscalationServiceTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private PositionService positionService;
 
     @Mock
     private ComplaintRestRepository complaintRestRepository;

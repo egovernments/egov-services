@@ -18,12 +18,15 @@ public class EscalationService {
 
     private UserService userService;
 
+    private PositionService positionService;
+
     public EscalationService( ComplaintRestRepository complaintRestRepository,
                               WorkflowService workflowService,
-                              UserService userService){
+                              UserService userService,PositionService positionService){
         this.complaintRestRepository = complaintRestRepository;
         this.workflowService = workflowService;
         this.userService = userService;
+        this.positionService = positionService;
     }
 
     public void escalateComplaint(){
@@ -33,10 +36,11 @@ public class EscalationService {
 
     private void escalate(ServiceRequest serviceRequest){
 
-        serviceRequest.getValues().put(PREVIOUS_ASSIGNEE, serviceRequest.getAssigneeId());
+        serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setUserInfo(userService.getUserByUserName("system","default"));
         serviceRequest =  workflowService.enrichWorkflowForEscalation(serviceRequest,requestInfo);
+        positionService.enrichRequestWithPosition(serviceRequest);
 
         //Escalation should not be done if next assignee is same.
 //        if()

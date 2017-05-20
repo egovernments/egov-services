@@ -1,0 +1,14 @@
+{
+  "Positions": [
+    {
+      "deptDesig": {
+        "designation": {
+          "id": 12
+        },
+        "department": {
+          "id": 18
+        }
+      }
+    }
+  ]
+}

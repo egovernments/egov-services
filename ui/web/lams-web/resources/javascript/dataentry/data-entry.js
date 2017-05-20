@@ -961,7 +961,7 @@ $('.datepicker').datepicker({
 
         });
 
-$(".datepicker").on("dp.change", function() {
+$(".datepicker").on(".change", function() {
     // alert('hey');
     fillValueToObject(this);
 });

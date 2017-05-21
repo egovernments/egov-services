@@ -1,4 +1,4 @@
-package org.egov.lams.producers;
+package org.egov.lams.brokers.producer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;

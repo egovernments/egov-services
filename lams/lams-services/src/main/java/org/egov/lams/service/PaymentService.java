@@ -11,12 +11,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
-import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.FinancialsRepository;

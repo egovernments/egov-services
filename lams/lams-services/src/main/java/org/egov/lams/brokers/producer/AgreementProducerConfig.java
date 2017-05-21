@@ -1,4 +1,4 @@
-package org.egov.lams.producers;
+package org.egov.lams.brokers.producer;
 
 import java.util.HashMap;
 import java.util.Map;

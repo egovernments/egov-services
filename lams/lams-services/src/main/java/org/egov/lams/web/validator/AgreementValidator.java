@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.AssetCategory;
@@ -19,6 +18,7 @@ import org.egov.lams.web.contract.AssetResponse;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.egov.lams.web.errorhandlers.LamsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

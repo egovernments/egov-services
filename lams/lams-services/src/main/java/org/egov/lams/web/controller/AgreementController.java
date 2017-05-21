@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -16,6 +15,7 @@ import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
+import org.egov.lams.web.errorhandlers.LamsException;
 import org.egov.lams.web.validator.AgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -14,7 +16,6 @@ import org.egov.lams.model.DemandReason;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
-import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.util.AcknowledgementNumberUtil;

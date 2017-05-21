@@ -1,4 +1,4 @@
-package org.egov.lams.exception;
+package org.egov.lams.web.errorhandlers;
 
 public class LamsException extends RuntimeException {
 

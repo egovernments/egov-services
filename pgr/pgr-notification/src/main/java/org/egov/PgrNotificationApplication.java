@@ -56,7 +56,8 @@ public class PgrNotificationApplication {
         return Arrays.asList(
             new ComplaintSMSMessageStrategy(),
             new NewDeliverableSMSMessageStrategy(),
-            new UpdateDeliverableStatusSMSMessageStrategy()
+            new UpdateDeliverableStatusSMSMessageStrategy(),
+            new ProcessingFeeEnteredSMSMessageStrategy()
         );
     }
 
@@ -65,7 +66,8 @@ public class PgrNotificationApplication {
         return Arrays.asList(
             new ComplaintEmailMessageStrategy(),
             new NewDeliverableEmailMessageStrategy(),
-            new UpdateDeliverableStatusEmailMessageStrategy()
+            new UpdateDeliverableStatusEmailMessageStrategy(),
+            new ProcessingFeeEnteredEmailMessageStrategy()
         );
     }
 }

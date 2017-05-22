@@ -7,16 +7,17 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
-public class UpdateDeliverableStatusSMSMessageStrategy implements SMSMessageStrategy {
+public class ProcessingFeeEnteredSMSMessageStrategy implements SMSMessageStrategy {
     private static final String SERVICE_NAME = "serviceName";
     private static final String CRN = "crn";
-    private static final String SERVICE_STATUS = "status";
-    private static final String TEMPLATE_NAME = "sms_deliverable_service_status_updated";
+    private static final String FEE = "fee";
+    private static final String TEMPLATE_NAME = "sms_deliverable_service_processing_fee_entered";
 
     @Override
     public boolean matches(SevaRequest sevaRequest, ServiceType serviceType) {
         return serviceType.isDeliverableType()
-            && sevaRequest.isUpdate()
+            && sevaRequest.isProcessingFeePresent()
+            && sevaRequest.isInProgress()
             && sevaRequest.isEmployeeLoggedIn();
     }
 
@@ -25,9 +26,8 @@ public class UpdateDeliverableStatusSMSMessageStrategy implements SMSMessageStra
         final Map<Object, Object> map = ImmutableMap.of(
             SERVICE_NAME, serviceType.getName(),
             CRN, sevaRequest.getCrn(),
-            SERVICE_STATUS, sevaRequest.getStatusName().toLowerCase()
+            FEE, sevaRequest.getProcessingFee()
         );
         return new SMSMessageContext(TEMPLATE_NAME, map);
     }
 }
-

@@ -33,9 +33,10 @@ public class SevaRequest {
     private static final String POST = "POST";
     private static final String PUT = "PUT";
     private static final String PROCESSING_FEE = "PROCESSINGFEE";
-    public static final String EMPLOYEE_TYPE = "EMPLOYEE";
-    public static final String USER_TYPE_KEY = "type";
-    public static final String USER_INFO_KEY = "userInfo";
+    private static final String EMPLOYEE_TYPE = "EMPLOYEE";
+    private static final String USER_TYPE_KEY = "type";
+    private static final String USER_INFO_KEY = "userInfo";
+    private static final String IN_PROGRESS_STATUS = "IN PROGRESS";
 
     private final HashMap<String, Object> serviceRequest;
     private final HashMap<String, Object> sevaRequest;
@@ -108,6 +109,10 @@ public class SevaRequest {
 
     public boolean isProcessingFeePresent() {
         return StringUtils.isNotEmpty(getProcessingFee());
+    }
+
+    public boolean isInProgress() {
+        return IN_PROGRESS_STATUS.equalsIgnoreCase(getStatusName());
     }
 
     @SuppressWarnings("unchecked")

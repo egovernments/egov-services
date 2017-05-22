@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.trimou.util.ImmutableMap;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +34,16 @@ public class SMSServiceTest {
     private SevaRequest sevaRequest;
 
     @Mock
-    private SMSMessageStrategy smsMessageStrategy;
+    private SMSMessageStrategy smsMessageStrategy1;
+
+    @Mock
+    private SMSMessageStrategy smsMessageStrategy2;
 
     private SMSService smsService;
 
     @Before
     public void before() {
-        final List<SMSMessageStrategy> messageStrategyList = Collections.singletonList(smsMessageStrategy);
+        final List<SMSMessageStrategy> messageStrategyList = Arrays.asList(smsMessageStrategy1, smsMessageStrategy2);
         smsService = new SMSService(templateService, messageQueueRepository, messageStrategyList);
     }
 
@@ -56,14 +60,19 @@ public class SMSServiceTest {
         );
         final List<String> keywords = Collections.singletonList("COMPLAINT");
         final ServiceType serviceType = new ServiceType("serviceName", keywords);
-        when(smsMessageStrategy.matches(sevaRequest, serviceType)).thenReturn(true);
-        final SMSMessageContext messageContext = new SMSMessageContext("sms_en", requestMap);
-        when(smsMessageStrategy.getMessageContext(sevaRequest, serviceType)).thenReturn(messageContext);
-        when(templateService.loadByName("sms_en", requestMap)).thenReturn("smsMessage");
+        when(smsMessageStrategy1.matches(sevaRequest, serviceType)).thenReturn(true);
+        when(smsMessageStrategy2.matches(sevaRequest, serviceType)).thenReturn(true);
+        final SMSMessageContext messageContext1 = new SMSMessageContext("sms_en1", requestMap);
+        final SMSMessageContext messageContext2 = new SMSMessageContext("sms_en2", requestMap);
+        when(smsMessageStrategy1.getMessageContext(sevaRequest, serviceType)).thenReturn(messageContext1);
+        when(smsMessageStrategy2.getMessageContext(sevaRequest, serviceType)).thenReturn(messageContext2);
+        when(templateService.loadByName("sms_en1", requestMap)).thenReturn("smsMessage1");
+        when(templateService.loadByName("sms_en2", requestMap)).thenReturn("smsMessage2");
 
         smsService.send(sevaRequest, serviceType);
 
-        verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage");
+        verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage1");
+        verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage2");
     }
 
     @Test(expected = NotImplementedException.class)
@@ -74,7 +83,8 @@ public class SMSServiceTest {
         when(sevaRequest.getMobileNumber()).thenReturn("mobileNumber");
         final List<String> keywords = Collections.singletonList("COMPLAINT");
         final ServiceType serviceType = new ServiceType("serviceName", keywords);
-        when(smsMessageStrategy.matches(sevaRequest, serviceType)).thenReturn(false);
+        when(smsMessageStrategy1.matches(sevaRequest, serviceType)).thenReturn(false);
+        when(smsMessageStrategy2.matches(sevaRequest, serviceType)).thenReturn(false);
 
         smsService.send(sevaRequest, serviceType);
 

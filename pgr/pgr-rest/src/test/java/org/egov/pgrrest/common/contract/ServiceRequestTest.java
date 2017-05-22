@@ -429,7 +429,7 @@ public class ServiceRequestTest {
         final List<AttributeEntry> attributeEntries = serviceRequest.getAttribValues();
         assertEquals("receivingMode", attributeEntries.get(0).getKey());
         assertEquals("receivingModeName", attributeEntries.get(0).getName());
-        assertEquals("complaintStatus", attributeEntries.get(1).getKey());
+        assertEquals("status", attributeEntries.get(1).getKey());
         assertEquals("complaintStatusName", attributeEntries.get(1).getName());
         assertEquals("receivingCenter", attributeEntries.get(2).getKey());
         assertEquals("receivingCenterName", attributeEntries.get(2).getName());
@@ -477,7 +477,7 @@ public class ServiceRequestTest {
         assertNotNull(serviceRequest);
         final Map<String, String> values = serviceRequest.getValues();
         assertEquals("receivingMode", values.get("receivingMode"));
-        assertEquals("complaintStatus", values.get("complaintStatus"));
+        assertEquals("complaintStatus", values.get("status"));
         assertEquals("receivingCenter", values.get("receivingCenter"));
         assertEquals("locationId", values.get("locationId"));
         assertEquals("childLocation", values.get("childLocationId"));
@@ -510,7 +510,7 @@ public class ServiceRequestTest {
         final Map<String, String> values = serviceRequest.getValues();
         final HashSet<String> expectedKeys = new HashSet<>();
         expectedKeys.add("receivingMode");
-        expectedKeys.add("complaintStatus");
+        expectedKeys.add("status");
         assertEquals(expectedKeys, values.keySet());
     }
 
@@ -537,7 +537,7 @@ public class ServiceRequestTest {
         final List<AttributeEntry> attributeEntries = serviceRequest.getAttribValues();
         assertEquals(2, attributeEntries.size());
         assertEquals("receivingMode", attributeEntries.get(0).getKey());
-        assertEquals("complaintStatus", attributeEntries.get(1).getKey());
+        assertEquals("status", attributeEntries.get(1).getKey());
     }
 
     private AuthenticatedUser getAuthenticatedUser() {

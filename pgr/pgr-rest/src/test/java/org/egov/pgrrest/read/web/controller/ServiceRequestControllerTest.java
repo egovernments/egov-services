@@ -191,7 +191,8 @@ public class ServiceRequestControllerTest {
                 ".com&mobileNumber=74742487428&receivingMode=5&locationId=4&childLocationId=5")
                 .content(resources.getFileContents("requestinfobody.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(content().json(expectedContent));
     }
 

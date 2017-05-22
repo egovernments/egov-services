@@ -153,9 +153,9 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 					}
 					return wardname+' - '+localityname;
 			    } },
-				{data: 'values.complaintStatus', "render": function ( data, type, full, meta ) {
+				{data: 'values.status', "render": function ( data, type, full, meta ) {
 					for (var item of full.attribValues) {
-						if(item['key']=='complaintStatus')
+						if(item['key']=='status')
 							return item['name'];
 					}
 			    }},

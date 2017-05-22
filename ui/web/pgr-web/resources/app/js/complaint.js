@@ -37,11 +37,15 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+var sCode = getUrlParameter('code');
+var sName = getUrlParameter('name');
+var sGroup = getUrlParameter('group');
 var type = localStorage.getItem("type");
 var loadDD = new $.loadDD();
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
+
 $(document).ready(function()
 {
 	/*Productization - Aslam*/
@@ -282,6 +286,7 @@ $(document).ready(function()
 				var obj = $(this);
 				obj.attr("disabled", "disabled");
 				var $form = $("form");
+				$('#complaintType').removeAttr("disabled");
 				var data = getFormData($form);
 
 				data['serviceRequestId'] = '';
@@ -289,7 +294,7 @@ $(document).ready(function()
 				data['phone'] = $('#phone').val() ? $('#phone').val() : userMobile;
 				data['email'] = $('#email').val() ? $('#email').val() : userEmail;
 				data['status'] = true;
-				data['serviceName'] = $('#complaintType option:selected').text();
+				data['serviceName'] = $('#complaintType option:selected').text() ? $('#complaintType option:selected').text() : '';
 				data['requestedDatetime'] = "";
 				data['mediaUrl'] = "";
 				data['tenantId'] = 'default';
@@ -408,7 +413,11 @@ $(document).ready(function()
 		$( "form" ).trigger('reset');
 		hideReceivingCenter();
 		clearimagepreview();
-		captcha.refreshCaptcha();
+		if(sCode){
+			complaintCategory();
+			fromNewService();
+		}
+		//captcha.refreshCaptcha();
 		$(this).parent().nextAll('li').remove();
 	});
 
@@ -417,6 +426,8 @@ $(document).ready(function()
 		$("#complaintTypeCategory").trigger('change');
 		$('#complaintType').val($(this).data('type'));
 	});
+
+	fromNewService();
 
 });
 
@@ -541,6 +552,7 @@ function complaintCategory(){
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
 		processData : false,
+		async : false,
 		contentType: "application/json",
 		success : function(data){
 			loadDD.load({
@@ -557,6 +569,8 @@ function complaintCategory(){
 }
 
 function topComplaintTypes(){
+	if(sCode)
+		return;
 	$.ajax({
 		url: "/pgr/services/_search?type=frequency&count=5&tenantId=default",
 		type : 'POST',
@@ -587,5 +601,15 @@ function loadBasedonType(){
 		
 	}else{//anonymous
 		$('.officialremove').remove();
+	}
+}
+
+function fromNewService(){
+	if(sCode){
+		$('#topcomplaintsection').remove();
+		$('#complaintTypeCategory').val(sGroup).prop( "disabled", true );
+		$('#complaintTypeCategory').trigger('change');
+		$('#complaintType').val(sCode).prop( "disabled", true );
+		$('header .title2').html(sName);
 	}
 }

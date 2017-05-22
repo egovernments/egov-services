@@ -446,12 +446,13 @@ function worklist(){
 			dataSrc : "serviceRequests"
 		},
 		"columns": [
-		{ "title": dt_date, "data": "requestedDatetime","width": "16%" },
+		{ "title": "Application No.", "data": "serviceRequestId","width": "15%" },
+		{ "title": dt_date, "data": "requestedDatetime","width": "15%" },
 		{ "title":dt_sender, "data": "firstName","width": "15%" },
 		{ "title":dt_now, "width": "20%", "render": function ( data, type, full, meta ) {
 			return 'Grievance';
 	    } },
-		{ "title":dt_status, "width": "24%", "render": function ( data, type, full, meta ) {
+		{ "title":dt_status, "width": "15%", "render": function ( data, type, full, meta ) {
 			for (var item of full.attribValues) {
 				if(item['key']=='status')
 					return item['name'];

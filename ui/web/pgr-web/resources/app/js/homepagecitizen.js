@@ -180,7 +180,7 @@ $(document).ready(function()
 		}
 		$(".complaint-item .services:visible").each(function(){
 		  var testStr = $(this).find('.content').html().toLowerCase();
-		  console.log(testStr, rule, matchRuleShort(testStr, rule))
+		  //console.log(testStr, rule, matchRuleShort(testStr, rule))
 		  if(matchRuleShort(testStr, rule))
 		    $(this).show();
 		  else
@@ -197,7 +197,9 @@ $(document).on('click','.services-item .services .content',function(){
 
 $(document).on('click','.complaint-item .services .content',function(){
 	sCode = $(this).data('code');
-	openPopUp('create-complaint.html?code='+sCode,sCode);
+	name = $(this).data('servicename');
+	groupId = $(this).data('group');
+	openPopUp('create-complaint.html?code='+sCode+'&name='+name+'&group='+groupId,sCode);
 });
 
 function loadComplaints(){
@@ -297,7 +299,7 @@ function getAllComplaint(){
 			});
 			$('#complaint_list').html('');
 			$.each(complaintResult, function(i,obj){
-				$('#complaint_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'">'+obj.serviceName+'</div> </a></div>');
+				$('#complaint_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'" data-servicename="'+obj.serviceName+'" data-group="'+obj.groupId+'">'+obj.serviceName+'</div> </a></div>');
 			});
 			$('.services .content').matchHeight();
 		},

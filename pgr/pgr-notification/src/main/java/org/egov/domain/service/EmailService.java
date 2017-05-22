@@ -29,13 +29,14 @@ public class EmailService {
             log.info("Skipping email notification for CRN {}", sevaRequest.getCrn());
             return;
         }
-        final EmailRequest emailRequest = getEmailRequest(sevaRequest, serviceType);
+        final EmailRequest emailRequest = getEmailRequest(sevaRequest, serviceType, tenant);
         messageQueueRepository.sendEmail(sevaRequest.getRequesterEmail(), emailRequest);
     }
 
-    private EmailRequest getEmailRequest(SevaRequest sevaRequest, ServiceType serviceType) {
-        final EmailMessageStrategy emailMessageStrategy = getEmailMessageStrategy(sevaRequest, serviceType);
-        final EmailMessageContext messageContext = emailMessageStrategy.getMessageContext(sevaRequest, serviceType);
+    private EmailRequest getEmailRequest(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        final EmailMessageStrategy emailMessageStrategy = getEmailMessageStrategy(sevaRequest, serviceType, tenant);
+        final EmailMessageContext messageContext = emailMessageStrategy
+            .getMessageContext(sevaRequest, serviceType, tenant);
         return EmailRequest.builder()
             .subject(getEmailSubject(messageContext))
             .body(getMailBody(messageContext))
@@ -52,9 +53,11 @@ public class EmailService {
             .loadByName(messageContext.getBodyTemplateName(), messageContext.getBodyTemplateValues());
     }
 
-    private EmailMessageStrategy getEmailMessageStrategy(SevaRequest sevaRequest, ServiceType serviceType) {
+    private EmailMessageStrategy getEmailMessageStrategy(SevaRequest sevaRequest,
+                                                         ServiceType serviceType,
+                                                         Tenant tenant) {
         return emailMessageStrategyList.stream()
-            .filter(strategy -> strategy.matches(sevaRequest, serviceType))
+            .filter(strategy -> strategy.matches(sevaRequest, serviceType, tenant))
             .findFirst()
             .orElse(new UndefinedEmailMessageStrategy());
     }

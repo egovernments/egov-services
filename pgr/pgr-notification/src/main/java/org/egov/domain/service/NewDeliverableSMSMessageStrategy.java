@@ -15,7 +15,7 @@ public class NewDeliverableSMSMessageStrategy implements SMSMessageStrategy {
 
     @Override
     public boolean matches(SevaRequest sevaRequest, ServiceType serviceType) {
-        return serviceType.isComplaintType();
+        return serviceType.isDeliverableType() && sevaRequest.isCreate();
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.egov.domain.service;
 import org.egov.domain.model.EmailMessageContext;
 import org.egov.domain.model.ServiceType;
 import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.Tenant;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -12,30 +13,26 @@ public class NewDeliverableEmailMessageStrategy implements EmailMessageStrategy 
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_created_deliverable_service";
 
     @Override
-    public boolean matches(SevaRequest sevaRequest, ServiceType serviceType) {
-        return false;
+    public boolean matches(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        return serviceType.isDeliverableType() && sevaRequest.isCreate();
     }
 
     @Override
-    public EmailMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType) {
+    public EmailMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
         return EmailMessageContext.builder()
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
-            .bodyTemplateValues(getBodyTemplate(sevaRequest))
+            .bodyTemplateValues(getBodyTemplate(sevaRequest, tenant))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
             .subjectTemplateValues(getSubjectTemplateValues(sevaRequest))
             .build();
     }
 
-    private Map<Object, Object> getBodyTemplate(SevaRequest sevaRequest) {
+    private Map<Object, Object> getBodyTemplate(SevaRequest sevaRequest, Tenant tenant) {
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
-        builder.put("complainantName", sevaRequest.getRequesterName());
+        builder.put("citizenName", sevaRequest.getRequesterName());
         builder.put("crn", sevaRequest.getCrn());
-        builder.put("complaintType", sevaRequest.getServiceTypeName());
-        builder.put("locationName", sevaRequest.getLocationName());
-        builder.put("complaintDetails", sevaRequest.getDetails());
-        builder.put("registeredDate", sevaRequest.getFormattedCreatedDate());
-        builder.put("statusUpperCase", sevaRequest.getStatusName());
-        builder.put("statusLowerCase",sevaRequest.getStatusName().toLowerCase());
+        builder.put("serviceName", sevaRequest.getServiceTypeName());
+        builder.put("ULBName", tenant.getName());
         return builder.build();
     }
 

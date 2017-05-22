@@ -9,10 +9,19 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceType {
     private static final String COMPLAINT_KEYWORD = "COMPLAINT";
+    private static final String DELIVERABLE_KEYWORD = "DELIVERABLE";
     private String name;
     private List<String> keywords;
 
     public boolean isComplaintType() {
-        return keywords != null && keywords.stream().anyMatch(COMPLAINT_KEYWORD::equalsIgnoreCase);
+        return isKeywordPresent(COMPLAINT_KEYWORD);
+    }
+
+    public boolean isDeliverableType() {
+        return isKeywordPresent(DELIVERABLE_KEYWORD);
+    }
+
+    private boolean isKeywordPresent(String keyword) {
+        return keywords != null && keywords.stream().anyMatch(keyword::equalsIgnoreCase);
     }
 }

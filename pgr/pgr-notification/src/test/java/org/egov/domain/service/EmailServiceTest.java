@@ -75,7 +75,7 @@ public class EmailServiceTest {
         final Tenant tenant = new Tenant("tenantName");
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
-        when(emailMessageStrategy.matches(sevaRequest, serviceType)).thenReturn(true);
+        when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(true);
         final HashMap<Object, Object> bodyTemplateValues = new HashMap<>();
         final HashMap<Object, Object> subjectTemplateValues = new HashMap<>();
         final EmailMessageContext emailMessageContext = EmailMessageContext.builder()
@@ -84,7 +84,7 @@ public class EmailServiceTest {
             .bodyTemplateValues(bodyTemplateValues)
             .subjectTemplateValues(subjectTemplateValues)
             .build();
-        when(emailMessageStrategy.getMessageContext(sevaRequest, serviceType)).thenReturn(emailMessageContext);
+        when(emailMessageStrategy.getMessageContext(sevaRequest, serviceType, tenant)).thenReturn(emailMessageContext);
         when(templateService.loadByName("bodyTemplateName", bodyTemplateValues)).thenReturn(body);
         when(templateService.loadByName("subjectTemplateName", subjectTemplateValues)).thenReturn(subject);
 
@@ -119,7 +119,7 @@ public class EmailServiceTest {
         final Tenant tenant = new Tenant("tenantName");
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
-        when(emailMessageStrategy.matches(sevaRequest, serviceType)).thenReturn(false);
+        when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(false);
 
         emailService.send(sevaRequest, serviceType, tenant);
     }

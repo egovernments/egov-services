@@ -27,4 +27,22 @@ public class ServiceTypeTest {
         assertFalse(serviceType.isComplaintType());
     }
 
+    @Test
+    public void test_should_return_true_when_service_type_has_deliverable_keyword() {
+        final List<String> keywords = Arrays.asList("keyword1", "deliverable");
+        final String serviceName = "service type name";
+        final ServiceType serviceType = new ServiceType(serviceName, keywords);
+
+        assertTrue(serviceType.isDeliverableType());
+    }
+
+    @Test
+    public void test_should_return_false_when_service_type_does_not_have_deliverable_keyword() {
+        final List<String> keywords = Arrays.asList("keyword1", "keyword2");
+        final String serviceName = "service type name";
+        final ServiceType serviceType = new ServiceType(serviceName, keywords);
+
+        assertFalse(serviceType.isDeliverableType());
+    }
+
 }

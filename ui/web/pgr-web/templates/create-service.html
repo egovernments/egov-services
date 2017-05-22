@@ -31,7 +31,7 @@
     <body class="page-body" oncontextmenu="return false;">
         <div class="page-container">
 
-        	<header class="navbar navbar-fixed-top" data-include="header" data-header-title="pgr.title.create.grievence">
+        	<header class="navbar navbar-fixed-top" data-include="header" data-header-title="">
 			</header>
 
 	        <div class="main-content">
@@ -57,79 +57,73 @@
 						</div>
 					</div>
 					<div class="createcrn">
-						<div class="col-md-12">
-								<div class="panel panel-primary" data-collapsed="0">
-									<div class="panel-heading">
-										<div class="panel-title">Basic Details</div>
-									</div>
-									<form class="form-horizontal form-groups-bordered" id="moreForm">
-									<div class="panel-body custom-form">
-										<div class="form-group">
-											<label class="col-sm-3 control-label required">Description</label>
-											<div class="col-sm-6">
-												<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" data-translate="pgr.msg.complaint.moredetails" required="required"></textarea>
-												<div class="text-left"><small  data-translate="pgr.lbl.minmax.characters"></small></div>
-											</div>
+						<form class="form-horizontal form-groups-bordered">
+							<div class="col-md-12">
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">Basic Details</div>
 										</div>
-										<div class="form-group">
-											<label class="col-sm-3 control-label required">Location</label>
-											<div class="col-sm-6" style="margin:0;">
-												<div class="input-group"  id="location-tour">
-													<input id="location" name="locationtext" data-extra="" type="text" class="form-control" autocomplete="off" required="required"/>
-													<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
-													<input id="address_id" name="addressId" type="hidden" value=""/>
-									   				<input id="lat" name="lat" type="hidden" value="0.0"/>
-					                   				<input id="lng" name="lng" type="hidden" value="0.0"/>
+										<div class="panel-body custom-form" id="moreForm">
+											<div class="form-group">
+												<label class="col-sm-3 control-label required">Description</label>
+												<div class="col-sm-6">
+													<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" data-translate="pgr.msg.complaint.moredetails" required="required"></textarea>
+													<div class="text-left"><small  data-translate="pgr.lbl.minmax.characters"></small></div>
 												</div>
-												<label id="location-error" class="error display-hide" for="location">Required</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label required">Location</label>
+												<div class="col-sm-6" style="margin:0;">
+													<div class="input-group"  id="location-tour">
+														<input id="location" name="locationtext" data-extra="" type="text" class="form-control" autocomplete="off" required="required"/>
+														<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
+														<input id="address_id" name="addressId" type="hidden" value=""/>
+										   				<input id="lat" name="lat" type="hidden" value="0.0"/>
+						                   				<input id="lng" name="lng" type="hidden" value="0.0"/>
+													</div>
+													<label id="location-error" class="error display-hide" for="location">Required</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label" data-translate="core.lbl.landmark"></label>
+												<div class="col-sm-6">
+													<textarea id="landmarkDetails" name="address" maxlength="200" class="form-control"></textarea>
+												</div>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="core.lbl.landmark"></label>
-											<div class="col-sm-6">
-												<textarea id="landmarkDetails" name="address" maxlength="200" class="form-control"></textarea>
-											</div>
+									</div>
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">Application Details</div>
+										</div>
+										<div class="panel-body custom-form appForm" id="servicesBlock">
+
 										</div>
 									</div>
-									</form>
-								</div>
-								<div class="panel panel-primary" data-collapsed="0">
-									<div class="panel-heading">
-										<div class="panel-title">Application Details</div>
-									</div>
-									<form class="form-horizontal form-groups-bordered" id="appForm">
-									<div class="panel-body custom-form" id="servicesBlock">
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">CheckList</div>
+										</div>
+										<div class="panel-body checkForm" id="servicesBlockClist">
 
+										</div>
 									</div>
-									</form>
-								</div>
-								<div class="panel panel-primary" data-collapsed="0">
-									<div class="panel-heading">
-										<div class="panel-title">CheckList</div>
-									</div>
-									<form class="form-horizontal form-groups-bordered" id="checkForm">
-									<div class="panel-body" id="servicesBlockClist">
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">Document Upload</div>
+										</div>
+										<div class="panel-body" id="servicesBlockDocs">
 
+										</div>
 									</div>
-									</form>
-								</div>
-								<div class="panel panel-primary" data-collapsed="0">
-									<div class="panel-heading">
-										<div class="panel-title">Document Upload</div>
+									<div class="row">
+										<div class="text-center">
+											<button type="button" class="btn btn-primary" id="createService" >Create Service</button>
+											<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
+										</div>
 									</div>
-									<form class="form-horizontal form-groups-bordered" id="docsForm">
-									<div class="panel-body" id="servicesBlockDocs">
-
-									</div>
-									</form>
-								</div>
-								<div class="row">
-									<div class="text-center">
-										<button type="button" class="btn btn-primary" id="createService" >Create Service</button>
-										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
-									</div>
-								</div>
-						</div>
+							</div>
+						</form>
 					</div>
 				</div>
 	        </div>

@@ -158,12 +158,13 @@ $(document).ready(function()
 
 	$('.services .content').matchHeight();
 
-	$('#searchServices').keyup(function(e){
+	$('.search').keyup(function(e){
+		var searchId = $(this).data('searchid');
 		var rule = '*'+$(this).val()+'*';
 		if(e.keyCode == 8){
-		  $('.services').show();
+		  $(''+searchId+' .services').show();
 		}
-		$(".services-item .services:visible").each(function(){
+		$(''+searchId+" .services:visible").each(function(){
 		  var testStr = $(this).find('.content').html().toLowerCase();
 		  //console.log(testStr, rule, matchRuleShort(testStr, rule))
 		  if(matchRuleShort(testStr, rule))
@@ -173,26 +174,12 @@ $(document).ready(function()
 		});
 	});
 
-	$('#searchComplaints').keyup(function(e){
-		var rule = '*'+$(this).val()+'*';
-		if(e.keyCode == 8){
-		  $('.services').show();
-		}
-		$(".complaint-item .services:visible").each(function(){
-		  var testStr = $(this).find('.content').html().toLowerCase();
-		  //console.log(testStr, rule, matchRuleShort(testStr, rule))
-		  if(matchRuleShort(testStr, rule))
-		    $(this).show();
-		  else
-		    $(this).hide();
-		});
-	});
-		
 });
 
 $(document).on('click','.services-item .services .content',function(){
 	sCode = $(this).data('code');
-	openPopUp('create-service.html?code='+sCode,sCode);
+	name = $(this).data('servicename');
+	openPopUp('create-service.html?code='+sCode+'&name='+name,sCode);
 });
 
 $(document).on('click','.complaint-item .services .content',function(){
@@ -270,12 +257,12 @@ function getAllServices(){
 			});
 			$('#service_list').html('');
 			$.each(serviceResult, function(i,obj){
-				$('#service_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'">'+obj.serviceName+'</div> </a></div>');
+				$('#service_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'" data-servicename="'+obj.serviceName+'">'+obj.serviceName+'</div> </a></div>');
 			});
 			$('.services .content').matchHeight();
 		},
 		complete : function(){
-			$('#searchServices').trigger('keyup');
+			$('.search').trigger('keyup');
 			hideLoader();
 
 		}
@@ -304,7 +291,7 @@ function getAllComplaint(){
 			$('.services .content').matchHeight();
 		},
 		complete : function(){
-			$('#searchComplaints').trigger('keyup');
+			$('.search').trigger('keyup');
 			hideLoader();
 		}
 	});

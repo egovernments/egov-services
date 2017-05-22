@@ -127,7 +127,7 @@ function getComplaint(){
 				return;
 			}
 
-			status = response.serviceRequests[0].values.complaintStatus;
+			status = response.serviceRequests[0].values.status;
 			
 			if(localStorage.getItem('type') == 'EMPLOYEE'){
 				if(status == 'COMPLETED' || status == 'REJECTED')
@@ -260,8 +260,7 @@ function complaintUpdate(obj){
 	req_obj.serviceRequest['isAttribValuesPopulated'] = true;
 
 	for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
-		if(req_obj.serviceRequest.attribValues[i]['key'] == 'complaintStatus'){
-			req_obj.serviceRequest.attribValues[i]['key'] = 'status';
+		if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
 			req_obj.serviceRequest.attribValues[i]['name'] = $('#status').val() ? $('#status').val() : status;
 		}
 		else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assigneeId'){

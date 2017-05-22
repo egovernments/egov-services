@@ -37,29 +37,188 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-var type = localStorage.getItem("type");
+var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
+var requestInfo = {};
+var currentObj;
+requestInfo['RequestInfo'] = RequestInfo.requestInfo;
+$(document).ready(function(){
+
+	var sCode = getUrlParameter('code');
+
+	$.when(
+		
+		showLoader(),
+
+		doCheckUser(),
+
+		loadServiceDefinition(sCode)
+
+	).then(function() {
+		//Hide Loader
+		hideLoader();
+	});
+
+	//typeahead initialize
+	var locationtypeahead = new $.typeahead({
+		url : '/egov-location/boundarys/getLocationByLocationName?tenantId=default&locationName=%QUERY',
+		element : $('#location'),
+		keyValue:'id',
+		keyDisplayName:'name',
+		minLength : 1,
+		hiddenelem : $("#address_id")
+	});
+
+	//Additional functionality on typeahead selected
+	locationtypeahead.typeaheadobj.on('typeahead:selected', function(event, data){   
+		//by default this will happen         
+		$("#address_id").val(data.value);   
+		//Extra functionality 
+		$('#lat, #lng').val(0.0);
+    });
+
+	//Clearing hidden field value when clearing autocomplete
+    typeaheadWithEventsHandling(locationtypeahead.typeaheadobj, '#address_id');
+
+	$('#createService').click(function(e){
+
+		//if($('form').valid()){
+			currentObj = $(this);
+			currentObj.attr("disabled", "disabled");
+			var request={}, data={};
+			data['attribValues'] = [];
+
+			data['serviceCode'] = sCode;
+			data['description'] = $('#doc').val();			
+			data['addressId'] = $('#address_id').val();		
+			data['lat'] = $('#lat').val();
+			data['lng'] = $('#lng').val();
+			data['address'] = $('#landmarkDetails').val();
+			data['serviceRequestId'] = '';
+			data['firstName'] = userName;
+			data['phone'] = userMobile;
+			data['email'] = userEmail;
+			data['status'] = true;
+			data['serviceName'] = '';
+			data['requestedDatetime'] = "";
+			data['mediaUrl'] = "";
+			data['tenantId'] = 'default';
+			data["isAttribValuesPopulated"]=true;
+
+			var obj = {};
+			obj = {
+			    key: 'status',
+			    name:'REGISTERED'
+			};
+			data['attribValues'].push(obj);
+
+			obj = {};
+			obj = {
+			    key: 'complainantAddress',
+			    name:''
+			};
+			data['attribValues'].push(obj);
+
+			//Iterate App. details
+			$('#appForm *').filter(':input').each(function(){
+			    obj = {};
+				obj = {
+				    key: $(this).attr('name'),
+				    name: $(this).val()
+				};
+				data['attribValues'].push(obj);
+			});
+
+			//Checklist
+			$('#checkForm *').filter(':input').each(function(){
+			    obj = {};
+				obj = {
+				    key: 'CHECKLIST',
+				    name: $(this).attr('name')
+				};
+				data['attribValues'].push(obj);
+				obj = {};
+				obj = {
+				    key: $(this).attr('name'),
+				    name: $(this).is(':checked')
+				};
+				data['attribValues'].push(obj);
+			});
+
+			//upload files
+			$('input[type=file]').each(function(){
+				var formData=new FormData();
+				formData.append('tenantId', 'default');
+				formData.append('module', 'SERVICES');
+				var file = $(this)[0].files[0];
+				if(!file)
+					return;
+				formData.append('file', file); 
+				var resp = fileUpload(formData);
+				var obj = {};
+				obj = {
+				    key: 'DOCUMENTS',
+				    name: $(this).attr('name')
+				};
+				data['attribValues'].push(obj);
+				obj = {};
+				obj = {
+				    key: $(this).attr('name'),
+				    name: resp.files[0].fileStoreId
+				};
+				data['attribValues'].push(obj);
+			});
+
+			request['RequestInfo'] = RequestInfo.requestInfo;
+			request['serviceRequest'] = data;
+			console.log(JSON.stringify(request));
+
+			$.ajax({
+				url: "/pgr/seva/_create",
+				type : 'POST',
+				dataType: 'json',
+				processData : false,
+				contentType: "application/json",
+				data : JSON.stringify(request),
+				success : function(response){
+					console.log('Final Response',JSON.stringify(response));
+					doAck(response);
+				},
+				error : function(jqXHR, textStatus){
+					bootbox.alert( "Create service failed!");
+				},
+				complete : function(){
+					currentObj.removeAttr("disabled");
+					hideLoader();
+				}
+			});
+		//}
+	});
+
+});
+/*var type = localStorage.getItem("type");
 var loadDD = new $.loadDD();
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {
-	/*Productization - Aslam*/
+
+	var sCode = getUrlParameter('code');
+
 	$.when(
 		
-		/*Show loader*/
 		showLoader(),
+
+		loadServiceDefinition(sCode),
 
 		loadBasedonType(),
 
 		loadReceivingMode(),
 
-		/*load grievance  category*/
 		complaintCategory(),
 
 		doCheckUser(),
 
-		/*load top 5 complaint types*/
 		topComplaintTypes()
 
 	).then(function() {
@@ -67,7 +226,8 @@ $(document).ready(function()
 		hideLoader();
 	});
 
-	/*Productization - Aslam*/
+	var captcha = new $.Captcha("#captchaCanvas","#captchaimage");
+
 	 
 	$('#complaintTypeCategory').change(function() {
 		if ($(this).val()) {
@@ -270,14 +430,14 @@ $(document).ready(function()
 	    
 	});
 
-	/*$('.captcha-section .fa-refresh').click(function(){
+	$('.captcha-section .fa-refresh').click(function(){
 		captcha.refreshCaptcha();
-	});*/
+	});
 
 	$('#create-griev').click(function(){
 		
 		if($('form').valid()){
-			//if(captcha.validateCaptcha($('#captcha').val())){
+			if(captcha.validateCaptcha($('#captcha').val())){
 				//ajax to submit
 				var obj = $(this);
 				obj.attr("disabled", "disabled");
@@ -390,14 +550,14 @@ $(document).ready(function()
 						$('.createcrn, .tour-section').removeClass('hide');
 					}
 				});
-			/*}else{
+			}else{
 				bootbox.alert("Captcha failed!", function(){ 
 					captcha.refreshCaptcha();
 					$('#captcha').focus(); 
 				});
-			}*/
+			}
 		}else{
-			//captcha.refreshCaptcha();
+			captcha.refreshCaptcha();
 		}
 
 	});
@@ -577,7 +737,7 @@ function topComplaintTypes(){
 		error: function(){
 			//bootbox.alert('Error!');
 		}
-	})
+	});
 }
 
 function loadBasedonType(){
@@ -588,4 +748,98 @@ function loadBasedonType(){
 	}else{//anonymous
 		$('.officialremove').remove();
 	}
+}*/
+
+function loadServiceDefinition(code){
+	$.ajax({
+		url: "/pgr/servicedefinition/_search?tenantId=default&serviceCode="+code,
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		beforeSend : function(){
+			showLoader();
+		},
+		contentType: "application/json",
+		success : function(data){
+			var renderFields = new $.renderFields();
+			var finTemplate = renderFields.render(data.attributes);
+			$('#servicesBlock').prepend(finTemplate.formFields);
+			$('#servicesBlockClist').prepend(finTemplate.checklist);
+			$('#servicesBlockDocs').prepend(finTemplate.documents);
+			patternvalidation();
+			translate();
+		},
+		error: function(){
+			//bootbox.alert('Error!');
+		},
+		complete : function(){
+			hideLoader();
+		}
+	});
+}
+
+function fileUpload(formData){
+	var fresponse;
+	$.ajax({
+		url: "/filestore/v1/files",
+		type : 'POST',
+		// THIS MUST BE DONE FOR FILE UPLOADING
+		contentType: false,
+		async : false,
+		processData : false,
+		beforeSend : function(){
+			showLoader();
+		},
+		data : formData,
+		success: function(fileresponse){
+			fresponse = fileresponse;
+		},
+		error: function(){
+			bootbox.alert('Media file not uploaded!');
+			currentObj.removeAttr("disabled");
+			hideLoader();
+		},
+		complete : function(){
+			//console.log('Complete function called!');
+		}
+	});
+	return fresponse;
+}
+
+var userName, userMobile, userEmail;
+
+function doCheckUser(){
+	var userId = localStorage.getItem('id');
+	if(userId){
+		var userArray = [];
+		userArray.push(userId);
+		var userRequestInfo = {};
+		userRequestInfo['RequestInfo'] = RequestInfo.requestInfo;
+		userRequestInfo['id'] = userArray;
+		userRequestInfo['tenantId'] = 'default';
+		$.ajax({
+			url : '/user/_search',
+			type: 'POST',
+			contentType: "application/json",
+			data : JSON.stringify(userRequestInfo),
+			success : function(userResponse){
+				userName = userResponse.user[0].name;
+				userMobile = userResponse.user[0].mobileNumber;
+				userEmail = userResponse.user[0].emailId;
+			},
+			error: function(){
+				bootbox.alert('userInfo failed!');
+			}
+		});	
+	}
+}
+
+function doAck(response){
+	var acklabel = translate('core.msg.acknowledgement');
+	$('.breadcrumb').append('<li class="active">'+acklabel+'</li>');
+	$('.acknowledgement, .breadcrumb').removeClass('hide');
+	$('.acknowledgement #firstname').html('Dear '+response.serviceRequests[0].firstName+',');
+	$('.acknowledgement #crn').html(response.serviceRequests[0].serviceRequestId);
+	$('.createcrn, .tour-section').addClass('hide');
 }

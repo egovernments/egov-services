@@ -453,7 +453,7 @@ function worklist(){
 	    } },
 		{ "title":dt_status, "width": "24%", "render": function ( data, type, full, meta ) {
 			for (var item of full.attribValues) {
-				if(item['key']=='complaintStatus')
+				if(item['key']=='status')
 					return item['name'];
 			}
 	    } },

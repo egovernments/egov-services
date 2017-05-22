@@ -91,6 +91,10 @@ $(document).ready(function()
 		getAllServices();
 	});
 
+	$('.newComplaint').click(function(){
+		getAllComplaint();
+	});
+
 	$(document).on('click','.open_popup',function(e){
 		var srn = $(this).data('srn');
 		openPopUp('view-complaint.html?srn='+srn,srn);
@@ -154,12 +158,27 @@ $(document).ready(function()
 
 	$('.services .content').matchHeight();
 
-	$('#search').keyup(function(e){
+	$('#searchServices').keyup(function(e){
 		var rule = '*'+$(this).val()+'*';
 		if(e.keyCode == 8){
 		  $('.services').show();
 		}
 		$(".services-item .services:visible").each(function(){
+		  var testStr = $(this).find('.content').html().toLowerCase();
+		  //console.log(testStr, rule, matchRuleShort(testStr, rule))
+		  if(matchRuleShort(testStr, rule))
+		    $(this).show();
+		  else
+		    $(this).hide();
+		});
+	});
+
+	$('#searchComplaints').keyup(function(e){
+		var rule = '*'+$(this).val()+'*';
+		if(e.keyCode == 8){
+		  $('.services').show();
+		}
+		$(".complaint-item .services:visible").each(function(){
 		  var testStr = $(this).find('.content').html().toLowerCase();
 		  console.log(testStr, rule, matchRuleShort(testStr, rule))
 		  if(matchRuleShort(testStr, rule))
@@ -171,14 +190,19 @@ $(document).ready(function()
 		
 });
 
-$(document).on('click','.services .content',function(){
+$(document).on('click','.services-item .services .content',function(){
+	sCode = $(this).data('code');
+	openPopUp('create-service.html?code='+sCode,sCode);
+});
+
+$(document).on('click','.complaint-item .services .content',function(){
 	sCode = $(this).data('code');
 	openPopUp('create-complaint.html?code='+sCode,sCode);
 });
 
 function loadComplaints(){
 	$.ajax({
-		url : "/pgr/seva/_search?tenantId=default&user_id="+localStorage.getItem("id"),
+		url : "/pgr/seva/_search?tenantId=default&userId="+localStorage.getItem("id"),
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -225,6 +249,8 @@ function search(elem) {
 	}
 }
 
+var serviceResult, complaintResult;
+
 function getAllServices(){
 	$.ajax({
 		url: "/pgr/services/_search?type=all&tenantId=default",
@@ -237,15 +263,47 @@ function getAllServices(){
 			showLoader();
 		},
 		success : function(data) {
+			serviceResult = (data.complaintTypes).filter(function( obj ) {
+				return (obj.keywords).indexOf('deliverable') > -1;
+			});
 			$('#service_list').html('');
-			$.each(data.complaintTypes, function(i,obj){
+			$.each(serviceResult, function(i,obj){
 				$('#service_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'">'+obj.serviceName+'</div> </a></div>');
 			});
 			$('.services .content').matchHeight();
 		},
 		complete : function(){
+			$('#searchServices').trigger('keyup');
 			hideLoader();
-			search($('.searchinbox'));
+
+		}
+	});
+}
+
+function getAllComplaint(){
+	$.ajax({
+		url: "/pgr/services/_search?type=all&tenantId=default",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		beforeSend : function(){
+			showLoader();
+		},
+		success : function(data) {
+			complaintResult = (data.complaintTypes).filter(function( obj ) {
+				return (obj.keywords).indexOf('complaint') > -1;
+			});
+			$('#complaint_list').html('');
+			$.each(complaintResult, function(i,obj){
+				$('#complaint_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'">'+obj.serviceName+'</div> </a></div>');
+			});
+			$('.services .content').matchHeight();
+		},
+		complete : function(){
+			$('#searchComplaints').trigger('keyup');
+			hideLoader();
 		}
 	});
 }

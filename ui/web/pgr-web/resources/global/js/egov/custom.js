@@ -504,3 +504,108 @@ var typeahead = function(params){
 }
 
 $.typeahead = typeahead;
+
+var renderFields = function(){
+	
+}
+
+renderFields.prototype.render =function(attr_array)
+{
+	this.attr_array = attr_array;
+
+	for (var j = 0; j < this.attr_array.length; j++){
+		if(this.attr_array[j].code == 'CHECKLIST'){
+			var template = renderFields.prototype.renderTemplate(this.attr_array[j]);
+			this.templateCheckList = this.templateCheckList ? this.templateCheckList + template : template;
+		}else if(this.attr_array[j].code == 'DOCUMENTS'){
+			var template = renderFields.prototype.renderTemplate(this.attr_array[j]);
+			this.templateDocuments = this.templateDocuments ? this.templateDocuments + template : template;
+		}else{
+			var template = renderFields.prototype.renderTemplate(this.attr_array[j]);
+			this.templateFormFields = this.templateFormFields ? this.templateFormFields + template : template;
+		}
+	}
+
+	this.templateObj = {};
+	this.templateObj['formFields'] = this.templateFormFields;
+	this.templateObj['checklist'] = this.templateCheckList;
+	this.templateObj['documents'] = this.templateDocuments;
+
+	//console.log('final',this.templateObj)
+
+	return this.templateObj;
+}
+
+renderFields.prototype.renderTemplate =function(obj)
+{
+	this.objToRender = obj;
+
+	for (var key in this.objToRender) {
+		var value = this.objToRender[key];
+		if(key == 'variable'){
+			this.variable = value;
+		}else if(key == 'dataType'){
+			this.dataType = value;
+		}else if(key == 'code'){
+			this.name = value;
+		}else if(key == 'required'){
+			this.required = value ? 'required' : '';
+		}else if(key == 'description'){
+			this.description = value;
+		}else if(key == 'attribValues'){
+			this.attribValues = value;
+		}
+	}
+
+	if(this.name == 'CHECKLIST'){
+		var this_checklist = '';
+		for(var i=0; i < this.attribValues.length; i++){
+			if(this.attribValues[i]["isActive"])
+				this_checklist += '<div class="form-group"><div class="col-sm-1">'+(i+1)+'</div><div class="col-sm-1"><input type="checkbox" name="'+this.attribValues[i].key+'"></div><div class="col-sm-10" data-translate="'+this.attribValues[i].name+'"></div></div>'
+		}
+		this.template = this_checklist;
+	}else if(this.name == 'DOCUMENTS'){
+		var this_documents = '<div class="form-group">';
+		for(var i=0; i < this.attribValues.length; i++){
+			if(this.attribValues[i]["isActive"])
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control"></div></div>'
+		}
+		this_documents += '</div>';
+		this.template = this_documents;
+	}else{
+		if(!this.variable){
+			this.template = '<div class="form-group"><label class="col-sm-3 control-label"></label><div class="col-sm-6 add-margin error-msg" data-translate="'+this.description+'"></div></div>';
+		}else{
+			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'String' ? 'alphabetwithspace' : value; 
+			if(this.dataType == 'number' || this.dataType == 'String' || this.dataType == 'datetime')
+				this.template = '<div class="form-group"> <label for="field-1" class="col-sm-3 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-6 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' /> </div> </div>';	
+			else if(this.dataType == 'text')
+				this.template = '<div class="form-group"> <label for="field-1" class="col-sm-3 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-6 add-margin"> <textarea class="form-control patternvalidation" name="'+this.name+'" data-pattern="'+this.pattern+'" '+this.required+' ></textarea> </div> </div>';
+			else if(this.dataType == 'singlevaluelist' || this.dataType == 'multivaluelist'){
+				var this_select_content;
+
+				if(this.dataType == 'multivaluelist'){
+					this_select_content = '<select name="'+this.name+'" '+this.required+' multiple class="form-control">';
+				}else
+					this_select_content = '<select name="'+this.name+'" '+this.required+' class="form-control">';
+
+					this_select_content += '<option value="">Select</option>';
+
+				for(var i=0; i < this.attribValues.length; i++){
+					if(this.attribValues[i]["isActive"])
+				    	this_select_content += '<option value="' + this.attribValues[i]['key'] + '">' + translate(this.attribValues[i]['name']) + '</option>';
+				}
+
+				this_select_content +='</select>';
+
+				this.template = '<div class="form-group"><label class="col-sm-3 control-label" '+this.required+'" data-translate="'+this.description+'"></label><div class="col-sm-6 add-margin">'+this_select_content+'</div> </div>';
+			}
+		}
+		
+	}
+	
+	return this.template;
+
+}
+
+$.renderFields = renderFields;

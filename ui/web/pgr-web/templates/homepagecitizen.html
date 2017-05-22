@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="../resources/global/css/egov/custom.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>
-        	.services-item [class*='col-'].services .content{
+        	[class*='col-'].services .content{
         		padding: 10px;
 				box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 				color: #333;
@@ -76,6 +76,8 @@
 								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)"  data-show-screen="#inbox-template"> <span class="title" data-translate="core.lbl.inbox"></span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
 								<span class="separator">|</span>
 								<li class="newServices"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newservicesContent">Services</a></li>
+								<span class="separator">|</span>
+								<li class="newComplaint"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newcomplaintContent">Grievances</a></li>
 							</ul>
 						</div><!--/.nav-collapse -->
 						
@@ -150,7 +152,7 @@
 											Grievance Redressal
 												<span class="msg-status">
 													{{#each attribValues}}
-													    {{#if (contains this.key "complaintStatus")}}
+													    {{#if (contains this.key "status")}}
 															{{this.name}}
 													    {{/if}}
 													{{/each}}
@@ -171,7 +173,7 @@
 											{{serviceName}} 
 											in 
 											{{#each attribValues}}
-											    {{#if (contains this.key "complaintStatus")}}
+											    {{#if (contains this.key "status")}}
 													{{this.name}}
 											    {{/if}}
 											{{/each}} 
@@ -188,7 +190,7 @@
 			<div class="citizen-screens tabs tabs-style-topline display-hide" id="newservicesContent">
 				<div class="content-wrap">
 					<div class="action-bar">
-		              <div class="action-item"><input type="text" id="search" placeholder="Search"></div>
+		              <div class="action-item"><input type="text" id="searchServices" placeholder="Search"></div>
 		              <div class="action-item"><i class="material-icons">search</i></div>
 		            </div>
 					<form action="">
@@ -196,7 +198,20 @@
 			            </div>
 					</form>
 				</div>
-			</div>					
+			</div>	
+
+			<div class="citizen-screens tabs tabs-style-topline display-hide" id="newcomplaintContent">
+				<div class="content-wrap">
+					<div class="action-bar">
+		              <div class="action-item"><input type="text" id="searchComplaints" placeholder="Search"></div>
+		              <div class="action-item"><i class="material-icons">search</i></div>
+		            </div>
+					<form action="">
+						<div class="form-group row complaint-item" id="complaint_list">
+			            </div>
+					</form>
+				</div>
+			</div>				
 
             </div>
          

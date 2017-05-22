@@ -33,9 +33,10 @@ public class WorkflowRequest {
         }
 
         public static String forComplaintStatus(String complaintStatus) {
-            if (complaintStatus.equalsIgnoreCase("REGISTERED")) {
+            if (complaintStatus.equalsIgnoreCase("REGISTERED") || complaintStatus.equalsIgnoreCase("NEW")) {
                 return CREATE.strValue;
-            } else if (complaintStatus.equalsIgnoreCase("COMPLETED") || complaintStatus.equalsIgnoreCase("REJECTED") || complaintStatus.equalsIgnoreCase("WITHDRAWN")) {
+            } else if (complaintStatus.equalsIgnoreCase("COMPLETED") || complaintStatus.equalsIgnoreCase("REJECTED") || complaintStatus.equalsIgnoreCase("WITHDRAWN")
+                || complaintStatus.equalsIgnoreCase("APPROVED") || complaintStatus.equalsIgnoreCase("REJECTED")) {
                 return END.strValue;
             }
             return UPDATE.strValue;

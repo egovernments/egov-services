@@ -68,7 +68,7 @@ public class SevaRequest {
     }
 
     public String getTenantId() {
-        return (String) this.sevaRequest.get(TENANT_ID);
+        return (String) this.serviceRequest.get(TENANT_ID);
     }
 
     public String getCrn() {

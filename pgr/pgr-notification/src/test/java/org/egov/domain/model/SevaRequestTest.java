@@ -151,6 +151,18 @@ public class SevaRequestTest {
     }
 
     @Test
+    public void test_should_return_tenant_id_from_request_map() {
+        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("tenantId", "tenant");
+        sevaRequestMap.put("serviceRequest", serviceRequest);
+
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        assertEquals("tenant", sevaRequest.getTenantId());
+    }
+
+    @Test
     public void test_should_return_location_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();

@@ -1,6 +1,5 @@
 package org.egov.persistence.repository;
 
-import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.dto.RequestInfoBody;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-@Slf4j
 public class TenantRepository {
 
     private final String tenantServiceUrl;
@@ -26,7 +24,6 @@ public class TenantRepository {
 
     public Tenant fetchTenantById(String tenantId) {
         final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
-        log.info("Fetching tenant with id" + tenantId);
         TenantResponse tenantResponse = restTemplate
             .postForObject(tenantServiceUrl, requestInfoBody, TenantResponse.class, tenantId);
         return tenantResponse.toDomainTenant();

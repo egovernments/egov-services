@@ -994,7 +994,7 @@ $('.datepicker').datepicker({
       autoclose:true
 });
 
-$(".datepicker").on(".change", function() {
+$(".datepicker").on("change", function() {
     // alert('hey');
     fillValueToObject(this);
 });

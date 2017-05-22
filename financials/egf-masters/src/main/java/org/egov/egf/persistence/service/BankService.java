@@ -60,11 +60,18 @@ public class BankService {
 		BankContractResponse bankContractResponse = new BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
 		ModelMapper modelMapper = new ModelMapper();
-		for (BankContract bankContract : bankContractRequest.getBanks()) {
-			Bank bankEntity = modelMapper.map(bankContract, Bank.class);
+		if (bankContractRequest.getBanks() != null && !bankContractRequest.getBanks().isEmpty()) {
+			for (BankContract bankContract : bankContractRequest.getBanks()) {
+				Bank bankEntity = modelMapper.map(bankContract, Bank.class);
+				bankJpaRepository.save(bankEntity);
+				BankContract resp = modelMapper.map(bankEntity, BankContract.class);
+				bankContractResponse.getBanks().add(resp);
+			}
+		} else if (bankContractRequest.getBank() != null) {
+			Bank bankEntity = modelMapper.map(bankContractRequest.getBank(), Bank.class);
 			bankJpaRepository.save(bankEntity);
 			BankContract resp = modelMapper.map(bankEntity, BankContract.class);
-			bankContractResponse.getBanks().add(resp);
+			bankContractResponse.setBank(resp);
 		}
 		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
 		return bankContractResponse;

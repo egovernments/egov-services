@@ -65,11 +65,19 @@ public class BankBranchService {
 		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
 		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
 		ModelMapper modelMapper = new ModelMapper();
-		for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
-			BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
+		if (bankBranchContractRequest.getBankBranches() != null
+				&& !bankBranchContractRequest.getBankBranches().isEmpty()) {
+			for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
+				BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
+				bankBranchJpaRepository.save(bankBranchEntity);
+				BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
+				bankBranchContractResponse.getBankBranches().add(resp);
+			}
+		} else if (bankBranchContractRequest.getBankBranch() != null) {
+			BankBranch bankBranchEntity = new BankBranch(bankBranchContractRequest.getBankBranch());
 			bankBranchJpaRepository.save(bankBranchEntity);
 			BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
-			bankBranchContractResponse.getBankBranches().add(resp);
+			bankBranchContractResponse.setBankBranch(resp);
 		}
 		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
 		return bankBranchContractResponse;

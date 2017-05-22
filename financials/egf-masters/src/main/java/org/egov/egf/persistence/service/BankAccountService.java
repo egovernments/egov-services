@@ -80,11 +80,19 @@ public class BankAccountService {
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		ModelMapper modelMapper = new ModelMapper();
-		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
-			BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
+		if (bankAccountContractRequest.getBankAccounts() != null
+				&& !bankAccountContractRequest.getBankAccounts().isEmpty()) {
+			for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
+				BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
+				bankAccountJpaRepository.save(bankAccountEntity);
+				BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
+				bankAccountContractResponse.getBankAccounts().add(resp);
+			}
+		} else if (bankAccountContractRequest.getBankAccount() != null) {
+			BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
 			bankAccountJpaRepository.save(bankAccountEntity);
 			BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-			bankAccountContractResponse.getBankAccounts().add(resp);
+			bankAccountContractResponse.setBankAccount(resp);
 		}
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		return bankAccountContractResponse;

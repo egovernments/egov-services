@@ -49,13 +49,19 @@ public class BankAccountController {
 		bankAccountService.push(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
-		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
+		if (bankAccountContractRequest.getBankAccounts() != null
+				&& !bankAccountContractRequest.getBankAccounts().isEmpty()) {
+			for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
 
-			BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
+				BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
+				BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
+				bankAccountContractResponse.getBankAccounts().add(resp);
+			}
+		} else if (bankAccountContractRequest.getBankAccount() != null) {
+			BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
 			BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-			bankAccountContractResponse.getBankAccounts().add(resp);
+			bankAccountContractResponse.setBankAccount(resp);
 		}
-
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return bankAccountContractResponse;
@@ -81,7 +87,6 @@ public class BankAccountController {
 		bankAccountContractResponse.setBankAccount(resp);
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		
 
 		return bankAccountContractResponse;
 

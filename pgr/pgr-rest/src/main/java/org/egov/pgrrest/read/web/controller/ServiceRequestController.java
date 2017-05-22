@@ -49,7 +49,7 @@ public class ServiceRequestController {
     }
 
     @PostMapping(value = "/_search")
-    public ServiceResponse getServiceRequests(@RequestParam("tenantId") String tenantId,
+    public ServiceResponse getServiceRequests(@RequestParam(value = "tenantId", required = false) String tenantId,
                                               @RequestParam(value = "serviceRequestId", required = false) String
                                                   serviceRequestId,
                                               @RequestParam(value = "serviceCode", required = false) String

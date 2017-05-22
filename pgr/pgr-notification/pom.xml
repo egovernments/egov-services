@@ -26,6 +26,12 @@
 
 	<dependencies>
 
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>services-common</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -141,7 +147,17 @@
                                     <excludes>
                                         <exclude>org.egov.PgrNotificationApplication</exclude>
                                         <exclude>org.egov.domain.model.SevaRequest</exclude>
+                                        <exclude>org.egov.domain.service.SMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UndefinedSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UndefinedEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.NewDeliverableSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.NotificationService</exclude>
                                         <exclude>org.egov.consumer.HashMapDeserializer</exclude>
+                                        <exclude>org.egov.persistence.dto.*</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

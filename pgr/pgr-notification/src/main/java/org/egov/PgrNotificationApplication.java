@@ -3,6 +3,7 @@ package org.egov;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.egov.domain.service.*;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,8 @@ import org.trimou.engine.MustacheEngineBuilder;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -46,5 +49,21 @@ public class PgrNotificationApplication {
         return MustacheEngineBuilder.newBuilder()
             .addTemplateLocator(classPathTemplateLocator)
             .build();
+    }
+
+    @Bean("smsMessageStrategies")
+    public List<SMSMessageStrategy> getSMSMessageStrategies() {
+        return Arrays.asList(
+            new ComplaintSMSMessageStrategy(),
+            new NewDeliverableSMSMessageStrategy()
+        );
+    }
+
+    @Bean("emailMessageStrategies")
+    public List<EmailMessageStrategy> getEmailMessageStrategies() {
+        return Arrays.asList(
+            new ComplaintEmailMessageStrategy(),
+            new NewDeliverableEmailMessageStrategy()
+        );
     }
 }

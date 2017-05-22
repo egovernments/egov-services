@@ -1,0 +1,16 @@
+{
+    "responseInfo": null,
+    "complaintTypes": [
+        {
+            "id":5,
+            "serviceName": "servicename",
+            "serviceCode": "BPS",
+            "description":  "Building plan sanction",
+            "tenantId": "ap.public",
+            "keywords": [
+                "keyword1",
+                "keyword2"
+            ]
+        }
+    ]
+}

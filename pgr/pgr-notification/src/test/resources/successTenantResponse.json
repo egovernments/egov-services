@@ -1,0 +1,22 @@
+{
+    "tenant": [
+        {
+            "code": "tenantId",
+            "description": "abc",
+            "logoId": "",
+            "imageId": "",
+            "domainUrl": null,
+            "type": "CITY",
+            "city": {
+                "name": "cityname",
+                "localName": null,
+                "code":"default",
+                "districtCode": null,
+                "districtName": "KC1",
+                "regionName": "KC-Region",
+                "longitude": 0,
+                "latitude": 0
+            }
+        }
+    ]
+}

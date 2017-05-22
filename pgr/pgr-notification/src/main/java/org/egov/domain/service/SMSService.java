@@ -1,39 +1,45 @@
 package org.egov.domain.service;
 
+import org.egov.domain.model.SMSMessageContext;
+import org.egov.domain.model.ServiceType;
 import org.egov.domain.model.SevaRequest;
 import org.egov.persistence.queue.MessageQueueRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.trimou.util.ImmutableMap;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class SMSService {
-	private static final String SMS_ENGLISH = "sms_en";
-	private static final String NAME = "name";
-	private static final String NUMBER = "number";
-	private static final String STATUSLOWERCASE = "statusLowerCase";
-	private TemplateService templateService;
-	private MessageQueueRepository messageQueueRepository;
+    private TemplateService templateService;
+    private MessageQueueRepository messageQueueRepository;
+    private List<SMSMessageStrategy> messageStrategyList;
 
-	public SMSService(TemplateService templateService,
-					  MessageQueueRepository messageQueueRepository) {
-		this.templateService = templateService;
-		this.messageQueueRepository = messageQueueRepository;
-	}
+    public SMSService(TemplateService templateService,
+                      MessageQueueRepository messageQueueRepository,
+                      @Qualifier("smsMessageStrategies") List<SMSMessageStrategy> messageStrategyList) {
+        this.templateService = templateService;
+        this.messageQueueRepository = messageQueueRepository;
+        this.messageStrategyList = messageStrategyList;
+    }
 
-	public void send(SevaRequest sevaRequest) {
-        final String smsMessage = getSMSMessage(sevaRequest);
+    public void send(SevaRequest sevaRequest, ServiceType serviceType) {
+        final String smsMessage = getSMSMessage(sevaRequest, serviceType);
         final String mobileNumber = sevaRequest.getMobileNumber();
         messageQueueRepository.sendSMS(mobileNumber, smsMessage);
     }
 
-    private String getSMSMessage(SevaRequest sevaRequest) {
-        final Map<Object, Object> map = ImmutableMap.of(
-			NAME, sevaRequest.getComplaintTypeName(),
-			NUMBER, sevaRequest.getCrn(),
-            STATUSLOWERCASE, sevaRequest.getStatusName().toLowerCase()
-		);
-        return templateService.loadByName(SMS_ENGLISH, map);
+    private String getSMSMessage(SevaRequest sevaRequest, ServiceType serviceType) {
+        final SMSMessageStrategy smsMessageStrategy = getSmsMessageStrategy(sevaRequest, serviceType);
+        final SMSMessageContext messageContext = smsMessageStrategy.getMessageContext(sevaRequest, serviceType);
+        return templateService.loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
     }
+
+    private SMSMessageStrategy getSmsMessageStrategy(SevaRequest sevaRequest, ServiceType serviceType) {
+        return messageStrategyList.stream()
+            .filter(strategy -> strategy.matches(sevaRequest, serviceType))
+            .findFirst()
+            .orElse(new UndefinedSMSMessageStrategy());
+    }
+
 }

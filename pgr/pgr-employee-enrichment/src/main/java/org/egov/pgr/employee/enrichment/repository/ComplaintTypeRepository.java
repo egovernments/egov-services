@@ -26,7 +26,6 @@ public class ComplaintTypeRepository {
 
         final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
         return String.valueOf(restTemplate.postForObject(url, request, ComplaintTypeServiceResponse.class, complaintTypeCode, tenantId).getComplaintTypes().get(0).getId());
-
     }
 }
 

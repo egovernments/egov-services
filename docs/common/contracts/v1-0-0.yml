@@ -158,14 +158,9 @@ definitions:
       
   ErrorRes:
     type: object
-    description: All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadat and Error object as actual representation of error. In case of bulk apis, some apis may chose to return the array of Error objects to indicate individual failure. T
+    description: All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadata and Error object as actual representation of error. For bulk/batch form of the API currently either all of the requests should succeed or all of them fail. Partial batch success will be made available later
     properties:
       ResposneInfo:
         $ref: '#/definitions/ResponseInfo'
       Error:
         $ref: '#/definitions/Error'
-      Errors:
-        description: some bulk apis may return the indvidual object related errors
-        type: array
-        items:
-          $ref: '#/definitions/Error'

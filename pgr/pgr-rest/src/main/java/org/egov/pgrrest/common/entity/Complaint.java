@@ -123,6 +123,7 @@ public class Complaint extends AbstractAuditable<Long> {
         final String locationId = getLocationId();
         final ServiceRequestType complaintType =
                 new ServiceRequestType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
+
         return ServiceRequest.builder()
                 .serviceRequestLocation(new ServiceRequestLocation(coordinates, getCrossHierarchyId(), locationId))
                 .complaintType(complaintType)
@@ -144,7 +145,7 @@ public class Complaint extends AbstractAuditable<Long> {
                 .assignee(getAssigneeId())
                 .tenantId(tenantId)
                 .state(getState())
-                .complaintStatus(getComplaintStatus())
+                .serviceRequestStatus(status)
                 .citizenFeedback(getCitizenFeedback())
                 .build();
     }
@@ -180,10 +181,6 @@ public class Complaint extends AbstractAuditable<Long> {
 
     private String getChildLocationId() {
         return childLocation != null ? childLocation.toString(): null;
-    }
-    
-    private String getComplaintStatus(){
-    	return status;
     }
 
 }

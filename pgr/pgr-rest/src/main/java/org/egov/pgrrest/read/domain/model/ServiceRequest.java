@@ -28,7 +28,7 @@ public class ServiceRequest {
     private String crn;
     @NonNull
     private ServiceRequestType complaintType;
-    private String complaintStatus;
+    private String serviceRequestStatus;
     private String address;
     private List<String> mediaUrls;
     private String tenantId;

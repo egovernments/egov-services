@@ -155,7 +155,7 @@ public class ServiceRequestControllerTest {
             .assignee(assigneeId)
             .receivingCenter(receivingCenter)
             .receivingMode(receivingMode)
-            .complaintStatus("FORWARDED")
+            .serviceRequestStatus("FORWARDED")
             .childLocation("Gadu Veedhi")
             .department(3L)
             .tenantId("tenantId")

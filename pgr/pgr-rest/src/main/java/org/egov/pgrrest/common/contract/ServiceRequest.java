@@ -137,7 +137,7 @@ public class ServiceRequest {
     private List<AttributeEntry> getAttributeValues(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         final ArrayList<AttributeEntry> attributeEntries = new ArrayList<>();
         attributeEntries.add(new AttributeEntry("receivingMode", complaint.getReceivingMode()));
-        attributeEntries.add(new AttributeEntry("complaintStatus", complaint.getComplaintStatus()));
+        attributeEntries.add(new AttributeEntry("status", complaint.getServiceRequestStatus()));
         addAttributeEntryIfPresent(attributeEntries, "receivingCenter", complaint.getReceivingCenter());
         addAttributeEntryIfPresent(attributeEntries, "locationId", complaint.getServiceRequestLocation().getLocationId());
         addAttributeEntryIfPresent(attributeEntries, "childLocationId", complaint.getChildLocation());
@@ -162,7 +162,7 @@ public class ServiceRequest {
     private Map<String, String> getAdditionalValues(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         final HashMap<String, String> map = new HashMap<>();
         map.put("receivingMode", complaint.getReceivingMode());
-        map.put("complaintStatus", complaint.getComplaintStatus());
+        map.put("status", complaint.getServiceRequestStatus());
         addEntryIfPresent(map, "receivingCenter", complaint.getReceivingCenter());
         addEntryIfPresent(map, "locationId", complaint.getServiceRequestLocation().getLocationId());
         addEntryIfPresent(map, "childLocationId", complaint.getChildLocation());

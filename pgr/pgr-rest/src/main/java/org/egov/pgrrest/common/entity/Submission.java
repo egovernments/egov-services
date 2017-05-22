@@ -91,7 +91,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .lastAccessedTime(getLastModifiedDate())
             .assignee(getAssignee())
             .tenantId(id.getTenantId())
-            .complaintStatus(status)
+            .serviceRequestStatus(status)
             .attributeEntries(getAttributeEntries())
             .build();
     }

@@ -413,7 +413,7 @@ public class ServiceRequestTest {
             .requester(complainant)
             .serviceRequestLocation(serviceRequestLocation)
             .receivingMode("receivingModeName")
-            .complaintStatus("complaintStatusName")
+            .serviceRequestStatus("complaintStatusName")
             .receivingCenter("receivingCenterName")
             .childLocation("childLocationIdName")
             .state("stateName")
@@ -462,7 +462,7 @@ public class ServiceRequestTest {
             .requester(complainant)
             .serviceRequestLocation(serviceRequestLocation)
             .receivingMode("receivingMode")
-            .complaintStatus("complaintStatus")
+            .serviceRequestStatus("complaintStatus")
             .receivingCenter("receivingCenter")
             .childLocation("childLocation")
             .state("state")
@@ -500,7 +500,7 @@ public class ServiceRequestTest {
             .complaintType(new ServiceRequestType("name", "code", "tenantId"))
             .requester(complainant)
             .receivingMode("receivingMode")
-            .complaintStatus("complaintStatus")
+            .serviceRequestStatus("complaintStatus")
             .serviceRequestLocation(serviceRequestLocation)
             .build();
 
@@ -527,7 +527,7 @@ public class ServiceRequestTest {
             .complaintType(new ServiceRequestType("name", "code", "tenantId"))
             .requester(complainant)
             .receivingMode("receivingMode")
-            .complaintStatus("complaintStatus")
+            .serviceRequestStatus("complaintStatus")
             .serviceRequestLocation(serviceRequestLocation)
             .build();
 

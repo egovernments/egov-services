@@ -153,7 +153,7 @@ public class ComplaintAdapter {
             if (serviceRequest.getCreatedDate() != null)
                 complaintIndex.setCreatedDate(formatter.parse(serviceRequest.getCreatedDate()));
             if (serviceRequest.getEscalationDate() != null)
-                complaintIndex.setEscalationDate(formatter.parse(serviceRequest.getEscalationDate()));
+                complaintIndex.setEscalationDate(getEscalationDate(serviceRequest));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -189,6 +189,10 @@ public class ComplaintAdapter {
         final String assignmentId = serviceRequest.getDynamicSingleValue("assignmentId");
         InitializeEmployeeDetails(complaintIndex, assignmentId, serviceRequest.getTenantId());
 
+    }
+
+    private Date getEscalationDate(ServiceRequest serviceRequest) {
+        return new Date(Long.parseLong(serviceRequest.getEscalationDate()));
     }
 
     public void InitializeComplaintTypeDetails(ComplaintIndex complaintIndex, String complaintTypeCode, Double lat,

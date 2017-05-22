@@ -81,7 +81,7 @@ public class ComplaintAdapterTest {
 	private ServiceRequest setUpServiceRequest() {
 		ServiceRequest serviceRequest = ServiceRequest.builder().values(new HashMap<>()).build();
 		serviceRequest.setCreatedDate("20-10-2016 10:47:21");
-		serviceRequest.setEscalationDate("20-10-2016 10:47:21");
+		serviceRequest.setEscalationDate("149561348738");
 		serviceRequest.setFirstName("abc");
 		serviceRequest.setTenantId("ap.public");
 		serviceRequest.setLat(0.0);

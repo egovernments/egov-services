@@ -152,8 +152,10 @@
                                         <exclude>org.egov.domain.service.UndefinedSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UndefinedEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NewDeliverableSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ComplaintEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NotificationService</exclude>
                                         <exclude>org.egov.consumer.HashMapDeserializer</exclude>
@@ -168,16 +170,6 @@
                                     </limits>
                                 </rule>
 
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>COMPLEXITY</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.5</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
                             </rules>
                         </configuration>
                     </execution>

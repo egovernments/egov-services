@@ -55,7 +55,8 @@ public class PgrNotificationApplication {
     public List<SMSMessageStrategy> getSMSMessageStrategies() {
         return Arrays.asList(
             new ComplaintSMSMessageStrategy(),
-            new NewDeliverableSMSMessageStrategy()
+            new NewDeliverableSMSMessageStrategy(),
+            new UpdateDeliverableStatusSMSMessageStrategy()
         );
     }
 
@@ -63,7 +64,8 @@ public class PgrNotificationApplication {
     public List<EmailMessageStrategy> getEmailMessageStrategies() {
         return Arrays.asList(
             new ComplaintEmailMessageStrategy(),
-            new NewDeliverableEmailMessageStrategy()
+            new NewDeliverableEmailMessageStrategy(),
+            new UpdateDeliverableStatusEmailMessageStrategy()
         );
     }
 }

@@ -1,5 +1,7 @@
 package org.egov.domain.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,6 +31,12 @@ public class SevaRequest {
     private static final String ATTRIBUTE_VALUES_NAME_FIELD = "name";
     private static final String ATTRIBUTE_VALUES_POPULATED_FLAG = "isAttribValuesPopulated";
     private static final String POST = "POST";
+    private static final String PUT = "PUT";
+    private static final String PROCESSING_FEE = "PROCESSINGFEE";
+    public static final String EMPLOYEE_TYPE = "EMPLOYEE";
+    public static final String USER_TYPE_KEY = "type";
+    public static final String USER_INFO_KEY = "userInfo";
+
     private final HashMap<String, Object> serviceRequest;
     private final HashMap<String, Object> sevaRequest;
 
@@ -88,6 +96,26 @@ public class SevaRequest {
 
     public boolean isCreate() {
        return POST.equals(getRequestInfo().get(ACTION));
+    }
+
+    public boolean isUpdate() {
+       return PUT.equals(getRequestInfo().get(ACTION));
+    }
+
+    public String getProcessingFee() {
+        return getDynamicSingleValue(PROCESSING_FEE);
+    }
+
+    public boolean isProcessingFeePresent() {
+        return StringUtils.isNotEmpty(getProcessingFee());
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean isEmployeeLoggedIn() {
+        final Map<String, Object> requestInfo = getRequestInfo();
+        final Map<String, Object> userInfo = (HashMap<String, Object>) requestInfo
+            .getOrDefault(USER_INFO_KEY, new HashMap<String, Object>());
+        return EMPLOYEE_TYPE.equals(userInfo.get(USER_TYPE_KEY));
     }
 
     @SuppressWarnings("unchecked")

@@ -1,0 +1,5 @@
+Dear {{citizenName}}
+Your Request for {{serviceName}} with tracking number {{crn}} is {{status}}.
+This is a computer generated email and does not need any signature.
+Thanks,
+{{ULBName}}

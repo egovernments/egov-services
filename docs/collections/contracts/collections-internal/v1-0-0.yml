@@ -63,7 +63,7 @@ paths:
   
   /businessCategory/_create:     
     post:
-      summary: Create Business Category for the given tenentId.
+      summary: Create Business Category for the given tenantId.
       description: Create new Business Category with all the required parameters.
       parameters:
         - name: businessCategory
@@ -883,6 +883,20 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
+      fund:
+        type: integer
+        description: Fund is referenced from Financial Module.
+      function:
+        type: integer
+        description: Function is referenced from Financial Module.
+      department:
+        type: integer
+        description: Reference from Department.
+      serviceAccountDetails:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceAccountDetails'
+          
     required:
      - code
      - name
@@ -911,7 +925,45 @@ definitions:
         type: array
         items: 
          $ref: '#/definitions/BusinessDetails'
-  
+         
+  ServiceAccountDetails:
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+        description: Receivable Amount.
+      BusinessDetailsInfo:
+        type: object
+        items: 
+         $ref: '#/definitions/BusinessDetails'
+      subledgerDetails:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceSubledgerInfo'
+          
+  ServiceSubledgerInfo:
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+        description: Receivable Amount.
+      detailType:
+        type: object
+        description: Referenced from Financials Module AccountDetailType
+      detailCode:
+        type: string
+        description: Detail Code
+      detailKey:
+        type: string
+        description: Detail Key
+      serviceAccountDetails:
+        type: object
+        items:
+          $ref: '#/definitions/ServiceAccountDetails'
+      
+        
   RequestInfo:
     type: object
     properties:

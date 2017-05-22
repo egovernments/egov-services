@@ -196,17 +196,6 @@ public class ServiceRequestControllerTest {
     }
 
     @Test
-    public void testGetServiceRequestsFailsWithoutTenantId() throws Exception {
-        mockMvc.perform( post("/seva/_search?service_request_id=serid_123&service_code=serviceCode_123&status" +
-            "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
-            ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
-            .content(resources.getFileContents("requestinfobody.json"))
-            .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
     public void testShouldUpdateLastAccessedTime() throws Exception {
         mockMvc.perform(
             post("/seva/updateLastAccessedTime")

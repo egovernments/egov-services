@@ -23,7 +23,7 @@ public class SevaRequest {
     private static final String LOCATION_NAME = "locationName";
     private static final String REQUESTED_DATE = "requestedDatetime";
     private static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
-    private static final String SERVICE_REQUEST = "ServiceRequest";
+    private static final String SERVICE_REQUEST = "serviceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
     private static final String ACTION = "action";
     private static final String ATTRIBUTE_VALUES = "attribValues";

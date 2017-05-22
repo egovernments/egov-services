@@ -17,7 +17,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("phone", "mobileNumber");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -29,7 +29,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("email", "email@email.com");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -41,7 +41,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("email", "email@email.com");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -51,7 +51,7 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_true_when_email_is_not_present_in_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("ServiceRequest", new HashMap<String, Object>());
+        sevaRequestMap.put("serviceRequest", new HashMap<String, Object>());
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -63,7 +63,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("serviceName", "complaintTypeName");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -75,7 +75,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("serviceRequestId", "CRN");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -93,7 +93,7 @@ public class SevaRequestTest {
         serviceRequest.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
         serviceRequest.put("attribValues", attributeValues);
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -106,7 +106,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         TimeZone.setDefault(TimeZone.getTimeZone(IST));
         serviceRequest.put("requestedDatetime", "26-03-2017 12:58:40");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -119,7 +119,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         TimeZone.setDefault(TimeZone.getTimeZone(IST));
         serviceRequest.put("requestedDatetime", "26/03/2017 12:58:40");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
         sevaRequest.getFormattedCreatedDate();
@@ -131,7 +131,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("description", "complaintDescription");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -143,7 +143,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("firstName", "firstName");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -160,7 +160,7 @@ public class SevaRequestTest {
         serviceRequest.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
         serviceRequest.put("attribValues", attributeValues);
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -172,7 +172,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("firstName", "firstName");
-        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 

@@ -6,6 +6,13 @@ function getValueByName(name, id) {
     }
 }
 
+try {
+  var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+} catch (e) {
+    console.log(e);
+    var department = [];
+}
+
 var _type;
 $(document).ready(function() {
   if(window.opener && window.opener.document) {

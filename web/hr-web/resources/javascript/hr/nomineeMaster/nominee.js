@@ -10,7 +10,7 @@ class Nominee extends React.Component{
             name:"",
             code:""
           },
-          assetFieldsDefination:[]
+          nomineeFieldsDefination:[]
         },
       nomineeSet:{
       "name": "",
@@ -40,7 +40,8 @@ class Nominee extends React.Component{
     bankList:[],
     branchList:[],
     employList:[],
-    showMsg: false
+    showMsg: false,
+    id :""
   }
         this.handleChange=this.handleChange.bind(this);
         this.addOrUpdate=this.addOrUpdate.bind(this);
@@ -48,6 +49,7 @@ class Nominee extends React.Component{
         this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
         this.setInitialState=this.setInitialState.bind(this);
         this.addNominee=this.addNominee.bind(this);
+        this.renderDelEvent=this.renderDelEvent.bind(this);
     }
 
 
@@ -62,6 +64,7 @@ class Nominee extends React.Component{
       list,
       nomineeSet
     } = this.state;
+
 
     if((!nomineeSet.name || !nomineeSet.dateOfBirth || !nomineeSet.employed ||
       !nomineeSet.maritalStatus || !nomineeSet.gender || !nomineeSet.relationship)) {
@@ -78,38 +81,89 @@ class Nominee extends React.Component{
     }
 
     if (isEdit) {
-      var assetFieldsDefination = this.state.allNomineeValue.assetFieldsDefination;
-      assetFieldsDefination[index] = nomineeSet;
+      var nomineeFieldsDefination = this.state.allNomineeValue.nomineeFieldsDefination;
+      nomineeFieldsDefination[index] = nomineeSet;
       this.setState({
-        assetFieldsDefination :nomineeSet,
+        allNomineeValue:{
+          ...this.state.allNomineeValue,
+          nomineeFieldsDefination
+        },
         isEdit: false,
+        isCustomFormVisible:false
       })
       //this.setState({isEdit:false})
     } else {
       //get asset Category from state
       // customFieldData["columns"]=[];
-        var temp = Object.assign([], this.state.allNomineeValue.assetFieldsDefination);
+        var temp = Object.assign([], this.state.allNomineeValue.nomineeFieldsDefination);
         temp.push(nomineeSet);
         this.setState({
-          assetFieldsDefination: temp,
-
-          isCustomFormVisible:false,
+          allNomineeValue:{
+            ...this.state.allNomineeValue,
+            nomineeFieldsDefination: temp
+          },
+          nomineeSet:{
+          "name": "",
+          "gender": "",
+          "dateOfBirth": "",
+          "maritalStatus": "",
+          "relationship": "",
+          "bank": "",
+          "bankBranch": "",
+          "bankAccount": "",
+          "nominated": true,
+          "employed": true,
+          "createdBy": "",
+          "createdDate": "",
+          "lastModifiedBy": "",
+          "lastModifiedDate": "",
+          "tenantId": tenantId
+        },
+          isCustomFormVisible:false
         })
       }
     }
 
+    componentWillMount(){
+      try {
+        var MaritalList = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(commonApiPost("hr-employee", "maritalstatuses", "_search", {tenantId, pageSize:500}).responseJSON["MaritalStatus"] || [])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus"));
+      } catch (e) {
+          console.log(e);
+          var MaritalList = [];
+      }
+      try {
+        var bankList = !localStorage.getItem("bank") || localStorage.getItem("bank") == "undefined" ? (localStorage.setItem("bank", JSON.stringify(getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [])), JSON.parse(localStorage.getItem("bank"))) : JSON.parse(localStorage.getItem("bank"));
+      } catch (e) {
+          console.log(e);
+          var bankList = [];
+      }
 
+    try {
+      var branchList = commonApiPost("egf-masters", "bankbranches", "_search", {
+        tenantId,
+        "bank.id": bankList.id
+      }).responseJSON["bankBranches"] || [];
+    } catch (e) {
+      console.log(e);
+      var branchList :[];
+    }
 
-    handleChange(e,name){
-      if(name === "nominated"){
+    this.setState({
+      MaritalList,
+      bankList,
+      branchList
+  })
+  }
+
+    handleChange(e,name) {
+      if(name === "nominated") {
       this.setState({
         nomineeSet:{
             ...this.state.nomineeSet,
             nominated: !this.state.nomineeSet.nominated
-
         }
       })
-    }else{
+    } else {
       this.setState({
         nomineeSet:{
           ...this.state.nomineeSet,
@@ -119,9 +173,34 @@ class Nominee extends React.Component{
     }
   }
 
+  renderDelEvent(index) {
 
-    showCustomFieldForm(isShow)  {
-      this.setState({isCustomFormVisible:isShow})
+    var nomineeFieldsDefination = this.state.allNomineeValue.nomineeFieldsDefination;
+    nomineeFieldsDefination.splice(index, 1);
+    this.setState({
+      nomineeFieldsDefination
+    });
+}
+
+    showCustomFieldForm(isShow,index) {
+      if(typeof(index)!="undefined") {
+        var nomineeFieldsDefination = this.state.allNomineeValue.nomineeFieldsDefination;
+        var nomineeSet  = this.state.nomineeSet;
+        nomineeSet = nomineeFieldsDefination[index];
+        this.setState({
+          nomineeSet,
+          isEdit: true,
+          index:index
+        })
+      }
+      var _this = this;
+      setTimeout(function(){
+        $('#dateOfBirth').datepicker({
+           format: 'dd/mm/yyyy',
+           autoclose: true
+       });
+     },500);
+      _this.setState({isCustomFormVisible:isShow});
   }
 
     componentDidMount() {
@@ -134,39 +213,18 @@ class Nominee extends React.Component{
        }
        if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Nominee");
 
-       $('#dateOfBirth').datepicker({
-
-          format: 'dd/mm/yyyy',
-          autoclose: true
-      });
-
-      $('#dateOfBirth').on("dp.change", function(e) {
-         _this.setState({
-            nomineeSet: {
-                ..._this.state.nomineeSet,
-                "dateOfBirth":$("#dateOfBirth").val()
-            }
-         })
-      });
-
+       $('body').on("change", "#dateOfBirth", function(e) {
+          _this.setState({
+             nomineeSet: {
+                 ..._this.state.nomineeSet,
+                 "dateOfBirth":$("#dateOfBirth").val()
+             }
+          })
+       });
     }
 
 
-componentWillMount() {
-  var count = 2, _this = this, _state = {};
-  var checkCountNCall = function(key, res) {
-    count--;
-    _state[key] = res;
-    if(count == 0)
-      _this.setInitialState(_state);
-    }
-    getDropdown("gender", function(res) {
-      checkCountNCall("genderList", res);
-    });
-    getDropdown("assignments_designation", function(res) {
-        checkCountNCall("designationList", res);
-      });
-  }
+
 
     close(){
         // widow.close();
@@ -215,7 +273,7 @@ componentWillMount() {
   //       })
   // }
 
-    addOrUpdate(e,mode){
+    addOrUpdate(e,mode) {
         e.preventDefault();
          console.log(this.state.allNomineeValue);
       }
@@ -244,9 +302,9 @@ componentWillMount() {
 
   render(){
 
-    let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee}=this;
-    let {isSearchClicked,list,customField,genderList,isEdit,index,isCustomFormVisible, readonly, showMsg}=this.state;
-    let {assetFieldsDefination}=this.state.allNomineeValue;
+    let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee,renderDelEvent}=this;
+    let {MaritalList,bankList,list,branchList,genderList,isEdit,index,isCustomFormVisible, readonly, showMsg}=this.state;
+    let {nomineeFieldsDefination}=this.state.allNomineeValue;
     let mode=getUrlVars()["type"];
     let {name,gender,dateOfBirth,code,maritalStatus,relationship,bank,bankBranch,bankAccount,nominated,employed}=this.state.nomineeSet;
 
@@ -331,8 +389,8 @@ componentWillMount() {
                         </div>
                     </div>
                   </div>
-                <div className="row">
-                  <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
                       <label for="gender"> Gender <span>*</span></label>
@@ -351,7 +409,7 @@ componentWillMount() {
                   </div>
                 </div>
 
-              <div className="col-sm-6">
+            <div className="col-sm-6">
               <div className="row">
                 <div className="col-sm-6 label-text">
                   <label for="relationship"> Relation <span>*</span></label>
@@ -370,24 +428,24 @@ componentWillMount() {
                   </div>
                 </div>
               </div>
-              </div>
-              </div>
+            </div>
+            </div>
               <div className="row">
+              <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="maritalStatus"> Marital Status</label>
+                </div>
                 <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="maritalStatus"> MaritalStatus <span>*</span></label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="styled-select">
-                      <select  name="maritalStatus" value={maritalStatus}
-                          onChange={(e)=>{handleChange(e,"maritalStatus")}}required>
-                            <option value="">Select Type</option>
-                            <option>daughter</option>
-                       </select>
-                    </div>
+                  <div className="styled-select">
+                    <select  name="maritalStatus" value={maritalStatus}
+                        onChange={(e)=>{handleChange(e,"maritalStatus")}}>
+                          <option value="">Select Type</option>
+                          {renderOption(MaritalList)}
+                     </select>
                   </div>
                 </div>
+              </div>
               </div>
             <div className="col-sm-6">
             <div className="row">
@@ -399,7 +457,7 @@ componentWillMount() {
                   <select  name="bank" value={bank}
                       onChange={(e)=>{handleChange(e,"bank")}}>
                         <option value="">Select Type</option>
-                        <option>daughter</option>
+                        {renderOption(bankList)}
                    </select>
                 </div>
               </div>
@@ -417,7 +475,7 @@ componentWillMount() {
                     <select  name="bankBranch" value={bankBranch}
                         onChange={(e)=>{handleChange(e,"bankBranch")}}>
                           <option value="">Select Type</option>
-                          <option>daughter</option>
+                          {renderOption(branchList)}
                      </select>
                   </div>
                 </div>
@@ -478,8 +536,8 @@ componentWillMount() {
         return "";
     }
     const renderBody=function() {
-    if(assetFieldsDefination.length>0) {
-            return assetFieldsDefination.map((item,index)=> {
+    if(nomineeFieldsDefination.length>0) {
+            return nomineeFieldsDefination.map((item,index)=> {
                 return (<tr  key={index} className="text-center">
                 <td>{index+1}</td>
                   <td  >
@@ -516,6 +574,7 @@ componentWillMount() {
                   </td>
                   <td data-label="Action">
                   <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
+                  <button type="button" className="btn btn-default btn-action" onClick={(e)=>{showCustomFieldForm(true,index)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-pencil"></span></button>
                 </td></tr>)
             })
         }

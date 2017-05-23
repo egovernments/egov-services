@@ -79,7 +79,7 @@ public class SubSchemeService {
 		} else if (subSchemeContractRequest.getSubScheme() != null) {
 			SubScheme subSchemeEntity = new SubScheme(subSchemeContractRequest.getSubScheme());
 			subSchemeJpaRepository.save(subSchemeEntity);
-			SubSchemeContract resp = modelMapper.map(subSchemeEntity, SchemeContract.class);
+			SubSchemeContract resp = modelMapper.map(subSchemeEntity, SubSchemeContract.class);
 			subSchemeContractResponse.setSubScheme(resp);
 		}
 		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));

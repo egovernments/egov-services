@@ -79,7 +79,7 @@ public class SupplierService {
 		} else if (supplierContractRequest.getSupplier() != null) {
 			Supplier supplierEntity = new Supplier(supplierContractRequest.getSupplier());
 			supplierJpaRepository.save(supplierEntity);
-			SupplierContract resp = modelMapper.map(supplierEntity, SchemeContract.class);
+			SupplierContract resp = modelMapper.map(supplierEntity, SupplierContract.class);
 			supplierContractResponse.setSupplier(resp);
 		}
 		supplierContractResponse.setResponseInfo(getResponseInfo(supplierContractRequest.getRequestInfo()));

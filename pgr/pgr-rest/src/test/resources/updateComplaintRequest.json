@@ -28,13 +28,6 @@
         "email": "jake@maildrop.cc",
         "approvalPosition": null,
         "approvalComment": null,
-        "values": {
-            "locationId": "173",
-            "childLocationId": "60",
-            "receivingMode": "MANUAL",
-            "receivingCenter": "5",
-            "assigneeId": "3",
-            "status": "REGISTERED"
-        }
+        "values": {}
     }
 }

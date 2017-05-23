@@ -25,16 +25,7 @@
             "deviceId": null,
             "accountId": null,
             "tenantId":"tenantId",
-            "values": {
-                "status": "FORWARDED",
-                "receivingMode": "MANUAL",
-                "receivingCenter": "Commissioner Office",
-                "locationId": "34",
-                "childLocationId": "Gadu Veedhi",
-                "stateId": "1",
-                "assigneeId": "2",
-                "departmentId": "3"
-            }
+            "values": {}
         }
     ]
 }

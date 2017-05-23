@@ -196,6 +196,7 @@
                                         <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.specification.SubmissionSpecification</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
+                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.UnauthorizedAccessException
                                         </exclude>
                                         <exclude>org.egov.pgrrest.read.web.interceptor.CorrelationIdAwareRestTemplate

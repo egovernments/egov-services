@@ -4,10 +4,7 @@ import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
-import org.egov.pgrrest.read.persistence.specification.ComplaintSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -40,19 +37,7 @@ public class ServiceRequestRepository {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        if (serviceRequestSearchCriteria.isUseNewSchema()) {
-            return findInSubmissionTable(serviceRequestSearchCriteria);
-        } else {
-            return findInComplaintTable(serviceRequestSearchCriteria);
-        }
-    }
-
-    private List<ServiceRequest> findInComplaintTable(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        final ComplaintSpecification specification = new ComplaintSpecification(serviceRequestSearchCriteria);
-        final Sort sort = new Sort(Direction.DESC, "lastModifiedDate");
-        return this.complaintJpaRepository.findAll(specification, sort).stream()
-            .map(org.egov.pgrrest.common.entity.Complaint::toDomain)
-            .collect(Collectors.toList());
+        return findInSubmissionTable(serviceRequestSearchCriteria);
     }
 
     private List<ServiceRequest> findInSubmissionTable(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {

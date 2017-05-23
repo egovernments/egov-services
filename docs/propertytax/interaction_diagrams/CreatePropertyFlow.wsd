@@ -10,6 +10,8 @@ PropertySvc->PropertySvc: validate Request Format
 note over PropertySvc
     All request format validations like 
     email, phone, string and number fields
+    validate ref values from all external services
+    Eg. egov-location etc.
 end note
 PropertySvc->PropertySvc: business Validations
 note over PropertySvc
@@ -33,7 +35,6 @@ alt isNewProperty
         end note over 
         KafkaQSvc->UserSvc: create New User
     end
-    KafkaQSvc->BoundrySvc: identify Boundry
     KafkaQSvc->TaxCalcSvc: calculatePropertyTax
     KafkaQSvc->DemandSvc: generateDemand
     KafkaQSvc->WorkflowSvc: initiateWorkflow
@@ -48,8 +49,6 @@ else isLegacyPropertyUpload
         end note over 
         KafkaQSvc->UserSvc: create New User
     end
-    KafkaQSvc->BoundrySvc: identify Boundry
-    KafkaQSvc->DemandSvc: generateDemand
     KafkaQSvc->PropertySvc: persistProperty
     KafkaQSvc->ESSvc: createElasticSearchIndex
 end

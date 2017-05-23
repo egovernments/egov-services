@@ -44,15 +44,16 @@ public class DemandRepository {
 	DemandHelper demandHelper;
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
-	
-		//FIXME overriding tenantid as default due to unavailability of ramki 
+
+		// FIXME overriding tenantid as default due to unavailability of ramki
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
 				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
-	
+
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {
-			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),DemandReasonResponse.class);
+			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
+					DemandReasonResponse.class);
 			LOGGER.info(demandReasonResponse);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
@@ -73,8 +74,9 @@ public class DemandRepository {
 				LOGGER.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
-			 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-				LOGGER.error("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
+			// return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
+			LOGGER.error("the exception from user module inside first catch block ::"
+					+ userErrorResponse.getError().toString());
 		} catch (Exception e) {
 			LOGGER.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
@@ -157,7 +159,7 @@ public class DemandRepository {
 		demandRequest.setDemand(demands);
 
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getUpdateDemandBasePath()
-				+ demands.get(0).getId() + propertiesManager.getUpdateDemandService();
+				+ demands.get(0).getId() + "/" + propertiesManager.getUpdateDemandService();
 		LOGGER.info("the url for update demand API call is  ::: " + url);
 
 		DemandResponse demandResponse = null;

@@ -77,7 +77,7 @@ public class SubmissionRepository {
             getSubmissionAttributes(searchCriteria, submissions);
         submissions.forEach(submission -> {
             final List<SubmissionAttribute> matchingAttributes = submissionAttributes
-                .getOrDefault(submission.getId(), Collections.emptyList());
+                .getOrDefault(submission.getCrn(), Collections.emptyList());
             submission.setAttributeValues(matchingAttributes);
         });
     }

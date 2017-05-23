@@ -160,7 +160,8 @@ const uploadFiles = function(body, cb) {
                         breakout = 1;
                     } else {
                         counter--;
-                        body.Asset.assetAttributes[i].value[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        var _val = res.files[0].fileStoreId
+                        body.Asset.assetAttributes[i].value[j] = _val;
                         if(counter == 0) {
                             counter1--;
                             if(counter1 == 0 && breakout == 0)
@@ -503,6 +504,8 @@ class CreateAsset extends React.Component {
               }
             }
             attr[i].value = values;
+          } else if(attr[i].type == "File") {
+            attr[i].value = e.target.files;
           } else {
             attr[i].value = e.target.value;
           }
@@ -561,6 +564,12 @@ class CreateAsset extends React.Component {
           type: type,
           value: values
         })
+    } else if(type == "File") {
+      attr.push({
+          key: key,
+          type: type,
+          value: e.target.files
+        })
     } else {
       attr.push({
           key: key,
@@ -568,6 +577,7 @@ class CreateAsset extends React.Component {
           value: e.target.value
         })
     }
+
     this.setState({
       assetSet: {
         ...this.state.assetSet,

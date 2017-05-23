@@ -306,7 +306,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
 
     //append category text
     $(".categoryType").prepend("Land ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "shop") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
     // validation rules for shop agreement
     validationRules = {
         // shoppingComplexName: {

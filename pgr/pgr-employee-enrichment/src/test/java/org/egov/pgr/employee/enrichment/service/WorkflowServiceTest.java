@@ -2,6 +2,7 @@ package org.egov.pgr.employee.enrichment.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRestRepository;
 import org.egov.pgr.employee.enrichment.repository.WorkflowRepository;
@@ -162,14 +163,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("Testing complaint update")
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("Testing complaint update")
                 .complaintTypeCode("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
@@ -202,13 +203,13 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         final ServiceRequest complaint = ServiceRequest.builder()
-            .values(responseValues)
+            .attribValues(responseValues)
             .description("test")
             .complaintTypeCode("serviceCode")
             .build();
@@ -246,14 +247,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("test").complaintTypeCode
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
                 ("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
@@ -287,14 +288,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
-        responseValues.put("complaintTypeCode", "BOG");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("complaintTypeCode", "BOG"));
         final ServiceRequest complaint = ServiceRequest.builder()
-            .values(responseValues)
+            .attribValues(responseValues)
             .description("test")
             .complaintTypeCode("serviceCode")
             .build();
@@ -332,15 +333,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "2");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
-
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "2"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("test").complaintTypeCode
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
                 ("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
@@ -373,14 +373,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "2");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "2"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
 
         final ServiceRequest complaint = ServiceRequest.builder()
-            .values(responseValues)
+            .attribValues(responseValues)
             .description("test")
             .complaintTypeCode("serviceCode")
             .build();
@@ -418,15 +418,15 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "2");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "2"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
 
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("test").complaintTypeCode
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
                 ("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);

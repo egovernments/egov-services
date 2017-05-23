@@ -2,8 +2,8 @@ package org.egov.pgr.employee.enrichment.consumer;
 
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintMessageQueueRepository;
-import org.egov.pgr.employee.enrichment.service.PositionService;
 import org.egov.pgr.employee.enrichment.service.EscalationDateService;
+import org.egov.pgr.employee.enrichment.service.PositionService;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;

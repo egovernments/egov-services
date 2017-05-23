@@ -38,7 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var srn = getUrlParameter('srn');
-var lat, lng, myCenter,status;
+var lat, lng, myCenter, AV_status, serviceCode, serviceDefinition= [];
 var updateResponse = {};
 var loadDD = new $.loadDD();
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
@@ -97,7 +97,7 @@ $(document).ready(function()
 	});
 
 	$('#update-complaint').click(function(){
-		if($('form').valid()){
+		if($('form#complaintUpdate').valid()){
 			var obj = $(this);
 			obj.attr("disabled", "disabled");
 			complaintUpdate(obj);
@@ -127,13 +127,31 @@ function getComplaint(){
 				return;
 			}
 
-			status = response.serviceRequests[0].values.status;
-			
+			serviceCode = response.serviceRequests[0].serviceCode;
+
+			var AV_locationId, AV_childLocationId, AV_receivingcenter, AV_departmentId, AV_stateId;
+
+			for (var item of response.serviceRequests[0].attribValues) {
+			    if(item['key']=='receivingCenter')
+			    	AV_receivingcenter = item['name'];
+			    else if(item['key']=='departmentId')
+			    	AV_departmentId = item['name'];
+		    	else if(item['key']=='locationId')
+		    		AV_locationId = item['name'];
+	    		else if(item['key']=='childLocationId')
+	    			AV_childLocationId = item['name'];
+	    		else if(item['key']=='stateId')
+	    			AV_stateId = item['name'];
+	    		else if(item['key']=='status'){
+	    			AV_status = item['name'];
+	    		}
+			}
+
 			if(localStorage.getItem('type') == 'EMPLOYEE'){
-				if(status == 'COMPLETED' || status == 'REJECTED')
+				if(AV_status == 'COMPLETED' || AV_status == 'REJECTED')
 					$('.action-section').remove();
 			}else if(localStorage.getItem('type') == 'CITIZEN'){
-				if(status == 'WITHDRAWN')
+				if(AV_status == 'WITHDRAWN')
 					$('.action-section').remove();
 			}
 
@@ -145,7 +163,7 @@ function getComplaint(){
 
 					//History
 					$.ajax({
-						url : "/workflow/history?tenantId=default&workflowId="+response.serviceRequests[0].values.stateId,
+						url : "/workflow/history?tenantId=default&workflowId="+AV_stateId,
 						type : 'GET',
 						success : function(work_response){
 
@@ -158,7 +176,7 @@ function getComplaint(){
 							var wf_template = Handlebars.compile(wf_source);
 							$('.wfcomplaint').append(wf_template(wf_response));
 
-							if(localStorage.getItem('type') == 'CITIZEN' && status != 'COMPLETED')
+							if(localStorage.getItem('type') == 'CITIZEN' && AV_status != 'COMPLETED')
 								$('.feedback').remove();
 
 							lat = response.serviceRequests[0].lat;
@@ -166,19 +184,6 @@ function getComplaint(){
 
 							if (lat != '0' && lng != '0')
 								getAddressbyLatLng(lat, lng, response);
-
-							var AV_locationId, AV_childLocationId, AV_receivingcenter, AV_departmentId;
-
-							for (var item of response.serviceRequests[0].attribValues) {
-							    if(item['key']=='receivingCenter')
-							    	AV_receivingcenter = item['name'];
-							    else if(item['key']=='departmentId')
-							    	AV_departmentId = item['name'];
-						    	else if(item['key']=='locationId')
-						    		AV_locationId = item['name'];
-					    		else if(item['key']=='childLocationId')
-					    			AV_childLocationId = item['name'];
-							}
 
 							getDepartmentbyId(AV_departmentId, response);
 
@@ -214,6 +219,8 @@ function getComplaint(){
 								getLocality(wardId, localityid);
 								getDepartment(loadDD);
 							}
+
+							loadServiceDefinition(response);
 
 						},
 						error:function(){
@@ -261,7 +268,7 @@ function complaintUpdate(obj){
 
 	for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
 		if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
-			req_obj.serviceRequest.attribValues[i]['name'] = $('#status').val() ? $('#status').val() : status;
+			req_obj.serviceRequest.attribValues[i]['name'] = $('#status').val() ? $('#status').val() : AV_status;
 		}
 		else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assigneeId'){
 			req_obj.serviceRequest.attribValues[i]['key'] = 'assignmentId';
@@ -373,7 +380,7 @@ function complaintType(loadDD, serviceName){
 
 function nextStatus(loadDD){
 	$.ajax({
-		url : '/workflow/v1/nextstatuses/_search?tenantId=default&currentStatusCode='+status,
+		url : '/workflow/v1/nextstatuses/_search?tenantId=default&currentStatusCode='+AV_status,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -386,7 +393,7 @@ function nextStatus(loadDD){
 			keyValue:'code',
 			keyDisplayName:'name'
 		});
-		$('#status').val(status);
+		$('#status').val(AV_status);
 		$('#status').val() ? $('#status').val() : $('#status').val('');
 	});
 }
@@ -540,6 +547,108 @@ function getAddressbyLatLng(lat, lng, response){
 	});
 }
 
+function loadServiceDefinition(searchResponse){
+	$.ajax({
+		url: "/pgr/services/_search?type=all&tenantId=default",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		beforeSend : function(){
+			showLoader();
+		},
+		success : function(data) {
+			serviceResult = (data.complaintTypes).filter(function( obj ) {
+				return (obj.keywords).indexOf('deliverable') > -1;
+			});
+			console.log(JSON.stringify(serviceResult));
+			for(var i=0;i<serviceResult.length;i++){
+				if(serviceResult[i].serviceCode == serviceCode){
+					callToLoadDefinition(searchResponse);
+					return;
+				}
+			}
+		}
+	});
+}
+
+function callToLoadDefinition(searchResponse){
+	$.ajax({
+		url: "/pgr/servicedefinition/_search?tenantId=default&serviceCode="+serviceCode,
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		beforeSend : function(){
+			showLoader();
+		},
+		contentType: "application/json",
+		success : function(data){
+
+			//console.log('OR',JSON.stringify(searchResponse.serviceRequests[0].attribValues));
+			serviceDefinition = searchResponse.serviceRequests[0].attribValues;
+
+			var renderFields = new $.renderFields();
+			var finTemplate = renderFields.render({'data':data.attributes,'create':false});
+
+			if(finTemplate.formFields){
+				$('#servicesBlock').parents('.panel-primary').removeClass('hide');
+				$('#servicesBlock').prepend(finTemplate.formFields);
+			}
+			else
+				$('#servicesBlock').parents('.panel-primary').hide();
+
+			if(finTemplate.checklist){
+				$('#servicesBlockClist').parents('.panel-primary').removeClass('hide');
+				$('#servicesBlockClist').prepend(finTemplate.checklist);
+			}
+			else
+				$('#servicesBlockClist').parents('.panel-primary').hide();
+
+			if(finTemplate.documents){
+				$('#servicesBlockDocs').parents('.panel-primary').removeClass('hide');
+				$('#servicesBlockDocs').prepend(finTemplate.documents);
+			}
+			else
+				$('#servicesBlockDocs').parents('.panel-primary').hide();
+
+			patternvalidation();
+			translate();
+
+			$('.appForm *').filter(':input').each(function(){
+			    var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
+			    $(this).val(obj.name);
+			});
+
+			$('.checkForm *').filter(':input').each(function(){
+				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
+			    if(JSON.parse(obj.name))
+			    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");
+			    else
+			    	$(this).prop('checked', JSON.parse(obj.name));
+			});
+
+			$('#servicesBlockDocs *').filter(':input').each(function(){
+				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
+				//console.log($(this).attr('name'), obj ? obj.name : 'nothing')
+				if(obj){
+					$(this).parent('div').html('<a href="/filestore/v1/files/id?fileStoreId='+obj.name+'&tenantId=default" download>Download</a>')
+					$(this).remove();
+				}
+			});
+			
+
+		},
+		error: function(){
+			//bootbox.alert('Error!');
+		},
+		complete : function(){
+			hideLoader();
+		}
+	});
+}
+
 function resizeMap() {
 	if(typeof map =="undefined") return;
 	setTimeout( function(){resizingMap();} , 400);
@@ -579,3 +688,8 @@ Handlebars.registerHelper('contains', function(string, checkString) {
 	var n = string.includes(checkString);
 	return n;
 });
+
+function getObjFromArray(arr, value) {
+  var result  = arr.filter(function(o){return o.key == value;} );
+  return result? result[0] : null; // or undefined
+}

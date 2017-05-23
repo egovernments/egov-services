@@ -103,6 +103,7 @@ $(document).ready(function(){
 			data['mediaUrl'] = "";
 			data['tenantId'] = 'default';
 			data["isAttribValuesPopulated"]=true;
+			data["isForNewSchema"]=true;
 
 			obj = {};
 			obj = {
@@ -121,7 +122,7 @@ $(document).ready(function(){
 			var obj = {};
 			obj = {
 			    key: 'status',
-			    name:'REGISTERED'
+			    name:'NEW'
 			};
 			data['attribValues'].push(obj);
 
@@ -232,7 +233,7 @@ function loadServiceDefinition(code){
 		contentType: "application/json",
 		success : function(data){
 			var renderFields = new $.renderFields();
-			var finTemplate = renderFields.render(data.attributes);
+			var finTemplate = renderFields.render({'data':data.attributes,'create':true});
 
 			if(finTemplate.formFields)
 				$('#servicesBlock').prepend(finTemplate.formFields);

@@ -509,19 +509,20 @@ var renderFields = function(){
 	
 }
 
-renderFields.prototype.render =function(attr_array)
+renderFields.prototype.render =function(objFields)
 {
-	this.attr_array = attr_array;
+	this.attr_array = objFields.data;
+	this.create = objFields.create;
 
 	for (var j = 0; j < this.attr_array.length; j++){
 		if(this.attr_array[j].code == 'CHECKLIST'){
-			var template = renderFields.prototype.renderTemplate(this.attr_array[j]);
+			var template = renderFields.prototype.renderTemplate(this.attr_array[j], this.create);
 			this.templateCheckList = this.templateCheckList ? this.templateCheckList + template : template;
 		}else if(this.attr_array[j].code == 'DOCUMENTS'){
-			var template = renderFields.prototype.renderTemplate(this.attr_array[j]);
+			var template = renderFields.prototype.renderTemplate(this.attr_array[j], this.create);
 			this.templateDocuments = this.templateDocuments ? this.templateDocuments + template : template;
 		}else{
-			var template = renderFields.prototype.renderTemplate(this.attr_array[j]);
+			var template = renderFields.prototype.renderTemplate(this.attr_array[j], this.create);
 			this.templateFormFields = this.templateFormFields ? this.templateFormFields + template : template;
 		}
 	}
@@ -536,9 +537,11 @@ renderFields.prototype.render =function(attr_array)
 	return this.templateObj;
 }
 
-renderFields.prototype.renderTemplate =function(obj)
+renderFields.prototype.renderTemplate =function(obj, mode)
 {
+
 	this.objToRender = obj;
+	this.mode = mode ? '' : 'disabled';
 
 	for (var key in this.objToRender) {
 		var value = this.objToRender[key];
@@ -578,16 +581,16 @@ renderFields.prototype.renderTemplate =function(obj)
 		}else{
 			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'String' ? 'alphabetwithspace' : value; 
 			if(this.dataType == 'number' || this.dataType == 'String' || this.dataType == 'datetime')
-				this.template = '<div class="form-group"> <label for="field-1" class="col-sm-3 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-6 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' /> </div> </div>';	
+				this.template = '<div class="form-group"> <label for="field-1" class="col-sm-3 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-6 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div> </div>';	
 			else if(this.dataType == 'text')
-				this.template = '<div class="form-group"> <label for="field-1" class="col-sm-3 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-6 add-margin"> <textarea class="form-control patternvalidation" name="'+this.name+'" data-pattern="'+this.pattern+'" '+this.required+' ></textarea> </div> </div>';
+				this.template = '<div class="form-group"> <label for="field-1" class="col-sm-3 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-6 add-margin"> <textarea class="form-control patternvalidation" name="'+this.name+'" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' ></textarea> </div> </div>';
 			else if(this.dataType == 'singlevaluelist' || this.dataType == 'multivaluelist'){
 				var this_select_content;
 
 				if(this.dataType == 'multivaluelist'){
-					this_select_content = '<select name="'+this.name+'" '+this.required+' multiple class="form-control">';
+					this_select_content = '<select name="'+this.name+'" '+this.required+' '+this.mode+' multiple class="form-control">';
 				}else
-					this_select_content = '<select name="'+this.name+'" '+this.required+' class="form-control">';
+					this_select_content = '<select name="'+this.name+'" '+this.required+' '+this.mode+' class="form-control">';
 
 					this_select_content += '<option value="">Select</option>';
 

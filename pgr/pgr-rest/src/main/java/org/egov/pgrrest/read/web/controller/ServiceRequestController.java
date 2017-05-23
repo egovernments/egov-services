@@ -102,14 +102,6 @@ public class ServiceRequestController {
         return createResponse(complaints);
     }
 
-    @PostMapping(value = "/updateLastAccessedTime")
-    @ResponseBody
-    public void updateLastAccessedTime(@RequestParam final String serviceRequestId,
-                                       @RequestBody RequestInfoBody requestInfo,
-                                       @RequestParam(value = "tenantId") final String tenantId) {
-        serviceRequestService.updateLastAccessedTime(serviceRequestId, tenantId);
-    }
-
     private ServiceResponse createResponse(List<ServiceRequest> complaints) {
         final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = complaints.stream().map(org
             .egov.pgrrest.common.contract.ServiceRequest::new)

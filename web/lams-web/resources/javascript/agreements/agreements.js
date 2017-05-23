@@ -96,7 +96,7 @@ $("select").on("change", function() {
             departmentId: $("#approverDepartment").val(),
             designationId: $("#approverDesignation").val()
         }).responseJSON["Employee"] || [];
-        //$(`#approverName`).html(`<option value=''>Select</option>`)
+        $(`#approverName`).html(`<option value=''>Select</option>`)
 
         for (var i = 0; i < employees.length; i++) {
             $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)

@@ -41,19 +41,16 @@ package org.egov.egf.persistence.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.FiscalPeriodContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -67,48 +64,54 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"financialYear"},callSuper=false)
-
+@EqualsAndHashCode(exclude = { "financialYear" }, callSuper = false)
 @Table(name = "egf_fiscalperiod")
 @SequenceGenerator(name = FiscalPeriod.SEQ_FISCALPERIOD, sequenceName = FiscalPeriod.SEQ_FISCALPERIOD, allocationSize = 1)
 public class FiscalPeriod extends AbstractAuditable {
 
-        private static final long serialVersionUID = -5166451072153556422L;
+	private static final long serialVersionUID = -5166451072153556422L;
 
-        public static final String SEQ_FISCALPERIOD = "seq_egf_fiscalperiod";
+	public static final String SEQ_FISCALPERIOD = "seq_egf_fiscalperiod";
 
-        @Id
-        @GeneratedValue(generator = SEQ_FISCALPERIOD, strategy = GenerationType.SEQUENCE)
-        private Long id;
-                       
-        @Length(min = 1, max = 25)
-        @NotNull
-        private String name = "";
-        
-        @NotNull
-        @ManyToOne(fetch=FetchType.LAZY)
-        @JoinColumn(name="FinancialYearid", updatable = false)
-        private FinancialYear financialYear ;
-        
-        @NotNull
-        private Date startingDate;
-        
-        @NotNull
-        private Date endingDate;
-        @NotNull
-        private Boolean active;
-        @NotNull
-        private Boolean isActiveForPosting;
-        
-        private Boolean isClosed ;
+	@Id
+	@GeneratedValue(generator = SEQ_FISCALPERIOD, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-        @Override
-        public Long getId()
-        {
-        	return this.id;
-        }
-       
+	@Length(min = 1, max = 25)
+	@NotNull
+	private String name = "";
 
-        
+	@NotNull
+	@Column(name = "FinancialYearid")
+	private Long financialYear;
+
+	@NotNull
+	private Date startingDate;
+
+	@NotNull
+	private Date endingDate;
+	@NotNull
+	private Boolean active;
+	@NotNull
+	private Boolean isActiveForPosting;
+
+	private Boolean isClosed;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public FiscalPeriod(FiscalPeriodContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setFinancialYear(contract.getFinancialYear() != null ? contract.getFinancialYear().getId() : null);
+		this.setStartingDate(contract.getStartingDate());
+		this.setEndingDate(contract.getEndingDate());
+		this.setActive(contract.getActive());
+		this.setIsActiveForPosting(contract.getIsActiveForPosting());
+		this.setIsClosed(contract.getIsClosed());
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

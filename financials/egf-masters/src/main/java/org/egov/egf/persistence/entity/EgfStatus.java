@@ -40,16 +40,11 @@
 
 package org.egov.egf.persistence.entity;
 
-import java.util.Date;
-
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
-
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -57,23 +52,22 @@ import lombok.Setter;
 
 public class EgfStatus implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6547627766486994776L;
 
 	private Long id;
-	
 
 	private String moduleType;
 
 	private String code;
-	
+
 	private String description;
 
 	private String orderId;
-	
+
 	@Override
 	public String toString() {
-		return "EgwStatus [id=" + id + ", moduletype=" + moduleType
-				+ ", description=" + description + ", code=" + code + "]";
+		return "EgwStatus [id=" + id + ", moduletype=" + moduleType + ", description=" + description + ", code=" + code
+				+ "]";
 	}
 
 	@Override
@@ -81,10 +75,8 @@ public class EgfStatus implements java.io.Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result
-				+ ((moduleType == null) ? 0 : moduleType.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((moduleType == null) ? 0 : moduleType.hashCode());
 		return result;
 	}
 
@@ -115,7 +107,4 @@ public class EgfStatus implements java.io.Serializable {
 		return true;
 	}
 
-	
-
-	
 }

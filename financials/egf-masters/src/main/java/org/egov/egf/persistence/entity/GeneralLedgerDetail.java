@@ -40,7 +40,6 @@
 package org.egov.egf.persistence.entity;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -59,39 +58,38 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"generalLedger","accountDetailKey","accountDetailType"},callSuper=false)
+@EqualsAndHashCode(exclude = { "generalLedger", "accountDetailKey", "accountDetailType" }, callSuper = false)
 
 @Table(name = "egf_generalledgerdetail")
 @SequenceGenerator(name = GeneralLedger.SEQ, sequenceName = GeneralLedger.SEQ, allocationSize = 1)
 public class GeneralLedgerDetail extends AbstractPersistable<Long> {
- 
+
 	private static final long serialVersionUID = 8704167799390083959L;
 	public static final String SEQ = "seq_egf_generalledgerdetail";
 	@Id
-    @GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
-    private Long id;
- 
-	@ManyToOne
-	@JoinColumn(name="generalLedgerId")
-    private GeneralLedger generalLedger;
-	
-	@NotNull
-    private AccountDetailKey accountDetailKey;
-    
-	@NotNull
-    @ManyToOne
-	@JoinColumn(name="detailTypeId")
-    private AccountDetailType accountDetailType;
-    @NotNull
-    @Min(1)
-    @Max(value=999999999)
-    private BigDecimal amount;
+	@GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    
+	@ManyToOne
+	@JoinColumn(name = "generalLedgerId")
+	private GeneralLedger generalLedger;
+
+	@NotNull
+	private AccountDetailKey accountDetailKey;
+
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "detailTypeId")
+	private AccountDetailType accountDetailType;
+	@NotNull
+	@Min(1)
+	@Max(value = 999999999)
+	private BigDecimal amount;
 
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository 
-public interface AccountCodePurposeRepository extends JpaRepository<AccountCodePurpose,java.lang.Long>,JpaSpecificationExecutor<AccountCodePurpose>  {
+public interface AccountCodePurposeJpaRepository extends JpaRepository<AccountCodePurpose,java.lang.Long>,JpaSpecificationExecutor<AccountCodePurpose>  {
 
 AccountCodePurpose findByName(String name);
 

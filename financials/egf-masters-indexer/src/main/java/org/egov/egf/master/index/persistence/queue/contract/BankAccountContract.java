@@ -57,39 +57,39 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "bankBranch", "chartOfAccount", "fund", "accountNumber", "accountType", "description", "active",
-        "payTo", "type" })
+@JsonPropertyOrder({ "id", "bankBranch", "chartOfAccount", "fund", "accountNumber", "accountType", "description",
+		"active", "payTo", "type" })
 public class BankAccountContract extends AuditableContract implements java.io.Serializable {
 
-    private Long id;
+	private Long id;
 
-    private BankBranchContract bankBranch;
+	private BankBranchContract bankBranch;
 
-    private ChartOfAccountContract chartOfAccount;
+	private ChartOfAccountContract chartOfAccount;
 
-    private FundContract fund;
+	private FundContract fund;
 
-    @NotNull
-    @Length(max = 25)
-    private String accountNumber;
+	@NotNull
+	@Length(max = 25)
+	private String accountNumber;
 
-    // is this required ?
-    private String accountType;
-    @Length(max = 256)
-    private String description;
+	// is this required ?
+	private String accountType;
+	@Length(max = 256)
+	private String description;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    @Length(max = 100)
-    private String payTo;
+	@Length(max = 100)
+	private String payTo;
 
-    @NotNull
-   
-    private String type;
+	@NotNull
 
-    public Long getId() {
-        return this.id;
-    }
+	private String type;
+
+	public Long getId() {
+		return this.id;
+	}
 
 }

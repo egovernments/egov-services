@@ -65,10 +65,10 @@ public class AccountCodePurposeContract extends AuditableContract {
 	@NotNull
 	@Length(max = 256, min = 3)
 	private String name;
-	
+
 	public AccountCodePurposeContract(final String id) {
-	        super();
-	        this.id = Long.valueOf(id);
-	    }
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

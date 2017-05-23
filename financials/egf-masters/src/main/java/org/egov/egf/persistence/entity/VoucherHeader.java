@@ -57,8 +57,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -73,63 +71,60 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"vouchermis","fund","ledgers"},callSuper=false)
+@EqualsAndHashCode(exclude = { "vouchermis", "fund", "ledgers" }, callSuper = false)
 @Table(name = "egf_voucherheader")
 @SequenceGenerator(name = VoucherHeader.SEQ_VOUCHERHEADER, sequenceName = VoucherHeader.SEQ_VOUCHERHEADER, allocationSize = 1)
-public class VoucherHeader extends AbstractAuditable  {
+public class VoucherHeader extends AbstractAuditable {
 
-    public static final String SEQ_VOUCHERHEADER = "seq_egf_voucherheader";
-    private static final long serialVersionUID = -1950866465902911747L;
-    @Id
-    @GeneratedValue(generator = SEQ_VOUCHERHEADER, strategy = GenerationType.SEQUENCE)
-    private Long id;
-   
-    @NotEmpty
-    @NotNull
-    @Length(max=16)
-    private String name;
-    @NotEmpty
-    @NotNull
-    @Length(max=16)
-    private String type;
-    
-    @Length(max=256)
-    private String description;
-    @Length(max=32)
-    private String voucherNumber;
-    
-    @NotNull
-    private Date voucherDate;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fundId")
-    private Fund fund;
-    private Long fiscalPeriod;
-    private Integer status;
-    private Long originalVhId;
-    private Long refVhId;
-    private String cgvn;
-    private Long moduleId;
-    
-    @Override
-    public Long getId()
-    {
-    	return this.id;
-    }
-  
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeader", targetEntity = GeneralLedger.class)
-    
-    private Set<GeneralLedger> ledgers;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucherHeader", targetEntity = Vouchermis.class)
-   
- 
-    private Vouchermis vouchermis;
- 
-    public BigDecimal getTotalAmount() {
-        BigDecimal amount = BigDecimal.ZERO;
-        for (final GeneralLedger detail : ledgers)
-            amount = amount.add(detail.getDebitAmount());
-        return amount;
-    }
+	public static final String SEQ_VOUCHERHEADER = "seq_egf_voucherheader";
+	private static final long serialVersionUID = -1950866465902911747L;
+	@Id
+	@GeneratedValue(generator = SEQ_VOUCHERHEADER, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
+	@NotEmpty
+	@NotNull
+	@Length(max = 16)
+	private String name;
+	@NotEmpty
+	@NotNull
+	@Length(max = 16)
+	private String type;
+
+	@Length(max = 256)
+	private String description;
+	@Length(max = 32)
+	private String voucherNumber;
+
+	@NotNull
+	private Date voucherDate;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fundId")
+	private Fund fund;
+	private Long fiscalPeriod;
+	private Integer status;
+	private Long originalVhId;
+	private Long refVhId;
+	private String cgvn;
+	private Long moduleId;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeader", targetEntity = GeneralLedger.class)
+
+	private Set<GeneralLedger> ledgers;
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucherHeader", targetEntity = Vouchermis.class)
+
+	private Vouchermis vouchermis;
+
+	public BigDecimal getTotalAmount() {
+		BigDecimal amount = BigDecimal.ZERO;
+		for (final GeneralLedger detail : ledgers)
+			amount = amount.add(detail.getDebitAmount());
+		return amount;
+	}
 
 }

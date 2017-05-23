@@ -40,7 +40,6 @@ public class BankAccountController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public BankAccountContractResponse create(@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		bankAccountService.validate(bankAccountContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -52,15 +51,10 @@ public class BankAccountController {
 		if (bankAccountContractRequest.getBankAccounts() != null
 				&& !bankAccountContractRequest.getBankAccounts().isEmpty()) {
 			for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
-
-				BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
-				BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-				bankAccountContractResponse.getBankAccounts().add(resp);
+				bankAccountContractResponse.getBankAccounts().add(bankAccountContract);
 			}
 		} else if (bankAccountContractRequest.getBankAccount() != null) {
-			BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
-			BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-			bankAccountContractResponse.setBankAccount(resp);
+			bankAccountContractResponse.setBankAccount(bankAccountContractRequest.getBankAccount());
 		}
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
@@ -72,7 +66,6 @@ public class BankAccountController {
 	public BankAccountContractResponse update(@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
 
-		ModelMapper modelMapper = new ModelMapper();
 		bankAccountService.validate(bankAccountContractRequest, "update", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -81,10 +74,7 @@ public class BankAccountController {
 		bankAccountContractRequest.getBankAccount().setId(uniqueId);
 		bankAccountService.push(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
-		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
-		BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
-		BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-		bankAccountContractResponse.setBankAccount(resp);
+		bankAccountContractResponse.setBankAccount(bankAccountContractRequest.getBankAccount());
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 
@@ -101,7 +91,6 @@ public class BankAccountController {
 			throw new CustomBindException(errors);
 		}
 		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
-		RequestInfo requestInfo = bankAccountContractRequest.getRequestInfo();
 		BankAccount bankAccountFromDb = bankAccountService.findOne(uniqueId);
 		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
 

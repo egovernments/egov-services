@@ -49,6 +49,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.queue.contract.AccountDetailTypeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -66,36 +67,46 @@ import lombok.Setter;
 
 public class AccountDetailType extends AbstractAuditable implements java.io.Serializable {
 
-    private static final long serialVersionUID = 3499589983886551123L;
+	private static final long serialVersionUID = 3499589983886551123L;
 
-    public static final String SEQ_ACCOUNTDETAILTYPE = "seq_egf_accountdetailtype";
+	public static final String SEQ_ACCOUNTDETAILTYPE = "seq_egf_accountdetailtype";
 
-    @Id
-    @GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)
+	@Id
+	@GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)
 
-    private Long id;
+	private Long id;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String name;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String name;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String description;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String description;
 
-    @Length(max = 25)
-    private String tableName;
+	@Length(max = 25)
+	private String tableName;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    @Column(name = "FULLY_QUALIFIED_NAME")
-    @Length(max = 250, min = 1)
-    private String fullyQualifiedName;
+	@Column(name = "FULLY_QUALIFIED_NAME")
+	@Length(max = 250, min = 1)
+	private String fullyQualifiedName;
 
-    @Override
-    public Long getId() {
-        return this.id;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public AccountDetailType(AccountDetailTypeContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setDescription(contract.getDescription());
+		this.setTableName(contract.getTableName());
+		this.setActive(contract.getActive());
+		this.setFullyQualifiedName(contract.getFullyQualifiedName());
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

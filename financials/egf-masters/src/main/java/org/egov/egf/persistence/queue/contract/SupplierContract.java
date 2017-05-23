@@ -58,52 +58,52 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "code", "name", "address", "mobile", "email", "description", "active", "panNo", "tinNo",
-        "registationNo", "bankAccount", "ifscCode", "bank" })
+		"registationNo", "bankAccount", "ifscCode", "bank" })
 public class SupplierContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String code;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String code;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String name;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String name;
 
-    @Length(max = 300)
-    private String address;
+	@Length(max = 300)
+	private String address;
 
-    @Length(max = 10)
-    private String mobile;
+	@Length(max = 10)
+	private String mobile;
 
-    @Length(max = 25)
-    private String email;
+	@Length(max = 25)
+	private String email;
 
-    @Length(max = 250)
-    private String description;
-    @NotNull
-    private Boolean active;
+	@Length(max = 250)
+	private String description;
+	@NotNull
+	private Boolean active;
 
-    @Length(max = 10)
-    private String panNo;
+	@Length(max = 10)
+	private String panNo;
 
-    @Length(max = 20)
-    private String tinNo;
+	@Length(max = 20)
+	private String tinNo;
 
-    @Length(max = 25)
-    private String registationNo;
+	@Length(max = 25)
+	private String registationNo;
 
-    @Length(max = 25)
-    private String bankAccount;
+	@Length(max = 25)
+	private String bankAccount;
 
-    @Length(max = 12)
-    private String ifscCode;
+	@Length(max = 12)
+	private String ifscCode;
 
-    private BankContract bank;
+	private BankContract bank;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
 }

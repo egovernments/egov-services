@@ -63,38 +63,39 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "name", "description", "tableName", "columnName", "attributeName", "active", "fullyQualifiedName" })
+@JsonPropertyOrder({ "id", "name", "description", "tableName", "columnName", "attributeName", "active",
+		"fullyQualifiedName" })
 public class AccountDetailTypeContract extends AuditableContract implements java.io.Serializable {
 
-    private Long id;
+	private Long id;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Long> ids = new ArrayList<Long>();
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<Long> ids = new ArrayList<Long>();
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String name;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String name;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String description;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String description;
 
-    @Length(max = 25)
-    private String tableName;
+	@Length(max = 25)
+	private String tableName;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    @Length(max = 250, min = 1)
-    private String fullyQualifiedName;
+	@Length(max = 250, min = 1)
+	private String fullyQualifiedName;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public AccountDetailTypeContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public AccountDetailTypeContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

@@ -31,158 +31,159 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/accountdetailtypes")  
+@RequestMapping("/accountdetailtypes")
 public class AccountDetailTypeController {
 	@Autowired
-	private AccountDetailTypeService  accountDetailTypeService;
+	private AccountDetailTypeService accountDetailTypeService;
 
 	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public  AccountDetailTypeContractResponse create(@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors) {
-		ModelMapper modelMapper=new ModelMapper();
-		accountDetailTypeService.validate(accountDetailTypeContractRequest,"create",errors);
+	public AccountDetailTypeContractResponse create(
+			@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest,
+			BindingResult errors) {
+		accountDetailTypeService.validate(accountDetailTypeContractRequest, "create", errors);
 		if (errors.hasErrors()) {
-		  throw	new CustomBindException(errors);
+			throw new CustomBindException(errors);
 		}
 		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
+		accountDetailTypeService.push(accountDetailTypeContractRequest);
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
-		for(AccountDetailTypeContract accountDetailTypeContract:accountDetailTypeContractRequest.getAccountDetailTypes())
-		{
-		
-		AccountDetailType	accountDetailTypeEntity=	modelMapper.map(accountDetailTypeContract, AccountDetailType.class);
-		accountDetailTypeEntity = accountDetailTypeService.create(accountDetailTypeEntity);
-		AccountDetailTypeContract resp=modelMapper.map(accountDetailTypeEntity, AccountDetailTypeContract.class);
-		accountDetailTypeContract.setId(accountDetailTypeEntity.getId());
-		accountDetailTypeContractResponse.getAccountDetailTypes().add(resp);
+		if (accountDetailTypeContractRequest.getAccountDetailTypes() != null
+				&& !accountDetailTypeContractRequest.getAccountDetailTypes().isEmpty()) {
+			for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest
+					.getAccountDetailTypes()) {
+				accountDetailTypeContractResponse.getAccountDetailTypes().add(accountDetailTypeContract);
+			}
+		} else if (accountDetailTypeContractRequest.getAccountDetailType() != null) {
+			accountDetailTypeContractResponse
+					.setAccountDetailType(accountDetailTypeContractRequest.getAccountDetailType());
 		}
 
-		accountDetailTypeContractResponse.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
-		 
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+
 		return accountDetailTypeContractResponse;
 	}
 
 	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailTypeContractResponse update(@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
+	public AccountDetailTypeContractResponse update(
+			@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-		
-		accountDetailTypeService.validate(accountDetailTypeContractRequest,"update",errors);
-		
+
+		accountDetailTypeService.validate(accountDetailTypeContractRequest, "update", errors);
+
 		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
+			throw new CustomBindException(errors);
+		}
 		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
-		AccountDetailType accountDetailTypeFromDb = accountDetailTypeService.findOne(uniqueId);
-		
-		AccountDetailTypeContract accountDetailType = accountDetailTypeContractRequest.getAccountDetailType();
-		//ignoring internally passed id if the put has id in url
-	    accountDetailType.setId(uniqueId);
-		ModelMapper model=new ModelMapper();
-	 	model.map(accountDetailType, accountDetailTypeFromDb);
-		accountDetailTypeFromDb = accountDetailTypeService.update(accountDetailTypeFromDb);
+		accountDetailTypeService.push(accountDetailTypeContractRequest);
+		accountDetailTypeContractRequest.getAccountDetailType().setId(uniqueId);
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
-		accountDetailTypeContractResponse.setAccountDetailType(accountDetailType);  
-		accountDetailTypeContractResponse.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		accountDetailTypeContractResponse.setAccountDetailType(accountDetailTypeContractRequest.getAccountDetailType());
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
 		accountDetailTypeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return accountDetailTypeContractResponse;
 	}
-	
+
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailTypeContractResponse view(@ModelAttribute AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
+	public AccountDetailTypeContractResponse view(
+			@ModelAttribute AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-		accountDetailTypeService.validate(accountDetailTypeContractRequest,"view",errors);
+		accountDetailTypeService.validate(accountDetailTypeContractRequest, "view", errors);
 		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
+			throw new CustomBindException(errors);
+		}
 		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
 		RequestInfo requestInfo = accountDetailTypeContractRequest.getRequestInfo();
 		AccountDetailType accountDetailTypeFromDb = accountDetailTypeService.findOne(uniqueId);
 		AccountDetailTypeContract accountDetailType = accountDetailTypeContractRequest.getAccountDetailType();
-		
-		ModelMapper model=new ModelMapper();
-	 	model.map(accountDetailTypeFromDb,accountDetailType );
-		
-		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
-		accountDetailTypeContractResponse.setAccountDetailType(accountDetailType);  
-		accountDetailTypeContractResponse.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
-		accountDetailTypeContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-		return accountDetailTypeContractResponse ;
-	}
-	
-	@PutMapping
-	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailTypeContractResponse updateAll(@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors) {
-		accountDetailTypeService.validate(accountDetailTypeContractRequest,"updateAll",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);		
- 
-		AccountDetailTypeContractResponse accountDetailTypeContractResponse =new  AccountDetailTypeContractResponse();
-		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
-		for(AccountDetailTypeContract accountDetailTypeContract:accountDetailTypeContractRequest.getAccountDetailTypes())
-		{
-		AccountDetailType accountDetailTypeFromDb = accountDetailTypeService.findOne(accountDetailTypeContract.getId());
-		
-		ModelMapper model=new ModelMapper();
-	 	model.map(accountDetailTypeContract, accountDetailTypeFromDb);
-		accountDetailTypeFromDb = accountDetailTypeService.update(accountDetailTypeFromDb);
-		model.map(accountDetailTypeFromDb,accountDetailTypeContract);
-		accountDetailTypeContractResponse.getAccountDetailTypes().add(accountDetailTypeContract);  
-		}
 
-		accountDetailTypeContractResponse.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
-		accountDetailTypeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		
+		ModelMapper model = new ModelMapper();
+		model.map(accountDetailTypeFromDb, accountDetailType);
+
+		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
+		accountDetailTypeContractResponse.setAccountDetailType(accountDetailType);
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		accountDetailTypeContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
 		return accountDetailTypeContractResponse;
 	}
-	
+
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public AccountDetailTypeContractResponse updateAll(
+			@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest,
+			BindingResult errors) {
+		accountDetailTypeService.validate(accountDetailTypeContractRequest, "updateAll", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
+
+		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
+		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
+		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest
+				.getAccountDetailTypes()) {
+			AccountDetailType accountDetailTypeFromDb = accountDetailTypeService
+					.findOne(accountDetailTypeContract.getId());
+
+			ModelMapper model = new ModelMapper();
+			model.map(accountDetailTypeContract, accountDetailTypeFromDb);
+			accountDetailTypeFromDb = accountDetailTypeService.update(accountDetailTypeFromDb);
+			model.map(accountDetailTypeFromDb, accountDetailTypeContract);
+			accountDetailTypeContractResponse.getAccountDetailTypes().add(accountDetailTypeContract);
+		}
+
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		accountDetailTypeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+
+		return accountDetailTypeContractResponse;
+	}
+
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailTypeContractResponse search(@ModelAttribute AccountDetailTypeContract accountDetailTypeContracts,@RequestBody RequestInfo requestInfo,BindingResult errors) {
-	    
-	    AccountDetailTypeContractRequest accountDetailTypeContractRequest = new AccountDetailTypeContractRequest();
-	    accountDetailTypeContractRequest.setAccountDetailType(accountDetailTypeContracts);
-	    accountDetailTypeContractRequest.setRequestInfo(requestInfo);
-		accountDetailTypeService.validate(accountDetailTypeContractRequest,"search",errors);
+	public AccountDetailTypeContractResponse search(
+			@ModelAttribute AccountDetailTypeContract accountDetailTypeContracts, @RequestBody RequestInfo requestInfo,
+			BindingResult errors) {
+
+		AccountDetailTypeContractRequest accountDetailTypeContractRequest = new AccountDetailTypeContractRequest();
+		accountDetailTypeContractRequest.setAccountDetailType(accountDetailTypeContracts);
+		accountDetailTypeContractRequest.setRequestInfo(requestInfo);
+		accountDetailTypeService.validate(accountDetailTypeContractRequest, "search", errors);
 		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
+			throw new CustomBindException(errors);
+		}
 		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
-		AccountDetailTypeContractResponse accountDetailTypeContractResponse =new  AccountDetailTypeContractResponse();
+		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
 		accountDetailTypeContractResponse.setPage(new Pagination());
 		Page<AccountDetailType> allAccountDetailTypes;
-		ModelMapper model=new ModelMapper();
-	 
+		ModelMapper model = new ModelMapper();
+
 		allAccountDetailTypes = accountDetailTypeService.search(accountDetailTypeContractRequest);
-		AccountDetailTypeContract accountDetailTypeContract=null;
-		for(AccountDetailType b:allAccountDetailTypes)
-		{
-			accountDetailTypeContract=new AccountDetailTypeContract();
+		AccountDetailTypeContract accountDetailTypeContract = null;
+		for (AccountDetailType b : allAccountDetailTypes) {
+			accountDetailTypeContract = new AccountDetailTypeContract();
 			model.map(b, accountDetailTypeContract);
 			accountDetailTypeContractResponse.getAccountDetailTypes().add(accountDetailTypeContract);
 		}
 		accountDetailTypeContractResponse.getPage().map(allAccountDetailTypes);
-		accountDetailTypeContractResponse.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
 		accountDetailTypeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return accountDetailTypeContractResponse;
 	}
 
-	
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-        new ResponseInfo();
-		return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date())
-                .resMsgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

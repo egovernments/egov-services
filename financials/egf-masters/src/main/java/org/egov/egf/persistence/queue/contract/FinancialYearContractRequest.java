@@ -37,13 +37,16 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package  org.egov.egf.persistence.queue.contract;
+package org.egov.egf.persistence.queue.contract;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Data; 
+import lombok.Data;
+
 public @Data class FinancialYearContractRequest {
-private RequestInfo requestInfo = new RequestInfo();
-private List<FinancialYearContract> financialYears =new ArrayList<FinancialYearContract>() ;
-private FinancialYearContract financialYear =new FinancialYearContract() ;
-private Pagination page=new Pagination();}
+	private RequestInfo requestInfo = new RequestInfo();
+	private List<FinancialYearContract> financialYears = new ArrayList<FinancialYearContract>();
+	private FinancialYearContract financialYear = new FinancialYearContract();
+	private Pagination page = new Pagination();
+}

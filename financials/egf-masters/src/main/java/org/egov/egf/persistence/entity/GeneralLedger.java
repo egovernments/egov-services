@@ -59,61 +59,58 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@EqualsAndHashCode(exclude={"chartOfAccount","voucherHeader","function","ledgerDetails"},callSuper=false)
+@EqualsAndHashCode(exclude = { "chartOfAccount", "voucherHeader", "function", "ledgerDetails" }, callSuper = false)
 
 @Table(name = "egf_generalledger")
 @SequenceGenerator(name = GeneralLedger.SEQ, sequenceName = GeneralLedger.SEQ, allocationSize = 1)
 public class GeneralLedger extends AbstractPersistable<Long> {
-	
+
+	private static final long serialVersionUID = 8461730283251609382L;
 	public static final String SEQ = "seq_egf_generalledger";
 	@Id
-    @GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
-    private Long id = null;
-    private Integer orderId;
-    private ChartOfAccount chartOfAccount;
-    @NotNull
-    @Length(max=16)
-    private String glcode;
-    @NotNull
-    @Min(value=0)
-    @Max(value=999999999)
-    private BigDecimal debitAmount;
-    @NotNull
-    @Min(value=0)
-    @Max(value=999999999)
-    private BigDecimal creditAmount;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+	@GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
+	private Long id = null;
+	private Integer orderId;
+	private ChartOfAccount chartOfAccount;
+	@NotNull
+	@Length(max = 16)
+	private String glcode;
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal debitAmount;
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal creditAmount;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "voucherheaderid", nullable = true)
-    private VoucherHeader voucherHeader;
-    
-    private Function function;
-   
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "generalLedger", targetEntity = GeneralLedgerDetail.class)
-    private Set<GeneralLedgerDetail> ledgerDetails = new HashSet<GeneralLedgerDetail>();
+	private VoucherHeader voucherHeader;
 
-    @Transient
-    private Boolean isSubLedger;
+	private Function function;
 
-    
-    public Long getId()
-    {
-    	return this.id;
-    }
-     
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "generalLedger", targetEntity = GeneralLedgerDetail.class)
+	private Set<GeneralLedgerDetail> ledgerDetails = new HashSet<GeneralLedgerDetail>();
+
+	@Transient
+	private Boolean isSubLedger;
+
+	public Long getId() {
+		return this.id;
+	}
+
 }

@@ -46,17 +46,17 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public abstract  class AbstractPersistable<PK extends Serializable> implements Serializable {
+public abstract class AbstractPersistable<PK extends Serializable> implements Serializable {
 
-    private static final long serialVersionUID = 7094572260034458544L;
+	private static final long serialVersionUID = 7094572260034458544L;
 
-    @Version
-    private Long version;
-   
-    @Override
-    public String toString() {
-        return String.format("Entity of type %s with id: %s", this.getClass().getName());
-    }
+	@Version
+	private Long version;
+
+	@Override
+	public String toString() {
+		return String.format("Entity of type %s with id: %s", this.getClass().getName());
+	}
 
 	public Long getVersion() {
 		return version;
@@ -66,5 +66,4 @@ public abstract  class AbstractPersistable<PK extends Serializable> implements S
 		this.version = version;
 	}
 
-	 
 }

@@ -33,157 +33,142 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/functionaries")
 public class FunctionaryController {
-    @Autowired
-    private FunctionaryService functionaryService;
+	@Autowired
+	private FunctionaryService functionaryService;
 
-    @PostMapping("/_create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public FunctionaryContractResponse create(@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest,
-            BindingResult errors) {
-        ModelMapper modelMapper = new ModelMapper();
-        functionaryService.validate(functionaryContractRequest, "create", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        functionaryService.fetchRelatedContracts(functionaryContractRequest);
-        FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
-        functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
-        for (FunctionaryContract functionaryContract : functionaryContractRequest.getFunctionaries()) {
+	@PostMapping("/_create")
+	@ResponseStatus(HttpStatus.CREATED)
+	public FunctionaryContractResponse create(@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest,
+			BindingResult errors) {
 
-            Functionary functionaryEntity = modelMapper.map(functionaryContract, Functionary.class);
-            functionaryEntity = functionaryService.create(functionaryEntity);
-            FunctionaryContract resp = modelMapper.map(functionaryEntity, FunctionaryContract.class);
-            functionaryContract.setId(functionaryEntity.getId());
-            functionaryContractResponse.getFunctionaries().add(resp);
-        }
+		functionaryService.validate(functionaryContractRequest, "create", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
+		functionaryService.push(functionaryContractRequest);
+		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
+		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
+		if (functionaryContractRequest.getFunctionaries() != null
+				&& !functionaryContractRequest.getFunctionaries().isEmpty()) {
+			for (FunctionaryContract functionaryContract : functionaryContractRequest.getFunctionaries()) {
+				functionaryContractResponse.getFunctionaries().add(functionaryContract);
+			}
+		} else if (functionaryContractRequest.getFunctionary() != null) {
+			functionaryContractResponse.setFunctionary(functionaryContractRequest.getFunctionary());
+		}
+		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+		functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return functionaryContractResponse;
+	}
 
-        functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+	@PostMapping(value = "/{uniqueId}/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public FunctionaryContractResponse update(@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
 
-        return functionaryContractResponse;
-    }
+		functionaryService.validate(functionaryContractRequest, "update", errors);
 
-    @PostMapping(value = "/{uniqueId}/_update")
-    @ResponseStatus(HttpStatus.OK)
-    public FunctionaryContractResponse update(@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest,
-            BindingResult errors,
-            @PathVariable Long uniqueId) {
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
+		functionaryContractRequest.getFunctionary().setId(uniqueId);
+		functionaryService.push(functionaryContractRequest);
+		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
+		functionaryContractResponse.setFunctionary(functionaryContractRequest.getFunctionary());
+		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+		functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return functionaryContractResponse;
+	}
 
-        functionaryService.validate(functionaryContractRequest, "update", errors);
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public FunctionaryContractResponse view(@ModelAttribute FunctionaryContractRequest functionaryContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
+		functionaryService.validate(functionaryContractRequest, "view", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
+		RequestInfo requestInfo = functionaryContractRequest.getRequestInfo();
+		Functionary functionaryFromDb = functionaryService.findOne(uniqueId);
+		FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
 
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        functionaryService.fetchRelatedContracts(functionaryContractRequest);
-        Functionary functionaryFromDb = functionaryService.findOne(uniqueId);
+		ModelMapper model = new ModelMapper();
+		model.map(functionaryFromDb, functionary);
 
-        FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
-        // ignoring internally passed id if the put has id in url
-        functionary.setId(uniqueId);
-        ModelMapper model = new ModelMapper();
-        model.map(functionary, functionaryFromDb);
-        functionaryFromDb = functionaryService.update(functionaryFromDb);
-        FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
-        functionaryContractResponse.setFunctionary(functionary);
-        functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
-        functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return functionaryContractResponse;
-    }
+		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
+		functionaryContractResponse.setFunctionary(functionary);
+		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+		functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+		return functionaryContractResponse;
+	}
 
-    @GetMapping(value = "/{uniqueId}")
-    @ResponseStatus(HttpStatus.OK)
-    public FunctionaryContractResponse view(@ModelAttribute FunctionaryContractRequest functionaryContractRequest,
-            BindingResult errors,
-            @PathVariable Long uniqueId) {
-        functionaryService.validate(functionaryContractRequest, "view", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        functionaryService.fetchRelatedContracts(functionaryContractRequest);
-        RequestInfo requestInfo = functionaryContractRequest.getRequestInfo();
-        Functionary functionaryFromDb = functionaryService.findOne(uniqueId);
-        FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public FunctionaryContractResponse updateAll(
+			@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest, BindingResult errors) {
+		functionaryService.validate(functionaryContractRequest, "updateAll", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 
-        ModelMapper model = new ModelMapper();
-        model.map(functionaryFromDb, functionary);
+		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
+		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
+		for (FunctionaryContract functionaryContract : functionaryContractRequest.getFunctionaries()) {
+			Functionary functionaryFromDb = functionaryService.findOne(functionaryContract.getId());
 
-        FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
-        functionaryContractResponse.setFunctionary(functionary);
-        functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
-        functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-        return functionaryContractResponse;
-    }
+			ModelMapper model = new ModelMapper();
+			model.map(functionaryContract, functionaryFromDb);
+			functionaryFromDb = functionaryService.update(functionaryFromDb);
+			model.map(functionaryFromDb, functionaryContract);
+			functionaryContractResponse.getFunctionaries().add(functionaryContract);
+		}
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public FunctionaryContractResponse updateAll(@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest,
-            BindingResult errors) {
-        functionaryService.validate(functionaryContractRequest, "updateAll", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        functionaryService.fetchRelatedContracts(functionaryContractRequest);
+		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+		functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 
-        FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
-        functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
-        for (FunctionaryContract functionaryContract : functionaryContractRequest.getFunctionaries()) {
-            Functionary functionaryFromDb = functionaryService.findOne(functionaryContract.getId());
+		return functionaryContractResponse;
+	}
 
-            ModelMapper model = new ModelMapper();
-            model.map(functionaryContract, functionaryFromDb);
-            functionaryFromDb = functionaryService.update(functionaryFromDb);
-            model.map(functionaryFromDb, functionaryContract);
-            functionaryContractResponse.getFunctionaries().add(functionaryContract);
-        }
+	@PostMapping("/_search")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public FunctionaryContractResponse search(@ModelAttribute FunctionaryContract functionaryContracts,
+			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+		final FunctionaryContractRequest functionaryContractRequest = new FunctionaryContractRequest();
+		functionaryContractRequest.setFunctionary(functionaryContracts);
+		functionaryContractRequest.setRequestInfo(requestInfo);
+		functionaryService.validate(functionaryContractRequest, "search", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
+		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
+		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
+		functionaryContractResponse.setPage(new Pagination());
+		Page<Functionary> allFunctionaries;
+		ModelMapper model = new ModelMapper();
 
-        functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
-        functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		allFunctionaries = functionaryService.search(functionaryContractRequest);
+		FunctionaryContract functionaryContract = null;
+		for (Functionary b : allFunctionaries) {
+			functionaryContract = new FunctionaryContract();
+			model.map(b, functionaryContract);
+			functionaryContractResponse.getFunctionaries().add(functionaryContract);
+		}
+		functionaryContractResponse.getPage().map(allFunctionaries);
+		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+		functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return functionaryContractResponse;
+	}
 
-        return functionaryContractResponse;
-    }
-
-    @PostMapping("/_search")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public FunctionaryContractResponse search(@ModelAttribute FunctionaryContract functionaryContracts,
-            @RequestBody RequestInfo requestInfo,
-            BindingResult errors) {
-        final FunctionaryContractRequest functionaryContractRequest = new FunctionaryContractRequest();
-        functionaryContractRequest.setFunctionary(functionaryContracts);
-        functionaryContractRequest.setRequestInfo(requestInfo);
-        functionaryService.validate(functionaryContractRequest, "search", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        functionaryService.fetchRelatedContracts(functionaryContractRequest);
-        FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
-        functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
-        functionaryContractResponse.setPage(new Pagination());
-        Page<Functionary> allFunctionaries;
-        ModelMapper model = new ModelMapper();
-
-        allFunctionaries = functionaryService.search(functionaryContractRequest);
-        FunctionaryContract functionaryContract = null;
-        for (Functionary b : allFunctionaries) {
-            functionaryContract = new FunctionaryContract();
-            model.map(b, functionaryContract);
-            functionaryContractResponse.getFunctionaries().add(functionaryContract);
-        }
-        functionaryContractResponse.getPage().map(allFunctionaries);
-        functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
-        functionaryContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return functionaryContractResponse;
-    }
-
-    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-        new ResponseInfo();
-        return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date())
-                .resMsgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

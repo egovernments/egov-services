@@ -40,7 +40,6 @@ public class BankBranchController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public BankBranchContractResponse create(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		bankBranchService.validate(bankBranchContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -53,14 +52,10 @@ public class BankBranchController {
 				&& !bankBranchContractRequest.getBankBranches().isEmpty()) {
 			for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
 
-				BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
-				BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
-				bankBranchContractResponse.getBankBranches().add(resp);
+				bankBranchContractResponse.getBankBranches().add(bankBranchContract);
 			}
 		} else if (bankBranchContractRequest.getBankBranch() != null) {
-			BankBranch bankBranchEntity = new BankBranch(bankBranchContractRequest.getBankBranch());
-			BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
-			bankBranchContractResponse.setBankBranch(resp);
+			bankBranchContractResponse.setBankBranch(bankBranchContractRequest.getBankBranch());
 		}
 		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
 
@@ -72,7 +67,6 @@ public class BankBranchController {
 	public BankBranchContractResponse update(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
 
-		ModelMapper modelMapper = new ModelMapper();
 		bankBranchService.validate(bankBranchContractRequest, "update", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -83,9 +77,7 @@ public class BankBranchController {
 		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
 		bankBranchContractResponse.setBankBranch(new BankBranchContract());
 
-		BankBranch bankBranchEntity = new BankBranch(bankBranchContractRequest.getBankBranch());
-		BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
-		bankBranchContractResponse.setBankBranch(resp);
+		bankBranchContractResponse.setBankBranch(bankBranchContractRequest.getBankBranch());
 
 		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
 		bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
@@ -101,7 +93,6 @@ public class BankBranchController {
 			throw new CustomBindException(errors);
 		}
 		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
-		RequestInfo requestInfo = bankBranchContractRequest.getRequestInfo();
 		BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
 		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
 

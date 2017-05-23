@@ -63,35 +63,35 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "name", "code", "identifier", "level", "parentId", "isParent", "active" })
 public class FundContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @Length(max = 50, min = 2)
-    @NotNull
-    private String name;
+	@Length(max = 50, min = 2)
+	@NotNull
+	private String name;
 
-    @Length(max = 50, min = 2)
-    @NotNull
-    private String code;
-    @NotNull
-    private Character identifier;
+	@Length(max = 50, min = 2)
+	@NotNull
+	private String code;
+	@NotNull
+	private Character identifier;
 
-    @NotNull
-    private Long level = Long.valueOf(1l);
+	@NotNull
+	private Long level = Long.valueOf(1l);
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private FundContract parentId;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private FundContract parentId;
 
-    private Boolean isParent;
-    @NotNull
-    private Boolean active;
+	private Boolean isParent;
+	@NotNull
+	private Boolean active;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public FundContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public FundContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

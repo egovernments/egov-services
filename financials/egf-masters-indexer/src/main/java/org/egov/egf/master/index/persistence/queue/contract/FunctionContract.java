@@ -60,33 +60,33 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "name", "code", "level", "active", "isParent", "parentId" })
 public class FunctionContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @Length(max = 128, min = 2)
-    @NotNull
-    private String name;
+	@Length(max = 128, min = 2)
+	@NotNull
+	private String name;
 
-    @Length(max = 16, min = 2)
-    @NotNull
-    private String code;
+	@Length(max = 16, min = 2)
+	@NotNull
+	private String code;
 
-    @NotNull
-    private Integer level;
-    @NotNull
-    private Boolean active;
-    // is this required?
-    @NotNull
-    private Boolean isParent;
+	@NotNull
+	private Integer level;
+	@NotNull
+	private Boolean active;
+	// is this required?
+	@NotNull
+	private Boolean isParent;
 
-    private FunctionContract parentId;
+	private FunctionContract parentId;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public FunctionContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public FunctionContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

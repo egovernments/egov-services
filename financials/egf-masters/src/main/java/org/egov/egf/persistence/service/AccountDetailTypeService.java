@@ -1,15 +1,24 @@
 package org.egov.egf.persistence.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.egov.egf.json.ObjectMapperFactory;
 import org.egov.egf.persistence.entity.AccountDetailType;
 import org.egov.egf.persistence.queue.contract.AccountDetailTypeContract;
 import org.egov.egf.persistence.queue.contract.AccountDetailTypeContractRequest;
-import org.egov.egf.persistence.repository.AccountDetailTypeRepository;
+import org.egov.egf.persistence.queue.contract.AccountDetailTypeContractResponse;
+import org.egov.egf.persistence.queue.contract.RequestInfo;
+import org.egov.egf.persistence.queue.contract.ResponseInfo;
+import org.egov.egf.persistence.repository.AccountDetailTypeJpaRepository;
+import org.egov.egf.persistence.repository.AccountDetailTypeQueueRepository;
 import org.egov.egf.persistence.specification.AccountDetailTypeSpecification;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,38 +35,97 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class AccountDetailTypeService {
 
-	private final AccountDetailTypeRepository accountDetailTypeRepository;
+	private final AccountDetailTypeJpaRepository accountDetailTypeJpaRepository;
+
+	private final AccountDetailTypeQueueRepository accountDetailTypeQueueRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Autowired
-	public AccountDetailTypeService(final AccountDetailTypeRepository accountDetailTypeRepository) {
-		this.accountDetailTypeRepository = accountDetailTypeRepository;
-	}
+	private SmartValidator validator;
 
 	@Autowired
-	private SmartValidator validator;
+	public AccountDetailTypeService(final AccountDetailTypeJpaRepository accountDetailTypeJpaRepository,
+			final AccountDetailTypeQueueRepository accountDetailTypeQueueRepository) {
+		this.accountDetailTypeJpaRepository = accountDetailTypeJpaRepository;
+		this.accountDetailTypeQueueRepository = accountDetailTypeQueueRepository;
+	}
+
+	public void push(final AccountDetailTypeContractRequest accountDetailTypeContractRequest) {
+		accountDetailTypeQueueRepository.push(accountDetailTypeContractRequest);
+	}
+
+	@Transactional
+	public AccountDetailTypeContractResponse create(HashMap<String, Object> financialContractRequestMap) {
+		final AccountDetailTypeContractRequest accountDetailTypeContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("AccountDetailTypeCreate"),
+						AccountDetailTypeContractRequest.class);
+		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
+		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (accountDetailTypeContractRequest.getAccountDetailTypes() != null
+				&& !accountDetailTypeContractRequest.getAccountDetailTypes().isEmpty()) {
+			for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest
+					.getAccountDetailTypes()) {
+				AccountDetailType accountDetailTypeEntity = new AccountDetailType(accountDetailTypeContract);
+				accountDetailTypeJpaRepository.save(accountDetailTypeEntity);
+				AccountDetailTypeContract resp = modelMapper.map(accountDetailTypeEntity,
+						AccountDetailTypeContract.class);
+				accountDetailTypeContractResponse.getAccountDetailTypes().add(resp);
+			}
+		} else if (accountDetailTypeContractRequest.getAccountDetailType() != null) {
+			AccountDetailType accountDetailTypeEntity = new AccountDetailType(
+					accountDetailTypeContractRequest.getAccountDetailType());
+			accountDetailTypeJpaRepository.save(accountDetailTypeEntity);
+			AccountDetailTypeContract resp = modelMapper.map(accountDetailTypeEntity, AccountDetailTypeContract.class);
+			accountDetailTypeContractResponse.setAccountDetailType(resp);
+		}
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		return accountDetailTypeContractResponse;
+	}
+
+	@Transactional
+	public AccountDetailTypeContractResponse update(HashMap<String, Object> financialContractRequestMap) {
+		final AccountDetailTypeContractRequest accountDetailTypeContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("AccountDetailTypeUpdate"),
+						AccountDetailTypeContractRequest.class);
+		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
+		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		AccountDetailType accountDetailTypeEntity = new AccountDetailType(
+				accountDetailTypeContractRequest.getAccountDetailType());
+		accountDetailTypeEntity
+				.setVersion(accountDetailTypeJpaRepository.findOne(accountDetailTypeEntity.getId()).getVersion());
+		accountDetailTypeJpaRepository.save(accountDetailTypeEntity);
+		AccountDetailTypeContract resp = modelMapper.map(accountDetailTypeEntity, AccountDetailTypeContract.class);
+		accountDetailTypeContractResponse.setAccountDetailType(resp);
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		return accountDetailTypeContractResponse;
+	}
 
 	@Transactional
 	public AccountDetailType create(final AccountDetailType accountDetailType) {
-		return accountDetailTypeRepository.save(accountDetailType);
+		return accountDetailTypeJpaRepository.save(accountDetailType);
 	}
 
 	@Transactional
 	public AccountDetailType update(final AccountDetailType accountDetailType) {
-		return accountDetailTypeRepository.save(accountDetailType);
+		return accountDetailTypeJpaRepository.save(accountDetailType);
 	}
 
 	public List<AccountDetailType> findAll() {
-		return accountDetailTypeRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+		return accountDetailTypeJpaRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
 	}
 
 	public AccountDetailType findByName(String name) {
-		return accountDetailTypeRepository.findByName(name);
+		return accountDetailTypeJpaRepository.findByName(name);
 	}
 
 	public AccountDetailType findOne(Long id) {
-		return accountDetailTypeRepository.findOne(id);
+		return accountDetailTypeJpaRepository.findOne(id);
 	}
 
 	public Page<AccountDetailType> search(AccountDetailTypeContractRequest accountDetailTypeContractRequest) {
@@ -65,7 +133,7 @@ public class AccountDetailTypeService {
 				accountDetailTypeContractRequest.getAccountDetailType());
 		Pageable page = new PageRequest(accountDetailTypeContractRequest.getPage().getOffSet(),
 				accountDetailTypeContractRequest.getPage().getPageSize());
-		return accountDetailTypeRepository.findAll(specification, page);
+		return accountDetailTypeJpaRepository.findAll(specification, page);
 	}
 
 	public BindingResult validate(AccountDetailTypeContractRequest accountDetailTypeContractRequest, String method,
@@ -109,5 +177,11 @@ public class AccountDetailTypeService {
 	public AccountDetailTypeContractRequest fetchRelatedContracts(
 			AccountDetailTypeContractRequest accountDetailTypeContractRequest) {
 		return accountDetailTypeContractRequest;
+	}
+
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 }

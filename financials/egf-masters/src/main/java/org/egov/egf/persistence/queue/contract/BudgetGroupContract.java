@@ -61,29 +61,30 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "name", "description", "majorCode", "maxCode", "minCode", "accountType", "budgetingType", "isActive" })
+@JsonPropertyOrder({ "id", "name", "description", "majorCode", "maxCode", "minCode", "accountType", "budgetingType",
+		"isActive" })
 public class BudgetGroupContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @Length(max = 250, min = 1)
-    private String name;
+	@Length(max = 250, min = 1)
+	private String name;
 
-    @Length(max = 250, message = "Max 250 characters are allowed for description")
-    private String description;
+	@Length(max = 250, message = "Max 250 characters are allowed for description")
+	private String description;
 
-    private ChartOfAccountContract majorCode;
+	private ChartOfAccountContract majorCode;
 
-    private ChartOfAccountContract maxCode;
+	private ChartOfAccountContract maxCode;
 
-    private ChartOfAccountContract minCode;
+	private ChartOfAccountContract minCode;
 
-    @Enumerated(value = EnumType.STRING)
-    private BudgetAccountType accountType;
+	@Enumerated(value = EnumType.STRING)
+	private BudgetAccountType accountType;
 
-    @Enumerated(value = EnumType.STRING)
-    private BudgetingType budgetingType;
+	@Enumerated(value = EnumType.STRING)
+	private BudgetingType budgetingType;
 
-    private Boolean isActive;
+	private Boolean isActive;
 
 }

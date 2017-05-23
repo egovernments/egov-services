@@ -39,25 +39,18 @@
  */
 package org.egov.egf.persistence.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.FinancialYearContract;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -67,60 +60,55 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"fiscalPeriodList"},callSuper=false)
+@EqualsAndHashCode(exclude = { "fiscalPeriodList" }, callSuper = false)
 @Table(name = "egf_financialyear")
 @SequenceGenerator(name = FinancialYear.SEQ_FINANCIALYEAR, sequenceName = FinancialYear.SEQ_FINANCIALYEAR, allocationSize = 1)
 public class FinancialYear extends AbstractAuditable {
 
-    private static final long serialVersionUID = -1563670460427134487L;
-    public static final String SEQ_FINANCIALYEAR = "seq_egf_financialyear";
+	private static final long serialVersionUID = -1563670460427134487L;
+	public static final String SEQ_FINANCIALYEAR = "seq_egf_financialyear";
 
-    @Id
-    @GeneratedValue(generator = SEQ_FINANCIALYEAR, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@Id
+	@GeneratedValue(generator = SEQ_FINANCIALYEAR, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @Length(min = 1, max = 25)
-    @NotBlank
-    @Column(name="FinancialYear")
-    private String finYearRange;
+	@Length(min = 1, max = 25)
+	@NotBlank
+	@Column(name = "FinancialYear")
+	private String finYearRange;
 
-  
-    @NotNull
-    private Date startingDate;
+	@NotNull
+	private Date startingDate;
 
-    @NotNull
-    private Date endingDate;
-    @NotNull
-    private Boolean active;
-    @NotNull
-    private Boolean isActiveForPosting;
-   
-    private Boolean isClosed;
- 
-    private Boolean transferClosingBalance;
-    
-    @OneToMany(mappedBy = "financialYear", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("id DESC ")
-    private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
-   
-    public void setFiscalPeriod(final List<FiscalPeriod> fiscalPeriod) {
-        this.fiscalPeriodList.clear();
-        if (fiscalPeriod != null)
-            this.fiscalPeriodList.addAll(fiscalPeriod);
-    }
-    
-    public void addFiscalPeriod(final FiscalPeriod fiscalPeriod) {
-    	this.fiscalPeriodList.add(fiscalPeriod);
-    }
-    @Override
-    public Long getId()
-    {
-    	return this.id;
-    }
+	@NotNull
+	private Date endingDate;
+	@NotNull
+	private Boolean active;
+	@NotNull
+	private Boolean isActiveForPosting;
+
+	private Boolean isClosed;
+
+	private Boolean transferClosingBalance;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public FinancialYear(FinancialYearContract contract) {
+		this.setId(contract.getId());
+		this.setFinYearRange(contract.getFinYearRange());
+		this.setStartingDate(contract.getStartingDate());
+		this.setEndingDate(contract.getEndingDate());
+		this.setActive(contract.getActive());
+		this.setIsActiveForPosting(contract.getIsActiveForPosting());
+		this.setIsClosed(contract.getIsClosed());
+		this.setTenantId(contract.getTenantId());
+	}
 }

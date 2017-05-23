@@ -40,23 +40,18 @@
 
 package org.egov.egf.persistence.entity;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
+import org.egov.egf.persistence.queue.contract.AccountDetailKeyContract;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -81,11 +76,20 @@ public class AccountDetailKey extends AbstractAuditable {
 	private Long key;
 
 	@NotNull
-	@Column(name="detailtypeid")
+	@Column(name = "detailtypeid")
 	private Long accountDetailType;
 
 	@Override
 	public Long getId() {
 		return this.id;
 	}
+
+	public AccountDetailKey(AccountDetailKeyContract contract) {
+		this.setId(contract.getId());
+		this.setKey(contract.getKey());
+		this.setAccountDetailType(
+				contract.getAccountDetailType() != null ? contract.getAccountDetailType().getId() : null);
+		this.setTenantId(contract.getTenantId());
+	}
+
 }

@@ -75,7 +75,7 @@ public class RequestInfo {
 	private String key = null;
 
 	private String tenantId = null;
-	
+
 	private User userInfo;
 
 }

@@ -31,7 +31,7 @@ public class Role {
 	@JsonProperty("lastModifiedBy")
 	private Long lastModifiedBy;
 
-    @JsonProperty("lastModifiedDate")
-    @JsonFormat(pattern = "MM/dd/yyyy")
-    private Date lastModifiedDate;
+	@JsonProperty("lastModifiedDate")
+	@JsonFormat(pattern = "MM/dd/yyyy")
+	private Date lastModifiedDate;
 }

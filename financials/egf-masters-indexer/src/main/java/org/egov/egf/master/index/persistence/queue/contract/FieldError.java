@@ -49,7 +49,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonPropertyOrder({ "code", "description" })
 public @Data class FieldError {
-    private String code;
-    private String description;
+	private String code;
+	private String description;
 
 }

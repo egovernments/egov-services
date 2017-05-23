@@ -51,14 +51,14 @@ import lombok.Data;
 @JsonPropertyOrder({ "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate", "tenantId" })
 public class AuditableContract {
 
-    private Long createdBy;
+	private Long createdBy;
 
-    private Date createdDate;
+	private Date createdDate;
 
-    private Long lastModifiedBy;
+	private Long lastModifiedBy;
 
-    private Date lastModifiedDate;
+	private Date lastModifiedDate;
 
-    @NotNull
-    private String tenantId;
+	@NotNull
+	private String tenantId;
 }

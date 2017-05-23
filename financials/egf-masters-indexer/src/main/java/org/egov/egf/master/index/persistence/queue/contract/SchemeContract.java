@@ -62,46 +62,47 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "fund", "code", "name", "validFrom", "validTo", "active", "description", "boundary" })
 public class SchemeContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    private FundContract fund;
+	private FundContract fund;
 
-    @Length(max = 25, min = 1)
-    private String code;
+	@Length(max = 25, min = 1)
+	private String code;
 
-    @Length(max = 25, min = 1)
-    private String name;
+	@Length(max = 25, min = 1)
+	private String name;
 
-    @NotNull
-    private Date validFrom;
+	@NotNull
+	private Date validFrom;
 
-    @NotNull
-    private Date validTo;
+	@NotNull
+	private Date validTo;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    @Length(max = 256)
-    private String description;
+	@Length(max = 256)
+	private String description;
 
-    private Long boundary;
+	private Long boundary;
 
-    /*
-     * private Set<SubSchemeContract> subSchemeContracts = new LinkedHashSet<SubSchemeContract>(0);
-     */
+	/*
+	 * private Set<SubSchemeContract> subSchemeContracts = new
+	 * LinkedHashSet<SubSchemeContract>(0);
+	 */
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
-    }
+		return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
+	}
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public SchemeContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public SchemeContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 }

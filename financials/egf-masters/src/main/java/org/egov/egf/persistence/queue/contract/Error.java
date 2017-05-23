@@ -49,12 +49,12 @@ import lombok.Data;
 @JsonPropertyOrder({ "code", "message", "description", "filelds" })
 public @Data class Error {
 
-    private String code = null;
+	private String code = null;
 
-    private String message = null;
+	private String message = null;
 
-    private String description = null;
+	private String description = null;
 
-    private List<FieldError> filelds = new ArrayList<FieldError>();
+	private List<FieldError> filelds = new ArrayList<FieldError>();
 
 }

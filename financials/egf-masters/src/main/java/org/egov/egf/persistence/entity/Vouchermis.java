@@ -50,9 +50,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -64,7 +61,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"fundsource","scheme","subScheme","functionary","function","voucherHeader"},callSuper=false)
+@EqualsAndHashCode(exclude = { "fundsource", "scheme", "subScheme", "functionary", "function",
+		"voucherHeader" }, callSuper = false)
 @Table(name = "egf_vouchermis")
 @SequenceGenerator(name = Vouchermis.SEQ_VOUCHERMIS, sequenceName = Vouchermis.SEQ_VOUCHERMIS, allocationSize = 1)
 public class Vouchermis implements java.io.Serializable {
@@ -91,7 +89,7 @@ public class Vouchermis implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subschemeid")
 	private SubScheme subScheme;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "functionaryid")
 	private Functionary functionary;
@@ -106,8 +104,7 @@ public class Vouchermis implements java.io.Serializable {
 	private String budgetAppropriationNo;
 
 	private Boolean budgetCheckRequired = true;
-	
-	 
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "voucherheaderid", nullable = true)
 	private VoucherHeader voucherHeader;

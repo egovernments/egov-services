@@ -23,36 +23,36 @@ public class FinancialsApplication {
 		SpringApplication.run(FinancialsApplication.class, args);
 	}
 
-    @Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter() {
-    	//DateFormat std=DateFormat.getInstance().f
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-       // mapper.setDateFormat(std);
-        converter.setObjectMapper(mapper);
-        return converter;
-    }
-    @Bean
-    public RestTemplate getRestTemplate() {
-        return new CorrelationIdAwareRestTemplate();
-    }
+	@Bean
+	public MappingJackson2HttpMessageConverter jacksonConverter() {
+		// DateFormat std=DateFormat.getInstance().f
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		// mapper.setDateFormat(std);
+		converter.setObjectMapper(mapper);
+		return converter;
+	}
 
+	@Bean
+	public RestTemplate getRestTemplate() {
+		return new CorrelationIdAwareRestTemplate();
+	}
 
-    @Bean
-    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-        return new WebMvcConfigurerAdapter() {
+	@Bean
+	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+		return new WebMvcConfigurerAdapter() {
 
-            @Override
-            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-                configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-            }
+			@Override
+			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+			}
 
-            @Override
-            public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(new CorrelationIdInterceptor());
-            }
-        };
-    }
+			@Override
+			public void addInterceptors(InterceptorRegistry registry) {
+				registry.addInterceptor(new CorrelationIdInterceptor());
+			}
+		};
+	}
 }

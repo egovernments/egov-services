@@ -66,16 +66,16 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "groupId", "name", "key", "accountDetailType" })
 public class AccountDetailKeyContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Long> ids = new ArrayList<Long>();
-    private Integer key;
-   
-    @NotNull
-    private AccountDetailTypeContract accountDetailType;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<Long> ids = new ArrayList<Long>();
+	private Integer key;
 
-    public Long getId() {
-        return this.id;
-    }
+	@NotNull
+	private AccountDetailTypeContract accountDetailType;
+
+	public Long getId() {
+		return this.id;
+	}
 }

@@ -33,156 +33,144 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/budgetgroups")
 public class BudgetGroupController {
-    @Autowired
-    private BudgetGroupService budgetGroupService;
+	@Autowired
+	private BudgetGroupService budgetGroupService;
 
-    @PostMapping("/_create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public BudgetGroupContractResponse create(@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest,
-            BindingResult errors) {
-        ModelMapper modelMapper = new ModelMapper();
-        budgetGroupService.validate(budgetGroupContractRequest, "create", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
-        BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
-        budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
-        for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getBudgetGroups()) {
+	@PostMapping("/_create")
+	@ResponseStatus(HttpStatus.CREATED)
+	public BudgetGroupContractResponse create(@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest,
+			BindingResult errors) {
+		budgetGroupService.validate(budgetGroupContractRequest, "create", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
+		budgetGroupService.push(budgetGroupContractRequest);
+		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
+		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
 
-            BudgetGroup budgetGroupEntity = modelMapper.map(budgetGroupContract, BudgetGroup.class);
-            budgetGroupEntity = budgetGroupService.create(budgetGroupEntity);
-            BudgetGroupContract resp = modelMapper.map(budgetGroupEntity, BudgetGroupContract.class);
-            budgetGroupContract.setId(budgetGroupEntity.getId());
-            budgetGroupContractResponse.getBudgetGroups().add(resp);
-        }
+		if (budgetGroupContractRequest.getBudgetGroups() != null
+				&& !budgetGroupContractRequest.getBudgetGroups().isEmpty()) {
+			for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getBudgetGroups()) {
 
-        budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+				budgetGroupContractResponse.getBudgetGroups().add(budgetGroupContract);
+			}
+		} else if (budgetGroupContractRequest.getBudgetGroup() != null) {
+			budgetGroupContractResponse.setBudgetGroup(budgetGroupContractRequest.getBudgetGroup());
+		}
 
-        return budgetGroupContractResponse;
-    }
+		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+		budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return budgetGroupContractResponse;
+	}
 
-    @PostMapping(value = "/{uniqueId}/_update")
-    @ResponseStatus(HttpStatus.OK)
-    public BudgetGroupContractResponse update(@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest,
-            BindingResult errors,
-            @PathVariable Long uniqueId) {
+	@PostMapping(value = "/{uniqueId}/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public BudgetGroupContractResponse update(@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
 
-        budgetGroupService.validate(budgetGroupContractRequest, "update", errors);
+		budgetGroupService.validate(budgetGroupContractRequest, "update", errors);
 
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
-        BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(uniqueId);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
+		budgetGroupContractRequest.getBudgetGroup().setId(uniqueId);
+		budgetGroupService.push(budgetGroupContractRequest);
+		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
+		budgetGroupContractResponse.setBudgetGroup(budgetGroupContractRequest.getBudgetGroup());
+		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+		budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return budgetGroupContractResponse;
+	}
 
-        BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
-        // ignoring internally passed id if the put has id in url
-        budgetGroup.setId(uniqueId);
-        ModelMapper model = new ModelMapper();
-        model.map(budgetGroup, budgetGroupFromDb);
-        budgetGroupFromDb = budgetGroupService.update(budgetGroupFromDb);
-        BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
-        budgetGroupContractResponse.setBudgetGroup(budgetGroup);
-        budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
-        budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return budgetGroupContractResponse;
-    }
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public BudgetGroupContractResponse view(@ModelAttribute BudgetGroupContractRequest budgetGroupContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
+		budgetGroupService.validate(budgetGroupContractRequest, "view", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
+		RequestInfo requestInfo = budgetGroupContractRequest.getRequestInfo();
+		BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(uniqueId);
+		BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
 
-    @GetMapping(value = "/{uniqueId}")
-    @ResponseStatus(HttpStatus.OK)
-    public BudgetGroupContractResponse view(@ModelAttribute BudgetGroupContractRequest budgetGroupContractRequest,
-            BindingResult errors,
-            @PathVariable Long uniqueId) {
-        budgetGroupService.validate(budgetGroupContractRequest, "view", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
-        RequestInfo requestInfo = budgetGroupContractRequest.getRequestInfo();
-        BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(uniqueId);
-        BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
+		ModelMapper model = new ModelMapper();
+		model.map(budgetGroupFromDb, budgetGroup);
 
-        ModelMapper model = new ModelMapper();
-        model.map(budgetGroupFromDb, budgetGroup);
+		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
+		budgetGroupContractResponse.setBudgetGroup(budgetGroup);
+		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+		budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+		return budgetGroupContractResponse;
+	}
 
-        BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
-        budgetGroupContractResponse.setBudgetGroup(budgetGroup);
-        budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
-        budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-        return budgetGroupContractResponse;
-    }
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public BudgetGroupContractResponse updateAll(
+			@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest, BindingResult errors) {
+		budgetGroupService.validate(budgetGroupContractRequest, "updateAll", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public BudgetGroupContractResponse updateAll(@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest,
-            BindingResult errors) {
-        budgetGroupService.validate(budgetGroupContractRequest, "updateAll", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
+		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
+		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
+		for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getBudgetGroups()) {
+			BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(budgetGroupContract.getId());
 
-        BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
-        budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
-        for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getBudgetGroups()) {
-            BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(budgetGroupContract.getId());
+			ModelMapper model = new ModelMapper();
+			model.map(budgetGroupContract, budgetGroupFromDb);
+			budgetGroupFromDb = budgetGroupService.update(budgetGroupFromDb);
+			model.map(budgetGroupFromDb, budgetGroupContract);
+			budgetGroupContractResponse.getBudgetGroups().add(budgetGroupContract);
+		}
 
-            ModelMapper model = new ModelMapper();
-            model.map(budgetGroupContract, budgetGroupFromDb);
-            budgetGroupFromDb = budgetGroupService.update(budgetGroupFromDb);
-            model.map(budgetGroupFromDb, budgetGroupContract);
-            budgetGroupContractResponse.getBudgetGroups().add(budgetGroupContract);
-        }
+		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+		budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 
-        budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
-        budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return budgetGroupContractResponse;
+	}
 
-        return budgetGroupContractResponse;
-    }
+	@PostMapping("/_search")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public BudgetGroupContractResponse search(@ModelAttribute BudgetGroupContract budgetGroupContracts,
+			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+		BudgetGroupContractRequest budgetGroupContractRequest = new BudgetGroupContractRequest();
+		budgetGroupContractRequest.setBudgetGroup(budgetGroupContracts);
+		budgetGroupContractRequest.setRequestInfo(requestInfo);
+		budgetGroupService.validate(budgetGroupContractRequest, "search", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
+		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
+		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
+		budgetGroupContractResponse.setPage(new Pagination());
+		Page<BudgetGroup> allBudgetGroups;
+		ModelMapper model = new ModelMapper();
 
-    @PostMapping("/_search")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public BudgetGroupContractResponse search(@ModelAttribute BudgetGroupContract budgetGroupContracts,
-            @RequestBody RequestInfo requestInfo, BindingResult errors) {
-        BudgetGroupContractRequest budgetGroupContractRequest = new BudgetGroupContractRequest();
-        budgetGroupContractRequest.setBudgetGroup(budgetGroupContracts);
-        budgetGroupContractRequest.setRequestInfo(requestInfo);
-        budgetGroupService.validate(budgetGroupContractRequest, "search", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
-        BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
-        budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
-        budgetGroupContractResponse.setPage(new Pagination());
-        Page<BudgetGroup> allBudgetGroups;
-        ModelMapper model = new ModelMapper();
+		allBudgetGroups = budgetGroupService.search(budgetGroupContractRequest);
+		BudgetGroupContract budgetGroupContract = null;
+		for (BudgetGroup b : allBudgetGroups) {
+			budgetGroupContract = new BudgetGroupContract();
+			model.map(b, budgetGroupContract);
+			budgetGroupContractResponse.getBudgetGroups().add(budgetGroupContract);
+		}
+		budgetGroupContractResponse.getPage().map(allBudgetGroups);
+		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+		budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return budgetGroupContractResponse;
+	}
 
-        allBudgetGroups = budgetGroupService.search(budgetGroupContractRequest);
-        BudgetGroupContract budgetGroupContract = null;
-        for (BudgetGroup b : allBudgetGroups) {
-            budgetGroupContract = new BudgetGroupContract();
-            model.map(b, budgetGroupContract);
-            budgetGroupContractResponse.getBudgetGroups().add(budgetGroupContract);
-        }
-        budgetGroupContractResponse.getPage().map(allBudgetGroups);
-        budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
-        budgetGroupContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return budgetGroupContractResponse;
-    }
-
-    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-        new ResponseInfo();
-        return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date())
-                .resMsgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

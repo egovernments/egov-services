@@ -33,156 +33,142 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/financialyears")
 public class FinancialYearController {
-    @Autowired
-    private FinancialYearService financialYearService;
+	@Autowired
+	private FinancialYearService financialYearService;
 
-    @PostMapping("/_create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public FinancialYearContractResponse create(@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest,
-            BindingResult errors) {
-        ModelMapper modelMapper = new ModelMapper();
-        financialYearService.validate(financialYearContractRequest, "create", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        financialYearService.fetchRelatedContracts(financialYearContractRequest);
-        FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
-        financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
-        for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
+	@PostMapping("/_create")
+	@ResponseStatus(HttpStatus.CREATED)
+	public FinancialYearContractResponse create(
+			@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest, BindingResult errors) {
+		financialYearService.validate(financialYearContractRequest, "create", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
+		financialYearService.push(financialYearContractRequest);
+		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
+		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
+		if (financialYearContractRequest.getFinancialYears() != null
+				&& !financialYearContractRequest.getFinancialYears().isEmpty()) {
+			for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
+				financialYearContractResponse.getFinancialYears().add(financialYearContract);
+			}
+		} else if (financialYearContractRequest.getFinancialYear() != null) {
+			financialYearContractResponse.setFinancialYear(financialYearContractRequest.getFinancialYear());
+		}
+		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return financialYearContractResponse;
+	}
 
-            FinancialYear financialYearEntity = modelMapper.map(financialYearContract, FinancialYear.class);
-            financialYearEntity = financialYearService.create(financialYearEntity);
-            FinancialYearContract resp = modelMapper.map(financialYearEntity, FinancialYearContract.class);
-            financialYearContract.setId(financialYearEntity.getId());
-            financialYearContractResponse.getFinancialYears().add(resp);
-        }
+	@PostMapping(value = "/{uniqueId}/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public FinancialYearContractResponse update(
+			@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest, BindingResult errors,
+			@PathVariable Long uniqueId) {
 
-        financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		financialYearService.validate(financialYearContractRequest, "update", errors);
 
-        return financialYearContractResponse;
-    }
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
+		financialYearContractRequest.getFinancialYear().setId(uniqueId);
+		financialYearService.push(financialYearContractRequest);
+		financialYearContractRequest.getFinancialYear().setId(uniqueId);
+		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
+		financialYearContractResponse.setFinancialYear(financialYearContractRequest.getFinancialYear());
+		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return financialYearContractResponse;
+	}
 
-    @PostMapping(value = "/{uniqueId}/_update")
-    @ResponseStatus(HttpStatus.OK)
-    public FinancialYearContractResponse update(@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest,
-            BindingResult errors,
-            @PathVariable Long uniqueId) {
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public FinancialYearContractResponse view(@ModelAttribute FinancialYearContractRequest financialYearContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
+		financialYearService.validate(financialYearContractRequest, "view", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
+		FinancialYear financialYearFromDb = financialYearService.findOne(uniqueId);
+		FinancialYearContract financialYear = financialYearContractRequest.getFinancialYear();
 
-        financialYearService.validate(financialYearContractRequest, "update", errors);
+		ModelMapper model = new ModelMapper();
+		model.map(financialYearFromDb, financialYear);
 
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        financialYearService.fetchRelatedContracts(financialYearContractRequest);
-        FinancialYear financialYearFromDb = financialYearService.findOne(uniqueId);
+		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
+		financialYearContractResponse.setFinancialYear(financialYear);
+		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+		return financialYearContractResponse;
+	}
 
-        FinancialYearContract financialYear = financialYearContractRequest.getFinancialYear();
-        // ignoring internally passed id if the put has id in url
-        financialYear.setId(uniqueId);
-        ModelMapper model = new ModelMapper();
-        model.map(financialYear, financialYearFromDb);
-        financialYearFromDb = financialYearService.update(financialYearFromDb);
-        FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
-        financialYearContractResponse.setFinancialYear(financialYear);
-        financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
-        financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return financialYearContractResponse;
-    }
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public FinancialYearContractResponse updateAll(
+			@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest, BindingResult errors) {
+		financialYearService.validate(financialYearContractRequest, "updateAll", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 
-    @GetMapping(value = "/{uniqueId}")
-    @ResponseStatus(HttpStatus.OK)
-    public FinancialYearContractResponse view(@ModelAttribute FinancialYearContractRequest financialYearContractRequest,
-            BindingResult errors,
-            @PathVariable Long uniqueId) {
-        financialYearService.validate(financialYearContractRequest, "view", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        financialYearService.fetchRelatedContracts(financialYearContractRequest);
-        RequestInfo requestInfo = financialYearContractRequest.getRequestInfo();
-        FinancialYear financialYearFromDb = financialYearService.findOne(uniqueId);
-        FinancialYearContract financialYear = financialYearContractRequest.getFinancialYear();
+		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
+		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
+		for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
+			FinancialYear financialYearFromDb = financialYearService.findOne(financialYearContract.getId());
 
-        ModelMapper model = new ModelMapper();
-        model.map(financialYearFromDb, financialYear);
+			ModelMapper model = new ModelMapper();
+			model.map(financialYearContract, financialYearFromDb);
+			financialYearFromDb = financialYearService.update(financialYearFromDb);
+			model.map(financialYearFromDb, financialYearContract);
+			financialYearContractResponse.getFinancialYears().add(financialYearContract);
+		}
 
-        FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
-        financialYearContractResponse.setFinancialYear(financialYear);
-        financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
-        financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-        return financialYearContractResponse;
-    }
+		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public FinancialYearContractResponse updateAll(@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest,
-            BindingResult errors) {
-        financialYearService.validate(financialYearContractRequest, "updateAll", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        financialYearService.fetchRelatedContracts(financialYearContractRequest);
+		return financialYearContractResponse;
+	}
 
-        FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
-        financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
-        for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
-            FinancialYear financialYearFromDb = financialYearService.findOne(financialYearContract.getId());
+	@PostMapping("/_search")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public FinancialYearContractResponse search(@ModelAttribute FinancialYearContract financialYearContracts,
+			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+		FinancialYearContractRequest financialYearContractRequest = new FinancialYearContractRequest();
+		financialYearContractRequest.setFinancialYear(financialYearContracts);
+		financialYearContractRequest.setRequestInfo(requestInfo);
+		financialYearService.validate(financialYearContractRequest, "search", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
+		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
+		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
+		financialYearContractResponse.setPage(new Pagination());
+		Page<FinancialYear> allFinancialYears;
+		ModelMapper model = new ModelMapper();
 
-            ModelMapper model = new ModelMapper();
-            model.map(financialYearContract, financialYearFromDb);
-            financialYearFromDb = financialYearService.update(financialYearFromDb);
-            model.map(financialYearFromDb, financialYearContract);
-            financialYearContractResponse.getFinancialYears().add(financialYearContract);
-        }
+		allFinancialYears = financialYearService.search(financialYearContractRequest);
+		FinancialYearContract financialYearContract = null;
+		for (FinancialYear b : allFinancialYears) {
+			financialYearContract = new FinancialYearContract();
+			model.map(b, financialYearContract);
+			financialYearContractResponse.getFinancialYears().add(financialYearContract);
+		}
+		financialYearContractResponse.getPage().map(allFinancialYears);
+		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return financialYearContractResponse;
+	}
 
-        financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
-        financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-
-        return financialYearContractResponse;
-    }
-
-    @PostMapping("/_search")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public FinancialYearContractResponse search(@ModelAttribute FinancialYearContract financialYearContracts,
-            @RequestBody RequestInfo requestInfo, BindingResult errors) {
-        FinancialYearContractRequest financialYearContractRequest = new FinancialYearContractRequest();
-        financialYearContractRequest.setFinancialYear(financialYearContracts);
-        financialYearContractRequest.setRequestInfo(requestInfo);
-        financialYearService.validate(financialYearContractRequest, "search", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        financialYearService.fetchRelatedContracts(financialYearContractRequest);
-        FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
-        financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
-        financialYearContractResponse.setPage(new Pagination());
-        Page<FinancialYear> allFinancialYears;
-        ModelMapper model = new ModelMapper();
-
-        allFinancialYears = financialYearService.search(financialYearContractRequest);
-        FinancialYearContract financialYearContract = null;
-        for (FinancialYear b : allFinancialYears) {
-            financialYearContract = new FinancialYearContract();
-            model.map(b, financialYearContract);
-            financialYearContractResponse.getFinancialYears().add(financialYearContract);
-        }
-        financialYearContractResponse.getPage().map(allFinancialYears);
-        financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
-        financialYearContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return financialYearContractResponse;
-    }
-
-    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-        new ResponseInfo();
-        return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date())
-                .resMsgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

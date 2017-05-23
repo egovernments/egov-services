@@ -41,20 +41,15 @@
 package org.egov.egf.persistence.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.queue.contract.FundContract;
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -73,37 +68,45 @@ import lombok.Setter;
 @SequenceGenerator(name = Fund.SEQ, sequenceName = Fund.SEQ, allocationSize = 1)
 public class Fund extends AbstractAuditable {
 
-    public static final String SEQ = "seq_egf_fund";
-    private static final long serialVersionUID = 7977534010758407945L;
-    @Id
-    @GeneratedValue(generator = Fund.SEQ, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	public static final String SEQ = "seq_egf_fund";
+	private static final long serialVersionUID = 7977534010758407945L;
+	@Id
+	@GeneratedValue(generator = Fund.SEQ, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @Length(max = 50, min = 2)
-    @NotNull
-    private String name;
+	@Length(max = 50, min = 2)
+	@NotNull
+	private String name;
 
-    @Length(max = 50, min = 2)
-    @NotNull
-    private String code;
-    @NotNull
-    private Character identifier;
+	@Length(max = 50, min = 2)
+	@NotNull
+	private String code;
+	@NotNull
+	private Character identifier;
 
-    @NotNull
-    private Long level;
+	@NotNull
+	private Long level;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentid")
-    private Fund parentId;
+	private Long parentId;
 
-    private Boolean isParent;
-    @NotNull
-    private Boolean active;
+	private Boolean isParent;
+	@NotNull
+	private Boolean active;
 
-    @Override
-    public Long getId() {
-        return this.id;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public Fund(FundContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setActive(contract.getActive());
+		this.setLevel(contract.getLevel());
+		this.setIsParent(contract.getIsParent());
+		this.setParentId(contract.getParentId() != null ? contract.getParentId().getId() : null);
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

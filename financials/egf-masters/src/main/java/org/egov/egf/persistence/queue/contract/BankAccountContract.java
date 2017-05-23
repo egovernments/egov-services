@@ -47,8 +47,8 @@ import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,41 +62,41 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "bankBranch", "chartOfAccount", "fund", "accountNumber", "accountType", "description", "active",
-        "payTo", "type" })
+@JsonPropertyOrder({ "id", "bankBranch", "chartOfAccount", "fund", "accountNumber", "accountType", "description",
+		"active", "payTo", "type" })
 public class BankAccountContract extends AuditableContract implements java.io.Serializable {
 
-    private Long id;
+	private Long id;
 
-    private BankBranchContract bankBranch;
+	private BankBranchContract bankBranch;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private ChartOfAccountContract chartOfAccount;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private ChartOfAccountContract chartOfAccount;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private FundContract fund;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private FundContract fund;
 
-    @NotNull
-    @Length(max = 25)
-    private String accountNumber;
+	@NotNull
+	@Length(max = 25)
+	private String accountNumber;
 
-    // is this required ?
-    private String accountType;
-    @Length(max = 256)
-    private String description;
+	// is this required ?
+	private String accountType;
+	@Length(max = 256)
+	private String description;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    @Length(max = 100)
-    private String payTo;
+	@Length(max = 100)
+	private String payTo;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private BankAccountType type;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private BankAccountType type;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
 }

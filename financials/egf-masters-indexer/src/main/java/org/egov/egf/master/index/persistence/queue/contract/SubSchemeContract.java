@@ -61,32 +61,32 @@ import lombok.Setter;
 
 @JsonPropertyOrder({ "id", "scheme", "code", "name", "validFrom", "validTo", "active", "departmentId" })
 public class SubSchemeContract extends AuditableContract {
-    private Long id;
+	private Long id;
 
-    @NotNull
-    private SchemeContract scheme;
+	@NotNull
+	private SchemeContract scheme;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String code;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String code;
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String name;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String name;
 
-    @NotNull
-    private Date validFrom;
+	@NotNull
+	private Date validFrom;
 
-    @NotNull
-    private Date validTo;
+	@NotNull
+	private Date validTo;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    private Long departmentId;
+	private Long departmentId;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
 }

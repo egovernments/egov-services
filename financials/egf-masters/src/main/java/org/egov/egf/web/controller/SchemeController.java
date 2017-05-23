@@ -33,153 +33,141 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/schemes")
 public class SchemeController {
-    @Autowired
-    private SchemeService schemeService;
+	@Autowired
+	private SchemeService schemeService;
 
-    @PostMapping("_create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public SchemeContractResponse create(@RequestBody @Valid SchemeContractRequest schemeContractRequest, BindingResult errors) {
-        ModelMapper modelMapper = new ModelMapper();
-        schemeService.validate(schemeContractRequest, "create", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        schemeService.fetchRelatedContracts(schemeContractRequest);
-        SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
-        schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
-        for (SchemeContract schemeContract : schemeContractRequest.getSchemes()) {
+	@PostMapping("_create")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SchemeContractResponse create(@RequestBody @Valid SchemeContractRequest schemeContractRequest,
+			BindingResult errors) {
+		ModelMapper modelMapper = new ModelMapper();
+		schemeService.validate(schemeContractRequest, "create", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		schemeService.fetchRelatedContracts(schemeContractRequest);
+		schemeService.push(schemeContractRequest);
+		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
+		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
+		if (schemeContractRequest.getSchemes() != null && !schemeContractRequest.getSchemes().isEmpty()) {
+			for (SchemeContract schemeContract : schemeContractRequest.getSchemes()) {
+				schemeContractResponse.getSchemes().add(schemeContract);
+			}
+		} else if (schemeContractRequest.getScheme() != null) {
+			schemeContractResponse.setScheme(schemeContractRequest.getScheme());
+		}
+		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return schemeContractResponse;
+	}
 
-            Scheme schemeEntity = modelMapper.map(schemeContract, Scheme.class);
-            schemeEntity = schemeService.create(schemeEntity);
-            SchemeContract resp = modelMapper.map(schemeEntity, SchemeContract.class);
-            schemeContract.setId(schemeEntity.getId());
-            schemeContractResponse.getSchemes().add(resp);
-        }
+	@PostMapping(value = "/{uniqueId}/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public SchemeContractResponse update(@RequestBody @Valid SchemeContractRequest schemeContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
 
-        schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		schemeService.validate(schemeContractRequest, "update", errors);
 
-        return schemeContractResponse;
-    }
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		schemeService.fetchRelatedContracts(schemeContractRequest);
+		schemeContractRequest.getScheme().setId(uniqueId);
+		schemeService.push(schemeContractRequest);
+		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
+		schemeContractResponse.setScheme(schemeContractRequest.getScheme());
+		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return schemeContractResponse;
+	}
 
-    @PostMapping(value = "/{uniqueId}/_update")
-    @ResponseStatus(HttpStatus.OK)
-    public SchemeContractResponse update(@RequestBody @Valid SchemeContractRequest schemeContractRequest, BindingResult errors,
-            @PathVariable Long uniqueId) {
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public SchemeContractResponse view(@ModelAttribute SchemeContractRequest schemeContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
+		schemeService.validate(schemeContractRequest, "view", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		schemeService.fetchRelatedContracts(schemeContractRequest);
+		RequestInfo requestInfo = schemeContractRequest.getRequestInfo();
+		Scheme schemeFromDb = schemeService.findOne(uniqueId);
+		SchemeContract scheme = schemeContractRequest.getScheme();
 
-        schemeService.validate(schemeContractRequest, "update", errors);
+		ModelMapper model = new ModelMapper();
+		model.map(schemeFromDb, scheme);
 
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        schemeService.fetchRelatedContracts(schemeContractRequest);
-        Scheme schemeFromDb = schemeService.findOne(uniqueId);
+		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
+		schemeContractResponse.setScheme(scheme);
+		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		schemeContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+		return schemeContractResponse;
+	}
 
-        SchemeContract scheme = schemeContractRequest.getScheme();
-        // ignoring internally passed id if the put has id in url
-        scheme.setId(uniqueId);
-        ModelMapper model = new ModelMapper();
-        model.map(scheme, schemeFromDb);
-        schemeFromDb = schemeService.update(schemeFromDb);
-        SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
-        schemeContractResponse.setScheme(scheme);
-        schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
-        schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return schemeContractResponse;
-    }
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public SchemeContractResponse updateAll(@RequestBody @Valid SchemeContractRequest schemeContractRequest,
+			BindingResult errors) {
+		schemeService.validate(schemeContractRequest, "updateAll", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		schemeService.fetchRelatedContracts(schemeContractRequest);
 
-    @GetMapping(value = "/{uniqueId}")
-    @ResponseStatus(HttpStatus.OK)
-    public SchemeContractResponse view(@ModelAttribute SchemeContractRequest schemeContractRequest, BindingResult errors,
-            @PathVariable Long uniqueId) {
-        schemeService.validate(schemeContractRequest, "view", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        schemeService.fetchRelatedContracts(schemeContractRequest);
-        RequestInfo requestInfo = schemeContractRequest.getRequestInfo();
-        Scheme schemeFromDb = schemeService.findOne(uniqueId);
-        SchemeContract scheme = schemeContractRequest.getScheme();
+		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
+		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
+		for (SchemeContract schemeContract : schemeContractRequest.getSchemes()) {
+			Scheme schemeFromDb = schemeService.findOne(schemeContract.getId());
 
-        ModelMapper model = new ModelMapper();
-        model.map(schemeFromDb, scheme);
+			ModelMapper model = new ModelMapper();
+			model.map(schemeContract, schemeFromDb);
+			schemeFromDb = schemeService.update(schemeFromDb);
+			model.map(schemeFromDb, schemeContract);
+			schemeContractResponse.getSchemes().add(schemeContract);
+		}
 
-        SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
-        schemeContractResponse.setScheme(scheme);
-        schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
-        schemeContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-        return schemeContractResponse;
-    }
+		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public SchemeContractResponse updateAll(@RequestBody @Valid SchemeContractRequest schemeContractRequest,
-            BindingResult errors) {
-        schemeService.validate(schemeContractRequest, "updateAll", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        schemeService.fetchRelatedContracts(schemeContractRequest);
+		return schemeContractResponse;
+	}
 
-        SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
-        schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
-        for (SchemeContract schemeContract : schemeContractRequest.getSchemes()) {
-            Scheme schemeFromDb = schemeService.findOne(schemeContract.getId());
+	@PostMapping("_search")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public SchemeContractResponse search(@ModelAttribute SchemeContract schemeContracts,
+			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+		SchemeContractRequest schemeContractRequest = new SchemeContractRequest();
+		schemeContractRequest.setScheme(schemeContracts);
+		schemeContractRequest.setRequestInfo(requestInfo);
+		schemeService.validate(schemeContractRequest, "search", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		schemeService.fetchRelatedContracts(schemeContractRequest);
+		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
+		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
+		schemeContractResponse.setPage(new Pagination());
+		Page<Scheme> allSchemes;
+		ModelMapper model = new ModelMapper();
 
-            ModelMapper model = new ModelMapper();
-            model.map(schemeContract, schemeFromDb);
-            schemeFromDb = schemeService.update(schemeFromDb);
-            model.map(schemeFromDb, schemeContract);
-            schemeContractResponse.getSchemes().add(schemeContract);
-        }
+		allSchemes = schemeService.search(schemeContractRequest);
+		SchemeContract schemeContract = null;
+		for (Scheme b : allSchemes) {
+			schemeContract = new SchemeContract();
+			model.map(b, schemeContract);
+			schemeContractResponse.getSchemes().add(schemeContract);
+		}
+		schemeContractResponse.getPage().map(allSchemes);
+		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return schemeContractResponse;
+	}
 
-        schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
-        schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-
-        return schemeContractResponse;
-    }
-
-    @PostMapping("_search")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public SchemeContractResponse search(@ModelAttribute SchemeContract schemeContracts, @RequestBody RequestInfo requestInfo,
-            BindingResult errors) {
-        SchemeContractRequest schemeContractRequest = new SchemeContractRequest();
-        schemeContractRequest.setScheme(schemeContracts);
-        schemeContractRequest.setRequestInfo(requestInfo);
-        schemeService.validate(schemeContractRequest, "search", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        schemeService.fetchRelatedContracts(schemeContractRequest);
-        SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
-        schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
-        schemeContractResponse.setPage(new Pagination());
-        Page<Scheme> allSchemes;
-        ModelMapper model = new ModelMapper();
-
-        allSchemes = schemeService.search(schemeContractRequest);
-        SchemeContract schemeContract = null;
-        for (Scheme b : allSchemes) {
-            schemeContract = new SchemeContract();
-            model.map(b, schemeContract);
-            schemeContractResponse.getSchemes().add(schemeContract);
-        }
-        schemeContractResponse.getPage().map(allSchemes);
-        schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
-        schemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return schemeContractResponse;
-    }
-
-    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-        new ResponseInfo();
-        return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date())
-                .resMsgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

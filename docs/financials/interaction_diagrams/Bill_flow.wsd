@@ -1,4 +1,4 @@
-title Create Bill Workflow
+title Create Bill Process flow
 
 Client->BillSvc: Create Bill Request
 activate Client

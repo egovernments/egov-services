@@ -1,4 +1,4 @@
-title Create Voucher Workflow
+title Create Voucher Process flow
 
 Client->VoucherSvc: Create Voucher Request
 activate Client

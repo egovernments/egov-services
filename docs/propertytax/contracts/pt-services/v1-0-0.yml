@@ -657,9 +657,11 @@ definitions:
         minLength: 4
       applicationNo:
         type: string
-        description: application no of the PropertyDetail
-        maxLength: 32
+        description: Acknowldgement number given to citizen on submitting the application.
+        maxLength: 64
         minLength: 1
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
       createdBy:
         type: string
         description: created by of the PropertyDetail
@@ -969,6 +971,27 @@ definitions:
         type: integer
         format: int32
         description: page number of the Pagination, Default value is 0
+        
+  WorkFlowDetails:
+    type: object
+    description: This object holds info about the assignee and other workflow related info
+    properties:
+      department:
+        type: string
+        description: Selected department.
+      designation:
+        type: string
+        description: Selected designation.
+      assignee:
+        type: integer
+        format: int64
+        description: Selected assignee.
+      action:
+        type: string
+        description: chosen action.
+      status:
+        type: string
+        description: current status.
       
 parameters:
 ##########################################################

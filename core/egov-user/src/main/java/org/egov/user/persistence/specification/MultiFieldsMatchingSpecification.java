@@ -2,12 +2,10 @@ package org.egov.user.persistence.specification;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.persistence.entity.User;
-import org.egov.user.persistence.entity.UserKey;
-import org.egov.user.persistence.entity.UserKey_;
-import org.egov.user.persistence.entity.User_;
+import org.egov.user.persistence.entity.*;
 import org.egov.user.persistence.enums.UserType;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
         Path<UserType> type = root.get(User_.type);
         Path<String> tenantId = userKey.get(UserKey_.tenantId);
 
-        List<Predicate> predicates = new ArrayList<>();
+		List<Predicate> predicates = new ArrayList<>();
 
         if (isIdPresent(searchCriteria)) {
             predicates.add(longPath.in(searchCriteria.getId()));
@@ -75,12 +73,23 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
             predicates.add(criteriaBuilder.equal(type, UserType.valueOf(searchCriteria.getType())));
         }
 
+        if(isRolesPresent(searchCriteria)) {
+			searchCriteria.getRoleCodes().forEach(roleCode -> {
+				final SetJoin<User, Role> rolesJoin = root.join(User_.roles);
+				predicates.add(criteriaBuilder.equal(rolesJoin.get(Role_.code), roleCode));
+			});
+		}
+
         predicates.add(criteriaBuilder.equal(active, searchCriteria.isActive()));
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
-    private boolean isUserTypePresent(UserSearchCriteria userSearch) {
+	private boolean isRolesPresent(UserSearchCriteria searchCriteria) {
+		return !CollectionUtils.isEmpty(searchCriteria.getRoleCodes());
+	}
+
+	private boolean isUserTypePresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getType());
     }
 

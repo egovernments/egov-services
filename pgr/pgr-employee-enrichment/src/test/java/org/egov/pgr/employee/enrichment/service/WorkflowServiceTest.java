@@ -166,7 +166,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
@@ -206,7 +206,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
@@ -250,7 +250,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
@@ -291,7 +291,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         responseValues.add(new AttributeEntry("complaintTypeCode", "BOG"));
         final ServiceRequest complaint = ServiceRequest.builder()
@@ -336,7 +336,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
@@ -376,7 +376,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
 
         final ServiceRequest complaint = ServiceRequest.builder()
@@ -421,7 +421,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assigneeId", "6"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
 
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")

@@ -16,6 +16,9 @@ public class AgreementQueryBuilder {
 	public static final String agreementQuery = "SELECT id FROM eglams_agreement agreement WHERE "
 			+ "agreement.acknowledgementnumber=? OR agreement.agreement_no=?";
 	
+	public static final String baseSearchQuery =  "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
+			+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid";
+	
 	public static String insertAgreementQuery() {
 		// FIXME explicitly mention columns
 		return "INSERT INTO eglams_agreement values "
@@ -42,9 +45,7 @@ public class AgreementQueryBuilder {
 	public static String agreementSearchQuery(AgreementCriteria agreementsModel,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 
-		StringBuilder selectQuery = new StringBuilder(
-				"SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
-						+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid");
+		StringBuilder selectQuery = new StringBuilder(baseSearchQuery);
 
 		if (!(agreementsModel.getAgreementId() == null && agreementsModel.getAgreementNumber() == null
 				&& (agreementsModel.getFromDate() == null && agreementsModel.getToDate() == null)

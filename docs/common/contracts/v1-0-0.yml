@@ -11,10 +11,19 @@ host: phoenix-qa.egovernments.org
 schemes:
   - https
 basePath: '/common/v1/definitions'
+
 paths: {}
 
-definitions:
+parameters:
+  requestInfo:
+    name: requestInfo
+    description: Parameter to carry Request metadata in the request body
+    in: body
+    required: false
+    schema:
+      $ref: '#/definitions/RequestInfo'
 
+definitions:
   RequestInfo:
     type: object
     description: RequestInfo should be used to carry meta information about teh requests to the server as described in the fields below. All eGov APIs will use requestinfo as a part of the request body to carry this meta information. Some of this information will be returned back from the server as part of the ResponseInfo in the response body to ensure correlation.
@@ -91,14 +100,14 @@ definitions:
           
   UserRole:
     type: object
-    description: User role carries the teannt related role information for the user. A user can have multiple roles per tenant based on the need of the tenant.
+    description: User role carries the tenant related role information for the user. A user can have multiple roles per tenant based on the need of the tenant. A user may also have multiple roles for multiple tenants.
     properties:
       tenantid: 
         type: string
         description: tenantid for the tenant
       roles:
         type: array
-        description: Roles for the tenant
+        description: Roles assigned for a particular tenant
         items: 
           type: string
       
@@ -158,10 +167,62 @@ definitions:
       
   ErrorRes:
     type: object
-    description: All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadata and Error object as actual representation of error. For bulk/batch form of the API currently either all of the requests should succeed or all of them fail. Partial batch success will be made available later
+    description: All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadat and Error object as actual representation of error. In case of bulk apis, some apis may chose to return the array of Error objects to indicate individual failure. T
     properties:
       ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
       Error:
         $ref: '#/definitions/Error'
-
+      Errors:
+        description: some bulk apis may return the indvidual object related errors
+        type: array
+        items:
+          $ref: '#/definitions/Error'
+    required:
+      - ResponseInfo
+      
+  Address:
+    type: object
+    description: Representation of a address. Indiavidual APIs may choose to extend from this using allOf if more details needed to be added in their case.
+    properties:
+      tenantid: 
+        type: string
+        description: city/ULB/tenant code of the address
+      latitude:
+        type: number
+        format: double
+        description: latitude of the address
+      longitude:
+        type: number
+        format: double
+        description: longitude of the address
+      addressId:
+        type: string
+        description: any system generated id for the address
+      pincode:
+        type: string
+        description: PIN code of the address. Indian pincodes will usually be all numbers.
+      detail:
+        type: string
+        description: |
+          complete address detail including house/building number, Street address, Landmark, area, zone etc.
+          
+  AuditDetails:
+    type: object
+    description: Collection of audit related fields used by most models
+    properties:
+      createdBy: 
+        type: string
+        description: username (preferred) or userid of the user that created the object
+      lastModifiedBy: 
+        type: string
+        description: username (preferred) or userid of the user that last modified the object
+      createdTime:
+        type: number
+        format: long
+        description: epoch of the time object is created
+      lastModifiedTime:
+        type: number
+        format: long
+        description: epoch of the time object is last modified
+        

@@ -1179,7 +1179,7 @@ class CreateAsset extends React.Component {
                       </div>
                       <div className="col-sm-6">
                           <input data-type="Date" data-name={item.name} data-index={index} className="custom-date-picker" name={item.name} type="text"
-                            defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
+                            defaultValue={_values || item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
                       </div>
                   </div>
               </div>)

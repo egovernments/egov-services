@@ -1166,7 +1166,7 @@ class CreateAsset extends React.Component {
         var _values;
         if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
           var textItem = assetAttributes.filter(function(val, ind) {
-            return (val.type == "Text" && item.name == val.key);
+            return (val.type == "Date" && item.name == val.key);
           });
 
           if(textItem && textItem[0])

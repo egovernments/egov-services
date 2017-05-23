@@ -449,6 +449,7 @@ class UploadLeaveApplication extends React.Component{
             d.errorMessage = "Leave days already present in the scanned Excel";
             errorObject.push(d);
           }else {
+            d.successMessage = "Employee leaves created successfully";
             finalValidatedServerObject.push(d);
           }
       });

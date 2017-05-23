@@ -659,6 +659,15 @@ class CreateAsset extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
+
+      $('body').on('change', '.custom-date-picker', function(e) {
+        if(e.target && e.target.getAttribute("data-type") == "Date") {
+          _this.handleChangeAssetAttr(e, "Date", e.target.getAttribute("data-name"));
+        } else {
+          _this.handleChangeAssetAttr(e, "Table", e.target.getAttribute("data-parent"), e.target.getAttribute("data-type"), e.target.getAttribute("data-index"));
+        }
+      });
+
       $("#refModal").on("hidden.bs.modal", function () {
         flag = 1;
         _this.setState({
@@ -787,7 +796,7 @@ class CreateAsset extends React.Component {
               }
 
               if(asset.assetReference) {
-                getCommonMasterById("asset-services", "assets", asset.assetReference, function(res1) {
+                getCommonMasterById("asset-services", "assets", asset.assetReference, function(err, res1) {
                   if(res1 && res1["Assets"] && res1["Assets"][0]) {
                     var _this = this;
                     setTimeout(function() {
@@ -1150,7 +1159,7 @@ class CreateAsset extends React.Component {
     const showDatePicker = function(item, index, ifTable) {
       if(ifTable) {
         return (
-          <input  className="custom-date-picker" name={item.name} type="text"
+          <input data-type="Table" data-parent={item.parent} data-name={item.name} data-index={index} className="custom-date-picker" name={item.name} type="text"
             defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
         )
       } else {
@@ -1170,7 +1179,7 @@ class CreateAsset extends React.Component {
                           <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                       </div>
                       <div className="col-sm-6">
-                          <input  className="custom-date-picker" name={item.name} type="text"
+                          <input data-type="Date" data-name={item.name} data-index={index} className="custom-date-picker" name={item.name} type="text"
                             defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.name)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}/>
                       </div>
                   </div>
@@ -1181,7 +1190,7 @@ class CreateAsset extends React.Component {
 		const showSelect = function(item, index, multi, ifTable) {
       if(ifTable) {
         return (
-          <select name={item.name} multiple={multi ? true : false}
+          <select name={item.name} size={multi ? 3 : 1} multiple={multi ? true : false}
                   onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}>
                   <option value="">Select</option>
                   {item.values ? renderOption(item.values.split(',')) : ""}
@@ -1204,7 +1213,7 @@ class CreateAsset extends React.Component {
                 <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
               </div>
               <div className="col-sm-6">
-                <select name={item.name} multiple={multi ? true : false}
+                <select name={item.name} size={multi ? 3 : 1} multiple={multi ? true : false}
                   defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly || [true, "true"].indexOf(item.isActive) == -1}>
                   <option value="">Select</option>
                   {item.values ? renderOption(item.values.split(',')) : ""}

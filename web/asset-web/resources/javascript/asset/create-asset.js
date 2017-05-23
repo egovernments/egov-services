@@ -798,7 +798,6 @@ class CreateAsset extends React.Component {
               if(asset.assetReference) {
                 getCommonMasterById("asset-services", "assets", asset.assetReference, function(err, res1) {
                   if(res1 && res1["Assets"] && res1["Assets"][0]) {
-                    var _this = this;
                     setTimeout(function() {
                       _this.setState({
                         assetSet: {

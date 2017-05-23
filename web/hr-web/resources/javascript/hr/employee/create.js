@@ -7,7 +7,9 @@ try { employeeType = !localStorage.getItem("employeeType") || localStorage.getIt
     console.log(e);
     employeeType = [];
 }
-try { employeeStatus = !localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined" ? (localStorage.setItem("employeeStatus", JSON.stringify(getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"] || [])), JSON.parse(localStorage.getItem("employeeStatus"))) : JSON.parse(localStorage.getItem("employeeStatus")); } catch (e) {
+try {
+  employeeStatus = !localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined" ? (localStorage.setItem("employeeStatus", JSON.stringify(commonApiPost("hr-masters", "hrstatuses", "_search",{tenantId, pageSize:500, objectName:"Employee Master"}).responseJSON["HRStatus"] || [])), JSON.parse(localStorage.getItem("employeeStatus"))) : JSON.parse(localStorage.getItem("employeeStatus"));
+} catch (e) {
     console.log(e);
     employeeStatus = [];
 }

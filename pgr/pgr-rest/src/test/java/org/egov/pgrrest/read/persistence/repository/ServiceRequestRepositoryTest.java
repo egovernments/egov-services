@@ -18,8 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +44,7 @@ public class ServiceRequestRepositoryTest {
     @Before
     public void setUp() throws Exception {
         complaintRepository =
-            new ServiceRequestRepository(complaintJpaRepository, serviceRequestMessageQueueRepository, submissionRepository);
+            new ServiceRequestRepository(serviceRequestMessageQueueRepository, submissionRepository);
     }
 
     @Test
@@ -99,25 +97,4 @@ public class ServiceRequestRepositoryTest {
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
     }
 
-    @Test
-    public void test_complaint_repository_should_get_complaints_modified_for_a_user_from_jpa_repository() {
-        Date lastAccessedTime = Calendar.getInstance().getTime();
-        Complaint complaintEntityMock1 = mock(Complaint.class);
-        Complaint complaintEntityMock2 = mock(Complaint.class);
-        org.egov.pgrrest.read.domain.model.ServiceRequest complaintModelMock1 = mock(
-                org.egov.pgrrest.read.domain.model.ServiceRequest.class);
-        org.egov.pgrrest.read.domain.model.ServiceRequest complaintModelMock2 = mock(
-                org.egov.pgrrest.read.domain.model.ServiceRequest.class);
-
-        when(complaintEntityMock1.toDomain()).thenReturn(complaintModelMock1);
-        when(complaintEntityMock2.toDomain()).thenReturn(complaintModelMock2);
-
-        when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(1L, "tenantId"))
-                .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
-
-        List<org.egov.pgrrest.read.domain.model.ServiceRequest> actual = complaintRepository
-                .getAllModifiedServiceRequestsForCitizen(1L, "tenantId");
-
-        assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
-    }
-} 
+}

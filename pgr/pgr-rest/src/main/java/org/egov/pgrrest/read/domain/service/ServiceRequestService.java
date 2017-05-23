@@ -1,36 +1,32 @@
 package org.egov.pgrrest.read.domain.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
+import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
-import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
-import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ServiceRequestService {
 
     private static final String SYSTEM_USER = "SYSTEM";
+    private static final String ANONYMOUS_USER_NAME = "anonymous";
     private ServiceRequestRepository serviceRequestRepository;
-	private ComplaintJpaRepository complaintJpaRepository;
-	private UserRepository userRepository;
+    private UserRepository userRepository;
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
-                                 SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
-                                 ComplaintJpaRepository complaintJpaRepository) {
+                                 SevaNumberGeneratorService sevaNumberGeneratorService,
+                                 UserRepository userRepository) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
-        this.complaintJpaRepository = complaintJpaRepository;
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
@@ -60,7 +56,7 @@ public class ServiceRequestService {
     }
 
     private User getAnonymousUser(String tenantId) {
-        return userRepository.getUserByUserName("anonymous",tenantId); 
+        return userRepository.getUserByUserName(ANONYMOUS_USER_NAME,tenantId);
     }
 
     public void update(ServiceRequest complaint, SevaRequest sevaRequest) {
@@ -69,16 +65,5 @@ public class ServiceRequestService {
 		setUserIdForAnonymousUser(sevaRequest);
 		serviceRequestRepository.update(sevaRequest);
 	}
-
-    public void updateLastAccessedTime(String crn, String tenantId) {
-        complaintJpaRepository.updateLastAccessedTime(new Date(), crn, tenantId);
-    }
-
-    public List<ServiceRequest> getAllModifiedCitizenComplaints(Long userId, String tenantId) {
-        if (userId != null) {
-            return serviceRequestRepository.getAllModifiedServiceRequestsForCitizen(userId, tenantId);
-        }
-        return new ArrayList<>();
-    }
 
 }

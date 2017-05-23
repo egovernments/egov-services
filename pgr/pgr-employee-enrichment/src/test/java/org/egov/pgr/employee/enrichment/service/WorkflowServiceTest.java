@@ -207,7 +207,7 @@ public class WorkflowServiceTest {
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
         responseValues.add(new AttributeEntry("assignmentId", "6"));
-        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
             .description("test")
@@ -337,7 +337,7 @@ public class WorkflowServiceTest {
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
         responseValues.add(new AttributeEntry("assignmentId", "6"));
-        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
             .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
@@ -377,7 +377,7 @@ public class WorkflowServiceTest {
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
         responseValues.add(new AttributeEntry("assignmentId", "6"));
-        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
 
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
@@ -422,7 +422,7 @@ public class WorkflowServiceTest {
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
         responseValues.add(new AttributeEntry("assignmentId", "6"));
-        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
 
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))

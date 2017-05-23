@@ -34,7 +34,7 @@ public class WorkflowService {
             String locationId = responseFromDB.getDynamicSingleValue("locationId");
             String departmentId = responseFromDB.getDynamicSingleValue("departmentId");
             String assigneeId = responseFromDB.getDynamicSingleValue("assignmentId");
-            String status = responseFromDB.getDynamicSingleValue("complaintStatus");
+            String status = responseFromDB.getDynamicSingleValue("status");
             boolean isUpdate = false;
             if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
                 || !locationId.equals(request.getValueForKey("boundaryId"))

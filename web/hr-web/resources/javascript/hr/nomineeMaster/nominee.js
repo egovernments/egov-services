@@ -384,6 +384,9 @@ class Nominee extends React.Component{
       return (
         <div className="form-section">
           <h3 className="categoryType">Nominee Details</h3>
+          <div className="row" style={{"padding-right": "18px"}}>
+            {showAddNewBtn()}
+          </div>
           <div className="land-table table-responsive">
               <table className="table table-bordered">
                   <thead>
@@ -406,10 +409,6 @@ class Nominee extends React.Component{
                   {renderBody()}
                   </tbody>
               </table>
-          </div>
-          <div className="row" style={{"padding-right": "18px"}}>
-            {showAddNewBtn()}
-            <br/>
           </div>
             {showCustomFieldAddForm()}
         </div>

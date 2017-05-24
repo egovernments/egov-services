@@ -176,7 +176,7 @@ public class AgreementController {
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields().put(errs.getField(),"value : "+errs.getRejectedValue()+"reason : "+errs.getDefaultMessage());
+				error.getFields().put(errs.getField(),errs.getDefaultMessage());
 			}
 		}
 		errRes.setError(error);

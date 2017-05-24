@@ -42,6 +42,10 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
     private static final String TENANT_FIELD_CITY_NAME = "city.name";
     private static final String TENANT_MISSING_CITY_NAME_MESSAGE = "city.name is required";
 
+    private static final String TENANT_MISSING_ULB_GRADE = "core-tenant.TENANT_MISSING_ULB_GRADE";
+    private static final String TENANT_FIELD_ULB_GRADE = "city.ulbGrade";
+    private static final String TENANT_MISSING_ULB_GRADE_MESSAGE = "city.ulbGrade is required";
+
     @Override
     public ErrorResponse adapt(Tenant tenant) {
         final Error error = getError(tenant);
@@ -77,16 +81,25 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
                 ErrorField.builder()
                     .code(TENANT_MISSING_CITY).field(TENANT_FIELD_CITY).message(TENANT_MISSING_CITY_MESSAGE).build()
             );
-        } else {
-            if (tenant.getCity().isNameAbsent()) {
-                errorFields.add(
-                    ErrorField.builder()
-                        .code(TENANT_MISSING_CITY_NAME)
-                        .field(TENANT_FIELD_CITY_NAME)
-                        .message(TENANT_MISSING_CITY_NAME_MESSAGE)
-                        .build()
-                );
-            }
+            return;
+        }
+        if (tenant.getCity().isNameAbsent()) {
+            errorFields.add(
+                ErrorField.builder()
+                    .code(TENANT_MISSING_CITY_NAME)
+                    .field(TENANT_FIELD_CITY_NAME)
+                    .message(TENANT_MISSING_CITY_NAME_MESSAGE)
+                    .build()
+            );
+        }
+        if (tenant.getCity().isULBGradeAbsent()) {
+            errorFields.add(
+                ErrorField.builder()
+                    .code(TENANT_MISSING_ULB_GRADE)
+                    .field(TENANT_FIELD_ULB_GRADE)
+                    .message(TENANT_MISSING_ULB_GRADE_MESSAGE)
+                    .build()
+            );
         }
     }
 
@@ -112,7 +125,8 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
         if (tenant.isLogoIdAbsent()) {
             errorFields.add(
                 ErrorField.builder()
-                    .code(TENANT_MISSING_LOGO_ID).field(TENANT_FIELD_LOGO_ID).message(TENANT_MISSING_LOGO_ID_MESSAGE).build()
+                    .code(TENANT_MISSING_LOGO_ID).field(TENANT_FIELD_LOGO_ID).message(TENANT_MISSING_LOGO_ID_MESSAGE)
+                    .build()
             );
         }
     }
@@ -121,7 +135,8 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
         if (tenant.isImageIdAbsent()) {
             errorFields.add(
                 ErrorField.builder()
-                    .code(TENANT_MISSING_IMAGE_ID).field(TENANT_FIELD_IMAGE_ID).message(TENANT_MISSING_IMAGE_ID_MESSAGE).build()
+                    .code(TENANT_MISSING_IMAGE_ID).field(TENANT_FIELD_IMAGE_ID).message
+                    (TENANT_MISSING_IMAGE_ID_MESSAGE).build()
             );
         }
     }
@@ -130,7 +145,8 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
         if (!tenant.isCodeAbsent() && tenant.isCodeOfInvalidLength()) {
             errorFields.add(
                 ErrorField.builder()
-                    .code(TENANT_CODE_INVALID_LENGTH).field(TENANT_FIELD_CODE).message(TENANT_CODE_INVALID_LENGTH_MESSAGE).build()
+                    .code(TENANT_CODE_INVALID_LENGTH).field(TENANT_FIELD_CODE).message
+                    (TENANT_CODE_INVALID_LENGTH_MESSAGE).build()
             );
         }
     }

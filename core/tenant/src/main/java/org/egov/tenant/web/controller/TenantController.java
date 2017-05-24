@@ -15,8 +15,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/tenant")
 public class TenantController {
 
-    @Autowired
     private TenantService tenantService;
+
+    @Autowired
+    public TenantController(TenantService tenantService) {
+        this.tenantService = tenantService;
+    }
 
     @PostMapping(value="_search")
     public SearchTenantResponse search(@RequestParam("code") List<String> code,
@@ -31,7 +35,8 @@ public class TenantController {
 
     @PostMapping(value="_create")
     public CreateTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
-        org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.getTenant().toDomain());
+        org.egov.tenant.domain.model.Tenant tenant = tenantService
+            .createTenant(createTenantRequest.getTenant().toDomain());
         return new CreateTenantResponse(new ResponseInfo(), new Tenant(tenant, new City(tenant.getCity())));
     }
 }

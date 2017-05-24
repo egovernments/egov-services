@@ -9,7 +9,7 @@ import java.util.Date;
 @Builder
 public class City {
 
-    public static String
+    public static final String
         ID = "id",
         NAME = "name",
         LOCAL_NAME = "localname",
@@ -18,6 +18,7 @@ public class City {
         REGION_NAME = "regionname",
         LONGITUDE = "longitude",
         LATITUDE = "latitude",
+        ULB_GRADE = "ulbgrade",
         TENANT_CODE = "tenantcode",
         CREATED_BY = "createdby",
         CREATED_DATE = "createddate",
@@ -33,6 +34,7 @@ public class City {
     private Double longitude;
     private Double latitude;
     private String tenantCode;
+    private String ULBGrade;
     private Long createdBy;
     private Date createdDate;
     private Long lastModifiedBy;
@@ -49,6 +51,7 @@ public class City {
             .longitude(longitude)
             .latitude(latitude)
             .tenantCode(tenantCode)
+            .ulbGrade(ULBGrade)
             .createdBy(createdBy)
             .createdDate(createdDate)
             .lastModifiedBy(lastModifiedBy)

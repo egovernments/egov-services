@@ -42,6 +42,7 @@ public class CityRepositoryTest {
             .districtCode("AB")
             .districtName("district")
             .regionName("region name")
+            .ulbGrade("municipality")
             .longitude(35.345)
             .latitude(75.234)
             .build();
@@ -57,6 +58,7 @@ public class CityRepositoryTest {
         assertThat(row.get(DISTRICT_CODE)).isEqualTo("AB");
         assertThat(row.get(DISTRICT_NAME)).isEqualTo("district");
         assertThat(row.get(REGION_NAME)).isEqualTo("region name");
+        assertThat(row.get(ULB_GRADE)).isEqualTo("municipality");
     }
 
     @Test
@@ -76,6 +78,7 @@ public class CityRepositoryTest {
         assertThat(city.getLongitude()).isEqualTo(34.567);
         assertThat(city.getLatitude()).isEqualTo(74.566);
         assertThat(city.getTenantCode()).isEqualTo("AP.KURNOOL");
+        assertThat(city.getUlbGrade()).isEqualTo("Municipality");
         assertThat(city.getCreatedBy()).isEqualTo(1L);
         assertThat(city.getCreatedDate()).isInSameSecondAs(date);
         assertThat(city.getLastModifiedBy()).isEqualTo(1L);
@@ -97,6 +100,7 @@ public class CityRepositoryTest {
                     put(LONGITUDE, resultSet.getDouble(LONGITUDE));
                     put(LATITUDE, resultSet.getDouble(LATITUDE));
                     put(TENANT_CODE, resultSet.getString(TENANT_CODE));
+                    put(ULB_GRADE, resultSet.getString(ULB_GRADE));
                     put(CREATED_BY, resultSet.getLong(CREATED_BY));
                     put(CREATED_DATE, resultSet.getString(CREATED_DATE));
                     put(LAST_MODIFIED_BY, resultSet.getLong(LAST_MODIFIED_BY));

@@ -7,7 +7,7 @@ function getValueByName(name, id) {
 }
 
 try {
-  var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
 } catch (e) {
     console.log(e);
     var department = [];
@@ -15,12 +15,12 @@ try {
 
 var _type;
 $(document).ready(function() {
-  if(window.opener && window.opener.document) {
-     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-     if(logo_ele && logo_ele[0]) {
-       document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
-     }
-   }
+    if (window.opener && window.opener.document) {
+        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+        if (logo_ele && logo_ele[0]) {
+            document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
+        }
+    }
     $('.datepicker').datepicker({
         format: 'DD/MM/YYYY'
     });
@@ -199,7 +199,7 @@ $(document).ready(function() {
                 designationId: $("#approver_designation").val()
             }).responseJSON["Employee"] || [];
 
-            
+
 
             for (var i = 0; i < employees.length; i++) {
                 $(`#approver_name`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
@@ -234,7 +234,7 @@ $(document).ready(function() {
                 required: true
             }
         };
-    } else if(getUrlVars()["view"] == "eviction") {
+    } else if (getUrlVars()["view"] == "eviction") {
         var commom_fields_rules = {
             evict_reason: {
                 required: true
@@ -321,6 +321,11 @@ $(document).ready(function() {
         if (process) {
             getDesignations(process.status, function(designations) {
                 for (var variable in designations) {
+                    if (!designations[variable]["id"]) {
+                        var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
+                        designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
+                    }
+                    
                     $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
                 }
             });
@@ -334,7 +339,7 @@ $(document).ready(function() {
         $(".hide-sec").hide();
         $("#viewDetBtn").show();
         $("#minDetSec").show();
-        if(getUrlVars()["view"] == "cancel") {
+        if (getUrlVars()["view"] == "cancel") {
             $("#evict").remove();
         } else {
             $("#cancel").remove();

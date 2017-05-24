@@ -73,10 +73,10 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			errors.rejectValue("Agreement.securityDeposit", "","security deposit value should be greater than or equal to thrice rent value");
 
 		if (solvencyCertificateDate.compareTo(new Date()) >= 0)
-			errors.rejectValue("Agreement.securityDeposit", "","solvency certificate date should be lesser than current date");
+			errors.rejectValue("Agreement.solvencyCertificateDate", "","solvency certificate date should be lesser than current date");
 
 		if (bankGuaranteeDate.compareTo(new Date()) >= 0)
-			errors.rejectValue("Agreement.securityDeposit", "","bank Guarantee Date date should be lesser than current date");
+			errors.rejectValue("Agreement.bankGuaranteeDate", "","bank Guarantee Date date should be lesser than current date");
 
 		// FIXME uncomment this part before pushing-->
 		validateAllottee(agreementRequest,errors);
@@ -96,7 +96,7 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			errors.rejectValue("Agreement.securityDeposit", "","the asset given does not exist");
 			
 		if(!assetService.isAssetAvailable(assetId))
-			errors.rejectValue("Agreement.securityDeposit", "","Agreement has been already signed for the given asset");
+			errors.rejectValue("Agreement.Asset.id", "","Agreement has been already signed for the given asset");
 	}
 
 	public void validateAllottee(AgreementRequest agreementRequest,Errors errors) {
@@ -132,9 +132,9 @@ public class AgreementValidator implements org.springframework.validation.Valida
 					RentIncrementType responseRentIncrement = rentIncrementService
 							.getRentIncrementById(rentIncrementId);
 					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
-						errors.rejectValue("Agreement.securityDeposit", "","invalid rentincrement type object");
+						errors.rejectValue("Agreement.rentIncrement.Id", "","invalid rentincrement type object");
 				} else {
-					errors.rejectValue("Agreement.securityDeposit", "","please enter a rentincrement type value for given agreement");
+					errors.rejectValue("Agreement.rentIncrement.Id", "","please enter a rentincrement type value for given agreement");
 				}
 			}
 		}

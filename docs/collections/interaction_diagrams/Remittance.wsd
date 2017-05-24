@@ -1,0 +1,26 @@
+title Collection Remittance Process Flow
+
+Client->+RemittanceSvc: Bank Remittance Request
+note over Client,RemittanceSvc
+    Remittance request to list out the records 
+    pending for remittance
+end note
+RemittanceSvc->RemittanceSvc: Validate remittance request
+RemittanceSvc->RemittanceSvc: Query records pending for remittance group by service, fund and date
+RemittanceSvc->Client : Search remittance response
+note over RemittanceSvc, Client 
+  List of records pending for remittance
+end note over 
+Client->RemittanceSvc: Remit selected records
+RemittanceSvc->IdGenService: Generate Remittance Number
+RemittanceSvc->RemittanceSvc: Persist Remittance, Remittance Details and mapping of Remittance to receipt
+RemittanceSvc->+KafkaQSvc : Queue for Further Processing
+RemittanceSvc->-Client: Remittance response
+note over RemittanceSvc, Client
+Prepare and generate Remittance Report
+end note over 
+KafkaQSvc->WorkflowSvc: initiate workflow
+KafkaQSvc->VoucherSvc: Post Remittance Voucher
+KafkaQSvc->InstrumentSvc: Update instrument Details
+KafkaQSvc->ReceiptSvc: Update receipt status to remitted
+KafkaQSvc->ESSvc: Push to elastic search

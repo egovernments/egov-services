@@ -1,0 +1,37 @@
+title Challan Creation in Collection
+
+Client->+ChallanSvc: Create Challan Request
+note over Client,ChallanSvc
+    Display the Create Challan Screen to enter details
+end note
+ChallanSvc->ChallanSvc: Validate Challan Create request
+
+Client->+ChallanSvc: Submit Create Challan request
+ChallanSvc->IDGenSvc: Generate challan number
+ChallanSvc->ChallanSvc: Persist challan and set validity of challan
+ChallanSvc->+KafkaQSvc: Queue for further processing
+ChallanSvc->-Client: Create Challan response
+
+KafkaQSvc->WorkflowSvc: Initiate workflow
+KafkaQSvc->ESSvc: Push to elastic search
+
+title Challan Based Collection
+
+Client->+ChallanSvc: Search Challan 
+note over Client,ChallanSvc
+    Search request to get the Challan
+end note
+ChallanSvc->ChallanSvc: Validate search request
+ChallanSvc->ChallanSvc: Query to get Challan from  system
+ChallanSvc->-Client: Challan Resonse 
+
+Client->+ReceiptSvc: Submit payment request
+ReceiptSvc->ReceiptSvc: Validate payment request
+ReceiptSvc->IDGenSvc: Generate receipt number
+ReceiptSvc->ReceiptSvc: Persist receipt
+ReceiptSvc->+KafkaQSvc: Queue for further processing
+ReceiptSvc->-Client: Create receipt response
+
+KafkaQSvc->WorkflowSvc: Initiate workflow
+KafkaQSvc->VoucherSvc: Post voucher in financials
+KafkaQSvc->ESSvc: Push to elastic search

@@ -239,6 +239,9 @@ var commomFieldsRules = {
     },
     collectedSecurityDeposit: {
       required: true
+    },
+    goodWillAmount: {
+      required: true
     }
 
 };
@@ -1018,6 +1021,19 @@ $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
+      $('#createAgreementForm').submit(function() {
+    var id1 = $('#collectedGoodWillAmount').val();
+    var id2 = $('#goodWillAmount').val();
+    if (id1 > id2) {
+        alert('CollectedGoodWillAmount should be less than GoodWillAmount');
+        return false;
+    }
+    else
+    {
+    return true;
+    }
+
+});
         // form.submit();
         // form.preventDefault();
         agreement["asset"] = {};

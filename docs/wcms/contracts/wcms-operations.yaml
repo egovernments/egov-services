@@ -205,11 +205,11 @@ definitions:
         description: donation charges of the water connection.
         minLength: 1
         maxLength: 100
-      noOfTaps: 
+      numberOfTaps: 
         type: integer
         format: int64
         description: number of taps required.
-      noOfPersons: 
+      numberOfPersons: 
         type: integer
         description: Defines the number of persons in the household.
         minLength: 1

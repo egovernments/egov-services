@@ -22,6 +22,15 @@ parameters:
     required: false
     schema:
       $ref: '#/definitions/RequestInfo'
+      
+  tenantId:
+    name: tenantId
+    in: query
+    description: Unique id for for a tenant.
+    required: true
+    type: string
+    format: varchar
+
 
 definitions:
   RequestInfo:
@@ -70,13 +79,16 @@ definitions:
       
   UserInfo:
     type: object
-    description: This is acting ID token of the authenticated user on the srerver. Any value provided by the clients will be ignored and actual user based on authtoken will be used on the server. 
+    description: This is acting ID token of the authenticated user on the server. Any value provided by the clients will be ignored and actual user based on authtoken will be used on the server. 
     readOnly: true
     properties:
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
       id: 
         type: integer
         format: int32
-        description: User id of the authenticated user
+        description: User id of the authenticated user. Will be deprecated in future
       username: 
         type: string
         description: Unique user name of the authenticated user
@@ -87,29 +99,49 @@ definitions:
         type: string
         description: email address of the authenticated user
       primaryrole:
-        $ref: '#/definitions/UserRole'
+        type: array
+        description: List of all the roles for teh primary tenant
+        items:
+          $ref: '#/definitions/Role'
       additionalroles:
         type: array
         description: array of additional tenantids authorized for the authenticated user
         items:
-          $ref: '#/definitions/UserRole'
+          $ref: '#/definitions/TenantRole'
     required:
-      - id
+      - tenantId
       - username
       - primaryrole
+      
+  Role:
+    type: object
+    description: |
+      minimal representation of teh Roles n the system to be carried along in UserInfo with RequestInfo meta data. Actual authorization service to extend this to have more role related attributes
+    properties:
+      name: 
+        type: string
+        description: Unique name of the role
+      description:
+        type: string
+        description: brief description of the role
+    required:
+      - name
           
-  UserRole:
+  TenantRole:
     type: object
     description: User role carries the tenant related role information for the user. A user can have multiple roles per tenant based on the need of the tenant. A user may also have multiple roles for multiple tenants.
     properties:
-      tenantid: 
+      tenantId: 
         type: string
         description: tenantid for the tenant
       roles:
         type: array
-        description: Roles assigned for a particular tenant
+        description: Roles assigned for a particular tenant - array of role codes/names
         items: 
-          type: string
+          $ref: "#/definitions/Role"
+    required:
+      - tenantId
+      - roles
       
   ResponseInfo:
     type: object
@@ -174,8 +206,9 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
       Errors:
-        description: some bulk apis may return the indvidual object related errors
+        description: Error response array corresponding to Request Object array. In case of single object submission or _search related paths this may be an array of one error element
         type: array
+        minLength: 1
         items:
           $ref: '#/definitions/Error'
     required:

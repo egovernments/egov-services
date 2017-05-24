@@ -390,66 +390,66 @@ $(document).ready(function() {
      }*/
 
     _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name", agreementDetail.asset.assetCategory.id);
-    if (_type == "land") {
+    if (_type.toLowerCase() == "land") {
 
         // remove all other Asset Details block from DOM except land asset related fields
         $(".shopAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
 
-    } else if (_type == "shop") {
+    } else if (_type.toLowerCase() == "shopping complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateThree").remove();
 
-    } else if (_type == "market") {
+    } else if (_type.toLowerCase() == "market") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-    } else if (_type == "kalyanamandapam") {
+    } else if (_type.toLowerCase() == "kalyana mandapam") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-    } else if (_type == "parking_space") {
+    } else if (_type.toLowerCase() == "parking space") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
 
-    } else if (_type == "slaughter_house") {
+    } else if (_type.toLowerCase() == "slaughter house") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
 
-    } else if (_type == "usfructs") {
+    } else if (_type.toLowerCase() == "usufruct") {
 
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-    } else if (_type == "community") {
+    } else if (_type.toLowerCase() == "community toilet complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-    } else if (_type == "Fish Tank") {
+    } else if (_type.toLowerCase() == "fish tanks") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-    } else if (_type == "park") {
+    } else if (_type.toLowerCase() == "parks") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock").remove();

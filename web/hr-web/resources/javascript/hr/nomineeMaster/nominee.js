@@ -50,6 +50,7 @@ class Nominee extends React.Component{
         this.setInitialState=this.setInitialState.bind(this);
         this.addNominee=this.addNominee.bind(this);
         this.renderDelEvent=this.renderDelEvent.bind(this);
+        this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
     }
 
 
@@ -89,8 +90,25 @@ class Nominee extends React.Component{
           nomineeFieldsDefination
         },
         isEdit: false,
-        isCustomFormVisible:false
-      })
+        isCustomFormVisible:false,
+        nomineeSet:{
+        "name": "",
+        "gender": "",
+        "dateOfBirth": "",
+        "maritalStatus": "",
+        "relationship": "",
+        "bank": "",
+        "bankBranch": "",
+        "bankAccount": "",
+        "nominated": true,
+        "employed": true,
+        "createdBy": "",
+        "createdDate": "",
+        "lastModifiedBy": "",
+        "lastModifiedDate": "",
+        "tenantId": tenantId
+      }
+    })
       //this.setState({isEdit:false})
     } else {
       //get asset Category from state
@@ -125,34 +143,20 @@ class Nominee extends React.Component{
     }
 
     componentWillMount(){
-      try {
-        var MaritalList = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(commonApiPost("hr-employee", "maritalstatuses", "_search", {tenantId, pageSize:500}).responseJSON["MaritalStatus"] || [])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus"));
-      } catch (e) {
-          console.log(e);
-          var MaritalList = [];
-      }
-      try {
-        var bankList = !localStorage.getItem("bank") || localStorage.getItem("bank") == "undefined" ? (localStorage.setItem("bank", JSON.stringify(getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [])), JSON.parse(localStorage.getItem("bank"))) : JSON.parse(localStorage.getItem("bank"));
-      } catch (e) {
-          console.log(e);
-          var bankList = [];
-      }
 
-    try {
-      var branchList = commonApiPost("egf-masters", "bankbranches", "_search", {
-        tenantId,
-        "bank.id": bankList.id
-      }).responseJSON["bankBranches"] || [];
-    } catch (e) {
-      console.log(e);
-      var branchList :[];
-    }
+}
 
-    this.setState({
-      MaritalList,
-      bankList,
-      branchList
-  })
+  handleChangeThreeLevel(e, pName, name, key) {
+
+      this.setState({
+        [pName]: {
+          ...this.state[pName],
+          [name]: {
+            ...this.state[name],
+            key:e.target.value
+          }
+        }
+      })
   }
 
     handleChange(e,name) {
@@ -161,6 +165,24 @@ class Nominee extends React.Component{
         nomineeSet:{
             ...this.state.nomineeSet,
             nominated: !this.state.nomineeSet.nominated
+        }
+      })
+    } else if (name === "bank"){
+      try {
+        var branchList = commonApiPost("egf-masters", "bankbranches", "_search", {
+          tenantId,
+          "bank.id": e.target.value
+        }).responseJSON["bankBranches"] || [];
+      } catch (e) {
+        console.log(e);
+        var branchList :[];
+      }
+      this.setState({
+        branchList,
+        nomineeSet:{
+            ...this.state.nomineeSet,
+              [name]:e.target.value,
+
         }
       })
     } else {
@@ -205,12 +227,15 @@ class Nominee extends React.Component{
 
     componentDidMount() {
       var _this = this;
+      var id = getUrlVars()["id"];
       if(window.opener && window.opener.document) {
          var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
          if(logo_ele && logo_ele[0]) {
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
+        $('#code').prop("disabled", true);
+
        if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Nominee");
 
        $('body').on("change", "#dateOfBirth", function(e) {
@@ -221,8 +246,41 @@ class Nominee extends React.Component{
              }
           })
        });
-    }
+       try {
+         var MaritalList = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(commonApiPost("hr-employee", "maritalstatuses", "_search", {tenantId, pageSize:500}).responseJSON["MaritalStatus"] || [])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus"));
+       } catch (e) {
+           console.log(e);
+           var MaritalList = [];
+       }
+       try {
+         var bankList = !localStorage.getItem("bank") || localStorage.getItem("bank") == "undefined" ? (localStorage.setItem("bank", JSON.stringify(getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [])), JSON.parse(localStorage.getItem("bank"))) : JSON.parse(localStorage.getItem("bank"));
+       } catch (e) {
+           console.log(e);
+           var bankList = [];
+       }
 
+         this.setState({
+           MaritalList,
+           bankList,
+       })
+
+       try {
+         var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+       } catch (e) {
+         console.log(e);
+         var obj=[];
+       }
+       _this.setState({
+         allNomineeValue:{
+           ..._this.state.allNomineeValue,
+             employeeid: {
+               id:id,
+               name: obj.name,
+               code: obj.code
+             }
+       }
+    })
+}
 
 
 
@@ -302,8 +360,8 @@ class Nominee extends React.Component{
 
   render(){
 
-    let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee,renderDelEvent}=this;
-    let {MaritalList,bankList,list,branchList,genderList,isEdit,index,isCustomFormVisible, readonly, showMsg}=this.state;
+    let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee,renderDelEvent,handleChangeThreeLevel}=this;
+    let {MaritalList,bankList,list,branchList,genderList,isEdit,index,isCustomFormVisible, readonly, showMsg,allNomineeValue}=this.state;
     let {nomineeFieldsDefination}=this.state.allNomineeValue;
     let mode=getUrlVars()["type"];
     let {name,gender,dateOfBirth,code,maritalStatus,relationship,bank,bankBranch,bankAccount,nominated,employed}=this.state.nomineeSet;
@@ -312,10 +370,10 @@ class Nominee extends React.Component{
     {
         if(list)
         {
-            return list.map((item)=>
+            return list.map((item, ind)=>
             {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
+                return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                        {typeof item == "object" ? item.name : item}
                   </option>)
             })
         }
@@ -434,12 +492,12 @@ class Nominee extends React.Component{
               <div className="col-sm-6">
               <div className="row">
                 <div className="col-sm-6 label-text">
-                  <label for="maritalStatus"> Marital Status</label>
+                  <label for="maritalStatus"> Marital Status <span>*</span></label>
                 </div>
                 <div className="col-sm-6">
                   <div className="styled-select">
-                    <select  name="maritalStatus" value={maritalStatus}
-                        onChange={(e)=>{handleChange(e,"maritalStatus")}}>
+                    <select id = "maritalStatus" name="maritalStatus" value={maritalStatus}
+                        onChange={(e)=>{handleChange(e,"maritalStatus")}} required>
                           <option value="">Select Type</option>
                           {renderOption(MaritalList)}
                      </select>
@@ -454,7 +512,7 @@ class Nominee extends React.Component{
               </div>
               <div className="col-sm-6">
                 <div className="styled-select">
-                  <select  name="bank" value={bank}
+                  <select id = "bank" name="bank" value={bank}
                       onChange={(e)=>{handleChange(e,"bank")}}>
                         <option value="">Select Type</option>
                         {renderOption(bankList)}
@@ -472,7 +530,7 @@ class Nominee extends React.Component{
                 </div>
                 <div className="col-sm-6">
                   <div className="styled-select">
-                    <select  name="bankBranch" value={bankBranch}
+                    <select id = "bankBranch" name="bankBranch" value={bankBranch}
                         onChange={(e)=>{handleChange(e,"bankBranch")}}>
                           <option value="">Select Type</option>
                           {renderOption(branchList)}
@@ -496,7 +554,7 @@ class Nominee extends React.Component{
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Nominated</label>
+                      <label htmlFor="">Nominated <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
                       <input type="checkbox" name="nominated" value={nominated} onChange={(e)=>{ handleChange(e,"nominated", true)}} checked={nominated? true : false}/>
@@ -510,10 +568,10 @@ class Nominee extends React.Component{
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                      <select  name="employed" value={employed}
+                      <select id = "employed" name="employed" value={employed}
                           onChange={(e)=>{handleChange(e,"employed")}}required>
                             <option value="">Select Type</option>
-                            <option>daughter</option>
+                            <option>Full Time</option>
                        </select>
                     </div>
                   </div>
@@ -611,7 +669,8 @@ class Nominee extends React.Component{
                             <label for="name">Employee Name</label>
                         </div>
                             <div className="col-sm-6">
-                              <input type="text" name="name" id="name" value={name}/>
+                              <input type="text" name="name" id="name" value={allNomineeValue.employeeid.name}
+                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","name")}} readonly/>
                             </div>
                         </div>
                     </div>
@@ -621,7 +680,8 @@ class Nominee extends React.Component{
                                 <label for="">Employee Code</label>
                                 </div>
                                     <div className="col-sm-6">
-                                    <input type="text" name="code" id="code" value={code} />
+                                    <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
+                                    onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}}readonly/>
                                     </div>
                               </div>
                         </div>

@@ -464,6 +464,20 @@ $(document).ready(function() {
         // $(`#${key}`).attr("disabled",true);
     };
 
+    function getPositionId(id) {
+        var tempEmploye = {};
+        for (var i = 0; i < employees.length; i++) {
+            if (employees[i].id == id) {
+                tempEmploye = employees[i];
+            }
+        }
+
+        for (var i = 0; i < tempEmploye.assignments.length; i++) {
+            if (tempEmploye.assignments[i].isPrimary) {
+                return tempEmploye.assignments[i].position;
+            }
+        }
+    }
 
 
     $('body').on('click', 'button', function(e) {
@@ -475,7 +489,7 @@ $(document).ready(function() {
             _agrmntDet.workflowDetails = {
                 "businessKey": process.businessKey,
                 "type": "Agreement",
-                "assignee": $("#approver_name") && $("#approver_name").val() ? $("#approver_name").val() : process.initiatorPosition,
+                "assignee":getPositionId($("#approver_name").val()),
                 "status": process.status,
                 "action": data.action
             };

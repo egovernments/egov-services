@@ -30,6 +30,15 @@ parameters:
     required: true
     type: string
     format: varchar
+    
+  lastChangedSince:
+    name: lastChangedSince
+    description: |
+      epoch of the time since when the changes on the object should be picked up. Search results from this parameter should include both newly created objects since this time as well as any modified objects since this time. This criterion is included to help polling clients to get the changes in system since a last tme they synchronized with the platform.
+    in: query
+    required: false
+    type: integer
+    format: int64
 
 
 definitions:

@@ -1,0 +1,270 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  title: Water Charges Management Service (WCMS) APIs
+  description: |
+    APIs available for WCMS 
+      - Apply for new water connection.
+      - Search water connection details based upon acknowledgement number or legacyConsumerNumber.
+      - Modify water connection details.
+  contact:
+    name: Rishi
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1/egov-wcms/[API endpoint]'
+paths:
+  /_create:
+    post:
+      summary: Creates new water connection
+      description: To create new water connection is based upon various master data configured for your ULB.
+      tags:
+        - Water Connection
+      parameters:
+        - name: connection
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/WaterConnectionReq'
+      responses:
+        '201':
+          description: New water connection request acknowledged sucessfully
+          schema:
+            $ref: "#/definitions/WaterConnectionRes"
+        '400':
+          description: New water connection request failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+definitions:
+
+  Property:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the property.
+      usageType:
+        type: string
+        description: all possible combination of usage type and subusage type.
+      propertyType:
+        type: string
+        description: holds supported pre-defined value of property type. Check master API to look at supported values.
+      address: 
+        type: string
+        description: address of the property.
+        readOnly: true
+  
+  Document:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the document.
+      applicationType:
+        type: integer
+        description: type of the application for particular document.
+      documentName: 
+        type: string
+        description: name of the document.
+        readOnly: true
+      description:
+        type: string
+        description: description of the document .
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active Document Names and FALSE for inactive Document Names.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+    required:
+      - id
+      - applicationType
+      - active
+      - documentName
+      - description
+      - tenantId
+  
+  WorkflowDetails:
+        type: object
+        properties: 
+          department: 
+            type: integer
+            description: ID to define the Department .
+            minLength: 1
+            maxLength: 100
+          designation: 
+            type: integer
+            description: ID to define the Designation.
+            minLength: 1
+            maxLength: 100
+          approver: 
+            type: integer
+            description: ID to define the Approver ID.
+            minLength: 1
+            maxLength: 100
+          comments: 
+            type: string
+            description: Notes that has been added by the clerk or engineer.
+            minLength: 1
+            maxLength: 100
+          status:
+            type: string
+            description: Enumeration of Connection Request statuses.
+            enum:
+              - ACTIVE
+              - INPROGRESS
+              - DISCONNECTED
+              - HOLDING
+              - CLOSED
+              - INACTIVE            
+        required:
+         - department
+         - designation
+         - approver
+  
+  Meter:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the meter.
+      meterMake:
+        type: string
+        description: company name of the meter.
+      meterReading: 
+        type: string
+        description: intial reading of the meter.
+        readOnly: true
+  
+  Connection:
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
+      connectionType:
+        type: string
+        description: possible and supported type of new water connection
+        enum:
+          - TEMPORARY
+          - PERMANENT
+      billingType:
+        type: string
+        description: supported type of billing nature of the water connection.
+        enum:
+          - METERED
+          - NON-METERED
+      categoryType:
+        type: string
+        description: This field holds the pre-defined value of supported category. Check master API to look at supported values for your ULB.
+      hscPipeSizeType:
+        type: string
+        description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.
+      supplyType:
+        type: string
+        description: supported supply type for the water connection
+        enum:
+          - REGULAR
+          - BULK
+          - SEMIBULK
+      sourceType:
+        type: string
+        description: supported source type for the water connection.
+        enum:
+          - GROUNDWATER
+          - SURFACEWATER
+      connectionStatus: 
+        type: string
+        description: water connection status.
+        enum:
+          - ACTIVE
+          - INACTIVE
+      sumpCapacity: 
+        type: number
+        description: Capacity of the sump.
+        minLength: 1
+        maxLength: 100
+      donationCharge: 
+        type: integer
+        description: donation charges of the water connection.
+        minLength: 1
+        maxLength: 100
+      noOfTaps: 
+        type: integer
+        format: int64
+        description: number of taps required.
+      noOfPersons: 
+        type: integer
+        description: Defines the number of persons in the household.
+        minLength: 1
+        maxLength: 100
+      parentConnectionId:
+        type: integer
+        description: holds identifier of previous connection if current connection request is for additional water connection.
+      legacyConsumerNumber:
+        type: integer
+        format: int64
+        description: legacy connection consumer number for existing consumer.
+      acknowledgmentNumber:
+        type: string
+        description: the acknowledgement number generated after successful acceptance of request. 
+      consumerCode:
+        type: string
+        description: consumer code generated after successful acceptance of request.
+      documents:
+        type: array
+        items:
+          $ref: "#/definitions/Document"
+      property:
+        $ref: '#/definitions/Property'
+      meter:
+        $ref: '#/definitions/Meter'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - property
+      - documents
+      - connectionType
+      - billingType
+      - categoryType
+      - hscPipeSizeType
+      - supplyType
+      - sourceType
+  
+  WaterConnectionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Connection:
+        $ref: '#/definitions/Connection'
+    required:
+      - RequestInfo
+      - Connection
+
+  WaterConnectionRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Connection:
+        $ref: '#/definitions/Connection'
+      WorkflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
+

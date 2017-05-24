@@ -65,6 +65,7 @@ definitions:
   
   Document:
     type: object
+    description: documents required under respective water connection operations.
     properties:
       id:
        type: integer
@@ -100,45 +101,47 @@ definitions:
       - tenantId
   
   WorkflowDetails:
-        type: object
-        properties: 
-          department: 
-            type: integer
-            description: ID to define the Department .
-            minLength: 1
-            maxLength: 100
-          designation: 
-            type: integer
-            description: ID to define the Designation.
-            minLength: 1
-            maxLength: 100
-          approver: 
-            type: integer
-            description: ID to define the Approver ID.
-            minLength: 1
-            maxLength: 100
-          comments: 
-            type: string
-            description: Notes that has been added by the clerk or engineer.
-            minLength: 1
-            maxLength: 100
-          status:
-            type: string
-            description: Enumeration of Connection Request statuses.
-            enum:
-              - ACTIVE
-              - INPROGRESS
-              - DISCONNECTED
-              - HOLDING
-              - CLOSED
-              - INACTIVE            
-        required:
-         - department
-         - designation
-         - approver
+    type: object
+    description: workflow details related to connection
+    properties: 
+      department: 
+        type: integer
+        description: ID to define the Department .
+        minLength: 1
+        maxLength: 100
+      designation: 
+        type: integer
+        description: ID to define the Designation.
+        minLength: 1
+        maxLength: 100
+      approver: 
+        type: integer
+        description: ID to define the Approver ID.
+        minLength: 1
+        maxLength: 100
+      comments: 
+        type: string
+        description: Notes that has been added by the clerk or engineer.
+        minLength: 1
+        maxLength: 100
+      status:
+        type: string
+        description: Enumeration of Connection Request statuses.
+        enum:
+          - ACTIVE
+          - INPROGRESS
+          - DISCONNECTED
+          - HOLDING
+          - CLOSED
+          - INACTIVE            
+    required:
+     - department
+     - designation
+     - approver
   
   Meter:
     type: object
+    description: Represents meter hardware used for water connection
     properties:
       id:
        type: integer
@@ -154,6 +157,7 @@ definitions:
   
   Connection:
     type: object
+    description: water connection attributes 
     properties:
       tenantId:
         type: string

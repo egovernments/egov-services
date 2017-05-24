@@ -562,9 +562,10 @@ function loadServiceDefinition(searchResponse){
 			serviceResult = (data.complaintTypes).filter(function( obj ) {
 				return (obj.keywords).indexOf('deliverable') > -1;
 			});
-			console.log(JSON.stringify(serviceResult));
+			//console.log(JSON.stringify(serviceResult));
 			for(var i=0;i<serviceResult.length;i++){
 				if(serviceResult[i].serviceCode == serviceCode){
+					console.log(serviceCode)
 					callToLoadDefinition(searchResponse);
 					return;
 				}
@@ -618,15 +619,18 @@ function callToLoadDefinition(searchResponse){
 
 			$('.appForm *').filter(':input').each(function(){
 			    var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
-			    $(this).val(obj.name);
+			    if(obj)
+			    	$(this).val(obj.name);
 			});
 
 			$('.checkForm *').filter(':input').each(function(){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
-			    if(JSON.parse(obj.name))
-			    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");
-			    else
-			    	$(this).prop('checked', JSON.parse(obj.name));
+				if(obj){
+					if(JSON.parse(obj.name))
+				    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");
+				    else
+				    	$(this).prop('checked', JSON.parse(obj.name));
+				}
 			});
 
 			$('#servicesBlockDocs *').filter(':input').each(function(){

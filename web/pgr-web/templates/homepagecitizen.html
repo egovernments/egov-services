@@ -16,6 +16,33 @@
         <link rel="stylesheet" href="../resources/global/css/egov/custom.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>
+        	.page-container .main-content .citizen-screens .content-wrap {
+			    position: relative;
+			    margin-top: 20px;
+			}
+			.page-container .main-content .citizen-screens .msg header i {
+			    font-size: 18px;
+		    	padding: 2px 5px;
+			}
+			.page-container .main-content .citizen-screens .msg header h3, .page-container .main-content .citizen-screens .msg header a {
+			    font-size: 18px;
+		        margin: 5px 0;
+			}
+			.page-container .main-content .citizen-screens .msg header span.msg-status {
+			    margin: 0 5px;
+			    position: relative;
+			    top: -3px;
+			}
+			.page-container .main-content .citizen-screens section div.msg, .page-container .main-content .citizen-screens section div.msg {
+			    /* margin-top: 10px; */
+			    margin-bottom: 15px;
+			}
+			.page-container .main-content .citizen-screens .msg header .msg-info {
+			    padding-left: 0;
+			}
+			.page-container .main-content .citizen-screens .msg .msg-content > p {
+			    margin: 15px 0 0 0;
+			}
         	[class*='col-'].services .content{
         		padding: 10px;
 				box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
@@ -73,11 +100,11 @@
 						</div>
 						<div class="nav-menu col-lg-4 col-xs-12">
 							<ul class="hr-menu text-center">
-								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)"  data-show-screen="#inbox-template"> <span class="title" data-translate="core.lbl.inbox"></span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
+								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)"  data-show-screen="#inbox-template"> <span class="title">My Request</span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
 								<span class="separator">|</span>
-								<li class="newServices"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newservicesContent">Services</a></li>
+								<li class="newServices"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newservicesContent">New Services</a></li>
 								<span class="separator">|</span>
-								<li class="newComplaint"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newcomplaintContent">Grievances</a></li>
+								<li class="newComplaint"><a class="menu-item" href="javascript:void(0);" data-show-screen="#newcomplaintContent">New Grievances</a></li>
 							</ul>
 						</div><!--/.nav-collapse -->
 						
@@ -140,47 +167,64 @@
 					</div>
 					
 					<div class="row container-msgs">
-						
-						<section class="col-lg-12 grievanceresponse">
+						<section class="grievanceresponse">
 							<script id="grievance-template" type="text/template">
 								{{#each this}}
-								<div class="msg reloadtemplate" data-toggle="collapse" data-target="#4275" aria-expanded="true">
-									<header>
-										<div class="row">
-											<i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i>
-											<h3 class="col-sm-11 col-xs-10">
-											Grievance Redressal
-												<span class="msg-status">
-													{{#each attribValues}}
-													    {{#if (contains this.key "status")}}
-															{{this.name}}
-													    {{/if}}
-													{{/each}}
-												</span> 
-											</h3> 
+								<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 inboxHeight reloadtemplate">
+									<div class="msg" data-toggle="collapse" data-target="#4275" aria-expanded="true">
+										<header>
+											<div class="row">
+												<h3>
+												<i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i>
+												{{#each attribValues}}
+												    {{#if (contains this.key "keyword")}}
+														{{#if (contains this.name "Complaint")}}
+															Grievance
+														{{else}}
+															Service
+														{{/if}}
+												    {{/if}}
+												{{/each}}
+													<span class="msg-status">
+														{{#each attribValues}}
+														    {{#if (contains this.key "status")}}
+																{{this.name}}
+														    {{/if}}
+														{{/each}}
+													</span> 
+												</h3> 
+											</div>
+											<div class="msg-info">
+												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
+												
+												<span class="msg-date">{{requestedDatetime}}</span>
+											</div>
+										</header>
+										<div class="msg-content collapse in">
+											<p> 
+												{{#each attribValues}}
+												    {{#if (contains this.key "keyword")}}
+														{{#if (contains this.name "Complaint")}}
+															Grievance No.
+														{{else}}
+															Service No.
+														{{/if}}
+												    {{/if}}
+												{{/each}}
+												{{serviceRequestId}} 
+												regarding 
+												{{serviceName}} 
+												in 
+												{{#each attribValues}}
+												    {{#if (contains this.key "status")}}
+														{{this.name}}
+												    {{/if}}
+												{{/each}} 
+												status. 
+											</p>
 										</div>
-										<div class="msg-info">
-											<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
-											
-											<span class="msg-date">{{requestedDatetime}}</span>
-										</div>
-									</header>
-									<div class="msg-content collapse in">
-										<p> 
-											Grievance No. 
-											{{serviceRequestId}} 
-											regarding 
-											{{serviceName}} 
-											in 
-											{{#each attribValues}}
-											    {{#if (contains this.key "status")}}
-													{{this.name}}
-											    {{/if}}
-											{{/each}} 
-											status. 
-										</p>
-									</div>
-								</div> 
+									</div> 
+								</div>
 								{{/each}}
 							</script>
 						</section>
@@ -202,12 +246,22 @@
 
 			<div class="citizen-screens tabs tabs-style-topline display-hide" id="newcomplaintContent">
 				<div class="content-wrap">
-					<div class="action-bar">
-		              <div class="action-item"><input type="text" class="search" data-searchid="#complaint_list" placeholder="Search"></div>
-		              <div class="action-item"><i class="material-icons">search</i></div>
-		            </div>
 					<form action="">
 						<div class="form-group row complaint-item" id="complaint_list">
+							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services">
+								<div data-href="create-complaint.html" class="open-popup" data-name="complintcreate">
+									<a href="javascript:void(0)">
+										<div class="content a">Create Grievance</div>
+									</a>
+								</div>
+							</div>
+							<!-- <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services">
+								<div data-href="search-complaint.html" class="open-popup" data-name="complaintsearch">
+									<a href="javascript:void(0)">
+										<div class="content a">Search Grievance</div>
+									</a>
+								</div>
+							</div> -->
 			            </div>
 					</form>
 				</div>

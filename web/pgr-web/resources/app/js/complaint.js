@@ -322,7 +322,12 @@ $(document).ready(function()
 				    name: $('#complainantAddress').val() ? $('#complainantAddress').val() : ''
 				};
 				data['attribValues'].push(finobj);
-
+				finobj = {};
+				finobj = {
+				    key: 'keyword',
+				    name:'Complaint'
+				};
+				data['attribValues'].push(finobj);
 				var request = {};
 				request['RequestInfo'] = RequestInfo.requestInfo;
 				request['serviceRequest'] = data;

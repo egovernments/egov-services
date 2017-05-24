@@ -1065,7 +1065,7 @@ $("#createAgreementForm").validate({
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
-                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
+                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumbers"] +"&from=dataEntry";
                     }
 
                 } else if(response["responseJSON"] && response["responseJSON"].Error) {

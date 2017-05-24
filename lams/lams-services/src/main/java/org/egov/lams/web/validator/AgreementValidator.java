@@ -7,6 +7,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
 import org.egov.lams.repository.RentIncrementRepository;
@@ -77,7 +78,15 @@ public class AgreementValidator implements org.springframework.validation.Valida
 
 		if (bankGuaranteeDate.compareTo(new Date()) >= 0)
 			errors.rejectValue("Agreement.bankGuaranteeDate", "","bank Guarantee Date date should be lesser than current date");
-
+		if(agreement.getSource().equals(Source.DATA_ENTRY)){
+			
+			if((agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
+				errors.rejectValue("Agreement.CollectedSecurotyDeposit","","collectedSecurityDeposit should not be greater than security deposit");
+			
+			if((agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
+				errors.rejectValue("Agreement.CollectedGoodWillAmount","","CollectedGoodWillAmount should not be greater than GoodWillAmount");
+			
+		}
 		// FIXME uncomment this part before pushing-->
 		validateAllottee(agreementRequest,errors);
 		validateAsset(agreementRequest,errors);

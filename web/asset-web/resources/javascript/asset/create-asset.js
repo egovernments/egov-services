@@ -1039,20 +1039,14 @@ class CreateAsset extends React.Component {
     {
         if(customFields.length > 0)
         {
-					let customFieldsDisply = function(){
-              var _custFields = [], _tables = [];
-              for(var i=0; i<customFields.length; i++) {
-                if(customFields[i].type != "Table") {
-                  _custFields.push(customFields[i]);
-                } else
-                  _tables.push(customFields[i]);
-              }
+					let customFieldsDisply = function() {
+              customFields.sort(function(item1, item2) {
+                return Number(item1.order || "999") > Number(item2.order || "999") ? 1 : Number(item1.order || "999") < Number(item2.order || "999") ? -1 : 0;
+              });
 
-              _custFields = _custFields.concat(_tables);
-
-							return _custFields.map((item, index) => {
-						 			return checkFields(item, index)
-								})
+              return customFields.map((item, index) => {
+                return checkFields(item, index)
+              })
 					}
 
               return (

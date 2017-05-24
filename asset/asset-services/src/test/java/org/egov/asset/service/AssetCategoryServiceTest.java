@@ -48,7 +48,7 @@ public class AssetCategoryServiceTest {
 		assertTrue(assetCategories.equals(assetCategoryService.search(any(AssetCategoryCriteria.class))));
 	}
 	
-	@Test
+	/*@Test
 	public void testCreate() {
 		
 		AssetCategory assetCategory = getAssetCategory();
@@ -64,7 +64,7 @@ public class AssetCategoryServiceTest {
 		when(assetCategoryRepository.create(any(AssetCategoryRequest.class))).thenReturn(assetCategory);
 		
 		assertTrue(assetCategoryResponse.equals(assetCategoryService.create(assetCategoryRequest)));
-	}
+	}*/
 	
 	@Test
 	public void testCreateAsync() {

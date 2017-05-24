@@ -27,18 +27,27 @@ public class AssetConsumers {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	@KafkaListener(containerFactory="kafkaListenerContainerFactory",topics = "${kafka.topics.save.assetcategory}")
+	@KafkaListener(containerFactory="kafkaListenerContainerFactory",
+					topics = {"${kafka.topics.save.assetcategory}","${kafka.topics.update.assetcategory}"})
 	public void listen(ConsumerRecord<String, String> record) {
 		
 		LOGGER.info("topic:"+ record.topic() +":"+ "value:" +record.value()+"thread:"+Thread.currentThread());
 	   
 			ObjectMapper objectMapper=new ObjectMapper();
+			AssetCategoryRequest assetCategoryRequest = null;
 			try {
 				LOGGER.info("SaveAssetConsumer save-assetcategory-db assetCategoryService:"+assetCategoryService);
-				assetCategoryService.create(objectMapper.readValue(record.value(),AssetCategoryRequest.class));
+				assetCategoryRequest= objectMapper.readValue(record.value(),AssetCategoryRequest.class);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			if (record.topic().equals(applicationProperties.getCreateAssetCategoryTopicName())) {
+				assetCategoryService.create(assetCategoryRequest);	
+			}
+			else if(record.topic().equals(applicationProperties.getUpdateAssetCategoryTopicName())){
+				assetCategoryService.update(assetCategoryRequest);
+			}	
 	}
 	
 	@KafkaListener(containerFactory="kafkaListenerContainerFactory",
@@ -57,7 +66,7 @@ public class AssetConsumers {
 		if (record.topic().equals(applicationProperties.getCreateAssetTopicName())) {
 			assetService.create(assetRequest);	
 		}
-		if(record.topic().equals(applicationProperties.getUpdateAssetTopicName())){
+		else if(record.topic().equals(applicationProperties.getUpdateAssetTopicName())){
 			assetService.update(assetRequest);
 		}
 	}

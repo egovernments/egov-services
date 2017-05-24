@@ -37,15 +37,14 @@ public class AssetCategoryService {
 		return assetCategoryRepository.search(assetCategoryCriteria);
 	}
 
-	public AssetCategoryResponse create(AssetCategoryRequest assetCategoryRequest) {
+	public void create(AssetCategoryRequest assetCategoryRequest) {
 
-		assetCategoryRepository.create(assetCategoryRequest);
-
-		List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
-		assetCategories.add(assetCategoryRequest.getAssetCategory());
-		AssetCategoryResponse assetCategoryResponse = getAssetCategoryResponse(assetCategories);
-
-		return assetCategoryResponse;
+		try {
+				assetCategoryRepository.create(assetCategoryRequest);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			logger.info("AssetCategoryService create");
+		}
 	}
 
 	public AssetCategoryResponse createAsync(AssetCategoryRequest assetCategoryRequest) {
@@ -71,6 +70,37 @@ public class AssetCategoryService {
 		return getAssetCategoryResponse(assetCategories);
 	}
 
+	public void update(AssetCategoryRequest assetCategoryRequest) {
+
+		try {
+			assetCategoryRepository.update(assetCategoryRequest);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			logger.info("AssetCategoryService update"+ex.getMessage());
+		}
+	}
+	
+	public AssetCategoryResponse updateAsync(AssetCategoryRequest assetCategoryRequest) {
+		
+		logger.info("AssetCategoryService updateAsync" + assetCategoryRequest);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String value = null;
+		try {
+			value = objectMapper.writeValueAsString(assetCategoryRequest);
+		} catch (JsonProcessingException e) {
+			logger.info("the exception in assetcategory service  updateasync method : " + e);
+		}
+		try {
+			assetProducer.sendMessage(applicationProperties.getUpdateAssetCategoryTopicName(), "update-aasetcategory",
+					value);
+		} catch (Exception ex) {
+			logger.info("the exception in assetcategory service updateasync method : " + ex);
+		}
+		List<AssetCategory> assetCategories = new ArrayList<>();
+		assetCategories.add(assetCategoryRequest.getAssetCategory());
+
+		return getAssetCategoryResponse(assetCategories);
+	}
 	private AssetCategoryResponse getAssetCategoryResponse(List<AssetCategory> assetCategories) {
 		AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
 		assetCategoryResponse.setAssetCategory(assetCategories);

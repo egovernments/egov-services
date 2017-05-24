@@ -94,14 +94,6 @@ public class AssetCategoryQueryBuilder {
 		return query.append(")").toString();
 	}
 
-	public String getInsertQuery() {
-		return "INSERT into egasset_assetcategory "
-				+ "(id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,"
-				+ "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,"
-				+ "lastmodifiedby,lastmodifieddate,isassetallow,version)"
-				+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	}
-
 	private void addPagingClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
 			AssetCategoryCriteria assetCategoryCriteria) {
 
@@ -115,5 +107,21 @@ public class AssetCategoryQueryBuilder {
 
 	private void addOrderByClause(StringBuilder selectQuery, AssetCategoryCriteria assetCategoryCriteria) {
 		selectQuery.append(" ORDER BY assetcategory.name");
+	}
+	
+	public String getInsertQuery() {
+		return "INSERT into egasset_assetcategory "
+				+ "(id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,"
+				+ "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,"
+				+ "lastmodifiedby,lastmodifieddate,isassetallow,version)"
+				+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	}
+	
+	public String getUpdateQuery() {
+		return "UPDATE egasset_assetcategory SET "
+				+ "parentid=?,assetcategorytype=?,depreciationmethod=?,depreciationrate=?,assetaccount=?,accumulateddepreciationaccount=?,"
+				+ "revaluationreserveaccount=?,depreciationexpenseaccount=?,unitofmeasurement=?,customfields=?,"
+				+ "lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?"
+				+ "WHERE code=? and tenantid=?";
 	}
 }

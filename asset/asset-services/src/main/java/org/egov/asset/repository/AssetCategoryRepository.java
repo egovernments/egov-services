@@ -107,4 +107,49 @@ public class AssetCategoryRepository {
 
 		return assetCategory;
 	}
+	public AssetCategory update(AssetCategoryRequest assetCategoryRequest) {
+
+		RequestInfo requestInfo = assetCategoryRequest.getRequestInfo();
+		AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
+		String queryStr = assetCategoryQueryBuilder.getUpdateQuery();
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_NULL);
+
+		AssetCategory assetCategory2 = new AssetCategory();
+		assetCategory2.setAssetFieldsDefination(assetCategory.getAssetFieldsDefination());
+
+		String customFields = null;
+		String assetCategoryType = null;
+		String depreciationMethod = null;
+
+		if (assetCategory.getAssetCategoryType() != null)
+			assetCategoryType = assetCategory.getAssetCategoryType().toString();
+
+		if (assetCategory.getDepreciationMethod() != null)
+			depreciationMethod = assetCategory.getDepreciationMethod().toString();
+
+		try {
+			customFields = mapper.writeValueAsString(assetCategory2);
+			logger.info("customFields:::" + customFields);
+		} catch (JsonProcessingException e) {
+			logger.info("the exception in assetcategory customfileds mapping :" + e);
+		}
+		
+		// TODO depreciationrate as of now hardcoded as null
+		Object[] obj = new Object[] { assetCategory.getParent(),
+				assetCategoryType, depreciationMethod, null, assetCategory.getAssetAccount(),
+				assetCategory.getAccumulatedDepreciationAccount(), assetCategory.getRevaluationReserveAccount(),
+				assetCategory.getDepreciationExpenseAccount(), assetCategory.getUnitOfMeasurement(), customFields,
+				requestInfo.getUserInfo().getId(), new Date(), assetCategory.getIsAssetAllow(),
+				assetCategory.getVersion(), assetCategory.getCode(),assetCategory.getTenantId()};
+
+		try {
+			jdbcTemplate.update(queryStr, obj);
+		} catch (Exception exception) {
+			logger.info("the exception in assetcategory insert :" + exception);
+		}
+
+		return assetCategory;
+	}
 }

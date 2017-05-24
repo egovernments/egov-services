@@ -41,7 +41,6 @@ public class SubSchemeController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public SubSchemeContractResponse create(@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest,
 			final BindingResult errors) {
-		final ModelMapper modelMapper = new ModelMapper();
 		subSchemeService.validate(subSchemeContractRequest, "create", errors);
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);

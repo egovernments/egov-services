@@ -28,7 +28,7 @@ public class FiscalPeriodQueueRepository {
 		else if (fiscalPeriodContractRequest.getFiscalPeriod() != null
 				&& fiscalPeriodContractRequest.getFiscalPeriod().getId() != null)
 			fiscalPeriodContractRequestMap.put("FiscalPeriodUpdate", fiscalPeriodContractRequest);
-		financialProducer.sendMessage(fiscalPeriodValidatedKey, fiscalPeriodValidatedKey,
+		financialProducer.sendMessage(fiscalPeriodValidatedTopic, fiscalPeriodValidatedKey,
 				fiscalPeriodContractRequestMap);
 	}
 }

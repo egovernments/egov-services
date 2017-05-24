@@ -36,11 +36,10 @@ public class FundsourceController {
 	@Autowired
 	private FundsourceService fundsourceService;
 
-	@PostMapping
+	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public FundsourceContractResponse create(@RequestBody @Valid FundsourceContractRequest fundsourceContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		fundsourceService.validate(fundsourceContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -62,7 +61,7 @@ public class FundsourceController {
 		return fundsourceContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public FundsourceContractResponse update(@RequestBody @Valid FundsourceContractRequest fundsourceContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
@@ -91,7 +90,6 @@ public class FundsourceController {
 			throw new CustomBindException(errors);
 		}
 		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
-		RequestInfo requestInfo = fundsourceContractRequest.getRequestInfo();
 		Fundsource fundsourceFromDb = fundsourceService.findOne(uniqueId);
 		FundsourceContract fundsource = fundsourceContractRequest.getFundsource();
 
@@ -133,7 +131,7 @@ public class FundsourceController {
 		return fundsourceContractResponse;
 	}
 
-	@GetMapping
+	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public FundsourceContractResponse search(@ModelAttribute FundsourceContractRequest fundsourceContractRequest,

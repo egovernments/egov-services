@@ -1,6 +1,7 @@
 package org.egov.tenant.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,8 @@ public class City {
     private String districtCode;
     private String districtName;
     private String regionName;
+    @JsonProperty("ulbGrade")
+    private String ulbGrade;
     private Double longitude;
     private Double latitude;
 
@@ -28,18 +31,20 @@ public class City {
         this.regionName = city.getRegionName();
         this.longitude = city.getLongitude();
         this.latitude = city.getLatitude();
+        this.ulbGrade = city.getUlbGrade();
     }
 
     @JsonIgnore
     public org.egov.tenant.domain.model.City toDomain() {
         return org.egov.tenant.domain.model.City.builder()
-                .name(name)
-                .localName(localName)
-                .districtCode(districtCode)
-                .districtName(districtName)
-                .regionName(regionName)
-                .longitude(longitude)
-                .latitude(latitude)
-                .build();
+            .name(name)
+            .localName(localName)
+            .districtCode(districtCode)
+            .districtName(districtName)
+            .ulbGrade(ulbGrade)
+            .regionName(regionName)
+            .longitude(longitude)
+            .latitude(latitude)
+            .build();
     }
 }

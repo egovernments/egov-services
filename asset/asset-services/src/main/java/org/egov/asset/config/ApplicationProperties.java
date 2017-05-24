@@ -69,6 +69,9 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.assetcategory}")
 	private String createAssetCategoryTopicName;
 	
+	@Value("${kafka.topics.update.assetcategory}")
+	private String updateAssetCategoryTopicName;
+	
 	@Autowired
 	private Environment environment;
 
@@ -95,6 +98,9 @@ public class ApplicationProperties {
 	}
 	public String getUpdateAssetTopicName() {
 		return updateAssetTopicName;
+	}
+	public String getUpdateAssetCategoryTopicName() {
+		return updateAssetCategoryTopicName;
 	}
 
 }

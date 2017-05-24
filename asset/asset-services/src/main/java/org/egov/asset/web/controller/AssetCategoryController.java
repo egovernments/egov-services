@@ -2,6 +2,8 @@ package org.egov.asset.web.controller;
 
 import java.util.List;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,18 +74,27 @@ public class AssetCategoryController {
 		}
 
 		assetCategoryValidator.validateAssetCategory(assetCategoryRequest);
-		Boolean isAsync = applicationProperties.getAssetCategoryAsync();
-		AssetCategoryResponse response = null;
-
-		if (isAsync) {
-			response = assetCategoryService.createAsync(assetCategoryRequest);
-		} else {
-			response = assetCategoryService.create(assetCategoryRequest);
-		}
+		AssetCategoryResponse response = assetCategoryService.createAsync(assetCategoryRequest);
 
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	@PostMapping("{code}/_update")
+	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody @Valid AssetCategoryRequest assetCategoryRequest, BindingResult bindingResult) {
+		
+		logger.info("AssetCategory update::" + assetCategoryRequest+","+"code:"+code);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		if (!code.equals(assetCategoryRequest.getAssetCategory().getCode())) {
+			throw new RuntimeException("Invalid asset code");
+		}
+		AssetCategoryResponse assetCategoryResponse = assetCategoryService.updateAsync(assetCategoryRequest);
+		
+		return new ResponseEntity<>(assetCategoryResponse, HttpStatus.OK);
+	}
+	
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 

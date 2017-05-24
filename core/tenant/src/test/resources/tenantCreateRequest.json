@@ -13,6 +13,7 @@
       "districtCode": "districtcode",
       "districtName": "districtname",
       "regionName": "regionname",
+      "ulbGrade": "Corporation",
       "longitude": 35.456,
       "latitude": 75.443
     }

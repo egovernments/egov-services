@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Getter
 @Builder
 @AllArgsConstructor
@@ -35,7 +33,7 @@ public class Tenant {
     public org.egov.tenant.domain.model.Tenant toDomain() {
         org.egov.tenant.domain.model.City city;
 
-        if (!isEmpty(this.city)) {
+        if (this.city != null) {
             city = this.city.toDomain();
         } else {
             city = null;

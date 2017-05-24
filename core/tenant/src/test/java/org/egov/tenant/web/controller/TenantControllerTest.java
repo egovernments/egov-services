@@ -45,45 +45,45 @@ public class TenantControllerTest {
         when(tenantService.find(tenantSearchCriteria)).thenReturn(tenants);
 
         mockMvc.perform(post("/v1/tenant/_search")
-                .param("code", "AP.KURNOOL, AP.GUNTOOR")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new Resources().getFileContents("tenantSearchRequest.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(new Resources().getFileContents("tenantSearchResponse.json")));
+            .param("code", "AP.KURNOOL, AP.GUNTOOR")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new Resources().getFileContents("tenantSearchRequest.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(new Resources().getFileContents("tenantSearchResponse.json")));
     }
 
     @Test
     public void test_should_create_tenant() throws Exception {
-
         City city = City.builder()
-                .name("name")
-                .localName("localname")
-                .districtCode("districtcode")
-                .districtName("districtname")
-                .regionName("regionname")
-                .longitude(35.456)
-                .latitude(75.443)
-                .build();
+            .name("name")
+            .localName("localname")
+            .districtCode("districtcode")
+            .districtName("districtname")
+            .regionName("regionname")
+            .longitude(35.456)
+            .latitude(75.443)
+            .ulbGrade("Corporation")
+            .build();
 
         Tenant tenant = Tenant.builder()
-                .code("AP.KURNOOL")
-                .description("description")
-                .logoId("logoId")
-                .imageId("imageId")
-                .domainUrl("domainUrl")
-                .type("CITY")
-                .city(city)
-                .build();
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type("CITY")
+            .city(city)
+            .build();
 
         when(tenantService.createTenant(tenant)).thenReturn(tenant);
 
         mockMvc.perform(post("/v1/tenant/_create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new Resources().getFileContents("tenantCreateRequest.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(new Resources().getFileContents("tenantCreateResponse.json")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new Resources().getFileContents("tenantCreateRequest.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(new Resources().getFileContents("tenantCreateResponse.json")));
     }
 
     @Test
@@ -134,38 +134,39 @@ public class TenantControllerTest {
 
     private List<Tenant> getListOfTenants() {
         City city = City.builder()
-                .id(1L)
-                .name("name")
-                .localName("localname")
-                .districtCode("districtcode")
-                .districtName("districtname")
-                .regionName("regionname")
-                .longitude(35.456)
-                .latitude(75.443)
-                .build();
+            .id(1L)
+            .name("name")
+            .localName("localname")
+            .districtCode("districtcode")
+            .districtName("districtname")
+            .regionName("regionname")
+            .ulbGrade("Municipality")
+            .longitude(35.456)
+            .latitude(75.443)
+            .build();
 
         return asList(
-                Tenant.builder()
-                        .id(1L)
-                        .code("AP.KURNOOL")
-                        .description("description")
-                        .logoId("logoId")
-                        .imageId("imageId")
-                        .domainUrl("domainUrl")
-                        .type("CITY")
-                        .city(city)
-                        .build(),
+            Tenant.builder()
+                .id(1L)
+                .code("AP.KURNOOL")
+                .description("description")
+                .logoId("logoId")
+                .imageId("imageId")
+                .domainUrl("domainUrl")
+                .type("CITY")
+                .city(city)
+                .build(),
 
-                Tenant.builder()
-                        .id(2L)
-                        .code("AP.GUNTOOR")
-                        .description("description")
-                        .logoId("logoId")
-                        .imageId("imageId")
-                        .domainUrl("domainUrl")
-                        .type("CITY")
-                        .city(city)
-                        .build()
+            Tenant.builder()
+                .id(2L)
+                .code("AP.GUNTOOR")
+                .description("description")
+                .logoId("logoId")
+                .imageId("imageId")
+                .domainUrl("domainUrl")
+                .type("CITY")
+                .city(city)
+                .build()
         );
     }
 

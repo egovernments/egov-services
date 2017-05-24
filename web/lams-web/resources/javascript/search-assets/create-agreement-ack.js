@@ -21,7 +21,7 @@ class CreateAgreement extends React.Component {
         <div>
           <div className="form-section">
             <form>
-              <h3> Acknowledgement of Agreement </h3>
+              <h3> {typeof(getUrlVars()["from"])=="undefined"?"Acknowledgement":"Agreement Number"} of Agreement </h3>
               <h4> <center><font color="ass"> Agreement Created </font> </center></h4>
               <h3> <center><font color="ass"><strong> {getUrlVars()["ackNo"] ? decodeURIComponent(getUrlVars()["ackNo"]) : ""}</strong>  </font> </center></h3>
               <h3><center>{renderMessage()}</center></h3>

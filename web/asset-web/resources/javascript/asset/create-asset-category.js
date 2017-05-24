@@ -242,6 +242,8 @@ class CreateAsset extends React.Component {
           }
           checkCountNCall("assetAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      } else {
+        checkCountNCall("assetAccount", []);
       }
     })
     commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Accumulated Depreciation"},function(err,res2){
@@ -252,16 +254,20 @@ class CreateAsset extends React.Component {
           }
           checkCountNCall("accumulatedDepreciationAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      } else {
+        checkCountNCall("accumulatedDepreciationAccount", []);
       }
     })
     commonApiPost("egf-masters","accountcodepurposes","_search",{tenantId,name:"Revaluation Reserve Account"},function(err,res2){
-      if(res2){
+      if(res2) {
         getDropdown("revaluationReserveAccount", function(res) {
           for(var i= 0; i<res.length; i++) {
             res[i].name = res[i].glcode + "-" + res[i].name;
           }
           checkCountNCall("revaluationReserveAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      } else {
+        checkCountNCall("revaluationReserveAccount", []);
       }
     })
 
@@ -274,6 +280,8 @@ class CreateAsset extends React.Component {
           }
           checkCountNCall("depreciationExpenseAccount", res);
         }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+      } else {
+        checkCountNCall("depreciationExpenseAccount", []);
       }
     })
 
@@ -572,9 +580,6 @@ class CreateAsset extends React.Component {
                       {item.type}
                     </td>
                     <td  >
-                    {item.regExFormate}
-                    </td>
-                    <td  >
                   {item.isActive?"true":"false"}
                     </td>
                     <td  >
@@ -583,13 +588,6 @@ class CreateAsset extends React.Component {
                     <td  >
                   {item.values}
                     </td>
-                    <td  >
-                  {item.localText}
-                    </td>
-                    <td  >
-                  {item.url}
-                    </td>
-
                     <td  >
                   {item.order}
                     </td>
@@ -615,10 +613,7 @@ class CreateAsset extends React.Component {
                     <td  >
                       {item.type}
                     </td>
-                    <td  >
-                    {item.regExFormate}
-                    </td>
-                    <td  >
+                    <td>
                   {item.isActive?"true":"false"}
                     </td>
                     <td  >
@@ -626,12 +621,6 @@ class CreateAsset extends React.Component {
                     </td>
                     <td  >
                   {item.values}
-                    </td>
-                    <td  >
-                  {item.localText}
-                    </td>
-                    <td  >
-                  {item.url}
                     </td>
 
                     <td  >
@@ -679,12 +668,9 @@ class CreateAsset extends React.Component {
                     <th>Sl No.</th>
                      <th>Name</th>
                      <th>Data Type</th>
-                     <th>RegEx format</th>
                      <th>Active</th>
                      <th>Mandatory</th>
                      <th>Values</th>
-                     <th>Local Text</th>
-                     <th>Url</th>
                      <th>Order</th>
                      <th>Columns</th>
                      <th>Action</th>
@@ -783,20 +769,7 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Url</label>
-                    </div>
-                    <div className="col-sm-6">
-                      <input type="text" name="url" disabled={readonly}  value={customField.url} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","url")}}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for="values">Value</label>
+                      <label htmlFor="">Value</label>
                     </div>
                     <div className="col-sm-6">
                       <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
@@ -831,12 +804,9 @@ class CreateAsset extends React.Component {
                         <th>Sl No.</th>
                          <th>Name</th>
                          <th>Data Type</th>
-                         <th>RegEx format</th>
                          <th>Active</th>
                          <th>Mandatory</th>
                          <th>Values</th>
-                         <th>Local Text</th>
-                         <th>Url</th>
                          <th>Order</th>
                         {/* <th>Columns</th> */}
                          <th>Action</th>
@@ -1108,20 +1078,7 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label htmlFor="">Url</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <input type="text" name="url" id="url" value={column.url} onChange={(e)=>{ handleChangeTwoLevel(e,"column","url")}}/>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="values">Value</label>
+                              <label htmlFor="">Value</label>
                             </div>
                             <div className="col-sm-6">
                               <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
@@ -1129,7 +1086,6 @@ class CreateAsset extends React.Component {
                           </div>
                         </div>
                       </div>
-
                       <div className="row">
                         {/*showCustomFieldsTable()*/}
                       </div>

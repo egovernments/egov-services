@@ -22,6 +22,7 @@ public class CityRowMapper implements RowMapper<City> {
                 .longitude(resultSet.getDouble(LONGITUDE))
                 .tenantCode(resultSet.getString(TENANT_CODE))
                 .regionName(resultSet.getString(REGION_NAME))
+                .ULBGrade(resultSet.getString(ULB_GRADE))
                 .createdBy(resultSet.getLong(CREATED_BY))
                 .createdDate(resultSet.getTimestamp(CREATED_DATE))
                 .lastModifiedBy(resultSet.getLong(LAST_MODIFIED_BY))

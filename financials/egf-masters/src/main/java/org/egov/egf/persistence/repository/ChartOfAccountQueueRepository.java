@@ -28,6 +28,6 @@ public class ChartOfAccountQueueRepository {
 		else if (chartOfAccountContractRequest.getChartOfAccount() != null
 				&& chartOfAccountContractRequest.getChartOfAccount().getId() != null)
 			chartOfAccountContractRequestMap.put("ChartOfAccountUpdate", chartOfAccountContractRequest);
-		financialProducer.sendMessage(chartOfAccountValidatedKey, chartOfAccountValidatedKey, chartOfAccountContractRequestMap);
+		financialProducer.sendMessage(chartOfAccountValidatedTopic, chartOfAccountValidatedKey, chartOfAccountContractRequestMap);
 	}
 }

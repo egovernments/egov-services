@@ -26,6 +26,6 @@ public class FunctionQueueRepository {
 			functionContractRequestMap.put("FunctionCreate", functionContractRequest);
 		else if (functionContractRequest.getFunction() != null && functionContractRequest.getFunction().getId() != null)
 			functionContractRequestMap.put("FunctionUpdate", functionContractRequest);
-		financialProducer.sendMessage(functionValidatedKey, functionValidatedKey, functionContractRequestMap);
+		financialProducer.sendMessage(functionValidatedTopic, functionValidatedKey, functionContractRequestMap);
 	}
 }

@@ -75,7 +75,6 @@ public class FinancialYearController {
 		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		financialYearContractRequest.getFinancialYear().setId(uniqueId);
 		financialYearService.push(financialYearContractRequest);
-		financialYearContractRequest.getFinancialYear().setId(uniqueId);
 		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYear(financialYearContractRequest.getFinancialYear());
 		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));

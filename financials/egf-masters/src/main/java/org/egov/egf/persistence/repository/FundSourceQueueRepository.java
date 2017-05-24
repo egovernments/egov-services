@@ -27,6 +27,6 @@ public class FundSourceQueueRepository {
 		else if (fundSourceContractRequest.getFundsource() != null
 				&& fundSourceContractRequest.getFundsource().getId() != null)
 			fundSourceContractRequestMap.put("FundSourceUpdate", fundSourceContractRequest);
-		financialProducer.sendMessage(fundSourceValidatedKey, fundSourceValidatedKey, fundSourceContractRequestMap);
+		financialProducer.sendMessage(fundSourceValidatedTopic, fundSourceValidatedKey, fundSourceContractRequestMap);
 	}
 }

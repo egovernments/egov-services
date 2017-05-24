@@ -117,11 +117,11 @@ public class AccountEntityService {
 	private void setAccountEntity(final AccountEntity accountEntity) {
 		if (accountEntity.getAccountDetailType() != null) {
 			final AccountDetailType accountDetailType = accountDetailTypeService
-					.findOne(accountEntity.getAccountDetailType().getId());
+					.findOne(accountEntity.getAccountDetailType());
 			if (accountDetailType == null)
 				throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
 						" Invalid accountDetailType");
-			accountEntity.setAccountDetailType(accountDetailType);
+			accountEntity.setAccountDetailType(accountDetailType.getId());
 		}
 	}
 

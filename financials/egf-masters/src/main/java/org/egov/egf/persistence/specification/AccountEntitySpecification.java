@@ -25,7 +25,7 @@ public class AccountEntitySpecification implements Specification<AccountEntity> 
 	@Override
 	public Predicate toPredicate(Root<AccountEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 		Path<Long> id = root.get(AccountEntity_.id);
-		Path<AccountDetailType> accountDetailType = root.get(AccountEntity_.accountDetailType);
+		Path<Long> accountDetailType = root.get(AccountEntity_.accountDetailType);
 		Path<String> code = root.get(AccountEntity_.code);
 		Path<String> name = root.get(AccountEntity_.name);
 		Path<Boolean> active = root.get(AccountEntity_.active);

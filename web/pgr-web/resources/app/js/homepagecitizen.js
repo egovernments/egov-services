@@ -41,7 +41,7 @@ var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
-{	
+{
 	preventBack();
 
 	var obj = {};
@@ -182,13 +182,6 @@ $(document).on('click','.services-item .services .content',function(){
 	openPopUp('create-service.html?code='+sCode+'&name='+name,sCode);
 });
 
-$(document).on('click','.complaint-item .services .content',function(){
-	sCode = $(this).data('code');
-	name = $(this).data('servicename');
-	groupId = $(this).data('group');
-	openPopUp('create-complaint.html?code='+sCode+'&name='+name+'&group='+groupId,sCode);
-});
-
 function loadComplaints(){
 	$.ajax({
 		url : "/pgr/seva/_search?tenantId=default&userId="+localStorage.getItem("id"),
@@ -205,8 +198,9 @@ function loadComplaints(){
 			var source   = $("#grievance-template").html();
 			var template = Handlebars.compile(source);
 			var html = template(response.serviceRequests);
-			$('.reloadtemplate').remove();
+			$('.inboxHeight').remove();
 			$('.grievanceresponse').append(html);
+			$('.grievanceresponse .reloadtemplate').matchHeight();
 		},
 		error : function(){
 			bootbox.alert('Error!')
@@ -270,31 +264,7 @@ function getAllServices(){
 }
 
 function getAllComplaint(){
-	$.ajax({
-		url: "/pgr/services/_search?type=all&tenantId=default",
-		type : 'POST',
-		data : JSON.stringify(requestInfo),
-		dataType: 'json',
-		processData : false,
-		contentType: "application/json",
-		beforeSend : function(){
-			showLoader();
-		},
-		success : function(data) {
-			complaintResult = (data.complaintTypes).filter(function( obj ) {
-				return (obj.keywords).indexOf('complaint') > -1;
-			});
-			$('#complaint_list').html('');
-			$.each(complaintResult, function(i,obj){
-				$('#complaint_list').append('<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services"><a href="javascript:void(0)"> <div class="content a" data-code="'+obj.serviceCode+'" data-servicename="'+obj.serviceName+'" data-group="'+obj.groupId+'">'+obj.serviceName+'</div> </a></div>');
-			});
-			$('.services .content').matchHeight();
-		},
-		complete : function(){
-			$('.search').trigger('keyup');
-			hideLoader();
-		}
-	});
+	$('#newcomplaintContent').removeClass('display-hide');
 }
 
 Handlebars.registerHelper('contains', function(string, checkString) {

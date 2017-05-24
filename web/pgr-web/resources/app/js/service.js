@@ -133,6 +133,13 @@ $(document).ready(function(){
 			};
 			data['attribValues'].push(obj);
 
+			obj = {};
+			obj = {
+			    key: 'keyword',
+			    name:'Deliverable_service'
+			};
+			data['attribValues'].push(obj);
+
 			//Iterate App. details
 			$('.appForm *').filter(':input').each(function(){
 			    obj = {};

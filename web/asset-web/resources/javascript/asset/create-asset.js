@@ -745,11 +745,11 @@ class CreateAsset extends React.Component {
 
       $('#dateOfCreation').datepicker({
           format: 'dd/mm/yyyy',
-          maxDate: new Date(),
+          endDate: new Date(),
           autoclose: true
       });
 
-      $('#dateOfCreation').on("dp.change", function(e) {
+      $('#dateOfCreation').on("change", function(e) {
          _this.setState({
             assetSet: {
                 ..._this.state.assetSet,
@@ -1040,11 +1040,12 @@ class CreateAsset extends React.Component {
         if(customFields.length > 0)
         {
 					let customFieldsDisply = function() {
-              customFields.sort(function(item1, item2) {
+              var _custFields = Object.assign([], customFields);
+              _custFields.sort(function(item1, item2) {
                 return Number(item1.order || "999") > Number(item2.order || "999") ? 1 : Number(item1.order || "999") < Number(item2.order || "999") ? -1 : 0;
               });
 
-              return customFields.map((item, index) => {
+              return _custFields.map((item, index) => {
                 return checkFields(item, index)
               })
 					}

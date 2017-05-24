@@ -1,3 +1,0 @@
-ALTER TABLE egeis_employee ADD COLUMN createdBy BIGINT NOT NULL;
-ALTER TABLE egeis_employee ADD COLUMN createdDate TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now();
-ALTER TABLE egeis_employee ADD COLUMN lastModifiedBy BIGINT;

@@ -20,7 +20,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class ComplaintRestRepositoryTest {
 
 	private static final String HOST = "http://host";
-	private static final String COMPLAINT_BY_CRN = "/pgr/seva?tenantId={tenantId}";
+	private static final String COMPLAINT_BY_CRN = "/pgr/seva?tenantId=tenantId";
 
 	private ComplaintRestRepository complaintRestRepositoryRepository;
 	private MockRestServiceServer server;
@@ -35,7 +35,7 @@ public class ComplaintRestRepositoryTest {
 	@Test
 	public void testShouldGetComplaintsEligibleForEscalation() {
 		server.expect(once(),
-				requestTo("http://host/pgr/seva?tenantId=default"))
+				requestTo("http://host/pgr/seva?tenantId=tenantId"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withSuccess(new Resources().getFileContents("complaintSearchResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));

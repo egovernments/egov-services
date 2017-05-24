@@ -21,17 +21,18 @@ import static org.egov.pgr.common.contract.AttributeValues.createOrUpdateAttribu
 @Builder
 public class ServiceRequest {
 
-    public static final String VALUES_ASSIGNEE_ID = "assigneeId";
+    public static final String VALUES_ASSIGNEE_ID = "assignmentId";
     public static final String VALUES_STATE_ID = "stateId";
     public static final String STATE_DETAILS = "stateDetails";
     private static final String WORKFLOW_TYPE = "Complaint";
-    public static final String STATUS = "complaintStatus";
+    public static final String STATUS = "status";
     public static final String VALUES_APPROVAL_COMMENT_KEY = "approvalComments";
-    private static final String PREVIOUS_ASSIGNEE = "previousAssigneeId";
+    private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
     private static final String ESCALATION_STATUS = "IN PROGRESS";
     private static final String  VALUES_APPROVAL_COMMENT_VALUE= "Complaint is escalated";
     private static final String VALUES_DESIGNATION_ID = "designationId";
     private static final String VALUES_DEPARTMENT_ID = "departmentId";
+    private static final String ESCALATION_HOURS = "escalationHours";
 
     private String tenantId;
 
@@ -66,6 +67,7 @@ public class ServiceRequest {
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("expectedDatetime")
+    @Setter
     private Date escalationDate;
 
     private String address;
@@ -130,12 +132,25 @@ public class ServiceRequest {
         return getDynamicSingleValue(VALUES_ASSIGNEE_ID);
     }
 
+    public void setAssigneeId(String assigneeId){
+        createOrUpdateAttributeEntry(attribValues,VALUES_ASSIGNEE_ID,assigneeId);
+    }
+
     public void setDesignation(String designationId) {
         createOrUpdateAttributeEntry(attribValues,VALUES_DESIGNATION_ID, designationId);
     }
 
     public void setDepartment(String departmentId) {
         createOrUpdateAttributeEntry(attribValues,VALUES_DEPARTMENT_ID, departmentId);
+    }
+
+    public void setEscalationHours(String escalationHours) {
+        createOrUpdateAttributeEntry(attribValues,ESCALATION_HOURS, escalationHours);
+    }
+
+    @JsonIgnore
+    public String getEscalationHours(){
+        return getDynamicSingleValue(ESCALATION_HOURS);
     }
 
     public WorkflowRequest getWorkFlowRequestForEscalation(RequestInfo requestInfo){
@@ -167,6 +182,10 @@ public class ServiceRequest {
 
     private String getCurrentStateId() {
         return Objects.isNull(getDynamicSingleValue(VALUES_STATE_ID)) ? null : getDynamicSingleValue(VALUES_STATE_ID);
+    }
+
+    public String getDesignation() {
+        return getDynamicSingleValue(VALUES_DESIGNATION_ID);
     }
 
     public void update(WorkflowResponse workflowResponse){

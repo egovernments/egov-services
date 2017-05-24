@@ -30,7 +30,7 @@ public class ComplaintRestRepository {
 		this.url = pgrRestHost + url;
 	}
 
-    public ServiceResponse getComplaintsEligibleForEscalation(final String tenantId) {
+    public ServiceResponse getComplaintsEligibleForEscalation(String tenantId) {
 
         String status = String.join(",", Arrays.asList("FORWARDED","REGISTERED","INPROGRESS","REOPENED"));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");

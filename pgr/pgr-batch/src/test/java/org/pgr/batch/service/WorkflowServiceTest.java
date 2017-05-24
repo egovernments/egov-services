@@ -23,7 +23,7 @@ public class WorkflowServiceTest {
     public static final String IN_PROGRESS = "IN PROGRESS";
     public static final String COMPLAINT = "complaint";
     public static final String REGISTERED = "REGISTERED";
-    public static final String COMPLAINT_STATUS = "complaintStatus";
+    public static final String COMPLAINT_STATUS = "status";
     public static final String UPDATE = "update";
     @Mock
     private WorkflowRepository workflowRepository;
@@ -65,7 +65,7 @@ public class WorkflowServiceTest {
                 .build();
 
         Map<String,Attribute>  values = new HashMap<>();
-        values.put("complaintStatus",complaintStatusAttribute);
+        values.put("status",complaintStatusAttribute);
 
         return values;
     }

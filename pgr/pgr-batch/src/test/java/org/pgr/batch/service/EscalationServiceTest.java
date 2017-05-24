@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.pgr.batch.repository.ComplaintMessageQueueRepository;
 import org.pgr.batch.repository.ComplaintRestRepository;
 import org.pgr.batch.repository.contract.ServiceRequest;
 import org.pgr.batch.repository.contract.ServiceResponse;
@@ -37,7 +38,13 @@ public class EscalationServiceTest {
     private PositionService positionService;
 
     @Mock
+    private EscalationDateService escalationDateService;
+
+    @Mock
     private ComplaintRestRepository complaintRestRepository;
+
+    @Mock
+    private ComplaintMessageQueueRepository complaintMessageQueueRepository;
 
     @InjectMocks
     private  EscalationService escalationService;

@@ -155,7 +155,8 @@
 									<excludes>
 										<exclude>org.pgr.batch.PgrBatchApplication</exclude>
 										<exclude>org.pgr.batch.repository.contract.*</exclude>
-										<exclude>org.pgr.batch.service.model.Position</exclude>
+										<exclude>org.pgr.batch.service.model.*</exclude>
+										<exclude>org.pgr.batch.factory.DateFactory</exclude>
 									</excludes>
 									<limits>
 										<limit>

@@ -28,6 +28,125 @@ schemes:
 basePath: '/egov-property/v1/[API endpoint]'
 
 paths:
+  /properties/_search:
+    post:
+      summary: Get the list of properties defined in the system.
+      description: |
+        Get the properties list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: RequestInfo
+          in: body
+          description: Commmon request info for getting Property.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: active
+          in: query
+          description: True will be set in cases where only active properties are needed and False will be set when inactive properties are needed and no value will be set when all properties are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+        - name: upicNo
+          in: query
+          required: false
+          description: The unique reference number for a property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortProperty"
+        - name: oldUpicNo
+          in: query
+          required: false
+          description: The unique old upic no for a Property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: mobileNumber
+          in: query
+          required: false
+          description: The mobile number of a Property owner.
+          type: string
+          pattern: "[0-9]"
+          maxLength: 10
+          exclusiveMaximum: true
+        - name: aadhaarNumber
+          in: query
+          required: false
+          description: The Aadhaar number of a Property owner.
+          type: string
+          pattern: "[0-9]"
+          maxLength: 12
+          exclusiveMaximum: true
+        - name: houseNoBldgApt
+          in: query
+          required: false
+          description: The house no for a building of a property.
+          type: string
+          minLength: 0
+          maxLength: 32
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: revenueZone
+          in: query
+          description: Revenue Zone boundary where the property is located.
+          required: false
+          type: integer
+          format: int64
+        - name: revenueWard
+          in: query
+          description: Revenue Ward boundary where the property is located.
+          required: false
+          type: integer
+          format: int64
+        - name: locality
+          in: query
+          description: Locality boundary where the property is located.
+          required: false
+          type: integer
+          format: int64
+        - name: ownerName
+          in: query
+          required: false
+          description: The name of a Property owner.
+          type: string
+          minLength: 4
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: demandFrom
+          in: query
+          description: Property tax from amount. Properties can be searched between the tax amounts. This is the from amount.
+          required: false
+          type: integer
+          format: int64
+        - name: demandTo
+          in: query
+          description: Property tax to amount. Properties can be searched between the tax amounts. This is the to amount.
+          required: false
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/PropertyResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags:
+       - Property
+       
   /properties/_create:
   ######################################################
   # Will be asynchronous.
@@ -56,9 +175,44 @@ paths:
         400:
           description: Invalid input.
           schema:
+            type: array
             $ref: '#/definitions/ErrorRes'
       tags:
-        - Property      
+        - Property  
+        
+  /properties/_update/{upicNo}:
+    post:
+      description: Updates a given `Property` with newer details.
+      parameters:
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: upicNo
+          in: path
+          description: The unique reference number for a property.
+          required: true
+          type: string
+          format: varchar
+        - name: property
+          in: body
+          description: Request header for the property Request.
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyRequest'
+      tags:
+        - Property
+      responses:
+        '200':
+          description: property updated
+          schema:
+            $ref: '#/definitions/PropertyResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
   
 definitions:
 ########################################################
@@ -306,6 +460,9 @@ definitions:
         description: is under workflow of the Property
       boundary:
         $ref: "#/definitions/PropertyBoundary"
+      active:
+        type: boolean
+        description: True if the property is active and False if the property is inactive.
       channel:
         type: string
         description: channel of the Property
@@ -1036,12 +1193,43 @@ parameters:
 #Parameter name must start with small case followed by camel case.
 ##########################################################
   tenantId:
-    name: tenantid
+    name: tenantId
     in: query
     description: Unique id for for a tenant.
     required: true
     type: string
     format: varchar
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortProperty:
+    name: sort
+    in: query
+    description: Property results will be sorted by upicno ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](upicno|doorNumber|ownerName)'
+    default:
+      - +upicno
 
 tags:
   - name: Property

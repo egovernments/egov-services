@@ -27,6 +27,6 @@ public class SchemeQueueRepository {
 		else if (schemeContractRequest.getScheme() != null
 				&& schemeContractRequest.getScheme().getId() != null)
 			schemeContractRequestMap.put("SchemeUpdate", schemeContractRequest);
-		financialProducer.sendMessage(schemeValidatedKey, schemeValidatedKey, schemeContractRequestMap);
+		financialProducer.sendMessage(schemeValidatedTopic, schemeValidatedKey, schemeContractRequestMap);
 	}
 }

@@ -28,7 +28,7 @@ public class FinancialYearQueueRepository {
 		else if (financialYearContractRequest.getFinancialYear() != null
 				&& financialYearContractRequest.getFinancialYear().getId() != null)
 			financialYearContractRequestMap.put("FinancialYearUpdate", financialYearContractRequest);
-		financialProducer.sendMessage(financialYearValidatedKey, financialYearValidatedKey,
+		financialProducer.sendMessage(financialYearValidatedTopic, financialYearValidatedKey,
 				financialYearContractRequestMap);
 	}
 }

@@ -28,7 +28,7 @@ public class FunctionaryQueueRepository {
 		else if (functionaryContractRequest.getFunctionary() != null
 				&& functionaryContractRequest.getFunctionary().getId() != null)
 			functionaryContractRequestMap.put("FunctionaryUpdate", functionaryContractRequest);
-		financialProducer.sendMessage(functionaryValidatedKey, functionaryValidatedKey,
+		financialProducer.sendMessage(functionaryValidatedTopic, functionaryValidatedKey,
 				functionaryContractRequestMap);
 	}
 }

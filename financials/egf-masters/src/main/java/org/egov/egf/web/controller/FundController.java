@@ -87,7 +87,6 @@ public class FundController {
 			throw new CustomBindException(errors);
 		}
 		fundService.fetchRelatedContracts(fundContractRequest);
-		RequestInfo requestInfo = fundContractRequest.getRequestInfo();
 		Fund fundFromDb = fundService.findOne(uniqueId);
 		FundContract fund = fundContractRequest.getFund();
 

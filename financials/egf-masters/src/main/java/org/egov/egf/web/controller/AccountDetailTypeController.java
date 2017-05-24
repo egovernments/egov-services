@@ -78,6 +78,7 @@ public class AccountDetailTypeController {
 			throw new CustomBindException(errors);
 		}
 		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
+		accountDetailTypeContractRequest.getAccountDetailType().setId(uniqueId);
 		accountDetailTypeService.push(accountDetailTypeContractRequest);
 		accountDetailTypeContractRequest.getAccountDetailType().setId(uniqueId);
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();

@@ -27,6 +27,6 @@ public class SubSchemeQueueRepository {
 		else if (SubSchemeContractRequest.getSubScheme() != null
 				&& SubSchemeContractRequest.getSubScheme().getId() != null)
 			SubSchemeContractRequestMap.put("SubSchemeUpdate", SubSchemeContractRequest);
-		financialProducer.sendMessage(SubSchemeValidatedKey, SubSchemeValidatedKey, SubSchemeContractRequestMap);
+		financialProducer.sendMessage(SubSchemeValidatedTopic, SubSchemeValidatedKey, SubSchemeContractRequestMap);
 	}
 }

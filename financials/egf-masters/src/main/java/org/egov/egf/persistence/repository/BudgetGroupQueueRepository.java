@@ -28,6 +28,6 @@ public class BudgetGroupQueueRepository {
 		else if (budgetGroupContractRequest.getBudgetGroup() != null
 				&& budgetGroupContractRequest.getBudgetGroup().getId() != null)
 			budgetGroupContractRequestMap.put("BudgetGroupUpdate", budgetGroupContractRequest);
-		financialProducer.sendMessage(budgetGroupValidatedKey, budgetGroupValidatedKey, budgetGroupContractRequestMap);
+		financialProducer.sendMessage(budgetGroupValidatedTopic, budgetGroupValidatedKey, budgetGroupContractRequestMap);
 	}
 }

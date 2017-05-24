@@ -30,7 +30,7 @@ public class ChartOfAccountDetailQueueRepository {
 				&& chartOfAccountDetailContractRequest.getChartOfAccountDetail().getId() != null)
 			chartOfAccountDetailContractRequestMap.put("ChartOfAccountDetailUpdate",
 					chartOfAccountDetailContractRequest);
-		financialProducer.sendMessage(chartOfAccountDetailValidatedKey, chartOfAccountDetailValidatedKey,
+		financialProducer.sendMessage(chartOfAccountDetailValidatedTopic, chartOfAccountDetailValidatedKey,
 				chartOfAccountDetailContractRequestMap);
 	}
 }

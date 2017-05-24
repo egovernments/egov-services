@@ -91,7 +91,6 @@ public class FunctionaryController {
 			throw new CustomBindException(errors);
 		}
 		functionaryService.fetchRelatedContracts(functionaryContractRequest);
-		RequestInfo requestInfo = functionaryContractRequest.getRequestInfo();
 		Functionary functionaryFromDb = functionaryService.findOne(uniqueId);
 		FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
 

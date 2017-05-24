@@ -75,6 +75,7 @@ public class AccountEntityController {
 			throw new CustomBindException(errors);
 		}
 		accountEntityService.fetchRelatedContracts(accountEntityContractRequest);
+		accountEntityContractRequest.getAccountEntity().setId(uniqueId);
 		accountEntityService.push(accountEntityContractRequest);
 		AccountEntityContractResponse accountEntityContractResponse = new AccountEntityContractResponse();
 		accountEntityContractResponse.setAccountEntity(accountEntityContractRequest.getAccountEntity());

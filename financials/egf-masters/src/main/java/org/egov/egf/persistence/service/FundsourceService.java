@@ -62,7 +62,7 @@ public class FundsourceService {
 	@Transactional
 	public FundsourceContractResponse create(HashMap<String, Object> financialContractRequestMap) {
 		final FundsourceContractRequest fundsourceContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("FundsourceCreate"), FundsourceContractRequest.class);
+				.convertValue(financialContractRequestMap.get("FundSourceCreate"), FundsourceContractRequest.class);
 		FundsourceContractResponse fundsourceContractResponse = new FundsourceContractResponse();
 		fundsourceContractResponse.setFundsources(new ArrayList<FundsourceContract>());
 		ModelMapper modelMapper = new ModelMapper();
@@ -87,7 +87,7 @@ public class FundsourceService {
 	@Transactional
 	public FundsourceContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final FundsourceContractRequest fundsourceContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("FundsourceUpdate"), FundsourceContractRequest.class);
+				.convertValue(financialContractRequestMap.get("FundSourceUpdate"), FundsourceContractRequest.class);
 		FundsourceContractResponse fundsourceContractResponse = new FundsourceContractResponse();
 		ModelMapper modelMapper = new ModelMapper();
 		Fundsource fundsourceEntity = new Fundsource(fundsourceContractRequest.getFundsource());

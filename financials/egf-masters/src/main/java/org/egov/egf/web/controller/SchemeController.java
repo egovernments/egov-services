@@ -40,7 +40,6 @@ public class SchemeController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public SchemeContractResponse create(@RequestBody @Valid SchemeContractRequest schemeContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		schemeService.validate(schemeContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);

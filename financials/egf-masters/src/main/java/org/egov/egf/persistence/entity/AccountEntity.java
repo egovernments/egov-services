@@ -39,13 +39,11 @@
  */
 package org.egov.egf.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -78,9 +76,8 @@ public class AccountEntity extends AbstractAuditable {
 	private Long id;
 
 	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "detailtypeid")
-	private AccountDetailType accountDetailType;
+	@Column(name = "detailtypeid")
+	private Long accountDetailType;
 
 	@NotNull
 	@Length(max = 25, min = 1)
@@ -107,6 +104,8 @@ public class AccountEntity extends AbstractAuditable {
 		this.setDescription(contract.getDescription());
 		this.setCode(contract.getCode());
 		this.setActive(contract.getActive());
+		this.setAccountDetailType(
+				contract.getAccountDetailType() != null ? contract.getAccountDetailType().getId() : null);
 		this.setTenantId(contract.getTenantId());
 	}
 

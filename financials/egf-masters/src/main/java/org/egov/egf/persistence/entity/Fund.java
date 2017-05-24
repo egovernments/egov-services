@@ -102,6 +102,7 @@ public class Fund extends AbstractAuditable {
 		this.setId(contract.getId());
 		this.setName(contract.getName());
 		this.setCode(contract.getCode());
+		this.setIdentifier(contract.getIdentifier());
 		this.setActive(contract.getActive());
 		this.setLevel(contract.getLevel());
 		this.setIsParent(contract.getIsParent());

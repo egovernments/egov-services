@@ -26,6 +26,6 @@ public class FundQueueRepository {
 			fundContractRequestMap.put("FundCreate", fundContractRequest);
 		else if (fundContractRequest.getFund() != null && fundContractRequest.getFund().getId() != null)
 			fundContractRequestMap.put("FundUpdate", fundContractRequest);
-		financialProducer.sendMessage(fundValidatedKey, fundValidatedKey, fundContractRequestMap);
+		financialProducer.sendMessage(fundValidatedTopic, fundValidatedKey, fundContractRequestMap);
 	}
 }

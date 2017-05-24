@@ -36,11 +36,10 @@ public class SupplierController {
 	@Autowired
 	private SupplierService supplierService;
 
-	@PostMapping
+	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public SupplierContractResponse create(@RequestBody @Valid SupplierContractRequest supplierContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		supplierService.validate(supplierContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -61,7 +60,7 @@ public class SupplierController {
 		return supplierContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public SupplierContractResponse update(@RequestBody @Valid SupplierContractRequest supplierContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
@@ -90,7 +89,6 @@ public class SupplierController {
 			throw new CustomBindException(errors);
 		}
 		supplierService.fetchRelatedContracts(supplierContractRequest);
-		RequestInfo requestInfo = supplierContractRequest.getRequestInfo();
 		Supplier supplierFromDb = supplierService.findOne(uniqueId);
 		SupplierContract supplier = supplierContractRequest.getSupplier();
 
@@ -132,7 +130,7 @@ public class SupplierController {
 		return supplierContractResponse;
 	}
 
-	@GetMapping
+	@PostMapping("_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public SupplierContractResponse search(@ModelAttribute SupplierContractRequest supplierContractRequest,

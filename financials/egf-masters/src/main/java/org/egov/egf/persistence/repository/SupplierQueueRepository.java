@@ -26,6 +26,6 @@ public class SupplierQueueRepository {
 			supplierContractRequestMap.put("SupplierCreate", supplierContractRequest);
 		else if (supplierContractRequest.getSupplier() != null && supplierContractRequest.getSupplier().getId() != null)
 			supplierContractRequestMap.put("SupplierUpdate", supplierContractRequest);
-		financialProducer.sendMessage(supplierValidatedKey, supplierValidatedKey, supplierContractRequestMap);
+		financialProducer.sendMessage(supplierValidatedTopic, supplierValidatedKey, supplierContractRequestMap);
 	}
 }

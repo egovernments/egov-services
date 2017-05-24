@@ -308,14 +308,14 @@ public class IndexerListener {
 					elasticSearchRepository
 							.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
 									chartOfAccountDetailContract.getTenantId() + ""
-											+ chartOfAccountDetailContract.getChartOfAccount(),
+											+ chartOfAccountDetailContract.getChartOfAccount().getGlcode(),
 									chartOfAccountDetailContract);
 				}
 			} else if (chartOfAccountDetailContractResponse.getChartOfAccountDetail() != null) {
 				RequestContext.setId("" + chartOfAccountDetailContractResponse.getChartOfAccountDetail());
 				elasticSearchRepository.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
 						chartOfAccountDetailContractResponse.getChartOfAccountDetail().getTenantId() + ""
-								+ chartOfAccountDetailContractResponse.getChartOfAccountDetail().getChartOfAccount(),
+								+ chartOfAccountDetailContractResponse.getChartOfAccountDetail().getChartOfAccount().getGlcode(),
 						chartOfAccountDetailContractResponse.getChartOfAccountDetail());
 			}
 		}

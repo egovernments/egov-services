@@ -76,6 +76,7 @@ public class ChartOfAccountDetailController {
 			throw new CustomBindException(errors);
 		}
 		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
+		chartOfAccountDetailContractRequest.getChartOfAccountDetail().setId(uniqueId);
 		chartOfAccountDetailService.push(chartOfAccountDetailContractRequest);
 		chartOfAccountDetailContractRequest.getChartOfAccountDetail().setId(uniqueId);
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();

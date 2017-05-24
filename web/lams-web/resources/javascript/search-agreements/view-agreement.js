@@ -464,6 +464,8 @@ $(document).ready(function() {
         // $(`#${key}`).attr("disabled",true);
     };
 
+
+
     function getPositionId(id) {
         var tempEmploye = {};
         for (var i = 0; i < employees.length; i++) {
@@ -489,7 +491,7 @@ $(document).ready(function() {
             _agrmntDet.workflowDetails = {
                 "businessKey": process.businessKey,
                 "type": "Agreement",
-                "assignee":getPositionId($("#approver_name").val()),
+                "assignee":getPositionId( $("#approver_name") && $("#approver_name").val() ? $("#approver_name").val() : process.initiatorPosition),
                 "status": process.status,
                 "action": data.action
             };

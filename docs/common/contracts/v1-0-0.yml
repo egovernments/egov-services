@@ -22,6 +22,15 @@ parameters:
     required: false
     schema:
       $ref: '#/definitions/RequestInfo'
+      
+  tenantId:
+    name: tenantId
+    in: query
+    description: Unique id for for a tenant.
+    required: true
+    type: string
+    format: varchar
+
 
 definitions:
   RequestInfo:

@@ -42,7 +42,7 @@ public class EmailServiceTest {
     @Test
     public void test_should_not_send_email_when_complainant_email_is_absent() {
         when(sevaRequest.isRequesterEmailAbsent()).thenReturn(true);
-        final Tenant tenant = new Tenant("tenantName");
+        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
 
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
@@ -72,7 +72,7 @@ public class EmailServiceTest {
         final String formattedDate = "formattedDate";
         when(sevaRequest.getFormattedCreatedDate()).thenReturn(formattedDate);
         when(sevaRequest.getStatusName()).thenReturn(status);
-        final Tenant tenant = new Tenant("tenantName");
+        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
         when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(true);
@@ -116,7 +116,7 @@ public class EmailServiceTest {
         final String formattedDate = "formattedDate";
         when(sevaRequest.getFormattedCreatedDate()).thenReturn(formattedDate);
         when(sevaRequest.getStatusName()).thenReturn(status);
-        final Tenant tenant = new Tenant("tenantName");
+        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
         when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(false);

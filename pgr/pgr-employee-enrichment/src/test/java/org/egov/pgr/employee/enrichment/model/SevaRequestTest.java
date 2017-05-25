@@ -90,6 +90,7 @@ public class SevaRequestTest {
         userInfoMap.put("type", "EMPLOYEE");
         final Map<String, Object> requestInfoMap = new HashMap<>();
         requestInfoMap.put("userInfo", userInfoMap);
+        requestInfoMap.put("action","POST");
         serviceRequestMap.put(SERVICE_CODE, "PKJB");
         serviceRequestMap.put(STATUS, "REGISTERED");
         serviceRequestMap.put("tenantId", "tenantId");

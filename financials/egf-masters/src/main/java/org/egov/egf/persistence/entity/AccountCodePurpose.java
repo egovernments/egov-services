@@ -51,6 +51,7 @@ import org.egov.egf.persistence.queue.contract.AccountCodePurposeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

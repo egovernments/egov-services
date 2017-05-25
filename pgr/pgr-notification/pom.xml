@@ -147,6 +147,8 @@
                                     <excludes>
                                         <exclude>org.egov.PgrNotificationApplication</exclude>
                                         <exclude>org.egov.domain.model.SevaRequest</exclude>
+                                        <exclude>org.egov.domain.model.Tenant</exclude>
+                                        <exclude>org.egov.domain.exception.TenantDoesNotExistException</exclude>
                                         <exclude>org.egov.domain.service.SMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ComplaintSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UndefinedSMSMessageStrategy</exclude>

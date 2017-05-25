@@ -2,16 +2,14 @@ package org.egov.pgrrest.common.contract;
 
 import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
-import org.egov.pgrrest.read.domain.model.ServiceRequestType;
-import org.egov.pgrrest.read.domain.model.Coordinates;
-import org.junit.Ignore;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -90,8 +88,8 @@ public class ServiceRequestTest {
         final String complaintTypeName = "complaintTypeName";
         org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
             .ServiceRequest.builder()
-            .complaintTypeCode(complaintTypeCode)
-            .complaintTypeName(complaintTypeName)
+            .serviceTypeCode(complaintTypeCode)
+            .serviceTypeName(complaintTypeName)
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
@@ -213,7 +211,7 @@ public class ServiceRequestTest {
     public void test_should_copy_complainant_address_from_attribute_values_field_when_flag_is_enabled() {
         org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
             .ServiceRequest.builder()
-            .attribValues(Collections.singletonList(new AttributeEntry("complainantAddress", "address")))
+            .attribValues(Collections.singletonList(new AttributeEntry("requesterAddress", "address")))
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());

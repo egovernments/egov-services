@@ -3,6 +3,7 @@ package org.egov.domain.service;
 import org.egov.domain.model.SMSMessageContext;
 import org.egov.domain.model.ServiceType;
 import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.Tenant;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,21 +27,24 @@ public class SMSService {
         this.messageStrategyList = messageStrategyList;
     }
 
-    public void send(SevaRequest sevaRequest, ServiceType serviceType) {
-        final List<String> smsMessages = getSMSMessages(sevaRequest, serviceType);
+    public void send(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        final List<String> smsMessages = getSMSMessages(sevaRequest, serviceType, tenant);
         final String mobileNumber = sevaRequest.getMobileNumber();
         smsMessages.forEach(message -> messageQueueRepository.sendSMS(mobileNumber, message));
     }
 
-    private List<String> getSMSMessages(SevaRequest sevaRequest, ServiceType serviceType) {
+    private List<String> getSMSMessages(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
         final List<SMSMessageStrategy> strategyList = getSmsMessageStrategy(sevaRequest, serviceType);
         return strategyList.stream()
-            .map(strategy -> getSMSMessage(sevaRequest, serviceType, strategy))
+            .map(strategy -> getSMSMessage(sevaRequest, serviceType, strategy, tenant))
             .collect(Collectors.toList());
     }
 
-    private String getSMSMessage(SevaRequest sevaRequest, ServiceType serviceType, SMSMessageStrategy strategy) {
-        final SMSMessageContext messageContext = strategy.getMessageContext(sevaRequest, serviceType);
+    private String getSMSMessage(SevaRequest sevaRequest,
+                                 ServiceType serviceType,
+                                 SMSMessageStrategy strategy,
+                                 Tenant tenant) {
+        final SMSMessageContext messageContext = strategy.getMessageContext(sevaRequest, serviceType, tenant);
         return templateService.loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
     }
 

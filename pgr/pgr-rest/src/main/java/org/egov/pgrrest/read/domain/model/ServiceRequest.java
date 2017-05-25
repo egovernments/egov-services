@@ -18,6 +18,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Builder
 @Getter
 public class ServiceRequest {
+    public static final String PROCESSINGFEE = "PROCESSINGFEE";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -79,7 +80,8 @@ public class ServiceRequest {
             || isServiceRequestTypeAbsent()
             || isDescriptionAbsent()
             || isCrnAbsent()
-            || descriptionLength()) {
+            || descriptionLength()
+            || isProcessingFeePresentForCreation()) {
             throw new InvalidComplaintException(this);
         }
     }
@@ -102,6 +104,10 @@ public class ServiceRequest {
 
     public void setCrn(String crn) {
         this.crn = crn;
+    }
+
+    public boolean isProcessingFeePresentForCreation(){
+        return  ((modifyServiceRequest == false) && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey())));
     }
 
 	public boolean descriptionLength() {

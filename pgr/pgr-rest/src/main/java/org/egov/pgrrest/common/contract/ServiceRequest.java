@@ -13,6 +13,7 @@ import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class ServiceRequest {
 
     private static final String LOCATION_ID = "locationId";
-    private static final String COMPLAINANT_ADDRESS = "complainantAddress";
+    private static final String REQUESTER_ADDRESS = "requesterAddress";
     private static final String RECEIVING_MODE = "receivingMode";
     private static final String RECEIVING_CENTER = "receivingCenter";
     private static final String USER_ID = "userId";
@@ -41,10 +42,10 @@ public class ServiceRequest {
     private Boolean status;
 
     @JsonProperty("serviceName")
-    private String complaintTypeName;
+    private String serviceTypeName;
 
     @JsonProperty("serviceCode")
-    private String complaintTypeCode;
+    private String serviceTypeCode;
 
     private String description;
 
@@ -100,8 +101,8 @@ public class ServiceRequest {
     public ServiceRequest(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         crn = complaint.getCrn();
         status = complaint.isClosed();
-        complaintTypeName = complaint.getServiceRequestType().getName();
-        complaintTypeCode = complaint.getServiceRequestType().getCode();
+        serviceTypeName = complaint.getServiceRequestType().getName();
+        serviceTypeCode = complaint.getServiceRequestType().getCode();
         description = complaint.getDescription();
         createdDate = complaint.getCreatedDate();
         lastModifiedDate = complaint.getLastModifiedDate();
@@ -136,11 +137,11 @@ public class ServiceRequest {
     private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser, boolean
         isUpdate) {
         final ServiceRequestLocation serviceRequestLocation = getServiceRequestLocation();
-        final Requester complainant = getComplainant();
+        final Requester complainant = getRequester();
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .authenticatedUser(authenticatedUser)
             .crn(crn)
-            .serviceRequestType(new ServiceRequestType(complaintTypeName, complaintTypeCode, tenantId))
+            .serviceRequestType(new ServiceRequestType(serviceTypeName, serviceTypeCode, tenantId))
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)
@@ -150,18 +151,19 @@ public class ServiceRequest {
             .receivingMode(getReceivingMode())
             .receivingCenter(getReceivingCenter())
             .modifyServiceRequest(isUpdate)
+            .attributeEntries(toDomainAttributeEntries())
             .build();
     }
 
-    private Requester getComplainant() {
-        final String complainantAddress = getComplainantAddress();
-        final String complainantUserId = getComplainantUserId();
+    private Requester getRequester() {
+        final String requesterAddress = getRequesterAddress();
+        final String requesterUserId = getRequesterUserId();
         return Requester.builder()
             .firstName(firstName)
             .mobile(phone)
             .email(email)
-            .userId(complainantUserId)
-            .address(complainantAddress)
+            .userId(requesterUserId)
+            .address(requesterAddress)
             .build();
     }
 
@@ -186,16 +188,27 @@ public class ServiceRequest {
         return getDynamicSingleValue(RECEIVING_CENTER);
     }
 
-    private String getComplainantUserId() {
+    private String getRequesterUserId() {
         return getDynamicSingleValue(USER_ID);
     }
 
-    private String getComplainantAddress() {
-        return getDynamicSingleValue(COMPLAINANT_ADDRESS);
+    private String getRequesterAddress() {
+        return getDynamicSingleValue(REQUESTER_ADDRESS);
     }
 
     private String getDynamicSingleValue(String key) {
         return AttributeValues.getAttributeSingleValue(attribValues, key);
+    }
+
+    private List<org.egov.pgrrest.common.model.AttributeEntry> toDomainAttributeEntries() {
+        if (CollectionUtils.isEmpty(attribValues)) {
+            return Collections.emptyList();
+        }
+        return attribValues.stream().map(this::toDomainAttributeEntry).collect(Collectors.toList());
+    }
+
+    private org.egov.pgrrest.common.model.AttributeEntry toDomainAttributeEntry(AttributeEntry attributeEntry) {
+        return new org.egov.pgrrest.common.model.AttributeEntry(attributeEntry.getKey(), attributeEntry.getName());
     }
 
 }

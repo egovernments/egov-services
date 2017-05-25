@@ -1,0 +1,53 @@
+{
+	"id": "401371f3-be21-1627-d74e-5d5d1b6b0f38",
+	"name": "COMPLAINT STATUS API'S",
+	"description": "",
+	"order": [
+		"791af1c1-08f6-a7be-d582-52008c0bf3dd",
+		"65fe5211-74c5-481f-e3f7-d45479d319ee"
+	],
+	"folders": [],
+	"timestamp": 1494408015949,
+	"owner": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "65fe5211-74c5-481f-e3f7-d45479d319ee",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{host}}:{{port}}/workflow/v1/nextstatuses/_search?currentStatusCode=REGISTERED&tenantId=default",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1495089357616,
+			"name": "get next status",
+			"description": "",
+			"collectionId": "401371f3-be21-1627-d74e-5d5d1b6b0f38",
+			"responses": [],
+			"rawModeData": "{\n\t\"RequestInfo\":{  \n     \"api_id\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"16-03-2017 12:09:14\",\n      \"action\": null,\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msg_id\":\"654654\",\n      \"requester_id\":null,\n      \"authToken\": \"65cbd6d0-9256-4c02-ab03-4970dff1c349\"\n   }\n}"
+		},
+		{
+			"id": "791af1c1-08f6-a7be-d582-52008c0bf3dd",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{host}}:{{port}}/workflow/v1/statuses/_search?keyword=Deliverable_service&tenantId=default",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1495089348817,
+			"name": "get complaint status",
+			"description": "",
+			"collectionId": "401371f3-be21-1627-d74e-5d5d1b6b0f38",
+			"responses": [],
+			"rawModeData": "{\n\t\"RequestInfo\":{  \n     \"api_id\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"16-03-2017 12:09:14\",\n      \"action\": null,\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msg_id\":\"654654\",\n      \"requester_id\":null,\n      \"authToken\": \"65cbd6d0-9256-4c02-ab03-4970dff1c349\"\n   }\n}"
+		}
+	]
+}

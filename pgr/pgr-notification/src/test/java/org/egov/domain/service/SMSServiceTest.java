@@ -3,11 +3,11 @@ package org.egov.domain.service;
 import org.egov.domain.model.SMSMessageContext;
 import org.egov.domain.model.ServiceType;
 import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.Tenant;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.trimou.util.ImmutableMap;
@@ -64,12 +64,13 @@ public class SMSServiceTest {
         when(smsMessageStrategy2.matches(sevaRequest, serviceType)).thenReturn(true);
         final SMSMessageContext messageContext1 = new SMSMessageContext("sms_en1", requestMap);
         final SMSMessageContext messageContext2 = new SMSMessageContext("sms_en2", requestMap);
-        when(smsMessageStrategy1.getMessageContext(sevaRequest, serviceType)).thenReturn(messageContext1);
-        when(smsMessageStrategy2.getMessageContext(sevaRequest, serviceType)).thenReturn(messageContext2);
+        final Tenant tenant = new Tenant("name", "grade");
+        when(smsMessageStrategy1.getMessageContext(sevaRequest, serviceType, tenant)).thenReturn(messageContext1);
+        when(smsMessageStrategy2.getMessageContext(sevaRequest, serviceType, tenant)).thenReturn(messageContext2);
         when(templateService.loadByName("sms_en1", requestMap)).thenReturn("smsMessage1");
         when(templateService.loadByName("sms_en2", requestMap)).thenReturn("smsMessage2");
 
-        smsService.send(sevaRequest, serviceType);
+        smsService.send(sevaRequest, serviceType, tenant);
 
         verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage1");
         verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage2");
@@ -85,8 +86,9 @@ public class SMSServiceTest {
         final ServiceType serviceType = new ServiceType("serviceName", keywords);
         when(smsMessageStrategy1.matches(sevaRequest, serviceType)).thenReturn(false);
         when(smsMessageStrategy2.matches(sevaRequest, serviceType)).thenReturn(false);
+        final Tenant tenant = new Tenant("name", "grade");
 
-        smsService.send(sevaRequest, serviceType);
+        smsService.send(sevaRequest, serviceType, tenant);
 
         verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage");
     }

@@ -3,6 +3,7 @@ package org.egov.domain.service;
 import org.egov.domain.model.SMSMessageContext;
 import org.egov.domain.model.ServiceType;
 import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.Tenant;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public class UpdateDeliverableStatusSMSMessageStrategy implements SMSMessageStra
     }
 
     @Override
-    public SMSMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType) {
+    public SMSMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
         final Map<Object, Object> map = ImmutableMap.of(
             SERVICE_NAME, serviceType.getName(),
             CRN, sevaRequest.getCrn(),

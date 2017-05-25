@@ -16,4 +16,5 @@ public class City {
     private Double longitude;
     private Double latitude;
     private String code;
+    private String ulbName;
 }

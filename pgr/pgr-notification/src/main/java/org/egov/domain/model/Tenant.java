@@ -7,4 +7,5 @@ import lombok.Getter;
 @Getter
 public class Tenant {
     private String name;
+    private String ulbGrade;
 }

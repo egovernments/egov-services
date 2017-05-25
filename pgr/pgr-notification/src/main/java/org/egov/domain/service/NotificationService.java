@@ -28,7 +28,7 @@ public class NotificationService {
         final ServiceType serviceType = this.serviceTypeRepository
             .getServiceTypeByCode(sevaRequest.getServiceTypeCode(), sevaRequest.getTenantId());
         final Tenant tenant = this.tenantRepository.fetchTenantById(sevaRequest.getTenantId());
-        this.smsService.send(sevaRequest, serviceType);
+        this.smsService.send(sevaRequest, serviceType, tenant);
         this.emailService.send(sevaRequest, serviceType, tenant);
     }
 }

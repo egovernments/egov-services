@@ -36,7 +36,8 @@ public class ProcessingFeeEnteredEmailMessageStrategy implements EmailMessageStr
         builder.put("crn", sevaRequest.getCrn());
         builder.put("fee", sevaRequest.getProcessingFee());
         builder.put("serviceName", sevaRequest.getServiceTypeName());
-        builder.put("ULBName", tenant.getName());
+        builder.put("ulbGrade", tenant.getUlbGrade());
+        builder.put("ulbName", tenant.getName());
         return builder.build();
     }
 

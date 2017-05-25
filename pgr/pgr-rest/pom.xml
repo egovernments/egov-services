@@ -181,6 +181,7 @@
                                     <excludes>
                                         <exclude>org.egov.pgrrest.common.entity.*</exclude>
                                         <exclude>org.egov.pgrrest.common.model.AuthenticatedUser</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.AttributeEntry</exclude>
                                         <exclude>org.egov.pgrrest.common.model.AttributeDefinition</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ServiceDefinition</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ValueDefinition</exclude>

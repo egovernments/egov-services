@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class SevaRequestTest {
 
@@ -101,10 +99,7 @@ public class SevaRequestTest {
         assertEquals(Long.valueOf(9), complaintRecord.getWorkflowStateId());
         assertEquals("ap.public", complaintRecord.getTenantId());
         final List<AttributeEntry> actualAttributeEntries = complaintRecord.getAttributeEntries();
-        assertEquals(3, actualAttributeEntries.size());
-        assertEquals(new AttributeEntry("receivingMode", "receiving mode"), actualAttributeEntries.get(0));
-        assertEquals(new AttributeEntry("receivingCenter", "5"), actualAttributeEntries.get(1));
-        assertEquals(new AttributeEntry("stateId", "9"), actualAttributeEntries.get(2));
+        assertEquals(9, actualAttributeEntries.size());
     }
 
     @Test
@@ -149,24 +144,6 @@ public class SevaRequestTest {
         assertNotNull(complaintRecord);
         assertEquals(Long.valueOf(4), complaintRecord.getComplainantUserId());
     }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test_should_return_receiving_center_as_null_when_not_present_in_request_map() {
-        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
-        final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get("serviceRequest");
-        final HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get("values");
-        values.put("receivingCenter", "");
-
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-
-        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
-
-        assertNull(complaintRecord.getReceivingCenter());
-    }
-
-
-
 
 }
 

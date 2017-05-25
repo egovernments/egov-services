@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ServiceRequest {
 
     private static final String LOCATION_ID = "locationId";
-    private static final String COMPLAINANT_ADDRESS = "Address";
+    private static final String COMPLAINANT_ADDRESS = "complainantAddress";
     private static final String RECEIVING_MODE = "receivingMode";
     private static final String RECEIVING_CENTER = "receivingCenter";
     private static final String USER_ID = "userId";

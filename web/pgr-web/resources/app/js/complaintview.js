@@ -386,8 +386,16 @@ function complaintType(loadDD, serviceName){
 }
 
 function nextStatus(loadDD){
+	var appendURL = '';
+	
+	if(keyword != 'Complaint')
+		appendURL = '&keyword=Deliverable_service';
+	else
+		appendURL = '';
+
+	//List of all status and get the code respective status
 	$.ajax({
-		url : '/workflow/v1/nextstatuses/_search?tenantId=default&currentStatusCode='+AV_status,
+		url : '/workflow/v1/nextstatuses/_search?tenantId=default&currentStatusCode='+AV_status+appendURL,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -403,6 +411,7 @@ function nextStatus(loadDD){
 		$('#status').val(AV_status);
 		$('#status').val() ? $('#status').val() : $('#status').val('');
 	});
+
 }
 
 function getWard(loadDD, wardId){

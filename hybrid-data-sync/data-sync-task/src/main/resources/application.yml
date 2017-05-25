@@ -243,7 +243,7 @@ sync:
             shouldSync: True
 
           - source: branchaddress1
-            destination: address1
+            destination: address
             type: String
             shouldSource: True
             shouldSync: True

@@ -79,7 +79,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> requestMap = sevaRequest.getRequestMap();
         @SuppressWarnings("unchecked")
         final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) requestMap.get("serviceRequest");
-        assertEquals(expectedDate, serviceRequest.get("expectedDatetime"));
+        assertEquals("02-01-2017 03:04:00", serviceRequest.get("expectedDatetime"));
     }
 
     private SevaRequest createSevaRequest() {

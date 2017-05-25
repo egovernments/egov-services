@@ -77,7 +77,30 @@ public class FiscalPeriodService {
 		fiscalPeriodContractResponse.setResponseInfo(getResponseInfo(fiscalPeriodContractRequest.getRequestInfo()));
 		return fiscalPeriodContractResponse;
 	}
+	
+	@Transactional
+	public FiscalPeriodContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final FiscalPeriodContractRequest fiscalPeriodContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("FiscalPeriodCreate"), FiscalPeriodContractRequest.class);
+		FiscalPeriodContractResponse fiscalPeriodContractResponse = new FiscalPeriodContractResponse();
+		fiscalPeriodContractResponse.setFiscalPeriods(new ArrayList<FiscalPeriodContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (fiscalPeriodContractRequest.getFiscalPeriods() != null
+				&& !fiscalPeriodContractRequest.getFiscalPeriods().isEmpty()) {
+			for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractRequest.getFiscalPeriods()) {
+				FiscalPeriod fiscalPeriodEntity = new FiscalPeriod(fiscalPeriodContract);
+				fiscalPeriodEntity.setVersion(findOne(fiscalPeriodEntity.getId()).getVersion());
+				fiscalPeriodJpaRepository.save(fiscalPeriodEntity);
+				FiscalPeriodContract resp = modelMapper.map(fiscalPeriodEntity, FiscalPeriodContract.class);
+				fiscalPeriodContractResponse.getFiscalPeriods().add(resp);
+			}
+		}
+		fiscalPeriodContractResponse.setResponseInfo(getResponseInfo(fiscalPeriodContractRequest.getRequestInfo()));
+		return fiscalPeriodContractResponse;
+	}
 
+	
+	
 	@Transactional
 	public FiscalPeriodContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final FiscalPeriodContractRequest fiscalPeriodContractRequest = ObjectMapperFactory.create()

@@ -79,6 +79,29 @@ public class FunctionaryService {
 		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
 		return functionaryContractResponse;
 	}
+	
+	@Transactional
+	public FunctionaryContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final FunctionaryContractRequest functionaryContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("FunctionaryCreate"), FunctionaryContractRequest.class);
+		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
+		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (functionaryContractRequest.getFunctionaries() != null
+				&& !functionaryContractRequest.getFunctionaries().isEmpty()) {
+			for (FunctionaryContract functionaryContract : functionaryContractRequest.getFunctionaries()) {
+				Functionary functionaryEntity = new Functionary(functionaryContract);
+				functionaryEntity.setVersion(findOne(functionaryEntity.getId()).getVersion());
+				functionaryJpaRepository.save(functionaryEntity);
+				FunctionaryContract resp = modelMapper.map(functionaryEntity, FunctionaryContract.class);
+				functionaryContractResponse.getFunctionaries().add(resp);
+			}
+		}
+		functionaryContractResponse.setResponseInfo(getResponseInfo(functionaryContractRequest.getRequestInfo()));
+		return functionaryContractResponse;
+	}
+	
+	
 
 	@Transactional
 	public FunctionaryContractResponse update(HashMap<String, Object> financialContractRequestMap) {

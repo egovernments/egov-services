@@ -14,7 +14,6 @@ import org.egov.egf.persistence.entity.Scheme;
 import org.egov.egf.persistence.entity.SubScheme;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
-import org.egov.egf.persistence.queue.contract.SchemeContract;
 import org.egov.egf.persistence.queue.contract.SubSchemeContract;
 import org.egov.egf.persistence.queue.contract.SubSchemeContractRequest;
 import org.egov.egf.persistence.queue.contract.SubSchemeContractResponse;
@@ -81,6 +80,26 @@ public class SubSchemeService {
 			subSchemeJpaRepository.save(subSchemeEntity);
 			SubSchemeContract resp = modelMapper.map(subSchemeEntity, SubSchemeContract.class);
 			subSchemeContractResponse.setSubScheme(resp);
+		}
+		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
+		return subSchemeContractResponse;
+	}
+
+	@Transactional
+	public SubSchemeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final SubSchemeContractRequest subSchemeContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("SubSchemeCreate"), SubSchemeContractRequest.class);
+		SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
+		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (subSchemeContractRequest.getSubSchemes() != null && !subSchemeContractRequest.getSubSchemes().isEmpty()) {
+			for (SubSchemeContract subSchemeContract : subSchemeContractRequest.getSubSchemes()) {
+				SubScheme subSchemeEntity = new SubScheme(subSchemeContract);
+				subSchemeEntity.setVersion(findOne(subSchemeEntity.getId()).getVersion());
+				subSchemeJpaRepository.save(subSchemeEntity);
+				SubSchemeContract resp = modelMapper.map(subSchemeEntity, SubSchemeContract.class);
+				subSchemeContractResponse.getSubSchemes().add(resp);
+			}
 		}
 		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
 		return subSchemeContractResponse;
@@ -203,7 +222,7 @@ public class SubSchemeService {
 		}
 		return subSchemeContractRequest;
 	}
-	
+
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		new ResponseInfo();
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())

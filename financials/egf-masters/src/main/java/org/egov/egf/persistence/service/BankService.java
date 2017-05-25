@@ -37,6 +37,7 @@ public class BankService {
 
 	private final BankJpaRepository bankJpaRepository;
 	private final BankQueueRepository bankQueueRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -72,6 +73,26 @@ public class BankService {
 			bankJpaRepository.save(bankEntity);
 			BankContract resp = modelMapper.map(bankEntity, BankContract.class);
 			bankContractResponse.setBank(resp);
+		}
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		return bankContractResponse;
+	}
+
+	@Transactional
+	public BankContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final BankContractRequest bankContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("BankCreate"), BankContractRequest.class);
+		BankContractResponse bankContractResponse = new BankContractResponse();
+		bankContractResponse.setBanks(new ArrayList<BankContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (bankContractRequest.getBanks() != null && !bankContractRequest.getBanks().isEmpty()) {
+			for (BankContract bankContract : bankContractRequest.getBanks()) {
+				Bank bankEntity = modelMapper.map(bankContract, Bank.class);
+				bankEntity.setVersion(findOne(bankEntity.getId()).getVersion());
+				bankJpaRepository.save(bankEntity);
+				BankContract resp = modelMapper.map(bankEntity, BankContract.class);
+				bankContractResponse.getBanks().add(resp);
+			}
 		}
 		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
 		return bankContractResponse;

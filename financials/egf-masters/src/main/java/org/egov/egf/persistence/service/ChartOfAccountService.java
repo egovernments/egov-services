@@ -87,7 +87,30 @@ public class ChartOfAccountService {
 		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
 		return chartOfAccountContractResponse;
 	}
+	
+	@Transactional
+	public ChartOfAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("ChartOfAccountCreate"), ChartOfAccountContractRequest.class);
+		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (chartOfAccountContractRequest.getChartOfAccounts() != null
+				&& !chartOfAccountContractRequest.getChartOfAccounts().isEmpty()) {
+			for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getChartOfAccounts()) {
+				ChartOfAccount chartOfAccountEntity = new ChartOfAccount(chartOfAccountContract);
+				chartOfAccountEntity.setVersion(findOne(chartOfAccountEntity.getId()).getVersion());
+				chartOfAccountJpaRepository.save(chartOfAccountEntity);
+				ChartOfAccountContract resp = modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
+				chartOfAccountContractResponse.getChartOfAccounts().add(resp);
+			}
+		}
+		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+		return chartOfAccountContractResponse;
+	}
 
+	
+	
 	@Transactional
 	public ChartOfAccountContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(

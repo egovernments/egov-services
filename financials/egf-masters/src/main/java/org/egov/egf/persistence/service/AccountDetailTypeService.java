@@ -85,7 +85,33 @@ public class AccountDetailTypeService {
 				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
 		return accountDetailTypeContractResponse;
 	}
-
+	
+	@Transactional
+	public AccountDetailTypeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final AccountDetailTypeContractRequest accountDetailTypeContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("AccountDetailTypeCreate"),
+						AccountDetailTypeContractRequest.class);
+		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
+		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (accountDetailTypeContractRequest.getAccountDetailTypes() != null
+				&& !accountDetailTypeContractRequest.getAccountDetailTypes().isEmpty()) {
+			for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest
+					.getAccountDetailTypes()) {
+				AccountDetailType accountDetailTypeEntity = new AccountDetailType(accountDetailTypeContract);
+				accountDetailTypeEntity.setVersion(findOne(accountDetailTypeEntity.getId()).getVersion());
+				accountDetailTypeJpaRepository.save(accountDetailTypeEntity);
+				AccountDetailTypeContract resp = modelMapper.map(accountDetailTypeEntity,
+						AccountDetailTypeContract.class);
+				accountDetailTypeContractResponse.getAccountDetailTypes().add(resp);
+			}
+		} 
+		accountDetailTypeContractResponse
+				.setResponseInfo(getResponseInfo(accountDetailTypeContractRequest.getRequestInfo()));
+		return accountDetailTypeContractResponse;
+	}
+	
+	
 	@Transactional
 	public AccountDetailTypeContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final AccountDetailTypeContractRequest accountDetailTypeContractRequest = ObjectMapperFactory.create()

@@ -44,6 +44,7 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		fiscalPeriodContractRequest.getRequestInfo().setAction("create");
 		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
 		fiscalPeriodService.push(fiscalPeriodContractRequest);
 		FiscalPeriodContractResponse fiscalPeriodContractResponse = new FiscalPeriodContractResponse();
@@ -73,6 +74,7 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		fiscalPeriodContractRequest.getRequestInfo().setAction("update");
 		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
 		fiscalPeriodContractRequest.getFiscalPeriod().setId(uniqueId);
 		fiscalPeriodService.push(fiscalPeriodContractRequest);
@@ -105,7 +107,7 @@ public class FiscalPeriodController {
 		return fiscalPeriodContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public FiscalPeriodContractResponse updateAll(
 			@RequestBody @Valid FiscalPeriodContractRequest fiscalPeriodContractRequest, BindingResult errors) {
@@ -113,17 +115,12 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		fiscalPeriodContractRequest.getRequestInfo().setAction("updateAll");
 		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
-
+		fiscalPeriodService.push(fiscalPeriodContractRequest);
 		FiscalPeriodContractResponse fiscalPeriodContractResponse = new FiscalPeriodContractResponse();
 		fiscalPeriodContractResponse.setFiscalPeriods(new ArrayList<FiscalPeriodContract>());
 		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractRequest.getFiscalPeriods()) {
-			FiscalPeriod fiscalPeriodFromDb = fiscalPeriodService.findOne(fiscalPeriodContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(fiscalPeriodContract, fiscalPeriodFromDb);
-			fiscalPeriodFromDb = fiscalPeriodService.update(fiscalPeriodFromDb);
-			model.map(fiscalPeriodFromDb, fiscalPeriodContract);
 			fiscalPeriodContractResponse.getFiscalPeriods().add(fiscalPeriodContract);
 		}
 

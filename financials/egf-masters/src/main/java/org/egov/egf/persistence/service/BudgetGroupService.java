@@ -91,7 +91,30 @@ public class BudgetGroupService {
 		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
 		return budgetGroupContractResponse;
 	}
-
+	
+	@Transactional
+	public BudgetGroupContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final BudgetGroupContractRequest budgetGroupContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("BudgetGroupCreate"), BudgetGroupContractRequest.class);
+		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
+		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (budgetGroupContractRequest.getBudgetGroups() != null
+				&& !budgetGroupContractRequest.getBudgetGroups().isEmpty()) {
+			for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getBudgetGroups()) {
+				BudgetGroup budgetGroupEntity = new BudgetGroup(budgetGroupContract);
+				budgetGroupEntity.setVersion(findOne(budgetGroupEntity.getId()).getVersion());
+				budgetGroupJpaRepository.save(budgetGroupEntity);
+				BudgetGroupContract resp = modelMapper.map(budgetGroupEntity, BudgetGroupContract.class);
+				budgetGroupContractResponse.getBudgetGroups().add(resp);
+			}
+		}
+		budgetGroupContractResponse.setResponseInfo(getResponseInfo(budgetGroupContractRequest.getRequestInfo()));
+		return budgetGroupContractResponse;
+	}
+	
+	
+	
 	@Transactional
 	public BudgetGroupContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final BudgetGroupContractRequest budgetGroupContractRequest = ObjectMapperFactory.create()

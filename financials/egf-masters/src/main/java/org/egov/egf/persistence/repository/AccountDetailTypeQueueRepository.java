@@ -22,11 +22,12 @@ public class AccountDetailTypeQueueRepository {
 
 	public void push(AccountDetailTypeContractRequest accountDetailTypeContractRequest) {
 		HashMap<String, Object> accountDetailTypeContractRequestMap = new HashMap<String, Object>();
-		if (accountDetailTypeContractRequest.getAccountDetailTypes() != null
-				&& !accountDetailTypeContractRequest.getAccountDetailTypes().isEmpty())
+
+		if ("create".equalsIgnoreCase(accountDetailTypeContractRequest.getRequestInfo().getAction()))
 			accountDetailTypeContractRequestMap.put("AccountDetailTypeCreate", accountDetailTypeContractRequest);
-		else if (accountDetailTypeContractRequest.getAccountDetailType() != null
-				&& accountDetailTypeContractRequest.getAccountDetailType().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(accountDetailTypeContractRequest.getRequestInfo().getAction()))
+			accountDetailTypeContractRequestMap.put("AccountDetailTypeUpdateAll", accountDetailTypeContractRequest);
+		else if ("update".equalsIgnoreCase(accountDetailTypeContractRequest.getRequestInfo().getAction()))
 			accountDetailTypeContractRequestMap.put("AccountDetailTypeUpdate", accountDetailTypeContractRequest);
 
 		financialProducer.sendMessage(accountDetailTypeValidatedTopic, accountDetailTypeValidatedKey,

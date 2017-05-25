@@ -81,6 +81,27 @@ public class FinancialYearService {
 	}
 
 	@Transactional
+	public FinancialYearContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final FinancialYearContractRequest financialYearContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("FinancialYearCreate"), FinancialYearContractRequest.class);
+		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
+		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (financialYearContractRequest.getFinancialYears() != null
+				&& !financialYearContractRequest.getFinancialYears().isEmpty()) {
+			for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
+				FinancialYear financialYearEntity = new FinancialYear(financialYearContract);
+				financialYearEntity.setVersion(findOne(financialYearEntity.getId()).getVersion());
+				financialYearJpaRepository.save(financialYearEntity);
+				FinancialYearContract resp = modelMapper.map(financialYearEntity, FinancialYearContract.class);
+				financialYearContractResponse.getFinancialYears().add(resp);
+			}
+		}
+		financialYearContractResponse.setResponseInfo(getResponseInfo(financialYearContractRequest.getRequestInfo()));
+		return financialYearContractResponse;
+	}
+
+	@Transactional
 	public FinancialYearContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final FinancialYearContractRequest financialYearContractRequest = ObjectMapperFactory.create().convertValue(
 				financialContractRequestMap.get("FinancialYearUpdate"), FinancialYearContractRequest.class);

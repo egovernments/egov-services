@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		budgetGroupContractRequest.getRequestInfo().setAction("create");
 		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 		budgetGroupService.push(budgetGroupContractRequest);
 		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
@@ -74,6 +74,7 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		budgetGroupContractRequest.getRequestInfo().setAction("update");
 		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 		budgetGroupContractRequest.getBudgetGroup().setId(uniqueId);
 		budgetGroupService.push(budgetGroupContractRequest);
@@ -93,7 +94,6 @@ public class BudgetGroupController {
 			throw new CustomBindException(errors);
 		}
 		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
-		RequestInfo requestInfo = budgetGroupContractRequest.getRequestInfo();
 		BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(uniqueId);
 		BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
 
@@ -107,7 +107,7 @@ public class BudgetGroupController {
 		return budgetGroupContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public BudgetGroupContractResponse updateAll(
 			@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest, BindingResult errors) {
@@ -115,17 +115,12 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		budgetGroupContractRequest.getRequestInfo().setAction("updateAll");
 		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
-
+		budgetGroupService.push(budgetGroupContractRequest);
 		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
 		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
 		for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getBudgetGroups()) {
-			BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(budgetGroupContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(budgetGroupContract, budgetGroupFromDb);
-			budgetGroupFromDb = budgetGroupService.update(budgetGroupFromDb);
-			model.map(budgetGroupFromDb, budgetGroupContract);
 			budgetGroupContractResponse.getBudgetGroups().add(budgetGroupContract);
 		}
 

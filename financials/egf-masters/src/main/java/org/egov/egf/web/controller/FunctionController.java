@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,6 +42,7 @@ public class FunctionController {
 		functionService.validate(functionContractRequest, "create", errors);
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
+		functionContractRequest.getRequestInfo().setAction("create");
 		functionService.fetchRelatedContracts(functionContractRequest);
 		functionService.push(functionContractRequest);
 		final FunctionContractResponse functionContractResponse = new FunctionContractResponse();
@@ -66,6 +66,7 @@ public class FunctionController {
 		functionService.validate(functionContractRequest, "update", errors);
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
+		functionContractRequest.getRequestInfo().setAction("update");
 		functionService.fetchRelatedContracts(functionContractRequest);
 		functionContractRequest.getFunction().setId(uniqueId);
 		functionService.push(functionContractRequest);
@@ -98,24 +99,19 @@ public class FunctionController {
 		return functionContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public FunctionContractResponse updateAll(@RequestBody @Valid final FunctionContractRequest functionContractRequest,
 			final BindingResult errors) {
 		functionService.validate(functionContractRequest, "updateAll", errors);
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
+		functionContractRequest.getRequestInfo().setAction("updateAll");
 		functionService.fetchRelatedContracts(functionContractRequest);
-
+		functionService.push(functionContractRequest);
 		final FunctionContractResponse functionContractResponse = new FunctionContractResponse();
 		functionContractResponse.setFunctions(new ArrayList<FunctionContract>());
 		for (final FunctionContract functionContract : functionContractRequest.getFunctions()) {
-			Function functionFromDb = functionService.findOne(functionContract.getId());
-
-			final ModelMapper model = new ModelMapper();
-			model.map(functionContract, functionFromDb);
-			functionFromDb = functionService.update(functionFromDb);
-			model.map(functionFromDb, functionContract);
 			functionContractResponse.getFunctions().add(functionContract);
 		}
 
@@ -130,7 +126,6 @@ public class FunctionController {
 	@ResponseStatus(HttpStatus.OK)
 	public FunctionContractResponse search(@ModelAttribute final FunctionContract functionContracts,
 			@RequestBody final RequestInfo requestInfo, final BindingResult errors) {
-		String tenantId = functionContracts.getTenantId();
 		final FunctionContractRequest functionContractRequest = new FunctionContractRequest();
 		functionContractRequest.setFunction(functionContracts);
 		functionContractRequest.setRequestInfo(requestInfo);

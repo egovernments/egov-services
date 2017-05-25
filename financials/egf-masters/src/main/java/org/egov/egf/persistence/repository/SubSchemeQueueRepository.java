@@ -20,13 +20,15 @@ public class SubSchemeQueueRepository {
 	@Value("${kafka.topics.egf.masters.SubScheme.validated.key}")
 	private String SubSchemeValidatedKey;
 
-	public void push(SubSchemeContractRequest SubSchemeContractRequest) {
-		HashMap<String, Object> SubSchemeContractRequestMap = new HashMap<String, Object>();
-		if (SubSchemeContractRequest.getSubSchemes() != null && !SubSchemeContractRequest.getSubSchemes().isEmpty())
-			SubSchemeContractRequestMap.put("SubSchemeCreate", SubSchemeContractRequest);
-		else if (SubSchemeContractRequest.getSubScheme() != null
-				&& SubSchemeContractRequest.getSubScheme().getId() != null)
-			SubSchemeContractRequestMap.put("SubSchemeUpdate", SubSchemeContractRequest);
-		financialProducer.sendMessage(SubSchemeValidatedTopic, SubSchemeValidatedKey, SubSchemeContractRequestMap);
+	public void push(SubSchemeContractRequest subSchemeContractRequest) {
+		HashMap<String, Object> subSchemeContractRequestMap = new HashMap<String, Object>();
+		if ("create".equalsIgnoreCase(subSchemeContractRequest.getRequestInfo().getAction()))
+			subSchemeContractRequestMap.put("SubSchemeCreate", subSchemeContractRequest);
+		else if ("updateAll".equalsIgnoreCase(subSchemeContractRequest.getRequestInfo().getAction()))
+			subSchemeContractRequestMap.put("SubSchemeUpdateAll", subSchemeContractRequest);
+		else if ("update".equalsIgnoreCase(subSchemeContractRequest.getRequestInfo().getAction()))
+			subSchemeContractRequestMap.put("SubSchemeUpdate", subSchemeContractRequest);
+
+		financialProducer.sendMessage(SubSchemeValidatedTopic, SubSchemeValidatedKey, subSchemeContractRequestMap);
 	}
 }

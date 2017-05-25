@@ -22,12 +22,15 @@ public class BudgetGroupQueueRepository {
 
 	public void push(BudgetGroupContractRequest budgetGroupContractRequest) {
 		HashMap<String, Object> budgetGroupContractRequestMap = new HashMap<String, Object>();
-		if (budgetGroupContractRequest.getBudgetGroups() != null
-				&& !budgetGroupContractRequest.getBudgetGroups().isEmpty())
+
+		if ("create".equalsIgnoreCase(budgetGroupContractRequest.getRequestInfo().getAction()))
 			budgetGroupContractRequestMap.put("BudgetGroupCreate", budgetGroupContractRequest);
-		else if (budgetGroupContractRequest.getBudgetGroup() != null
-				&& budgetGroupContractRequest.getBudgetGroup().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(budgetGroupContractRequest.getRequestInfo().getAction()))
+			budgetGroupContractRequestMap.put("BudgetGroupUpdateAll", budgetGroupContractRequest);
+		else if ("update".equalsIgnoreCase(budgetGroupContractRequest.getRequestInfo().getAction()))
 			budgetGroupContractRequestMap.put("BudgetGroupUpdate", budgetGroupContractRequest);
-		financialProducer.sendMessage(budgetGroupValidatedTopic, budgetGroupValidatedKey, budgetGroupContractRequestMap);
+
+		financialProducer.sendMessage(budgetGroupValidatedTopic, budgetGroupValidatedKey,
+				budgetGroupContractRequestMap);
 	}
 }

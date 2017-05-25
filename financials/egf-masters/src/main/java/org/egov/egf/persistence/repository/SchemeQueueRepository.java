@@ -22,11 +22,14 @@ public class SchemeQueueRepository {
 
 	public void push(SchemeContractRequest schemeContractRequest) {
 		HashMap<String, Object> schemeContractRequestMap = new HashMap<String, Object>();
-		if (schemeContractRequest.getSchemes() != null && !schemeContractRequest.getSchemes().isEmpty())
+		
+		if ("create".equalsIgnoreCase(schemeContractRequest.getRequestInfo().getAction()))
 			schemeContractRequestMap.put("SchemeCreate", schemeContractRequest);
-		else if (schemeContractRequest.getScheme() != null
-				&& schemeContractRequest.getScheme().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(schemeContractRequest.getRequestInfo().getAction()))
+			schemeContractRequestMap.put("SchemeUpdateAll", schemeContractRequest);
+		else if ("update".equalsIgnoreCase(schemeContractRequest.getRequestInfo().getAction()))
 			schemeContractRequestMap.put("SchemeUpdate", schemeContractRequest);
+		
 		financialProducer.sendMessage(schemeValidatedTopic, schemeValidatedKey, schemeContractRequestMap);
 	}
 }

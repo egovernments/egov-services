@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		fundsourceContractRequest.getRequestInfo().setAction("create");
 		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
 		fundsourceService.push(fundsourceContractRequest);
 		FundsourceContractResponse fundsourceContractResponse = new FundsourceContractResponse();
@@ -71,6 +71,7 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		fundsourceContractRequest.getRequestInfo().setAction("update");
 		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
 		fundsourceContractRequest.getFundsource().setId(uniqueId);
 		fundsourceService.push(fundsourceContractRequest);
@@ -103,7 +104,7 @@ public class FundsourceController {
 		return fundsourceContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public FundsourceContractResponse updateAll(@RequestBody @Valid FundsourceContractRequest fundsourceContractRequest,
 			BindingResult errors) {
@@ -111,17 +112,12 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		fundsourceContractRequest.getRequestInfo().setAction("updateAll");
 		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
-
+		fundsourceService.push(fundsourceContractRequest);
 		FundsourceContractResponse fundsourceContractResponse = new FundsourceContractResponse();
 		fundsourceContractResponse.setFundsources(new ArrayList<FundsourceContract>());
 		for (FundsourceContract fundsourceContract : fundsourceContractRequest.getFundsources()) {
-			Fundsource fundsourceFromDb = fundsourceService.findOne(fundsourceContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(fundsourceContract, fundsourceFromDb);
-			fundsourceFromDb = fundsourceService.update(fundsourceFromDb);
-			model.map(fundsourceFromDb, fundsourceContract);
 			fundsourceContractResponse.getFundsources().add(fundsourceContract);
 		}
 

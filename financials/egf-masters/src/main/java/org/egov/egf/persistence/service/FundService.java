@@ -82,6 +82,28 @@ public class FundService {
 		fundContractResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
 		return fundContractResponse;
 	}
+	
+	@Transactional
+	public FundContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final FundContractRequest fundContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("FundCreate"), FundContractRequest.class);
+		FundContractResponse fundContractResponse = new FundContractResponse();
+		fundContractResponse.setFunds(new ArrayList<FundContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (fundContractRequest.getFunds() != null && !fundContractRequest.getFunds().isEmpty()) {
+			for (FundContract fundContract : fundContractRequest.getFunds()) {
+				Fund fundEntity = new Fund(fundContract);
+				fundEntity.setVersion(findOne(fundEntity.getId()).getVersion());
+				fundJpaRepository.save(fundEntity);
+				FundContract resp = modelMapper.map(fundEntity, FundContract.class);
+				fundContractResponse.getFunds().add(resp);
+			}
+		}
+		fundContractResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
+		return fundContractResponse;
+	}
+	
+	
 
 	@Transactional
 	public FundContractResponse update(HashMap<String, Object> financialContractRequestMap) {

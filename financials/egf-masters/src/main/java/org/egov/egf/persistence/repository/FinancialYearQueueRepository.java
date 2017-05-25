@@ -19,15 +19,16 @@ public class FinancialYearQueueRepository {
 
 	@Value("${kafka.topics.egf.masters.financialyear.validated.key}")
 	private String financialYearValidatedKey;
-	
+
 	public void push(FinancialYearContractRequest financialYearContractRequest) {
 		HashMap<String, Object> financialYearContractRequestMap = new HashMap<String, Object>();
-		if (financialYearContractRequest.getFinancialYears() != null
-				&& !financialYearContractRequest.getFinancialYears().isEmpty())
+		if ("create".equalsIgnoreCase(financialYearContractRequest.getRequestInfo().getAction()))
 			financialYearContractRequestMap.put("FinancialYearCreate", financialYearContractRequest);
-		else if (financialYearContractRequest.getFinancialYear() != null
-				&& financialYearContractRequest.getFinancialYear().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(financialYearContractRequest.getRequestInfo().getAction()))
+			financialYearContractRequestMap.put("FinancialYearUpdateAll", financialYearContractRequest);
+		else if ("update".equalsIgnoreCase(financialYearContractRequest.getRequestInfo().getAction()))
 			financialYearContractRequestMap.put("FinancialYearUpdate", financialYearContractRequest);
+		
 		financialProducer.sendMessage(financialYearValidatedTopic, financialYearValidatedKey,
 				financialYearContractRequestMap);
 	}

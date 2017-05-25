@@ -24,8 +24,7 @@
             "email": null,
             "deviceId": null,
             "accountId": null,
-            "tenantId":"tenantId",
-            "values": {}
+            "tenantId":"tenantId"
         }
     ]
 }

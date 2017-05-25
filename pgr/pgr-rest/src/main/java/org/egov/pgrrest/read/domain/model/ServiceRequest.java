@@ -18,7 +18,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Builder
 @Getter
 public class ServiceRequest {
-    private static final String MANUAL_RECEIVING_MODE = "MANUAL";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -27,7 +26,7 @@ public class ServiceRequest {
     private Requester requester;
     private String crn;
     @NonNull
-    private ServiceRequestType complaintType;
+    private ServiceRequestType serviceRequestType;
     private String serviceRequestStatus;
     private String address;
     private List<String> mediaUrls;
@@ -41,7 +40,6 @@ public class ServiceRequest {
     private String receivingMode;
     private String receivingCenter;
     private Long department;
-    private Date lastAccessedTime;
     private String childLocation;
     private Long assignee;
     private String state;
@@ -78,7 +76,7 @@ public class ServiceRequest {
     public void validate() {
         if (isRequesterAbsent()
             || isTenantIdAbsent()
-            || isComplaintTypeAbsent()
+            || isServiceRequestTypeAbsent()
             || isDescriptionAbsent()
             || isCrnAbsent()
             || descriptionLength()) {
@@ -94,8 +92,8 @@ public class ServiceRequest {
         return isEmpty(description);
     }
 
-    public boolean isComplaintTypeAbsent() {
-        return complaintType.isAbsent();
+    public boolean isServiceRequestTypeAbsent() {
+        return serviceRequestType.isAbsent();
     }
 
     public boolean isCrnAbsent() {
@@ -104,16 +102,6 @@ public class ServiceRequest {
 
     public void setCrn(String crn) {
         this.crn = crn;
-    }
-
-    public boolean isReceivingModeAbsent() {
-        return authenticatedUser.isEmployee() && isEmpty(receivingMode);
-    }
-
-    public boolean isReceivingCenterAbsent() {
-        return authenticatedUser.isEmployee()
-            && MANUAL_RECEIVING_MODE.equalsIgnoreCase(receivingMode)
-            && isEmpty(receivingCenter);
     }
 
 	public boolean descriptionLength() {

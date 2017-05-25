@@ -83,7 +83,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .address(landmarkDetails)
             .description(details)
             .requester(getComplainant())
-            .complaintType(getDomainComplaintType())
+            .serviceRequestType(getDomainServiceRequestType())
             .crn(id.getCrn())
             .createdDate(getCreatedDate())
             .lastModifiedDate(getLastModifiedDate())
@@ -91,7 +91,6 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .escalationDate(getEscalationDate())
             .closed(isCompleted())
             .department(getDepartment())
-            .lastAccessedTime(getLastModifiedDate())
             .assignee(getAssignee())
             .tenantId(id.getTenantId())
             .serviceRequestStatus(status)
@@ -99,7 +98,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .build();
     }
 
-    private ServiceRequestType getDomainComplaintType() {
+    private ServiceRequestType getDomainServiceRequestType() {
         return new ServiceRequestType(this.serviceType.getName(),
             this.serviceType.getCode(),
             this.serviceType.getTenantId());

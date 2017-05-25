@@ -1,8 +1,8 @@
 package org.egov.pgrrest.write.consumer;
 
 import org.egov.pgrrest.write.contracts.grievance.SevaRequestMapFactory;
-import org.egov.pgrrest.write.model.ComplaintRecord;
-import org.egov.pgrrest.write.service.ComplaintWriteService;
+import org.egov.pgrrest.write.model.ServiceRequestRecord;
+import org.egov.pgrrest.write.service.ServiceRequestWriteService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class GrievancePersistenceListenerTest {
 
     @Mock
-    private ComplaintWriteService complaintWriteService;
+    private ServiceRequestWriteService complaintWriteService;
 
     @InjectMocks
     private GrievancePersistenceListener listener;
@@ -29,7 +29,7 @@ public class GrievancePersistenceListenerTest {
 
         listener.processMessage(sevaRequestMap);
 
-        verify(complaintWriteService).updateOrInsert(any(ComplaintRecord.class));
+        verify(complaintWriteService).updateOrInsert(any(ServiceRequestRecord.class));
     }
 
 }

@@ -1,7 +1,7 @@
 package org.egov.pgrrest.write.consumer;
 
 import org.egov.pgrrest.write.contracts.grievance.SevaRequest;
-import org.egov.pgrrest.write.service.ComplaintWriteService;
+import org.egov.pgrrest.write.service.ServiceRequestWriteService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +10,9 @@ import java.util.HashMap;
 @Service
 public class GrievancePersistenceListener {
 
-    private ComplaintWriteService complaintWriteService;
+    private ServiceRequestWriteService complaintWriteService;
 
-    public GrievancePersistenceListener(ComplaintWriteService complaintWriteService) {
+    public GrievancePersistenceListener(ServiceRequestWriteService complaintWriteService) {
         this.complaintWriteService = complaintWriteService;
     }
 

@@ -134,8 +134,8 @@ public class ServiceRequest {
         return toDomain(authenticatedUser, true);
     }
 
-    private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser, boolean
-        isUpdate) {
+    private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser,
+                                                                       boolean isUpdate) {
         final ServiceRequestLocation serviceRequestLocation = getServiceRequestLocation();
         final Requester complainant = getRequester();
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()

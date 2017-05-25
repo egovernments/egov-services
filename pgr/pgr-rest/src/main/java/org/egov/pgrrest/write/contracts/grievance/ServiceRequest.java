@@ -1,5 +1,7 @@
 package org.egov.pgrrest.write.contracts.grievance;
 
+import org.egov.pgr.common.date.DateFormatter;
+
 import java.util.*;
 
 public class ServiceRequest {
@@ -24,6 +26,8 @@ public class ServiceRequest {
     private static final String EMAIL = "email";
     private static final String SERVICE_CODE = "serviceCode";
     private static final String EXPECTED_DATETIME = "expectedDatetime";
+    private static final String REQUESTED_DATETIME = "requestedDatetime";
+    private static final String UPDATED_DATETIME = "updatedDatetime";
     private static final String ATTRIBUTE_VALUES = "attribValues";
     private static final String ATTRIBUTE_VALUES_KEY_FIELD = "key";
     private static final String ATTRIBUTE_VALUES_NAME_FIELD = "name";
@@ -75,7 +79,7 @@ public class ServiceRequest {
     }
 
     public Date getEscalationDate() {
-        return new Date((Long) this.serviceRequestMap.get(EXPECTED_DATETIME));
+        return DateFormatter.toDate((String) this.serviceRequestMap.get(EXPECTED_DATETIME));
     }
 
     @SuppressWarnings("unchecked")
@@ -93,4 +97,12 @@ public class ServiceRequest {
             .orElse(null);
     }
 
+    public Date getCreatedDate() {
+        return DateFormatter.toDate((String) this.serviceRequestMap.get(REQUESTED_DATETIME));
+    }
+
+    public Date getLastModifiedDate() {
+        return DateFormatter.toDate((String) this.serviceRequestMap.get(UPDATED_DATETIME));
+
+    }
 }

@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.8.0</version>
+            <version>0.11.0</version>
         </dependency>
 
         <dependency>
@@ -193,7 +193,7 @@
                                         <exclude>org.egov.pgrrest.read.domain.service.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.model.*</exclude>
                                         <exclude>org.egov.pgrrest.write.contracts.*</exclude>
-                                        <exclude>org.egov.pgrrest.write.repository.ComplaintWriteRepository</exclude>
+                                        <exclude>org.egov.pgrrest.write.repository.ServiceRequestWriteRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.specification.SubmissionSpecification</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
@@ -210,7 +210,7 @@
                                         <exclude>org.egov.pgrrest.write.consumer.HashMapDeserializer</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ReceivingMode</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ReceivingCenter</exclude>
-                                        <exclude>org.egov.pgrrest.write.model.ComplaintRecord</exclude>
+                                        <exclude>org.egov.pgrrest.write.model.ServiceRequestRecord</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

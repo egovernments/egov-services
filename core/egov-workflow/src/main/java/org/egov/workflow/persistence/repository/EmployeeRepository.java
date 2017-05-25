@@ -31,8 +31,8 @@ public class EmployeeRepository {
         this.restTemplate = restTemplate;
         this.employeesByUserIdUrl = hrEmployeeServiceHostname + hrEmployeesByUserIdUrl;
         this.employeesByPositionIdurl = hrEmployeeServiceHostname + hrEmployeesByPositionIdurl;
-        this.employeesByRoleCodeurl = hrEmployeeServiceHostname + hrEmployeesByRoleCodeurl;
-        //this.employeesByRoleCodeurl =  hrEmployeesByRoleCodeurl;
+        //this.employeesByRoleCodeurl = hrEmployeeServiceHostname + hrEmployeesByRoleCodeurl;
+        this.employeesByRoleCodeurl =  hrEmployeesByRoleCodeurl;
     }
 
     public List<Employee> getByRoleCode(final String roleCode, final String tenantId) {

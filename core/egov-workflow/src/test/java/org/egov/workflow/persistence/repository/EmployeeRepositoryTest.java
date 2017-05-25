@@ -24,9 +24,9 @@ import org.springframework.web.client.RestTemplate;
 public class EmployeeRepositoryTest {
 
     private static final String HOST = "http://host";
-    private static final String EMPLOYEES_BY_USERID_URL = "/eis/employee?tenantId=ap.public&userId=1";
-    private static final String EMPLOYEES_BY_POSITIONID_URL = "/eis/employee?tenantId=ap.public&positionId=1";
-    private static final String EMPLOYEES_BY_ROLENAME_URL = "/eis/employee?tenantId=ap.public&roleName='Grievance/Officer'";
+    private static final String EMPLOYEES_BY_USERID_URL = "/hr-employee/employees/_search?id=1&tenantId=default";
+    private static final String EMPLOYEES_BY_POSITIONID_URL = "/hr-employee/employees/_search?positionId=1&tenantId=default";
+    private static final String EMPLOYEES_BY_ROLENAME_URL = "/hr-employee/employees/_search?roleCodes=GRO&tenantId=tenantId";
 
     private MockRestServiceServer server;
     private EmployeeRepository employeeRepository;
@@ -41,8 +41,8 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void test_should_get_employees_by_userid() {
-        server.expect(once(), requestTo("http://host/eis/employee?tenantId=ap.public&userId=1"))
-                .andExpect(method(HttpMethod.GET))
+        server.expect(once(), requestTo("http://host/hr-employee/employees/_search?id=1&tenantId=default"))
+                .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
@@ -54,8 +54,8 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void test_should_return_employees_by_positionid() {
-        server.expect(once(), requestTo("http://host/eis/employee?tenantId=ap.public&positionId=1"))
-                .andExpect(method(HttpMethod.GET))
+        server.expect(once(), requestTo("http://host/hr-employee/employees/_search?positionId=1&tenantId=default"))
+                .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
@@ -65,13 +65,13 @@ public class EmployeeRepositoryTest {
     }
 
     @Test
-    public void test_should_return_employees_by_rolename() {
-        server.expect(once(), requestTo("http://host/eis/employee?tenantId=ap.public&roleName='Grievance/Officer'"))
-                .andExpect(method(HttpMethod.GET))
+    public void test_should_return_employees_by_roleCode() {
+        server.expect(once(), requestTo("http://host/hr-employee/employees/_search?roleCodes=GRO&tenantId=tenantId"))
+                .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        List<Employee> employees = employeeRepository.getByRoleName("Grievance Officer","tenantId");
+        List<Employee> employees = employeeRepository.getByRoleCode("GRO","tenantId");
         server.verify();
         assertEquals(1, employees.size());
     }

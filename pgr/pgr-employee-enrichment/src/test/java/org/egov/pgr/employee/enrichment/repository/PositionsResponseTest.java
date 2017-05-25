@@ -17,7 +17,7 @@ public class PositionsResponseTest {
         final String designationId = "3";
         final DesignationResponse designationResponse = new DesignationResponse(designationId);
         final String departmentId = "4";
-        final DepartmentResponse department = new DepartmentResponse(departmentId);
+        final Long department =4L;
         final PositionResponse positionResponse =
             new PositionResponse(new DepartmentDesignationResponse(designationResponse, department));
         final List<PositionResponse> positions = Collections.singletonList(positionResponse);

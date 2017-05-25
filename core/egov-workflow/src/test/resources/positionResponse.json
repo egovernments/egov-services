@@ -1,14 +1,33 @@
 {
- "Positions" : [ {
-    "id" : 1,
-    "name" : "position1",
-    "responseInfo" : {
-       "api_id" : "",
-       "ver" :  "",
-       "ts" : "",
-       "res_msg_id" : "",
-       "msg_id" : "",
-       "status" : "Successful Response"  
-    }
- }]
+    "ResponseInfo": {
+        "apiId": "1",
+        "ver": "1",
+        "ts": "Sun Jan 01 01:01:01 IST 2017",
+        "resMsgId": "uief87324",
+        "msgId": "",
+        "status": "200"
+    },
+    "Position": [
+        {
+            "id": 1,
+            "name": "position1",
+            "deptdesig": {
+                "id": 2,
+                "department": 2,
+                "designation": {
+                    "id": 2,
+                    "name": "Accounts Officer",
+                    "code": "AO",
+                    "description": null,
+                    "chartOfAccounts": null,
+                    "active": true,
+                    "tenantId": "default"
+                },
+                "tenantId": "default"
+            },
+            "isPostOutsourced": false,
+            "active": true,
+            "tenantId": "default"
+        }
+    ]
 }

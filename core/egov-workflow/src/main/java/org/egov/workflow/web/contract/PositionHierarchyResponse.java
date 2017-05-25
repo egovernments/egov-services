@@ -1,16 +1,23 @@
 package org.egov.workflow.web.contract;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PositionHierarchyResponse {
 
-    private Long id;
-    private PositionResponse fromPosition;
-    private PositionResponse toPosition;
-    private String tenantId;
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("PositionHierarchy")
+    private List<PositionHierarchy> positionHierarchy = new ArrayList<PositionHierarchy>();
+
 }

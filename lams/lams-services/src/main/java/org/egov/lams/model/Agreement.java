@@ -2,6 +2,8 @@ package org.egov.lams.model;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -27,7 +29,7 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
-	
+
 	@NotNull
 	@Max(5)
 	@Min(1)
@@ -42,12 +44,17 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date councilDate;
+
+	@Min(0)
 	private Double bankGuaranteeAmount;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date bankGuaranteeDate;
+
 	@NotNull
+	@Min(0)
 	private Double securityDeposit;
+
 	@Min(0)
 	private Double collectedSecurityDeposit;
 
@@ -57,6 +64,7 @@ public class Agreement {
 
 	@NotNull
 	private NatureOfAllotment natureOfAllotment;
+	@Min(0)
 	private Double registrationFee;
 	private String caseNo;
 
@@ -69,6 +77,7 @@ public class Agreement {
 	private String orderDetails;
 
 	@NotNull
+	@Min(0)
 	private Double rent;
 	private String tradelicenseNumber;
 
@@ -89,10 +98,15 @@ public class Agreement {
 
 	private List<Document> documents;
 	private List<String> demands;
+
+	@Valid
 	private WorkflowDetails workflowDetails;
+	@Min(0)
 	private Double goodWillAmount;
+
 	@Min(0)
 	private Double collectedGoodWillAmount;
+
 	@NotNull
 	private Source source;
 	private List<Demand> legacyDemands;

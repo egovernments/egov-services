@@ -122,7 +122,7 @@
 //         ]
 //       }
 //     ]
-var flag = 0, flag1 = 0
+var flag = 0, flag1 = 0, mode = getUrlVars()["type"];
 const makeAjaxUpload = function(file, cb) {
     if(file.constructor == File) {
       let formData = new FormData();
@@ -946,7 +946,6 @@ class CreateAsset extends React.Component {
       assetReferenceName,
       assetReference
   	} = this.state.assetSet;
-    let mode = getUrlVars()["type"];
 
     const getType = function() {
         switch(mode) {

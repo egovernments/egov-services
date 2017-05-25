@@ -56,18 +56,86 @@ paths:
         - $ref: "#/parameters/legacyConsumerNumber"
         - $ref: "#/parameters/acknowledgmentNumber"
         - $ref: "#/parameters/consumerNumber"
-        
+        - $ref: "#/parameters/assigneeId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortResult"
       responses:
         200: 
           description: Successful response
           schema:
-            $ref: "#/definitions/WaterConnectionRes"
+            $ref: "#/definitions/WaterConnectionsRes"
         400:
           description: Invalid input
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
+
+  Material:
+    type: object
+    description: holds material information used to generate estimation charges
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a material object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      name:
+        type: string
+        minLength: 5
+        maxLength: 200
+        description: name of material item used to supply the connection
+      quantity:
+        type: integer
+        description: number of material item required
+        minimum: 1
+        maximum: 50
+      size:
+        type: number
+        description: size value for the material item
+      amount:
+        type: number
+        description: tentative price for the material item
+
+  EstimationCharge:
+    type: object
+    description: detailed estimation to accomplish the water connection.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a material object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      materials:
+        type: array
+        maximum: 50
+        items:
+         $ref: '#/definitions/Material'
+      existingDistributionPipeline:
+        type: string
+        description: existing pipeline from where connection can be initiated
+        minLength: 0
+        maxLength: 200
+      pipelineToHomeDistance:
+        type: number
+        description: tentative amount of pipeline length required in meters
+        maximum: 1000
+      estimationCharges:
+        type: number
+        description: charges required for estimation
+      supervisionCharges:
+        type: number
+        description: charges required for supervision
+      materialCharges:
+        type: number
+        description: sum total of cost required for materials used
 
   Timeline:
     type: object
@@ -295,6 +363,8 @@ definitions:
         $ref: '#/definitions/Property'
       meter:
         $ref: '#/definitions/Meter'
+      estimationCharge:
+        $ref: "#/definitions/EstimationCharge"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -327,7 +397,18 @@ definitions:
         $ref: '#/definitions/Connection'
       WorkflowDetails:
         $ref: '#/definitions/WorkflowDetails'
-
+  
+  WaterConnectionsRes:
+    type: object
+    properties:
+      ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Connections:
+        type: array
+        maximum: 500
+        items:
+         $ref: '#/definitions/Connection'
+         
 parameters:
   legacyConsumerNumber:
     name: legacyConsumerNumber
@@ -354,3 +435,44 @@ parameters:
     type: string
     minLength: 0
     maxLength: 64
+    
+  assigneeId:
+    name: assigneeId
+    in: query
+    description: unique identifier of user who is owner in workflow
+    required: false
+    type: integer
+    
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+
+  sortResult:
+    name: sort
+    in: query
+    description: Connections results will be sorted by createdTime ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](createdTime|name)'
+    default:
+      - +createdTime

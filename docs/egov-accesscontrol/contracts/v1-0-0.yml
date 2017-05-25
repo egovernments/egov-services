@@ -138,7 +138,7 @@ paths:
         - name: roles
           in: query
           required: false
-          description: The list of role codes.
+          description: The list of role comma separated codes to filter Roles against
           type: array
           items:
             type: string

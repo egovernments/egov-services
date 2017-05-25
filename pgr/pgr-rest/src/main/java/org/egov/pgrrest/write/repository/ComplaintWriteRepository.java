@@ -184,21 +184,21 @@ public class ComplaintWriteRepository {
     }
 
     private void setComplaintStatus(ComplaintRecord complaintRecord, Complaint complaint) {
-        complaint.setStatus(complaintRecord.getComplaintStatus());
+        complaint.setStatus(complaintRecord.getServiceRequestStatus());
     }
 
     private void setComplaintStatus(ComplaintRecord complaintRecord, Submission submission) {
-        submission.setStatus(complaintRecord.getComplaintStatus());
+        submission.setStatus(complaintRecord.getServiceRequestStatus());
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Complaint complaint) {
         ServiceType complaintType = serviceRequestTypeJpaRepository
-            .findByCodeAndTenantId(complaintRecord.getComplaintTypeCode(), complaintRecord.getTenantId());
+            .findByCodeAndTenantId(complaintRecord.getServiceRequestTypeCode(), complaintRecord.getTenantId());
         complaint.setComplaintType(complaintType);
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Submission submission) {
-        submission.setServiceCode(complaintRecord.getComplaintTypeCode());
+        submission.setServiceCode(complaintRecord.getServiceRequestTypeCode());
     }
 
     private void setReceivingMode(ComplaintRecord complaintRecord, Complaint complaint) {
@@ -255,19 +255,19 @@ public class ComplaintWriteRepository {
         if (complaint.getId() == null) {
             complaint.getComplainant().setUserDetail(complaintRecord.getComplainantUserId());
         }
-        complaint.getComplainant().setName(complaintRecord.getComplainantName());
-        complaint.getComplainant().setMobile(complaintRecord.getComplainantMobileNumber());
-        complaint.getComplainant().setEmail(complaintRecord.getComplainantEmail());
-        complaint.getComplainant().setAddress(complaintRecord.getComplainantAddress());
+        complaint.getComplainant().setName(complaintRecord.getRequesterName());
+        complaint.getComplainant().setMobile(complaintRecord.getRequesterMobileNumber());
+        complaint.getComplainant().setEmail(complaintRecord.getRequesterEmail());
+        complaint.getComplainant().setAddress(complaintRecord.getRequesterAddress());
         complaint.getComplainant().setTenantId(complaintRecord.getTenantId());
     }
 
     private void setComplainant(ComplaintRecord complaintRecord, Submission submission) {
         submission.setLoggedInRequester(complaintRecord.getComplainantUserId());
-        submission.setName(complaintRecord.getComplainantName());
-        submission.setMobile(complaintRecord.getComplainantMobileNumber());
-        submission.setEmail(complaintRecord.getComplainantEmail());
-        submission.setRequesterAddress(complaintRecord.getComplainantAddress());
+        submission.setName(complaintRecord.getRequesterName());
+        submission.setMobile(complaintRecord.getRequesterMobileNumber());
+        submission.setEmail(complaintRecord.getRequesterEmail());
+        submission.setRequesterAddress(complaintRecord.getRequesterAddress());
     }
 
     private Complaint getComplaint(ComplaintRecord complaintRecord) {

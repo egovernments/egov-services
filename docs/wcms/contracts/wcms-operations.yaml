@@ -17,7 +17,7 @@ schemes:
   - https
 basePath: '/v1/egov-wcms/[API endpoint]'
 paths:
-  /_create:
+  /connection/_create:
     post:
       summary: Creates new water connection
       description: To create new water connection is based upon various master data configured for your ULB.
@@ -43,6 +43,30 @@ paths:
           description: tenantId provided was not found
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /connection/_search:
+    post:
+      summary: Retrieve water connection
+      description: Searchs water connection details based upon acknowledgment number, HSC consumer number or legacy consumer number. In case multiple parameterts are passed user will be searched as an AND combination of all the parameters.
+      tags:
+        - Water Connection
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/legacyConsumerNumber"
+        - $ref: "#/parameters/acknowledgmentNumber"
+        - $ref: "#/parameters/consumerNumber"
+        
+      responses:
+        200: 
+          description: Successful response
+          schema:
+            $ref: "#/definitions/WaterConnectionRes"
+        400:
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
 definitions:
 
   Property:
@@ -228,9 +252,9 @@ definitions:
       acknowledgmentNumber:
         type: string
         description: the acknowledgement number generated after successful acceptance of request. 
-      consumerCode:
+      consumerNumber:
         type: string
-        description: consumer code generated after successful acceptance of request.
+        description: HSC consumer number generated after completion of entire workflow.
       documents:
         type: array
         items:
@@ -272,3 +296,29 @@ definitions:
       WorkflowDetails:
         $ref: '#/definitions/WorkflowDetails'
 
+parameters:
+  legacyConsumerNumber:
+    name: legacyConsumerNumber
+    in: query
+    description: legacy consumer number of citizen
+    required: false
+    type: integer
+    format: int64
+
+  acknowledgmentNumber:
+    name: acknowledgmentNumber
+    in: query
+    description: acknowledgment number of the connection
+    required: false
+    type: string
+    minLength: 0
+    maxLength: 64
+    
+  consumerNumber:
+    name: consumerNumber
+    in: query
+    description: HSC consumer number for the water connection
+    required: false
+    type: string
+    minLength: 0
+    maxLength: 64

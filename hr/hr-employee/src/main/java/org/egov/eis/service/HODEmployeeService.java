@@ -51,6 +51,7 @@ import org.egov.eis.model.User;
 import org.egov.eis.repository.HODEmployeeRepository;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
+import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.HODEmployeeCriteria;
 import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
@@ -93,7 +94,9 @@ public class HODEmployeeService {
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
 				.collect(Collectors.toList());
 
-		List<User> usersList = userService.getUsers(ids, hodEmployeeCriteria.getTenantId(), requestInfo);
+		EmployeeCriteria employeeCriteria = EmployeeCriteria.builder()
+				.id(ids).tenantId(hodEmployeeCriteria.getTenantId()).build();
+		List<User> usersList = userService.getUsers(employeeCriteria, requestInfo);
 		LOGGER.debug("userService: " + usersList);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 

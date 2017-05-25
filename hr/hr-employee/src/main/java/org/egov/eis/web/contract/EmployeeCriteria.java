@@ -40,6 +40,8 @@
 
 package org.egov.eis.web.contract;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +67,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class EmployeeCriteria {
+public class EmployeeCriteria implements Cloneable {
 
 	private List<Long> id;
 
@@ -85,7 +87,9 @@ public class EmployeeCriteria {
 
 	private List<Long> employeeStatus;
 
-	private String sort;
+	private List<String> roleCodes;
+
+	private List<String> sort = Collections.singletonList("name");
 
 	private String sortBy;
 
@@ -97,8 +101,12 @@ public class EmployeeCriteria {
 
 	@Min(1)
 	@Max(500)
-	private Short pageSize;
+	private Integer pageSize;
 
-	private Short pageNumber;
+	private Integer pageNumber;
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

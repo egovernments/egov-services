@@ -43,7 +43,9 @@ package org.egov.eis.service;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.egov.eis.broker.EmployeeProducer;
@@ -165,20 +167,34 @@ public class EmployeeService {
 	@Autowired
 	PropertiesManager propertiesManager;
 
-	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
+	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
+		List<User> usersList = null;
+		List<Long> ids = null;
+		if (!isEmpty(employeeCriteria.getRoleCodes())) {
+			usersList = userService.getUsers(employeeCriteria, requestInfo);
+			LOGGER.debug("userService: " + usersList);
+			if(isEmpty(usersList))
+				return Collections.EMPTY_LIST;
+			ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
+			employeeCriteria.setId(ids);
+		}
+
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
 
-		if (employeeInfoList.isEmpty())
-			return employeeInfoList;
+		if (isEmpty(employeeInfoList))
+			return Collections.EMPTY_LIST;
 
-		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
-				.collect(Collectors.toList());
-		LOGGER.debug("Employee ids " + ids);
-		List<User> usersList = userService.getUsers(ids, employeeCriteria.getTenantId(), requestInfo);
-		LOGGER.debug("userService: " + usersList);
+		if (isEmpty(employeeCriteria.getRoleCodes())) {
+			ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+			LOGGER.debug("Employee ids " + ids);
+			employeeCriteria.setId(ids);
+			usersList = userService.getUsers(employeeCriteria, requestInfo);
+			LOGGER.debug("userService: " + usersList);
+		}
 		employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 		System.err.println("employeeInfoList size inside getEmployees: " + employeeInfoList.size());
-		if (!ids.isEmpty()) {
+
+		if (!isEmpty(ids)) {
 			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
 					employeeCriteria.getTenantId());
 			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
@@ -194,7 +210,8 @@ public class EmployeeService {
 		if (employee == null)
 			throw new EmployeeIdNotFoundException(employeeId);
 
-		User user = userService.getUsers(ids, tenantId, requestInfo).get(0);
+		EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
+		User user = userService.getUsers(employeeCriteria, requestInfo).get(0);
 		user.setBloodGroup(
 				isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
 		employee.setUser(user);

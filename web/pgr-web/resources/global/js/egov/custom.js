@@ -591,9 +591,9 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 				if(this.name == 'PROCESSINGFEE' && this.mode == '')
 					this.template = '';
 				else if(localStorage.getItem('type') == 'EMPLOYEE' && this.name == 'PROCESSINGFEE' && this.mode == 'disabled')
-					this.template = '<label class="col-sm-2 control-label" '+this.required+' data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' /> </div><div class="col-sm-1"></div>';	
+					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' /> </div><div class="col-sm-1"></div>';	
 				else
-					this.template = '<label class="col-sm-2 control-label" '+this.required+' data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
+					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
 
 			}
 			else if(this.dataType == 'text')
@@ -615,7 +615,7 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 
 				this_select_content +='</select>';
 
-				this.template = '<label class="col-sm-2 control-label" '+this.required+'" data-translate="'+this.description+'"></label><div class="col-sm-3 add-margin">'+this_select_content+'</div><div class="col-sm-1"></div>';
+				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label><div class="col-sm-3 add-margin">'+this_select_content+'</div><div class="col-sm-1"></div>';
 			}
 		}
 		

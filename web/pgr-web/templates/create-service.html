@@ -59,6 +59,42 @@
 					<div class="createcrn">
 						<form class="form-horizontal form-groups-bordered">
 							<div class="col-md-12">
+									<div class="panel panel-primary citizenremove" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title" data-translate="core.lbl.contact.information"></div>
+										</div>
+										<div class="panel-body custom-form">
+											<div class="form-group">
+												<label for="field-1" class="col-sm-3 control-label required" data-translate="core.lbl.fullname"></label>
+												<div class="col-sm-6 add-margin">
+													<input id="first_name" name="first_name" data-extra data-pattern="alphabetwithspace" class="form-control patternvalidation" required="required" type="text" value=""/>
+													 
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 col-md-3 control-label required" data-translate="core.lbl.mobilenumber"></label>
+												<div class="col-sm-6 col-md-2 add-margin">
+													<div class="input-group">
+														<span class="input-group-addon">+91</span>
+														  	<input id="phone" name="phone" data-extra class="form-control mobilevalidate patternvalidation" maxlength="10" data-pattern="number" required="required" type="text" value=""/>
+													</div>
+													<label id="phone-error" class="error custom display-hide" for="phone">Required</label>
+												</div>
+												<div class="clearfix visible-sm hidden-md" style="margin:0"></div>
+												<label for="field-1" class="control-label col-sm-3 col-md-1" data-translate="core.lbl.email.compulsory"></label>
+												<div class="col-sm-6 col-md-3">
+													<input id="email" name="email" type="email" class="form-control emailvalidate" value=""/>
+													
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label" data-translate="core.lbl.address"></label>
+												<div class="col-sm-6">
+													<textarea class="form-control autogrow" id="complainantAddress" maxlength="256"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
 									<div class="panel panel-primary" data-collapsed="0">
 										<div class="panel-heading">
 											<div class="panel-title">Application Details</div>

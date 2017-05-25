@@ -40,6 +40,7 @@
 var sCode = getUrlParameter('code');
 var sName = getUrlParameter('name');
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
+var type = localStorage.getItem("type");
 var requestInfo = {};
 var currentObj;
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
@@ -48,6 +49,8 @@ $(document).ready(function(){
 	$.when(
 		
 		showLoader(),
+
+		loadBasedonType(),
 
 		doCheckUser(),
 
@@ -94,9 +97,9 @@ $(document).ready(function(){
 			data['lng'] = $('#lng').val();
 			data['address'] = $('#landmarkDetails').val();
 			data['serviceRequestId'] = '';
-			data['firstName'] = userName;
-			data['phone'] = userMobile;
-			data['email'] = userEmail;
+			data['firstName'] = $('#first_name').val() ? $('#first_name').val() : userName;
+			data['phone'] = $('#phone').val() ? $('#phone').val() : userMobile;
+			data['email'] = $('#email').val() ? $('#email').val() : userEmail;
 			data['status'] = true;
 			data['serviceName'] = '';
 			data['requestedDatetime'] = "";
@@ -129,7 +132,7 @@ $(document).ready(function(){
 			obj = {};
 			obj = {
 			    key: 'complainantAddress',
-			    name:''
+			    name:$('#complainantAddress').val() ? $('#complainantAddress').val() : ''
 			};
 			data['attribValues'].push(obj);
 
@@ -337,4 +340,12 @@ function doAck(response){
 function fromNewService(){
 	if(sCode)
 		$('header .title2').html(sName);
+}
+
+function loadBasedonType(){
+	if(type == 'CITIZEN'){//citizen
+		$('.citizenremove').remove();
+	}else if(type == 'EMPLOYEE'){//employee
+		
+	}
 }

@@ -1,5 +1,6 @@
 package org.egov.workflow.domain.service;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.egov.workflow.persistence.entity.ComplaintRouter;
 import org.egov.workflow.persistence.repository.*;
 import org.egov.workflow.web.contract.*;
@@ -48,10 +49,8 @@ public class ComplaintRouterServiceTest {
         when(complaintRouterRepository.findByComplaintTypeAndBoundary(complaintType.getId(), 1L)).thenReturn(router);
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(router);
         when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION")).thenReturn(router);
-        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L))
-                .thenReturn(getPositionHierarchies());
-        when(positionRepository.getByEmployeeCode("101010")).thenReturn(getPositions());
-        when(positionRepository.getById(10L, "tenantId")).thenReturn(getPositions().get(0));
+        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L,"tenantId")).thenReturn(getPositionHierarchies());
+        when(positionRepository.getById(10L, "tenantId")).thenReturn(getPositions());
     }
 
     @Test
@@ -70,19 +69,21 @@ public class ComplaintRouterServiceTest {
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(3L);
         expectedPosition.setName("Grievence_Officer_1");
-        when(positionRepository.getById(3L, "tenantId")).thenReturn(expectedPosition);
+        when(positionRepository.getById(3L, "tenantId")).
+            thenReturn(expectedPosition);
         final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 2L, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
     @Test
     public void test_should_return_assignee_for_complaint_without_positionhierarchy() {
-        when(employeeRepository.getByRoleName("Grievance Routing Officer","default")).thenReturn(getEmplyees());
-        when(positionRepository.getByEmployeeCode("C001")).thenReturn(getPositions());
+        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L,"tenantId")).thenReturn(getPositionHeirarchy());
+        when(employeeRepository.getByRoleCode("GRO","default")).thenReturn(getEmployees());
+        when(positionRepository.getById(10L,"default")).thenReturn(getPositions());
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 30L, "tenantId");
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 2L, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
@@ -161,23 +162,28 @@ public class ComplaintRouterServiceTest {
         return boundary;
     }
 
-    private List<PositionHierarchyResponse> getPositionHierarchies() {
-        final List<PositionHierarchyResponse> positionsHirarchies = new ArrayList<PositionHierarchyResponse>();
-        final PositionHierarchyResponse positionHierarchy = new PositionHierarchyResponse();
+    private PositionHierarchyResponse getPositionHierarchies() {
+        final List<PositionHierarchy> positionHierarchyArrayList=new ArrayList<PositionHierarchy>();
         final PositionResponse fromPosition = new PositionResponse();
         fromPosition.setId(2L);
         fromPosition.setName("Accounts_Officer_1");
-        positionHierarchy.setFromPosition(fromPosition);
+
         final PositionResponse toPosition = new PositionResponse();
         toPosition.setId(3L);
         toPosition.setName("Grievence_Officer_1");
-        positionHierarchy.setToPosition(toPosition);
-        positionHierarchy.setId(1L);
-        positionsHirarchies.add(positionHierarchy);
-        return positionsHirarchies;
+
+        PositionHierarchy positionHierarchy=PositionHierarchy.builder().fromPosition(fromPosition).toPosition(toPosition).build();
+
+        positionHierarchyArrayList.add(positionHierarchy);
+
+        return PositionHierarchyResponse.builder().positionHierarchy(positionHierarchyArrayList).build();
     }
 
-    private List<Employee> getEmplyees() {
+    private List<Employee> getEmployees() {
+        List<Assignment> assignments = new ArrayList<Assignment>();
+        Assignment assignment=Assignment.builder().id(1L).isPrimary(Boolean.TRUE).department(1L).position(10L).build();
+        assignments.add(assignment);
+
         final List<Employee> employees = new ArrayList<Employee>();
         final Employee employee = new Employee();
         employee.setCode("101010");
@@ -185,17 +191,21 @@ public class ComplaintRouterServiceTest {
         employee.setName("narasappa");
         employee.setUsername("egovernments");
         employee.setTenantId("tenantId");
+        employee.setAssignments(assignments);
+
         employees.add(employee);
         return employees;
     }
 
-    private List<PositionResponse> getPositions() {
-        final List<PositionResponse> positions = new ArrayList<PositionResponse>();
+    private PositionResponse getPositions() {
         final PositionResponse position = new PositionResponse();
         position.setId(10L);
         position.setName("Grievence_Officer_1");
-        positions.add(position);
-        return positions;
+        return position;
+    }
+
+    private PositionHierarchyResponse getPositionHeirarchy(){
+        return PositionHierarchyResponse.builder().responseInfo(ResponseInfo.builder().build()).positionHierarchy(new ArrayList<PositionHierarchy>()).build();
     }
 
 }

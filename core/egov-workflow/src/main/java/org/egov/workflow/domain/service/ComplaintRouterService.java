@@ -73,9 +73,9 @@ public class ComplaintRouterService {
 
     @Autowired
     public ComplaintRouterService(final ComplaintRouterRepository complaintRouterRepository,
-            final BoundaryRepository boundaryRepository, final PositionRepository positionRepository,
-            final ComplaintTypeRepository complaintTypeRepository, final EmployeeRepository employeeRepository,
-            final PositionHierarchyRepository positionHierarchyRepository) {
+                                  final BoundaryRepository boundaryRepository, final PositionRepository positionRepository,
+                                  final ComplaintTypeRepository complaintTypeRepository, final EmployeeRepository employeeRepository,
+                                  final PositionHierarchyRepository positionHierarchyRepository) {
         this.complaintRouterRepository = complaintRouterRepository;
         this.boundaryRepository = boundaryRepository;
         this.positionRepository = positionRepository;
@@ -85,7 +85,7 @@ public class ComplaintRouterService {
     }
 
     /**
-     * @param complaint
+     * @param
      * @return This api takes responsibility of returning suitable position for the given complaint Api considers two fields from
      * complaint a. complaintType b. Boundary The descision is taken as below 1. If complainttype and boundary from complaint is
      * found in router then return corresponding position 2. If only complainttype from complaint is found search router for
@@ -104,24 +104,23 @@ public class ComplaintRouterService {
         PositionResponse positionResponse = null;
         Employee employeeResponse = null;
         ComplaintRouter complaintRouter = null;
-        List<PositionResponse> positions = null;
-        List<PositionHierarchyResponse> positionHierarchies = null;
-        final List<BoundaryResponse> boundaries = new ArrayList<>(); 
+        PositionHierarchyResponse positionHierarchies = null;
+        final List<BoundaryResponse> boundaries = new ArrayList<>();
         if (assigneeId == null) {
             if (null != boundaryId) {
                 getParentBoundaries(boundaryId, boundaries, tenantId);
                 if (StringUtils.isNotBlank(complaintTypeCode)) {
                     for (final BoundaryResponse bndry : boundaries) {
                         final ComplaintTypeResponse complaintType = complaintTypeRepository
-                                .fetchComplaintTypeByCode(complaintTypeCode,tenantId);
+                            .fetchComplaintTypeByCode(complaintTypeCode, tenantId);
                         complaintRouter = complaintRouterRepository
-                                .findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
+                            .findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
                         if (null != complaintRouter)
                             break;
                     }
                     if (null == complaintRouter) {
                         final ComplaintTypeResponse complaintType = complaintTypeRepository
-                                .fetchComplaintTypeByCode(complaintTypeCode,tenantId);
+                            .fetchComplaintTypeByCode(complaintTypeCode, tenantId);
                         complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                     }
                     if (null == complaintRouter)
@@ -132,7 +131,7 @@ public class ComplaintRouterService {
                         }
                 }
             } else {
-                final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode,tenantId);
+                final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode, tenantId);
                 complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                 if (null == complaintRouter)
                     complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
@@ -144,17 +143,17 @@ public class ComplaintRouterService {
         } else
             try {
                 positionHierarchies = positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint",
-                        complaintTypeCode, assigneeId);
-                if (positionHierarchies.isEmpty() || positionHierarchies.contains(null)) {
-                    final List<Employee> employees = employeeRepository.getByRoleName("Grievance Routing Officer","default");
+                    complaintTypeCode, assigneeId, tenantId);
+                if (positionHierarchies.getPositionHierarchy().isEmpty() || positionHierarchies.getPositionHierarchy().contains(null)) {
+                    final List<Employee> employees = employeeRepository.getByRoleCode("GRO", "default");
                     if (!employees.isEmpty())
                         employeeResponse = employees.iterator().next();
-                    if (employeeResponse != null)
-                        positions = positionRepository.getByEmployeeCode(employeeResponse.getCode());
-                    if (!positions.isEmpty())
-                        positionResponse = positionRepository.getById(positions.iterator().next().getId(), tenantId);
+                    if (employeeResponse != null) {
+                        employeeResponse.getAssignments().stream().anyMatch(assignment -> assignment.getPosition().equals(Boolean.TRUE));
+                        positionResponse = positionRepository.getById(employeeResponse.getAssignments().get(0).getPosition(), tenantId);
+                    }
                 } else
-                    positionResponse = positionHierarchies.iterator().next().getToPosition();
+                    positionResponse = positionHierarchies.getPositionHierarchy().iterator().next().getToPosition();
             } catch (final EscalationException e) {
                 // Ignoring and logging exception since exception will cause
                 // multi city scheduler to fail for all remaining cities.
@@ -165,7 +164,7 @@ public class ComplaintRouterService {
     }
 
     public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList, final String tenantId) {
-        final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId,tenantId);
+        final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId, tenantId);
         if (bndry != null) {
             boundaryList.add(bndry);
             if (bndry.getParent() != null)

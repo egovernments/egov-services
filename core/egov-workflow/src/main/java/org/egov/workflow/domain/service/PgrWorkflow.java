@@ -10,16 +10,10 @@ import java.util.Set;
 import org.egov.workflow.persistence.entity.State;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
+import org.egov.workflow.persistence.repository.DepartmentRestRepository;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
 import org.egov.workflow.persistence.repository.UserRepository;
-import org.egov.workflow.web.contract.Attribute;
-import org.egov.workflow.web.contract.Department;
-import org.egov.workflow.web.contract.Employee;
-import org.egov.workflow.web.contract.PositionResponse;
-import org.egov.workflow.web.contract.ProcessInstance;
-import org.egov.workflow.web.contract.User;
-import org.egov.workflow.web.contract.UserResponse;
-import org.egov.workflow.web.contract.Value;
+import org.egov.workflow.web.contract.*;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,15 +28,18 @@ public class PgrWorkflow implements Workflow {
     private final StateService stateService;
     private final EmployeeRepository employeeRepository;
     private final UserRepository userRepository;
+    private final DepartmentRestRepository departmentRestRepository;
+
     public static final String STATE_DETAILS = "stateDetails";
 
     @Autowired
     public PgrWorkflow(final ComplaintRouterService complaintRouterService, final StateService stateService,
-            final EmployeeRepository employeeRepository, final UserRepository userRepository) {
+                       final EmployeeRepository employeeRepository, final UserRepository userRepository, final DepartmentRestRepository departmentRestRepository) {
         this.complaintRouterService = complaintRouterService;
         this.stateService = stateService;
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
+        this.departmentRestRepository=departmentRestRepository;
     }
 
     @Override
@@ -139,14 +136,16 @@ public class PgrWorkflow implements Workflow {
 
                 user = employeeRepository.getEmployeeForUserIdAndTenantId(state.getOwnerUser(),tenantId).getEmployees().get(0);
                 t.setOwner(user.getUsername() + "::" + user.getName());
-                final Department dept = user.getAssignments().get(0).getDepartment();
-                t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
+                final Long dept = user.getAssignments().get(0).getDepartment();
+                DepartmentRes departmentRes=departmentRestRepository.getDepartmentById(dept,tenantId);
+                t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
             } else {
                 final Employee emp = employeeRepository
                         .getEmployeeForPositionAndTenantId(stateHistory.getOwnerPosition(), new LocalDate(),tenantId).getEmployees().get(0);
                 t.setOwner(emp.getUsername() + "::" + emp.getName());
-                final Department dept = emp.getAssignments().get(0).getDepartment();
-                t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
+                final Long dept = emp.getAssignments().get(0).getDepartment();
+                DepartmentRes departmentRes=departmentRestRepository.getDepartmentById(dept,tenantId);
+                t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
             }
             t.setNatureOfTask(stateHistory.getNatureOfTask());
             tasks.add(t);
@@ -163,14 +162,16 @@ public class PgrWorkflow implements Workflow {
         if (state.getOwnerUser() != null) {
             user = employeeRepository.getEmployeeForUserIdAndTenantId(state.getOwnerUser(),tenantId).getEmployees().get(0);
             t.setOwner(user.getUsername() + "::" + user.getName());
-            final Department dept = user.getAssignments().get(0).getDepartment();
-            t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
+            final Long dept = user.getAssignments().get(0).getDepartment();
+            DepartmentRes departmentRes=departmentRestRepository.getDepartmentById(dept,tenantId);
+            t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
         } else {
             final Employee emp = employeeRepository.getEmployeeForPositionAndTenantId(state.getOwnerPosition(), new LocalDate(),tenantId)
                     .getEmployees().get(0);
             t.setOwner(emp.getUsername() + "::" + emp.getName());
-            final Department dept = emp.getAssignments().get(0).getDepartment();
-            t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
+            final Long dept = emp.getAssignments().get(0).getDepartment();
+            DepartmentRes departmentRes=departmentRestRepository.getDepartmentById(dept,tenantId);
+            t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
         }
         t.setNatureOfTask(state.getNatureOfTask());
         tasks.add(t);

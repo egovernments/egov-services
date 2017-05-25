@@ -8,6 +8,6 @@ import lombok.Getter;
 
 @Getter
 public class PositionServiceResponse {
-	@JsonProperty("Positions")
+	@JsonProperty("Position")
 	private List<PositionResponse> positions;
 }

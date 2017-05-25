@@ -24,24 +24,25 @@ public class PositionRepositoryTest {
     @Before
     public void setUp() throws Exception {
         final RestTemplate restTemplate = new RestTemplate();
-        String positionHost = "http://position";
-        String designationUrl = "/eis/position?tenantId={tenant_id}&id={assignee}";
+        String positionHost = "http:///hr-employee";
+        String designationUrl = "/employees/3/positions/_search?id=3&tenantId=default";
         positionRepository = new PositionRepository(restTemplate, positionHost, designationUrl);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 
     @Test
     public void test_should_get_position_for_given_assignee() throws Exception {
-        String tenantId = "ap.hyd";
+        String tenantId = "default";
         Long assigneeId = 1L;
-        String expectedUrl = "http://position/eis/position?tenantId=ap.hyd&id=1";
-        server.expect(once(), requestTo(expectedUrl)).andExpect(method(HttpMethod.GET))
+        final Long employeeId = 3L;
+        String expectedUrl = "http:///hr-employee/employees/3/positions/_search?id=3&tenantId=default";
+        server.expect(once(), requestTo(expectedUrl)).andExpect(method(HttpMethod.POST))
             .andRespond(withSuccess(resources.getFileContents("positionResponse.json"),
                 MediaType.APPLICATION_JSON_UTF8));
 
-        Position position = positionRepository.getDesignationIdForAssignee(tenantId, assigneeId);
+        Position position = positionRepository.getDesignationIdForAssignee(tenantId, assigneeId,employeeId);
         server.verify();
-        assertEquals(new Position("12", "18"), position);
+        assertEquals(new Position("2", "2"), position);
     }
 
 }

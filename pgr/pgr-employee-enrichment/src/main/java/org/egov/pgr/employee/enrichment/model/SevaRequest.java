@@ -59,6 +59,8 @@ public class SevaRequest {
         return Long.valueOf(assigneeId);
     }
 
+    public Long getEmployeeId() {return Long.valueOf(getRequestInfo().getUserInfo().getId());}
+
     private void setAssignee(String assignee) {
         getValues().put(VALUES_ASSIGNEE_ID, assignee);
         createOrUpdateAttributeEntry(VALUES_ASSIGNEE_ID, assignee);

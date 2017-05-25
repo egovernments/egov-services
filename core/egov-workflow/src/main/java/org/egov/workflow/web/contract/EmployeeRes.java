@@ -14,7 +14,7 @@ public class EmployeeRes {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("Employees")
+	@JsonProperty("Employee")
 	private List<Employee> employees = new ArrayList<Employee>();
 
 	public EmployeeRes responseInfo(ResponseInfo responseInfo) {

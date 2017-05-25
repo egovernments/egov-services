@@ -1,10 +1,15 @@
 package org.egov.pgr.employee.enrichment.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.employee.enrichment.model.Position;
 import org.egov.pgr.employee.enrichment.repository.contract.PositionsResponse;
+import org.egov.pgr.employee.enrichment.repository.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Date;
 
 @Service
 public class PositionRepository {
@@ -19,10 +24,11 @@ public class PositionRepository {
         this.restTemplate = restTemplate;
     }
 
-    public Position getDesignationIdForAssignee(String tenantId, long assigneeId) {
-        PositionsResponse response = restTemplate
-            .getForObject(this.url, PositionsResponse.class, tenantId, assigneeId);
-        return response.toDomain();
+    public Position getDesignationIdForAssignee(String tenantId, long assigneeId, long employeeId) {
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        PositionsResponse positions = restTemplate.postForObject(url, request,PositionsResponse.class,employeeId,assigneeId,tenantId);
+        return positions.toDomain();
     }
 
 }

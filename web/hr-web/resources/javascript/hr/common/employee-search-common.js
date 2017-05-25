@@ -138,7 +138,7 @@ componentWillUpdate() {
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
     $('#asOnDate').datepicker({
-        format: 'DD/MM/YYYY',
+        format: 'dd/mm/yyyy',
         // maxDate: new Date(),
         defaultDate: ""
     });
@@ -229,20 +229,52 @@ componentWillUpdate() {
     }
 
 
-    const renderAction=function(type,id){
-      if (type==="update") {
+    const renderAction=function(type,value,id){
+      if(value==="nominee") {
+
+          if (type==="update") {
+                  return (
+                          <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>update Nominee</a>
+                  );
+          } else if (type==="view") {
+                return (
+                        <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>view Nominee</a>
+                );
+          } else {
               return (
-                      <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>update Nominee</a>
+                      <a href={`app/hr/nomineeMaster/nominee.html?id=${id}`} >create Nominee</a>
               );
-      } else if (type==="view") {
+          }
+      } else if(value==="transfer"){
+        if (type==="update") {
+                return (
+                        <a href={`app/hr/transfer/transfer.html?id=${id}&type=${type}`}>Initiate</a>
+                );
+        } else if (type==="view") {
+              return (
+                      <a href={`app/hr/transfer/transfer.html?id=${id}&type=${type}`}>Initiate</a>
+              );
+        } else {
             return (
-                    <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>view Nominee</a>
+                    <a href={`app/hr/transfer/transfer.html?id=${id}`} >Initiate</a>
             );
+        }
       } else {
-          return (
-                  <a href={`app/hr/nomineeMaster/nominee.html?id=${id}`} >create Nominee</a>
-          );
+        if (type==="update") {
+                return (
+                        <a href={`app/hr/promotion/promotion.html?id=${id}&type=${type}`}>Initiate</a>
+                );
+        } else if (type==="view") {
+              return (
+                      <a href={`app/hr/promotion/promotion.html?id=${id}&type=${type}`}>Initiate</a>
+              );
+        } else {
+            return (
+                    <a href={`app/hr/promotion/promotion.html?id=${id}`} >Initiate</a>
+            );
+        }
       }
+
 }
 
   //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
@@ -267,7 +299,7 @@ componentWillUpdate() {
                     <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
                     <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.id)}
+                    {renderAction(getUrlVars()["type"],getUrlVars()["value"],item.id)}
                     </td>
                 </tr>
             );

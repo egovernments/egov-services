@@ -8,14 +8,14 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class DateFormatter {
     private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    public String toString(java.util.Date date) {
+    public static String toString(java.util.Date date) {
         if (date == null) {
             return null;
         }
         return DATE_TIME_FORMAT.format(date);
     }
 
-    public java.util.Date toDate(String dateTime) {
+    public static java.util.Date toDate(String dateTime) {
         if (isEmpty(dateTime)) {
             return null;
         }

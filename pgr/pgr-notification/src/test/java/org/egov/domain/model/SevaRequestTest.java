@@ -86,12 +86,12 @@ public class SevaRequestTest {
     public void test_should_return_complaint_status_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
-        final HashMap<String, String> values = new HashMap<>();
-        values.put("status", "statusName");
-        serviceRequest.put("values", values);
-        serviceRequest.put("values", values);
-        serviceRequest.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> locationEntry = new HashMap<>();
+        locationEntry.put("key", "status");
+        locationEntry.put("name", "statusName");
+        attributeValues.add(locationEntry);
+        serviceRequest.put("attribValues", attributeValues);
         serviceRequest.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequest);
 
@@ -166,11 +166,11 @@ public class SevaRequestTest {
     public void test_should_return_location_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequest = new HashMap<>();
-        final HashMap<String, String> values = new HashMap<>();
-        values.put("locationName", "locationName");
-        serviceRequest.put("values", values);
-        serviceRequest.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> locationEntry = new HashMap<>();
+        locationEntry.put("key", "locationName");
+        locationEntry.put("name", "locationName");
+        attributeValues.add(locationEntry);
         serviceRequest.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequest);
 

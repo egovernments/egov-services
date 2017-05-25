@@ -13,6 +13,7 @@ import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -150,6 +151,7 @@ public class ServiceRequest {
             .receivingMode(getReceivingMode())
             .receivingCenter(getReceivingCenter())
             .modifyServiceRequest(isUpdate)
+            .attributeEntries(toDomainAttributeEntries())
             .build();
     }
 
@@ -196,6 +198,17 @@ public class ServiceRequest {
 
     private String getDynamicSingleValue(String key) {
         return AttributeValues.getAttributeSingleValue(attribValues, key);
+    }
+
+    private List<org.egov.pgrrest.common.model.AttributeEntry> toDomainAttributeEntries() {
+        if (CollectionUtils.isEmpty(attribValues)) {
+            return Collections.emptyList();
+        }
+        return attribValues.stream().map(this::toDomainAttributeEntry).collect(Collectors.toList());
+    }
+
+    private org.egov.pgrrest.common.model.AttributeEntry toDomainAttributeEntry(AttributeEntry attributeEntry) {
+        return new org.egov.pgrrest.common.model.AttributeEntry(attributeEntry.getKey(), attributeEntry.getName());
     }
 
 }

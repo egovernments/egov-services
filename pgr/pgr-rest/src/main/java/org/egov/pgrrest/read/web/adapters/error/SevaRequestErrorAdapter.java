@@ -56,6 +56,10 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
 	private static final String DESCRIPTION_LENGTH_FIELD = "ServiceRequest.description";
 	private static final String DESCRIPTION_LENGTH_MESSAGE = "Description must have minimum 10 characters";
 
+    private static final String PROCESSINGFEE_CODE = "pgr.0016";
+    private static final String PROCESSINGFEE_FIELD = "ServiceRequest.processingfee";
+    private static final String PROCESSINGFEE_MESSAGE = "Processingfee not allowed while service request creation";
+
     @Override
     public ErrorResponse adapt(ServiceRequest model) {
         final Error error = getError(model);
@@ -82,6 +86,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
         addDescriptionValidationErrors(model, errorFields);
         addDescriptionLengthValidationErrors(model, errorFields);
         addCRNValidationErrors(model, errorFields);
+        addProcessingFeeError(model, errorFields);
         return errorFields;
     }
 
@@ -94,6 +99,18 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
                 .message(CRN_MANDATORY_MESSAGE)
                 .field(CRN_FIELD_NAME)
                 .build();
+        errorFields.add(errorField);
+    }
+
+    private void addProcessingFeeError(ServiceRequest model, List<ErrorField> errorFields) {
+        if (!model.isProcessingFeePresentForCreation()) {
+            return;
+        }
+        final ErrorField errorField = ErrorField.builder()
+            .code(PROCESSINGFEE_CODE)
+            .message(PROCESSINGFEE_FIELD)
+            .field(PROCESSINGFEE_MESSAGE)
+            .build();
         errorFields.add(errorField);
     }
 

@@ -1026,11 +1026,7 @@ $("#createAgreementForm").validate({
     var id2 = $('#goodWillAmount').val();
     if (id1 > id2) {
         showError("CollectedGoodWillAmount should be less than GoodWillAmount");
-        return false;
-    }
-    else
-    {
-    return true;
+        
     }
 
         // form.submit();

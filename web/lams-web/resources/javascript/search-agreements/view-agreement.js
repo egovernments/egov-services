@@ -491,7 +491,7 @@ $(document).ready(function() {
             _agrmntDet.workflowDetails = {
                 "businessKey": process.businessKey,
                 "type": "Agreement",
-                "assignee":getPositionId( $("#approver_name") && $("#approver_name").val() ? $("#approver_name").val() : process.initiatorPosition),
+                "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
                 "status": process.status,
                 "action": data.action
             };

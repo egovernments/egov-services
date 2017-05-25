@@ -343,7 +343,7 @@ $(document).ready(function() {
         if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
             for (var i = 0; i < process.attributes.validActions.values.length; i++) {
                 if (process.attributes.validActions.values[i].key)
-                    $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+                    $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "approve" || process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
                     $("#workFlowDetails").remove();
                 }

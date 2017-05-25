@@ -88,6 +88,31 @@ public class AccountCodePurposeService {
 	}
 
 	@Transactional
+	public AccountCodePurposeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("AccountCodePurposeUpdateAll"),
+						AccountCodePurposeContractRequest.class);
+		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
+		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (accountCodePurposeContractRequest.getAccountCodePurposes() != null
+				&& !accountCodePurposeContractRequest.getAccountCodePurposes().isEmpty()) {
+			for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
+					.getAccountCodePurposes()) {
+				AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
+				accountCodePurposeEntity.setVersion(findOne(accountCodePurposeEntity.getId()).getVersion());
+				accountCodePurposeJpaRepository.save(accountCodePurposeEntity);
+				AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
+						AccountCodePurposeContract.class);
+				accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
+			}
+		}
+		accountCodePurposeContractResponse
+				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
+		return accountCodePurposeContractResponse;
+	}
+
+	@Transactional
 	public AccountCodePurposeContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create()
 				.convertValue(financialContractRequestMap.get("AccountCodePurposeUpdate"),

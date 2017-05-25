@@ -22,11 +22,11 @@ public class AccountCodePurposeQueueRepository {
 
 	public void push(AccountCodePurposeContractRequest accountCodePurposeContractRequest) {
 		HashMap<String, Object> accountCodePurposeContractRequestMap = new HashMap<String, Object>();
-		if (accountCodePurposeContractRequest.getAccountCodePurposes() != null
-				&& !accountCodePurposeContractRequest.getAccountCodePurposes().isEmpty())
+		if ("create".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
 			accountCodePurposeContractRequestMap.put("AccountCodePurposeCreate", accountCodePurposeContractRequest);
-		else if (accountCodePurposeContractRequest.getAccountCodePurpose() != null
-				&& accountCodePurposeContractRequest.getAccountCodePurpose().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
+			accountCodePurposeContractRequestMap.put("AccountCodePurposeUpdateAll", accountCodePurposeContractRequest);
+		else if ("update".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
 			accountCodePurposeContractRequestMap.put("AccountCodePurposeUpdate", accountCodePurposeContractRequest);
 
 		financialProducer.sendMessage(accountCodePurposeValidatedTopic, accountCodePurposeValidatedKey,

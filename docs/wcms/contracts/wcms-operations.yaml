@@ -69,6 +69,34 @@ paths:
 
 definitions:
 
+  Timeline:
+    type: object
+    description: history of connection when the connectionStatus is getting updated during the workflow
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of a timeline object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      remarks:
+        type: string
+        minLength: 0
+        maxLength: 200
+        description: any comment by assigner user 
+      assigner:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+      assignee:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+      workflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
+      createdTime:
+        type: number
+        format: long
+        description: epoch of the time object is created
+ 
   Property:
     type: object
     properties:
@@ -259,6 +287,10 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/Document"
+      timelines:
+        type: array
+        items:
+          $ref: "#/definitions/Timeline"
       property:
         $ref: '#/definitions/Property'
       meter:

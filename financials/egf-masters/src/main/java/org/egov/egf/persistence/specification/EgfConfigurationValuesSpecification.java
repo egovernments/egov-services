@@ -10,26 +10,26 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.egov.egf.persistence.entity.FinancialConfigurationValues;
-import org.egov.egf.persistence.entity.FinancialConfigurationValues_;
-import org.egov.egf.persistence.queue.contract.FinancialConfigurationValuesContract;
+import org.egov.egf.persistence.entity.EgfConfigurationValues;
+import org.egov.egf.persistence.entity.EgfConfigurationValues_;
+import org.egov.egf.persistence.queue.contract.EgfConfigurationValuesContract;
 import org.springframework.data.jpa.domain.Specification;
 
-public class FinancialConfigurationValuesSpecification implements Specification<FinancialConfigurationValues> {
-	private FinancialConfigurationValuesContract criteria;
+public class EgfConfigurationValuesSpecification implements Specification<EgfConfigurationValues> {
+	private EgfConfigurationValuesContract criteria;
 
-	public FinancialConfigurationValuesSpecification(FinancialConfigurationValuesContract criteria) {
+	public EgfConfigurationValuesSpecification(EgfConfigurationValuesContract criteria) {
 		this.criteria = criteria;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<FinancialConfigurationValues> root, CriteriaQuery<?> query,
+	public Predicate toPredicate(Root<EgfConfigurationValues> root, CriteriaQuery<?> query,
 			CriteriaBuilder criteriaBuilder) {
-		Path<Long> id = root.get(FinancialConfigurationValues_.id);
-		Path<Long> keyId = root.get(FinancialConfigurationValues_.keyId);
-		Path<String> value = root.get(FinancialConfigurationValues_.value);
-		Path<Date> effectiveFrom = root.get(FinancialConfigurationValues_.effectiveFrom);
-		Path<String> tenantId = root.get(FinancialConfigurationValues_.tenantId);
+		Path<Long> id = root.get(EgfConfigurationValues_.id);
+		Path<Long> keyId = root.get(EgfConfigurationValues_.keyId);
+		Path<String> value = root.get(EgfConfigurationValues_.value);
+		Path<Date> effectiveFrom = root.get(EgfConfigurationValues_.effectiveFrom);
+		Path<String> tenantId = root.get(EgfConfigurationValues_.tenantId);
 		final List<Predicate> predicates = new ArrayList<>();
 		if (criteria != null) {
 			if (criteria.getId() != null) {

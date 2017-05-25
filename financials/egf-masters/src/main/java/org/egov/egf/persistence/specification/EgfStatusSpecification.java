@@ -9,25 +9,25 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.egov.egf.persistence.entity.FinancialStatus;
-import org.egov.egf.persistence.entity.FinancialStatus_;
-import org.egov.egf.persistence.queue.contract.FinancialStatusContract;
+import org.egov.egf.persistence.entity.EgfStatus;
+import org.egov.egf.persistence.entity.EgfStatus_;
+import org.egov.egf.persistence.queue.contract.EgfStatusContract;
 import org.springframework.data.jpa.domain.Specification;
 
-public class FinancialStatusSpecification implements Specification<FinancialStatus> {
-	private FinancialStatusContract criteria;
+public class EgfStatusSpecification implements Specification<EgfStatus> {
+	private EgfStatusContract criteria;
 
-	public FinancialStatusSpecification(FinancialStatusContract criteria) {
+	public EgfStatusSpecification(EgfStatusContract criteria) {
 		this.criteria = criteria;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<FinancialStatus> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-		Path<Long> id = root.get(FinancialStatus_.id);
-		Path<String> code = root.get(FinancialStatus_.code);
-		Path<String> description = root.get(FinancialStatus_.description);
-		Path<String> objectName = root.get(FinancialStatus_.objectName);
-		Path<String> tenantId = root.get(FinancialStatus_.tenantId);
+	public Predicate toPredicate(Root<EgfStatus> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+		Path<Long> id = root.get(EgfStatus_.id);
+		Path<String> code = root.get(EgfStatus_.code);
+		Path<String> description = root.get(EgfStatus_.description);
+		Path<String> moduleType = root.get(EgfStatus_.moduleType);
+		Path<String> tenantId = root.get(EgfStatus_.tenantId);
 		final List<Predicate> predicates = new ArrayList<>();
 		if (criteria != null) {
 			if (criteria.getId() != null) {
@@ -43,7 +43,7 @@ public class FinancialStatusSpecification implements Specification<FinancialStat
 			}
 
 			if (criteria.getModuleType() != null) {
-				predicates.add(criteriaBuilder.equal(objectName, criteria.getModuleType()));
+				predicates.add(criteriaBuilder.equal(moduleType, criteria.getModuleType()));
 			}
 
 			if (criteria.getTenantId() != null) {

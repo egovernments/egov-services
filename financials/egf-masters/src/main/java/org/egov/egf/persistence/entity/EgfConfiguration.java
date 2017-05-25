@@ -57,20 +57,20 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "egeis_egfConfiguration")
-@SequenceGenerator(name = FinancialConfiguration.SEQ_EGEIS_EGFCONFIGURATION, sequenceName = FinancialConfiguration.SEQ_EGEIS_EGFCONFIGURATION, allocationSize = 1)
+@SequenceGenerator(name = EgfConfiguration.SEQ_EGEIS_EGFCONFIGURATION, sequenceName = EgfConfiguration.SEQ_EGEIS_EGFCONFIGURATION, allocationSize = 1)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class FinancialConfiguration extends AbstractAuditable {
+public class EgfConfiguration extends AbstractAuditable {
 
 	private static final long serialVersionUID = -3534756811207111932L;
 
 	public static final String SEQ_EGEIS_EGFCONFIGURATION = "SEQ_EGEIS_EGFCONFIGURATION";
 
 	@Id
-	@GeneratedValue(generator = FinancialConfiguration.SEQ_EGEIS_EGFCONFIGURATION, strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = EgfConfiguration.SEQ_EGEIS_EGFCONFIGURATION, strategy = GenerationType.SEQUENCE)
 	@NotNull
 	private Long id;
 

@@ -38,41 +38,55 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.egf.persistence.queue.contract;
+package org.egov.egf.persistence.entity;
 
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Builder
+@Entity
+@Table(name = "egeis_egfConfigurationValues")
+@SequenceGenerator(name = EgfConfigurationValues.SEQ_EGEIS_EGFCONFIGURATIONVALUES, sequenceName = EgfConfigurationValues.SEQ_EGEIS_EGFCONFIGURATIONVALUES, allocationSize = 1)
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonPropertyOrder({ "id", "keyName" })
-public class FinancialConfigurationContract extends AuditableContract {
+@ToString
+public class EgfConfigurationValues extends AbstractAuditable {
 
+	private static final long serialVersionUID = 2066693483783717492L;
+
+	public static final String SEQ_EGEIS_EGFCONFIGURATIONVALUES = "SEQ_EGEIS_EGFCONFIGURATIONVALUES";
+
+	@Id
+	@GeneratedValue(generator = EgfConfigurationValues.SEQ_EGEIS_EGFCONFIGURATIONVALUES, strategy = GenerationType.SEQUENCE)
 	@NotNull
 	private Long id;
 
 	@NotNull
-	@Size(min = 3, max = 50)
-	private String keyName;
+	private Long keyId;
 
 	@NotNull
-	@Size(min = 3, max = 250)
-	private String description;
+	@Size(min = 1, max = 1000)
+	private String value;
 
-	public FinancialConfigurationContract(final String id) {
-		super();
-		this.id = Long.valueOf(id);
-	}
+	@NotNull
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date effectiveFrom;
 
 }

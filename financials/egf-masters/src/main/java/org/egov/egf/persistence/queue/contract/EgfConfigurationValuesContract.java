@@ -60,7 +60,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonPropertyOrder({ "id", "keyId", "value" })
-public class FinancialConfigurationValuesContract extends AuditableContract {
+public class EgfConfigurationValuesContract extends AuditableContract {
 
 	@NotNull
 	private Long id;
@@ -76,7 +76,7 @@ public class FinancialConfigurationValuesContract extends AuditableContract {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date effectiveFrom;
 
-	public FinancialConfigurationValuesContract(final String id) {
+	public EgfConfigurationValuesContract(final String id) {
 		super();
 		this.id = Long.valueOf(id);
 	}

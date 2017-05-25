@@ -39,17 +39,14 @@
  */
 package org.egov.egf.persistence.queue.contract;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
 
-@JsonInclude(value = Include.NON_NULL)
-public @Data class FinancialConfigurationContractResponse {
-	private ResponseInfo responseInfo;
-	private List<FinancialConfigurationContract> financialConfigurations;
-	private FinancialConfigurationContract financialConfiguration;
-	private Pagination page;
+public @Data class EgfConfigurationValuesContractRequest {
+	private RequestInfo requestInfo = new RequestInfo();
+	private List<EgfConfigurationValuesContract> egfConfigurationValueses = new ArrayList<EgfConfigurationValuesContract>();
+	private EgfConfigurationValuesContract egfConfigurationValues = new EgfConfigurationValuesContract();
+	private Pagination page = new Pagination();
 }

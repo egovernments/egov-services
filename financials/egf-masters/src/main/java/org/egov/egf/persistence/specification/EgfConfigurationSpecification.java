@@ -9,25 +9,24 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.egov.egf.persistence.entity.FinancialConfiguration;
-import org.egov.egf.persistence.entity.FinancialConfiguration_;
-import org.egov.egf.persistence.queue.contract.FinancialConfigurationContract;
+import org.egov.egf.persistence.entity.EgfConfiguration;
+import org.egov.egf.persistence.entity.EgfConfiguration_;
+import org.egov.egf.persistence.queue.contract.EgfConfigurationContract;
 import org.springframework.data.jpa.domain.Specification;
 
-public class FinancialConfigurationSpecification implements Specification<FinancialConfiguration> {
-	private FinancialConfigurationContract criteria;
+public class EgfConfigurationSpecification implements Specification<EgfConfiguration> {
+	private EgfConfigurationContract criteria;
 
-	public FinancialConfigurationSpecification(FinancialConfigurationContract criteria) {
+	public EgfConfigurationSpecification(EgfConfigurationContract criteria) {
 		this.criteria = criteria;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<FinancialConfiguration> root, CriteriaQuery<?> query,
-			CriteriaBuilder criteriaBuilder) {
-		Path<Long> id = root.get(FinancialConfiguration_.id);
-		Path<String> keyName = root.get(FinancialConfiguration_.keyName);
-		Path<String> description = root.get(FinancialConfiguration_.description);
-		Path<String> tenantId = root.get(FinancialConfiguration_.tenantId);
+	public Predicate toPredicate(Root<EgfConfiguration> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+		Path<Long> id = root.get(EgfConfiguration_.id);
+		Path<String> keyName = root.get(EgfConfiguration_.keyName);
+		Path<String> description = root.get(EgfConfiguration_.description);
+		Path<String> tenantId = root.get(EgfConfiguration_.tenantId);
 		final List<Predicate> predicates = new ArrayList<>();
 		if (criteria != null) {
 			if (criteria.getId() != null) {

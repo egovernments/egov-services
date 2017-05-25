@@ -336,7 +336,7 @@ definitions:
 
   MeterReading:
     type: object
-    description: Captures periodical meter reading
+    description: Captures periodical meter reading of a connection
     properties:
       id:
        type: integer
@@ -452,7 +452,9 @@ definitions:
       workOrder:
         $ref: "#/definitions/WorkOrder"
       meterReadings:
-        $ref: "#/definitions/MeterReading"
+        type: array
+        items:
+          $ref: "#/definitions/MeterReading"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

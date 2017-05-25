@@ -375,7 +375,7 @@ sync:
 
         - source: isactive
           destination: active
-          Type: boolean
+          Type: Boolean
           shouldSource: True
           shouldSync: True
 
@@ -517,7 +517,7 @@ sync:
 
         - source: isactive
           destination: active
-          type: boolean
+          type: Boolean
           shouldSource: True
           shouldSync: True
 

@@ -570,15 +570,19 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 	if(this.name == 'CHECKLIST'){
 		var this_checklist = '';
 		for(var i=0; i < this.attribValues.length; i++){
-			if(this.attribValues[i]["isActive"])
+			if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'EMPLOYEE')
 				this_checklist += '<div class="form-group"><div class="col-sm-1">'+(i+1)+'</div><div class="col-sm-1"><input type="checkbox" name="'+this.attribValues[i].key+'"></div><div class="col-sm-10" data-translate="'+this.attribValues[i].name+'"></div></div>'
+			else if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'CITIZEN')
+				this_checklist += '<div class="form-group"><div class="col-sm-1">'+(i+1)+'</div><div class="col-sm-1"><input type="checkbox" name="'+this.attribValues[i].key+'" '+this.mode+'></div><div class="col-sm-10" data-translate="'+this.attribValues[i].name+'"></div></div>'
 		}
 		this.template = this_checklist;
 	}else if(this.name == 'DOCUMENTS'){
 		var this_documents = '<div class="form-group">';
 		for(var i=0; i < this.attribValues.length; i++){
-			if(this.attribValues[i]["isActive"])
+			if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'EMPLOYEE')
 				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control"></div></div>'
+			else if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'CITIZEN')
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control"></div></div>'
 		}
 		this_documents += '</div>';
 		this.template = this_documents;

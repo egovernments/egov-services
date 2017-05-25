@@ -516,7 +516,7 @@ $(document).ready(function() {
                 showError(response["statusText"]);
             }
         } else {
-            delete _agrmntDet.assignee;
+            delete _agrmntDet.workflowDetails.assignee;
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
                 type: 'POST',

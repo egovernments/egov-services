@@ -16,7 +16,6 @@ public class SevaRequest {
     private static final String SERVICE_NAME = "serviceName";
     private static final String SERVICE_CODE = "serviceCode";
     private static final String VALUES_STATUS = "status";
-    private static final String VALUES = "values";
     private static final String DESCRIPTION = "description";
     private static final String TENANT_ID = "tenantId";
     private static final String FIRST_NAME = "firstName";
@@ -29,7 +28,6 @@ public class SevaRequest {
     private static final String ATTRIBUTE_VALUES = "attribValues";
     private static final String ATTRIBUTE_VALUES_KEY_FIELD = "key";
     private static final String ATTRIBUTE_VALUES_NAME_FIELD = "name";
-    private static final String ATTRIBUTE_VALUES_POPULATED_FLAG = "isAttribValuesPopulated";
     private static final String POST = "POST";
     private static final String PUT = "PUT";
     private static final String PROCESSING_FEE = "PROCESSINGFEE";
@@ -96,11 +94,11 @@ public class SevaRequest {
     }
 
     public boolean isCreate() {
-       return POST.equals(getRequestInfo().get(ACTION));
+        return POST.equals(getRequestInfo().get(ACTION));
     }
 
     public boolean isUpdate() {
-       return PUT.equals(getRequestInfo().get(ACTION));
+        return PUT.equals(getRequestInfo().get(ACTION));
     }
 
     public String getProcessingFee() {
@@ -128,11 +126,6 @@ public class SevaRequest {
         return (HashMap<String, Object>) this.sevaRequest.get(REQUEST_INFO);
     }
 
-    @SuppressWarnings("unchecked")
-    private HashMap<String, String> getValues() {
-        return (HashMap<String, String>) this.serviceRequest.get(VALUES);
-    }
-
     private Date getCreatedDate() {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         try {
@@ -140,10 +133,6 @@ public class SevaRequest {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private boolean isAttributeValuesPopulated() {
-        return (boolean) this.serviceRequest.get(ATTRIBUTE_VALUES_POPULATED_FLAG);
     }
 
     @SuppressWarnings("unchecked")
@@ -154,15 +143,11 @@ public class SevaRequest {
     }
 
     private String getDynamicSingleValue(String key) {
-        if (isAttributeValuesPopulated()) {
-            return getAttributeValues().stream()
-                .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
-                .findFirst()
-                .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
-                .orElse(null);
-        } else {
-            return getValues().get(key);
-        }
+        return getAttributeValues().stream()
+            .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
+            .findFirst()
+            .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
+            .orElse(null);
     }
 
 }

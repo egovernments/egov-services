@@ -474,10 +474,10 @@ $(document).ready(function() {
             }
         }
 
-        for (var i = 0; i < tempEmploye.assignments.length; i++) {
-            if (tempEmploye.assignments[i].isPrimary) {
-                return tempEmploye.assignments[i].position;
-            }
+        if(tempEmploye && tempEmploye.assignments) {
+            return tempEmploye.assignments[0].position;
+        } else {
+            return "";
         }
     }
 

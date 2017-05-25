@@ -36,14 +36,6 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
     private static final String PHONE_FIELD_NAME = "ServiceRequest.phone";
     private static final String PHONE_MANDATORY_MESSAGE = "Phone is required";
 
-    private static final String MANDATORY_RECEIVING_MODE_CODE = "pgr.0009";
-    private static final String RECEIVING_MODE_FIELD_NAME = "ServiceRequest.values.receivingMode";
-    private static final String RECEIVING_MODE_MANDATORY_MESSAGE = "Receiving mode is required";
-
-    private static final String MANDATORY_RECEIVING_CENTER_CODE = "pgr.0010";
-    private static final String RECEIVING_CENTER_FIELD_NAME = "ServiceRequest.values.receivingCenter";
-    private static final String RECEIVING_CENTER_MANDATORY_MESSAGE = "Receiving center is required";
-
     private static final String MANDATORY_TENANT_ID_CODE = "pgr.0011";
     private static final String TENANT_ID_FIELD_NAME = "ServiceRequest.tenantId";
     private static final String TENANT_ID_MANDATORY_MESSAGE = "Tenant id is required";
@@ -85,8 +77,6 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
         addLocationIdValidationErrors(model, errorFields);
         addComplainantFirstNameValidationErrors(model, errorFields);
         addComplainantMobileValidationErrors(model, errorFields);
-        addReceivingModeValidationErrors(model, errorFields);
-        addReceivingCenterValidationErrors(model, errorFields);
         addTenantIdValidationErrors(model, errorFields);
         addComplaintTypeCodeValidationErrors(model, errorFields);
         addDescriptionValidationErrors(model, errorFields);
@@ -120,7 +110,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
     }
 
     private void addComplaintTypeCodeValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.isComplaintTypeAbsent()) {
+        if (!model.isServiceRequestTypeAbsent()) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
@@ -139,30 +129,6 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
                 .code(MANDATORY_DESCRIPTION_CODE)
                 .message(DESCRIPTION_MANDATORY_MESSAGE)
                 .field(MANDATORY_DESCRIPTION_FIELD_NAME)
-                .build();
-        errorFields.add(errorField);
-    }
-
-    private void addReceivingModeValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.isReceivingModeAbsent()) {
-            return;
-        }
-        final ErrorField errorField = ErrorField.builder()
-                .code(MANDATORY_RECEIVING_MODE_CODE)
-                .message(RECEIVING_MODE_MANDATORY_MESSAGE)
-                .field(RECEIVING_MODE_FIELD_NAME)
-                .build();
-        errorFields.add(errorField);
-    }
-
-    private void addReceivingCenterValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.isReceivingCenterAbsent()) {
-            return;
-        }
-        final ErrorField errorField = ErrorField.builder()
-                .code(MANDATORY_RECEIVING_CENTER_CODE)
-                .message(RECEIVING_CENTER_MANDATORY_MESSAGE)
-                .field(RECEIVING_CENTER_FIELD_NAME)
                 .build();
         errorFields.add(errorField);
     }

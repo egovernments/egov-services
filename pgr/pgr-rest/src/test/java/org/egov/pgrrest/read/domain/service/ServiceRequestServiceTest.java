@@ -184,9 +184,8 @@ public class ServiceRequestServiceTest {
             .tenantId(TENANT_ID)
             .description("description")
             .crn("crn")
-            .lastAccessedTime(new Date())
             .department(2L)
-            .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
             .build();
     }
 

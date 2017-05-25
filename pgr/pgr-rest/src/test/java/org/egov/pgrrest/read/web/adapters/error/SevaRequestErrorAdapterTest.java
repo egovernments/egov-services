@@ -92,34 +92,6 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void testShouldSetErrorWhenReceivingModeIsNotPresent() {
-        when(complaint.isReceivingModeAbsent()).thenReturn(true);
-
-        final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
-
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
-        assertNotNull(errorFields);
-        assertEquals(1, errorFields.size());
-        assertEquals("pgr.0009", errorFields.get(0).getCode());
-        assertEquals("ServiceRequest.values.receivingMode", errorFields.get(0).getField());
-        assertEquals("Receiving mode is required", errorFields.get(0).getMessage());
-    }
-
-    @Test
-    public void testShouldSetErrorWhenReceivingCenterIsNotPresent() {
-        when(complaint.isReceivingCenterAbsent()).thenReturn(true);
-
-        final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
-
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
-        assertNotNull(errorFields);
-        assertEquals(1, errorFields.size());
-        assertEquals("pgr.0010", errorFields.get(0).getCode());
-        assertEquals("ServiceRequest.values.receivingCenter", errorFields.get(0).getField());
-        assertEquals("Receiving center is required", errorFields.get(0).getMessage());
-    }
-
-    @Test
     public void testShouldSetErrorWhenTenantIdIsNotPresent() {
         when(complaint.isTenantIdAbsent()).thenReturn(true);
 
@@ -135,7 +107,7 @@ public class SevaRequestErrorAdapterTest {
 
     @Test
     public void testShouldSetErrorWhenCompaintTypeCodeIsNotPresent() {
-        when(complaint.isComplaintTypeAbsent()).thenReturn(true);
+        when(complaint.isServiceRequestTypeAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 

@@ -27,7 +27,7 @@ public class ServiceRequestTest {
             .serviceRequestLocation(serviceRequestLocation)
             .tenantId("tenantId")
             .description("description")
-            .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
             .build();
 
         complaint.validate();
@@ -50,7 +50,7 @@ public class ServiceRequestTest {
             .tenantId("tenantId")
             .description("description")
             .crn("crn")
-            .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
             .build();
 
         complaint.validate();
@@ -66,7 +66,7 @@ public class ServiceRequestTest {
             .authenticatedUser(getCitizen())
             .serviceRequestLocation(serviceRequestLocation)
             .modifyServiceRequest(true)
-            .complaintType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
             .build();
 
         assertTrue(complaint.isLocationAbsent());
@@ -97,7 +97,7 @@ public class ServiceRequestTest {
             .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
-            .complaintType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
             .build();
         assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
@@ -117,7 +117,7 @@ public class ServiceRequestTest {
             .requester(complainant)
             .authenticatedUser(getEmployee())
             .serviceRequestLocation(serviceRequestLocation)
-            .complaintType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
             .build();
         assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
@@ -137,7 +137,7 @@ public class ServiceRequestTest {
             .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
-            .complaintType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
             .build();
 
         assertTrue(complaint.isRequesterAbsent());
@@ -158,7 +158,7 @@ public class ServiceRequestTest {
                 .requester(complainant)
                 .authenticatedUser(getEmployee())
                 .serviceRequestLocation(serviceRequestLocation)
-                .complaintType(new ServiceRequestType(null, null, "tenantId"))
+                .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
                 .build();
 
         assertTrue(complaint.isRequesterAbsent());
@@ -182,7 +182,7 @@ public class ServiceRequestTest {
                 .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
-                .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
                 .build();
 
         assertFalse(complaint.isRequesterAbsent());
@@ -206,7 +206,7 @@ public class ServiceRequestTest {
                 .tenantId("tenantId")
                 .description("description")
                 .receivingMode("receivingMode")
-                .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
                 .build();
 
         complaint.validate();
@@ -228,7 +228,7 @@ public class ServiceRequestTest {
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
                 .description("description")
-                .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
                 .build();
 
         assertTrue(complaint.isTenantIdAbsent());
@@ -251,7 +251,7 @@ public class ServiceRequestTest {
                 .description(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
-                .complaintType(new ServiceRequestType(null, null, "tenantId"))
+                .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
                 .build();
 
         assertTrue(complaint.isDescriptionAbsent());
@@ -274,7 +274,7 @@ public class ServiceRequestTest {
             .description("description")
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
-            .complaintType(new ServiceRequestType(null, null, null))
+            .serviceRequestType(new ServiceRequestType(null, null, null))
             .build();
 
 		assertFalse(complaint.descriptionLength());
@@ -295,12 +295,12 @@ public class ServiceRequestTest {
                 .requester(complainant)
                 .tenantId("tenantId")
                 .description("description")
-                .complaintType(new ServiceRequestType("type", null, "tenantId"))
+                .serviceRequestType(new ServiceRequestType("type", null, "tenantId"))
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
                 .build();
 
-        assertTrue(complaint.isComplaintTypeAbsent());
+        assertTrue(complaint.isServiceRequestTypeAbsent());
         complaint.validate();
     }
 
@@ -318,7 +318,7 @@ public class ServiceRequestTest {
                 .requester(complainant)
                 .tenantId("tenantId")
                 .description("description")
-                .complaintType(new ServiceRequestType("type", "complaintTypeCode", "tenantId"))
+                .serviceRequestType(new ServiceRequestType("type", "complaintTypeCode", "tenantId"))
                 .crn(null)
                 .modifyServiceRequest(true)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
@@ -343,7 +343,7 @@ public class ServiceRequestTest {
                 .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
-                .complaintType(new ServiceRequestType(null, "complaintTypeCode", "tenantId"))
+                .serviceRequestType(new ServiceRequestType(null, "complaintTypeCode", "tenantId"))
                 .build();
     }
 

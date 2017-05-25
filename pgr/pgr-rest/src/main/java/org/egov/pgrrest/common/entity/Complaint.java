@@ -2,9 +2,9 @@ package org.egov.pgrrest.common.entity;
 
 import lombok.*;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 
 import javax.persistence.*;
@@ -130,7 +130,7 @@ public class Complaint extends AbstractAuditable<Long> {
 
         return ServiceRequest.builder()
             .serviceRequestLocation(new ServiceRequestLocation(coordinates, getCrossHierarchyId(), locationId))
-            .complaintType(complaintType)
+            .serviceRequestType(complaintType)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .requester(complainant.toDomain())
             .address(landmarkDetails)
@@ -142,7 +142,6 @@ public class Complaint extends AbstractAuditable<Long> {
             .escalationDate(getEscalationDate())
             .closed(isCompleted())
             .department(getDepartmentId())
-            .lastAccessedTime(lastAccessedTime)
             .receivingMode(getReceivingModeCode())
             .receivingCenter(getReceivingCenterId())
             .childLocation(getChildLocationId())

@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.any;
@@ -63,20 +64,26 @@ public class IndexerListenerTest {
 
     private HashMap<String, Object> getSevaRequestMap() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", "REGISTERED");
         final HashMap<String, Object> serviceRequest = new HashMap<>();
-        serviceRequest.put("values", valuesMap);
+        final ArrayList<HashMap<String, String>> attributeEntries = new ArrayList<>();
+        final HashMap<String, String> statusEntry = new HashMap<>();
+        statusEntry.put("key", "status");
+        statusEntry.put("name", "REGISTERED");
+        attributeEntries.add(statusEntry);
+        serviceRequest.put("attribValues", attributeEntries);
         sevaRequestMap.put("serviceRequest", serviceRequest);
         return sevaRequestMap;
     }
     
     private HashMap<String, Object> getSevaRequestMapForUpdate() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", "COMPLETED");
         final HashMap<String, Object> serviceRequest = new HashMap<>();
-        serviceRequest.put("values", valuesMap);
+        final ArrayList<HashMap<String, String>> attributeEntries = new ArrayList<>();
+        final HashMap<String, String> statusEntry = new HashMap<>();
+        statusEntry.put("key", "status");
+        statusEntry.put("name", "COMPLETED");
+        attributeEntries.add(statusEntry);
+        serviceRequest.put("attribValues", attributeEntries);
         sevaRequestMap.put("serviceRequest", serviceRequest);
         return sevaRequestMap;
     }

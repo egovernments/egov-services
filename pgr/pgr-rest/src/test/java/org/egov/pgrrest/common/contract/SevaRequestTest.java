@@ -27,19 +27,25 @@ public class SevaRequestTest {
     private org.egov.pgrrest.read.domain.model.ServiceRequest getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
         final Coordinates coordinates = new Coordinates(0d, 0d);
-        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder().coordinates(coordinates)
-                .crossHierarchyId("id").build();
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
+            .coordinates(coordinates)
+            .crossHierarchyId("id")
+            .build();
 
-        return org.egov.pgrrest.read.domain.model.ServiceRequest.builder().tenantId(TENANT_ID).authenticatedUser(user)
-                .requester(Requester.builder().build()).crn(CRN).serviceRequestLocation(serviceRequestLocation)
-                .complaintType(new ServiceRequestType(null, null, TENANT_ID)).build();
+        return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
+            .tenantId(TENANT_ID)
+            .authenticatedUser(user)
+            .requester(Requester.builder().build())
+            .crn(CRN)
+            .serviceRequestLocation(serviceRequestLocation)
+            .serviceRequestType(new ServiceRequestType(null, null, TENANT_ID)).build();
     }
 
     private AuthenticatedUser getAuthenticatedUser() {
         return AuthenticatedUser.builder()
-                .id(1L)
-                .type(UserType.CITIZEN)
-                .build();
+            .id(1L)
+            .type(UserType.CITIZEN)
+            .build();
     }
 
     private SevaRequest getSevaRequest() {

@@ -52,7 +52,6 @@ public class ComplaintTest {
         assertEquals("3", serviceRequestLocation.getLocationId());
         assertEquals("4", serviceRequestLocation.getCrossHierarchyId());
         assertEquals(new Coordinates(1.0, 2.0), serviceRequestLocation.getCoordinates());
-        assertEquals(toDate(lastAccessedDateTime), domainComplaint.getLastAccessedTime());
         assertEquals(toDate(lastModifiedDateTime), domainComplaint.getLastModifiedDate());
         assertEquals(toDate(createdDateTime), domainComplaint.getCreatedDate());
         assertEquals(Long.valueOf(3), domainComplaint.getDepartment());
@@ -71,7 +70,7 @@ public class ComplaintTest {
         assertTrue(authenticatedUser.isAnonymousUser());
         final ServiceRequestType expectedComplaintType = new ServiceRequestType(
                 "complaintName", "complaintCode", "tenantId");
-        assertEquals(expectedComplaintType, domainComplaint.getComplaintType());
+        assertEquals(expectedComplaintType, domainComplaint.getServiceRequestType());
         assertEquals("EMAIL", domainComplaint.getReceivingMode());
         assertEquals("4", domainComplaint.getReceivingCenter());
         assertEquals("5", domainComplaint.getChildLocation());

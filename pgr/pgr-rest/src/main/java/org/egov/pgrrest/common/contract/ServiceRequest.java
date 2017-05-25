@@ -7,12 +7,14 @@ import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.ServiceRequestType;
-import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -93,20 +95,13 @@ public class ServiceRequest {
 
     private String accountId;
 
-    private Map<String, String> values = new HashMap<>();
-
-    //  Short term feature flag - to support values and attribValues usage
-//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
-    @JsonProperty("isAttribValuesPopulated")
-    private boolean attribValuesPopulated;
-
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
     public ServiceRequest(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         crn = complaint.getCrn();
         status = complaint.isClosed();
-        complaintTypeName = complaint.getComplaintType().getName();
-        complaintTypeCode = complaint.getComplaintType().getCode();
+        complaintTypeName = complaint.getServiceRequestType().getName();
+        complaintTypeCode = complaint.getServiceRequestType().getCode();
         description = complaint.getDescription();
         createdDate = complaint.getCreatedDate();
         lastModifiedDate = complaint.getLastModifiedDate();
@@ -119,7 +114,6 @@ public class ServiceRequest {
         lastName = null;
         phone = complaint.getRequester().getMobile();
         email = complaint.getRequester().getEmail();
-        attribValuesPopulated = true;
         if (!CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
             attribValues = complaint.getAttributeEntries()
                 .stream()
@@ -141,12 +135,12 @@ public class ServiceRequest {
 
     private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser, boolean
         isUpdate) {
-        final ServiceRequestLocation serviceRequestLocation = getComplaintLocation();
+        final ServiceRequestLocation serviceRequestLocation = getServiceRequestLocation();
         final Requester complainant = getComplainant();
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .authenticatedUser(authenticatedUser)
             .crn(crn)
-            .complaintType(new ServiceRequestType(complaintTypeName, complaintTypeCode, tenantId))
+            .serviceRequestType(new ServiceRequestType(complaintTypeName, complaintTypeCode, tenantId))
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)
@@ -171,7 +165,7 @@ public class ServiceRequest {
             .build();
     }
 
-    private ServiceRequestLocation getComplaintLocation() {
+    private ServiceRequestLocation getServiceRequestLocation() {
         final Coordinates coordinates = new Coordinates(latitude, longitude);
         return ServiceRequestLocation.builder()
             .coordinates(coordinates)
@@ -201,11 +195,7 @@ public class ServiceRequest {
     }
 
     private String getDynamicSingleValue(String key) {
-        if (attribValuesPopulated) {
-            return AttributeValues.getAttributeSingleValue(attribValues, key);
-        } else {
-            return values.get(key);
-        }
+        return AttributeValues.getAttributeSingleValue(attribValues, key);
     }
 
 }

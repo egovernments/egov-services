@@ -515,7 +515,10 @@ function getDepartmentbyId(departmentId, response){
 		url : '/eis/departments?tenantId=default&id='+departmentId,
 		async : false,
 		success : function(depresponse){
-			response.serviceRequests[0].values['departmentName'] = depresponse.Department[0].name;
+			var obj = {};
+			obj['key'] = 'departmentName';
+			obj['name'] = depresponse.Department[0].name;
+			response.serviceRequests[0].attribValues.push(obj);
 		},
 		error : function(){
 			bootbox.alert('Loading departmentName failed');
@@ -528,7 +531,10 @@ function getBoundarybyId(id, name, response){
 		url : '/egov-location/boundarys?tenantId=default&boundary='+id,
 		async : false,
 		success : function(lresponse){
-			response.serviceRequests[0].values[''+name+''] = lresponse.Boundary[0].name;
+			var obj = {};
+			obj['key'] = name;
+			obj['name'] = lresponse.Boundary[0].name;
+			response.serviceRequests[0].attribValues.push(obj);
 		},
 		error : function(){
 			bootbox.alert('Loading location failed');
@@ -546,7 +552,10 @@ function getReceivingCenterbyId(receivingcenter, response){
 		data : JSON.stringify(requestInfo)
 ,		async : false,
 		success : function(centerReponse){
-			response.serviceRequests[0].values['recCenterText'] = centerReponse.receivingCenters[0].name;
+			var obj = {};
+			obj['key'] = 'recCenterText';
+			obj['name'] = centerReponse.receivingCenters[0].name; 
+			response.serviceRequests[0].attribValues.push(obj);
 		}
 	});
 }
@@ -558,7 +567,10 @@ function getAddressbyLatLng(lat, lng, response){
         url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng,
         dataType: 'json',
         success : function(data){
-        	response.service_requests[0].values['latlngAddress'] = data.results[0].formatted_address;
+        	var obj = {};
+			obj['key'] = 'latlngAddress'
+			obj['name'] = data.results[0].formatted_address;
+			response.serviceRequests[0].attribValues.push(obj);
         }
 	});
 }
@@ -579,7 +591,6 @@ function loadServiceDefinition(searchResponse){
 			serviceResult = (data.complaintTypes).filter(function( obj ) {
 				return (obj.keywords).indexOf('deliverable') > -1;
 			});
-			//console.log(JSON.stringify(serviceResult));
 			for(var i=0;i<serviceResult.length;i++){
 				if(serviceResult[i].serviceCode == serviceCode){
 					callToLoadDefinition(searchResponse);

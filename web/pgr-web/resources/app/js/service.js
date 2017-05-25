@@ -131,7 +131,7 @@ $(document).ready(function(){
 
 			obj = {};
 			obj = {
-			    key: 'complainantAddress',
+			    key: 'requesterAddress',
 			    name:$('#complainantAddress').val() ? $('#complainantAddress').val() : ''
 			};
 			data['attribValues'].push(obj);

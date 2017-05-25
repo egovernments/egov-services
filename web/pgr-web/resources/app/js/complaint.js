@@ -315,7 +315,7 @@ $(document).ready(function()
 				};
 				data['attribValues'].push(finobj);
 				finobj = {
-				    key: 'complainantAddress',
+				    key: 'requesterAddress',
 				    name: $('#complainantAddress').val() ? $('#complainantAddress').val() : ''
 				};
 				data['attribValues'].push(finobj);

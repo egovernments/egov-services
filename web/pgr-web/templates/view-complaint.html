@@ -45,7 +45,7 @@
 							</div>
 							<div class="panel-body">
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="core.lbl.fullname"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Name"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{#if firstName}}
 											{{firstName}}
@@ -68,15 +68,20 @@
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{serviceRequestId}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.date"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Registered Date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{requestedDatetime}}
 									</div>
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.department"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Department"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{values.departmentName}}
+										{{values.departmetName}}
+										{{#each attribValues}}
+										    {{#if (contains this.key "departmentName")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.nextescalation.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
@@ -84,7 +89,7 @@
 									</div> 
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.type"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Grievance / Service Type"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{serviceName}}
 									</div>
@@ -101,10 +106,14 @@
 								{{#if values.recCenterText}}
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.receivingcenter"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{values.recCenterText}}
+										{{#each attribValues}}
+										    {{#if (contains this.key "recCenterText")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
 									</div>
 								{{/if}}
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievancedetails"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Description"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{description}}
 									</div>
@@ -128,19 +137,31 @@
 								</div>
 					{{#serviceRequests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.location"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Location"></div>
 									<div class="col-md-9 col-xs-6 add-margin view-content">
 										 	{{#if values.latlngAddress}}
 												<span class="map-tool-class btn-secondary" data-toggle="tooltip"
 											 	data-placement="top" title="" data-original-title="Locate on map"
-											 	onclick="jQuery('#complaint-locate').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker"></i></span>&nbsp;<span id="address_locate">{{values.latlngAddress}}</span>
+											 	onclick="jQuery('#complaint-locate').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker"></i></span>&nbsp;<span id="address_locate">
+											 	{{#each attribValues}}
+												    {{#if (contains this.key "latlngAddress")}}
+														{{this.name}}
+												    {{/if}}
+												{{/each}}
+											 	</span>
 											{{else}}
 												<span id="address_locate">
-													{{values.ChildLocationName}} 
-													{{#if values.ChildLocationName}}
-													- 
-													{{/if}}
-													{{values.LocationName}}</span>
+													{{#each attribValues}}
+													    {{#if (contains this.key "ChildLocationName")}}
+															{{this.name}} -
+													    {{/if}}
+													{{/each}}
+													{{#each attribValues}}
+													    {{#if (contains this.key "LocationName")}}
+															{{this.name}}
+													    {{/if}}
+													{{/each}}
+													</span>
 											{{/if}}
 									</div>
 								</div>
@@ -357,7 +378,7 @@
 							</div>  
 							<div class="form-group employee-action">
 								<div class="col-sm-3 col-xs-12">
-									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="core.lbl.upload.photoimage"></button>
+									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="Document reference for approval"></button>
 									<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn hide"/>
 									<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn hide"/>
 									<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn hide"/>

@@ -124,24 +124,30 @@
 //     ]
 var flag = 0, flag1 = 0
 const makeAjaxUpload = function(file, cb) {
-    let formData = new FormData();
-    formData.append("jurisdictionId", tenantId);
-    formData.append("module", "ASSET");
-    formData.append("file", file);
-    $.ajax({
-        url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function(res) {
-            cb(null, res);
-        },
-        error: function(jqXHR, exception) {
-            cb(jqXHR.responseText || jqXHR.statusText);
-        }
-    });
+    if(file.constructor == File) {
+      let formData = new FormData();
+      formData.append("jurisdictionId", tenantId);
+      formData.append("module", "ASSET");
+      formData.append("file", file);
+      $.ajax({
+          url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: 'POST',
+          success: function(res) {
+              cb(null, res);
+          },
+          error: function(jqXHR, exception) {
+              cb(jqXHR.responseText || jqXHR.statusText);
+          }
+      });
+    } else {
+      cb(null, {files: [{
+        fileStoreId: file
+      }]});
+    }
 }
 
 const uploadFiles = function(body, cb) {
@@ -151,6 +157,7 @@ const uploadFiles = function(body, cb) {
         for(let i=0; i<body.Asset.assetAttributes.length; i++) {
           if(body.Asset.assetAttributes[i].type == "File") {
             var counter = body.Asset.assetAttributes[i].value.length;
+            var docs = [];
             for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
                 makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
                     if (breakout == 1)
@@ -160,9 +167,9 @@ const uploadFiles = function(body, cb) {
                         breakout = 1;
                     } else {
                         counter--;
-                        var _val = res.files[0].fileStoreId
-                        body.Asset.assetAttributes[i].value[j] = _val;
+                        docs.push(res.files[0].fileStoreId);
                         if(counter == 0) {
+                            body.Asset.assetAttributes[i].value = docs;
                             counter1--;
                             if(counter1 == 0 && breakout == 0)
                                 cb(null, body);

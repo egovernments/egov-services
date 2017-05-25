@@ -61,7 +61,7 @@ paths:
       tags: 
        - Action
        
-  /access/v1/actions/_validateaction:
+  /access/v1/actions/_validate:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
@@ -120,7 +120,7 @@ paths:
       tags:
        - Feature-Role
 
-  /access/v1/actions/_roles:
+  /access/v1/roles/_list:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
@@ -135,10 +135,10 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RolesReq'
-        - name: roles
+        - name: code
           in: query
           required: false
-          description: The list of role comma separated codes to filter Roles against
+          description: The list of comma separated codes to filter Roles against. No providing any would end up in all Roles as there is nothing to filter against
           type: array
           items:
             type: string

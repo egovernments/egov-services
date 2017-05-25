@@ -57,6 +57,9 @@ paths:
         - $ref: "#/parameters/acknowledgmentNumber"
         - $ref: "#/parameters/consumerNumber"
         - $ref: "#/parameters/assigneeId"
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/mobileNumber"
+        - $ref: "#/parameters/locality"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortResult"
@@ -89,10 +92,12 @@ definitions:
         minLength: 0
         maxLength: 200
         description: any comment by the user
-      createdTime:
-        type: number
-        format: long
-        description: epoch of the time object is created
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
         
   Material:
     type: object
@@ -122,6 +127,12 @@ definitions:
       amount:
         type: number
         description: tentative price for the material item
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
 
   EstimationCharge:
     type: object
@@ -158,6 +169,12 @@ definitions:
       materialCharges:
         type: number
         description: sum total of cost required for materials used
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
 
   Timeline:
     type: object
@@ -182,10 +199,12 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
       workflowDetails:
         $ref: '#/definitions/WorkflowDetails'
-      createdTime:
-        type: number
-        format: long
-        description: epoch of the time object is created
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
  
   Property:
     type: object
@@ -213,10 +232,7 @@ definitions:
        type: integer
        format: int64
        description : Unique identifier of the document.
-      applicationType:
-        type: integer
-        description: type of the application for particular document.
-      documentName: 
+      name: 
         type: string
         description: name of the document.
         readOnly: true
@@ -233,15 +249,30 @@ definitions:
       tenantId:
         type: string
         readOnly: true
-        description: Unique Identifier of the tenant 
+        description: Unique Identifier of the tenant
     required:
       - id
-      - applicationType
       - active
-      - documentName
+      - name
       - description
       - tenantId
   
+  DocumentOwner:
+    type: object
+    description: person for which document has been issued. If document name is BPL then name for DocumentOwner become mandatory. 
+    properties:
+      document:
+        $ref: "#/definitions/Document"
+      name:
+        type: string
+        description: name of person as mentioned in the document supplied
+        maxLength: 200
+      fileStoreId:
+        type: string
+        description: this should be file store id where document is uploaded.
+    required:
+      - fileStoreId
+
   WorkflowDetails:
     type: object
     description: workflow details related to connection
@@ -296,7 +327,38 @@ definitions:
         type: string
         description: intial reading of the meter.
         readOnly: true
-  
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+
+  MeterReading:
+    type: object
+    description: Captures periodical meter reading
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the meter.
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      reading:
+        type: integer
+        format: long
+        description: meter reading
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+    required:
+      - reading
+
   Connection:
     type: object
     description: water connection attributes 
@@ -376,7 +438,7 @@ definitions:
       documents:
         type: array
         items:
-          $ref: "#/definitions/Document"
+          $ref: "#/definitions/DocumentOwner"
       timelines:
         type: array
         items:
@@ -389,6 +451,8 @@ definitions:
         $ref: "#/definitions/EstimationCharge"
       workOrder:
         $ref: "#/definitions/WorkOrder"
+      meterReadings:
+        $ref: "#/definitions/MeterReading"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -467,6 +531,27 @@ parameters:
     required: false
     type: integer
     
+  name:
+    name: name
+    in: query
+    description: name of citizen
+    required: false
+    type: string
+  
+  mobileNumber:
+    name: mobileNumber
+    in: query
+    description: mobile number of citizen
+    required: false
+    type: string
+  
+  locality:
+    name: locality
+    in: query
+    description: locality name
+    required: false
+    type: string
+  
   pageSize:
     name: pageSize
     in: query
@@ -493,10 +578,10 @@ parameters:
     type: array
     uniqueItems: true
     minItems: 1
-    maxItems: 2
+    maxItems: 4
     collectionFormat: pipes
     items:
       type: string
-      pattern: '[-+](createdTime|name)'
+      pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
     default:
-      - +createdTime
+      - +name

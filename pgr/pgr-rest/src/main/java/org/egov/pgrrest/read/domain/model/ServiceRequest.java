@@ -107,7 +107,7 @@ public class ServiceRequest {
     }
 
     public boolean isProcessingFeePresentForCreation(){
-        return  ((modifyServiceRequest == false) && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey())));
+        return  modifyServiceRequest == false && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey()));
     }
 
 	public boolean descriptionLength() {

@@ -44,9 +44,9 @@ import java.util.List;
 
 import lombok.Data;
 
-public @Data class FinancialStatusContractRequest {
+public @Data class EgfStatusContractRequest {
 	private RequestInfo requestInfo = new RequestInfo();
-	private List<FinancialStatusContract> financialStatuses = new ArrayList<FinancialStatusContract>();
-	private FinancialStatusContract financialStatus = new FinancialStatusContract();
+	private List<EgfStatusContract> egfStatuses = new ArrayList<EgfStatusContract>();
+	private EgfStatusContract egfStatus = new EgfStatusContract();
 	private Pagination page = new Pagination();
 }

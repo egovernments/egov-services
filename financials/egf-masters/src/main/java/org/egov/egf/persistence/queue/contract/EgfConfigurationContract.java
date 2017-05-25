@@ -56,25 +56,21 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder({ "id", "name" })
-public class FinancialStatusContract extends AuditableContract {
+@JsonPropertyOrder({ "id", "keyName" })
+public class EgfConfigurationContract extends AuditableContract {
 
 	@NotNull
 	private Long id;
 
 	@NotNull
 	@Size(min = 3, max = 50)
-	private String moduleType;
-
-	@NotNull
-	@Size(min = 3, max = 20)
-	private String code;
+	private String keyName;
 
 	@NotNull
 	@Size(min = 3, max = 250)
 	private String description;
 
-	public FinancialStatusContract(final String id) {
+	public EgfConfigurationContract(final String id) {
 		super();
 		this.id = Long.valueOf(id);
 	}

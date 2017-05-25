@@ -38,45 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.egf.persistence.entity;
+package org.egov.egf.persistence.queue.contract;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@Entity
-@Table(name = "egeis_egfStatus")
-@SequenceGenerator(name = FinancialStatus.SEQ_EGEIS_EGFSTATUS, sequenceName = FinancialStatus.SEQ_EGEIS_EGFSTATUS, allocationSize = 1)
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@ToString
-public class FinancialStatus extends AbstractAuditable {
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonPropertyOrder({ "id", "name" })
+public class EgfStatusContract extends AuditableContract {
 
-	private static final long serialVersionUID = -8641767461447916679L;
-
-	public static final String SEQ_EGEIS_EGFSTATUS = "SEQ_EGEIS_EGFSTATUS";
-	
-	@Id
-	@GeneratedValue(generator = FinancialStatus.SEQ_EGEIS_EGFSTATUS, strategy = GenerationType.SEQUENCE)
 	@NotNull
 	private Long id;
 
 	@NotNull
 	@Size(min = 3, max = 50)
-	private String objectName;
+	private String moduleType;
 
 	@NotNull
 	@Size(min = 3, max = 20)
@@ -85,5 +73,10 @@ public class FinancialStatus extends AbstractAuditable {
 	@NotNull
 	@Size(min = 3, max = 250)
 	private String description;
+
+	public EgfStatusContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

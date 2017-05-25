@@ -47,9 +47,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 @JsonInclude(value = Include.NON_NULL)
-public @Data class FinancialConfigurationValuesContractResponse {
+public @Data class EgfConfigurationContractResponse {
 	private ResponseInfo responseInfo;
-	private List<FinancialConfigurationValuesContract> financialConfigurationValueses;
-	private FinancialConfigurationValuesContract financialConfigurationValues;
+	private List<EgfConfigurationContract> egfConfigurations;
+	private EgfConfigurationContract egfConfiguration;
 	private Pagination page;
 }

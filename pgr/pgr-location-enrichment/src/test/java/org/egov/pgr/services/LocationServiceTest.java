@@ -36,13 +36,13 @@ public class LocationServiceTest {
     public void test_should_return_seva_request_as_is_when_location_id_is_already_present() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "5");
-        serviceRequestMap.put("values", valuesMap);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> attribEntry = new HashMap<>();
+        attribEntry.put("key", "locationId");
+        attribEntry.put("name", "5");
+        attributeValues.add(attribEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);

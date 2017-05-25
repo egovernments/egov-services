@@ -129,12 +129,12 @@ paths:
         Get the list of roles based on role codes in the input parameters.
       # This is array of GET operation parameters:
       parameters:
-        - name: requestInfo
+        - name: rolesReq
           in: body
           description: Request info for getting actions.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+            $ref: '#/definitions/RolesReq'
         - name: roles
           in: query
           required: false
@@ -346,6 +346,12 @@ definitions:
         $ref: '#/definitions/Role'
       feature:
         $ref: '#/definitions/Feature'
+
+  RolesReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
 
   RequestInfo:
     type: object

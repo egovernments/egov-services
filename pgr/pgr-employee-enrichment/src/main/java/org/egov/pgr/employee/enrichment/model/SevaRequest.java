@@ -87,7 +87,7 @@ public class SevaRequest {
         final String status = getDynamicSingleValue(STATUS);
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
             .assignee(getCurrentAssignee())
-            .action(WorkflowRequest.Action.forComplaintStatus(status))
+            .action(WorkflowRequest.Action.forComplaintStatus(status,isCreate()))
             .requestInfo(requestInfo)
             .values(valuesToSet)
             .status(status)
@@ -152,7 +152,7 @@ public class SevaRequest {
     }
 
     public boolean isCreate() {
-        return this.getRequestInfo().getAction().equals(POST);
+        return POST.equalsIgnoreCase(this.getRequestInfo().getAction());
     }
 
     public void setDesignation(String designationId) {

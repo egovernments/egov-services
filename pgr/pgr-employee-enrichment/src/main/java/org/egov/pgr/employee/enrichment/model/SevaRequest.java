@@ -19,8 +19,7 @@ public class SevaRequest {
     public static final String VALUES_ASSIGNEE_ID = "assignmentId";
     public static final String VALUES_STATE_ID = "stateId";
     private static final String VALUES_DESIGNATION_ID = "designationId";
-    private static final String VALUES_DEPARTMENT_ID = "departmentId";
-    public static final String VALUES = "values";
+    public static final String VALUES_DEPARTMENT_ID = "departmentId";
     public static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
     public static final String BOUNDARY_ID = "boundaryId";
     public static final String STATE_DETAILS = "stateDetails";
@@ -39,19 +38,12 @@ public class SevaRequest {
     private static final String ATTRIBUTE_VALUES = "attribValues";
     private static final String ATTRIBUTE_VALUES_KEY_FIELD = "key";
     private static final String ATTRIBUTE_VALUES_NAME_FIELD = "name";
-    private static final String ATTRIBUTE_VALUES_POPULATED_FLAG = "isAttribValuesPopulated";
     private static final String POST = "POST";
 
     private HashMap<String, Object> sevaRequestMap;
 
     public SevaRequest(HashMap<String, Object> sevaRequestMap) {
         this.sevaRequestMap = sevaRequestMap;
-    }
-
-    @SuppressWarnings("unchecked")
-    public HashMap<String, String> getValues() {
-        HashMap<String, Object> serviceRequest = getServiceRequest();
-        return (HashMap<String, String>) serviceRequest.get(VALUES);
     }
 
     public Long getAssignee() {
@@ -62,17 +54,14 @@ public class SevaRequest {
     public Long getEmployeeId() {return Long.valueOf(getRequestInfo().getUserInfo().getId());}
 
     private void setAssignee(String assignee) {
-        getValues().put(VALUES_ASSIGNEE_ID, assignee);
         createOrUpdateAttributeEntry(VALUES_ASSIGNEE_ID, assignee);
     }
 
     private void setStateId(String stateId) {
-        getValues().put(VALUES_STATE_ID, stateId);
         createOrUpdateAttributeEntry(VALUES_STATE_ID, stateId);
     }
 
     public void setEscalationHours(String escalationHours) {
-        getValues().put(ESCALATION_HOURS, escalationHours);
         createOrUpdateAttributeEntry(ESCALATION_HOURS, escalationHours);
     }
 
@@ -167,7 +156,6 @@ public class SevaRequest {
     }
 
     public void setDesignation(String designationId) {
-        getValues().put(VALUES_DESIGNATION_ID, designationId);
         createOrUpdateAttributeEntry(VALUES_DESIGNATION_ID, designationId);
     }
 
@@ -176,7 +164,6 @@ public class SevaRequest {
     }
 
     public void setDepartment(String departmentId) {
-        getValues().put(VALUES_DEPARTMENT_ID, departmentId);
         createOrUpdateAttributeEntry(VALUES_DEPARTMENT_ID, departmentId);
     }
 
@@ -188,20 +175,12 @@ public class SevaRequest {
         return attributeValues == null ? new ArrayList<>() : attributeValues;
     }
 
-    private boolean isAttributeValuesPopulated() {
-        return (boolean) getServiceRequest().get(ATTRIBUTE_VALUES_POPULATED_FLAG);
-    }
-
-    private String getDynamicSingleValue(String key) {
-        if (isAttributeValuesPopulated()) {
-            return getAttributeValues().stream()
-                .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
-                .findFirst()
-                .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
-                .orElse(null);
-        } else {
-            return getValues().get(key);
-        }
+    public String getDynamicSingleValue(String key) {
+        return getAttributeValues().stream()
+            .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
+            .findFirst()
+            .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
+            .orElse(null);
     }
 
     private boolean isAttributeKeyPresent(String key) {

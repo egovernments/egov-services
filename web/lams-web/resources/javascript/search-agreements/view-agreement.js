@@ -486,16 +486,16 @@ $(document).ready(function() {
         e.preventDefault();
         if (!e.target.id) return;
         var data = $("#" + e.target.id).data();
-        if (data.action && data.action != "Print Notice") {
-            var _agrmntDet = Object.assign({}, agreementDetail);
-            _agrmntDet.workflowDetails = {
-                "businessKey": process.businessKey,
-                "type": "Agreement",
-                "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
-                "status": process.status,
-                "action": data.action
-            };
+        var _agrmntDet = Object.assign({}, agreementDetail);
+        _agrmntDet.workflowDetails = {
+            "businessKey": process.businessKey,
+            "type": "Agreement",
+            "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
+            "status": process.status,
+            "action": data.action
+        };
 
+        if (data.action && data.action != "Print Notice") {
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
@@ -516,6 +516,7 @@ $(document).ready(function() {
                 showError(response["statusText"]);
             }
         } else {
+            delete _agrmntDet.assignee;
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
                 type: 'POST',

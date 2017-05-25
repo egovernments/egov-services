@@ -58,7 +58,7 @@ public class DataSyncTask {
                         String.join(",", info.getSourceColumnNamesToReadFrom()), sourceSchema, info.getSourceTable());
                 log.info(query);
                 jdbcTemplate.query(
-                        query, new Object[]{convertedEpoch},
+                        query, new Object[]{convertedEpoch,convertedEpoch},
                         (rs, rowNum) -> new CustomResultSet(rs, info.getSourceColumnConfigsToReadFrom())
                 ).forEach(res -> {
                     try {

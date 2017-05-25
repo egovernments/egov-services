@@ -89,14 +89,53 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
       tags: 
-       - Feature-Role     
+       - Feature-Role
+
+  /access/v1/actions/_roles:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the list of roles based on role codes.
+      description: |
+        Get the list of roles based on role codes in the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Request info for getting actions.
+          required: true
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - name: roles
+          in: query
+          required: false
+          description: The list of role codes.
+          type: array
+          items:
+            type: string
+          format: int64
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RoleRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags:
+       - Feature-Role
 
 definitions:
-      
+
   Action:
     type: object
     properties:
-      id: 
+      id:
        type: integer
        format: int64
        description : Unique identifier of the Action.
@@ -115,11 +154,11 @@ definitions:
         description: The string url for the action.
         minLength: 10
         maxLength: 100
-      parentModule: 
+      parentModule:
        type: integer
        format: int64
        description : Unique identifier of the Parent.
-      orderNumber: 
+      orderNumber:
        type: integer
        format: int64
        description : Defines order for actions.
@@ -134,7 +173,7 @@ definitions:
       createdBy:
         type: integer
         format: int64
-        description: Id of the user who created the record. 
+        description: Id of the user who created the record.
       createdDate:
         type: string
         format: date
@@ -142,7 +181,7 @@ definitions:
       lastModifiedBy:
         type: integer
         format: int64
-        description: Id of the user who last modified the record. 
+        description: Id of the user who last modified the record.
       lastModifiedDate:
         type: string
         format: date
@@ -150,18 +189,18 @@ definitions:
       tenantId:
         type: string
         description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
-      serviceCode: 
+      serviceCode:
        type: integer
        format: int64
        description : Defines service code.
     required:
       - name
       - tenantId
-  
+
   Feature:
     type: object
     properties:
-      id: 
+      id:
        type: integer
        format: int64
        description : Unique identifier of the Action.
@@ -179,7 +218,7 @@ definitions:
         description: Description of the Feature.
         minLength: 2
         maxLength: 100
-      serviceCode: 
+      serviceCode:
        type: integer
        format: int64
        description : Defines service code.
@@ -190,11 +229,11 @@ definitions:
       - name
       - code
       - tenantId
-      
+
   Role:
     type: object
     properties:
-      id: 
+      id:
        type: integer
        format: int64
        description : Unique identifier of the role.
@@ -202,8 +241,8 @@ definitions:
         type: string
         description: The Name of the Role.
         minLength: 2
-        maxLength: 100    
-      
+        maxLength: 100
+
   ActionRes:
     type: object
     properties:
@@ -211,9 +250,19 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       Action:
         type: array
-        items: 
+        items:
          $ref: '#/definitions/Action'
-         
+
+  RoleRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Role:
+        type: array
+        items:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
+
   FeatureRoleReq:
     type: object
     properties:
@@ -231,7 +280,7 @@ definitions:
       - roleId
       - feature
       - tenantId
-      
+
   FeatureRoleRes:
     type: object
     properties:
@@ -240,8 +289,8 @@ definitions:
       role:
         $ref: '#/definitions/Role'
       feature:
-        $ref: '#/definitions/Feature'    
-      
+        $ref: '#/definitions/Feature'
+
   RequestInfo:
     type: object
     properties:
@@ -278,7 +327,7 @@ definitions:
       - apiId
       - ver
       - ts
-      
+
   ResponseInfo:
     type: object
     properties:
@@ -307,7 +356,7 @@ definitions:
       - ver
       - ts
       - status
-      
+
   Error:
     type: object
     properties:
@@ -323,7 +372,7 @@ definitions:
     required:
       - code
       - message
-      
+
   ErrorRes:
     properties:
       ResponseInfo:

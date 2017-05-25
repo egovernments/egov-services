@@ -527,7 +527,6 @@ renderFields.prototype.render =function(objFields)
 			if (this.count%2 == 0)
 				template += '<div class="form-group">';
 			template += renderFields.prototype.renderTemplate(this.attr_array[j], this.create);
-			console.log(template)
 			if (this.count%2 == 1)
 				template += '</div>';
 			this.templateFormFields = this.templateFormFields ? this.templateFormFields + template : template;
@@ -588,8 +587,15 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 			this.template = '<label class="col-sm-2 control-label"></label><div class="col-sm-3 add-margin error-msg" data-translate="'+this.description+'"></div><div class="col-sm-1"></div>';
 		}else{
 			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'String' ? 'alphabetwithspace' : value; 
-			if(this.dataType == 'number' || this.dataType == 'String' || this.dataType == 'datetime')
-				this.template = '<label class="col-sm-2 control-label" '+this.required+' data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
+			if(this.dataType == 'number' || this.dataType == 'String' || this.dataType == 'datetime'){
+				if(this.name == 'PROCESSINGFEE' && this.mode == '')
+					this.template = '';
+				else if(localStorage.getItem('type') == 'EMPLOYEE' && this.name == 'PROCESSINGFEE' && this.mode == 'disabled')
+					this.template = '<label class="col-sm-2 control-label" '+this.required+' data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' /> </div><div class="col-sm-1"></div>';	
+				else
+					this.template = '<label class="col-sm-2 control-label" '+this.required+' data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
+
+			}
 			else if(this.dataType == 'text')
 				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-3 add-margin"> <textarea class="form-control patternvalidation" name="'+this.name+'" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' ></textarea> </div><div class="col-sm-1"></div>';
 			else if(this.dataType == 'singlevaluelist' || this.dataType == 'multivaluelist'){

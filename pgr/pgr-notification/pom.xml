@@ -73,6 +73,12 @@
             <version>0.14.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>pgr-common</artifactId>
+            <version>0.11.0</version>
+        </dependency>
+
         <!--Test dependencies-->
 
         <dependency>

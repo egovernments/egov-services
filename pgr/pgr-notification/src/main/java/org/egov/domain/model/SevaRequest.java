@@ -1,6 +1,7 @@
 package org.egov.domain.model;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.pgr.common.date.DateFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -127,12 +128,7 @@ public class SevaRequest {
     }
 
     private Date getCreatedDate() {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        try {
-            return dateFormat.parse((String) this.serviceRequest.get(REQUESTED_DATE));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        return DateFormatter.toDate((String) this.serviceRequest.get(REQUESTED_DATE));
     }
 
     @SuppressWarnings("unchecked")

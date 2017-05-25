@@ -61,10 +61,39 @@ paths:
       tags: 
        - Action
        
+  /access/v1/actions/_validateaction:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the list of actions based on either roles or features.
+      description: |
+        Get the list of actions based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: ValidateActionReq
+          in: body
+          description: Request info for getting actions.
+          required: true
+          schema:
+            $ref: '#/definitions/ValidateActionReq'
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response without any content
+          schema:
+            $ref: '#/definitions/ValidateActionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags:
+       - Action
+
   /access/v1/feature-role/_create:
     # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
+      # Describe this verb here. Note: you can use markdown
       summary: Create mapping for feature and role.
       description: |
         Create mapping for feature and role.
@@ -88,7 +117,7 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
+      tags:
        - Feature-Role
 
   /access/v1/actions/_roles:
@@ -281,6 +310,27 @@ definitions:
       - feature
       - tenantId
 
+  ValidateActionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      roles:
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
+        description: List of roles to be considered for validation
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to be considered for validation
+      actionUrl:
+        type: string
+        description: Url of the action to be validated for given tenant
+    required:
+      - roles
+      - tenantId
+      - actionUrl
+
   FeatureRoleRes:
     type: object
     properties:
@@ -373,10 +423,27 @@ definitions:
       - code
       - message
 
+  ActionValidation:
+    type: object
+    properties:
+      allowed:
+        type: string
+        enum: ["TRUE", "FALSE"]
+    required:
+      - allowed
+
   ErrorRes:
     properties:
       ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
       Error:
         $ref: '#/definitions/Error'
+    type: object
+
+  ValidateActionRes:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      ValidateAction:
+        $ref: '#/definitions/ActionValidation'
     type: object

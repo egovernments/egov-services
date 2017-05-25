@@ -14,22 +14,23 @@ note over  VoucherSvc
         2. Validate glcode active,function,fund etc
         3. Validate financial year for posting
 end note
-alt Validation failed
+VoucherSvc->+BudgetSvc : Business validation  Budget Check
+note over  VoucherSvc,BudgetSvc
+   Do budget check based on application configuration 
+   return Budget appropriation number or Budget check failure error
+   end note  over
+BudgetSvc->-VoucherSvc : Budget check response is added to the contract
+VoucherSvc->+VoucherNoGenerator:  generate vouchernumber  
+VoucherNoGenerator->-VoucherSvc : VoucherNumber is  added to contract
+alt Validation failed,Budget check failed
 VoucherSvc->Client : throw Validation Error
-else
+else 
 VoucherSvc->+Kafka : Data put on Kafka Q with topic "voucher.validated"
 VoucherSvc->Client :Acknowledge client with transaction number
 deactivate Client
 deactivate VoucherSvc
 end
-Kafka->+BudgetSvc : Business validation  Budget Check
-note over  Kafka,BudgetSvc
-   Do budget check based on application configuration 
-   return Budget appropriation number or Budget check failure error
-   end note  over
-BudgetSvc->-Kafka : Budget check response is pushed to kafka with topic voucher_budget_check_completed
-Kafka->+VoucherNoGenerator: VoucherNoGenerator picks voucher_budget_check_completed and generates vouchernumber  
-VoucherNoGenerator->-Kafka : VoucherNoGenerator puts back the data to Kafka with topic "voucher.number.generated"
+
 Kafka->+WorkflowSvc: WorkflowSvc picks and completes workflow
 WorkflowSvc->-Kafka :WorkflowSvc puts back the data to Kafka  with topic "voucher.workflow.completed"
 Kafka->+VoucherSvc : Data persisted on db with vouchernumber

@@ -38,7 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var srn = getUrlParameter('srn');
-var lat, lng, myCenter, AV_status, serviceCode, serviceDefinition= [];
+var lat, lng, myCenter, AV_status, serviceCode, keyword,  serviceDefinition= [];
 var updateResponse = {};
 var loadDD = new $.loadDD();
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
@@ -144,6 +144,8 @@ function getComplaint(){
 	    			AV_stateId = item['name'];
 	    		else if(item['key']=='status'){
 	    			AV_status = item['name'];
+	    		}else if(item['key']=='keyword'){
+	    			keyword = item['name'];
 	    		}
 			}
 
@@ -203,11 +205,18 @@ function getComplaint(){
 							translate();
 							///console.log('response with files',JSON.stringify(response));
 
-							//Start actions
-							if(localStorage.getItem('type') == 'EMPLOYEE' || localStorage.getItem('type') == 'CITIZEN'){
+							if(keyword != 'Complaint')
+								loadServiceDefinition(response);
+
+							if(localStorage.getItem('type') == 'CITIZEN' && keyword != 'Complaint'){
+								
+							}else{
 								var loadDD = new $.loadDD();
 								nextStatus(loadDD);
 							}
+
+							if(keyword != 'Complaint' && localStorage.getItem('type') == 'CITIZEN')
+								$('.action-section').remove();
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								$('#status').attr('required','required');
@@ -219,8 +228,6 @@ function getComplaint(){
 								getLocality(wardId, localityid);
 								getDepartment(loadDD);
 							}
-
-							loadServiceDefinition(response);
 
 						},
 						error:function(){
@@ -551,6 +558,7 @@ function loadServiceDefinition(searchResponse){
 	$.ajax({
 		url: "/pgr/services/_search?type=all&tenantId=default",
 		type : 'POST',
+		async : false,
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
 		processData : false,
@@ -565,7 +573,6 @@ function loadServiceDefinition(searchResponse){
 			//console.log(JSON.stringify(serviceResult));
 			for(var i=0;i<serviceResult.length;i++){
 				if(serviceResult[i].serviceCode == serviceCode){
-					console.log(serviceCode)
 					callToLoadDefinition(searchResponse);
 					return;
 				}
@@ -579,6 +586,7 @@ function callToLoadDefinition(searchResponse){
 		url: "/pgr/servicedefinition/_search?tenantId=default&serviceCode="+serviceCode,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
+		async : false,
 		dataType: 'json',
 		processData : false,
 		beforeSend : function(){

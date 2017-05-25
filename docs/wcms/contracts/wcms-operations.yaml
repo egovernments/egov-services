@@ -72,6 +72,28 @@ paths:
 
 definitions:
 
+  WorkOrder:
+    type: object
+    description: work order information
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a work order object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      remarks:
+        type: string
+        minLength: 0
+        maxLength: 200
+        description: any comment by the user
+      createdTime:
+        type: number
+        format: long
+        description: epoch of the time object is created
+        
   Material:
     type: object
     description: holds material information used to generate estimation charges
@@ -365,6 +387,8 @@ definitions:
         $ref: '#/definitions/Meter'
       estimationCharge:
         $ref: "#/definitions/EstimationCharge"
+      workOrder:
+        $ref: "#/definitions/WorkOrder"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

@@ -1,26 +1,25 @@
 package org.egov.web.indexer.adaptor;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.web.indexer.config.IndexerProperties;
 import org.egov.web.indexer.contract.*;
 import org.egov.web.indexer.repository.*;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
-import org.hibernate.validator.constraints.Mod10Check;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintAdapterTest {
@@ -63,23 +62,26 @@ public class ComplaintAdapterTest {
 	@Test
     public void test_update_index() {
         ServiceRequest serviceRequest = setUpServiceRequest();
-        serviceRequest.getValues().put("status", "COMPLETED");
+        final ArrayList<AttributeEntry> attribValues = new ArrayList<>();
+        attribValues.add(new AttributeEntry("status", "COMPLETED"));
+        serviceRequest.setAttribValues(attribValues);
+        serviceRequest.setAttribValues(Collections.singletonList(new AttributeEntry("status", "COMPLETED")));
         ComplaintIndex complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
-        serviceRequest.getValues().put("status", "PROCESSING");
+        serviceRequest.setAttribValues(Collections.singletonList(new AttributeEntry("status", "PROCESSING")));
         complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
-        serviceRequest.getValues().put("status", "REJECTED");
+        serviceRequest.setAttribValues(Collections.singletonList(new AttributeEntry("status", "REJECTED")));
         serviceRequest.setCreatedDate(toDefaultDateTimeFormat(new Date()));
         complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
-        serviceRequest.getValues().put("status", "REOPENED");
+        serviceRequest.setAttribValues(Collections.singletonList(new AttributeEntry("status", "REOPENED")));
         complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
     }
 	
 	private ServiceRequest setUpServiceRequest() {
-		ServiceRequest serviceRequest = ServiceRequest.builder().values(new HashMap<>()).build();
+		ServiceRequest serviceRequest = ServiceRequest.builder().build();
 		serviceRequest.setCreatedDate("20-10-2016 10:47:21");
 		serviceRequest.setEscalationDate("149561348738");
 		serviceRequest.setFirstName("abc");
@@ -88,24 +90,26 @@ public class ComplaintAdapterTest {
 		serviceRequest.setLng(0.0);
 		serviceRequest.setComplaintTypeCode("AOS");
 		serviceRequest.setCrn("AB-123");
-		Map<String, String> values = serviceRequest.getValues();
-		values.put("receivingMode", "");
-		values.put("userType", "");
-		values.put("citizenFeedback", "0");
-		values.put("escalationHours", "0");
-		values.put("locationId", "1");
-		values.put("childLocationId", "2");
-		values.put("assignmentId", "1");
+        final ArrayList<AttributeEntry> attribValues = new ArrayList<>();
+        attribValues.add(new AttributeEntry("receivingMode", ""));
+        attribValues.add(new AttributeEntry("receivingMode", ""));
+        attribValues.add(new AttributeEntry("userType", ""));
+        attribValues.add(new AttributeEntry("citizenFeedback", "0"));
+        attribValues.add(new AttributeEntry("escalationHours", "0"));
+        attribValues.add(new AttributeEntry("locationId", "1"));
+        attribValues.add(new AttributeEntry("childLocationId", "2"));
+        attribValues.add(new AttributeEntry("assignmentId", "1"));
+        serviceRequest.setAttribValues(attribValues);
 		final ComplaintType expectedComplaintType = getComplaintType();
 		final Boundary expectedBoundary = getExpectedBoundary();
 		//final City expectedCityContent = getExpectedCityContent();
 		final Employee expectedAssignment = getExpectedEmployee();
 		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public")).thenReturn(expectedComplaintType);
-		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")),"ap.public")).thenReturn(expectedBoundary);
-		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("childLocationId")),"ap.public")).thenReturn(expectedBoundary);
+		when(boundaryRepository.fetchBoundaryById(1L,"ap.public")).thenReturn(expectedBoundary);
+		when(boundaryRepository.fetchBoundaryById(2L,"ap.public")).thenReturn(expectedBoundary);
 		when(tenantRepository.fetchTenantByCode("ap.public")).thenReturn(getCity());
 		//when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
-		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignmentId")), new LocalDate(),
+		when(employeeRepository.fetchEmployeeByPositionId(1L, new LocalDate(),
 				serviceRequest.getTenantId())).thenReturn(expectedAssignment);
 		return serviceRequest;
 	}

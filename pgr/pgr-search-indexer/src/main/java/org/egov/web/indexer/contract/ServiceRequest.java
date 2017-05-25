@@ -10,9 +10,7 @@ import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -68,22 +66,10 @@ public class ServiceRequest {
     @JsonProperty("tenantId")
     private String tenantId;
 
-    @JsonProperty("values")
-    private Map<String, String> values = new HashMap<>();
-
-    //  Short term hack - to support values and attribValues usage
-//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
-    @JsonProperty("isAttribValuesPopulated")
-    private boolean attribValuesPopulated;
-
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
     public String getDynamicSingleValue(String key) {
-        if (attribValuesPopulated) {
-            return AttributeValues.getAttributeSingleValue(attribValues, key);
-        } else {
-            return values.get(key);
-        }
+        return AttributeValues.getAttributeSingleValue(attribValues, key);
     }
 
     @JsonIgnore

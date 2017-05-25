@@ -310,11 +310,9 @@ definitions:
       - feature
       - tenantId
 
-  ValidateActionReq:
+  ValidateAction:
     type: object
     properties:
-      RequestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       roles:
         type: array
         items:
@@ -330,6 +328,14 @@ definitions:
       - roles
       - tenantId
       - actionUrl
+
+  ValidateActionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      ValidateAction:
+        $ref: '#/definitions/ValidateAction'
 
   FeatureRoleRes:
     type: object

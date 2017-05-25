@@ -690,7 +690,7 @@ class CreateAsset extends React.Component {
         })
       });
 
-			if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
+			if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset") else $('#hpCitizenTitle').text("Create Asset");
 
 			if(type==="update"|| type==="view" ){
 				$(document).ready(function(){

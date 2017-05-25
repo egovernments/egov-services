@@ -517,16 +517,14 @@ $(document).ready(function() {
             }
         } else {
             delete _agrmntDet.workflowDetails.assignee;
+
             var response = $.ajax({
-                url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+                url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify({
                     RequestInfo: requestInfo,
-                    Notice: {
-                        tenantId,
-                        agreementNumber: _agrmntDet.agreementNumber
-                    }
+                    Agreement: _agrmntDet
                 }),
                 async: false,
                 headers: {
@@ -536,10 +534,32 @@ $(document).ready(function() {
             });
 
             if (response["status"] === 201) {
-                printNotice(response["responseJSON"].Notices[0]);
-                // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+                var response = $.ajax({
+                    url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        RequestInfo: requestInfo,
+                        Notice: {
+                            tenantId,
+                            agreementNumber: _agrmntDet.agreementNumber
+                        }
+                    }),
+                    async: false,
+                    headers: {
+                        'auth-token': authToken
+                    },
+                    contentType: 'application/json'
+                });
+
+                if (response["status"] === 201) {
+                    printNotice(response["responseJSON"].Notices[0]);
+                    // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+                } else {
+                    console.log("Something went wrong.");
+                }
             } else {
-                console.log("Handle error.");
+                showError(response["statusText"]);
             }
         }
     });

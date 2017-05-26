@@ -362,7 +362,7 @@ public class PaymentService {
 		BigDecimal arrearAmount = BigDecimal.ZERO;
 		System.out.print("PaymentService- receiptAmountBifurcation - getting purpose");
 		Map<String, String> purposeMap = billRepository.getPurpose();
-		final List<BillDetailInfo> billDetails = new ArrayList<>(billInfo.getBillDetailInfos());
+		final List<BillDetailInfo> billDetails = billInfo.getBillDetailInfos();
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - " + rcptAccInfo);
 			if (rcptAccInfo.getCrAmount() != null

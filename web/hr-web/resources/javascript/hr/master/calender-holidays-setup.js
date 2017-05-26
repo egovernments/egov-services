@@ -126,6 +126,10 @@ addOrUpdate(e,mode) {
               success: function(res) {
                       showSuccess("Holiday Modified successfully.");
                       window.location.href = 'app/hr/common/show-calender-holiday.html?type=update';
+              },
+              error: function(err) {
+                  showError("Something went wrong. Please try again later.");
+
               }
           });
       }

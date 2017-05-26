@@ -35,31 +35,6 @@ class UpdateLeave extends React.Component {
     this.handleProcess = this.handleProcess.bind(this);
 }
 
-componentWillMount() {
-  var _this = this;
-  var  hrConfigurations = [], allHolidayList = [];
-  commonApiPost("hr-masters", "hrconfigurations", "_search", {
-        tenantId
-  }, function(err, res) {
-    if(res) {
-      hrConfigurations = res;
-    }
-  })
-  commonApiPost("egov-common-masters", "holidays", "_search", {
-      tenantId
-  }, function(err, res) {
-    allHolidayList = res ? res.Holiday : [];
-  });
-
-  getCommonMaster("hr-leave", "leavetypes", function(err, res) {
-    if(res) {
-      _this.setState({
-        leaveList: res.LeaveType
-      })
-    }
-  })
-}
-
 
   componentDidMount() {
     if(window.opener && window.opener.document) {
@@ -73,7 +48,28 @@ componentWillMount() {
     var asOnDate = _this.state.leaveSet.toDate;
     var process = [], employee;
     var  _leaveSet = {};
+    var  hrConfigurations = [], allHolidayList = [];
+    
+    commonApiPost("hr-masters", "hrconfigurations", "_search", {
+          tenantId
+    }, function(err, res) {
+      if(res) {
+        hrConfigurations = res;
+      }
+    })
+    commonApiPost("egov-common-masters", "holidays", "_search", {
+        tenantId
+    }, function(err, res) {
+      allHolidayList = res ? res.Holiday : [];
+    });
 
+    getCommonMaster("hr-leave", "leavetypes", function(err, res) {
+      if(res) {
+        _this.setState({
+          leaveList: res.LeaveType
+        })
+      }
+    })
 
     commonApiPost("hr-leave","leaveapplications", "_search", {tenantId, stateId}, function(err, res) {
       if(res) {

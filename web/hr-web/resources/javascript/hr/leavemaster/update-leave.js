@@ -35,6 +35,31 @@ class UpdateLeave extends React.Component {
     this.handleProcess = this.handleProcess.bind(this);
 }
 
+componentWillMount() {
+  var _this = this;
+  var  hrConfigurations = [], allHolidayList = [];
+  commonApiPost("hr-masters", "hrconfigurations", "_search", {
+        tenantId
+  }, function(err, res) {
+    if(res) {
+      hrConfigurations = res;
+    }
+  })
+  commonApiPost("egov-common-masters", "holidays", "_search", {
+      tenantId
+  }, function(err, res) {
+    allHolidayList = res ? res.Holiday : [];
+  });
+
+  getCommonMaster("hr-leave", "leavetypes", function(err, res) {
+    if(res) {
+      _this.setState({
+        leaveList: res.LeaveType
+      })
+    }
+  })
+}
+
 
   componentDidMount() {
     if(window.opener && window.opener.document) {
@@ -75,8 +100,6 @@ class UpdateLeave extends React.Component {
       }
     });
 
-
-
         $('#fromDate, #toDate').datepicker({
             format: 'dd/mm/yyyy',
             autoclose:true
@@ -86,20 +109,6 @@ class UpdateLeave extends React.Component {
           var _from = $('#fromDate').val();
           var _to = $('#toDate').val();
           var _triggerId = e.target.id;
-          var  hrConfigurations = [], allHolidayList = [];
-          commonApiPost("hr-masters", "hrconfigurations", "_search", {
-                tenantId
-          }, function(err, res) {
-            if(res) {
-              hrConfigurations = res;
-            }
-          })
-          commonApiPost("egov-common-masters", "holidays", "_search", {
-              tenantId
-          }, function(err, res) {
-            allHolidayList = res ? res.Holiday : [];
-          });
-
           if(_from && _to) {
             var dateParts1 = _from.split("/");
             var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];

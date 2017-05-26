@@ -284,9 +284,9 @@ definitions:
   RoleRes:
     type: object
     properties:
-      ResponseInfo:
+      responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      Role:
+      roles:
         type: array
         items:
          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'

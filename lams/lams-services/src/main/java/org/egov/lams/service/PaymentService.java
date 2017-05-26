@@ -153,7 +153,7 @@ public class PaymentService {
 			LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
 
 			billInfo.setServiceCode(serviceCode);
-			billInfo.setPartPaymentAllowed('N');
+			billInfo.setPartPaymentAllowed('Y');
 			billInfo.setOverrideAccHeadAllowed('N');
 			billInfo.setDescription("Leases And Agreements : " + (StringUtils.isBlank(agreement.getAgreementNumber())
 					? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber()));
@@ -191,6 +191,7 @@ public class PaymentService {
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
 				BigDecimal pendingAmount = (demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 				if (pendingAmount.compareTo(BigDecimal.ZERO) > 0) {
+					LOGGER.info(" payment service pendingamount value loop: "+pendingAmount);
 					orderNo++;
 					totalAmount = totalAmount.add(pendingAmount);
 					billDetailInfos

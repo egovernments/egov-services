@@ -22,15 +22,15 @@ public class EmployeeRepositoryTest {
 	@Before
 	public void before() {
 		RestTemplate restTemplate = new RestTemplate();
-		employeeRepository = new EmployeeRepository(restTemplate, "http://host/");
+		employeeRepository = new EmployeeRepository(restTemplate, "http://host/","/hr-employee/employees/_search?positionId={positionId}&asOnDate={asOnDate}&tenantId={tenantId}");
 		server = MockRestServiceServer.bindTo(restTemplate).build();
 	}
 
 	@Test
 	public void test_should_fetch_employee_for_given_positionid() throws Exception {
 		LocalDate sysDate = new LocalDate();
-		server.expect(once(), requestTo("http://host/eis/employee?positionId=1&asOnDate=" + sysDate + "&tenantId=1"))
-				.andExpect(method(HttpMethod.GET))
+		server.expect(once(), requestTo("http://host/hr-employee/employees/_search?positionId=1&asOnDate="+sysDate.toString("dd/MM/yyyy")+"&tenantId=1"))
+				.andExpect(method(HttpMethod.POST))
 				.andRespond(withSuccess(new Resources().getFileContents("successEmployeeResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 

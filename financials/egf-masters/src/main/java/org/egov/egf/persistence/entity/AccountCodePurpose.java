@@ -51,7 +51,6 @@ import org.egov.egf.persistence.queue.contract.AccountCodePurposeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -62,14 +61,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "egf_accountcodepurpose")
-@SequenceGenerator(name = AccountCodePurpose.SEQ, sequenceName = AccountCodePurpose.SEQ, allocationSize = 1)
+@SequenceGenerator(name = AccountCodePurpose.SEQ_EGF_ACCOUNTCODEPURPOSE, sequenceName = AccountCodePurpose.SEQ_EGF_ACCOUNTCODEPURPOSE, allocationSize = 1)
 public class AccountCodePurpose extends AbstractAuditable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String SEQ = "seq_egf_accountcodepurpose";
+	public static final String SEQ_EGF_ACCOUNTCODEPURPOSE = "SEQ_EGF_ACCOUNTCODEPURPOSE";
 
 	@Id
-	@GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = SEQ_EGF_ACCOUNTCODEPURPOSE, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@NotNull

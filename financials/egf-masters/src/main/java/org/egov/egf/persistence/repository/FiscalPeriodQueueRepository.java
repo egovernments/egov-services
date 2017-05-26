@@ -19,15 +19,17 @@ public class FiscalPeriodQueueRepository {
 
 	@Value("${kafka.topics.egf.masters.fiscalperiod.validated.key}")
 	private String fiscalPeriodValidatedKey;
-	
+
 	public void push(FiscalPeriodContractRequest fiscalPeriodContractRequest) {
 		HashMap<String, Object> fiscalPeriodContractRequestMap = new HashMap<String, Object>();
-		if (fiscalPeriodContractRequest.getFiscalPeriods() != null
-				&& !fiscalPeriodContractRequest.getFiscalPeriods().isEmpty())
+
+		if ("create".equalsIgnoreCase(fiscalPeriodContractRequest.getRequestInfo().getAction()))
 			fiscalPeriodContractRequestMap.put("FiscalPeriodCreate", fiscalPeriodContractRequest);
-		else if (fiscalPeriodContractRequest.getFiscalPeriod() != null
-				&& fiscalPeriodContractRequest.getFiscalPeriod().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(fiscalPeriodContractRequest.getRequestInfo().getAction()))
+			fiscalPeriodContractRequestMap.put("FiscalPeriodUpdateAll", fiscalPeriodContractRequest);
+		else if ("update".equalsIgnoreCase(fiscalPeriodContractRequest.getRequestInfo().getAction()))
 			fiscalPeriodContractRequestMap.put("FiscalPeriodUpdate", fiscalPeriodContractRequest);
+
 		financialProducer.sendMessage(fiscalPeriodValidatedTopic, fiscalPeriodValidatedKey,
 				fiscalPeriodContractRequestMap);
 	}

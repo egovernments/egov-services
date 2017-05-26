@@ -8,7 +8,7 @@ public class SevaRequestMapFactory {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("serviceRequestId", "crn");
-        serviceRequestMap.put("expectedDatetime", 1491205848337L);
+        serviceRequestMap.put("expectedDatetime", "01-04-2017 13:20:47");
         serviceRequestMap.put("description", "complaint description");
         serviceRequestMap.put("address", "landmark");
         serviceRequestMap.put("firstName", "firstName");

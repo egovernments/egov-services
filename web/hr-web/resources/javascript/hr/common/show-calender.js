@@ -20,21 +20,15 @@ class ShowCalender extends React.Component {
      }
 
      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calendar");
-
-       try {
-           var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
-       } catch(e) {
-           var _years = [];
-       }
-           this.setState({
-               list:_years
-           });
+     var _this = this;
+     getDropdown("years", function(res) {
+        _this.setState({
+               list: res
+        });
+     })  
    }
 
-
-
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
 
           $('#calenderTable').DataTable({

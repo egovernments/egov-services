@@ -55,6 +55,8 @@ $(document).ready(function()
 		$('.action-section').remove();
 	}
 
+	$('.rating').rating();
+
 	getComplaint();
 	
 	$('.slide-history-menu').click(function(){
@@ -102,6 +104,14 @@ $(document).ready(function()
 			obj.attr("disabled", "disabled");
 			complaintUpdate(obj);
 		}
+	});
+
+	//feepaid change event
+	$('#feepaid').change(function() {
+		if($(this).is(":checked"))
+			$('input[name="PROCESSINGFEE"]').attr('required','required');
+		else
+			$('input[name="PROCESSINGFEE"]').removeAttr('required');
 	});
 
 });
@@ -205,8 +215,20 @@ function getComplaint(){
 							translate();
 							///console.log('response with files',JSON.stringify(response));
 
-							if(keyword != 'Complaint')
+							if(keyword != 'Complaint'){
+								$('.serviceType').hide();
 								loadServiceDefinition(response);
+								if(localStorage.getItem('type') == 'EMPLOYEE'){
+									$('.feegroup').removeClass('hide');
+									if(!(AV_status == 'DSNEW' || AV_status == 'DSPROGRESS')){
+										$('input[name="PROCESSINGFEE"]').attr('disabled','disabled');
+									}
+								}
+								else{
+									$('.feegroup').addClass('hide');
+								}
+								
+							}
 
 							if(localStorage.getItem('type') == 'CITIZEN' && keyword != 'Complaint'){
 								
@@ -297,6 +319,17 @@ function complaintUpdate(obj){
 		    name: $("#approvalDepartment option:selected").text()
 		};
 		req_obj.serviceRequest.attribValues.push(finobj);
+	}
+
+	if(localStorage.getItem('type') == 'EMPLOYEE' && keyword != 'Complaint'){
+		if(($('#status').val() == 'DSAPPROVED' && $('#feepaid').is(":checked")) || $('#status').val() == 'DSPROGRESS'){
+			//check status is approved, after update pF 
+			finobj = {
+			    key: 'PROCESSINGFEE',
+			    name: $('input[name="PROCESSINGFEE"]').val()
+			};
+			req_obj.serviceRequest.attribValues.push(finobj);
+		}
 	}
 	
 	$.ajax({
@@ -458,8 +491,12 @@ function getLocality(boundaryId, localityid){
 
 function getDepartment(loadDD){
 	$.ajax({
-		url: "/eis/departments?tenantId=default",
-		type : 'GET'
+		url: "/egov-common-masters/departments/_search?tenantId=default",
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#approvalDepartment'),
@@ -473,7 +510,7 @@ function getDepartment(loadDD){
 
 function getDesignation(depId){
 	$.ajax({
-		url: "/eis/designationByDepartmentId?tenantId=default&id="+depId,
+		url: "/hr-masters/designations/_search?tenantId=default",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -493,29 +530,35 @@ function getDesignation(depId){
 function getUser(depId, desId){
 	//console.log(depId, desId);
 	$.ajax({
-		url: "/eis/assignmentsByDeptOrDesignId?tenantId=default&deptId="+depId+"&desgnId="+desId,
+		url: "/hr-employee/employees/_search?tenantId=default&departmentId="+depId+"&designationId="+desId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo),
 	}).done(function(data) {
-		loadDD.load({
-			element:$('#approvalPosition'),
-			placeholder : 'Select Position', // default - Select(optional)
-			data:data.Assignment,
-			keyValue:'position',
-			keyDisplayName:'employee'
-		});
+		$.each(data.Employee,function(i,obj)
+	    {
+			$('#approvalPosition').append($("<option />")
+				.val(obj['assignments'][0].position).text(obj['userName']));
+	    }); 
 	});
 }
 
 function getDepartmentbyId(departmentId, response){
 	$.ajax({
-		url : '/eis/departments?tenantId=default&id='+departmentId,
+		url : '/egov-common-masters/departments/_search?tenantId=default&id='+departmentId,
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo),
 		async : false,
 		success : function(depresponse){
-			response.serviceRequests[0].values['departmentName'] = depresponse.Department[0].name;
+			var obj = {};
+			obj['key'] = 'departmentName';
+			obj['name'] = depresponse.Department[0].name;
+			response.serviceRequests[0].attribValues.push(obj);
 		},
 		error : function(){
 			bootbox.alert('Loading departmentName failed');
@@ -528,7 +571,10 @@ function getBoundarybyId(id, name, response){
 		url : '/egov-location/boundarys?tenantId=default&boundary='+id,
 		async : false,
 		success : function(lresponse){
-			response.serviceRequests[0].values[''+name+''] = lresponse.Boundary[0].name;
+			var obj = {};
+			obj['key'] = name;
+			obj['name'] = lresponse.Boundary[0].name;
+			response.serviceRequests[0].attribValues.push(obj);
 		},
 		error : function(){
 			bootbox.alert('Loading location failed');
@@ -546,7 +592,10 @@ function getReceivingCenterbyId(receivingcenter, response){
 		data : JSON.stringify(requestInfo)
 ,		async : false,
 		success : function(centerReponse){
-			response.serviceRequests[0].values['recCenterText'] = centerReponse.receivingCenters[0].name;
+			var obj = {};
+			obj['key'] = 'recCenterText';
+			obj['name'] = centerReponse.receivingCenters[0].name; 
+			response.serviceRequests[0].attribValues.push(obj);
 		}
 	});
 }
@@ -558,7 +607,10 @@ function getAddressbyLatLng(lat, lng, response){
         url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng,
         dataType: 'json',
         success : function(data){
-        	response.service_requests[0].values['latlngAddress'] = data.results[0].formatted_address;
+        	var obj = {};
+			obj['key'] = 'latlngAddress'
+			obj['name'] = data.results[0].formatted_address;
+			response.serviceRequests[0].attribValues.push(obj);
         }
 	});
 }
@@ -579,7 +631,6 @@ function loadServiceDefinition(searchResponse){
 			serviceResult = (data.complaintTypes).filter(function( obj ) {
 				return (obj.keywords).indexOf('deliverable') > -1;
 			});
-			//console.log(JSON.stringify(serviceResult));
 			for(var i=0;i<serviceResult.length;i++){
 				if(serviceResult[i].serviceCode == serviceCode){
 					callToLoadDefinition(searchResponse);

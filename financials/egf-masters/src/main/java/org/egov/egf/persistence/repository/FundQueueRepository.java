@@ -22,10 +22,14 @@ public class FundQueueRepository {
 
 	public void push(FundContractRequest fundContractRequest) {
 		HashMap<String, Object> fundContractRequestMap = new HashMap<String, Object>();
-		if (fundContractRequest.getFunds() != null && !fundContractRequest.getFunds().isEmpty())
+
+		if ("create".equalsIgnoreCase(fundContractRequest.getRequestInfo().getAction()))
 			fundContractRequestMap.put("FundCreate", fundContractRequest);
-		else if (fundContractRequest.getFund() != null && fundContractRequest.getFund().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(fundContractRequest.getRequestInfo().getAction()))
+			fundContractRequestMap.put("FundUpdateAll", fundContractRequest);
+		else if ("update".equalsIgnoreCase(fundContractRequest.getRequestInfo().getAction()))
 			fundContractRequestMap.put("FundUpdate", fundContractRequest);
+
 		financialProducer.sendMessage(fundValidatedTopic, fundValidatedKey, fundContractRequestMap);
 	}
 }

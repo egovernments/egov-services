@@ -206,7 +206,6 @@ public class ServiceRequestTest {
         assertEquals(mobileNumber, complaint.getRequester().getMobile());
     }
 
-
     @Test
     public void test_should_copy_complainant_address_from_attribute_values_field_when_flag_is_enabled() {
         org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract

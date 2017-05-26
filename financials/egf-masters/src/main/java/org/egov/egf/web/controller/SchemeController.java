@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		schemeContractRequest.getRequestInfo().setAction("create");
 		schemeService.fetchRelatedContracts(schemeContractRequest);
 		schemeService.push(schemeContractRequest);
 		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
@@ -70,6 +70,7 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		schemeContractRequest.getRequestInfo().setAction("update");
 		schemeService.fetchRelatedContracts(schemeContractRequest);
 		schemeContractRequest.getScheme().setId(uniqueId);
 		schemeService.push(schemeContractRequest);
@@ -89,7 +90,6 @@ public class SchemeController {
 			throw new CustomBindException(errors);
 		}
 		schemeService.fetchRelatedContracts(schemeContractRequest);
-		RequestInfo requestInfo = schemeContractRequest.getRequestInfo();
 		Scheme schemeFromDb = schemeService.findOne(uniqueId);
 		SchemeContract scheme = schemeContractRequest.getScheme();
 
@@ -103,7 +103,7 @@ public class SchemeController {
 		return schemeContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public SchemeContractResponse updateAll(@RequestBody @Valid SchemeContractRequest schemeContractRequest,
 			BindingResult errors) {
@@ -111,17 +111,12 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		schemeContractRequest.getRequestInfo().setAction("updateAll");
 		schemeService.fetchRelatedContracts(schemeContractRequest);
-
+		schemeService.push(schemeContractRequest);
 		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
 		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
 		for (SchemeContract schemeContract : schemeContractRequest.getSchemes()) {
-			Scheme schemeFromDb = schemeService.findOne(schemeContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(schemeContract, schemeFromDb);
-			schemeFromDb = schemeService.update(schemeFromDb);
-			model.map(schemeFromDb, schemeContract);
 			schemeContractResponse.getSchemes().add(schemeContract);
 		}
 

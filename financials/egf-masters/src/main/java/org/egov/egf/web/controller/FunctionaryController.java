@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +44,7 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		functionaryContractRequest.getRequestInfo().setAction("create");
 		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 		functionaryService.push(functionaryContractRequest);
 		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
@@ -72,6 +72,7 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		functionaryContractRequest.getRequestInfo().setAction("update");
 		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 		functionaryContractRequest.getFunctionary().setId(uniqueId);
 		functionaryService.push(functionaryContractRequest);
@@ -104,7 +105,7 @@ public class FunctionaryController {
 		return functionaryContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public FunctionaryContractResponse updateAll(
 			@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest, BindingResult errors) {
@@ -112,17 +113,12 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		functionaryContractRequest.getRequestInfo().setAction("updateAll");
 		functionaryService.fetchRelatedContracts(functionaryContractRequest);
-
+		functionaryService.push(functionaryContractRequest);
 		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
 		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
 		for (FunctionaryContract functionaryContract : functionaryContractRequest.getFunctionaries()) {
-			Functionary functionaryFromDb = functionaryService.findOne(functionaryContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(functionaryContract, functionaryFromDb);
-			functionaryFromDb = functionaryService.update(functionaryFromDb);
-			model.map(functionaryFromDb, functionaryContract);
 			functionaryContractResponse.getFunctionaries().add(functionaryContract);
 		}
 

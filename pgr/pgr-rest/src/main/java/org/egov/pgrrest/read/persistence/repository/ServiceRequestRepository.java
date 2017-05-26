@@ -6,7 +6,6 @@ import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,9 +24,10 @@ public class ServiceRequestRepository {
     }
 
     public void save(SevaRequest sevaRequest) {
-        Date date = Calendar.getInstance().getTime();
         sevaRequest.getRequestInfo().setAction(POST);
-        sevaRequest.getServiceRequest().setCreatedDate(date);
+        final Date now = new Date();
+        sevaRequest.getServiceRequest().setCreatedDate(now);
+        sevaRequest.getServiceRequest().setLastModifiedDate(now);
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
@@ -40,9 +40,8 @@ public class ServiceRequestRepository {
     }
 
     public void update(SevaRequest sevaRequest) {
-        Date date = Calendar.getInstance().getTime();
         sevaRequest.getRequestInfo().setAction(PUT);
-        sevaRequest.getServiceRequest().setLastModifiedDate(date);
+        sevaRequest.getServiceRequest().setLastModifiedDate(new Date());
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 

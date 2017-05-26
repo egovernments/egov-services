@@ -41,8 +41,21 @@ public class BankAccountService {
 
 	private final BankAccountJpaRepository bankAccountJpaRepository;
 	private final BankAccountQueueRepository bankAccountQueueRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private SmartValidator validator;
+
+	@Autowired
+	private ChartOfAccountService chartOfAccountService;
+
+	@Autowired
+	private BankBranchService bankBranchService;
+
+	@Autowired
+	private FundService fundService;
 
 	@Autowired
 	public BankAccountService(final BankAccountJpaRepository bankAccountJpaRepository,
@@ -50,16 +63,6 @@ public class BankAccountService {
 		this.bankAccountJpaRepository = bankAccountJpaRepository;
 		this.bankAccountQueueRepository = bankAccountQueueRepository;
 	}
-
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private ChartOfAccountService chartOfAccountService;
-
-	@Autowired
-	private BankBranchService bankBranchService;
-	@Autowired
-	private FundService fundService;
 
 	@Transactional
 	public BankAccount create(final BankAccount bankAccount) {
@@ -93,6 +96,27 @@ public class BankAccountService {
 			bankAccountJpaRepository.save(bankAccountEntity);
 			BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
 			bankAccountContractResponse.setBankAccount(resp);
+		}
+		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
+		return bankAccountContractResponse;
+	}
+
+	@Transactional
+	public BankAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final BankAccountContractRequest bankAccountContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("BankAccountCreate"), BankAccountContractRequest.class);
+		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
+		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (bankAccountContractRequest.getBankAccounts() != null
+				&& !bankAccountContractRequest.getBankAccounts().isEmpty()) {
+			for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
+				BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
+				bankAccountEntity.setVersion(findOne(bankAccountEntity.getId()).getVersion());
+				bankAccountJpaRepository.save(bankAccountEntity);
+				BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
+				bankAccountContractResponse.getBankAccounts().add(resp);
+			}
 		}
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		return bankAccountContractResponse;

@@ -14,7 +14,6 @@ import org.egov.egf.persistence.entity.Bank;
 import org.egov.egf.persistence.entity.Supplier;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
-import org.egov.egf.persistence.queue.contract.SchemeContract;
 import org.egov.egf.persistence.queue.contract.SupplierContract;
 import org.egov.egf.persistence.queue.contract.SupplierContractRequest;
 import org.egov.egf.persistence.queue.contract.SupplierContractResponse;
@@ -72,6 +71,31 @@ public class SupplierService {
 		if (supplierContractRequest.getSuppliers() != null && !supplierContractRequest.getSuppliers().isEmpty()) {
 			for (SupplierContract supplierContract : supplierContractRequest.getSuppliers()) {
 				Supplier supplierEntity = new Supplier(supplierContract);
+				supplierJpaRepository.save(supplierEntity);
+				SupplierContract resp = modelMapper.map(supplierEntity, SupplierContract.class);
+				supplierContractResponse.getSuppliers().add(resp);
+			}
+		} else if (supplierContractRequest.getSupplier() != null) {
+			Supplier supplierEntity = new Supplier(supplierContractRequest.getSupplier());
+			supplierJpaRepository.save(supplierEntity);
+			SupplierContract resp = modelMapper.map(supplierEntity, SupplierContract.class);
+			supplierContractResponse.setSupplier(resp);
+		}
+		supplierContractResponse.setResponseInfo(getResponseInfo(supplierContractRequest.getRequestInfo()));
+		return supplierContractResponse;
+	}
+
+	@Transactional
+	public SupplierContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final SupplierContractRequest supplierContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("SupplierCreate"), SupplierContractRequest.class);
+		SupplierContractResponse supplierContractResponse = new SupplierContractResponse();
+		supplierContractResponse.setSuppliers(new ArrayList<SupplierContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (supplierContractRequest.getSuppliers() != null && !supplierContractRequest.getSuppliers().isEmpty()) {
+			for (SupplierContract supplierContract : supplierContractRequest.getSuppliers()) {
+				Supplier supplierEntity = new Supplier(supplierContract);
+				supplierEntity.setVersion(findOne(supplierEntity.getId()).getVersion());
 				supplierJpaRepository.save(supplierEntity);
 				SupplierContract resp = modelMapper.map(supplierEntity, SupplierContract.class);
 				supplierContractResponse.getSuppliers().add(resp);

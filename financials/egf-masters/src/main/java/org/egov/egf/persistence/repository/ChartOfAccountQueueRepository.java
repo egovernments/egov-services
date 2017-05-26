@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChartOfAccountQueueRepository {
-	
+
 	@Autowired
 	private FinancialProducer financialProducer;
 
@@ -22,12 +22,15 @@ public class ChartOfAccountQueueRepository {
 
 	public void push(ChartOfAccountContractRequest chartOfAccountContractRequest) {
 		HashMap<String, Object> chartOfAccountContractRequestMap = new HashMap<String, Object>();
-		if (chartOfAccountContractRequest.getChartOfAccounts() != null
-				&& !chartOfAccountContractRequest.getChartOfAccounts().isEmpty())
+
+		if ("create".equalsIgnoreCase(chartOfAccountContractRequest.getRequestInfo().getAction()))
 			chartOfAccountContractRequestMap.put("ChartOfAccountCreate", chartOfAccountContractRequest);
-		else if (chartOfAccountContractRequest.getChartOfAccount() != null
-				&& chartOfAccountContractRequest.getChartOfAccount().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(chartOfAccountContractRequest.getRequestInfo().getAction()))
+			chartOfAccountContractRequestMap.put("ChartOfAccountUpdateAll", chartOfAccountContractRequest);
+		else if ("update".equalsIgnoreCase(chartOfAccountContractRequest.getRequestInfo().getAction()))
 			chartOfAccountContractRequestMap.put("ChartOfAccountUpdate", chartOfAccountContractRequest);
-		financialProducer.sendMessage(chartOfAccountValidatedTopic, chartOfAccountValidatedKey, chartOfAccountContractRequestMap);
+
+		financialProducer.sendMessage(chartOfAccountValidatedTopic, chartOfAccountValidatedKey,
+				chartOfAccountContractRequestMap);
 	}
 }

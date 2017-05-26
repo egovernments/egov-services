@@ -24,10 +24,10 @@ public class PositionRepository {
         this.restTemplate = restTemplate;
     }
 
-    public Position getDesignationIdForAssignee(String tenantId, long assigneeId, long employeeId) {
+    public Position getDesignationIdForAssignee(String tenantId, long assigneeId) {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        PositionsResponse positions = restTemplate.postForObject(url, request,PositionsResponse.class,employeeId,assigneeId,tenantId);
+        PositionsResponse positions = restTemplate.postForObject(url, request,PositionsResponse.class,assigneeId,tenantId);
         return positions.toDomain();
     }
 

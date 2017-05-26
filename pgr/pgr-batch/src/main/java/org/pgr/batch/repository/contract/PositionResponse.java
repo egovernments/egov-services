@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PositionResponse {
 
-    @JsonProperty("deptDesig")
+    @JsonProperty("deptdesig")
     private DepartmentDesignationResponse departmentDesignation;
 
 }

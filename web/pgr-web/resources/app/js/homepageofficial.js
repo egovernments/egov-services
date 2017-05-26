@@ -449,8 +449,11 @@ function worklist(){
 		{ "title": "Application No.", "data": "serviceRequestId","width": "15%" },
 		{ "title": dt_date, "data": "requestedDatetime","width": "15%" },
 		{ "title":dt_sender, "data": "firstName","width": "15%" },
-		{ "title":dt_now, "width": "20%", "render": function ( data, type, full, meta ) {
-			return 'Grievance';
+		{ "title":dt_now, "width": "15%", "render": function ( data, type, full, meta ) {
+			for (var item of full.attribValues) {
+				if(item['key']=='keyword')
+					return (item['name'] == 'Complaint' ? 'Grievance' : 'Service');
+			}
 	    } },
 		{ "title":dt_status, "width": "15%", "render": function ( data, type, full, meta ) {
 			for (var item of full.attribValues) {
@@ -458,7 +461,7 @@ function worklist(){
 					return item['name'];
 			}
 	    } },
-		{ "title":dt_comments, "width": "20%", "render": function ( data, type, full, meta ) {
+		{ "title":dt_comments, "width": "25%", "render": function ( data, type, full, meta ) {
 			var text = 'Complaint Number '+(full.serviceRequestId)+' for '+(full.serviceName)+' filed on '+(full.requestedDatetime)+'. Date of Resolution is '+(full.expectedDatetime);
 			return text;
 	    } },
@@ -629,7 +632,7 @@ function inboxloadmethod(){
 
 function getPosition(){
 	$.ajax({
-		url : '/eis/_assignmentByEmployeeId?tenantId=default&employeeId='+localStorage.getItem('id'),
+		url : '/hr-employee/employees/_search?tenantId=default&id='+localStorage.getItem('id'),
 		type : 'POST',
 		processData : false,
 		contentType: "application/json",
@@ -637,8 +640,8 @@ function getPosition(){
 		async : false,
 		success : function(response){
 			try{
-				positionId = response.Assignment[0].position;
-				$('.profile-text').text(response.Assignment[0].employee);
+				positionId = response.Employee[0].assignments[0].position;
+				$('.profile-text').text(response.Employee[0].userName);
 			}catch(e){
 
 			}

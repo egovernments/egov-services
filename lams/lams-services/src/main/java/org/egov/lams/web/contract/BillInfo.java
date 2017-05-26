@@ -22,6 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
@@ -29,6 +30,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class BillInfo {
 	private Long id = null;
 	private Long demandId = null;

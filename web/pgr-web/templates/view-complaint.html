@@ -32,7 +32,7 @@
         	<header class="navbar navbar-fixed-top" data-include="header" data-header-title="Update Service">
 			</header>
             <div class="main-content">
-
+				<form id="complaintUpdate" role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data" autocomplete="off">
 				<div class="row viewcomplaint">
 				<script id="viewcomplaint-script" type="text/x-handlebars-template">
 					{{#serviceRequests}}
@@ -45,7 +45,7 @@
 							</div>
 							<div class="panel-body">
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="core.lbl.fullname"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Name"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{#if firstName}}
 											{{firstName}}
@@ -68,15 +68,20 @@
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{serviceRequestId}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.date"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Registered Date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{requestedDatetime}}
 									</div>
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.department"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Department"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{values.departmentName}}
+										{{values.departmetName}}
+										{{#each attribValues}}
+										    {{#if (contains this.key "departmentName")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.nextescalation.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
@@ -84,7 +89,7 @@
 									</div> 
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.type"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Grievance / Service Type"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{serviceName}}
 									</div>
@@ -101,10 +106,14 @@
 								{{#if values.recCenterText}}
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.receivingcenter"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{values.recCenterText}}
+										{{#each attribValues}}
+										    {{#if (contains this.key "recCenterText")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
 									</div>
 								{{/if}}
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievancedetails"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Description"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{description}}
 									</div>
@@ -128,19 +137,31 @@
 								</div>
 					{{#serviceRequests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.location"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Location"></div>
 									<div class="col-md-9 col-xs-6 add-margin view-content">
 										 	{{#if values.latlngAddress}}
 												<span class="map-tool-class btn-secondary" data-toggle="tooltip"
 											 	data-placement="top" title="" data-original-title="Locate on map"
-											 	onclick="jQuery('#complaint-locate').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker"></i></span>&nbsp;<span id="address_locate">{{values.latlngAddress}}</span>
+											 	onclick="jQuery('#complaint-locate').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker"></i></span>&nbsp;<span id="address_locate">
+											 	{{#each attribValues}}
+												    {{#if (contains this.key "latlngAddress")}}
+														{{this.name}}
+												    {{/if}}
+												{{/each}}
+											 	</span>
 											{{else}}
 												<span id="address_locate">
-													{{values.ChildLocationName}} 
-													{{#if values.ChildLocationName}}
-													- 
-													{{/if}}
-													{{values.LocationName}}</span>
+													{{#each attribValues}}
+													    {{#if (contains this.key "ChildLocationName")}}
+															{{this.name}} -
+													    {{/if}}
+													{{/each}}
+													{{#each attribValues}}
+													    {{#if (contains this.key "LocationName")}}
+															{{this.name}}
+													    {{/if}}
+													{{/each}}
+													</span>
 											{{/if}}
 									</div>
 								</div>
@@ -162,7 +183,6 @@
 				</div>
 
 				<div class="row">
-					<form class="form-horizontal form-groups-bordered">
 						<div class="col-md-12">
 							<div class="panel panel-primary hide" data-collapsed="0">
 								<div class="panel-heading">
@@ -189,7 +209,6 @@
 								</div>
 							</div>
 						</div>
-					</form>
 				</div>
 				
 
@@ -198,7 +217,7 @@
 						<div class="panel-group">
 							<div class="panel panel-primary">
 								<div class="panel-heading slide-history-menu">
-									<div class="panel-title" data-translate="pgr.lbl.grievance.history"></div>
+									<div class="panel-title" data-translate="History"></div>
 									<div class="history-icon">
 										<i class="fa fa-angle-down fa-2x" id="toggle-his-icon"></i>
 									</div>
@@ -244,59 +263,17 @@
 					</div>
 				</div>
 
-				<!-- Modal 6 (Long Modal)-->
-				<div class="modal fade" id="complaint-locate">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-						        <button type="button" class="close" data-dismiss="modal">&times;</button>
-						        <h4 class="modal-title" data-translate="pgr.lbl.grievance.location"></h4>
-							</div>
-							<div class="modal-body">
-								<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic"></script>
-								<div id="normal" class="img-prop"></div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
-				<div id="blueimp-gallery" class="blueimp-gallery"
-					data-use-bootstrap-modal="false">
-					<!-- The container for the modal slides -->
-					<div class="slides"></div>
-					<!-- Controls for the borderless lightbox -->
-					<h3 class="title"></h3>
-					<ol class="indicator"></ol>
-					<!-- The modal dialog, which will be used to wrap the lightbox content -->
-					<div class="modal fade">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" aria-hidden="true">&times;</button>
-									<h4 class="modal-title"></h4>
-								</div>
-								<div class="modal-body next"></div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default pull-left prev">
-										<i class="glyphicon glyphicon-chevron-left"></i>Previous</button>
-									<button type="button" class="btn btn-primary next">Next
-									 	<i class="glyphicon glyphicon-chevron-right"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 				<div class="panel panel-primary action-section" data-collapsed="0">
 					<div class="panel-heading">
 						<div class="panel-title" data-translate="pgr.lbl.actions"></div>
 					</div>
 					<div class="panel-body">
-						<form id="complaintUpdate" role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data" autocomplete="off">
+						
+							<div class="form-group hide feegroup">
+								<div class="col-md-offset-3 col-md-9">
+									<input type="checkbox" id="feepaid"> Whether the processing fee is paid
+								</div>
+							</div>
 							<div class="form-group">
 								<div class="col-md-3 col-sm-4 col-xs-6 add-margin" data-translate="pgr.lbl.change.status">
 								</div>
@@ -304,8 +281,8 @@
 									<select id="status" name="status" class="form-control">
 									</select>
 								</div>
-								<div class="col-md-3 col-sm-4 col-xs-6 add-margin employee-action" data-translate="pgr.lbl.change.grievancetype"></div>
-								<div class="col-md-3 col-sm-8 col-xs-6 add-margin employee-action">
+								<div class="col-md-3 col-sm-4 col-xs-6 add-margin employee-action serviceType" data-translate="pgr.lbl.change.grievancetype"></div>
+								<div class="col-md-3 col-sm-8 col-xs-6 add-margin employee-action serviceType">
 									<select id="complaintType" name="complaintType" class="form-control">
 									</select>
 									
@@ -357,7 +334,7 @@
 							</div>  
 							<div class="form-group employee-action">
 								<div class="col-sm-3 col-xs-12">
-									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="core.lbl.upload.photoimage"></button>
+									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="Document reference for approval"></button>
 									<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn hide"/>
 									<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn hide"/>
 									<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn hide"/>
@@ -371,6 +348,7 @@
 										Feedback<span class="mandatory"></span>
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin">
+										<input type="hidden" class="rating"/>
 									</div>
 							</div> -->
 				
@@ -380,9 +358,58 @@
 									<button type="button" class="btn btn-default" data-translate="core.lbl.close" onclick="window.close();"></button>   
 								</div>
 							</div>
-						</form>
+						
 					</div>
 				</div>
+				</form>
+				<!-- Modal 6 (Long Modal)-->
+				<div class="modal fade" id="complaint-locate">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal">&times;</button>
+						        <h4 class="modal-title" data-translate="pgr.lbl.grievance.location"></h4>
+							</div>
+							<div class="modal-body">
+								<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic"></script>
+								<div id="normal" class="img-prop"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+				<div id="blueimp-gallery" class="blueimp-gallery"
+					data-use-bootstrap-modal="false">
+					<!-- The container for the modal slides -->
+					<div class="slides"></div>
+					<!-- Controls for the borderless lightbox -->
+					<h3 class="title"></h3>
+					<ol class="indicator"></ol>
+					<!-- The modal dialog, which will be used to wrap the lightbox content -->
+					<div class="modal fade">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" aria-hidden="true">&times;</button>
+									<h4 class="modal-title"></h4>
+								</div>
+								<div class="modal-body next"></div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default pull-left prev">
+										<i class="glyphicon glyphicon-chevron-left"></i>Previous</button>
+									<button type="button" class="btn btn-primary next">Next
+									 	<i class="glyphicon glyphicon-chevron-right"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
             </div>
 			<footer class="main" data-include="footer">
 			</footer>
@@ -401,6 +428,7 @@
 
 		<script src="../resources/global/js/jquery/jquery.js"></script>
 		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap-rating.min.js"></script>
 		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
 		<script src="../resources/global/js/bootstrap-tour/bootstrap-tour.js"></script>
 		<script src="../resources/global/js/bootstrap/typeahead.bundle.js"></script>

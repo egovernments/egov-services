@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PositionsResponse {
 
-    @JsonProperty("Positions")
+    @JsonProperty("Position")
     List<PositionResponse> positions;
 
     private String getDesignationId() {
@@ -19,10 +19,11 @@ public class PositionsResponse {
     }
 
     private String getDepartmentId() {
-        return positions.get(0).getDepartmentDesignation().getDepartment().getId();
+        return positions.get(0).getDepartmentDesignation().getDepartment().toString();
     }
 
     public Position toDomain() {
         return new Position(getDesignationId(), getDepartmentId());
     }
 }
+

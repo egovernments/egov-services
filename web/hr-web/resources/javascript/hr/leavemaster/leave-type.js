@@ -48,77 +48,68 @@ class LeaveType extends React.Component{
       open(location, '_self').close();
   }
 
-addOrUpdate(e,mode)
-{
+addOrUpdate(e, mode) {
+      e.preventDefault();
+      var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
+      var body={
+          "RequestInfo":requestInfo,
+          "LeaveType":[tempInfo]
+        },_this=this;
 
-        e.preventDefault();
-
-        var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
-        var body={
-            "RequestInfo":requestInfo,
-            "LeaveType":[tempInfo]
-          },_this=this;
-
-            if(type == "update") {
+      if(type == "update") {
         $.ajax({
-              url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(body),
-              contentType: 'application/json',
-              headers:{
-                'auth-token': authToken
-              },
-              success: function(res) {
-                      showSuccess("Leave Modified successfully.");
-                      window.location.href = 'app/hr/common/show-leave-type.html?type=update';
-              },
-              error: function(err) {
-                  showError("Leave Type already defined");
-
+          url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data:JSON.stringify(body),
+          contentType: 'application/json',
+          headers:{
+            'auth-token': authToken
+          },
+          success: function(res) {
+            showSuccess("Leave Modified successfully.");
+            window.location.href = 'app/hr/common/show-leave-type.html?type=update';
+          },
+          error: function(err) {
+              showError("Leave Type already defined");
+          }
+        });
+      } else {
+        $.ajax({
+          url:baseUrl+"/hr-leave/leavetypes/_create?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data:JSON.stringify(body),
+          contentType: 'application/json',
+          headers:{
+            'auth-token': authToken
+          },
+          success: function(res) {
+            showSuccess("Leave Created successfully.");
+            _this.setState({
+              LeaveType:{
+                "id": "",
+                "name": "",
+                "description": "",
+                "halfdayAllowed": "false",
+                "payEligible": "false",
+                "accumulative": "false",
+                "encashable": "false",
+                "active": "true",
+                "createdBy": "",
+                "createdDate": "",
+                "lastModifiedBy": "",
+                "lastModifiedDate": "",
+                "tenantId": tenantId
               }
-          });
-        } else {
-          $.ajax({
-
-                url:baseUrl+"/hr-leave/leavetypes/_create?tenantId=" + tenantId,
-                type: 'POST',
-                dataType: 'json',
-                data:JSON.stringify(body),
-                contentType: 'application/json',
-                headers:{
-                  'auth-token': authToken
-                },
-                success: function(res) {
-                        showSuccess("Leave Created successfully.");
-                        _this.setState({
-                          LeaveType:{
-                            "id": "",
-                            "name": "",
-                            "description": "",
-                            "halfdayAllowed": "false",
-                            "payEligible": "false",
-                            "accumulative": "false",
-                            "encashable": "false",
-                            "active": "true",
-                            "createdBy": "",
-                            "createdDate": "",
-                            "lastModifiedBy": "",
-                            "lastModifiedDate": "",
-                            "tenantId": tenantId
-                        }
-                        })
-
-                },
-                error: function(err) {
-                    showError("Leave Type already defined");
-
-                }
-            });
-
-        }
+            })
+          },
+          error: function(err) {
+            showError("Leave Type already defined.");
+          }
+        });
+      }
   }
-
 
   componentDidMount() {
     if(window.opener && window.opener.document) {
@@ -126,23 +117,26 @@ addOrUpdate(e,mode)
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Type");
+    }
+    if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Type");
     var type=getUrlVars()["type"];
-    var id=getUrlVars()["id"];
+    var id=getUrlVars()["id"], _this = this;
 
-    if(getUrlVars()["type"]==="view")
-    {
+    if(getUrlVars()["type"]==="view") {
       $("input,select,radio,textarea").prop("disabled", true);
-      }
+    }
 
-      if(type==="view"||type==="update")
-      {
-          this.setState({
-            LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
+    if(type==="view"||type==="update") {
+      getCommonMasterById("hr-leave", "leavetypes", id, function(err, res) {
+        if(res) {
+          _this.setState({
+            LeaveType: res.LeaveType[0]
           })
-      }
+        }
+      })
+    }
   }
+
   render()
   {
     let {handleChange,addOrUpdate}=this;

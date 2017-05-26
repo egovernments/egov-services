@@ -2,7 +2,7 @@ var baseUrl = window.location.origin;
 
 
 
-var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "ap.kurnool"//"ap." + window.location.origin.split("-")[0].split("//")[1];
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();
@@ -50,81 +50,87 @@ $(document).ready(function() {
 
 
 
-function getCommonMaster(mainRoute, resource, returnObject, pageSize) {
-    blockUI();
-    var res = $.ajax({
+function getCommonMaster(mainRoute, resource, cb, pageSize) {
+    $.ajax({
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + (pageSize || 500),
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),
-        async: false,
-        // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
-        // processData: false, // We want this to remain an object for  $.ajaxPrefilter
         headers: {
-            'auth-token': authToken
+            'auth-token': authToken,
+            Authorization:'Basic Og=='
         },
-        contentType: 'application/json'
+        contentType: 'application/json',
+        success: function(res) {
+            cb(null, res);
+        },
+        error: function(err) {
+            cb(err);
+        }
     });
-    unblockUI();
-    return res;
 }
 
-function commonApiPost(context, resource = "", action = "", queryObject = {}) {
-    blockUI();
+function commonApiPost(context, resource = "", action = "", queryObject = {}, cb) {
     var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
     for (var variable in queryObject) {
         if (queryObject[variable]) {
             url += "&" + variable + "=" + queryObject[variable];
         }
     }
-    var res = $.ajax({
+    $.ajax({
         url: url,
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),
-        async: false,
         contentType: 'application/json',
         headers: {
-            'auth-token': authToken
+            'auth-token': authToken,
+            Authorization:'Basic Og=='
+        },
+        success: function(res) {
+            cb(null, res);
+        },
+        error: function(err) {
+            cb(err);
         }
     });
-    unblockUI();
-    return res;
 }
 
-function commonApiGet(context, resource = "", action = "", queryObject = {}) {
-    blockUI();
+function commonApiGet(context, resource = "", action = "", queryObject = {}, cb) {
     var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
     for (var variable in queryObject) {
         if (queryObject[variable]) {
             url += "&" + variable + "=" + queryObject[variable];
         }
     }
-    var res = $.ajax({
+    $.ajax({
         url: url,
         type: 'GET',
         dataType: 'json',
         headers: {
-            'auth-token': authToken
+            'auth-token': authToken,
+            Authorization:'Basic Og=='
         },
-        // data:JSON.stringify({RequestInfo: requestInfo}),
-        async: false,
-        contentType: 'application/json'
+        contentType: 'application/json',
+        success: function(res) {
+            cb(null, res);
+        },
+        error: function(err) {
+            cb(err);
+        }
     });
-    unblockUI();
-    return res;
 }
 
 
-function titleCase (field) {
-    if(field) {
+function titleCase(field) {
+    if (field) {
         var newField = field[0].toUpperCase();
-        for(let i=1; i<field.length; i++) {
-          if(field[i-1] != " " && field[i] != " ") {
-            newField += field.charAt(i).toLowerCase();
-          } else {
-            newField += field[i]
-          }
+        for (let i = 1; i < field.length; i++) {
+            if (field[i - 1] != " " && field[i] != " ") {
+                newField += field.charAt(i).toLowerCase();
+            } else {
+                newField += field[i]
+            }
         }
         return newField;
     } else {
@@ -147,21 +153,24 @@ function getUrlVars() {
 
 
 
-function getCommonMasterById(mainRoute, resource, returnObject, id) {
-    blockUI();
-    var res = $.ajax({
+function getCommonMasterById(mainRoute, resource, id, cb) {
+    $.ajax({
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "id=" + id,
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),
-        async: false,
         headers: {
-            'auth-token': authToken
+            'auth-token': authToken,
+            Authorization:'Basic Og=='
         },
-        contentType: 'application/json'
+        contentType: 'application/json',
+        success: function(res) {
+            cb(null, res);
+        },
+        error: function(err) {
+            cb(err);
+        }
     });
-    unblockUI();
-    return res;
 }
 
 // commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})
@@ -232,4 +241,341 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+
+function getDropdown(name, cb, params) {
+    switch (name) {
+        case 'employeeType':
+            if (!localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined") {
+                getCommonMaster("hr-masters", "employeetypes", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("employeeType", JSON.stringify(res["EmployeeType"]));
+                        cb(res["EmployeeType"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("employeeType")));
+            }
+            break;
+        case 'employeeStatus':
+            if (!localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined") {
+                getCommonMaster("hr-masters", "hrstatuses", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("employeeStatus", JSON.stringify(res["HRStatus"]));
+                        cb(res["HRStatus"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("employeeStatus")));
+            }
+            break;
+        case 'group':
+            if (!localStorage.getItem("group") || localStorage.getItem("group") == "undefined") {
+                getCommonMaster("hr-masters", "groups", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("group", JSON.stringify(res["Group"]));
+                        cb(res["Group"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("group")));
+            }
+            break;
+        case 'maritalStatus':
+            if (!localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined") {
+                var queryString = {tenantId, pageSize:500};
+                if (params && typeof params == "object")
+                    queryString = Object.assign(queryString, params);
+                commonApiPost("hr-employee", "maritalstatuses", "_search", queryString, function(err, res) {
+                    if (res) {
+                        localStorage.setItem("maritalStatus", JSON.stringify(res["MaritalStatus"]));
+                        cb(res["MaritalStatus"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("maritalStatus")));
+            }
+            break;
+        case 'user_bloodGroup':
+            if (!localStorage.getItem("user_bloodGroup") || localStorage.getItem("user_bloodGroup") == "undefined") {
+                var queryString = {tenantId, pageSize:500};
+                if (params && typeof params == "object")
+                    queryString = Object.assign(queryString, params);
+                commonApiPost("hr-employee", "bloodgroups", "_search", queryString, function(err, res) {
+                    if (res) {
+                        localStorage.setItem("user_bloodGroup", JSON.stringify(res["BloodGroup"]));
+                        cb(res["BloodGroup"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("user_bloodGroup")));
+            }
+            break;
+        case 'motherTongue':
+            if (!localStorage.getItem("motherTongue") || localStorage.getItem("motherTongue") == "undefined") {
+                getCommonMaster("egov-common-masters", "languages", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("motherTongue", JSON.stringify(res["Language"]));
+                        cb(res["Language"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("motherTongue")));
+            }
+            break;
+        case 'religion':
+            if (!localStorage.getItem("religion") || localStorage.getItem("religion") == "undefined") {
+                getCommonMaster("egov-common-masters", "religions", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("religion", JSON.stringify(res["Religion"]));
+                        cb(res["Religion"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("religion")));
+            }
+            break;
+        case 'community':
+            if (!localStorage.getItem("community") || localStorage.getItem("community") == "undefined") {
+                getCommonMaster("egov-common-masters", "communities", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("community", JSON.stringify(res["Community"]));
+                        cb(res["Community"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("community")));
+            }
+            break;
+        case 'category':
+            if (!localStorage.getItem("category") || localStorage.getItem("category") == "undefined") {
+                getCommonMaster("egov-common-masters", "categories", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("category", JSON.stringify(res["Category"]));
+                        cb(res["Category"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("category")));
+            }
+            break;
+        case 'bank':
+            if (!localStorage.getItem("bank") || localStorage.getItem("bank") == "undefined") {
+                getCommonMaster("egf-masters", "banks", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("bank", JSON.stringify(res["banks"]));
+                        cb(res["banks"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("bank")));
+            }
+            break;
+        case 'recruitmentMode':
+            if (!localStorage.getItem("recruitmentMode") || localStorage.getItem("recruitmentMode") == "undefined") {
+                getCommonMaster("hr-masters", "recruitmentmodes", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("recruitmentMode", JSON.stringify(res["RecruitmentMode"]));
+                        cb(res["RecruitmentMode"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("recruitmentMode")));
+            }
+            break;
+        case 'recruitmentType':
+            if (!localStorage.getItem("recruitmentType") || localStorage.getItem("recruitmentType") == "undefined") {
+                getCommonMaster("hr-masters", "recruitmenttypes", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("recruitmentType", JSON.stringify(res["RecruitmentType"]));
+                        cb(res["RecruitmentType"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("recruitmentType")));
+            }
+            break;
+        case 'assignments_grade':
+            if (!localStorage.getItem("assignments_grade") || localStorage.getItem("assignments_grade") == "undefined") {
+                getCommonMaster("hr-masters", "grades", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_grade", JSON.stringify(res["Grade"]));
+                        cb(res["Grade"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_grade")));
+            }
+            break;
+        case 'assignments_fund':
+            if (!localStorage.getItem("assignments_fund") || localStorage.getItem("assignments_fund") == "undefined") {
+                getCommonMaster("egf-masters", "funds", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_fund", JSON.stringify(res["funds"]));
+                        cb(res["funds"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_fund")));
+            }
+            break;
+        case 'assignments_functionary':
+            if (!localStorage.getItem("assignments_functionary") || localStorage.getItem("assignments_functionary") == "undefined") {
+                getCommonMaster("egf-masters", "functionaries", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_functionary", JSON.stringify(res["functionaries"]));
+                        cb(res["functionaries"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_functionary")));
+            }
+            break;
+        case 'assignments_function':
+            if (!localStorage.getItem("assignments_function") || localStorage.getItem("assignments_function") == "undefined") {
+                getCommonMaster("egf-masters", "functions", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_function", JSON.stringify(res["functions"]));
+                        cb(res["functions"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_function")));
+            }
+            break;
+        case 'jurisdictions_jurisdictionsType':
+            if (!localStorage.getItem("jurisdictions_jurisdictionsType") || localStorage.getItem("jurisdictions_jurisdictionsType") == "undefined") {
+                var queryString = { tenantId, hierarchyTypeName: "ADMINISTRATION" };
+                if (params && typeof params == "object")
+                    queryString = Object.assign(queryString, params);
+                commonApiPost("egov-location/boundarytypes", "getByHierarchyType", "", queryString, function(err, res) {
+                    if (res) {
+                        localStorage.setItem("jurisdictions_jurisdictionsType", JSON.stringify(res["BoundaryType"]));
+                        cb(res["BoundaryType"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("jurisdictions_jurisdictionsType")));
+            }
+            break;
+        case 'assignments_position':
+            if (!localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined") {
+                getCommonMaster("hr-masters", "positions", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_position", JSON.stringify(res["Position"]));
+                        cb(res["Position"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_position")));
+            }
+            break;
+        case 'assignments_designation':
+            if (!localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined") {
+                getCommonMaster("hr-masters", "designations", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_designation", JSON.stringify(res["Designation"]));
+                        cb(res["Designation"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_designation")));
+            }
+            break;
+        case 'assignments_department':
+            if (!localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined") {
+                getCommonMaster("egov-common-masters", "departments", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_department", JSON.stringify(res["Department"]));
+                        cb(res["Department"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_department")));
+            }
+            break;
+        case 'recruitmentQuota':
+            if (!localStorage.getItem("recruitmentQuota") || localStorage.getItem("recruitmentQuota") == "undefined") {
+                getCommonMaster("hr-masters", "recruitmentquotas", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("recruitmentQuota", JSON.stringify(res["RecruitmentQuota"]));
+                        cb(res["RecruitmentQuota"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("recruitmentQuota")));
+            }
+            break;
+        case 'years':
+            if (!localStorage.getItem("years") || localStorage.getItem("years") == "undefined") {
+                getCommonMaster("egov-common-masters", "calendaryears", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("years", JSON.stringify(res["CalendarYear"]));
+                        cb(res["CalendarYear"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("years")));
+            }
+            break;
+        case 'leaveTypes':
+            if (!localStorage.getItem("leaveTypes") || localStorage.getItem("leaveTypes") == "undefined") {
+                getCommonMaster("hr-leave", "leavetypes", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("leaveTypes", JSON.stringify(res["LeaveType"]));
+                        cb(res["LeaveType"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("leaveTypes")));
+            }
+            break;
+    }
 }

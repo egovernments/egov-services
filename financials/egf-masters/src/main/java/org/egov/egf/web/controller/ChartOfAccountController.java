@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class ChartOfAccountController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		chartOfAccountContractRequest.getRequestInfo().setAction("create");
 		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
 		chartOfAccountService.push(chartOfAccountContractRequest);
 		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
@@ -73,6 +73,7 @@ public class ChartOfAccountController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		chartOfAccountContractRequest.getRequestInfo().setAction("update");
 		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
 		chartOfAccountContractRequest.getChartOfAccount().setId(uniqueId);
 		chartOfAccountService.push(chartOfAccountContractRequest);
@@ -93,7 +94,6 @@ public class ChartOfAccountController {
 			throw new CustomBindException(errors);
 		}
 		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
-		RequestInfo requestInfo = chartOfAccountContractRequest.getRequestInfo();
 		ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(uniqueId);
 		ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
 
@@ -107,7 +107,7 @@ public class ChartOfAccountController {
 		return chartOfAccountContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public ChartOfAccountContractResponse updateAll(
 			@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors) {
@@ -115,17 +115,12 @@ public class ChartOfAccountController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		chartOfAccountContractRequest.getRequestInfo().setAction("updateAll");
 		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
-
+		chartOfAccountService.push(chartOfAccountContractRequest);
 		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
 		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
 		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getChartOfAccounts()) {
-			ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(chartOfAccountContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(chartOfAccountContract, chartOfAccountFromDb);
-			chartOfAccountFromDb = chartOfAccountService.update(chartOfAccountFromDb);
-			model.map(chartOfAccountFromDb, chartOfAccountContract);
 			chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);
 		}
 

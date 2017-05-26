@@ -97,6 +97,32 @@ public class ChartOfAccountDetailService {
 	}
 
 	@Transactional
+	public ChartOfAccountDetailContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("ChartOfAccountDetailCreate"),
+						ChartOfAccountDetailContractRequest.class);
+		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();
+		chartOfAccountDetailContractResponse.setChartOfAccountDetails(new ArrayList<ChartOfAccountDetailContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (chartOfAccountDetailContractRequest.getChartOfAccountDetails() != null
+				&& !chartOfAccountDetailContractRequest.getChartOfAccountDetails().isEmpty()) {
+			for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailContractRequest
+					.getChartOfAccountDetails()) {
+				ChartOfAccountDetail chartOfAccountDetailEntity = new ChartOfAccountDetail(
+						chartOfAccountDetailContract);
+				chartOfAccountDetailEntity.setVersion(findOne(chartOfAccountDetailEntity.getId()).getVersion());
+				chartOfAccountDetailJpaRepository.save(chartOfAccountDetailEntity);
+				ChartOfAccountDetailContract resp = modelMapper.map(chartOfAccountDetailEntity,
+						ChartOfAccountDetailContract.class);
+				chartOfAccountDetailContractResponse.getChartOfAccountDetails().add(resp);
+			}
+		}
+		chartOfAccountDetailContractResponse
+				.setResponseInfo(getResponseInfo(chartOfAccountDetailContractRequest.getRequestInfo()));
+		return chartOfAccountDetailContractResponse;
+	}
+
+	@Transactional
 	public ChartOfAccountDetailContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest = ObjectMapperFactory.create()
 				.convertValue(financialContractRequestMap.get("ChartOfAccountDetailUpdate"),
@@ -125,8 +151,7 @@ public class ChartOfAccountDetailService {
 
 	private void setChartOfAccountDetail(final ChartOfAccountDetail chartOfAccountDetail) {
 		if (chartOfAccountDetail.getChartOfAccount() != null) {
-			ChartOfAccount chartOfAccount = chartOfAccountService
-					.findOne(chartOfAccountDetail.getChartOfAccount());
+			ChartOfAccount chartOfAccount = chartOfAccountService.findOne(chartOfAccountDetail.getChartOfAccount());
 			if (chartOfAccount == null) {
 				throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid", " Invalid chartOfAccount");
 			}

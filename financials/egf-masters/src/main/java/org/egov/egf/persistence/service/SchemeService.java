@@ -83,6 +83,27 @@ public class SchemeService {
 		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
 		return schemeContractResponse;
 	}
+	
+	@Transactional
+	public SchemeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final SchemeContractRequest schemeContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("SchemeCreate"), SchemeContractRequest.class);
+		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
+		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (schemeContractRequest.getSchemes() != null && !schemeContractRequest.getSchemes().isEmpty()) {
+			for (SchemeContract schemeContract : schemeContractRequest.getSchemes()) {
+				Scheme schemeEntity = new Scheme(schemeContract);
+				schemeEntity.setVersion(findOne(schemeEntity.getId()).getVersion());
+				schemeJpaRepository.save(schemeEntity);
+				SchemeContract resp = modelMapper.map(schemeEntity, SchemeContract.class);
+				schemeContractResponse.getSchemes().add(resp);
+			}
+		}
+		schemeContractResponse.setResponseInfo(getResponseInfo(schemeContractRequest.getRequestInfo()));
+		return schemeContractResponse;
+	}
+	
 
 	@Transactional
 	public SchemeContractResponse update(HashMap<String, Object> financialContractRequestMap) {

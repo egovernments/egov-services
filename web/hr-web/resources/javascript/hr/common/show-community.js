@@ -9,30 +9,24 @@ class ShowCommunity extends React.Component {
   }
 
 
-  componentDidMount()
-  {
+  componentDidMount() {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Community");
-
-      try {
-          var _communities = commonApiPost("egov-common-masters","communities","_search",{tenantId,pageSize:500}).responseJSON["Community"] || [];
-      } catch(e) {
-          var _communities = [];
-      }
-      this.setState({
-        list: _communities
-      });
+    }
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Community");
+    var _this = this;
+    getDropdown("community", function(res) {
+        _this.setState({
+          list: res
+        });
+    })
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
-
           $('#communityTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -43,14 +37,10 @@ class ShowCommunity extends React.Component {
       }
   }
 
-
-
   close(){
       // widow.close();
       open(location, '_self').close();
   }
-
-
 
   render() {
     let {list}=this.state;

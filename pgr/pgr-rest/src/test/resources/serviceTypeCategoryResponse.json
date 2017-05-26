@@ -1,6 +1,6 @@
 {
     "responseInfo": null,
-    "complaintTypeCategories": [
+    "serviceTypeCategories": [
         {
             "name": "Administration",
             "description": "Administration",

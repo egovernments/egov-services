@@ -11,100 +11,85 @@ class CompensetoryLeave extends React.Component {
     }
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
-
   }
 
 
-  handleChange(e,name)
-  {
-      this.setState({
-          compensetorySet:{
-              ...this.state.compensetorySet,
-              [name]:e.target.value
-          }
-      })
+  handleChange(e, name) {
+    this.setState({
+        compensetorySet:{
+            ...this.state.compensetorySet,
+            [name]:e.target.value
+        }
+    })
   }
 
-  close(){
-      // widow.close();
+  close() {
       open(location, '_self').close();
   }
 
-
-
-  addOrUpdate(e,mode)
-  {
-
-          e.preventDefault();
-          var employee;
-          var asOnDate = this.state.compensetorySet.toDate;
-          var departmentId = this.state.departmentId;
-          var tempInfo=Object.assign({},this.state.compensetorySet) , type = getUrlVars()["type"];
-          delete  tempInfo.name;
-          delete tempInfo.code;
-          var body={
-              "RequestInfo":requestInfo,
-              "LeaveApplication":tempInfo
-            },_this=this;
-              if(type == "Update") {
-                $.ajax({
-
-                      url:baseUrl+"/hr-leave/leaveapplications/" + this.state.compensetorySet.id + "/" + "_update?tenantId=" + tenantId,
-                      type: 'POST',
-                      dataType: 'json',
-                      data:JSON.stringify(body),
-
-                      contentType: 'application/json',
-                      headers:{
-                        'auth-token': authToken
-                      },
-                      success: function(res) {
-                              showSuccess("Leave Application Modified successfully.");
-                              _this.setState({
-                                compensetorySet:{
-                                workedOn:"",
-                                compensatoryForDate:"",
-                                name:"",
-                                code:""}
-                              })
-
-                      },
-                      error: function(err) {
-                          showError(err);
-
-                      }
-                  });
+addOrUpdate(e,mode) {
+  e.preventDefault();
+  var employee;
+  var asOnDate = this.state.compensetorySet.toDate;
+  var departmentId = this.state.departmentId;
+  var tempInfo=Object.assign({},this.state.compensetorySet) , type = getUrlVars()["type"];
+  delete  tempInfo.name;
+  delete tempInfo.code;
+  var body={
+      "RequestInfo":requestInfo,
+      "LeaveApplication":tempInfo
+    },_this=this;
+      if(type == "Update") {
+        $.ajax({
+              url:baseUrl+"/hr-leave/leaveapplications/" + this.state.compensetorySet.id + "/" + "_update?tenantId=" + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(body),
+              contentType: 'application/json',
+              headers:{
+                'auth-token': authToken
+              },
+              success: function(res) {
+                showSuccess("Leave Application Modified successfully.");
+                _this.setState({
+                  compensetorySet:{
+                  workedOn:"",
+                  compensatoryForDate:"",
+                  name:"",
+                  code:""}
+                })
+              },
+              error: function(err) {
+                showError(err["statusText"]);
               }
-              else{
-                $.ajax({
-                      url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
-                      type: 'POST',
-                      dataType: 'json',
-                      data:JSON.stringify(body),
-
-                      contentType: 'application/json',
-                      headers:{
-                        'auth-token': authToken
-                      },
-                      success: function(res) {
-                              showSuccess("Leave Application Created successfully.");
-                              _this.setState({
-                                compensetorySet:{
-                                workedOn:"",
-                                compensatoryForDate:"",
-                                name:"",
-                                code:""}
-                              })
-
-
-                      },
-                      error: function(err) {
-                          showError(err);
-
-                      }
-                  });
+          });
+      }
+      else{
+        $.ajax({
+              url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(body),
+              contentType: 'application/json',
+              headers:{
+                'auth-token': authToken
+              },
+              success: function(res) {
+                showSuccess("Leave Application Created successfully.");
+                _this.setState({
+                  compensetorySet:{
+                  workedOn:"",
+                  compensatoryForDate:"",
+                  name:"",
+                  code:""}
+                })
+              },
+              error: function(err) {
+                showError(err["statusText"]);
               }
-          }
+          });
+      }
+}
 
 
   componentDidMount() {
@@ -121,40 +106,46 @@ class CompensetoryLeave extends React.Component {
         autclose:true
 
     });
-    $('#compensatoryForDate').on("change", function(e) {
 
+    $('#compensatoryForDate').on("change", function(e) {
       _this.setState({
             compensetorySet: {
                 ..._this.state.compensetorySet,
                 "compensatoryForDate":$("#compensatoryForDate").val()
             }
       })
-      });
-      if (!id) {
+    });
 
-       var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
-      } else {
-        var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
-      }
-
-      _this.setState({
-        compensetorySet:{
-            ..._this.state.compensetorySet,
-            name:obj.name,
-            code:obj.code,
-            employee:obj.id,
-            // workflowDetails:{
-            //   ..._this.state.leaveSet.workflowDetails,
-            //   assignee: assignee || ""
-            // }
-
-          }
+    if (!id) {
+      commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}, function(err, res) {
+        if(res) {
+          var obj = res.Employee[0];
+          _this.setState({
+            compensetorySet:{
+                ..._this.state.compensetorySet,
+                name:obj.name,
+                code:obj.code,
+                employee:obj.id,
+              }
+          })
+        }
       })
+    } else {
+      getCommonMasterById("hr-employee", "employees", id, function(err, res) {
+        if(res) {
+          var obj = res.Employee[0];
+          _this.setState({
+            compensetorySet:{
+                ..._this.state.compensetorySet,
+                name:obj.name,
+                code:obj.code,
+                employee:obj.id,
+              }
+          })
+        }
+      });
     }
-
-
-
-
+  }
 
   render() {
       let {handleChange,addOrUpdate}=this;

@@ -22,14 +22,17 @@ public class ChartOfAccountDetailQueueRepository {
 
 	public void push(ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest) {
 		HashMap<String, Object> chartOfAccountDetailContractRequestMap = new HashMap<String, Object>();
-		if (chartOfAccountDetailContractRequest.getChartOfAccountDetails() != null
-				&& !chartOfAccountDetailContractRequest.getChartOfAccountDetails().isEmpty())
+		
+		if ("create".equalsIgnoreCase(chartOfAccountDetailContractRequest.getRequestInfo().getAction()))
 			chartOfAccountDetailContractRequestMap.put("ChartOfAccountDetailCreate",
 					chartOfAccountDetailContractRequest);
-		else if (chartOfAccountDetailContractRequest.getChartOfAccountDetail() != null
-				&& chartOfAccountDetailContractRequest.getChartOfAccountDetail().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(chartOfAccountDetailContractRequest.getRequestInfo().getAction()))
+			chartOfAccountDetailContractRequestMap.put("ChartOfAccountDetailUpdateAll",
+					chartOfAccountDetailContractRequest);
+		else if ("update".equalsIgnoreCase(chartOfAccountDetailContractRequest.getRequestInfo().getAction()))
 			chartOfAccountDetailContractRequestMap.put("ChartOfAccountDetailUpdate",
 					chartOfAccountDetailContractRequest);
+		
 		financialProducer.sendMessage(chartOfAccountDetailValidatedTopic, chartOfAccountDetailValidatedKey,
 				chartOfAccountDetailContractRequestMap);
 	}

@@ -12,8 +12,7 @@ class ShowGrade extends React.Component {
   }
 
 
-  componentDidMount()
-  {
+  componentDidMount () {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
@@ -22,40 +21,31 @@ class ShowGrade extends React.Component {
      }
 
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Grade");
+    var _this = this;
+    getDropdown("assignments_grade", function(res) {
+      _this.setState({
+        grades: res
+      })
+    })
+  }
 
-    try {
-        var _grade = commonApiPost("hr-masters","grades","_search",{tenantId,pageSize:500}).responseJSON["Grade"] || [];
-    } catch(e) {
-        var _grade = [];
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.grades.length!=this.state.grades.length) {
+        $('#gradeTable').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+                   'copy', 'csv', 'excel', 'pdf', 'print'
+           ],
+           ordering: false
+        });
     }
-    this.setState({
-      grades:_grade
-    });
-}
-
-
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.grades.length!=this.state.grades.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.grades.length);
-          // alert(this.state.grades.length);
-          // alert('updated');
-          $('#gradeTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false
-          });
-      }
   }
 
 
 
   close(){
-      // widow.close();
-      open(location, '_self').close();
+    open(location, '_self').close();
   }
 
 

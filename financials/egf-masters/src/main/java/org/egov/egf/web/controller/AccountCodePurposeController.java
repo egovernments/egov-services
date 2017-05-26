@@ -89,37 +89,6 @@ public class AccountCodePurposeController {
 		return accountCodePurposeContractResponse;
 	}
 
-	/*
-	 * @PostMapping(value = "/{uniqueId}/view")
-	 * 
-	 * @ResponseStatus(HttpStatus.OK) public AccountCodePurposeContractResponse
-	 * view(
-	 * 
-	 * @ModelAttribute AccountCodePurposeContractRequest
-	 * accountCodePurposeContractRequest, BindingResult errors,
-	 * 
-	 * @PathVariable Long uniqueId) {
-	 * accountCodePurposeService.validate(accountCodePurposeContractRequest,
-	 * "view", errors); if (errors.hasErrors()) { throw new
-	 * CustomBindException(errors); }
-	 * accountCodePurposeService.fetchRelatedContracts(
-	 * accountCodePurposeContractRequest); AccountCodePurpose
-	 * accountCodePurposeFromDb = accountCodePurposeService.findOne(uniqueId);
-	 * AccountCodePurposeContract accountCodePurpose =
-	 * accountCodePurposeContractRequest.getAccountCodePurpose();
-	 * 
-	 * ModelMapper model = new ModelMapper();
-	 * model.map(accountCodePurposeFromDb, accountCodePurpose);
-	 * 
-	 * AccountCodePurposeContractResponse accountCodePurposeContractResponse =
-	 * new AccountCodePurposeContractResponse();
-	 * accountCodePurposeContractResponse.setAccountCodePurpose(
-	 * accountCodePurpose); accountCodePurposeContractResponse
-	 * .setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.
-	 * getRequestInfo()));
-	 * accountCodePurposeContractResponse.getResponseInfo().setStatus(HttpStatus
-	 * .OK.toString()); return accountCodePurposeContractResponse; }
-	 */
 	@PostMapping("_update")
 	@ResponseStatus(HttpStatus.OK)
 	public AccountCodePurposeContractResponse updateAll(
@@ -174,6 +143,33 @@ public class AccountCodePurposeController {
 			accountCodePurposeContractResponse.getAccountCodePurposes().add(accountCodePurposeContract);
 		}
 		accountCodePurposeContractResponse.getPage().map(allAccountCodePurposes);
+		accountCodePurposeContractResponse
+				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
+		accountCodePurposeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return accountCodePurposeContractResponse;
+	}
+
+	@PostMapping(value = "/{uniqueId}/view")
+
+	@ResponseStatus(HttpStatus.OK)
+	public AccountCodePurposeContractResponse view(
+
+			@ModelAttribute AccountCodePurposeContractRequest accountCodePurposeContractRequest, BindingResult errors,
+
+			@PathVariable Long uniqueId) {
+		accountCodePurposeService.validate(accountCodePurposeContractRequest, "view", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);
+		AccountCodePurpose accountCodePurposeFromDb = accountCodePurposeService.findOne(uniqueId);
+		AccountCodePurposeContract accountCodePurpose = accountCodePurposeContractRequest.getAccountCodePurpose();
+
+		ModelMapper model = new ModelMapper();
+		model.map(accountCodePurposeFromDb, accountCodePurpose);
+
+		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
+		accountCodePurposeContractResponse.setAccountCodePurpose(accountCodePurpose);
 		accountCodePurposeContractResponse
 				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
 		accountCodePurposeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());

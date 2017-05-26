@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +44,7 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		chartOfAccountDetailContractRequest.getRequestInfo().setAction("create");
 		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
 		chartOfAccountDetailService.push(chartOfAccountDetailContractRequest);
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();
@@ -56,7 +56,8 @@ public class ChartOfAccountDetailController {
 				chartOfAccountDetailContractResponse.getChartOfAccountDetails().add(chartOfAccountDetailContract);
 			}
 		} else if (chartOfAccountDetailContractRequest.getChartOfAccountDetail() != null) {
-			chartOfAccountDetailContractResponse.setChartOfAccountDetail(chartOfAccountDetailContractRequest.getChartOfAccountDetail());
+			chartOfAccountDetailContractResponse
+					.setChartOfAccountDetail(chartOfAccountDetailContractRequest.getChartOfAccountDetail());
 		}
 		chartOfAccountDetailContractResponse
 				.setResponseInfo(getResponseInfo(chartOfAccountDetailContractRequest.getRequestInfo()));
@@ -75,6 +76,7 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		chartOfAccountDetailContractRequest.getRequestInfo().setAction("update");
 		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
 		chartOfAccountDetailContractRequest.getChartOfAccountDetail().setId(uniqueId);
 		chartOfAccountDetailService.push(chartOfAccountDetailContractRequest);
@@ -98,7 +100,6 @@ public class ChartOfAccountDetailController {
 			throw new CustomBindException(errors);
 		}
 		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
-		RequestInfo requestInfo = chartOfAccountDetailContractRequest.getRequestInfo();
 		ChartOfAccountDetail chartOfAccountDetailFromDb = chartOfAccountDetailService.findOne(uniqueId);
 		ChartOfAccountDetailContract chartOfAccountDetail = chartOfAccountDetailContractRequest
 				.getChartOfAccountDetail();
@@ -114,7 +115,7 @@ public class ChartOfAccountDetailController {
 		return chartOfAccountDetailContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public ChartOfAccountDetailContractResponse updateAll(
 			@RequestBody @Valid ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest,
@@ -123,19 +124,13 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		chartOfAccountDetailContractRequest.getRequestInfo().setAction("updateAll");
 		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
-
+		chartOfAccountDetailService.push(chartOfAccountDetailContractRequest);
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();
 		chartOfAccountDetailContractResponse.setChartOfAccountDetails(new ArrayList<ChartOfAccountDetailContract>());
 		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailContractRequest
 				.getChartOfAccountDetails()) {
-			ChartOfAccountDetail chartOfAccountDetailFromDb = chartOfAccountDetailService
-					.findOne(chartOfAccountDetailContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(chartOfAccountDetailContract, chartOfAccountDetailFromDb);
-			chartOfAccountDetailFromDb = chartOfAccountDetailService.update(chartOfAccountDetailFromDb);
-			model.map(chartOfAccountDetailFromDb, chartOfAccountDetailContract);
 			chartOfAccountDetailContractResponse.getChartOfAccountDetails().add(chartOfAccountDetailContract);
 		}
 

@@ -82,7 +82,29 @@ public class FunctionService {
 		functionContractResponse.setResponseInfo(getResponseInfo(functionContractRequest.getRequestInfo()));
 		return functionContractResponse;
 	}
+	
+	@Transactional
+	public FunctionContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final FunctionContractRequest functionContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("FunctionCreate"), FunctionContractRequest.class);
+		FunctionContractResponse functionContractResponse = new FunctionContractResponse();
+		functionContractResponse.setFunctions(new ArrayList<FunctionContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (functionContractRequest.getFunctions() != null && !functionContractRequest.getFunctions().isEmpty()) {
+			for (FunctionContract functionContract : functionContractRequest.getFunctions()) {
+				Function functionEntity = new Function(functionContract);
+				functionEntity.setVersion(findOne(functionEntity.getId()).getVersion());
+				functionJpaRepository.save(functionEntity);
+				FunctionContract resp = modelMapper.map(functionEntity, FunctionContract.class);
+				functionContractResponse.getFunctions().add(resp);
+			}
+		}
+		functionContractResponse.setResponseInfo(getResponseInfo(functionContractRequest.getRequestInfo()));
+		return functionContractResponse;
+	}
 
+	
+	
 	@Transactional
 	public FunctionContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final FunctionContractRequest functionContractRequest = ObjectMapperFactory.create()

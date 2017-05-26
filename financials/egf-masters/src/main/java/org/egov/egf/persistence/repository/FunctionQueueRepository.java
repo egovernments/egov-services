@@ -22,10 +22,14 @@ public class FunctionQueueRepository {
 
 	public void push(FunctionContractRequest functionContractRequest) {
 		HashMap<String, Object> functionContractRequestMap = new HashMap<String, Object>();
-		if (functionContractRequest.getFunctions() != null && !functionContractRequest.getFunctions().isEmpty())
+
+		if ("create".equalsIgnoreCase(functionContractRequest.getRequestInfo().getAction()))
 			functionContractRequestMap.put("FunctionCreate", functionContractRequest);
-		else if (functionContractRequest.getFunction() != null && functionContractRequest.getFunction().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(functionContractRequest.getRequestInfo().getAction()))
+			functionContractRequestMap.put("FunctionUpdateAll", functionContractRequest);
+		else if ("update".equalsIgnoreCase(functionContractRequest.getRequestInfo().getAction()))
 			functionContractRequestMap.put("FunctionUpdate", functionContractRequest);
+
 		financialProducer.sendMessage(functionValidatedTopic, functionValidatedKey, functionContractRequestMap);
 	}
 }

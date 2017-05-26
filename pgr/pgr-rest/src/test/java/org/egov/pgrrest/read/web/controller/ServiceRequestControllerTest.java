@@ -4,6 +4,7 @@ import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.TestResourceReader;
 import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
@@ -104,6 +105,7 @@ public class ServiceRequestControllerTest {
             .tenantId(null)
             .description("description")
             .serviceRequestType(new ServiceRequestType(null, "complaintCode", null))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
     }
 

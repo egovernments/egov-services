@@ -22,13 +22,13 @@ public class AccountDetailKeyQueueRepository {
 
 	public void push(AccountDetailKeyContractRequest accountDetailKeyContractRequest) {
 		HashMap<String, Object> accountDetailKeyContractRequestMap = new HashMap<String, Object>();
-		if (accountDetailKeyContractRequest.getAccountDetailKeys() != null
-				&& !accountDetailKeyContractRequest.getAccountDetailKeys().isEmpty())
+		if ("create".equalsIgnoreCase(accountDetailKeyContractRequest.getRequestInfo().getAction()))
 			accountDetailKeyContractRequestMap.put("AccountDetailKeyCreate", accountDetailKeyContractRequest);
-		else if (accountDetailKeyContractRequest.getAccountDetailKey() != null
-				&& accountDetailKeyContractRequest.getAccountDetailKey().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(accountDetailKeyContractRequest.getRequestInfo().getAction()))
+			accountDetailKeyContractRequestMap.put("AccountDetailKeyUpdateAll", accountDetailKeyContractRequest);
+		else if ("update".equalsIgnoreCase(accountDetailKeyContractRequest.getRequestInfo().getAction()))
 			accountDetailKeyContractRequestMap.put("AccountDetailKeyUpdate", accountDetailKeyContractRequest);
-
+		
 		financialProducer.sendMessage(accountDetailKeyValidatedTopic, accountDetailKeyValidatedKey,
 				accountDetailKeyContractRequestMap);
 	}

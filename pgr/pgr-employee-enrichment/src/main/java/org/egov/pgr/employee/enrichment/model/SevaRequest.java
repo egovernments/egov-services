@@ -3,6 +3,7 @@ package org.egov.pgr.employee.enrichment.model;
 import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.pgr.common.date.DateFormatter;
 import org.egov.pgr.employee.enrichment.json.ObjectMapperFactory;
 import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
@@ -130,7 +131,7 @@ public class SevaRequest {
     }
 
     public void setEscalationDate(Date date) {
-        getServiceRequest().put(EXPECTED_DATETIME, date);
+        getServiceRequest().put(EXPECTED_DATETIME, DateFormatter.toString(date));
     }
 
     public String getTenantId() {

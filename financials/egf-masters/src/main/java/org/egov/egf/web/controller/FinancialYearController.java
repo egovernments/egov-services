@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		financialYearContractRequest.getRequestInfo().setAction("create");
 		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		financialYearService.push(financialYearContractRequest);
 		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
@@ -72,6 +72,7 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		financialYearContractRequest.getRequestInfo().setAction("update");
 		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		financialYearContractRequest.getFinancialYear().setId(uniqueId);
 		financialYearService.push(financialYearContractRequest);
@@ -104,7 +105,7 @@ public class FinancialYearController {
 		return financialYearContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public FinancialYearContractResponse updateAll(
 			@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest, BindingResult errors) {
@@ -112,17 +113,12 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		financialYearContractRequest.getRequestInfo().setAction("updateAll");
 		financialYearService.fetchRelatedContracts(financialYearContractRequest);
-
+		financialYearService.push(financialYearContractRequest);
 		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
 		for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
-			FinancialYear financialYearFromDb = financialYearService.findOne(financialYearContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(financialYearContract, financialYearFromDb);
-			financialYearFromDb = financialYearService.update(financialYearFromDb);
-			model.map(financialYearFromDb, financialYearContract);
 			financialYearContractResponse.getFinancialYears().add(financialYearContract);
 		}
 

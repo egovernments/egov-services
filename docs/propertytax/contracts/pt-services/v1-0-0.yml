@@ -25,22 +25,19 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/egov-property/v1/[API endpoint]'
+basePath: '/properties/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
-  /properties/_search:
+  /_search:
     post:
       summary: Get the list of properties defined in the system.
       description: |
         Get the properties list based on the input parameters.
       # This is array of GET operation parameters:
       parameters:
-        - name: RequestInfo
-          in: body
-          description: Commmon request info for getting Property.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: active
           in: query
           description: True will be set in cases where only active properties are needed and False will be set when inactive properties are needed and no value will be set when all properties are needed.
@@ -60,7 +57,6 @@ paths:
           exclusiveMaximum: false
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/tenantId"
         - $ref: "#/parameters/sortProperty"
         - name: oldUpicNo
           in: query
@@ -143,11 +139,11 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - Property
        
-  /properties/_create:
+  /_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -159,7 +155,7 @@ paths:
       parameters:
         - name: property
           in: body
-          description: Details for the new usage type.
+          description: Details for the new property + RequestInfo meta data.
           required: true
           schema:
             $ref: '#/definitions/PropertyRequest'
@@ -169,33 +165,20 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: Property created sucessfully.
+          description: Property(s) created sucessfully
           schema:
             $ref: '#/definitions/PropertyResponse'
         400:
-          description: Invalid input.
+          description: Property(s) creation failed
           schema:
-            type: array
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Property  
         
-  /properties/_update/{upicNo}:
+  /properties/_update:
     post:
       description: Updates a given `Property` with newer details.
       parameters:
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
-        - name: upicNo
-          in: path
-          description: The unique reference number for a property.
-          required: true
-          type: string
-          format: varchar
         - name: property
           in: body
           description: Request header for the property Request.
@@ -206,13 +189,13 @@ paths:
         - Property
       responses:
         '200':
-          description: property updated
+          description: Update Property(s) successful
           schema:
             $ref: '#/definitions/PropertyResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Update Property(s) failed
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
 definitions:
 ########################################################
@@ -220,67 +203,6 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts
-  ResponseInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
       
   Error:
     type: object
@@ -297,13 +219,6 @@ definitions:
     required:
       - code
       - message
-  ErrorRes:
-    properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
-    type: object
 
   Address:
     type: object
@@ -468,24 +383,8 @@ definitions:
         description: channel of the Property
         maxLength: 16
         minLength: 4
-      createdBy:
-        type: string
-        description: created by of the Property
-        maxLength: 16
-        minLength: 1
-      createdDate:
-        type: string
-        format: date
-        description: created date of the Property
-      lastModifiedBy:
-        type: string
-        description: last modified by of the Property
-        maxLength: 16
-        minLength: 1
-      lastModifiedDate:
-        type: string
-        format: date
-        description: last modified date of the Property
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
     - upicNo
@@ -499,10 +398,12 @@ definitions:
     description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
     properties:
       requestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       properties:
         description: Used for search result and create only
         type:  array
+        minimum: 1
+        maximum: 100
         items:
           $ref: '#/definitions/Property'
           
@@ -510,7 +411,7 @@ definitions:
     description: Contract class to send response. Array of Property items  are used in case of search results or response for create. Where as single Property item is used for update
     properties:
       responseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       properties:
         description: Used for search result and create only
         type:  array
@@ -646,24 +547,8 @@ definitions:
         description: water meter no of the Floor
         maxLength: 64
         minLength: 1
-      createdBy:
-        type: string
-        description: created by of the Floor
-        maxLength: 16
-        minLength: 1
-      createdDate:
-        type: string
-        format: date
-        description: created date of the Floor
-      lastModifiedBy:
-        type: string
-        description: last modified by of the Floor
-        maxLength: 16
-        minLength: 1
-      lastModifiedDate:
-        type: string
-        format: date
-        description: last modified date of the Floor
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - id
     - tenantId
@@ -819,24 +704,8 @@ definitions:
         minLength: 1
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
-      createdBy:
-        type: string
-        description: created by of the PropertyDetail
-        maxLength: 16
-        minLength: 1
-      createdDate:
-        type: string
-        format: date
-        description: created date of the PropertyDetail
-      lastModifiedBy:
-        type: string
-        description: last modified by of the PropertyDetail
-        maxLength: 16
-        minLength: 1
-      lastModifiedDate:
-        type: string
-        format: date
-        description: last modified date of the PropertyDetail
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
     - channel
@@ -917,24 +786,8 @@ definitions:
         description: south bounded by of the PropertyBoundary
         maxLength: 256
         minLength: 1
-      createdBy:
-        type: string
-        description: created by of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      createdDate:
-        type: string
-        format: date
-        description: created date of the PropertyBoundary
-      lastModifiedBy:
-        type: string
-        description: last modified by of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      lastModifiedDate:
-        type: string
-        format: date
-        description: last modified date of the PropertyBoundary
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
 
@@ -1084,51 +937,11 @@ definitions:
         type: number
         format: double
         description: non resd plot area of the VacantLandProperty
-      createdBy:
-        type: string
-        description: created by of the VacantLandProperty
-        maxLength: 16
-        minLength: 1
-      createdDate:
-        type: string
-        format: date
-        description: created date of the VacantLandProperty
-      lastModifiedBy:
-        type: string
-        description: last modified by of the VacantLandProperty
-        maxLength: 16
-        minLength: 1
-      lastModifiedDate:
-        type: string
-        format: date
-        description: last modified date of the VacantLandProperty
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
 
-  Page:
-    type: object
-    properties:
-      totalResults:
-        type: integer
-        format: int32
-        description: total results of the Pagination
-      totalPages:
-        type: integer
-        format: int32
-        description: total pages of the Pagination
-      pageSize:
-        type: integer
-        format: int32
-        description: Number of records in a per page in  the Pagination, Default value is 20
-      currentPage:
-        type: integer
-        format: int32
-        description: current page of the Pagination
-      offSet:
-        type: integer
-        format: int32
-        description: page number of the Pagination, Default value is 0
-        
   WorkFlowDetails:
     type: object
     description: This object holds info about the assignee and other workflow related info
@@ -1192,13 +1005,6 @@ parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
 ##########################################################
-  tenantId:
-    name: tenantId
-    in: query
-    description: Unique id for for a tenant.
-    required: true
-    type: string
-    format: varchar
   pageSize:
     name: pageSize
     in: query

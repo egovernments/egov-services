@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		supplierContractRequest.getRequestInfo().setAction("create");
 		supplierService.fetchRelatedContracts(supplierContractRequest);
 		supplierService.push(supplierContractRequest);
 		SupplierContractResponse supplierContractResponse = new SupplierContractResponse();
@@ -70,6 +70,7 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		supplierContractRequest.getRequestInfo().setAction("update");
 		supplierService.fetchRelatedContracts(supplierContractRequest);
 		supplierContractRequest.getSupplier().setId(uniqueId);
 		supplierService.push(supplierContractRequest);
@@ -102,7 +103,7 @@ public class SupplierController {
 		return supplierContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/update")
 	@ResponseStatus(HttpStatus.OK)
 	public SupplierContractResponse updateAll(@RequestBody @Valid SupplierContractRequest supplierContractRequest,
 			BindingResult errors) {
@@ -110,17 +111,12 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		supplierContractRequest.getRequestInfo().setAction("updateAll");
 		supplierService.fetchRelatedContracts(supplierContractRequest);
-
+		supplierService.push(supplierContractRequest);
 		SupplierContractResponse supplierContractResponse = new SupplierContractResponse();
 		supplierContractResponse.setSuppliers(new ArrayList<SupplierContract>());
 		for (SupplierContract supplierContract : supplierContractRequest.getSuppliers()) {
-			Supplier supplierFromDb = supplierService.findOne(supplierContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(supplierContract, supplierFromDb);
-			supplierFromDb = supplierService.update(supplierFromDb);
-			model.map(supplierFromDb, supplierContract);
 			supplierContractResponse.getSuppliers().add(supplierContract);
 		}
 

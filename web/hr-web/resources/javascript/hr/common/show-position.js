@@ -7,40 +7,38 @@ class ShowPosition extends React.Component {
     name:"",
     isPostOutsourced:"",active:""}
     }
-
+    this.setInitialState = this.setInitialState.bind(this);
   }
 
+  setInitialState(initState) {
+    this.setState(initState);
+  }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
      }
-      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Position");
-    try {
-        var _position = commonApiPost("hr-masters","positions","_search",{tenantId,pageSize:500}).responseJSON["Position"] || [];
-    } catch(e) {
-        var _position = [];
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Position");
+    var count = 2, _state = {}, _this = this;
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
     }
 
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    this.setState({
-      list: _position,
-      assignments_department
+    getDropdown("assignments_position", function(res) {
+      checkCountAndCall("list", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("assignments_department", res);
     });
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
           $('#positionTable').DataTable({
             dom: 'Bfrtip',
@@ -52,10 +50,8 @@ class ShowPosition extends React.Component {
       }
   }
 
-
-  close(){
-      // widow.close();
-      open(location, '_self').close();
+  close() {
+    open(location, '_self').close();
   }
 
   render() {

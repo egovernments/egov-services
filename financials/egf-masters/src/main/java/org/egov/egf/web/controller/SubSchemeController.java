@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +43,7 @@ public class SubSchemeController {
 		subSchemeService.validate(subSchemeContractRequest, "create", errors);
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
+		subSchemeContractRequest.getRequestInfo().setAction("create");
 		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
 		subSchemeService.push(subSchemeContractRequest);
 		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
@@ -69,6 +69,7 @@ public class SubSchemeController {
 
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
+		subSchemeContractRequest.getRequestInfo().setAction("update");
 		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
 		subSchemeContractRequest.getSubScheme().setId(uniqueId);
 		subSchemeService.push(subSchemeContractRequest);
@@ -101,24 +102,19 @@ public class SubSchemeController {
 		return subSchemeContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public SubSchemeContractResponse updateAll(
 			@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest, final BindingResult errors) {
 		subSchemeService.validate(subSchemeContractRequest, "updateAll", errors);
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
+		subSchemeContractRequest.getRequestInfo().setAction("updateAll");
 		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
-
+		subSchemeService.push(subSchemeContractRequest);
 		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
 		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
 		for (final SubSchemeContract subSchemeContract : subSchemeContractRequest.getSubSchemes()) {
-			SubScheme subSchemeFromDb = subSchemeService.findOne(subSchemeContract.getId());
-
-			final ModelMapper model = new ModelMapper();
-			model.map(subSchemeContract, subSchemeFromDb);
-			subSchemeFromDb = subSchemeService.update(subSchemeFromDb);
-			model.map(subSchemeFromDb, subSchemeContract);
 			subSchemeContractResponse.getSubSchemes().add(subSchemeContract);
 		}
 

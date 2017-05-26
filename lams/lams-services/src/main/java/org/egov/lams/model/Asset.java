@@ -18,13 +18,13 @@ import lombok.ToString;
 @ToString
 public class Asset {
 
+	@NotNull
 	private Long id;
 	
 	@NotNull
 	@JsonProperty("assetCategory")
 	private AssetCategory category;
 	
-	@NotNull
 	private String name;
 	private String code;
 	private Location locationDetails;

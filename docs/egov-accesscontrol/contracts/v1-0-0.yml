@@ -61,14 +61,13 @@ paths:
       tags: 
        - Action
        
-  /access/v1/actions/_validateaction:
+  /access/v1/actions/_validate:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
-      summary: Get the list of actions based on either roles or features.
+      summary: Validate a particular action for a given tenant and roles of the tenant
       description: |
-        Get the list of actions based on the input parameters.
-      # This is array of GET operation parameters:
+        Validate a particular action for a given tenant and roles of the tenant.
       parameters:
         - name: ValidateActionReq
           in: body
@@ -120,7 +119,7 @@ paths:
       tags:
        - Feature-Role
 
-  /access/v1/actions/_roles:
+  /access/v1/roles/_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
@@ -129,16 +128,16 @@ paths:
         Get the list of roles based on role codes in the input parameters.
       # This is array of GET operation parameters:
       parameters:
-        - name: requestInfo
+        - name: rolesReq
           in: body
           description: Request info for getting actions.
           required: true
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        - name: roles
+            $ref: '#/definitions/RolesReq'
+        - name: code
           in: query
           required: false
-          description: The list of role codes.
+          description: The list of comma separated codes to filter Roles against. No providing any would end up in all Roles as there is nothing to filter against
           type: array
           items:
             type: string
@@ -285,9 +284,9 @@ definitions:
   RoleRes:
     type: object
     properties:
-      ResponseInfo:
+      responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      Role:
+      roles:
         type: array
         items:
          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
@@ -310,26 +309,25 @@ definitions:
       - feature
       - tenantId
 
+  ValidateAction:
+    type: object
+    properties:
+      TenantRole:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/TenantRole'
+      actionUrl:
+        type: string
+        description: Url of the action to be validated for given tenant
+    required:
+      - TenantRole
+      - actionUrl
+
   ValidateActionReq:
     type: object
     properties:
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      roles:
-        type: array
-        items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
-        description: List of roles to be considered for validation
-      tenantId:
-        type: string
-        description: Unique Identifier of the tenant to be considered for validation
-      actionUrl:
-        type: string
-        description: Url of the action to be validated for given tenant
-    required:
-      - roles
-      - tenantId
-      - actionUrl
+      ValidateAction:
+        $ref: '#/definitions/ValidateAction'
 
   FeatureRoleRes:
     type: object
@@ -340,6 +338,12 @@ definitions:
         $ref: '#/definitions/Role'
       feature:
         $ref: '#/definitions/Feature'
+
+  RolesReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
 
   RequestInfo:
     type: object

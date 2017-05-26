@@ -68,7 +68,6 @@ public class EscalationDateServiceTest {
         final ServiceRequest serviceRequest = ServiceRequest.builder()
                 .tenantId("tenantId")
                 .complaintTypeCode("complaintTypeCode")
-                .attribValuesPopulated(true)
                 .attribValues(new ArrayList<AttributeEntry>())
                 .build();
 

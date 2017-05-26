@@ -87,6 +87,27 @@ public class AccountEntityService {
 	}
 
 	@Transactional
+	public AccountEntityContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final AccountEntityContractRequest accountEntityContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("AccountEntityCreate"), AccountEntityContractRequest.class);
+		AccountEntityContractResponse accountEntityContractResponse = new AccountEntityContractResponse();
+		accountEntityContractResponse.setAccountEntities(new ArrayList<AccountEntityContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (accountEntityContractRequest.getAccountEntities() != null
+				&& !accountEntityContractRequest.getAccountEntities().isEmpty()) {
+			for (AccountEntityContract accountEntityContract : accountEntityContractRequest.getAccountEntities()) {
+				AccountEntity accountEntityEntity = new AccountEntity(accountEntityContract);
+				accountEntityEntity.setVersion(findOne(accountEntityEntity.getId()).getVersion());
+				accountEntityJpaRepository.save(accountEntityEntity);
+				AccountEntityContract resp = modelMapper.map(accountEntityEntity, AccountEntityContract.class);
+				accountEntityContractResponse.getAccountEntities().add(resp);
+			}
+		}
+		accountEntityContractResponse.setResponseInfo(getResponseInfo(accountEntityContractRequest.getRequestInfo()));
+		return accountEntityContractResponse;
+	}
+
+	@Transactional
 	public AccountEntityContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final AccountEntityContractRequest accountEntityContractRequest = ObjectMapperFactory.create().convertValue(
 				financialContractRequestMap.get("AccountEntityUpdate"), AccountEntityContractRequest.class);

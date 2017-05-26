@@ -214,15 +214,8 @@ $(document).ready(function () {
 		}); 
 	});
 	
-	/*$("a.open-popup").click(function(e) {
-		var windowObjectReference = window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
-		openedWindows.push(windowObjectReference);
-		windowObjectReference.focus();
-		return false;
-	});
-	
-	$(document).on('click', 'a.open-popup', function() {
-		var windowObjectReference = window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
+	/*$(document).on('click', 'a.open-popup', function() {
+		var windowObjectReference = window.open(this.href, ''+$(this).data('name')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
 		openedWindows.push(windowObjectReference);
 		windowObjectReference.focus();
 		return false;

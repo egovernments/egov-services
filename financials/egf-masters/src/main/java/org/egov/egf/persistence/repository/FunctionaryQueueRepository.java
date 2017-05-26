@@ -22,12 +22,14 @@ public class FunctionaryQueueRepository {
 
 	public void push(FunctionaryContractRequest functionaryContractRequest) {
 		HashMap<String, Object> functionaryContractRequestMap = new HashMap<String, Object>();
-		if (functionaryContractRequest.getFunctionaries() != null
-				&& !functionaryContractRequest.getFunctionaries().isEmpty())
+		
+		if ("create".equalsIgnoreCase(functionaryContractRequest.getRequestInfo().getAction()))
 			functionaryContractRequestMap.put("FunctionaryCreate", functionaryContractRequest);
-		else if (functionaryContractRequest.getFunctionary() != null
-				&& functionaryContractRequest.getFunctionary().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(functionaryContractRequest.getRequestInfo().getAction()))
+			functionaryContractRequestMap.put("FunctionaryUpdateAll", functionaryContractRequest);
+		else if ("update".equalsIgnoreCase(functionaryContractRequest.getRequestInfo().getAction()))
 			functionaryContractRequestMap.put("FunctionaryUpdate", functionaryContractRequest);
+		
 		financialProducer.sendMessage(functionaryValidatedTopic, functionaryValidatedKey,
 				functionaryContractRequestMap);
 	}

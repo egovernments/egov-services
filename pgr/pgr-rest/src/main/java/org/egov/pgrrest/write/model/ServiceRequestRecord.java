@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Builder
 @Getter
-public class ComplaintRecord {
+public class ServiceRequestRecord {
     private String CRN;
     private double latitude;
     private double longitude;

@@ -1,10 +1,14 @@
 package org.egov.pgrrest.read.domain.model;
 
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -28,10 +32,12 @@ public class ServiceRequestTest {
             .tenantId("tenantId")
             .description("description")
             .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
         complaint.validate();
     }
+
 
     @Test
     public void testShouldNotFailValidationWhenCitizenUpdatesComplaintWithAllValidAttributes() {
@@ -51,6 +57,7 @@ public class ServiceRequestTest {
             .description("description")
             .crn("crn")
             .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
         complaint.validate();
@@ -67,6 +74,7 @@ public class ServiceRequestTest {
             .serviceRequestLocation(serviceRequestLocation)
             .modifyServiceRequest(true)
             .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
         assertTrue(complaint.isLocationAbsent());
@@ -98,6 +106,7 @@ public class ServiceRequestTest {
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
             .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
         assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
@@ -118,6 +127,7 @@ public class ServiceRequestTest {
             .authenticatedUser(getEmployee())
             .serviceRequestLocation(serviceRequestLocation)
             .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
         assertTrue(complaint.isRequesterAbsent());
         complaint.validate();
@@ -138,6 +148,7 @@ public class ServiceRequestTest {
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
             .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
         assertTrue(complaint.isRequesterAbsent());
@@ -159,6 +170,7 @@ public class ServiceRequestTest {
                 .authenticatedUser(getEmployee())
                 .serviceRequestLocation(serviceRequestLocation)
                 .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+                .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
         assertTrue(complaint.isRequesterAbsent());
@@ -183,6 +195,7 @@ public class ServiceRequestTest {
                 .tenantId("tenantId")
                 .description("description")
                 .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
         assertFalse(complaint.isRequesterAbsent());
@@ -207,6 +220,7 @@ public class ServiceRequestTest {
                 .description("description")
                 .receivingMode("receivingMode")
                 .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
         complaint.validate();
@@ -229,6 +243,7 @@ public class ServiceRequestTest {
                 .serviceRequestLocation(serviceRequestLocation)
                 .description("description")
                 .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
         assertTrue(complaint.isTenantIdAbsent());
@@ -252,6 +267,7 @@ public class ServiceRequestTest {
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
                 .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+                .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
         assertTrue(complaint.isDescriptionAbsent());
@@ -275,6 +291,7 @@ public class ServiceRequestTest {
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
             .serviceRequestType(new ServiceRequestType(null, null, null))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
 		assertFalse(complaint.descriptionLength());
@@ -298,6 +315,7 @@ public class ServiceRequestTest {
                 .serviceRequestType(new ServiceRequestType("type", null, "tenantId"))
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
+                .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
         assertTrue(complaint.isServiceRequestTypeAbsent());

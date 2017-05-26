@@ -24,27 +24,20 @@ class ShowLeaveMapping extends React.Component {
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
-
-    try {
-        var _leaveAllotment = commonApiPost("hr-leave","leaveallotments","_search",{tenantId,pageSize:500}).responseJSON["LeaveAllotment"] || [];
-    } catch(e) {
-        var _leaveAllotment = [];
     }
-    this.setState({
-      leaveTypeList: _leaveAllotment
-
-    });
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
+    var _this = this;
+    commonApiPost("hr-leave","leaveallotments","_search", { tenantId, pageSize:500 }, function(err, res) {
+      if(res) {
+        _this.setState({
+          leaveTypeList: res.LeaveAllotment
+        })
+      }
+    })
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.leaveTypeList.length!=this.state.leaveTypeList.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.grades.length);
-          // alert(this.state.grades.length);
-          // alert('updated');
           $('#LeaveTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -56,8 +49,7 @@ class ShowLeaveMapping extends React.Component {
   }
 
 
-  handleChange(e,name)
-  {
+  handleChange(e,name) {
 
       this.setState({
           leave:{

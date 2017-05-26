@@ -18,17 +18,6 @@ public class ServiceTypeCategoryController {
         this.serviceTypeCategoryService = serviceTypeCategoryService;
     }
 
-    //TODO: Remove this endpoint after UI uses "/servicecategories/_search" endpoint
-    @PostMapping(value ="/complaintTypeCategories/_search")
-    public ServiceTypeCategoryResponse getAllComplaintTypeCategories(
-        @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,
-        @RequestBody RequestInfoBody requestInfo) {
-        List<ServiceTypeCategory> complaintTypeCategoryList = serviceTypeCategoryService
-            .getAll(tenantId).stream().map(ServiceTypeCategory::new)
-            .collect(Collectors.toList());
-        return new ServiceTypeCategoryResponse(null, complaintTypeCategoryList);
-    }
-
     @PostMapping(value ="/servicecategories/_search")
     public ServiceTypeCategoryResponse getAllServiceTypeCategories(
         @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,

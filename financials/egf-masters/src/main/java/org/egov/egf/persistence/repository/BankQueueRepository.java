@@ -22,10 +22,14 @@ public class BankQueueRepository {
 
 	public void push(BankContractRequest bankContractRequest) {
 		HashMap<String, Object> bankContractRequestMap = new HashMap<String, Object>();
-		if (bankContractRequest.getBanks() != null && !bankContractRequest.getBanks().isEmpty())
+
+		if ("create".equalsIgnoreCase(bankContractRequest.getRequestInfo().getAction()))
 			bankContractRequestMap.put("BankCreate", bankContractRequest);
-		else if (bankContractRequest.getBank() != null && bankContractRequest.getBank().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(bankContractRequest.getRequestInfo().getAction()))
+			bankContractRequestMap.put("BankUpdateAll", bankContractRequest);
+		else if ("update".equalsIgnoreCase(bankContractRequest.getRequestInfo().getAction()))
 			bankContractRequestMap.put("BankUpdate", bankContractRequest);
+
 		financialProducer.sendMessage(bankValidatedTopic, bankValidatedKey, bankContractRequestMap);
 	}
 }

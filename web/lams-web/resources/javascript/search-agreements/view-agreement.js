@@ -343,7 +343,7 @@ $(document).ready(function() {
         if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
             for (var i = 0; i < process.attributes.validActions.values.length; i++) {
                 if (process.attributes.validActions.values[i].key)
-                    $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+                    $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "approve" || process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
                     $("#workFlowDetails").remove();
                 }
@@ -486,16 +486,16 @@ $(document).ready(function() {
         e.preventDefault();
         if (!e.target.id) return;
         var data = $("#" + e.target.id).data();
-        if (data.action && data.action != "Print Notice") {
-            var _agrmntDet = Object.assign({}, agreementDetail);
-            _agrmntDet.workflowDetails = {
-                "businessKey": process.businessKey,
-                "type": "Agreement",
-                "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
-                "status": process.status,
-                "action": data.action
-            };
+        var _agrmntDet = Object.assign({}, agreementDetail);
+        _agrmntDet.workflowDetails = {
+            "businessKey": process.businessKey,
+            "type": "Agreement",
+            "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
+            "status": process.status,
+            "action": data.action
+        };
 
+        if (data.action && data.action != "Print Notice") {
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
@@ -516,16 +516,15 @@ $(document).ready(function() {
                 showError(response["statusText"]);
             }
         } else {
+            delete _agrmntDet.workflowDetails.assignee;
+
             var response = $.ajax({
-                url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+                url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify({
                     RequestInfo: requestInfo,
-                    Notice: {
-                        tenantId,
-                        agreementNumber: _agrmntDet.agreementNumber
-                    }
+                    Agreement: _agrmntDet
                 }),
                 async: false,
                 headers: {
@@ -535,10 +534,32 @@ $(document).ready(function() {
             });
 
             if (response["status"] === 201) {
-                printNotice(response["responseJSON"].Notices[0]);
-                // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+                var response = $.ajax({
+                    url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        RequestInfo: requestInfo,
+                        Notice: {
+                            tenantId,
+                            agreementNumber: _agrmntDet.agreementNumber
+                        }
+                    }),
+                    async: false,
+                    headers: {
+                        'auth-token': authToken
+                    },
+                    contentType: 'application/json'
+                });
+
+                if (response["status"] === 201) {
+                    printNotice(response["responseJSON"].Notices[0]);
+                    // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+                } else {
+                    console.log("Something went wrong.");
+                }
             } else {
-                console.log("Handle error.");
+                showError(response["statusText"]);
             }
         }
     });

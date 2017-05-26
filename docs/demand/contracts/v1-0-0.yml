@@ -1,38 +1,50 @@
 swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+
 info:
-  version: 0.0.0
-  title: eGov Demand
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Demand APIs
   description: eGov Demand manages head wise demand and Demand Bill information for all the revenue modules from eGov solution. It manages
   
     * The demand data for a revenue module with category of tax for a defined *period, rebate, penalty, late payment interest, fee* etc and again head wise in each category. This module have one entity called Demand for every revenue entity which holds the list of category and head wise demands for a defined period in DemandDetail.
     
     * The Demand Bill data with period and head wise dues and its payment details.
-    
   contact:
     name:  Ramakrishna (Ramki)
-    email: ramakrishna@egovernments.org
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/v1/[API endpoint]'
+basePath: '/demand/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
-  /demand/demandreason/_search:
+  /demandreason/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
     post:
-      description: Returns a demand reasons
+      summary: Search the demand reasons in the system based on the criterion specified.
+      description: |
+        Search and get demand reason(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed demand reason will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of demand reasons as defined in DemandReasonResponse model.
+        
+        By default results will be sorted by UserName
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: moduleName
           in: query
           description: Name of the module for which demand reasons to be returned.
@@ -68,24 +80,24 @@ paths:
       tags:
         - Master
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
           description: returns a demand reasons.
           schema:
             $ref: '#/definitions/DemandReasonResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/demandreason/_create:
+  /demandreason/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
     post:
       description: Creates a demand reason
       parameters:
@@ -104,24 +116,25 @@ paths:
       tags:
         - Master
       responses:
-        '200':
-          description: returns a demand reason id (A primary key of a demand reason object).
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Demand Reason(s) created sucessfully.
           schema:
             $ref: '#/definitions/DemandReasonResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/demandreason/{id}/_update:
+  /demandreason/{id}/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
     post:
       description: Updates a demand reason.
       parameters:
@@ -146,39 +159,28 @@ paths:
       tags:
         - Master
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
-          description: updated a demand reason
+          description: Update DemandReason(s) successful
           schema:
             $ref: '#/definitions/DemandReasonResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-  /demand/installment/_search:
+  /installment/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
     post:
       description: Returns a installments
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: moduleName
           in: query
           description: Name of the module for which installments to be returned.
@@ -207,24 +209,24 @@ paths:
       tags:
         - Master
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
           description: returns a installments.
           schema:
             $ref: '#/definitions/InstallmentResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/installment/_create:
+  /installment/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
     post:
       description: Creates a Installment
       parameters:
@@ -243,24 +245,25 @@ paths:
       tags:
         - Master
       responses:
-        '200':
-          description: returns a demand reason id (A primary key of a demand reason object).
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: created Installment(s) successfully.
           schema:
             $ref: '#/definitions/InstallmentResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/installment/{id}/_update:
+  /installment/{id}/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
     post:
       description: Updates a Installment.
       parameters:
@@ -285,71 +288,79 @@ paths:
       tags:
         - Master
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
-          description: updated a installment
+          description: update a Installment(s) successful.
           schema:
             $ref: '#/definitions/InstallmentResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/_search:
+  /_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
     post:
       description: Returns a demand along with its list of demand details
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
-        - name: dmenadId
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: demandId
           in: query
           description: Primary key of Demand object.
           required: false
           type: integer
-          format: int64
+        - name: consumerCode
+          in: query
+          description: Unique identification provided by business details.
+          required: false
+          type: string
+        - name: businessDetails
+          in: query
+          description: Billing system details e.g., PropertyTax,Water Charges etc.
+          required: false
+          type: string
+        - name: emailId
+          in: query
+          description: Email Id of Primary owner of business detail.
+          required: false
+          type: string
+        - name: mobileNumber
+          in: query
+          description: Mobile number of Primary owner of business detail.
+          required: false
+          type: string
         - name: paymentInfoReq
           in: query
-          description: True the payment info list will be returned. Falase the payment info list will not be returned.
-          required: false
+          description: True the payment info list will be returned. False the payment info list will not be returned.
+          default: false
           type: boolean
       tags:
         - Demand
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
           description: returns a demand along with its demand details.
           schema:
             $ref: '#/definitions/DemandResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/_create:
+  /_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
     post:
       description: Creates a demand along with its list of demand details
       parameters:
@@ -368,24 +379,25 @@ paths:
       tags:
         - Demand
       responses:
-        '200':
-          description: returns a demand id (A primary key of a demand object).
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Created Demand(s) successfully.
           schema:
             $ref: '#/definitions/DemandResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/{id}/_update:
+  /{id}/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
     post:
       description: Updates a demand. This only for DCB back update.
       parameters:
@@ -410,39 +422,28 @@ paths:
       tags:
         - Demand
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
           description: updated a collection amount for demand.
           schema:
             $ref: '#/definitions/DemandResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demanddetail/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
     post:
       description: Returns a demand details
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: dmenadId
           in: query
           description: Primary key of Demand object.
@@ -462,39 +463,28 @@ paths:
       tags:
         - Demand
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
           description: returns a demand along with its demand details.
           schema:
             $ref: '#/definitions/DemandDetailResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/bill/_search:
+  /bill/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
     post:
       description: Returns a Bill along with its list of bill details. By default non-history and non-cancelled bills will be returned when no value passed for history or cancelled.
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: demandId
           in: query
           description: Primary key of Demand object.
@@ -530,24 +520,24 @@ paths:
       tags:
         - Bill
       responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
         '200':
           description: returns a Bill along with its bill details.
           schema:
             $ref: '#/definitions/BillResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demand/bill/_create:
+  /bill/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
     post:
       description: Creates a bill along with its list of bill details
       parameters:
@@ -566,55 +556,64 @@ paths:
       tags:
         - Bill
       responses:
-        '200':
-          description: returns a bill id (A primary key of a bill object).
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Created Bill(s) successfully.
           schema:
             $ref: '#/definitions/BillResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Invalid input
           schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
 definitions:
   Demand:
     type: object
-    description: A basic Object which holds the info about the revenue module name and the period the demand belongs to.
+    description: A Object which holds the basic info about the revenue assessment for which the demand is generated like module name, consumercode, owner, etc.
     properties:
       id:
         type: integer
         format: int64
         description: primary key of a demand.
       installment:
+        $ref: '#/definitions/Installment'
+      consumerCode:
         type: string
-        description: installment period description.
-      moduleName:
+        description : Unique identification provided by the billing system.
+      owner:
         type: string
-        description: name of the module
+        description : Primary owner of the business detail.
+        maxLength: 100
+        minLength: 4
+      businessDetails :
+        type : string
+        description : Billing system details e.g., PropertyTax,Water Charges etc.
+        maxLength: 256
+        minLength: 4
       demandDetails:
         type: array
         items:
           $ref: '#/definitions/DemandDetails'
-      paymentInfo:
-        type: array
-        items:
-          $ref: '#/definitions/CollectedReceipts'
-        description: list of payment info details. This is required to display on DCB screen and DCB back update on collection.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
       - installment
-      - moduleName
       - demandDetails
+      - consumerCode
+      - businessDetails
+      - tenantId
       
   DemandDetails:
     type: object
-    description: A object holds a demand and collection values for a head and category or demand and the period.
+    description: A object holds a demand and collection values for a tax head and period.
     properties:
       id:
         type: integer
@@ -627,60 +626,127 @@ definitions:
       collectionAmount:
         type: number
         format: double
+        default: 0
         description: collection against taxAmount.
-      rebateAmount:
-        type: number
-        format: double
-        description: discount against taxAmount.
-      taxReason:
+      demandReason:
+        $ref: '#/definitions/DemandReason'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
         type: string
-        description: tax reason head.
-      taxPeriod:
-        type: string
-        description: period the taxAmount belongs to.
-      glCode:
-        type: string
-        minLength: 1
-        maxLength: 64
-        description: A general ledger code for tax head for financial posting.
-      isActualDemand:
-        type: number
-        format: int32
-        description: Flag to tell actual demand or not, the demand can be tax or penalty or reabate. If the demand is a tax then its a actual demand.
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
       - taxAmount
       - collectionAmount
-      - taxReason
-      - taxPeriod
+      - demandReason
+      - tenantId
       
-  DemandReason:
+  ReasonCategory:
     type: object
-    description: A object holds a demand reason details
+    description: A object holds a demand reason categories. It gives the type of demand like tax, rebate, penalty, advance, fee etc.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Address
       name:
         type: string
         description: Demand reason name.
-      category:
+        maxLength: 64
+        minLength: 2
+      code:
         type: string
         description: tax category.
-      taxPeriod:
+        maxLength: 64
+        minLength: 2
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
         type: string
-        description: tax period.
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - tenantId
+  
+  DemandReasonMaster:
+    type: object
+    description: A object holds a demand reasons for each reason category, for example General tax, Edu cess, lib cess for TAX.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: primary key of a DemandReasonMaster.
+      name:
+        type: string
+        description: Demand reason name.
+        maxLength: 64
+        minLength: 2
+      code:
+        type: string
+        description: Demand reason code.
+        maxLength: 64
+        minLength: 2
+      category:
+        $ref: '#/definitions/ReasonCategory'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - category
+      - tenantId
+      
+  DemandReason:
+    type: object
+    description: A object holds a 'DemandReasonMaster' for a period.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: primary key of a DemandReason.
+      installment:
+        $ref: '#/definitions/Installment'
+      reasonMaster:
+        $ref: '#/definitions/DemandReasonMaster'
       glCode:
         type: string
         minLength: 1
         maxLength: 64
         description: A general ledger code for tax head for financial posting.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
-      - name
-      - category
-      - taxPeriod
+      - reasonMaster
+      - installment
       - glCode
+      - tenantId
       
   Installment:
     type: object
-    description: A object holds a installment, the tax period info
+    description: A object holds a installment, the tax period.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: primary key of a Installment.
       fromDate:
         type: string
         format: date
@@ -696,12 +762,17 @@ definitions:
       module:
         type: string
         description: Name of the module this period belongs to.
+        maxLength: 128
+        minLength: 4
       installmentNumber:
-        type: string
+        type: integer
+        format: int64
         description: Tax period number.
       description:
         type: string
         description: representation of a tax period.
+        maxLength: 128
+        minLength: 4
       installmentType:
         type: string
         description: type of installment, its for monthly, querterly, halfyearly or yearly.
@@ -713,12 +784,23 @@ definitions:
       financialYear:
         type: string
         description: financial year for which this period belongs.
+        maxLength: 64
+        minLength: 4
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
       - fromDate
       - toDate
       - installmentNumber
       - description
       - installmentType
+      - tenantId
       
   CollectedReceipts:
     type: object
@@ -738,12 +820,23 @@ definitions:
       status:
         type: string
         description: receipt status
+      demandDetail:
+        $ref: '#/definitions/DemandDetails'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
       - receiptNumber
       - receiptAmount
       - receiptDate
+      - tenantId
       
-  BillInfo:
+  Bill:
     type: object
     description: A detailed head wise dues which is payable on a Demand.
     properties:
@@ -788,11 +881,6 @@ definitions:
         minLength: 1
         maxLength: 100
         description: Name of the module this bill belongs to.
-      createdBy:
-        type: string
-        minLength: 1
-        maxLength: 64
-        description: Name of the user who created a bill.
       history:
         type: string
         minLength: 1
@@ -895,6 +983,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/BillDetailInfo'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
       - citizenName
       - citizenAddress
@@ -921,6 +1017,7 @@ definitions:
       - callbackForApportion
       - emailId
       - consumerType
+      - tenantId
       
   BillDetailInfo:
     type: object
@@ -947,11 +1044,6 @@ definitions:
         minLength: 1
         maxLength: 64
         description: A general ledger code for this head for financial posting.
-      functionCode:
-        type: string
-        minLength: 1
-        maxLength: 32
-        description: Function code for financial voucher posting. Code need to be passed
       description:
         type: string
         minLength: 1
@@ -975,32 +1067,43 @@ definitions:
         type: number
         format: int32
         description: Flag to tell actual demand or not, the demand can be tax or penalty or reabate. If the demand is a tax then its a actual demand.
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
     required:
       - billId
       - creditAmount
       - debitAmount
       - glCode
-      - functionCode
       - description
       - purpose
       - period
       - orderNo
       - isActualDemand
+      - tenantId
       
   DemandRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Demand:
-        $ref: '#/definitions/Demand'
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/Demand'
     type: object
 
   DemandResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Demands:
         type: array
+        maximum: 500
         items:
           $ref: '#/definitions/Demand'
     type: object
@@ -1008,9 +1111,10 @@ definitions:
   DemandDetailResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       DemandDetails:
         type: array
+        maximum: 500
         items:
           $ref: '#/definitions/DemandDetails'
     type: object
@@ -1018,17 +1122,22 @@ definitions:
   DemandReasonRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
-      Demand:
-        $ref: '#/definitions/DemandReason'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      DemandReason:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/DemandReason'
     type: object
 
   DemandReasonResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Demands:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      DemandReasons:
         type: array
+        maximum: 500
         items:
           $ref: '#/definitions/DemandReason'
     type: object
@@ -1036,107 +1145,49 @@ definitions:
   BillRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       BillInfos:
         type: array
+        minimum: 1
+        maximum: 100
         items:
-          $ref: '#/definitions/BillInfo'
+         $ref: '#/definitions/Bill'
     type: object
 
   BillResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       BillInfos:
         type: array
+        maximum: 500
         items:
-          $ref: '#/definitions/BillInfo'
+          $ref: '#/definitions/Bill'
     type: object
     
   InstallmentRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Installment:
-        $ref: '#/definitions/Installment'
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/Installment'
     type: object
 
   InstallmentResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Installments:
         type: array
+        maximum: 500
         items:
           $ref: '#/definitions/Installment'
     type: object
-      
-  RequestInfo:
-    type: object
-    properties:
-      api_id:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msg_id:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requester_id:
-        type: string
-        description: UserId of the user calling
-      auth_token:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - api_id
-      - ver
-      - ts
-      
-  ResponseInfo:
-    type: object
-    properties:
-      api_id:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      res_msg_id:
-        type: string
-        description: unique response message id (UUID)
-      msg_id:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - api_id
-      - ver
-      - ts
-      - status
-      
+    
   Error:
     type: object
     properties:
@@ -1152,11 +1203,4 @@ definitions:
     required:
       - code
       - message
-      
-  ErrorRes:
-    properties:
-      ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
-    type: object
+

@@ -1,5 +1,4 @@
 class UploadLeaveApplication extends React.Component{
-
   constructor(props) {
     super(props);
     this.state={LeaveType:{
@@ -9,9 +8,12 @@ class UploadLeaveApplication extends React.Component{
   },temp:[],dataType:[],employees:[],_leaveTypes:[],_years:[],duplicate:[],hrConfigurations:[],allHolidayList:[]}
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
+    this.setInitialState=this.setInitialState.bind(this);
   }
 
-
+  setInitialState(initState) {
+    this.setState(initState);
+  }
 
   componentDidMount(){
     if(window.opener && window.opener.document) {
@@ -20,38 +22,31 @@ class UploadLeaveApplication extends React.Component{
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-    try {
-        var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
-    } catch(e) {
-        var _leaveTypes = [];
+
+    var count = 4, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+    count--;
+    _state[key] = res;
+    if(count == 0)
+      _this.setInitialState(_state);
     }
-  console.log(_leaveTypes);
-    ////console.log("Leave type required",_leaveTypes);
-    try {
-    var  employees = getCommonMaster("hr-employee","employees","Employee").responseJSON["Employee"] || [];
-    } catch (e) {
-    var  employees = [];
-    }
-    try {
-        var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search", {tenantId:"default"}).responseJSON || [];
-    } catch(e) {
-        var hrConfigurations = [];
-    }
-    try {
-             var allHolidayList = commonApiPost("egov-common-masters", "holidays", "_search", { tenantId}).responseJSON["Holiday"] || [];
-    } catch(e) {
-        var allHolidayList = [];
-    }
-    ////console.log(employees);
-    this.setState({
-      employees : employees,
-      _leaveTypes : _leaveTypes,
-      hrConfigurations: hrConfigurations,
-      allHolidayList : allHolidayList
+
+    getDropdown("leaveTypes", function(res) {
+      checkCountNCall("_leaveTypes", res);
     });
 
+    getCommonMaster("hr-employee","employees",function(err,res){
+      checkCountNCall("employees", res ? res.Employee : [])
+    });
 
-  }
+    commonApiPost("hr-masters", "hrconfigurations", "_search",{tenantId},function(err, res){
+      checkCountNCall("hrConfigurations", res || {})
+    });
+
+    commonApiPost("egov-common-masters", "holidays", "_search", {tenantId},function(err,res) {
+      checkCountNCall("allHolidayList", res ? res.Holiday : [])
+    })
+}
 
 
 
@@ -167,11 +162,8 @@ class UploadLeaveApplication extends React.Component{
           var tempInfo=Object.assign([],this.state.temp);
           var duplicateInfo = Object.assign([],this.state.duplicate);
           var allHolidayList = Object.assign([],this.state.allHolidayList);
-          var hrConfigurations = Object.assign([],this.state.hrConfigurations);
+          var hrConfigurations = Object.assign({},this.state.hrConfigurations);
 
-
-          console.log(hrConfigurations);
-          console.log("TEMP ",allHolidayList);
           duplicateInfo.forEach(function(d){
             errorObject.push(d);
           });
@@ -208,11 +200,20 @@ class UploadLeaveApplication extends React.Component{
           for(var k=0;k<tempInfo.length;k++){
 
             var d = tempInfo[k];
+
+
+
             ////console.log("from",d.fromDate);
             ////console.log("to",d.toDate);
-              d.errorMessage="";
+
+
+
+
+
+
               var _from = d.fromDate;
               var _to = d.toDate;
+              var _triggerId = e.target.id;
               if(_from && _to) {
                 var dateParts1 = _from.split("/");
                 var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
@@ -220,10 +221,10 @@ class UploadLeaveApplication extends React.Component{
                 var dateParts2 = _to.split("/");
                 var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
                 var date2 = new Date(newDateStr);
-
                 if (date1 > date2) {
                   console.log("From date must be before End date.");
                   showError("From date must be before End date.");
+                  $('#' + _triggerId).val("");
                 } else {
                   var holidayList = [], m1 = dateParts1[1], m2 = dateParts2[1], y1 = dateParts1[2], y2 = dateParts2[2];
                   for(var i=0; i<allHolidayList.length;i++) {
@@ -273,7 +274,7 @@ class UploadLeaveApplication extends React.Component{
 
 
 
-            noOfDays = parseInt(d.noOfDays);
+            noOfDays = parseInt(d.noOfDays)
             leaveName = d.leaveType.id;
             employeeName = d.employee;
 
@@ -342,8 +343,7 @@ class UploadLeaveApplication extends React.Component{
                               "fromDate": d.fromDate,
                               "toDate": d.toDate,
                               "leaveDays":d.leaveDays,
-                              "successMessage" : d.successMessage,
-                              "duplicate":false
+                              "successMessage" : d.successMessage
             });
 
 
@@ -352,111 +352,10 @@ class UploadLeaveApplication extends React.Component{
             error = 0;
             }
           }
-    console.log("Success Objects",serverObject);
+      console.log("Success Objects",serverObject);
       console.log("Error Objects",errorObject);
 
-
-      // date1 = date1.addDays(1);
-      for(var i=0;i<serverObject.length;i++){
-          for(var j=i+1;j<=serverObject.length-1;j++){
-            console.log("serverObject[i]",i,serverObject[i]);
-            console.log("serverObject[i]",j,serverObject[j]);
-          if(serverObject[i].duplicate===false && serverObject[j].duplicate===false)
-          {
-                if(serverObject[i].employee===serverObject[j].employee){
-                  console.log("duplicate1",serverObject[i]);
-                  console.log("duplicate2",serverObject[j])
-
-                    if(serverObject[i].fromDate===serverObject[j].fromDate){
-                      console.log("duplicate");
-                      serverObject[i].duplicate = "true";
-                      serverObject[j].duplicate = "true";
-
-                    }else if(serverObject[i].toDate===serverObject[j].toDate){
-                      console.log("duplicate");
-                      serverObject[i].duplicate = "true";
-                      serverObject[j].duplicate = "true";
-
-                    }
-                    var fromDateToLoop,toDateToLoop,array1=[],array2=[],toDate2,fromDate2;
-                    fromDateToLoop = serverObject[i].fromDate;
-                   toDateToLoop = serverObject[i].toDate;
-                   fromDate2 = serverObject[j].fromDate;
-                   toDate2 = serverObject[j].toDate;
-
-
-                    var dateParts1 = fromDateToLoop.split("/");
-                     var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-                     var date1 = new Date(newDateStr);
-                     var dateParts2 = toDateToLoop.split("/");
-                     var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-                     var date2 = new Date(newDateStr);
-
-
-                     var dateParts3 = fromDate2.split("/");
-                      var newDateStr = dateParts3[1] + "/" + dateParts3[0] + "/ " + dateParts3[2];
-                      var date3 = new Date(newDateStr);
-                      var dateParts4 = toDate2.split("/");
-                      var newDateStr = dateParts4[1] + "/" + dateParts4[0] + "/" + dateParts4[2];
-                      var date4 = new Date(newDateStr);
-
-
-                     Date.prototype.addDays = function(days) {
-                          var dat = new Date(this.valueOf())
-                          dat.setDate(dat.getDate() + days);
-                          return dat;
-                      }
-
-                      function getDates(startDate, stopDate) {
-                         var dateArray = new Array();
-                         var currentDate = startDate;
-                         while (currentDate <= stopDate) {
-                           dateArray.push(currentDate)
-                           currentDate = currentDate.addDays(1);
-                         }
-                         return dateArray;
-                       }
-
-                    var dateArray1 = getDates(date1, date2);
-                    var dateArray2 = getDates(date3, date4);
-
-
-
-                    console.log("First",dateArray1);
-                    console.log("Second",dateArray2);
-
-                    for(var m=0;m<dateArray1.length;m++){
-                      for(var n=0;n<dateArray2.length;n++){
-                        console.log("dateArray1[m]",dateArray1[m]);
-                        console.log("dateArray2[n]",dateArray2[n]);
-                        if(dateArray1[m].getTime()===dateArray2[n].getTime()){
-                        console.log("duplicate");
-                        serverObject[i].duplicate = "true";
-                        serverObject[j].duplicate = "true";
-                        break;
-                        }
-                      }
-                    }
-
-          }
-        }
-      }
-    }
-    console.log("FINALDKK  KJHKU",serverObject);
       serverObject.forEach(function(d){
-          if(d.duplicate === "true"){
-            d.errorMessage = "Leave days already present in the scanned Excel";
-            d.errorMessage = "Leave days already present in the scanned Excel";
-            errorObject.push(d);
-          }else {
-            d.successMessage = "Employee leaves created successfully";
-            finalValidatedServerObject.push(d);
-          }
-      });
-
-      console.log("Final",finalValidatedServerObject);
-      console.log("Error",errorObject);
-      finalValidatedServerObject.forEach(function(d){
 
           finalSuccessObject.push({
             "employee": d.employee,
@@ -482,37 +381,37 @@ class UploadLeaveApplication extends React.Component{
 
         });
             console.log("finalSuccessObject",finalSuccessObject);
-          var ep1=new ExcelPlus();
-          var b=0;
-
-            ep1.createFile("Success");
-            ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
-            for(b=0;b<finalValidatedServerObject.length;b++){
-              ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].fromDate,finalValidatedServerObject[b].toDate,finalValidatedServerObject[b].leaveDays,finalValidatedServerObject[b].reason,finalValidatedServerObject[b].successMessage])
-            }
-            ep1.saveAs("success.xlsx");
-
-          var ep2=new ExcelPlus();
-          var b=0;
-
-            ep2.createFile("Error");
-            ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
-            for(b=0;b<errorObject.length;b++){
-              ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMessage])
-            }
-            ep2.saveAs("error.xlsx");
-          errorObject[b]
-
-            finalValidatedServerObject.forEach(function(d){
-            ////console.log(d);
-                finalSuccessObject.push({"employee": d.employee,
-                                "calendarYear": d.calendarYear,
-                                "leaveType":  { "id": d.leaveType["id"]},
-                                "noOfDays" : d.noOfDays,
-                                "tenantId": d.tenantId
-                              });
-            });
-          console.log("FINSSL SNJNCJ",finalSuccessObject);
+          // var ep1=new ExcelPlus();
+          // var b=0;
+          //
+          //   ep1.createFile("Success");
+          //   ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
+          //   for(b=0;b<finalValidatedServerObject.length;b++){
+          //     ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].calendarYear,finalValidatedServerObject[b].noOfDays,finalValidatedServerObject[b].successMessage])
+          //   }
+          //   ep1.saveAs("success.xlsx");
+          //
+          // var ep2=new ExcelPlus();
+          // var b=0;
+          //
+          //   ep2.createFile("Error");
+          //   ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+          //   for(b=0;b<errorObject.length;b++){
+          //     ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMessage])
+          //   }
+          //   ep2.saveAs("error.xlsx");
+          //
+          //
+          //   finalValidatedServerObject.forEach(function(d){
+          //   ////console.log(d);
+          //       finalSuccessObject.push({"employee": d.employee,
+          //                       "calendarYear": d.calendarYear,
+          //                       "leaveType":  { "id": d.leaveType["id"]},
+          //                       "noOfDays" : d.noOfDays,
+          //                       "tenantId": d.tenantId
+          //                     });
+          //   });
+          //console.log("FINSSL SNJNCJ",finalSuccessObject);
 
           if(serverObject.length!==0){
 

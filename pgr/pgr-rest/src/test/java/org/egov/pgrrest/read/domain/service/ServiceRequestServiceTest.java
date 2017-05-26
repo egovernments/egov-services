@@ -1,13 +1,15 @@
 package org.egov.pgrrest.read.domain.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.contract.*;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.junit.Test;
@@ -186,6 +188,7 @@ public class ServiceRequestServiceTest {
             .crn("crn")
             .department(2L)
             .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
     }
 
@@ -200,7 +203,10 @@ public class ServiceRequestServiceTest {
     }
 
     private org.egov.pgrrest.common.contract.ServiceRequest getServiceRequest() {
-        return org.egov.pgrrest.common.contract.ServiceRequest.builder().tenantId("tenantId").build();
+        return org.egov.pgrrest.common.contract.ServiceRequest.builder()
+            .tenantId("tenantId")
+            .attribValues(new ArrayList<org.egov.pgr.common.contract.AttributeEntry>())
+            .build();
     }
 
     private User populateUser() {

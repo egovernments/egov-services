@@ -43,18 +43,22 @@ public class EscalationService {
     }
 
     private void escalate(ServiceRequest serviceRequest){
-
         serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
-        RequestInfo requestInfo = new RequestInfo();
-        requestInfo.setAction("PUT");
-        requestInfo.setUserInfo(userService.getUserByUserName("system","default"));
-        serviceRequest =  workflowService.enrichWorkflowForEscalation(serviceRequest,requestInfo);
+        serviceRequest =  workflowService.enrichWorkflowForEscalation(serviceRequest,getRequestInfo());
         positionService.enrichRequestWithPosition(serviceRequest);
-        SevaRequest enrichedSevaRequest = new SevaRequest(requestInfo, serviceRequest);
+        SevaRequest enrichedSevaRequest = new SevaRequest(getRequestInfo(), serviceRequest);
         escalationDateService.enrichRequestWithEscalationDate(enrichedSevaRequest);
         complaintMessageQueueRepository.save(enrichedSevaRequest);
 
         //Escalation should not be done if next assignee is same.
 //        if()
+    }
+
+    private RequestInfo getRequestInfo(){
+
+        return RequestInfo.builder()
+                .action("PUT")
+                .userInfo(userService.getUserByUserName("system","default"))
+                .build();
     }
 }

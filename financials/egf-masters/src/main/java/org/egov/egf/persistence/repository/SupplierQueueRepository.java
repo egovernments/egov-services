@@ -22,10 +22,14 @@ public class SupplierQueueRepository {
 
 	public void push(SupplierContractRequest supplierContractRequest) {
 		HashMap<String, Object> supplierContractRequestMap = new HashMap<String, Object>();
-		if (supplierContractRequest.getSuppliers() != null && !supplierContractRequest.getSuppliers().isEmpty())
+
+		if ("create".equalsIgnoreCase(supplierContractRequest.getRequestInfo().getAction()))
 			supplierContractRequestMap.put("SupplierCreate", supplierContractRequest);
-		else if (supplierContractRequest.getSupplier() != null && supplierContractRequest.getSupplier().getId() != null)
+		else if ("updateAll".equalsIgnoreCase(supplierContractRequest.getRequestInfo().getAction()))
 			supplierContractRequestMap.put("SupplierUpdate", supplierContractRequest);
+		else if ("update".equalsIgnoreCase(supplierContractRequest.getRequestInfo().getAction()))
+			supplierContractRequestMap.put("SupplierUpdate", supplierContractRequest);
+
 		financialProducer.sendMessage(supplierValidatedTopic, supplierValidatedKey, supplierContractRequestMap);
 	}
 }

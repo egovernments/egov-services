@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.pgrrest.common.model.AttributeEntry;
-import org.egov.pgrrest.write.model.ComplaintRecord;
+import org.egov.pgrrest.write.model.ServiceRequestRecord;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +30,8 @@ public class SevaRequest {
         this.objectMapper = new ObjectMapper();
     }
 
-    public ComplaintRecord toDomain() {
-        return ComplaintRecord.builder()
+    public ServiceRequestRecord toDomain() {
+        return ServiceRequestRecord.builder()
             .CRN(getCRN())
             .latitude(getLatitude())
             .latitude(getLongitude())
@@ -39,6 +39,8 @@ public class SevaRequest {
             .landmarkDetails(this.getServiceRequest().getLandmarkDetails())
             .createdBy(this.getRequesterId())
             .lastModifiedBy(this.getRequesterId())
+            .createdDate(this.getServiceRequest().getCreatedDate())
+            .lastModifiedDate(this.getServiceRequest().getLastModifiedDate())
             .requesterName(this.getServiceRequest().getFirstName())
             .requesterMobileNumber(this.getServiceRequest().getPhone())
             .requesterEmail(this.getServiceRequest().getEmail())

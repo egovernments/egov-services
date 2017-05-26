@@ -1781,7 +1781,6 @@ function appendTr(tBodyName, count, name, fileId) {
 
 function loadUI() {
 
-
                 commonApiPost("hr-masters", "hrconfigurations", "_search", {
                     tenantId
                 }, function(err, res) {
@@ -1852,6 +1851,63 @@ function loadUI() {
                         }
                     }
                 }
+
+
+            if (getUrlVars()["type"] == "update") {
+                if (getUrlVars()["id"]) {
+                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                            tenantId
+                        }, function(err, res) {
+                            var currentEmployee = res.Employee;
+                            showAndPrint(currentEmployee);
+                        });
+                    } else {
+                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                            tenantId
+                        }, function(err, res) {
+                            var obj = res.Employee[0];
+                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                tenantId
+                            }, function(err, res2) {
+                                var currentEmployee = res2.Employee;
+                                showAndPrint(currentEmployee);
+                            });
+                        });
+                    }
+            }
+
+            if (getUrlVars()["type"] == "view") {
+                if (getUrlVars()["id"]) {
+                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                            tenantId
+                        }, function(err, res) {
+                            var currentEmployee = res.Employee;
+                            showAndPrint2(currentEmployee);
+                        });
+                    } else {
+                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                            tenantId
+                        }, function(err, res) {
+                            var obj = res.Employee[0];
+                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                tenantId
+                            }, function(err, res2) {
+                                var currentEmployee = res2.Employee;
+                                showAndPrint2(currentEmployee);
+                            })
+                        });
+                    }
+
+                    $("#createEmployeeForm input").prop("disabled", true);
+
+                    $("#createEmployeeForm select").prop("disabled", true);
+
+                    $("#createEmployeeForm textarea").prop("disabled", true);
+
+                    $("#addEmployee").hide();
+
+                    $(".btn-default").hide();
+            }
 
                 $("input[name='user.dob']").datepicker({
                     format: 'dd/mm/yyyy',
@@ -2317,13 +2373,6 @@ function loadUI() {
                     }
                 };
 
-                if (window.opener && window.opener.document) {
-                    var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-                    if (logo_ele && logo_ele[0]) {
-                        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-                    }
-                }
-                if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
                 $.validator.addMethod('phone', function(value) {
                     return value ? /^[0-9]{10}$/.test(value) : true;
                 }, 'Please enter a valid phone number.');
@@ -2487,6 +2536,14 @@ function loadUI() {
 }
 
 $(document).ready(function() {
+                if (window.opener && window.opener.document) {
+                    var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+                    if (logo_ele && logo_ele[0]) {
+                        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+                    }
+                }
+                if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+
             getDropdown("employeeType", function(res) {
                 employeeType = res;
                 checkCount();
@@ -2575,71 +2632,4 @@ $(document).ready(function() {
             $('#close').on("click", function() {
                 window.close();
             })
-
-
-            if (getUrlVars()["type"] == "update") {
-                try {
-                    if (getUrlVars()["id"]) {
-                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                            tenantId
-                        }, function(err, res) {
-                            var currentEmployee = res.Employee;
-                            showAndPrint(currentEmployee);
-                        });
-                    } else {
-                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                            tenantId
-                        }, function(err, res) {
-                            var obj = res.Employee[0];
-                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                tenantId
-                            }, function(err, res2) {
-                                var currentEmployee = res2.Employee;
-                                showAndPrint(currentEmployee);
-                            });
-                        });
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            if (getUrlVars()["type"] == "view") {
-                try {
-
-                    if (getUrlVars()["id"]) {
-                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                            tenantId
-                        }, function(err, res) {
-                            var currentEmployee = res.Employee;
-                            showAndPrint2(currentEmployee);
-                        });
-                    } else {
-                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                            tenantId
-                        }, function(err, res) {
-                            var obj = res.Employee[0];
-                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                tenantId
-                            }, function(err, res2) {
-                                var currentEmployee = res2.Employee;
-                                showAndPrint2(currentEmployee);
-                            })
-                        });
-                    }
-
-                    $("#createEmployeeForm input").prop("disabled", true);
-
-                    $("#createEmployeeForm select").prop("disabled", true);
-
-                    $("#createEmployeeForm textarea").prop("disabled", true);
-
-                    $("#addEmployee").hide();
-
-                    $(".btn-default").hide();
-
-                } catch (e) {
-                    console.log(e);
-                }
-            }
 });

@@ -43,7 +43,6 @@ public class DemandRepository {
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
 
-		// FIXME overriding tenantid as default due to unavailability of ramki
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
 				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
 

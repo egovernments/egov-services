@@ -3,7 +3,6 @@ package org.egov.domain.model;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.common.date.DateFormatter;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

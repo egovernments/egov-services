@@ -39,6 +39,8 @@
  */
 package org.egov.egf.persistence.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,7 +49,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.queue.contract.AccountCodePurposeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -60,24 +61,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "egf_accountcodepurpose")
-@SequenceGenerator(name = AccountCodePurpose.SEQ_EGF_ACCOUNTCODEPURPOSE, sequenceName = AccountCodePurpose.SEQ_EGF_ACCOUNTCODEPURPOSE, allocationSize = 1)
-public class AccountCodePurpose extends AbstractAuditable {
+@Table(name = "egf_vouchersubtype")
+@SequenceGenerator(name = VoucherSubType.SEQ_EGF_VOUCHERSUBTYPE, sequenceName = VoucherSubType.SEQ_EGF_VOUCHERSUBTYPE, allocationSize = 1)
+public class VoucherSubType extends AbstractAuditable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String SEQ_EGF_ACCOUNTCODEPURPOSE = "SEQ_EGF_ACCOUNTCODEPURPOSE";
+	public static final String SEQ_EGF_VOUCHERSUBTYPE = "SEQ_EGF_VOUCHERSUBTYPE";
 
 	@Id
-	@GeneratedValue(generator = SEQ_EGF_ACCOUNTCODEPURPOSE, strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = SEQ_EGF_VOUCHERSUBTYPE, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@NotNull
 	@Length(max = 256, min = 3)
 	private String name;
+	
+	private Date validUpTo;
+	
+	@NotNull
+	private Boolean exclude;
 
-	public AccountCodePurpose(AccountCodePurposeContract contract) {
-		this.setId(contract.getId());
-		this.setName(contract.getName());
-		this.setTenantId(contract.getTenantId());
-	}
 }

@@ -189,9 +189,13 @@ public class PaymentService {
 			System.out.print("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-				orderNo++;
-				totalAmount = totalAmount.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
-				billDetailInfos.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+				BigDecimal pendingAmount = (demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+				if (pendingAmount.compareTo(BigDecimal.ZERO) > 0) {
+					orderNo++;
+					totalAmount = totalAmount.add(pendingAmount);
+					billDetailInfos
+							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+				}
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());

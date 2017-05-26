@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Demand;
@@ -13,7 +12,6 @@ import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
 import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
-import org.egov.lams.web.contract.DemandReasonCriteria;
 import org.egov.lams.web.contract.DemandReasonResponse;
 import org.egov.lams.web.contract.DemandRequest;
 import org.egov.lams.web.contract.DemandResponse;

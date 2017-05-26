@@ -41,14 +41,11 @@
 package org.egov.eis.web.errorhandler;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.egov.eis.service.exception.UserException;
-import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;

@@ -88,8 +88,8 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			
 		}
 		// FIXME uncomment this part before pushing-->
-		validateAllottee(agreementRequest,errors);
 		validateAsset(agreementRequest,errors);
+		validateAllottee(agreementRequest,errors);
 		validateRentIncrementType(agreement,errors);
 		logger.info("after the validations");
 	}

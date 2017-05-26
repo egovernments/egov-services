@@ -83,6 +83,11 @@ public class AgreementController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
 
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
 		LOGGER.info("agreementRequest::" + agreementRequest);
 		agreementValidator.validateAgreement(agreementRequest,errors);
 		

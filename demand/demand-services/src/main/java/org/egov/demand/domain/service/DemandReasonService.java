@@ -40,6 +40,12 @@ public class DemandReasonService {
 		if (demandReasonCriteria.getInstallmentType()!=null) {
 			queryStr.append(" and dr.egInstallmentMaster.installmentType=:installmenttype");
 		}
+		if (demandReasonCriteria.getFromDate()!=null) {
+			queryStr.append(" and dr.egInstallmentMaster.fromDate>=:fromDate");
+		}
+		if (demandReasonCriteria.getToDate()!=null) {
+			queryStr.append(" and dr.egInstallmentMaster.toDate<=:toDate");
+		}
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());
 		if (demandReasonCriteria.getModuleName()!=null) {
@@ -53,6 +59,12 @@ public class DemandReasonService {
 		}
 		if (demandReasonCriteria.getInstallmentType()!=null) {
 			query.setString("installmenttype", demandReasonCriteria.getInstallmentType());
+		}
+		if (demandReasonCriteria.getFromDate()!=null) {
+			query.setDate("fromDate", demandReasonCriteria.getFromDate());
+		}
+		if (demandReasonCriteria.getToDate()!=null) {
+			query.setDate("toDate", demandReasonCriteria.getToDate());
 		}
 		return (List<EgDemandReason>) query.list();
 	}

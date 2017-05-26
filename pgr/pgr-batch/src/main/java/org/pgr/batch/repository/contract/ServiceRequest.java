@@ -196,4 +196,8 @@ public class ServiceRequest {
     private String getDynamicSingleValue(String key) {
             return AttributeValues.getAttributeSingleValue(attribValues, key);
     }
+
+    public boolean isComplaint(){
+        return "Complaint".equalsIgnoreCase(AttributeValues.getAttributeSingleValue(attribValues, "keyword"));
+    }
 }

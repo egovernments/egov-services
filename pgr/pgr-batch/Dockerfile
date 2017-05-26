@@ -14,7 +14,7 @@ ENV DB_NAME=mydb \
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/pgr-location-enrichment-0.0.1-SNAPSHOT.jar /opt/egov/pgr-location-enrichment.jar
+COPY /target/pgr-batch-0.0.1-SNAPSHOT.jar /opt/egov/pgr-batch.jar
 
 COPY start.sh /usr/bin/start.sh
 

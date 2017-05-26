@@ -1,4 +1,5 @@
-package org.egov.access.domain.model;
+package org.egov.access.domain.criteria;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +8,12 @@ import lombok.Getter;
 
 import java.util.List;
 
-@AllArgsConstructor
-@Builder
 @Getter
+@Builder
+@AllArgsConstructor
 @EqualsAndHashCode
-public class ActionSearchCriteria {
-    private List<String> roleCodes;
-    private List<Long> featureIds;
+public class ValidateActionCriteria {
+    private List<String> roleNames;
     private String tenantId;
+    private String actionUrl;
 }

@@ -1,4 +1,4 @@
-package org.egov.access.web.contract;
+package org.egov.access.web.contract.action;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RoleResponse {
+public class ActionResponse {
     private ResponseInfo responseInfo;
-    private List<RoleContract> roles;
+    private List<ActionContract> actions;
 }

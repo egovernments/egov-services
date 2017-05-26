@@ -1,13 +1,15 @@
 package org.egov.access.domain.service;
 
-import org.egov.access.domain.model.Action;
 import org.egov.access.domain.model.Role;
-import org.egov.access.domain.model.RoleSearchCriteria;
-import org.egov.access.persistence.repository.RoleRepository;
+import org.egov.access.domain.criteria.RoleSearchCriteria;
+import org.egov.access.persistence.repository.BaseRepository;
+import org.egov.access.persistence.repository.querybuilder.RoleFinderQueryBuilder;
+import org.egov.access.persistence.repository.rowmapper.RoleRowMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class RoleServiceTest {
 
     @Mock
-    private RoleRepository roleRepository;
+    private BaseRepository repository;
 
     @InjectMocks
     private RoleService roleService;
@@ -28,16 +30,17 @@ public class RoleServiceTest {
     @Test
     public void testShouldReturnRolesForCodes() throws Exception {
 
-        final RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().build();
-        final List<Role> rolesExpected = getRoles();
-        when(roleRepository.findForCriteria(roleSearchCriteria)).thenReturn(rolesExpected);
+        RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().build();
+        List<Object> expectedRoles = getRoles();
+        when(repository.run(Mockito.any(RoleFinderQueryBuilder.class), Mockito.any(RoleRowMapper.class))).
+                thenReturn(expectedRoles);
 
         List<Role> actualActions = roleService.getRoles(roleSearchCriteria);
-        assertEquals(rolesExpected, actualActions);
+        assertEquals(expectedRoles, actualActions);
     }
 
-    private List<Role> getRoles() {
-        List<Role> roles = new ArrayList<>();
+    private List<Object> getRoles() {
+        List<Object> roles = new ArrayList<>();
         Role role1 = Role.builder().id(1L).name("Employee").code("EMP")
                 .description("Employee of an org").build();
         Role role2 = Role.builder().id(1L).name("Another Employee").code("EMP")

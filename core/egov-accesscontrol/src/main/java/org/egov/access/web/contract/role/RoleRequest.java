@@ -1,4 +1,4 @@
-package org.egov.access.web.contract;
+package org.egov.access.web.contract.role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

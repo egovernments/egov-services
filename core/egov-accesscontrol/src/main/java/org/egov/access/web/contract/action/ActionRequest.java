@@ -1,8 +1,8 @@
-package org.egov.access.web.contract;
+package org.egov.access.web.contract.action;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.egov.access.domain.model.ActionSearchCriteria;
+import org.egov.access.domain.criteria.ActionSearchCriteria;
 import org.egov.common.contract.request.RequestInfo;
 
 import java.util.List;

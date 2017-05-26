@@ -4,7 +4,7 @@ package org.egov.access.web.controller;
 import org.egov.access.Resources;
 import org.egov.access.TestConfiguration;
 import org.egov.access.domain.model.Role;
-import org.egov.access.domain.model.RoleSearchCriteria;
+import org.egov.access.domain.criteria.RoleSearchCriteria;
 import org.egov.access.domain.service.RoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

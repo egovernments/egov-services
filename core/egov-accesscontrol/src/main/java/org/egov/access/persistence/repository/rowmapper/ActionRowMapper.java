@@ -26,7 +26,7 @@ public class ActionRowMapper implements RowMapper<Action> {
                 .lastModifiedDate(rs.getDate("a_lastmodifieddate"))
                 .orderNumber(rs.getInt("a_ordernumber"))
                 .queryParams(rs.getString("a_queryparams"))
-                .tenantId(rs.getString("a_tenantId"))
+                .tenantId(rs.getString("ra_tenantId"))
                 .build();
 
         return action;

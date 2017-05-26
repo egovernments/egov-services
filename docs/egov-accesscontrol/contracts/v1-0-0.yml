@@ -312,21 +312,21 @@ definitions:
   ValidateAction:
     type: object
     properties:
-      TenantRole:
+      tenantRole:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/TenantRole'
       actionUrl:
         type: string
         description: Url of the action to be validated for given tenant
     required:
-      - TenantRole
+      - tenantRole
       - actionUrl
 
   ValidateActionReq:
     type: object
     properties:
-      RequestInfo:
+      requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      ValidateAction:
+      validateAction:
         $ref: '#/definitions/ValidateAction'
 
   FeatureRoleRes:
@@ -438,16 +438,16 @@ definitions:
 
   ErrorRes:
     properties:
-      ResponseInfo:
+      responseInfo:
         $ref: '#/definitions/ResponseInfo'
-      Error:
+      error:
         $ref: '#/definitions/Error'
     type: object
 
   ValidateActionRes:
     properties:
-      ResponseInfo:
+      responseInfo:
         $ref: '#/definitions/ResponseInfo'
-      ValidateAction:
+      actionValidation:
         $ref: '#/definitions/ActionValidation'
     type: object

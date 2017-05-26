@@ -1,8 +1,10 @@
 package org.egov.access.domain.service;
 
+import org.egov.access.domain.criteria.RoleSearchCriteria;
 import org.egov.access.domain.model.Role;
-import org.egov.access.domain.model.RoleSearchCriteria;
-import org.egov.access.persistence.repository.RoleRepository;
+import org.egov.access.persistence.repository.BaseRepository;
+import org.egov.access.persistence.repository.querybuilder.RoleFinderQueryBuilder;
+import org.egov.access.persistence.repository.rowmapper.RoleRowMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,13 +13,14 @@ import java.util.List;
 @Service
 public class RoleService {
 
-    private RoleRepository roleRepository;
+    private BaseRepository repository;
 
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public RoleService(BaseRepository repository) {
+        this.repository = repository;
     }
 
     public List<Role> getRoles(RoleSearchCriteria roleSearchCriteria) {
-       return roleRepository.findForCriteria(roleSearchCriteria);
+        RoleFinderQueryBuilder queryBuilder = new RoleFinderQueryBuilder(roleSearchCriteria);
+        return (List<Role>) (List<?>) repository.run(queryBuilder, new RoleRowMapper());
     }
 }

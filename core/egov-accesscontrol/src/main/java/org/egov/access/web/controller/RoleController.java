@@ -1,11 +1,11 @@
 package org.egov.access.web.controller;
 
 import org.egov.access.domain.model.Role;
-import org.egov.access.domain.model.RoleSearchCriteria;
+import org.egov.access.domain.criteria.RoleSearchCriteria;
 import org.egov.access.domain.service.RoleService;
-import org.egov.access.web.contract.RoleContract;
-import org.egov.access.web.contract.RoleRequest;
-import org.egov.access.web.contract.RoleResponse;
+import org.egov.access.web.contract.role.RoleContract;
+import org.egov.access.web.contract.role.RoleRequest;
+import org.egov.access.web.contract.role.RoleResponse;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,15 +1,14 @@
-package org.egov.access.web.contract;
+package org.egov.access.web.contract.validateaction;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.egov.common.contract.response.ResponseInfo;
 
-import java.util.List;
-
-
 @Getter
+@Builder
 @AllArgsConstructor
-public class ActionResponse {
+public class ValidateActionResponse {
     private ResponseInfo responseInfo;
-    private List<ActionContract> actions;
+    private ActionValidationContract actionValidation;
 }

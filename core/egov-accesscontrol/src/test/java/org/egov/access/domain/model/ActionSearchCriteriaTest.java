@@ -1,5 +1,6 @@
 package org.egov.access.domain.model;
 
+import org.egov.access.domain.criteria.ActionSearchCriteria;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.egov.access.domain.model;
+package org.egov.access.domain.criteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

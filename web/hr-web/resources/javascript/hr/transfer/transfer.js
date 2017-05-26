@@ -30,12 +30,16 @@ class EmployeeTransfer extends React.Component {
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
   }
 
 addOrUpdate(){
   console.log("created");
 }
 
+setInitialState(initState) {
+  this.setState(initState);
+}
 
 componentWillUpdate() {
   if(flag == 1) {
@@ -56,63 +60,7 @@ componentWillUpdate() {
     })
   }
 
-  componentWillMount() {
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
-
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    try {
-      var assignments_position = !localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined" ? (localStorage.setItem("assignments_position", JSON.stringify(getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [])), JSON.parse(localStorage.getItem("assignments_position"))) : JSON.parse(localStorage.getItem("assignments_position"));
-    } catch (e) {
-      console.log(e);
-      var  assignments_position = [];
-    }
-    try {
-      var assignments_fund = !localStorage.getItem("assignments_fund") || localStorage.getItem("assignments_fund") == "undefined" ? (localStorage.setItem("assignments_fund", JSON.stringify(getCommonMaster("egf-masters", "funds", "funds").responseJSON["funds"])) || []) : JSON.parse(localStorage.getItem("assignments_fund"));
-    } catch (e) {
-        console.log(e);
-      var assignments_fund = [];
-    }
-    try {
-      var assignments_functionary = !localStorage.getItem("assignments_functionary") || localStorage.getItem("assignments_functionary") == "undefined" ? (localStorage.setItem("assignments_functionary", JSON.stringify(getCommonMaster("egf-masters", "functionaries", "funds").responseJSON["functionaries"] || [])), JSON.parse(localStorage.getItem("assignments_functionary"))) : JSON.parse(localStorage.getItem("assignments_functionary"));
-      }
-       catch (e) {
-        console.log(e);
-        var assignments_functionary = [];
-    }
-    try {
-      var assignments_position = !localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined" ? (localStorage.setItem("assignments_position", JSON.stringify(getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [])), JSON.parse(localStorage.getItem("assignments_position"))) : JSON.parse(localStorage.getItem("assignments_position"));
-    } catch (e) {
-      console.log(e);
-      var assignments_position = [];
-
-    }
-
-    this.setState({
-      departmentList: Object.assign([], assignments_department),
-      designationList: Object.assign([], assignments_designation),
-      fundList:Object.assign([], assignments_fund),
-      functionaryList:Object.assign([], assignments_functionary),
-      positionList:Object.assign([], assignments_position),
-
-      assignments_department,
-      assignments_designation,
-      assignments_position
-    })
-  }
-
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.employees.length!=this.state.employees.length) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
@@ -135,53 +83,78 @@ componentWillUpdate() {
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
-        $('#code,#name,#departmentId,#designationId').prop("disabled", true);
-        $('#effective').datepicker({
-            format: 'dd/mm/yyyy',
-            autoclose:true,
-            // maxDate: new Date(),
-            defaultDate: ""
-        });
-        $('#effective').val("");
-        $('#effective').on("dp.change", function(e) {
-              _this.setState({
-                    transferSet: {
-                        ..._this.state.transferSet,
-                        "effective":$("#effective").val()
-                    }
-              })
-          });
-          try {
-            var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
-          } catch (e) {
-            console.log(e);
-            var obj=[];
-          }
-          var ind = 0;
-          if(obj.length>0)  {
-             obj.map((item,index)=>
-            {
-                  for(var i=0; i<item.assignments.length; i++) {
-                    if([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
-                      ind = i;
-                      break;
-                    }
+    }
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+
+    var _state = {}, _this = this, count = 5;
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
+    }
+
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("designationList", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("departmentList", res);
+    });
+    getDropdown("assignments_position", function(res) {
+      checkCountAndCall("positionList", res);
+    });
+    getDropdown("assignments_fund", function(res) {
+      checkCountAndCall("fundList", res);
+    });
+    getDropdown("assignments_functionary", function(res) {
+      checkCountAndCall("functionaryList", res);
+    });
+
+
+    $('#code,#name,#departmentId,#designationId').prop("disabled", true);
+    $('#effective').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose:true,
+        // maxDate: new Date(),
+        defaultDate: ""
+    });
+    $('#effective').val("");
+    $('#effective').on("dp.change", function(e) {
+          _this.setState({
+                transferSet: {
+                    ..._this.state.transferSet,
+                    "effective":$("#effective").val()
+                }
+          })
+    });
+
+    getCommonMasterById("hr-employee","employees", id, function(err, res) {
+      if(res && res.Employee) {
+        var obj = res.Employee[0];
+        var ind = 0;
+        if(obj.length > 0) {
+          obj.map((item,index)=>{
+                for(var i=0; i<item.assignments.length; i++) {
+                  if([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                    ind = i;
+                    break;
                   }
+                }
           });
         }
-          _this.setState({
-            transferSet:{
-              ..._this.state.transferSet,
-              employeeid: {
-                name: obj.name,
-                code: obj.code,
-                departmentId:obj.assignments[ind].department,
-                designationId:obj.assignments[ind].designation
-              }
+        _this.setState({
+          transferSet:{
+            ..._this.state.transferSet,
+            employeeid: {
+              name: obj.name,
+              code: obj.code,
+              departmentId:obj.assignments[ind].department,
+              designationId:obj.assignments[ind].designation
+            }
           }
-       })
+        })
+      }
+    });
   }
 
   handleChange(e,name) {
@@ -204,8 +177,7 @@ componentWillUpdate() {
         fund,functionary,effective,remark ,documents,employeeid}=this.state.transferSet;
     let {isSearchClicked,employees,assignments_designation,assignments_department,assignments_position}=this.state;
 
-    const renderOption=function(list)
-    {
+    const renderOption=function(list) {
         if(list)
         {
             return list.map((item, ind)=>

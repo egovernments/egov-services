@@ -1401,7 +1401,7 @@ function getHodDetails(object) {
     return returnObj;
 }
 
-//common edit mark index
+//common edit mark index - tested123
 function markEditIndex(index = -1, modalName = "", object = "") {
     editIndex = index;
     $('#' + modalName).modal('show');
@@ -1411,7 +1411,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                 if (object == "jurisdictions") {
                     //Get the boundary to get boundaryType
                     commonApiGet("egov-location", "boundarys", "", {
-                        "Boundary.id": employee[object][editIndex],
+                        "Boundary.id": (typeof employee[object][editIndex] == "object" ? employee[object][editIndex]["boundary"] : employee[object][editIndex]),
                         "Boundary.tenantId": tenantId
                     }, function(err, res) {
                         if (res) {

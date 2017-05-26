@@ -8,9 +8,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-/**
- * Created by parvati on 31/3/17.
- */
 public class ActionSearchCriteriaTest {
 
     @Test
@@ -21,8 +18,8 @@ public class ActionSearchCriteriaTest {
         ActionSearchCriteria searchCriteria1 = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
         ActionSearchCriteria searchCriteria2 = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
 
-        assertEquals(searchCriteria1,searchCriteria2);
-        assertEquals(searchCriteria1.hashCode(),searchCriteria2.hashCode());
+        assertEquals(searchCriteria1, searchCriteria2);
+        assertEquals(searchCriteria1.hashCode(), searchCriteria2.hashCode());
     }
 
     @Test
@@ -36,7 +33,7 @@ public class ActionSearchCriteriaTest {
         roleCodesList2.add("TEST");
         ActionSearchCriteria searchCriteria2 = ActionSearchCriteria.builder().roleCodes(roleCodesList2).build();
 
-        assertNotEquals(searchCriteria1,searchCriteria2);
-        assertNotEquals(searchCriteria1.hashCode(),searchCriteria2.hashCode());
+        assertNotEquals(searchCriteria1, searchCriteria2);
+        assertNotEquals(searchCriteria1.hashCode(), searchCriteria2.hashCode());
     }
 }

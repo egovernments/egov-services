@@ -1217,20 +1217,6 @@ function updateTable(tableName, modalName, object) {
     for (let i = 0; i < employee[object].length; i++) {
         $(tableName).append(`<tr>`);
         if (object == "assignments") {
-            $(tableName).append(`<td data-label=${"fromDate"}>
-
-                                  ${employee[object][i]["fromDate"] || ""}
-                            </td>`)
-            $(tableName).append(`<td data-label=${"toDate"}>
-
-                                  ${employee[object][i]["toDate"] || ""}
-                                                </td>`)
-            $(tableName).append(`<td data-label=${"department"}>
-                                  ${getNameById("department",employee[object][i]["department"],"") || ""}
-                            </td>`)
-            $(tableName).append(`<td data-label=${"designation"}>
-                                  ${getNameById("designation",employee[object][i]["designation"],"") || ""}
-                              </td>`)
             commonApiPost("hr-masters", "positions", "_search", {
                 tenantId,
                 id: employee[object][i]["position"]
@@ -1240,6 +1226,20 @@ function updateTable(tableName, modalName, object) {
                 } else {
                     assignments_position = [];
                 }
+                $(tableName).append(`<td data-label=${"fromDate"}>
+
+                                  ${employee[object][i]["fromDate"] || ""}
+                            </td>`)
+                $(tableName).append(`<td data-label=${"toDate"}>
+
+                                  ${employee[object][i]["toDate"] || ""}
+                                                </td>`)
+                $(tableName).append(`<td data-label=${"department"}>
+                                  ${getNameById("department",employee[object][i]["department"],"") || ""}
+                            </td>`)
+                $(tableName).append(`<td data-label=${"designation"}>
+                                  ${getNameById("designation",employee[object][i]["designation"],"") || ""}
+                              </td>`)
                 $(tableName).append(`<td data-label=${"position"}>
                                         ${assignments_position.length>0?assignments_position[0]["name"]:""}
                                     </td>`)
@@ -1267,7 +1267,7 @@ function updateTable(tableName, modalName, object) {
                 $(tableName).append(`<td data-label=${"documents"}>
                                         ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
                                     </td>`)
-                closeTR(tableName, modalName, object, i);                                                                                                                                                                             
+                closeTR(tableName, modalName, object, i);
             });
         } else if (object == "jurisdictions") {
             commonApiGet("egov-location", "boundarys", "", {
@@ -1539,7 +1539,7 @@ function getPositions(_this, cb) {
                             $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
                         }
                     }
-                    if(cb) cb();
+                    if (cb) cb();
                 });
             }
         } else {
@@ -1555,7 +1555,7 @@ function getPositions(_this, cb) {
                         $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
                     }
                 }
-                if(cb) cb();
+                if (cb) cb();
             });
         }
     }

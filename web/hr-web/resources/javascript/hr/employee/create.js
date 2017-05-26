@@ -1231,186 +1231,165 @@ function updateTable(tableName, modalName, object) {
             $(tableName).append(`<td data-label=${"designation"}>
                                   ${getNameById("designation",employee[object][i]["designation"],"") || ""}
                               </td>`)
-            try {
-                assignments_position = commonApiPost("hr-masters", "positions", "_search", {
-                    tenantId,
-                    id: employee[object][i]["position"]
-                }).responseJSON["Position"] || [];
-            } catch (e) {
-                console.log(e);
-                assignments_position = [];
-            }
-            $(tableName).append(`<td data-label=${"position"}>
-
-                                                        ${assignments_position.length>0?assignments_position[0]["name"]:""}
-                              </td>`)
-            $(tableName).append(`<td data-label=${"isPrimary"}>
-
-                                                        ${employee[object][i]["isPrimary"] || ""}
-                                                  </td>`)
-            $(tableName).append(`<td data-label=${"fund"}>
-                                                                            ${getNameById("fund",employee[object][i]["fund"],"") || ""}
-                                                                      </td>`)
-            $(tableName).append(`<td data-label=${"function"}>
-                                                                                                ${getNameById("function",employee[object][i]["function"],"") || ""}
-                                                                                          </td>`)
-            $(tableName).append(`<td data-label=${"functionary"}>
-                                                                                                                    ${getNameById("functionary",employee[object][i]["functionary"],"") || ""}
-                                                                                                              </td>`)
-            $(tableName).append(`<td data-label=${"grade"}>
-                                                                                                                                        ${getNameById("grade",employee[object][i]["grade"],"") || ""}
-                                                                                                                                  </td>`)
-            $(tableName).append(`<td data-label=${"hod"}>
-        ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
-
-        </td>`)
-
-            $(tableName).append(`<td data-label=${"govtOrderNumber"}>
-
-                                                                                                                                                                              ${employee[object][i]["govtOrderNumber"] || ""}
-                                                                                                                                                                        </td>`)
-            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-
+            commonApiPost("hr-masters", "positions", "_search", {
+                tenantId,
+                id: employee[object][i]["position"]
+            }, function(err, res) {
+                if (res) {
+                    assignments_position = res["Position"];
+                } else {
+                    assignments_position = [];
+                }
+                $(tableName).append(`<td data-label=${"position"}>
+                                        ${assignments_position.length>0?assignments_position[0]["name"]:""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"isPrimary"}>
+                                        ${employee[object][i]["isPrimary"] || ""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"fund"}>
+                                        ${getNameById("fund",employee[object][i]["fund"],"") || ""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"function"}>
+                                        ${getNameById("function",employee[object][i]["function"],"") || ""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"functionary"}>
+                                        ${getNameById("functionary",employee[object][i]["functionary"],"") || ""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"grade"}>
+                                        ${getNameById("grade",employee[object][i]["grade"],"") || ""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"hod"}>
+                                         ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"govtOrderNumber"}>
+                                         ${employee[object][i]["govtOrderNumber"] || ""}
+                                    </td>`)
+                $(tableName).append(`<td data-label=${"documents"}>
+                                        ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                    </td>`)
+                closeTR(tableName, modalName, object, i);                                                                                                                                                                             
+            });
         } else if (object == "jurisdictions") {
-            try {
-                commonApiGet("egov-location", "boundarys", "", {
-                    "Boundary.id": (typeof employee[object][i] == "object" ? employee[object][i]["boundary"] : employee[object][i]),
-                    "Boundary.tenantId": tenantId
-                }, function(err, res) {
-                    if (res) {
-                        bnd = res.Boundary;
-                        $(tableName).append(`<td data-label=${"jurisdictionsType"}>
+            commonApiGet("egov-location", "boundarys", "", {
+                "Boundary.id": (typeof employee[object][i] == "object" ? employee[object][i]["boundary"] : employee[object][i]),
+                "Boundary.tenantId": tenantId
+            }, function(err, res) {
+                if (res) {
+                    bnd = res.Boundary;
+                } else {
+                    bnd = [];
+                }
+                $(tableName).append(`<td data-label=${"jurisdictionsType"}>
                                     ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
                                     </td>`)
-                        $(tableName).append(`<td data-label=${"boundary"}>
+                $(tableName).append(`<td data-label=${"boundary"}>
                                           ${bnd.length > 0 ? bnd[0]["name"] : ""}
                                     </td>`)
-                    }
-                });
-            } catch (e) {
-                console.log(e);
-                bnd = [];
-            }
+                closeTR(tableName, modalName, object, i);
+            });
         } else if (object == "serviceHistory") {
             $(tableName).append(`<td data-label=${"serviceInfo"}>
-
                                   ${employee[object][i]["serviceInfo"] || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"serviceFrom"}>
-
                                   ${employee[object][i]["serviceFrom"] || ""}
-                                                </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"]}
-                                                                                        </td>`)
+                                    ${employee[object][i]["remarks"]}
+                                </td>`)
             $(tableName).append(`<td data-label=${"orderNo"}>
-
-                                                                                                                                                          ${employee[object][i]["orderNo"] || ""}
-                                                                                                                                                                        </td>`)
+                                    ${employee[object][i]["orderNo"] || ""}
+                                </td>`)
 
             $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
+                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                </td>`);
+            closeTR(tableName, modalName, object, i);
         } else if (object == "probation" || object == "regularisation") {
             $(tableName).append(`<td data-label=${"designation"}>
-            ${getNameById("designation",employee[object][i]["designation"],"")}
-        </td>`)
+                                    ${getNameById("designation",employee[object][i]["designation"],"")}
+                                </td>`)
             $(tableName).append(`<td data-label=${"declaredOn"}>
-
                                   ${employee[object][i]["declaredOn"] || ""}
-                            </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"orderNo"}>
-                          ${employee[object][i]["orderNo"]}                                                               </td>`)
+                                  ${employee[object][i]["orderNo"]}
+                                </td>`)
             $(tableName).append(`<td data-label=${"orderDate"}>
-
                                   ${employee[object][i]["orderDate"] || ""}
-                                                </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"] || ""}
-                                                                                        </td>`)
+                                    ${employee[object][i]["remarks"] || ""}
+                                </td>`)
             $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
+                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                </td>`);
+            closeTR(tableName, modalName, object, i);
         } else if (object == "education") {
-
             $(tableName).append(`<td data-label=${"qualification"}>
-
                                   ${employee[object][i]["qualification"] || ""}
-                            </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"majorSubject"}>
-                          ${employee[object][i]["majorSubject"] || ""}                                                               </td>`)
+                                    ${employee[object][i]["majorSubject"] || ""}
+                                </td>`)
             $(tableName).append(`<td data-label=${"yearOfPassing"}>
-
                                   ${employee[object][i]["yearOfPassing"] || ""}
-                                                </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"university"}>
-
-                                                                          ${employee[object][i]["university"] || ""}
-                                                                                        </td>`)
+                                    ${employee[object][i]["university"] || ""}
+                                </td>`)
             $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
+                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                </td>`);
+            closeTR(tableName, modalName, object, i);
         } else if (object == "technical") {
-
             $(tableName).append(`<td data-label=${"skill"}>
-
                                   ${employee[object][i]["skill"] || ""}
-                            </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"grade"}>
-                          ${employee[object][i]["grade"] || ""}                                                               </td>`)
+                                    ${employee[object][i]["grade"] || ""}
+                                </td>`)
             $(tableName).append(`<td data-label=${"yearOfPassing"}>
-
                                   ${employee[object][i]["yearOfPassing"] || ""}
-                                                </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"] || ""}
-                                                                                        </td>`)
+                                    ${employee[object][i]["remarks"] || ""}
+                                </td>`)
             $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
+                                     ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                </td>`)
+            closeTR(tableName, modalName, object, i);
         } else if (object == "test") {
-
             $(tableName).append(`<td data-label=${"test"}>
-
                                   ${employee[object][i]["test"] || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"yearOfPassing"}>
-
                                   ${employee[object][i]["yearOfPassing"] || ""}
-                                                </td>`)
+                                </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"] || ""}
-                                                                                        </td>`)
-            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
+                                    ${employee[object][i]["remarks"] || ""}
+                                </td>`)
+            $(tableName).append(`<td data-label=${"documents"}>                                                                                                                                     
+                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                </td>`)
+            closeTR(tableName, modalName, object, i);
         }
-
-        if (getUrlVars()["type"] != "view") {
-            $(tableName).append(`<td data-label="Action">
-                        <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
-                        <button type="button" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></button>
-                      </td>`);
-        } else {
-            $(tableName).append(`<td data-label="Action">
-                        NA
-                      </td>`);
-        }
-
-        $(tableName).append(`</tr>`);
     }
+}
+
+function closeTR(tableName, modalName, object, i) {
+    if (getUrlVars()["type"] != "view") {
+        $(tableName).append(`<td data-label="Action">
+                    <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
+                    <button type="button" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></button>
+                  </td>`);
+    } else {
+        $(tableName).append(`<td data-label="Action">
+                    NA
+                  </td>`);
+    }
+
+    $(tableName).append(`</tr>`);
 }
 
 function getHodDetails(object) {
@@ -1792,7 +1771,7 @@ function appendTr(tBodyName, count, name, fileId) {
               }
 
 function loadUI() {
-    
+
 
                 commonApiPost("hr-masters", "hrconfigurations", "_search", {
                     tenantId

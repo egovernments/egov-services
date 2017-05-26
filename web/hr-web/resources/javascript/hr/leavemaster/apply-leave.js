@@ -305,38 +305,40 @@ addOrUpdate(e, mode) {
         var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
         delete tempInfo.name;
         delete tempInfo.code;
-        var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
-          if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
-            employee = res.responseJSON["Employee"][0]
-          }
-          else{
-            employee={};
-          }
-          var hodname = employee.name;
-          tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
-          var body={
-            "RequestInfo":requestInfo,
-            "LeaveApplication":[tempInfo]
-          }, _this=this;
-              $.ajax({
-                    url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
+        commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId}, function(err, res) {
+            if(res && res["Employee"] && res["Employee"][0]){
+              employee = res["Employee"][0]
+            }
+            else{
+              employee={};
+            }
+            var hodname = employee.name;
+            tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
+            var body={
+              "RequestInfo":requestInfo,
+              "LeaveApplication":[tempInfo]
+            }, _this=this;
+                $.ajax({
+                      url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
+                      type: 'POST',
+                      dataType: 'json',
+                      data:JSON.stringify(body),
 
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                      var leaveNumber = res.LeaveApplication[0].applicationNumber;
-                      window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
-                    },
-                    error: function(err) {
-                      showError(err["statusText"]);
-                    }
-                });
-        }
+                      contentType: 'application/json',
+                      headers:{
+                        'auth-token': authToken
+                      },
+                      success: function(res) {
+                        var leaveNumber = res.LeaveApplication[0].applicationNumber;
+                        window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
+                      },
+                      error: function(err) {
+                        showError(err["statusText"]);
+                      }
+                  });
+        })
+          
+}
 
 
   render() {

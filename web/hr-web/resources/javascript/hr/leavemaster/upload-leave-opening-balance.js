@@ -38,7 +38,7 @@ class UploadLeaveType extends React.Component{
       checkCountNCall("_leaveTypes", res);
     });
     getCommonMaster("hr-employee","employees",function(err,res){
-      checkCountNCall(employees, res ? res.Employee : [])
+      checkCountNCall("employees", res ? res.Employee : [])
     })
   }
 

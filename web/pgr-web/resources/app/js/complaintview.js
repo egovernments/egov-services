@@ -55,6 +55,8 @@ $(document).ready(function()
 		$('.action-section').remove();
 	}
 
+	$('.rating').rating();
+
 	getComplaint();
 	
 	$('.slide-history-menu').click(function(){

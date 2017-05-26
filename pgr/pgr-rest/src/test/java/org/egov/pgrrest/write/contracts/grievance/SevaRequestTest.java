@@ -2,16 +2,25 @@ package org.egov.pgrrest.write.contracts.grievance;
 
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.write.model.ServiceRequestRecord;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 
 public class SevaRequestTest {
+
+    private static final String IST = "Asia/Calcutta";
+
+    @Before
+    public void before() {
+        TimeZone.setDefault(TimeZone.getTimeZone(IST));
+    }
 
     @Test
     public void test_should_convert_from_seva_request_map_to_domain_complaint_record() {

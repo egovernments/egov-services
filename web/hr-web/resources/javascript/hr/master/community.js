@@ -1,87 +1,89 @@
 class Community extends React.Component{
   constructor(props){
-      super(props);
-      this.state={communitySet:{
-          name:"",
-          description:"",
-          active:""
-      }    }
-        this.handleChange=this.handleChange.bind(this);
-        this.addOrUpdate=this.addOrUpdate.bind(this);
+    super(props);
+    this.state={ communitySet:{
+        name:"",
+        description:"",
+        active:""
     }
+  }
+    this.handleChange=this.handleChange.bind(this);
+    this.addOrUpdate=this.addOrUpdate.bind(this);
+}
 
 
-    componentDidMount() {
-      if(window.opener && window.opener.document) {
-         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-         if(logo_ele && logo_ele[0]) {
-           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-         }
-       }
-       if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Community");
+componentDidMount() {
+  var type=getUrlVars()["type"];
+  var id=getUrlVars()["id"];
 
-      var type=getUrlVars()["type"];
-      var id=getUrlVars()["id"];
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+     }
+   }
+  if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Community");
 
+  if(getUrlVars()["type"]==="view") {
+    for (var variable in this.state.communitySet)
+      document.getElementById(variable).disabled = true;
+  }
 
-      if(getUrlVars()["type"]==="view")
-      {
-        for (var variable in this.state.communitySet)
-          document.getElementById(variable).disabled = true;
-        }
+  if(type==="view"||type==="update") {
 
-        if(type==="view"||type==="update")
-        {
-            this.setState({
-              communitySet:getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]
-            })
-        }
-    }
-
-    handleChange(e,name)
-    {
-        this.setState({
-            communitySet:{
-                ...this.state.communitySet,
-                [name]:e.target.value
-            }
-        })
-
-    }
-
-    close(){
-        // widow.close();
-        open(location, '_self').close();
-    }
-
-
-    addOrUpdate(e,mode){
-        console.log(this.state.communitySet);
-        this.setState({communitySet:{
-            name:"",
-            description:"",
-            active:""
+    getCommonMasterById("egov-common-masters","communities",{id},function(err, res) {
+      if(res) {
+           communitySet = res["Community"][0];
+          _this.setState({
+            communitySet
+          })
         }
     })
   }
+}
 
-
-
-  render(){
-
-    let {handleChange,addOrUpdate}=this;
-    let {name,description,active}=this.state.communitySet;
-      let mode=getUrlVars()["type"];
-
-
-      const showActionButton=function() {
-        if((!mode) ||mode==="update")
-        {
-          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+handleChange(e,name) {
+    this.setState({
+        communitySet:{
+            ...this.state.communitySet,
+            [name]:e.target.value
         }
-      };
+    })
+}
 
-    return (<div>
+close() {
+    // widow.close();
+    open(location, '_self').close();
+}
+
+
+addOrUpdate(e,mode){
+    console.log(this.state.communitySet);
+    this.setState({communitySet:{
+        name:"",
+        description:"",
+        active:""
+    }
+  })
+}
+
+
+
+render() {
+
+  let {handleChange,addOrUpdate}=this;
+  let {name,description,active}=this.state.communitySet;
+  let mode=getUrlVars()["type"];
+
+
+  const showActionButton=function() {
+    if((!mode) ||mode==="update")
+    {
+      return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+    }
+  };
+
+  return (<div>
       <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Community</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>

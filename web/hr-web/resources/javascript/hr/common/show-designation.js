@@ -7,8 +7,7 @@ class ShowDesignation extends React.Component {
   }
 
 
-  componentDidMount()
-  {
+  componentDidMount() {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
@@ -16,19 +15,15 @@ class ShowDesignation extends React.Component {
        }
      }
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Designation");
-    try {
-        var _designation = commonApiPost("hr-masters","designations","_search",{tenantId,pageSize:500}).responseJSON["Designation"] || [];
-    } catch(e) {
-        var _designation = [];
-    }
-    this.setState({
-      list:_designation
-    });
-
+    var _this = this;
+    getDropdown("assignments_designation", function(res) {
+      _this.setState({
+        list: res
+      })
+    })
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
 
           $('#designationTable').DataTable({

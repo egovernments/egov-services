@@ -1,88 +1,65 @@
 class PositionMaster extends React.Component{
-    constructor(props){
-      super(props);
-      this.state={list:[],positionSet:{
-      "id": "",
-      "name": "",
-      "deptdesig": {
-          "id": "",
-          "department": "",
+  constructor(props){
+    super(props);
+    this.state={list:[],positionSet:{
+    "id": "",
+    "name": "",
+    "deptdesig": {
+        "id": "",
+        "department": "",
         "designation": {
-                            "id": "",
-                            "name": "",
-                            "code": "",
-                            "description": "",
-                            "chartOfAccounts": null,
-                            "tenantId": ""
-                        }
-                    },
-                    "isPostOutsourced": "false",
-                    "active": "true",
-                    "tenantId":tenantId
-    },
-      departmentsList:[],designationList:[]}
+                        "id": "",
+                        "name": "",
+                        "code": "",
+                        "description": "",
+                        "chartOfAccounts": null,
+                        "tenantId": ""
+                    }
+                  },
+    "isPostOutsourced": "false",
+    "active": "true",
+    "tenantId":tenantId
+  },
+      departmentsList:[],designationList:[]
+}
       this.handleChange=this.handleChange.bind(this);
       this.addOrUpdate=this.addOrUpdate.bind(this);
       this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
       this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
 
 }
-    componentWillMount()
-    {
-      try {
-        var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-      } catch (e) {
-          console.log(e);
-           var assignments_designation = [];
-      }
-      try {
-        var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-      } catch (e) {
-          console.log(e);
-        var  assignments_department = [];
-      }
-      this.setState({
-        departmentsList: assignments_department,
-        designationList: assignments_designation
-    })
-    }
 
-
-    handleChange(e,name){
-      if(name === "active"){
-      this.setState({
-        positionSet:{
-            ...this.state.positionSet,
-            active: !this.state.positionSet.active
-
-        }
-      })
-    }else{
-      this.setState({
-        positionSet:{
+handleChange(e,name) {
+    if(name === "active"){
+    this.setState({
+      positionSet:{
           ...this.state.positionSet,
-          [name]:e.target.value
-        }
-      })
-    }
-  }
+          active: !this.state.positionSet.active
 
-
-
-  handleChangeTwoLevel(e,pName,name)
-  {
+      }
+    })
+  }else{
     this.setState({
       positionSet:{
         ...this.state.positionSet,
-        [pName]:{
-            ...this.state.positionSet[pName],
-            [name]:e.target.value
-        }
+        [name]:e.target.value
       }
-
     })
-
+  }
 }
+
+handleChangeTwoLevel(e,pName,name) {
+  this.setState({
+    positionSet:{
+      ...this.state.positionSet,
+      [pName]:{
+          ...this.state.positionSet[pName],
+          [name]:e.target.value
+      }
+    }
+  })
+}
+
 handleChangeThreeLevel(e,pName,name,val)
 {
   this.setState({
@@ -94,55 +71,68 @@ handleChangeThreeLevel(e,pName,name,val)
           [name]:{
               ...this.state.positionSet[name],
                   [val]:e.target.value
+        }
       }
     }
-  }
   })
-
 }
-    close(){
-        // widow.close();
-        open(location, '_self').close();
-    }
 
+close(){
+    // widow.close();
+    open(location, '_self').close();
+}
 
+componentDidMount() {
+  var type=getUrlVars()["type"];
+  var id=getUrlVars()["id"], _this=this;
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+     }
+   }
 
-    componentDidMount(){
-      if(window.opener && window.opener.document) {
-         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-         if(logo_ele && logo_ele[0]) {
-           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-         }
-       }
-       if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Position");
+  if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Position");
 
-      var type=getUrlVars()["type"];
-      var id=getUrlVars()["id"];
+  if(getUrlVars()["type"]==="view") {
+      $("input,select").prop("disabled", true);
+  }
 
-      if(getUrlVars()["type"]==="view")
-      {
-          $("input,select").prop("disabled", true);
+  var count = 2, _this = this, _state = {};
+  var checkCountNCall = function(key, res) {
+    count--;
+    _state[key] = res;
+    if(count == 0)
+      _this.setInitialState(_state);
+  }
+  getDropdown("assignments_department", function(res) {
+    checkCountNCall("departmentsList", res);
+  });
+  getDropdown("assignments_designation", function(res) {
+    checkCountNCall("designationList", res);
+  });
+
+  if(type==="view"||type==="update") {
+    getCommonMasterById("hr-masters","positions",{id},function(err, res) {
+      if(res) {
+           positionSet = res["Position"][0];
+          _this.setState({
+            positionSet
+          })
         }
-
-        if(type==="view"||type==="update")
-        {
-            this.setState({
-              positionSet:getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]
-            })
-        }
-    }
+    })
+  }
+}
 
 
-
-
-  addOrUpdate(e){
+addOrUpdate(e){
   e.preventDefault();
   var tempInfo=Object.assign({},this.state.positionSet) , type = getUrlVars()["type"];
-            var body={
+  var body={
       "RequestInfo":requestInfo,
       "Position":[tempInfo]
     },_this=this;
-    if (type == "update") {
+  if (type == "update") {
         $.ajax({
            url:baseUrl+"/hr-masters/positions/" + this.state.positionSet.id + "/" + "_update?tenantId=" + tenantId,
             type: 'POST',
@@ -198,42 +188,39 @@ handleChangeThreeLevel(e,pName,name,val)
             error: function(err) {
                 showError(err);
 
-            }
-        });
-    }
-  }
-
-
-
-
-    render(){
-
-      let {handleChange,addOrUpdate,handleChangeTwoLevel,handleChangeThreeLevel}=this;
-      let {department,designation,name,isPostOutsourced,deptdesig,active}=this.state.positionSet;
-      let mode =getUrlVars()["type"];
-
-
-      const renderOption=function(list)
-      {
-          if(list)
-          {
-              return list.map((item)=>
-              {
-                  return (<option key={item.id} value={item.id}>
-                          {item.name}
-                    </option>)
-              })
           }
-      }
-      const showActionButton=function() {
-        if((!mode) ||mode==="update")
+      });
+  }
+}
+
+
+render(){
+    let {handleChange,addOrUpdate,handleChangeTwoLevel,handleChangeThreeLevel}=this;
+    let {department,designation,name,isPostOutsourced,deptdesig,active}=this.state.positionSet;
+    let mode =getUrlVars()["type"];
+
+    const renderOption=function(list)
+    {
+        if(list)
         {
-          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+            return list.map((item)=>
+            {
+                return (<option key={item.id} value={item.id}>
+                        {item.name}
+                  </option>)
+            })
         }
-      };
+    }
+
+    const showActionButton=function() {
+      if((!mode) ||mode==="update")
+      {
+        return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+      }
+    };
 
 
-      return (<div>
+  return (<div>
         <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Position</h3>
         <form  onSubmit={(e)=>{addOrUpdate(e,mode)}}>
         <fieldset>

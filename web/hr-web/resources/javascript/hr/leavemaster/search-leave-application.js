@@ -3,15 +3,19 @@ class SearchLeaveApplication extends React.Component {
   constructor(props) {
     super(props);
     this.state={employees:[],employ:{},searchSet:{
-
-    name:"",
-    code:"",
-    departmentId:"",
-    designationId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[]}
+      name:"",
+      code:"",
+      departmentId:"",
+      designationId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
+    this.setInitialState=this.setInitialState.bind(this);
+  }
 
+
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
   componentDidMount(){
@@ -22,11 +26,25 @@ class SearchLeaveApplication extends React.Component {
        }
      }
     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
+
+    var count = 2, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+    count--;
+    _state[key] = res;
+    if(count == 0)
+      _this.setInitialState(_state);
+    }
+
+    getDropdown("assignments_designation", function(res) {
+      checkCountNCall("assignments_designation", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountNCall("assignments_department", res);
+    });
   }
 
 
-  search(e)
-  {
+  search(e) {
     let {
     name,
     code,
@@ -35,46 +53,21 @@ class SearchLeaveApplication extends React.Component {
     e.preventDefault();
     //call api call
     var employees=[];
-    try{
-      employees=commonApiPost("hr-employee","employees","_search",{tenantId,
+
+      commonApiPost("hr-employee","employees","_search",{...this.state.searchSet, tenantId,
       departmentId: departmentId || null,
       designationId: designationId || null,
       code: code || null,
-      pageSize: 500},this.state.searchSet).responseJSON["Employee"] || [];
-    } catch(e){
-      employees = [];
-    }
-
-    flag = 1;
-    this.setState({
-      isSearchClicked:true,
-      employees
-    })
-  }
-
-
-  componentWillMount()
-  {
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
-
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    this.setState({
-      assignments_department:assignments_department,
-      assignments_designation:assignments_designation,
-      assignments_designation,
-      assignments_department
-  })
+      pageSize: 500},function(err,res) {
+        if(res){
+          employees=res["Employee"];
+          flag = 1;
+          this.setState({
+            isSearchClicked:true,
+            employees
+          })
+        }
+      })
   }
 
   handleChange(e,name)

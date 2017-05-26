@@ -12,6 +12,11 @@ class EmployeeSearch extends React.Component {
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
+  }
+
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
   search(e) {
@@ -22,20 +27,22 @@ class EmployeeSearch extends React.Component {
     designationId,
     employeeType,
     asOnDate}=this.state.searchSet;
+    var _this = this;
     e.preventDefault();
     //call api call
     var employees = [];
-    try {
-      employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,departmentId,designationId,name,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
-    } catch (e) {
-      employees = [];
-      console.log(e);
-    }
-    flag = 1;
-    this.setState({
-      isSearchClicked:true,
-      employees
-    });
+    commonApiPost("hr-employee","employees","_search", {
+        tenantId, code, departmentId, designationId, name, pageSize:500
+      }, this.state.searchSet, function(err, res) {
+        if(res) {
+          employees = res.Employee;
+        }
+        flag = 1;
+        _this.setState({
+          isSearchClicked: true,
+          employees
+        });
+      });
   }
   handleBlur(e) {
     setTimeout(function(){
@@ -43,76 +50,39 @@ class EmployeeSearch extends React.Component {
           $("#sub").click();
        }
     }, 100);
-    var _this=this;
+    var _this = this;
 
     if(e.target.value) {
-      try{
-        var code = e.target.value;
+       var code = e.target.value;
        //Make get employee call
-       var obj = commonApiPost("hr-employee","employees","_search",{code,tenantId}).responseJSON["Employee"][0];
-       _this.setState({
-         searchSet:{
-             ..._this.state.searchSet,
-             name: obj ? obj.name : ""
-           }
-     })
-  }
-      catch (e){
-        console.log(e);
-      }
-  }
-  else {
-    _this.setState({
-      searchSet: {
-        ..._this.state.searchSet,
-        name: ""
-      }
-    })
-  }
-}
-
-componentWillUpdate() {
-  if(flag == 1) {
-    flag = 0;
-    $('#employeeTable').dataTable().fnDestroy();
-  }
-}
-
-
-  componentWillMount() {
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
+       commonApiPost("hr-employee","employees","_search",{code,tenantId}, function(err, res) {
+        if(res) {
+          _this.setState({
+            searchSet: {
+              ..._this.state.searchSet,
+              name: res.Employee && res.Employee[0] ? res.Employee[0].name : ""
+            }
+          })
+        }
+       });
+    } else {
+      _this.setState({
+        searchSet: {
+          ..._this.state.searchSet,
+          name: ""
+        }
+      })
     }
-
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    try {
-      var assignments_position = !localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined" ? (localStorage.setItem("assignments_position", JSON.stringify(getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [])), JSON.parse(localStorage.getItem("assignments_position"))) : JSON.parse(localStorage.getItem("assignments_position"));
-    } catch (e) {
-      console.log(e);
-      var  assignments_position = [];
-
-    }
-
-    this.setState({
-      departmentList: Object.assign([], assignments_department),
-      designationList: Object.assign([], assignments_designation),
-      assignments_department,
-      assignments_designation,
-      assignments_position
-    })
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#employeeTable').dataTable().fnDestroy();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.employees.length!=this.state.employees.length) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
@@ -127,23 +97,44 @@ componentWillUpdate() {
           });
       }
   }
+
   componentDidMount() {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
-    var type = getUrlVars()["type"], _this = this;
+    }
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+
+    var count = 3, _state = {}, _this = this;
+
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
+    }
+
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("departmentList", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("designationList", res);
+    });
+    getDropdown("assignments_position", function(res) {
+      checkCountAndCall("assignments_position", res);
+    });
+
+    var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
     $('#asOnDate').datepicker({
-        format: 'dd/mm/yyyy',
-        // maxDate: new Date(),
+        format: 'DD/MM/YYYY',
         defaultDate: ""
     });
+    
     $('#asOnDate').val("");
-    $('#asOnDate').on("dp.change", function(e) {
+    $('#asOnDate').on("change", function(e) {
           _this.setState({
                 searchSet: {
                     ..._this.state.searchSet,
@@ -151,7 +142,7 @@ componentWillUpdate() {
                 }
           })
       });
-    }
+  }
 
   handleChange(e,name) {
       this.setState({
@@ -160,7 +151,6 @@ componentWillUpdate() {
               [name]:e.target.value
           }
       })
-
   }
 
   close(){
@@ -171,7 +161,7 @@ componentWillUpdate() {
   render() {
 
     let {handleChange,search,handleBlur}=this;
-    let {isSearchClicked,employees,assignments_designation,assignments_department,assignments_position}=this.state;
+    let {isSearchClicked,employees, designationList, departmentList ,assignments_position}=this.state;
     let {
     code,
     departmentId,
@@ -229,20 +219,20 @@ componentWillUpdate() {
     }
 
 
-    const renderAction=function(type,value,id){
+    const renderAction=function(type,value,id) {
       if(value==="nominee") {
 
           if (type==="update") {
                   return (
-                          <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>update Nominee</a>
+                          <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>Update Nominee</a>
                   );
           } else if (type==="view") {
                 return (
-                        <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>view Nominee</a>
+                        <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>View Nominee</a>
                 );
           } else {
               return (
-                      <a href={`app/hr/nomineeMaster/nominee.html?id=${id}`} >create Nominee</a>
+                      <a href={`app/hr/nomineeMaster/nominee.html?id=${id}`} >Create Nominee</a>
               );
           }
       } else if(value==="transfer"){
@@ -275,7 +265,7 @@ componentWillUpdate() {
         }
       }
 
-}
+  }
 
   //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
     const renderBody = function() {
@@ -294,8 +284,8 @@ componentWillUpdate() {
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
 
-                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[ind].designation)}</td>
-                    <td data-label="department">{getNameById(assignments_department,item.assignments[ind].department)}</td>
+                    <td data-label="designation">{getNameById(designationList,item.assignments[ind].designation)}</td>
+                    <td data-label="department">{getNameById(departmentList,item.assignments[ind].department)}</td>
                     <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
                     <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
                     <td data-label="action">

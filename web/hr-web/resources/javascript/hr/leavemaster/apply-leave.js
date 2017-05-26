@@ -39,49 +39,53 @@ class ApplyLeave extends React.Component {
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
+    }
     $('#availableDays,#leaveDays').prop("disabled", true);
 
     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
-    var asOnDate = _this.state.leaveSet.toDate;
+    var asOnDate = _this.state.leaveSet.toDate,
+        _leaveSet = {}, employee;
 
+    if(getUrlVars()["type"] === "view") {
+      $("input,select,textarea").prop("disabled", true);
+    }
 
-    if(getUrlVars()["type"]==="view")
-    {
-        $("input,select,textarea").prop("disabled", true);
-      }
-
-      if(type === "view"){
-        var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",id).responseJSON["LeaveApplication"][0];
-        var employee = commonApiPost("hr-employee", "employees", "_search", {
-            tenantId,
-            id: _leaveSet.employee
-        }).responseJSON["Employee"][0];
-        _leaveSet.name = employee.name;
-        _leaveSet.code = employee.code;
-        _this.setState({
-           leaveSet: _leaveSet,
-           leaveNumber:_leaveSet.applicationNumber
-        })
-      }
-      else{
-        try {
-          var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search", {
+      if(type === "view") {
+        getCommonMasterById("hr-leave","leaveapplications", id, function(err, res) {
+          if(res) {
+            _leaveSet = res.LeaveApplication[0];
+            commonApiPost("hr-employee", "employees", "_search", {
+                tenantId,
+                id: _leaveSet.employee
+            }, function(err, res1)  {
+              if(res1) {
+                employee = res1.Employee[0];
+                _leaveSet.name = employee.name;
+                _leaveSet.code = employee.code;
+                _this.setState({
+                   leaveSet: _leaveSet,
+                   leaveNumber: _leaveSet.applicationNumber
+                })
+              }
+            })
+          }
+        });
+      } else {
+        var hrConfigurations = [], allHolidayList = [];
+        commonApiPost("hr-masters", "hrconfigurations", "_search", {
               tenantId
-          }).responseJSON || [];
-        } catch(e) {
-          var hrConfigurations = [];
-        }
-
-        try {
-          var allHolidayList = commonApiPost("egov-common-masters", "holidays", "_search", {
+        }, function(err, res) {
+          if(res) {
+            hrConfigurations = res;
+          }
+        })
+        commonApiPost("egov-common-masters", "holidays", "_search", {
             tenantId
-          }).responseJSON["Holiday"] || [];
-        } catch(e) {
-          var allHolidayList = [];
-        }
+        }, function(err, res) {
+          allHolidayList = res ? res.Holiday : [];
+        });
 
         $('#fromDate, #toDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -152,13 +156,16 @@ class ApplyLeave extends React.Component {
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
                       var employeeid = getUrlVars()["id"];
-                      var object = commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
-                       _this.setState({
-                           leaveSet:{
-                               ..._this.state.leaveSet,
-                               availableDays: object.noOfDays
-                           }
-                       })
+                      commonApiPost("hr-leave","eligibleleaves","_search",{
+                        leaveType,tenantId,asOnDate,employeeid
+                      }, function(err, res) {
+                        _this.setState({
+                          leaveSet:{
+                            ..._this.state.leaveSet,
+                            availableDays: res["EligibleLeave"][0].noOfDays
+                          }
+                        });
+                      });
                     } catch (e){
                       console.log(e);
                     }
@@ -175,77 +182,86 @@ class ApplyLeave extends React.Component {
           }
         });
 
-        if (!id) {
-          var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
+        if(!id) {
+          commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId},function(err, res) {
+            if(res) {
+              var obj = res.Employee[0];
+              _this.setState({
+                leaveSet:{
+                    ..._this.state.leaveSet,
+                    name: obj.name,
+                    code: obj.code,
+                    employee: obj.id
+                  },
+                 departmentId: this.getPrimaryAssigmentDep(obj,"department")
+              })
+            }
+          });
         } else {
-          var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+          getCommonMasterById("hr-employee", "employees", id, function(err, res) {
+            if(res) {
+              var obj = res.Employee[0];
+              _this.setState({
+                leaveSet:{
+                    ..._this.state.leaveSet,
+                    name: obj.name,
+                    code: obj.code,
+                    employee: obj.id
+                  },
+                 departmentId: this.getPrimaryAssigmentDep(obj,"department")
+              })
+            }
+          })
         }
-
-        _this.setState({
-          leaveSet:{
-              ..._this.state.leaveSet,
-              name: obj.name,
-              code: obj.code,
-              employee: obj.id
-            },
-           departmentId: this.getPrimaryAssigmentDep(obj,"department")
-        })
-
-
-
       }
+  }
 
-    }
-
-    getPrimaryAssigmentDep(obj,type)
-    {
-
-      for (var i = 0; i < obj.assignments.length; i++) {
+  getPrimaryAssigmentDep(obj,type) {
+    for (var i = 0; i < obj.assignments.length; i++) {
         if(obj.assignments[i].isPrimary)
         {
           return obj.assignments[i][type];
         }
-      }
     }
-
-  componentWillMount()
-  {
-    try {
-        var _leaveTypes = getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"] || [];
-    } catch(e) {
-        var _leaveTypes = [];
-    }
-    this.setState({
-    leaveList:_leaveTypes
-      });
   }
 
-
+  componentWillMount() {
+    var _this = this;
+    getCommonMaster("hr-leave", "leavetypes", function(err, res) {
+      if(res) {
+        _this.setState({
+          leaveList: res.LeaveType
+        })
+      }
+    })
+  }
 
   handleChangeThreeLevel(e,pName,name) {
-    var _this=this;
+    var _this = this;
     if(pName=="leaveType"&&_this.state.leaveSet.toDate){
 
-      try{
-      var leaveType = e.target.value;
-      var asOnDate = _this.state.leaveSet.toDate;
-      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
-        var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
-          this.setState({
-            leaveSet:{
-              ...this.state.leaveSet,
-              availableDays: object.noOfDays,
-              [pName]:{
-                  ...this.state.leaveSet[pName],
-                  [name]:e.target.value
-              }
-
-            }
-          })
-        }
-        catch (e){
-          console.log(e);
-        }
+      try {
+        var leaveType = e.target.value;
+        var asOnDate = _this.state.leaveSet.toDate;
+        var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
+        commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}, function(err, res) {
+          if(res) {
+              _this.setState({
+                leaveSet:{
+                  ..._this.state.leaveSet,
+                  availableDays: res["EligibleLeave"][0].noOfDays,
+                  [pName]:{
+                      ..._this.state.leaveSet[pName],
+                      [name]:e.target.value
+                  }
+                }
+              })
+          }
+        });
+      }
+      catch (e){
+        console.log(e);
+      }
 
 
     } else {
@@ -284,9 +300,7 @@ isFourthSat (d) {
   return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 4);
 }
 
-addOrUpdate(e,mode)
-{
-
+addOrUpdate(e, mode) {
         e.preventDefault();
         console.log(this.state.leaveNumber);
         var employee;
@@ -295,7 +309,7 @@ addOrUpdate(e,mode)
         var leaveNumber = this.state.leaveNumber;
         var owner = this.state.owner;
         var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
-        delete  tempInfo.name;
+        delete tempInfo.name;
         delete tempInfo.code;
         var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
           if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
@@ -306,10 +320,10 @@ addOrUpdate(e,mode)
           }
           var hodname = employee.name;
           tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
-        var body={
+          var body={
             "RequestInfo":requestInfo,
             "LeaveApplication":[tempInfo]
-          },_this=this;
+          }, _this=this;
               $.ajax({
                     url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
                     type: 'POST',
@@ -321,14 +335,11 @@ addOrUpdate(e,mode)
                       'auth-token': authToken
                     },
                     success: function(res) {
-
-                    var leaveNumber = res.LeaveApplication[0].applicationNumber;
-                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
-
+                      var leaveNumber = res.LeaveApplication[0].applicationNumber;
+                      window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
                     },
                     error: function(err) {
-                        showError(err);
-
+                      showError(err["statusText"]);
                     }
                 });
         }

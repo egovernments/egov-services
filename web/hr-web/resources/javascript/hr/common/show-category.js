@@ -10,34 +10,26 @@ class ShowCategory extends React.Component {
 }
 
 
-  componentDidMount()
-  {
+  componentDidMount() {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-     
-     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Category");
-
-    try {
-        var _categories = commonApiPost("egov-common-masters","categories","_search",{tenantId,pageSize:500}).responseJSON["Category"] || [];
-    } catch(e) {
-        var _categories = [];
     }
-    this.setState({
-        list:_categories
-      });
+     
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Category");
+    var _this = this;
+    getDropdown("category", function(res) {
+        _this.setState({
+          list: res
+        });
+    })
   }
 
   componentDidUpdate(prevProps, prevState)
   {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
           $('#categoryTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -50,8 +42,7 @@ class ShowCategory extends React.Component {
 
 
 
-  close(){
-      // widow.close();
+  close() {
       open(location, '_self').close();
   }
 

@@ -13,27 +13,8 @@ class ShowCalenderHoliday extends React.Component {
 
   }
 
-
-  componentWillMount(){
-    try {
-    var  year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [])), JSON.parse(localStorage.getItem("year"))) : JSON.parse(localStorage.getItem("year"));
-
-    } catch (e) {
-        console.log(e);
-      var  year = [];
-    }
-    this.setState({
-      year : Object.assign([], year)
-  })
-  }
-
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#calenderTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
           $('#calenderTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -54,8 +35,15 @@ class ShowCalenderHoliday extends React.Component {
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Holiday");
+    }
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Holiday");
+
+    var _this = this;
+    getDropdown("years", function(res) {
+      _this.setState({
+        year: res
+      })
+    })
   }
 
 
@@ -82,21 +70,20 @@ class ShowCalenderHoliday extends React.Component {
       open(location, '_self').close();
   }
 
-search(e)
-  {
+  search(e) {
     e.preventDefault();
-    try{
-      var list=commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear,pageSize:500}).responseJSON["Holiday"];
-    }
-    catch(e){
-      console.log(e);
-      var list = [];
-    }
-    flag = 1;
-    this.setState({
-      isSearchClicked:true,
-      list
-    })
+    var _this = this;
+    commonApiPost("egov-common-masters","holidays","_search",{
+      tenantId, year: this.state.holidaySet.calendarYear, pageSize:500
+    }, function(err, res) {
+      if(res) {
+        flag = 1;
+        _this.setState({
+          isSearchClicked: true,
+          list: res.Holiday
+        });
+      }
+    });
   }
 
   render() {

@@ -48,59 +48,17 @@ class EmployeeSearch extends React.Component {
     employeeType:""},employeeType:[],department:[],designation:[],month:[],year:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
   }
 
-  search(e)
-  {
+  setInitialState(initState) {
+    this.setState(initState);
+  }
+
+  search(e) {
     let {month,year,designationCode,departmentCode,code,employeeType}=this.state.searchSet;
     e.preventDefault();
     window.location=`app/hr/attendance/attendance.html?month=${month}&year=${year}&designationCode=${designationCode}&departmentCode=${departmentCode}&code=${code}&type=${employeeType}`;
-
-    // console.log("fired");
-  }
-
-  componentWillMount()
-  {
-    var date = new Date();
-
-
-    try {
-      var _year = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
-    } catch(e) {
-        console.log(e);
-      var  _year = [];
-    }
-
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
-
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    try {
-      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
-      }
-      catch (e) {
-        console.log(e);
-      var employeeType = [];
-    }
-
-    this.setState({
-        employeeType: employeeType,
-        department: Object.assign([], assignments_department),
-        designation: Object.assign([], assignments_designation),
-        month,
-        year: _year
-    })
-
   }
 
   handleChange(e,name) {
@@ -136,8 +94,31 @@ class EmployeeSearch extends React.Component {
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
-       $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+    }
+
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+
+    var count = 4, _state = {month}, _this = this;
+    
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
+    }
+
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("designation", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("department", res);
+    });
+    getDropdown("employeeType", function(res) {
+      checkCountAndCall("employeeType", res);
+    });
+    getDropdown("years", function(res) {
+      checkCountAndCall("year", res);
+    });
   }
 
   close(){

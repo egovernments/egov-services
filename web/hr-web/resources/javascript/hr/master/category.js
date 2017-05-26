@@ -1,87 +1,92 @@
 class Category extends React.Component{
-
-    constructor(props){
-      super(props);
-      this.state={categorySet:{
-          name:"",
-          description:"",
-          active:""
-      }    }
-        this.handleChange=this.handleChange.bind(this);
-        this.addOrUpdate=this.addOrUpdate.bind(this);
+  constructor(props){
+    super(props);
+    this.state={categorySet:{
+        name:"",
+        description:"",
+        active:""
     }
-
-
-    componentDidMount() {
-      if(window.opener && window.opener.document) {
-         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-         if(logo_ele && logo_ele[0]) {
-           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-         }
-       }
-       if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Category");
-      var type=getUrlVars()["type"];
-      var id=getUrlVars()["id"];
-
-      if(getUrlVars()["type"]==="view")
-      {
-        for (var variable in this.state.categorySet)
-          document.getElementById(variable).disabled = true;
-        }
-
-        if(type==="view"||type==="update")
-        {
-            this.setState({
-              categorySet:getCommonMasterById("egov-common-masters","categories","Category",id).responseJSON["Category"][0]
-            })
-        }
-    }
-
-    handleChange(e,name)
-    {
-        this.setState({
-            categorySet:{
-                ...this.state.categorySet,
-                [name]:e.target.value
-            }
-        })
-
-    }
-
-    close(){
-        // widow.close();
-        open(location, '_self').close();
-    }
-
-
-    addOrUpdate(e,mode){
-        console.log(this.state.categorySet);
-        e.preventDefault();
-        this.setState({categorySet:{
-            name:"",
-            description:"",
-            active:""
-        }
-     })
   }
+  this.handleChange=this.handleChange.bind(this);
+  this.addOrUpdate=this.addOrUpdate.bind(this);
+}
 
-  render(){
+componentDidMount() {
+  var type = getUrlVars()["type"];
+  var id = getUrlVars()["id"];
+  var _this = this;
 
-    let {handleChange,addOrUpdate}=this;
-    let {name,description,active}=this.state.categorySet;
-      let mode=getUrlVars()["type"];
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+     }
+   }
 
+  if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Category");
 
-      const showActionButton=function() {
-        if((!mode) ||mode==="update")
-        {
-          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+  if(getUrlVars()["type"]==="view") {
+    for (var variable in this.state.categorySet)
+      document.getElementById(variable).disabled = true;
+    }
+
+  if(type==="view"||type==="update") {
+
+    getCommonMasterById("egov-common-masters","categories",{id},function(err, res) {
+      if(res) {
+           categorySet = res["Category"][0];
+          _this.setState({
+            categorySet
+          })
         }
-      };
+    })
+  }
+}
 
-    return (<div>
+handleChange(e,name) {
+    this.setState({
+        categorySet:{
+            ...this.state.categorySet,
+            [name]:e.target.value
+        }
+    })
 
-        <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Category </h3>
+}
+
+close() {
+    // widow.close();
+    open(location, '_self').close();
+}
+
+
+addOrUpdate(e,mode) {
+    console.log(this.state.categorySet);
+    e.preventDefault();
+    this.setState({categorySet:{
+        name:"",
+        description:"",
+        active:""
+    }
+ })
+}
+
+render(){
+
+  let {handleChange,addOrUpdate}=this;
+  let {name,description,active}=this.state.categorySet;
+  let mode=getUrlVars()["type"];
+
+
+    const showActionButton=function() {
+      if((!mode) ||mode==="update")
+      {
+        return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+      }
+    };
+
+  return (<div>
+
+    <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Category </h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
       <div className="row">

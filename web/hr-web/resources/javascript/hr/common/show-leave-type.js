@@ -15,23 +15,20 @@ class ShowLeaveType extends React.Component {
 
 
 
-componentDidMount()
-{
+componentDidMount() {
   if(window.opener && window.opener.document) {
      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
      if(logo_ele && logo_ele[0]) {
        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
      }
-   }
-    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Type");
-  try {
-      var _leaveTypes = commonApiPost("hr-leave", "leavetypes","_search",{tenantId,pageSize:500}).responseJSON["LeaveType"] || [];
-  } catch(e) {
-      var _leaveTypes = [];
   }
-  this.setState({
-  leaveList:_leaveTypes
-    });
+  $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Type");
+  var _this = this;
+  commonApiPost("hr-leave", "leavetypes","_search",{tenantId,pageSize:500}, function(err, res) {
+    _this.setState({
+      leaveList: res.LeaveType
+    })
+  })
 }
 
 close(){
@@ -40,13 +37,8 @@ close(){
 }
 
 
-componentDidUpdate(prevProps, prevState)
-{
+componentDidUpdate(prevProps, prevState) {
     if (prevState.leaveList.length!=this.state.leaveList.length) {
-        // $('#leaveTable').DataTable().draw();
-        // alert(prevState.leaveList.length);
-        // alert(this.state.leaveList.length);
-        // alert('updated');
         $('#leaveTable').DataTable({
           dom: 'Bfrtip',
           buttons: [
@@ -58,19 +50,16 @@ componentDidUpdate(prevProps, prevState)
 }
 
 
-handleChange(e,name)
-{
-
+handleChange(e,name) {
     this.setState({
         leaveType:{
             ...this.state.leaveType,
             [name]:e.target.value
         }
     })
-
 }
 
-  render() {
+render() {
     let  {name,description}=this.state.leaveType;
     let {leaveList}=this.state;
 

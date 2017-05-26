@@ -1,130 +1,102 @@
 class Calender_setup extends React.Component{
-    constructor(props){
-      super(props);
-      this.state={calenderSet:{
+  constructor(props){
+    super(props);
+    this.state={calenderSet:{
+        name:"",
+        startDate:"",
+        endDate:"",
+        active:""
+    }
+  }
+  this.handleChange=this.handleChange.bind(this);
+  this.addOrUpdate=this.addOrUpdate.bind(this);
+}
+
+handleChange(e,name) {
+  this.setState({
+      calenderSet:{
+          ...this.state.calenderSet,
+          [name]:e.target.value
+        }
+    })
+}
+
+componentDidMount() {
+  var _this = this;
+  if(window.opener && window.opener.document) {
+     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+     if(logo_ele && logo_ele[0]) {
+       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+     }
+   }
+
+  if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calender");
+    var type=getUrlVars()["type"];
+    var id=getUrlVars()["id"];
+    var _this = this;
+
+    $('#fromDate, #toDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose:true
+
+    });
+
+    $('#fromDate, #toDate').on("change", function(e) {
+      var _from = $('#fromDate').val();
+      var _to = $('#toDate').val();
+      var _triggerId = e.target.id;
+      if(_from && _to) {
+        var dateParts1 = _from.split("/");
+        var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+        var date1 = new Date(newDateStr);
+        var dateParts2 = _to.split("/");
+        var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+        var date2 = new Date(newDateStr);
+        if (date1 > date2) {
+          showError("From date must be before End date.");
+          $('#' + _triggerId).val("");
+        }
+      }
+    });
+
+  if(getUrlVars()["type"]==="view")
+  {
+    for (var variable in this.state.calenderSet)
+      document.getElementById(variable).disabled = true;
+  }
+
+  if(type==="view"||type==="update") {
+
+    getCommonMasterById("egov-common-masters","calendaryears",{id},function(err, res) {
+      if(res) {
+           calenderSet = res["CalendarYear"][0];
+          _this.setState({
+            calenderSet
+          })
+        }
+    })
+  }
+
+}
+
+close() {
+    // widow.close();
+    open(location, '_self').close();
+}
+
+addOrUpdate(e,mode) {
+     console.log(this.state.calenderSet);
+    e.preventDefault();
+      this.setState({calenderSet:{
           name:"",
           startDate:"",
           endDate:"",
           active:""
       }
+    })
   }
-        this.handleChange=this.handleChange.bind(this);
-        this.addOrUpdate=this.addOrUpdate.bind(this);
-    }
 
-
-
-    handleChange(e,name)
-    {
-        this.setState({
-            calenderSet:{
-                ...this.state.calenderSet,
-                [name]:e.target.value
-            }
-        })
-
-    }
-
-
-    componentDidMount() {
-      if(window.opener && window.opener.document) {
-         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-         if(logo_ele && logo_ele[0]) {
-           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-         }
-       }
-    if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calender");
-      var type=getUrlVars()["type"];
-      var id=getUrlVars()["id"];
-      var _this = this;
-      $('#startDate').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose:true
-
-    });
-    $('#startDate').on("change", function(e) {
-      var from = $('#startDate').val();
-      var to = $('#endDate').val();
-      var dateParts = from.split("/");
-      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-      var date1 = new Date(newDateStr);
-
-      var dateParts = to.split("/");
-      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-      var date2 = new Date(newDateStr);
-      if (date1 > date2) {
-          showError("From date must be before of End date");
-          $('#startDate').val("");
-      }
-      _this.setState({
-            calenderSet: {
-                ..._this.state.calenderSet,
-                "startDate":$("#startDate").val()
-            }
-      })
-
-      });
-
-      $('#endDate').datepicker({
-          format: 'dd/mm/yyyy',
-          autoclose:true
-      });
-      $('#endDate').on("change", function(e) {
-        var from = $('#startDate').val();
-        var to = $('#endDate').val();
-        var dateParts = from.split("/");
-        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-        var date1 = new Date(newDateStr);
-
-        var dateParts = to.split("/");
-        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-        var date2 = new Date(newDateStr);
-        if (date1 > date2) {
-            showError("End date must be after of From date");
-            $('#endDate').val("");
-        }
-
-        _this.setState({
-              calenderSet: {
-                  ..._this.state.calenderSet,
-                  "endDate":$("#endDate").val()
-              }
-            })
-        });
-
-      if(getUrlVars()["type"]==="view")
-      {
-        for (var variable in this.state.calenderSet)
-          document.getElementById(variable).disabled = true;
-        }
-
-        if(type==="view"||type==="update")
-        {
-            this.setState({
-              calenderSet:getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]
-            })
-        }
-
-    }
-
-    close(){
-        // widow.close();
-        open(location, '_self').close();
-    }
-
-    addOrUpdate(e,mode){
-         console.log(this.state.calenderSet);
-        e.preventDefault();
-          this.setState({calenderSet:{
-              name:"",
-              startDate:"",
-              endDate:"",
-              active:""
-          } })
-      }
-
-  render(){
-
+render() {
     let {handleChange,addOrUpdate}=this;
     let mode=getUrlVars()["type"];
     let {name,startDate,endDate,active}=this.state.calenderSet;
@@ -137,7 +109,7 @@ class Calender_setup extends React.Component{
     };
 
 
-    return (<div>
+  return (<div>
       <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Calendar Setup</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>

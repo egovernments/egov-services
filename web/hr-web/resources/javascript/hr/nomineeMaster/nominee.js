@@ -2,57 +2,56 @@ class Nominee extends React.Component{
 
     constructor(props){
       super(props);
-      this.state={
-        allNomineeValue:{
-          "tenantId": tenantId,
-          "employeeid": {
-            id:"",
-            name:"",
-            code:""
+      this.state = {
+          allNomineeValue: {
+              "tenantId": tenantId,
+              "employeeid": {
+                  id: "",
+                  name: "",
+                  code: ""
+              },
+              nomineeFieldsDefination: []
           },
-          nomineeFieldsDefination:[]
-        },
-      nomineeSet:{
-      "name": "",
-      "gender": "",
-      "dateOfBirth": "",
-      "maritalStatus": "",
-      "relationship": "",
-      "bank": "",
-      "bankBranch": "",
-      "bankAccount": "",
-      "nominated": true,
-      "employed": true,
-      "createdBy": "",
-      "createdDate": "",
-      "lastModifiedBy": "",
-      "lastModifiedDate": "",
-      "tenantId": tenantId
-    },
-    isCustomFormVisible:false,
-    dataType: [],
-    isEdit: false,
-    index: -1,
-    list:[],
-    genderList:[],
-    MaritalList:[],
-    relationList:[],
-    bankList:[],
-    branchList:[],
-    employList:[],
-    showMsg: false,
-    id :""
-  }
-        this.handleChange=this.handleChange.bind(this);
-        this.addOrUpdate=this.addOrUpdate.bind(this);
-        this.addNewRow=this.addNewRow.bind(this);
-        this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
-        this.setInitialState=this.setInitialState.bind(this);
-        this.addNominee=this.addNominee.bind(this);
-        this.renderDelEvent=this.renderDelEvent.bind(this);
-        this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
+          nomineeSet: {
+              "name": "",
+              "gender": "",
+              "dateOfBirth": "",
+              "maritalStatus": "",
+              "relationship": "",
+              "bank": "",
+              "bankBranch": "",
+              "bankAccount": "",
+              "nominated": true,
+              "employed": true,
+              "createdBy": "",
+              "createdDate": "",
+              "lastModifiedBy": "",
+              "lastModifiedDate": "",
+              "tenantId": tenantId
+          },
+          isCustomFormVisible: false,
+          dataType: [],
+          isEdit: false,
+          index: -1,
+          list: [],
+          genderList: [],
+          MaritalList: [],
+          relationList: [],
+          bankList: [],
+          branchList: [],
+          employList: [],
+          showMsg: false,
+          id: ""
+      }
+      this.handleChange = this.handleChange.bind(this);
+      this.addOrUpdate = this.addOrUpdate.bind(this);
+      this.addNewRow = this.addNewRow.bind(this);
+      this.showCustomFieldForm = this.showCustomFieldForm.bind(this);
+      this.setInitialState = this.setInitialState.bind(this);
+      this.addNominee = this.addNominee.bind(this);
+      this.renderDelEvent = this.renderDelEvent.bind(this);
+      this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
     }
-
 
     setInitialState(initState) {
       this.setState(initState);
@@ -142,9 +141,6 @@ class Nominee extends React.Component{
       }
     }
 
-    componentWillMount(){
-
-}
 
   handleChangeThreeLevel(e, pName, name, key) {
 
@@ -246,40 +242,38 @@ class Nominee extends React.Component{
              }
           })
        });
-       try {
-         var MaritalList = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(commonApiPost("hr-employee", "maritalstatuses", "_search", {tenantId, pageSize:500}).responseJSON["MaritalStatus"] || [])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus"));
-       } catch (e) {
-           console.log(e);
-           var MaritalList = [];
-       }
-       try {
-         var bankList = !localStorage.getItem("bank") || localStorage.getItem("bank") == "undefined" ? (localStorage.setItem("bank", JSON.stringify(getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [])), JSON.parse(localStorage.getItem("bank"))) : JSON.parse(localStorage.getItem("bank"));
-       } catch (e) {
-           console.log(e);
-           var bankList = [];
-       }
 
-         this.setState({
-           MaritalList,
-           bankList,
-       })
+      var count = 3, _state = {}, _this = this;
 
-       try {
-         var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
-       } catch (e) {
-         console.log(e);
-         var obj=[];
-       }
-       _this.setState({
-         allNomineeValue:{
-           ..._this.state.allNomineeValue,
-             employeeid: {
-               id:id,
-               name: obj.name,
-               code: obj.code
-             }
-       }
-    })
+      const checkCountAndCall = function(key, res) {
+        _state[key] = res;
+        count--;
+        if(count == 0)
+          _this.setInitialState(_state);
+      }
+
+      getDropdown("maritalStatus", function(res) {
+        checkCountAndCall("MaritalList", res);
+      })
+
+      getDropdown("bank", function(res) {
+        checkCountAndCall("bankList", res);
+      })
+
+      getCommonMasterById("hr-employee","employees", id, function(err, res) {
+        if(res && res.Employee && res.Employee[0]) {
+          _this.setState({
+            allNomineeValue: {
+             ..._this.state.allNomineeValue,
+               employeeid: {
+                 id:id,
+                 name: obj.name,
+                 code: obj.code
+               }
+            }
+          })
+        }
+      })
 }
 
 
@@ -332,9 +326,9 @@ class Nominee extends React.Component{
   // }
 
     addOrUpdate(e,mode) {
-        e.preventDefault();
-         console.log(this.state.allNomineeValue);
-      }
+      e.preventDefault();
+      console.log(this.state.allNomineeValue);
+    }
 
 
 

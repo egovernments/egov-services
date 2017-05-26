@@ -26,7 +26,6 @@ const callAjax = (type, empArr, cb) => {
                     RequestInfo: requestInfo,
                     LeaveOpeningBalance: [empArr[i]]
                 }),
-                async: false,
                 contentType: 'application/json',
                 headers: {
                     'auth-token': authToken
@@ -54,7 +53,6 @@ const callAjax = (type, empArr, cb) => {
                 RequestInfo: requestInfo,
                 LeaveOpeningBalance: empArr
             }),
-            async: false,
             contentType: 'application/json',
             headers: {
                 'auth-token': authToken
@@ -85,8 +83,12 @@ class PersonalInform extends React.Component {
     this.handleChangeSrchRslt = this.handleChangeSrchRslt.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.close = this.close.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
   }
 
+  setInitialState(initState) {
+    this.setState(initState);
+  }
 
   componentDidMount() {
     if(window.opener && window.opener.document) {
@@ -94,7 +96,36 @@ class PersonalInform extends React.Component {
        if(logo_ele && logo_ele[0]) {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
-     }
+    }
+
+    var count = 4, _this = this, _state = {};
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
+    }
+
+    commonApiPost("hr-leave", "leavetypes", "_search", {
+      tenantId,
+      pageSize: 500,
+      accumulative: true
+    }, function(err, res) {
+        checkCountAndCall("leave", res ? res.LeaveType : []);
+    });
+
+    getDropdown("years", function(res) {
+      checkCountAndCall("years", res);
+    })
+
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("departmentsList", res);
+    })
+
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("designationList", res);
+    })
+
     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Opening Balance");
 
     if(getUrlVars()["type"] == "view") {
@@ -115,59 +146,68 @@ class PersonalInform extends React.Component {
         calendarYear
     } = this.state.searchSet;
     e.preventDefault();
+    var _emps = [], leaveBal = [], count = 2, _this = this;
+    const calculate = function() {
+      var employees = [];
+      var _noDays, _leaveId, _createdDate, _lastModifiedDate;
+      for (var i = 0; i < _emps.length; i++) {
+          _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
+          for(var j = 0; j < leaveBal.length; j++) {
+              if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
+                  _noDays = leaveBal[j].noOfDays;
+                  _leaveId = leaveBal[j].id;
+                  _createdDate = leaveBal[j].createdDate
+                  _lastModifiedDate = leaveBal[j].lastModifiedDate;
+                  break;
+              }
+          }
+
+          employees.push({
+              name: _emps[i].name,
+              employee: _emps[i].id,
+              noOfDays: _noDays || "",
+              oldNoOfDays: _noDays || "",
+              code: _emps[i].code,
+              leaveId: _leaveId || "",
+              lastModifiedDate: _lastModifiedDate || "",
+              createdDate: _createdDate
+          })
+      }
+
+      flag = 1;
+      _this.setState({
+          isSearchClicked: true,
+          employees: Object.assign([], employees)
+      })
+    }
 
     //call api call
-    try {
-        var _emps = commonApiPost("hr-employee","employees","_search",{
+    commonApiPost("hr-employee","employees","_search",{
             tenantId,
             departmentId: department || null,
             designationId: designation || null,
             code: employee || null,
             pageSize: 500
-        }).responseJSON["Employee"] || [];
-    } catch(e) {
-        var _emps = [];
-    }
+    }, function(err, res) {
+      if(res) {
+        _emps = res.Employee;
+      }
+      count--;
+      if(count == 0)
+        calculate();
+    });
 
-    try {
-        var leaveBal = commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
+    commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
             tenantId,
             pageSize: 500
-        }).responseJSON["LeaveOpeningBalance"] || [];
-    } catch(e) {
-        var leaveBal = [];
-    }
-    var employees = [];
-    var _noDays, _leaveId, _createdDate, _lastModifiedDate;
-    for (var i = 0; i < _emps.length; i++) {
-        _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
-        for(var j = 0; j < leaveBal.length; j++) {
-            if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
-                _noDays = leaveBal[j].noOfDays;
-                _leaveId = leaveBal[j].id;
-                _createdDate = leaveBal[j].createdDate
-                _lastModifiedDate = leaveBal[j].lastModifiedDate;
-                break;
-            }
-        }
-
-        employees.push({
-            name: _emps[i].name,
-            employee: _emps[i].id,
-            noOfDays: _noDays || "",
-            oldNoOfDays: _noDays || "",
-            code: _emps[i].code,
-            leaveId: _leaveId || "",
-            lastModifiedDate: _lastModifiedDate || "",
-            createdDate: _createdDate
-        })
-    }
-
-    flag = 1;
-    this.setState({
-        isSearchClicked: true,
-        employees: Object.assign([], employees)
-    })
+    }, function(err, res) {
+      if(res) {
+        leaveBal = res.LeaveOpeningBalance;
+      }
+      count--;
+      if(count == 0)
+        calculate();
+    });
   }
 
   addOrUpdate(e){
@@ -264,45 +304,6 @@ class PersonalInform extends React.Component {
     }
   }
 
-
-  componentWillMount() {
-    try {
-        var _leaveTypes = commonApiPost("hr-leave", "leavetypes", "_search", {
-          tenantId,
-          pageSize: 500,
-          accumulative: true
-        }).responseJSON["LeaveType"] || [];
-    } catch(e) {
-        var _leaveTypes = [];
-    }
-
-    try {
-        var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
-    } catch(e) {
-        var _years = [];
-    }
-
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
-
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-    this.setState({
-      departmentsList: assignments_department,
-      designationList: assignments_designation,
-      leave: _leaveTypes,
-      years: _years
-  })
-  }
-
   handleChange(e, name) {
       this.setState({
           searchSet:{
@@ -362,13 +363,17 @@ class PersonalInform extends React.Component {
         try {
             var code = e.target.value;
             //Make get employee call
-            var obj = commonApiPost("hr-employee", "employees", "_search", { code, tenantId }).responseJSON["Employee"][0];
-            _this.setState({
-                searchSet: {
-                    ..._this.state.searchSet,
-                    name: obj.name
-                }
-            })
+            commonApiPost("hr-employee", "employees", "_search", { code, tenantId }, function(err, res) {
+              if(res) {
+                var obj = res.Employee[0];
+                _this.setState({
+                    searchSet: {
+                        ..._this.state.searchSet,
+                        name: obj.name
+                    }
+                })
+              }
+            });
         } catch (e) {
             console.log(e);
         }

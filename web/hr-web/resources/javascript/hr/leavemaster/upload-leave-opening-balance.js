@@ -9,9 +9,12 @@ class UploadLeaveType extends React.Component{
   },temp:[],dataType:[],employees:[],_leaveTypes:[],_years:[],duplicate:[]}
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.filePicked=this.filePicked.bind(this);
+    this.setInitialState=this.setInitialState.bind(this);
   }
 
-
+  setInitialState(initState) {
+    this.setState(initState);
+  }
 
   componentDidMount(){
     if(window.opener && window.opener.document) {
@@ -20,34 +23,23 @@ class UploadLeaveType extends React.Component{
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-  try {
-    var _leaveTypes = commonApiPost("hr-leave", "leavetypes", "_search", {
-      tenantId,
-      pageSize: 500,
-      accumulative: true
-      }).responseJSON["LeaveType"] || [];
-    } catch(e) {
-            var _leaveTypes = [];
-    }
-    try {
-        var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
-    } catch(e) {
-        var _years = [];``
+    var count = 3, _this = this, _state = {};
+    var checkCountNCall = function(key, res) {
+    count--;
+    _state[key] = res;
+    if(count == 0)
+      _this.setInitialState(_state);
     }
 
-    try {
-    var  employees = getCommonMaster("hr-employee","employees","Employee").responseJSON["Employee"] || [];
-    } catch (e) {
-    var  employees = [];
-    }
-
-    this.setState({
-      employees : employees,
-      _years : _years,
-      _leaveTypes : _leaveTypes
+    getDropdown("years", function(res) {
+      checkCountNCall("_years", res);
     });
-
-
+    getDropdown("leaveTypes", function(res) {
+      checkCountNCall("_leaveTypes", res);
+    });
+    getCommonMaster("hr-employee","employees",function(err,res){
+      checkCountNCall(employees, res ? res.Employee || [])
+    })
   }
 
 

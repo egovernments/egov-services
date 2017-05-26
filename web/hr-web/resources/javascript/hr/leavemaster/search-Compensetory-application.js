@@ -11,11 +11,13 @@ class SearchLeaveApplication extends React.Component {
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
-
+    this.setInitialState=this.setInitialState.bind(this);
   }
 
 
-
+  setInitialState(initState) {
+    this.setState(initState);
+  }
 
   search(e)
   {
@@ -27,20 +29,20 @@ class SearchLeaveApplication extends React.Component {
     e.preventDefault();
     //call api call
     var employees=[];
-    try{
-      employees=commonApiPost("hr-employee","employees","_search",{tenantId,
+    commonApiPost("hr-employee","employees","_search",{...this.state.searchSet, tenantId,
       departmentId: departmentId || null,
       designationId: designationId || null,
       code: code || null,
-      pageSize: 500},this.state.searchSet).responseJSON["Employee"] || [];
-    } catch(e){
-      employees = [];
-    }
-    flag = 1;
-    this.setState({
-      isSearchClicked:true,
-      employees
-    })
+      pageSize: 500},function(err,res){
+        if(res){
+          employees=res["Employee"];
+          flag = 1;
+          this.setState({
+            isSearchClicked:true,
+            employees
+          })
+        }
+      })
   }
 
 componentDidMount(){
@@ -49,32 +51,24 @@ componentDidMount(){
      if(logo_ele && logo_ele[0]) {
        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
      }
-   }
+  }
+
+  var count = 2, _this = this, _state = {};
+  var checkCountNCall = function(key, res) {
+  count--;
+  _state[key] = res;
+  if(count == 0)
+    _this.setInitialState(_state);
+  }
+
+  getDropdown("assignments_designation", function(res) {
+    checkCountNCall("assignments_designation", res);
+  });
+  getDropdown("assignments_department", function(res) {
+    checkCountNCall("assignments_department", res);
+  });
 }
 
-
-
-  componentWillMount()
-  {
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-    this.setState({
-      assignments_department:assignments_department,
-      assignments_designation:assignments_designation,
-      assignments_designation,
-      assignments_department
-  })
-  }
 
   componentWillUpdate() {
     if(flag == 1) {

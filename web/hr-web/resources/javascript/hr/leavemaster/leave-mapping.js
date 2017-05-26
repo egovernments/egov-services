@@ -17,165 +17,147 @@ constructor(props){
     },
         assignments_designation:[],leaveTypeList:[]}
 
-  this.addOrUpdate=this.addOrUpdate.bind(this);
-  this.handleChange=this.handleChange.bind(this);
-  this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
-
+  this.addOrUpdate = this.addOrUpdate.bind(this);
+  this.handleChange = this.handleChange.bind(this);
+  this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
+  this.setInitialState = this.setInitialState.bind(this);
 }
-    componentWillMount()
-    {
-      try {
-        var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-      } catch (e) {
-          console.log(e);
-           var assignments_designation = [];
-      }
 
-      try {
-          var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
-      } catch(e) {
-          var _leaveTypes = [];
-      }
+setInitialState(initState) {
+  this.setState(initState);
+}
 
-      this.setState({
-        assignments_designation: assignments_designation,
-        leaveTypeList: _leaveTypes
-
-    })
-  }
-
-
-    handleChange(e,name)
-    {
-        this.setState({
-            leave:{
-                ...this.state.leave,
-                [name]:e.target.value
-            }
-        })
-
-    }
-    close(){
-        // widow.close();
-        open(location, '_self').close();
-    }
-
-        addOrUpdate(e){
-          e.preventDefault();
-          // var tempInfo=this.state.leave;
-          var tempInfo=Object.assign({},this.state.leave) , type = getUrlVars()["type"];
-          // var date1 = new Date(tempInfo.createdDate);
-          // var date2 = new Date(tempInfo.lastModifiedDate);
-          // tempInfo.createdDate = ( date1.getFullYear() + '/' + (date1.getMonth() + 1) + '/' + date1.getDate()     );
-          // tempInfo.lastModifiedDate = ( date2.getDate() + '/' + (date2.getMonth() + 1) + '/' +  date2.getFullYear());
-          var body={
-              "RequestInfo":requestInfo,
-              "LeaveAllotment":[tempInfo]
-            },_this=this;
-            if (type == "update") {
-              delete tempInfo.leaveType.name;
-              delete tempInfo.leaveType.active;
-              delete tempInfo.leaveType.description;
-              delete tempInfo.leaveType.createdDate;
-              delete tempInfo.leaveType.lastModifiedDate;
-              delete tempInfo.leaveType.tenantId;
-              $.ajax({
-                   url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
-                    async: false,
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                            showSuccess("Leave Mapping Modified successfully.");
-                            window.location.href = 'app/hr/common/show-leave-mapping.html?type=update';
-
-                    },
-                    error: function(err) {
-                        showError(err);
-
-                    }
-                });
-            } else {
-              $.ajax({
-                    url:baseUrl+"/hr-leave/leaveallotments/_create?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
-                    async: false,
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                            showSuccess("Leave Mapping Created successfully.");
-                            _this.setState({
-                              leave:{
-                                "id": "",
-                                "designation": "",
-                                "leaveType":{
-                                  "id" :""
-                                },
-                                "noOfDays":"",
-                                "active": "",
-                                "tenantId": tenantId
-                                }
-                            })
-
-                    },
-                    error: function(err) {
-                        showError(err);
-
-                    }
-                });
-            }
-     }
-
-    handleChangeThreeLevel(e,pName,name)
-    {
-      this.setState({
-        leave:{
+handleChange(e,name) {
+  this.setState({
+      leave:{
           ...this.state.leave,
-          [pName]:{
-              ...this.state.leave[pName],
-              [name]:e.target.value
-          }
-        }
-
-      })
-
+          [name]:e.target.value
+      }
+  })
+}
+close(){
+  open(location, '_self').close();
 }
 
+  addOrUpdate(e){
+    e.preventDefault();
+    var tempInfo=Object.assign({},this.state.leave) , type = getUrlVars()["type"];
+    var body={
+        "RequestInfo":requestInfo,
+        "LeaveAllotment":[tempInfo]
+      },_this=this;
+      if (type == "update") {
+        delete tempInfo.leaveType.name;
+        delete tempInfo.leaveType.active;
+        delete tempInfo.leaveType.description;
+        delete tempInfo.leaveType.createdDate;
+        delete tempInfo.leaveType.lastModifiedDate;
+        delete tempInfo.leaveType.tenantId;
+        $.ajax({
+             url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update?tenantId=" + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(body),
+              async: false,
+              contentType: 'application/json',
+              headers:{
+                'auth-token': authToken
+              },
+              success: function(res) {
+                showSuccess("Leave Mapping Modified successfully.");
+                window.location.href = 'app/hr/common/show-leave-mapping.html?type=update';
+              },
+              error: function(err) {
+                  showError(err["statusText"]);
+              }
+          });
+      } else {
+        $.ajax({
+              url:baseUrl+"/hr-leave/leaveallotments/_create?tenantId=" + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(body),
+              async: false,
+              contentType: 'application/json',
+              headers:{
+                'auth-token': authToken
+              },
+              success: function(res) {
+                showSuccess("Leave Mapping Created successfully.");
+                _this.setState({
+                  leave:{
+                    "id": "",
+                    "designation": "",
+                    "leaveType":{
+                      "id" :""
+                    },
+                    "noOfDays":"",
+                    "active": "",
+                    "tenantId": tenantId
+                    }
+                })
+              },
+              error: function(err) {
+                showError(err["statusText"]);
+              }
+          });
+      }
+}
 
+handleChangeThreeLevel(e,pName,name) {
+  this.setState({
+    leave:{
+      ...this.state.leave,
+      [pName]:{
+          ...this.state.leave[pName],
+          [name]:e.target.value
+      }
+    }
+  })
+}
 
-    componentDidMount(){
-      if(window.opener && window.opener.document) {
-         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-         if(logo_ele && logo_ele[0]) {
-           document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-         }
-       }
-
-      if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
-
-      var type=getUrlVars()["type"];
-      var id=getUrlVars()["id"];
-
-      if(getUrlVars()["type"]==="view")
-      {
-        $("input,select,radio,textarea").prop("disabled", true);
-        }
-
-        if(type==="view"||type==="update")
-        {
-            this.setState({
-              leave:getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]
-            })
+componentDidMount() {
+    if (window.opener && window.opener.document) {
+        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+        if (logo_ele && logo_ele[0]) {
+            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
         }
     }
+
+    if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Mapping");
+
+    var _this = this, count = 2, _state = {};
+    const checkCountAndCall = function(key, res) {
+      count--;
+      _state[key] = res;
+      if(count == 0)
+        _this.setInitialState(_state);
+    }
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("assignments_designation", res);
+    });
+    getDropdown("leaveTypes", function(res) {
+      checkCountAndCall("leaveTypeList", res);
+    });
+
+    var type = getUrlVars()["type"];
+    var id = getUrlVars()["id"];
+
+    if (getUrlVars()["type"] === "view") {
+        $("input,select,radio,textarea").prop("disabled", true);
+    }
+
+    if (type === "view" || type === "update") {
+      getCommonMasterById("hr-leave", "leaveallotments", id, function(err, res) {
+        if(res) {
+          _this.setState({
+            leave: res.LeaveAllotment[0]
+          })
+        }
+      })
+    }
+}
+
 
   render(){
     let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
@@ -235,7 +217,7 @@ constructor(props){
                     <select id="leaveType" name="leaveType" value={leaveType.id} required="true" onChange={(e)=>{
                         handleChangeThreeLevel(e,"leaveType","id")
                     }}>
-                    <option value=""> select Leave Type</option>
+                    <option value=""> Select Leave Type</option>
                     {renderOption(this.state.leaveTypeList)}
                    </select>
                     </div>

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.lams.brokers.producer.AgreementProducer;
@@ -188,10 +189,9 @@ public class PaymentService {
 			System.out.print("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-					orderNo++;
-					totalAmount = totalAmount.add((demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())));
-					billDetailInfos
-							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+				orderNo++;
+				totalAmount = totalAmount.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+				billDetailInfos.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
@@ -358,7 +358,7 @@ public class PaymentService {
 		BigDecimal arrearAmount = BigDecimal.ZERO;
 		System.out.print("PaymentService- receiptAmountBifurcation - getting purpose");
 		Map<String, String> purposeMap = billRepository.getPurpose();
-		final List<BillDetailInfo> billDetails = billInfo.getBillDetailInfos();
+		final List<BillDetailInfo> billDetails = new ArrayList<>(billInfo.getBillDetailInfos());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - " + rcptAccInfo);
 			if (rcptAccInfo.getCrAmount() != null

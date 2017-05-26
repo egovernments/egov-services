@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var loadDD = new $.loadDD();
+var keyword = getUrlParameter('keyword');
 var tableContainer = $("#complaintSearchResults");
 var complaintList, department, ward = [];
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
@@ -69,6 +70,9 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		//Hide Loader
 		hideLoader();
 	});
+
+	if(keyword != 'Complaint')
+		$('.complaintSection').hide();
 
     $('#toggle-searchcomp').click(function () {
         if ($(this).data('translate') == "core.lbl.more") {
@@ -126,7 +130,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 			"deferRender": true,
 			autoWidth: false,
 			"aaSorting": [],
-			dom: "<'row'<'col-xs-12 pull-right'f>r>t<'row buttons-margin'<'col-md-3 col-xs-6'i><'col-md-3  col-xs-6'l><'col-md-3 col-xs-6'B><'col-md-3 col-xs-6 text-right'p>>",
+			dom: "<'row'<'col-xs-12 pull-right'f>r>t<'row buttons-margin'<'col-md-6  col-xs-6'l><'col-md-3 col-xs-6'B><'col-md-3 col-xs-6 text-right'p>>",
 			buttons: [
 			    'excel','print',
 			    {
@@ -165,7 +169,14 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 							return getDepartmentbyId(item['name']);
 					}
 			    } },
-				{data : 'requestedDatetime'}
+				{data : 'requestedDatetime'},
+				{"visible":false,"render": function ( data, type, full, meta ) {
+					var wardname,localityname;
+					for (var item of full.attribValues) {
+						if(item['key']=='keyword')
+							return item['name'];
+					}
+			    } },
 			]
 	    });
 
@@ -180,8 +191,12 @@ $("#complaintSearchResults").on('click','tbody tr',function(event) {
 
 function loadDeparment(){
 	$.ajax({
-		url: "/eis/departments?tenantId=default",
-		type : 'GET'
+		url: "/egov-common-masters/departments/_search?tenantId=default",
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		department = data.Department;
 	});
@@ -345,3 +360,18 @@ function loadWard(){
 		});
 	});
 }
+
+$.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
+	if(keyword == "Complaint"){
+		if(aData[7] == 'Complaint')
+			return true;
+		else
+			return false;
+	}else{
+		if(aData[7] == 'Deliverable_service')
+			return true;
+		else
+			return false;
+	}
+	
+});

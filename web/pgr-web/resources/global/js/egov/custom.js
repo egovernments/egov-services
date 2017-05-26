@@ -167,7 +167,8 @@ $(document).ready(function()
 		});
 	});
 
-	$(document).on('click','.open-popup', function(){
+	$(document).on('click','.open-popup', function(e){
+		e.preventDefault();
 		openPopUp($(this).data('href'),$(this).data('name'));
 	});
 

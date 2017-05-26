@@ -125,14 +125,14 @@ $(document).ready(function(){
 			var obj = {};
 			obj = {
 			    key: 'status',
-			    name:'NEW'
+			    name:'DSNEW'
 			};
 			data['attribValues'].push(obj);
 
 			obj = {};
 			obj = {
-			    key: 'requesterAddress',
-			    name:$('#complainantAddress').val() ? $('#complainantAddress').val() : ''
+			    key: 'aadhaarno',
+			    name:$('#aadhaarno').val() ? $('#aadhaarno').val() : ''
 			};
 			data['attribValues'].push(obj);
 

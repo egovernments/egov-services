@@ -42,6 +42,7 @@ package org.egov.eis.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
@@ -163,8 +164,8 @@ public class EmployeeRepository {
 				employee.getCategory(), employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
 				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
 				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
-				employee.getPlaceOfBirth(), employee.getCreatedBy(), employee.getCreatedDate(),
-				employee.getLastModifiedBy(), employee.getLastModifiedDate(), employee.getTenantId() };
+				employee.getPlaceOfBirth(), employee.getCreatedBy(), new Date(), employee.getLastModifiedBy(),
+				new Date(), employee.getTenantId() };
 
 		if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()) {
 			documentsRepository.save(employee.getId(), employee.getDocuments(),
@@ -183,7 +184,7 @@ public class EmployeeRepository {
 				employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
 				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
 				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
-				employee.getPlaceOfBirth(), employee.getLastModifiedBy(), employee.getLastModifiedDate(),
+				employee.getPlaceOfBirth(), employee.getLastModifiedBy(), new Date(),
 				employee.getId(), employee.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_EMPLOYEE_QUERY, obj);

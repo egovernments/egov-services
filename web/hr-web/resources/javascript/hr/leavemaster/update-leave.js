@@ -47,15 +47,8 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
     var process = [], employee;
-    var hrConfigurations = [], allHolidayList = [], _leaveSet = {};
+    var  _leaveSet = {};
 
-    getCommonMaster("hr-leave", "leavetypes", function(err, res) {
-      if(res) {
-        _this.setState({
-          leaveList: res.LeaveType
-        })
-      }
-    })
 
     commonApiPost("hr-leave","leaveapplications", "_search", {tenantId, stateId}, function(err, res) {
       if(res) {
@@ -81,19 +74,8 @@ class UpdateLeave extends React.Component {
         })
       }
     });
-        
-        commonApiPost("hr-masters", "hrconfigurations", "_search", {
-              tenantId
-        }, function(err, res) {
-          if(res) {
-            hrConfigurations = res;
-          }
-        })
-        commonApiPost("egov-common-masters", "holidays", "_search", {
-            tenantId
-        }, function(err, res) {
-          allHolidayList = res ? res.Holiday : [];
-        });
+
+
 
         $('#fromDate, #toDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -104,6 +86,20 @@ class UpdateLeave extends React.Component {
           var _from = $('#fromDate').val();
           var _to = $('#toDate').val();
           var _triggerId = e.target.id;
+          var  hrConfigurations = [], allHolidayList = [];
+          commonApiPost("hr-masters", "hrconfigurations", "_search", {
+                tenantId
+          }, function(err, res) {
+            if(res) {
+              hrConfigurations = res;
+            }
+          })
+          commonApiPost("egov-common-masters", "holidays", "_search", {
+              tenantId
+          }, function(err, res) {
+            allHolidayList = res ? res.Holiday : [];
+          });
+
           if(_from && _to) {
             var dateParts1 = _from.split("/");
             var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
@@ -150,17 +146,10 @@ class UpdateLeave extends React.Component {
                 }
               }
 
-              _this.setState({
-                leaveSet: {
-                    ..._this.state.leaveSet,
-                    [_triggerId]: $("#" + _triggerId).val(),
-                    leaveDays: _days
-                }
-              });
+
 
               setTimeout(function() {
                 if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
-                   try{
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
                       var employeeid = getUrlVars()["id"];
@@ -174,9 +163,6 @@ class UpdateLeave extends React.Component {
                           }
                         });
                       });
-                    } catch (e){
-                      console.log(e);
-                    }
                 }
               }, 200);
             }
@@ -570,4 +556,3 @@ ReactDOM.render(
   <UpdateLeave />,
   document.getElementById('root')
 );
-

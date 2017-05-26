@@ -29,6 +29,7 @@ public class EscalationDateService {
         final Date escalationDate = DateUtils.addHours(dateFactory.now(), escalationHours);
         sevaRequest.getServiceRequest().setEscalationHours(String.valueOf(escalationHours));
         sevaRequest.getServiceRequest().setEscalationDate(escalationDate);
+        sevaRequest.getServiceRequest().setLastModifiedDate(new Date());
     }
 
     private int getEscalationHours(SevaRequest sevaRequest) {

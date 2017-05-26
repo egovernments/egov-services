@@ -76,16 +76,10 @@ public class WorkflowServiceTest {
         attribValues.add(new AttributeEntry(COMPLAINT_STATUS,REGISTERED));
         attribValues.add(new AttributeEntry("stateId","1"));
 
-//        Map<String,String>  values = new HashMap<>();
-//        values.put("stateId","1");
-//        values.put(COMPLAINT_STATUS, REGISTERED);
-
      return ServiceRequest.builder()
              .address("central city")
              .complaintTypeCode("BRKBN")
              .complaintTypeName("Broken Bin")
-//             .values(values)
-             .attribValuesPopulated(true)
              .attribValues(attribValues)
              .build();
     }

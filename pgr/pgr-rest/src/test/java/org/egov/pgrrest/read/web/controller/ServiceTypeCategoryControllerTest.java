@@ -35,16 +35,6 @@ public class ServiceTypeCategoryControllerTest {
     private Resources resources = new Resources();
 
     @Test
-    public void getComplaintTypeCategory() throws Exception {
-        when(serviceTypeCategoryService.getAll("ap.public")).thenReturn(getComplaintTypeCategoryEntity());
-        mockMvc.perform(post("/complaintTypeCategories/_search?tenantId=ap.public")
-            .content(resources.getFileContents("requestinfobody.json"))
-            .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk())
-            .andExpect(content().json(resources.getFileContents("complaintTypeCategoryResponse.json")));
-    }
-
-    @Test
     public void test_should_return_service_type_categories() throws Exception {
         when(serviceTypeCategoryService.getAll("ap.public")).thenReturn(getComplaintTypeCategoryEntity());
         mockMvc.perform(post("/servicecategories/_search")
@@ -52,7 +42,7 @@ public class ServiceTypeCategoryControllerTest {
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
-            .andExpect(content().json(resources.getFileContents("complaintTypeCategoryResponse.json")));
+            .andExpect(content().json(resources.getFileContents("serviceTypeCategoryResponse.json")));
     }
 
     private List<ServiceTypeCategory> getComplaintTypeCategoryEntity() {

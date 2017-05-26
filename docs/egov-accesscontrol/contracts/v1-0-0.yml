@@ -65,10 +65,9 @@ paths:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
-      summary: Get the list of actions based on either roles or features.
+      summary: Validate a particular action for a given tenant and roles of the tenant
       description: |
-        Get the list of actions based on the input parameters.
-      # This is array of GET operation parameters:
+        Validate a particular action for a given tenant and roles of the tenant.
       parameters:
         - name: ValidateActionReq
           in: body
@@ -120,7 +119,7 @@ paths:
       tags:
        - Feature-Role
 
-  /access/v1/roles/_list:
+  /access/v1/roles/_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
@@ -313,20 +312,13 @@ definitions:
   ValidateAction:
     type: object
     properties:
-      roles:
-        type: array
-        items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
-        description: List of roles to be considered for validation
-      tenantId:
-        type: string
-        description: Unique Identifier of the tenant to be considered for validation
+      TenantRole:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/TenantRole'
       actionUrl:
         type: string
         description: Url of the action to be validated for given tenant
     required:
-      - roles
-      - tenantId
+      - TenantRole
       - actionUrl
 
   ValidateActionReq:

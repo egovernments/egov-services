@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.lams.brokers.producer.AgreementProducer;
@@ -153,7 +152,7 @@ public class PaymentService {
 			LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
 
 			billInfo.setServiceCode(serviceCode);
-			billInfo.setPartPaymentAllowed('Y');
+			billInfo.setPartPaymentAllowed('N');
 			billInfo.setOverrideAccHeadAllowed('N');
 			billInfo.setDescription("Leases And Agreements : " + (StringUtils.isBlank(agreement.getAgreementNumber())
 					? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber()));
@@ -189,14 +188,10 @@ public class PaymentService {
 			System.out.print("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-				/*BigDecimal pendingAmount = (demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
-				if (pendingAmount.compareTo(BigDecimal.ZERO) > 0) {
-					LOGGER.info(" payment service pendingamount value loop: "+pendingAmount);*/
 					orderNo++;
 					totalAmount = totalAmount.add((demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())));
 					billDetailInfos
 							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
-				//}
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());

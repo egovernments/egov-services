@@ -236,23 +236,21 @@ class ApplyLeave extends React.Component {
     })
   }
 
-  handleChangeThreeLevel(e,pName,name) {
-    var _this = this;
+  handleChangeThreeLevel(e, pName, name) {
+    var _this = this, val = e.target.value;
     if(pName=="leaveType"&&_this.state.leaveSet.toDate){
-      console.log(e.target.value);
-      var leaveType = e.target.value;
+      var leaveType = val;
       var asOnDate = _this.state.leaveSet.toDate;
       var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
       commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}, function(err, res) {
         if(res) {
-            console.log(e.target.value);
             _this.setState({
               leaveSet:{
                 ..._this.state.leaveSet,
                 availableDays: res["EligibleLeave"][0].noOfDays,
                 [pName]:{
                     ..._this.state.leaveSet[pName],
-                    [name]:e.target.value
+                    [name]: val
                 }
               }
             })

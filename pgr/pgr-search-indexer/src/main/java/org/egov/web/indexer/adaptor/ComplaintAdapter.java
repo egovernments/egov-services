@@ -2,10 +2,7 @@ package org.egov.web.indexer.adaptor;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.egov.web.indexer.contract.*;
-import org.egov.web.indexer.repository.BoundaryRepository;
-import org.egov.web.indexer.repository.ComplaintTypeRepository;
-import org.egov.web.indexer.repository.EmployeeRepository;
-import org.egov.web.indexer.repository.TenantRepository;
+import org.egov.web.indexer.repository.*;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.joda.time.LocalDate;
@@ -33,14 +30,17 @@ public class ComplaintAdapter {
     private ComplaintTypeRepository complaintTypeRepository;
     private EmployeeRepository employeeRepository;
     private TenantRepository tenantRepository;
+    private DepartmentRestRepository departmentRestRepository;
 
     public ComplaintAdapter(TenantRepository tenantRepository, BoundaryRepository boundaryRepository,
-            ComplaintTypeRepository complaintTypeRepository, EmployeeRepository employeeRepository) {
+            ComplaintTypeRepository complaintTypeRepository, EmployeeRepository employeeRepository,
+                            DepartmentRestRepository departmentRestRepository) {
         // this.propertiesManager = propertiesManager;
         this.boundaryRepository = boundaryRepository;
         this.complaintTypeRepository = complaintTypeRepository;
         this.employeeRepository = employeeRepository;
         this.tenantRepository = tenantRepository;
+        this.departmentRestRepository=departmentRestRepository;
     }
 
     public ComplaintIndex indexOnCreate(ServiceRequest serviceRequest) {
@@ -247,8 +247,9 @@ public class ComplaintAdapter {
                 complaintIndex.setAssigneeName(employee.getName());
                 if (!employee.getAssignments().isEmpty()) {
                     Assignment assignment = employee.getAssignments().get(0);
-                    complaintIndex.setDepartmentName(assignment.getDepartment().getName());
-                    complaintIndex.setDepartmentCode(assignment.getDepartment().getCode());
+                    DepartmentRes departmentRes=departmentRestRepository.getDepartmentById(assignment.getDepartment(),tenantId);
+                    complaintIndex.setDepartmentName(departmentRes.getDepartment().get(0).getName());
+                    complaintIndex.setDepartmentCode(departmentRes.getDepartment().get(0).getCode());
                 }
             }
         }

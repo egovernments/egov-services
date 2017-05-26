@@ -48,6 +48,9 @@ public class ComplaintAdapterTest {
 	@Mock
     private TenantRepository tenantRepository;
 
+    @Mock
+    private DepartmentRestRepository departmentRestRepository;
+
     public static String toDefaultDateTimeFormat(final Date date) {
          return sdf.format(date);
      }
@@ -111,6 +114,7 @@ public class ComplaintAdapterTest {
 		//when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
 		when(employeeRepository.fetchEmployeeByPositionId(1L, new LocalDate(),
 				serviceRequest.getTenantId())).thenReturn(expectedAssignment);
+        when(departmentRestRepository.getDepartmentById(1l,"ap.public")).thenReturn(getDepartment());
 		return serviceRequest;
 	}
 
@@ -163,11 +167,17 @@ public class ComplaintAdapterTest {
 		designation.setName("Asst.Eng.");
 		List<Assignment> assignment = new ArrayList<Assignment>();
 		Assignment assign = new Assignment();
-		assign.setDepartment(department);
-		assign.setDesignation(designation);
+		assign.setDepartment(1l);
+		assign.setDesignation(1L);
 		assignment.add(assign);
 		employee.setAssignments(assignment);
 		return employee;
 	}
 
+    private DepartmentRes getDepartment(){
+        final Department department=Department.builder().id(1L).name("ADMINISTRATION").code("ADM").tenantId("tenantId").build();
+        final List<Department> departmentList=new ArrayList<Department>();
+        departmentList.add(department);
+        return DepartmentRes.builder().department(departmentList).build();
+    }
 }

@@ -24,8 +24,8 @@ public class PositionRepositoryTest {
     @Before
     public void setUp() throws Exception {
         final RestTemplate restTemplate = new RestTemplate();
-        String positionHost = "http:///hr-employee";
-        String designationUrl = "/employees/3/positions/_search?id=3&tenantId=default";
+        String positionHost = "http://hr-masters";
+        String designationUrl = "/positions/_search?id=1&tenantId=default";
         positionRepository = new PositionRepository(restTemplate, positionHost, designationUrl);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
@@ -34,13 +34,12 @@ public class PositionRepositoryTest {
     public void test_should_get_position_for_given_assignee() throws Exception {
         String tenantId = "default";
         Long assigneeId = 1L;
-        final Long employeeId = 3L;
-        String expectedUrl = "http:///hr-employee/employees/3/positions/_search?id=3&tenantId=default";
+        String expectedUrl = "http://hr-masters/positions/_search?id=1&tenantId=default";
         server.expect(once(), requestTo(expectedUrl)).andExpect(method(HttpMethod.POST))
             .andRespond(withSuccess(resources.getFileContents("positionResponse.json"),
                 MediaType.APPLICATION_JSON_UTF8));
 
-        Position position = positionRepository.getDesignationIdForAssignee(tenantId, assigneeId,employeeId);
+        Position position = positionRepository.getDesignationIdForAssignee(tenantId, assigneeId);
         server.verify();
         assertEquals(new Position("2", "2"), position);
     }

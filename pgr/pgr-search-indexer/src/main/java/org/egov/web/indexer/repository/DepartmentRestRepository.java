@@ -1,8 +1,8 @@
-package org.egov.workflow.persistence.repository;
+package org.egov.web.indexer.repository;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.workflow.web.contract.DepartmentRes;
-import org.egov.workflow.web.contract.RequestInfoWrapper;
+import org.egov.web.indexer.contract.DepartmentRes;
+import org.egov.web.indexer.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

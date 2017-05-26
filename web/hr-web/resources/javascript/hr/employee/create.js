@@ -1214,7 +1214,7 @@ function clearModalInput(object, properties) {
 
 function updateTable(tableName, modalName, object) {
     $(tableName).html(``);
-    for (var i = 0; i < employee[object].length; i++) {
+    for (let i = 0; i < employee[object].length; i++) {
         $(tableName).append(`<tr>`);
         if (object == "assignments") {
             $(tableName).append(`<td data-label=${"fromDate"}>

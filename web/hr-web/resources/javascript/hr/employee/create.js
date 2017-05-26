@@ -1,1056 +1,1056 @@
-$(document).ready(function() {
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+var filesToBeDeleted = {};
+var employeeType, employeeStatus, group, motherTongue, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function, assignments_position, maritalStatus, user_bloodGroup;
+var count = 21;
+var tempListBox = [];
+var commonObject, hrConfigurations, startDate;
+var yearOfPassing = [];
 
-            var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
-            var filesToBeDeleted = {};
-            var employeeType, employeeStatus, group, motherTongue, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function, assignments_position, maritalStatus, user_bloodGroup;
-            var count = 21;
-            var tempListBox = [];
-            var commonObject, hrConfigurations, startDate;
-            var yearOfPassing = [];
+for (var i = 2000; i <= new Date().getFullYear(); i++) {
+    yearOfPassing.push(i);
+}
 
-            for (var i = 2000; i <= new Date().getFullYear(); i++) {
-                yearOfPassing.push(i);
+//final post object
+var employee = {
+    code: "",
+    dateOfAppointment: "",
+    dateOfJoining: "",
+    dateOfRetirement: "",
+    employeeStatus: "",
+    recruitmentMode: "",
+    recruitmentType: "",
+    recruitmentQuota: "",
+    retirementAge: "",
+    dateOfResignation: "",
+    dateOfTermination: "",
+    employeeType: "",
+    assignments: [],
+    jurisdictions: [],
+    motherTongue: "",
+    religion: "",
+    community: "",
+    category: "",
+    physicallyDisabled: false,
+    medicalReportProduced: true,
+    languagesKnown: [],
+    maritalStatus: "",
+    passportNo: null,
+    gpfNo: null,
+    bank: "",
+    bankBranch: "",
+    bankAccount: "",
+    group: "",
+    placeOfBirth: "",
+    documents: [],
+    serviceHistory: [],
+    probation: [],
+    regularisation: [],
+    technical: [],
+    education: [],
+    test: [],
+    user: {
+        roles: [{
+            code: "EMPLOYEE",
+            name: "EMPLOYEE",
+            tenantId
+        }],
+        userName: "",
+        name: "",
+        gender: "",
+        mobileNumber: "",
+        emailId: "",
+        altContactNumber: "",
+        pan: "",
+        aadhaarNumber: "",
+        permanentAddress: "",
+        permanentCity: "",
+        permanentPinCode: "",
+        correspondenceCity: "",
+        correspondencePinCode: "",
+        correspondenceAddress: "",
+        active: true,
+        dob: "",
+        locale: "",
+        signature: "",
+        fatherOrHusbandName: "",
+        bloodGroup: null,
+        identificationMark: "",
+        photo: "",
+        type: "EMPLOYEE",
+        password: "12345678",
+        tenantId
+    },
+    tenantId
+}
+
+//temprory object for holding modal value
+var employeeSubObject = {
+    assignments: {
+        fromDate: "",
+        toDate: "",
+        department: "",
+        designation: "",
+        position: "",
+        isPrimary: false,
+        fund: "",
+        function: "",
+        functionary: "",
+        grade: "",
+        hod: false,
+        // mainDepartments: "",
+        govtOrderNumber: "",
+        documents: null
+    },
+    jurisdictions: {
+        jurisdictionsType: "",
+        boundary: ""
+    },
+    serviceHistory: {
+        serviceInfo: "",
+        serviceFrom: "",
+        remarks: "",
+        orderNo: "",
+        documents: null
+    },
+    probation: {
+        designation: "",
+        declaredOn: "",
+        orderNo: "",
+        orderDate: "",
+        remarks: "",
+        documents: null
+    },
+    regularisation: {
+        designation: "",
+        declaredOn: "",
+        orderNo: "",
+        orderDate: "",
+        remarks: "",
+        documents: null
+    },
+    education: {
+        qualification: "",
+        majorSubject: "",
+        yearOfPassing: "",
+        university: "",
+        documents: null
+    },
+    technical: {
+        skill: "",
+        grade: "",
+        yearOfPassing: "",
+        remarks: "",
+        documents: null
+    },
+    test: {
+        test: "",
+        yearOfPassing: "",
+        remarks: "",
+        documents: null
+    }
+}
+
+//unicersal marker for putting edit index
+var editIndex = -1;
+
+//form validation
+var validation_rules = {};
+var final_validatin_rules = {};
+var commom_fields_rules = {
+    code: {
+        required: true,
+        alphanumeric: true
+    },
+    dateOfAppointment: {
+        required: true
+    },
+    dateOfJoining: {
+        required: false
+    },
+    dateOfRetirement: {
+        required: false
+    },
+    employeeStatus: {
+        required: true
+    },
+    recruitmentMode: {
+        required: false
+    },
+    recruitmentType: {
+        required: false
+    },
+    recruitmentQuota: {
+        required: false
+    },
+    retirementAge: {
+        required: false
+    },
+    dateOfResignation: {
+        required: false
+    },
+    dateOfTermination: {
+        required: false
+    },
+    employeeType: {
+        required: true
+    },
+    motherTongue: {
+        required: false
+    },
+    religion: {
+        required: false
+    },
+    community: {
+        required: false
+    },
+    category: {
+        required: false
+    },
+    physicallyDisabled: {
+        required: false
+    },
+    medicalReportProduced: {
+        required: false
+    },
+    languagesKnown: {
+        required: false
+    },
+    maritalStatus: {
+        required: true
+    },
+    passportNo: {
+        required: false
+    },
+    gpfNo: {
+        required: false,
+        alphanumeric: true
+    },
+    bank: {
+        required: false
+    },
+    bankBranch: {
+        required: false
+    },
+    bankAccount: {
+        required: false,
+        alphanumericWSplChar: true
+    },
+    group: {
+        required: false
+    },
+    placeOfBirth: {
+        required: false
+    },
+    documents: {
+        required: false
+    },
+    "user.userName": {
+        required: true
+    },
+    "user.name": {
+        required: true,
+        alphaWSpcNDot: true
+    },
+    "user.gender": {
+        required: true
+    },
+    "user.mobileNumber": {
+        required: true,
+        phone: true
+    },
+    "user.emailId": {
+        required: false
+    },
+    "user.altContactNumber": {
+        required: false,
+        phone: true
+    },
+    "user.pan": {
+        required: false,
+        panNo: true
+    },
+    "user.aadhaarNumber": {
+        required: false,
+        aadhar: true
+    },
+    "user.permanentAddress": {
+        required: false,
+        alphanumericWAllSplCharNSpc: true
+    },
+    "user.permanentCity": {
+        required: false,
+        alphanumericWSpc: true
+    },
+    "user.permanentPinCode": {
+        required: false
+    },
+    "user.correspondenceCity": {
+        required: false,
+        alphanumericWSpc: true
+    },
+    "user.correspondencePinCode": {
+        required: false
+    },
+    "user.correspondenceAddress": {
+        required: false,
+        alphanumericWAllSplCharNSpc: true
+    },
+    "user.active": {
+        required: true
+    },
+    "user.dob": {
+        required: true
+    },
+    "user.locale": {
+        required: false
+    },
+    "user.signature": {
+        required: false
+    },
+    "user.fatherOrHusbandName": {
+        required: false
+    },
+    "user.bloodGroup": {
+        required: false
+    },
+    "user.identificationMark": {
+        required: false
+    },
+    "user.photo": {
+        required: false
+    },
+    "assignments.fromDate": {
+        required: true
+    },
+    "assignments.toDate": {
+        required: true
+    },
+    "assignments.fund": {
+        required: false
+    },
+    "assignments.function": {
+        required: false
+    },
+    "assignments.grade": {
+        required: false
+    },
+    "assignments.designation": {
+        required: true
+    },
+    "assignments.position": {
+        required: true
+    },
+    "assignments.functionary": {
+        required: false
+    },
+    "assignments.department": {
+        required: true
+    },
+    "assignments.hod": {
+        required: true
+    },
+    "assignments.mainDepartments": {
+        required: true
+    },
+    "assignments.govtOrderNumber": {
+        required: false,
+        alphanumericWSplCharNSpc: true
+    },
+    "assignments.is_primary": {
+        required: true
+    },
+    "jurisdictions.jurisdictionsType": {
+        required: true
+    },
+    "jurisdictions.boundary": {
+        required: true
+    },
+    "education.qualification": {
+        required: true,
+        alphaWSplChar: true
+    },
+    "education.majorSubject": {
+        required: false,
+        alphaWSplChar: true
+    },
+    "education.yearOfPassing": {
+        required: true
+    },
+    "education.university": {
+        required: false,
+        alphaWSplChar: true
+    },
+    "education.documents": {
+        required: false
+    },
+    "serviceHistory.id": {
+        required: false
+    },
+    "serviceHistory.serviceInfo": {
+        required: true
+    },
+    "serviceHistory.serviceFrom": {
+        required: true
+    },
+    "serviceHistory.remarks": {
+        required: false,
+        alphanumericWSpc: true
+    },
+    "serviceHistory.orderNo": {
+        required: false,
+        alphanumericWSplCharNSpc: true
+    },
+    "serviceHistory.documents": {
+        required: false
+    },
+    "probation.designation": {
+        required: true
+    },
+    "probation.declaredOn": {
+        required: true
+    },
+    "probation.orderNo": {
+        required: false
+    },
+    "probation.orderDate": {
+        required: false
+    },
+    "probation.remarks": {
+        required: false
+    },
+    "probation.documents": {
+        required: false
+    },
+    "regularisation.designation": {
+        required: true
+    },
+    "regularisation.declaredOn": {
+        required: true
+    },
+    "regularisation.orderNo": {
+        required: false
+    },
+    "regularisation.orderDate": {
+        required: false
+    },
+    "regularisation.remarks": {
+        required: false
+    },
+    "regularisation.documents": {
+        required: false
+    },
+    "technical.skill": {
+        required: true
+    },
+    "technical.grade": {
+        required: false
+    },
+    "technical.yearOfPassing": {
+        required: false
+    },
+    "technical.remarks": {
+        required: false
+    },
+    "technical.documents": {
+        required: false
+    },
+    "test.test": {
+        required: true
+    },
+    "test.yearOfPassing": {
+        required: true
+    },
+    "test.remarks": {
+        required: false
+    },
+    "test.documents": {
+        required: false
+    }
+
+}
+
+var assignmentDetailValidation = {
+    fromDate: {
+        required: true
+    },
+    toDate: {
+        required: true
+    },
+    fund: {
+        required: false
+    },
+    function: {
+        required: false
+    },
+    grade: {
+        required: false
+    },
+    designation: {
+        required: true
+    },
+    position: {
+        required: true
+    },
+    functionary: {
+        required: false
+    },
+    department: {
+        required: true
+    },
+    hod: {
+        required: true
+    },
+    mainDepartments: {
+        required: true
+    },
+    govtOrderNumber: {
+        required: false
+    },
+    is_primary: {
+        required: true
+    }
+};
+
+var jurisdictions = {
+    jurisdictionsType: {
+        required: true
+    },
+    boundary: {
+        required: true
+    }
+};
+
+var serviceHistory = {
+
+    serviceInfo: {
+        required: true
+    },
+    serviceFrom: {
+        required: true
+    },
+    remarks: {
+        required: false
+    },
+    orderNo: {
+        required: false
+    },
+    documents: {
+        required: false
+    }
+};
+
+var probation = {
+    designation: {
+        required: true
+    },
+    declaredOn: {
+        required: true
+    },
+    orderNo: {
+        required: false
+    },
+    orderDate: {
+        required: false
+    },
+    remarks: {
+        required: false
+    },
+    documents: {
+        required: false
+    }
+};
+
+var regularisation = {
+    designation: {
+        required: true
+    },
+    declaredOn: {
+        required: true
+    },
+    orderNo: {
+        required: false
+    },
+    orderDate: {
+        required: false
+    },
+    remarks: {
+        required: false
+    },
+    documents: {
+        required: false
+    }
+};
+
+var education = {
+    qualification: {
+        required: true
+    },
+    majorSubject: {
+        required: false
+    },
+    yearOfPassing: {
+        required: true
+    },
+    university: {
+        required: false
+    },
+    documents: {
+        required: false
+    }
+};
+
+var technical = {
+    skill: {
+        required: true
+    },
+    grade: {
+        required: false
+    },
+    yearOfPassing: {
+        required: false
+    },
+    remarks: {
+        required: false
+    },
+    documents: {
+        required: false
+    }
+}
+
+var test = {
+    test: {
+        required: true
+    },
+    yearOfPassing: {
+        required: true
+    },
+    remarks: {
+        required: false
+    },
+    documents: {
+        required: false
+    }
+};
+
+var user = {
+    userName: {
+        required: true
+    },
+    name: {
+        required: true
+    },
+    gender: {
+        required: true
+    },
+    mobileNumber: {
+        required: true
+
+    },
+    emailId: {
+        required: false,
+
+    },
+    altContactNumber: {
+        required: false
+    },
+    pan: {
+        required: false
+    },
+    aadhaarNumber: {
+        required: false
+
+    },
+    permanentAddress: {
+        required: false
+    },
+    permanentCity: {
+        required: false
+    },
+    permanentPinCode: {
+        required: false
+    },
+    correspondenceCity: {
+        required: false
+    },
+    correspondencePinCode: {
+        required: false
+    },
+    correspondenceAddress: {
+        required: false
+    },
+    active: {
+        required: true
+    },
+    dob: {
+        required: true
+    },
+    locale: {
+        required: false
+    },
+    signature: {
+        required: false
+    },
+    fatherOrHusbandName: {
+        required: false
+    },
+    bloodGroup: {
+        required: false
+    },
+    identificationMark: {
+        required: false
+    },
+    photo: {
+        required: false
+    }
+}
+
+function checkCount() {
+    count--;
+    if (count == 0)
+        loadUI();
+}
+
+function getNameById(object, id, optional) {
+    object = returnObject(object, optional);
+    for (var i = 0; i < commonObject[object].length; i++) {
+        if (commonObject[object][i].id == id) {
+            return commonObject[object][i].name;
+        }
+    }
+    return "";
+}
+
+function isHavingPrimary() {
+    for (var i = 0; i < employee.assignments.length; i++) {
+        if (employee.assignments[i].isPrimary == "true" || employee.assignments[i].isPrimary == true) {
+            return true;
+        }
+
+    }
+    return false;
+}
+
+function uploadFiles(employee, cb) {
+    if (employee.user.photo && typeof employee.user.photo == "object") {
+        makeAjaxUpload(employee.user.photo[0], function(err, res) {
+            if (err) {
+                cb(err);
+            } else {
+                employee.user.photo = `${res.files[0].fileStoreId}`;
+                uploadFiles(employee, cb);
             }
-
-            //final post object
-            var employee = {
-                code: "",
-                dateOfAppointment: "",
-                dateOfJoining: "",
-                dateOfRetirement: "",
-                employeeStatus: "",
-                recruitmentMode: "",
-                recruitmentType: "",
-                recruitmentQuota: "",
-                retirementAge: "",
-                dateOfResignation: "",
-                dateOfTermination: "",
-                employeeType: "",
-                assignments: [],
-                jurisdictions: [],
-                motherTongue: "",
-                religion: "",
-                community: "",
-                category: "",
-                physicallyDisabled: false,
-                medicalReportProduced: true,
-                languagesKnown: [],
-                maritalStatus: "",
-                passportNo: null,
-                gpfNo: null,
-                bank: "",
-                bankBranch: "",
-                bankAccount: "",
-                group: "",
-                placeOfBirth: "",
-                documents: [],
-                serviceHistory: [],
-                probation: [],
-                regularisation: [],
-                technical: [],
-                education: [],
-                test: [],
-                user: {
-                    roles: [{
-                        code: "EMPLOYEE",
-                        name: "EMPLOYEE",
-                        tenantId
-                    }],
-                    userName: "",
-                    name: "",
-                    gender: "",
-                    mobileNumber: "",
-                    emailId: "",
-                    altContactNumber: "",
-                    pan: "",
-                    aadhaarNumber: "",
-                    permanentAddress: "",
-                    permanentCity: "",
-                    permanentPinCode: "",
-                    correspondenceCity: "",
-                    correspondencePinCode: "",
-                    correspondenceAddress: "",
-                    active: true,
-                    dob: "",
-                    locale: "",
-                    signature: "",
-                    fatherOrHusbandName: "",
-                    bloodGroup: null,
-                    identificationMark: "",
-                    photo: "",
-                    type: "EMPLOYEE",
-                    password: "12345678",
-                    tenantId
-                },
-                tenantId
+        })
+    } else if (employee.user.signature && typeof employee.user.signature == "object") {
+        makeAjaxUpload(employee.user.signature[0], function(err, res) {
+            if (err) {
+                cb(err);
+            } else {
+                employee.user.signature = `${res.files[0].fileStoreId}`;
+                uploadFiles(employee, cb);
             }
-
-            //temprory object for holding modal value
-            var employeeSubObject = {
-                assignments: {
-                    fromDate: "",
-                    toDate: "",
-                    department: "",
-                    designation: "",
-                    position: "",
-                    isPrimary: false,
-                    fund: "",
-                    function: "",
-                    functionary: "",
-                    grade: "",
-                    hod: false,
-                    // mainDepartments: "",
-                    govtOrderNumber: "",
-                    documents: null
-                },
-                jurisdictions: {
-                    jurisdictionsType: "",
-                    boundary: ""
-                },
-                serviceHistory: {
-                    serviceInfo: "",
-                    serviceFrom: "",
-                    remarks: "",
-                    orderNo: "",
-                    documents: null
-                },
-                probation: {
-                    designation: "",
-                    declaredOn: "",
-                    orderNo: "",
-                    orderDate: "",
-                    remarks: "",
-                    documents: null
-                },
-                regularisation: {
-                    designation: "",
-                    declaredOn: "",
-                    orderNo: "",
-                    orderDate: "",
-                    remarks: "",
-                    documents: null
-                },
-                education: {
-                    qualification: "",
-                    majorSubject: "",
-                    yearOfPassing: "",
-                    university: "",
-                    documents: null
-                },
-                technical: {
-                    skill: "",
-                    grade: "",
-                    yearOfPassing: "",
-                    remarks: "",
-                    documents: null
-                },
-                test: {
-                    test: "",
-                    yearOfPassing: "",
-                    remarks: "",
-                    documents: null
-                }
-            }
-
-            //unicersal marker for putting edit index
-            var editIndex = -1;
-
-            //form validation
-            var validation_rules = {};
-            var final_validatin_rules = {};
-            var commom_fields_rules = {
-                code: {
-                    required: true,
-                    alphanumeric: true
-                },
-                dateOfAppointment: {
-                    required: true
-                },
-                dateOfJoining: {
-                    required: false
-                },
-                dateOfRetirement: {
-                    required: false
-                },
-                employeeStatus: {
-                    required: true
-                },
-                recruitmentMode: {
-                    required: false
-                },
-                recruitmentType: {
-                    required: false
-                },
-                recruitmentQuota: {
-                    required: false
-                },
-                retirementAge: {
-                    required: false
-                },
-                dateOfResignation: {
-                    required: false
-                },
-                dateOfTermination: {
-                    required: false
-                },
-                employeeType: {
-                    required: true
-                },
-                motherTongue: {
-                    required: false
-                },
-                religion: {
-                    required: false
-                },
-                community: {
-                    required: false
-                },
-                category: {
-                    required: false
-                },
-                physicallyDisabled: {
-                    required: false
-                },
-                medicalReportProduced: {
-                    required: false
-                },
-                languagesKnown: {
-                    required: false
-                },
-                maritalStatus: {
-                    required: true
-                },
-                passportNo: {
-                    required: false
-                },
-                gpfNo: {
-                    required: false,
-                    alphanumeric: true
-                },
-                bank: {
-                    required: false
-                },
-                bankBranch: {
-                    required: false
-                },
-                bankAccount: {
-                    required: false,
-                    alphanumericWSplChar: true
-                },
-                group: {
-                    required: false
-                },
-                placeOfBirth: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                },
-                "user.userName": {
-                    required: true
-                },
-                "user.name": {
-                    required: true,
-                    alphaWSpcNDot: true
-                },
-                "user.gender": {
-                    required: true
-                },
-                "user.mobileNumber": {
-                    required: true,
-                    phone: true
-                },
-                "user.emailId": {
-                    required: false
-                },
-                "user.altContactNumber": {
-                    required: false,
-                    phone: true
-                },
-                "user.pan": {
-                    required: false,
-                    panNo: true
-                },
-                "user.aadhaarNumber": {
-                    required: false,
-                    aadhar: true
-                },
-                "user.permanentAddress": {
-                    required: false,
-                    alphanumericWAllSplCharNSpc: true
-                },
-                "user.permanentCity": {
-                    required: false,
-                    alphanumericWSpc: true
-                },
-                "user.permanentPinCode": {
-                    required: false
-                },
-                "user.correspondenceCity": {
-                    required: false,
-                    alphanumericWSpc: true
-                },
-                "user.correspondencePinCode": {
-                    required: false
-                },
-                "user.correspondenceAddress": {
-                    required: false,
-                    alphanumericWAllSplCharNSpc: true
-                },
-                "user.active": {
-                    required: true
-                },
-                "user.dob": {
-                    required: true
-                },
-                "user.locale": {
-                    required: false
-                },
-                "user.signature": {
-                    required: false
-                },
-                "user.fatherOrHusbandName": {
-                    required: false
-                },
-                "user.bloodGroup": {
-                    required: false
-                },
-                "user.identificationMark": {
-                    required: false
-                },
-                "user.photo": {
-                    required: false
-                },
-                "assignments.fromDate": {
-                    required: true
-                },
-                "assignments.toDate": {
-                    required: true
-                },
-                "assignments.fund": {
-                    required: false
-                },
-                "assignments.function": {
-                    required: false
-                },
-                "assignments.grade": {
-                    required: false
-                },
-                "assignments.designation": {
-                    required: true
-                },
-                "assignments.position": {
-                    required: true
-                },
-                "assignments.functionary": {
-                    required: false
-                },
-                "assignments.department": {
-                    required: true
-                },
-                "assignments.hod": {
-                    required: true
-                },
-                "assignments.mainDepartments": {
-                    required: true
-                },
-                "assignments.govtOrderNumber": {
-                    required: false,
-                    alphanumericWSplCharNSpc: true
-                },
-                "assignments.is_primary": {
-                    required: true
-                },
-                "jurisdictions.jurisdictionsType": {
-                    required: true
-                },
-                "jurisdictions.boundary": {
-                    required: true
-                },
-                "education.qualification": {
-                    required: true,
-                    alphaWSplChar: true
-                },
-                "education.majorSubject": {
-                    required: false,
-                    alphaWSplChar: true
-                },
-                "education.yearOfPassing": {
-                    required: true
-                },
-                "education.university": {
-                    required: false,
-                    alphaWSplChar: true
-                },
-                "education.documents": {
-                    required: false
-                },
-                "serviceHistory.id": {
-                    required: false
-                },
-                "serviceHistory.serviceInfo": {
-                    required: true
-                },
-                "serviceHistory.serviceFrom": {
-                    required: true
-                },
-                "serviceHistory.remarks": {
-                    required: false,
-                    alphanumericWSpc: true
-                },
-                "serviceHistory.orderNo": {
-                    required: false,
-                    alphanumericWSplCharNSpc: true
-                },
-                "serviceHistory.documents": {
-                    required: false
-                },
-                "probation.designation": {
-                    required: true
-                },
-                "probation.declaredOn": {
-                    required: true
-                },
-                "probation.orderNo": {
-                    required: false
-                },
-                "probation.orderDate": {
-                    required: false
-                },
-                "probation.remarks": {
-                    required: false
-                },
-                "probation.documents": {
-                    required: false
-                },
-                "regularisation.designation": {
-                    required: true
-                },
-                "regularisation.declaredOn": {
-                    required: true
-                },
-                "regularisation.orderNo": {
-                    required: false
-                },
-                "regularisation.orderDate": {
-                    required: false
-                },
-                "regularisation.remarks": {
-                    required: false
-                },
-                "regularisation.documents": {
-                    required: false
-                },
-                "technical.skill": {
-                    required: true
-                },
-                "technical.grade": {
-                    required: false
-                },
-                "technical.yearOfPassing": {
-                    required: false
-                },
-                "technical.remarks": {
-                    required: false
-                },
-                "technical.documents": {
-                    required: false
-                },
-                "test.test": {
-                    required: true
-                },
-                "test.yearOfPassing": {
-                    required: true
-                },
-                "test.remarks": {
-                    required: false
-                },
-                "test.documents": {
-                    required: false
-                }
-
-            }
-
-            var assignmentDetailValidation = {
-                fromDate: {
-                    required: true
-                },
-                toDate: {
-                    required: true
-                },
-                fund: {
-                    required: false
-                },
-                function: {
-                    required: false
-                },
-                grade: {
-                    required: false
-                },
-                designation: {
-                    required: true
-                },
-                position: {
-                    required: true
-                },
-                functionary: {
-                    required: false
-                },
-                department: {
-                    required: true
-                },
-                hod: {
-                    required: true
-                },
-                mainDepartments: {
-                    required: true
-                },
-                govtOrderNumber: {
-                    required: false
-                },
-                is_primary: {
-                    required: true
-                }
-            };
-
-            var jurisdictions = {
-                jurisdictionsType: {
-                    required: true
-                },
-                boundary: {
-                    required: true
-                }
-            };
-
-            var serviceHistory = {
-
-                serviceInfo: {
-                    required: true
-                },
-                serviceFrom: {
-                    required: true
-                },
-                remarks: {
-                    required: false
-                },
-                orderNo: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                }
-            };
-
-            var probation = {
-                designation: {
-                    required: true
-                },
-                declaredOn: {
-                    required: true
-                },
-                orderNo: {
-                    required: false
-                },
-                orderDate: {
-                    required: false
-                },
-                remarks: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                }
-            };
-
-            var regularisation = {
-                designation: {
-                    required: true
-                },
-                declaredOn: {
-                    required: true
-                },
-                orderNo: {
-                    required: false
-                },
-                orderDate: {
-                    required: false
-                },
-                remarks: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                }
-            };
-
-            var education = {
-                qualification: {
-                    required: true
-                },
-                majorSubject: {
-                    required: false
-                },
-                yearOfPassing: {
-                    required: true
-                },
-                university: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                }
-            };
-
-            var technical = {
-                skill: {
-                    required: true
-                },
-                grade: {
-                    required: false
-                },
-                yearOfPassing: {
-                    required: false
-                },
-                remarks: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                }
-            }
-
-            var test = {
-                test: {
-                    required: true
-                },
-                yearOfPassing: {
-                    required: true
-                },
-                remarks: {
-                    required: false
-                },
-                documents: {
-                    required: false
-                }
-            };
-
-            var user = {
-                userName: {
-                    required: true
-                },
-                name: {
-                    required: true
-                },
-                gender: {
-                    required: true
-                },
-                mobileNumber: {
-                    required: true
-
-                },
-                emailId: {
-                    required: false,
-
-                },
-                altContactNumber: {
-                    required: false
-                },
-                pan: {
-                    required: false
-                },
-                aadhaarNumber: {
-                    required: false
-
-                },
-                permanentAddress: {
-                    required: false
-                },
-                permanentCity: {
-                    required: false
-                },
-                permanentPinCode: {
-                    required: false
-                },
-                correspondenceCity: {
-                    required: false
-                },
-                correspondencePinCode: {
-                    required: false
-                },
-                correspondenceAddress: {
-                    required: false
-                },
-                active: {
-                    required: true
-                },
-                dob: {
-                    required: true
-                },
-                locale: {
-                    required: false
-                },
-                signature: {
-                    required: false
-                },
-                fatherOrHusbandName: {
-                    required: false
-                },
-                bloodGroup: {
-                    required: false
-                },
-                identificationMark: {
-                    required: false
-                },
-                photo: {
-                    required: false
-                }
-            }
-
-            function checkCount() {
-                count--;
-                if (count == 0)
-                    loadUI();
-            }
-
-            function getNameById(object, id, optional) {
-                object = returnObject(object, optional);
-                for (var i = 0; i < commonObject[object].length; i++) {
-                    if (commonObject[object][i].id == id) {
-                        return commonObject[object][i].name;
-                    }
-                }
-                return "";
-            }
-
-            function isHavingPrimary() {
-                for (var i = 0; i < employee.assignments.length; i++) {
-                    if (employee.assignments[i].isPrimary == "true" || employee.assignments[i].isPrimary == true) {
-                        return true;
-                    }
-
-                }
-                return false;
-            }
-
-            function uploadFiles(employee, cb) {
-                if (employee.user.photo && typeof employee.user.photo == "object") {
-                    makeAjaxUpload(employee.user.photo[0], function(err, res) {
-                        if (err) {
-                            cb(err);
-                        } else {
-                            employee.user.photo = `${res.files[0].fileStoreId}`;
-                            uploadFiles(employee, cb);
-                        }
-                    })
-                } else if (employee.user.signature && typeof employee.user.signature == "object") {
-                    makeAjaxUpload(employee.user.signature[0], function(err, res) {
-                        if (err) {
-                            cb(err);
-                        } else {
-                            employee.user.signature = `${res.files[0].fileStoreId}`;
-                            uploadFiles(employee, cb);
-                        }
-                    })
-                } else if (employee.documents && employee.documents.length && employee.documents[0].constructor == File) {
-                    let counter = employee.documents.length,
-                        breakout = 0;
-                    for (let i = 0, len = employee.documents.length; i < len; i++) {
-                        makeAjaxUpload(employee.documents[i], function(err, res) {
-                            if (breakout == 1)
-                                return;
-                            else if (err) {
-                                cb(err);
-                                breakout = 1;
-                            } else {
-                                counter--;
-                                employee.documents[i] = `${res.files[0].fileStoreId}`;
-                                if (counter == 0 && breakout == 0)
-                                    uploadFiles(employee, cb);
-                            }
-                        })
-                    }
-                } else if (employee.assignments.length && hasFile(employee.assignments)) {
-                    let counter1 = employee.assignments.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.assignments.length, i < len; i++) {
-                        let counter = employee.assignments[i].documents.length;
-                        for (let j = 0, len1 = employee.assignments[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.assignments[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.assignments[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
-                } else if (employee.serviceHistory.length && hasFile(employee.serviceHistory)) {
-                    let counter1 = employee.serviceHistory.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.serviceHistory.length, i < len; i++) {
-                        let counter = employee.serviceHistory[i].documents.length;
-                        for (let j = 0, len1 = employee.serviceHistory[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.serviceHistory[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.serviceHistory[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
-                } else if (employee.probation.length && hasFile(employee.probation)) {
-                    let counter1 = employee.probation.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.probation.length, i < len; i++) {
-                        let counter = employee.probation[i].documents.length;
-                        for (let j = 0, len1 = employee.probation[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.probation[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.probation[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
-                } else if (employee.regularisation.length && hasFile(employee.regularisation)) {
-                    let counter1 = employee.regularisation.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.regularisation.length, i < len; i++) {
-                        let counter = employee.regularisation[i].documents.length;
-                        for (let j = 0, len1 = employee.regularisation[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.regularisation[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.regularisation[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
-                } else if (employee.technical.length && hasFile(employee.technical)) {
-                    let counter1 = employee.technical.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.technical.length, i < len; i++) {
-                        let counter = employee.technical[i].documents.length;
-                        for (let j = 0, len1 = employee.technical[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.technical[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.technical[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
-                } else if (employee.education.length && hasFile(employee.education)) {
-                    let counter1 = employee.education.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.education.length, i < len; i++) {
-                        let counter = employee.education[i].documents.length;
-                        for (let j = 0, len1 = employee.education[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.education[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.education[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
-                } else if (employee.test.length && hasFile(employee.test)) {
-                    let counter1 = employee.test.length,
-                        breakout = 0;
-                    for (let i = 0; len = employee.test.length, i < len; i++) {
-                        let counter = employee.test[i].documents.length;
-                        for (let j = 0, len1 = employee.test[i].documents.length; j < len1; j++) {
-                            makeAjaxUpload(employee.test[i].documents[j], function(err, res) {
-                                if (breakout == 1)
-                                    return;
-                                else if (err) {
-                                    cb(err);
-                                    breakout = 1;
-                                } else {
-                                    counter--;
-                                    employee.test[i].documents[j] = `${res.files[0].fileStoreId}`;
-                                    if (counter == 0 && breakout == 0) {
-                                        counter1--;
-                                        if (counter1 == 0 && breakout == 0)
-                                            uploadFiles(employee, cb);
-                                    }
-                                }
-                            })
-                        }
-                    }
+        })
+    } else if (employee.documents && employee.documents.length && employee.documents[0].constructor == File) {
+        let counter = employee.documents.length,
+            breakout = 0;
+        for (let i = 0, len = employee.documents.length; i < len; i++) {
+            makeAjaxUpload(employee.documents[i], function(err, res) {
+                if (breakout == 1)
+                    return;
+                else if (err) {
+                    cb(err);
+                    breakout = 1;
                 } else {
-                    cb(null, employee);
+                    counter--;
+                    employee.documents[i] = `${res.files[0].fileStoreId}`;
+                    if (counter == 0 && breakout == 0)
+                        uploadFiles(employee, cb);
                 }
-            }
-
-            function checkNRemoveFile() {
-                for (var key in filesToBeDeleted) {
-                    if (key == "photo" || key == "signature") {
-                        employee.user[key] = "";
-                    } else if (key == "documents") {
-                        for (var i = 0; i < filesToBeDeleted[key].length; i++) {
-                            var ind = employee[key].indexOf(filesToBeDeleted[key][i]);
-                            employee[key].splice(ind, 1);
-                        }
+            })
+        }
+    } else if (employee.assignments.length && hasFile(employee.assignments)) {
+        let counter1 = employee.assignments.length,
+            breakout = 0;
+        for (let i = 0; len = employee.assignments.length, i < len; i++) {
+            let counter = employee.assignments[i].documents.length;
+            for (let j = 0, len1 = employee.assignments[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.assignments[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
                     } else {
-                        for (var i = 0; i < filesToBeDeleted[key].length; i++) {
-                            for (var j = 0; j < employee[key].length; j++) {
-                                var ind = employee[key][j]["documents"].indexOf(filesToBeDeleted[key][i]);
-                                if (ind > -1) {
-                                    employee[key][j]["documents"].splice(ind, 1);
-                                    break;
-                                }
-                            }
+                        counter--;
+                        employee.assignments[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
                         }
+                    }
+                })
+            }
+        }
+    } else if (employee.serviceHistory.length && hasFile(employee.serviceHistory)) {
+        let counter1 = employee.serviceHistory.length,
+            breakout = 0;
+        for (let i = 0; len = employee.serviceHistory.length, i < len; i++) {
+            let counter = employee.serviceHistory[i].documents.length;
+            for (let j = 0, len1 = employee.serviceHistory[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.serviceHistory[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.serviceHistory[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if (employee.probation.length && hasFile(employee.probation)) {
+        let counter1 = employee.probation.length,
+            breakout = 0;
+        for (let i = 0; len = employee.probation.length, i < len; i++) {
+            let counter = employee.probation[i].documents.length;
+            for (let j = 0, len1 = employee.probation[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.probation[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.probation[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if (employee.regularisation.length && hasFile(employee.regularisation)) {
+        let counter1 = employee.regularisation.length,
+            breakout = 0;
+        for (let i = 0; len = employee.regularisation.length, i < len; i++) {
+            let counter = employee.regularisation[i].documents.length;
+            for (let j = 0, len1 = employee.regularisation[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.regularisation[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.regularisation[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if (employee.technical.length && hasFile(employee.technical)) {
+        let counter1 = employee.technical.length,
+            breakout = 0;
+        for (let i = 0; len = employee.technical.length, i < len; i++) {
+            let counter = employee.technical[i].documents.length;
+            for (let j = 0, len1 = employee.technical[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.technical[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.technical[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if (employee.education.length && hasFile(employee.education)) {
+        let counter1 = employee.education.length,
+            breakout = 0;
+        for (let i = 0; len = employee.education.length, i < len; i++) {
+            let counter = employee.education[i].documents.length;
+            for (let j = 0, len1 = employee.education[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.education[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.education[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if (employee.test.length && hasFile(employee.test)) {
+        let counter1 = employee.test.length,
+            breakout = 0;
+        for (let i = 0; len = employee.test.length, i < len; i++) {
+            let counter = employee.test[i].documents.length;
+            for (let j = 0, len1 = employee.test[i].documents.length; j < len1; j++) {
+                makeAjaxUpload(employee.test[i].documents[j], function(err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.test[i].documents[j] = `${res.files[0].fileStoreId}`;
+                        if (counter == 0 && breakout == 0) {
+                            counter1--;
+                            if (counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else {
+        cb(null, employee);
+    }
+}
+
+function checkNRemoveFile() {
+    for (var key in filesToBeDeleted) {
+        if (key == "photo" || key == "signature") {
+            employee.user[key] = "";
+        } else if (key == "documents") {
+            for (var i = 0; i < filesToBeDeleted[key].length; i++) {
+                var ind = employee[key].indexOf(filesToBeDeleted[key][i]);
+                employee[key].splice(ind, 1);
+            }
+        } else {
+            for (var i = 0; i < filesToBeDeleted[key].length; i++) {
+                for (var j = 0; j < employee[key].length; j++) {
+                    var ind = employee[key][j]["documents"].indexOf(filesToBeDeleted[key][i]);
+                    if (ind > -1) {
+                        employee[key][j]["documents"].splice(ind, 1);
+                        break;
                     }
                 }
             }
+        }
+    }
+}
 
-            function hasFile(elements) {
-                if (elements && elements.constructor == Array) {
-                    for (var i = 0; i < elements.length; i++) {
-                        if (elements[i].documents && elements[i].documents.constructor == Array)
-                            for (var j = 0; j < elements[i].documents.length; j++)
-                                if (elements[i].documents[j].constructor == File)
-                                    return true;
-                    }
-                }
+function hasFile(elements) {
+    if (elements && elements.constructor == Array) {
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i].documents && elements[i].documents.constructor == Array)
+                for (var j = 0; j < elements[i].documents.length; j++)
+                    if (elements[i].documents[j].constructor == File)
+                        return true;
+        }
+    }
+    return false;
+}
+
+function makeAjaxUpload(file, cb) {
+    if (file.constructor == File) {
+        let formData = new FormData();
+        formData.append("jurisdictionId", tenantId);
+        formData.append("module", "HR");
+        formData.append("file", file);
+        $.ajax({
+            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(res) {
+                cb(null, res);
+            },
+            error: function(jqXHR, exception) {
+                cb(jqXHR.responseText || jqXHR.statusText);
+            }
+        });
+    } else {
+        cb(null, {
+            files: [{
+                fileStoreId: file
+            }]
+        })
+    }
+}
+
+function hasAllRequiredFields(emp) {
+    return (emp.user.name && emp.code && emp.employeeType && emp.employeeStatus && emp.user.dob && emp.user.gender && emp.maritalStatus && emp.user.userName && emp.user.mobileNumber && emp.user.mobileNumber.length == 10 && emp.dateOfAppointment);
+}
+
+function checkIfNoDup(employee, objectType, subObject) {
+    if (employee[objectType].length === 0)
+        return true;
+    else if (objectType == "jurisdictions") {
+        for (let i = 0; i < employee[objectType].length; i++) {
+            if (typeof employee[objectType][i] == "object" && employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
                 return false;
-            }
+            else if (employee[objectType][i] == subObject.boundary)
+                return false;
+        }
+    }
 
-            function makeAjaxUpload(file, cb) {
-                if (file.constructor == File) {
-                    let formData = new FormData();
-                    formData.append("jurisdictionId", tenantId);
-                    formData.append("module", "HR");
-                    formData.append("file", file);
-                    $.ajax({
-                        url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        type: 'POST',
-                        success: function(res) {
-                            cb(null, res);
-                        },
-                        error: function(jqXHR, exception) {
-                            cb(jqXHR.responseText || jqXHR.statusText);
-                        }
-                    });
-                } else {
-                    cb(null, {
-                        files: [{
-                            fileStoreId: file
-                        }]
-                    })
+    return true;
+}
+
+function validateDates(employee, objectType, subObject) {
+    if (objectType == "assignments" && subObject.isPrimary) {
+        for (let i = 0; i < employee[objectType].length; i++) {
+            if (employee[objectType][i].isPrimary && (editIndex == -1 || (editIndex > -1 && i != editIndex))) {
+                var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
+                var fromDate = new Date(employee[objectType][i].fromDate.split("/")[1] + "/" + employee[objectType][i].fromDate.split("/")[0] + "/" + employee[objectType][i].fromDate.split("/")[2]).getTime();
+                var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();
+                var toDate = new Date(employee[objectType][i].toDate.split("/")[1] + "/" + employee[objectType][i].toDate.split("/")[0] + "/" + employee[objectType][i].toDate.split("/")[2]).getTime();
+
+                if (((fromDate >= subFromDate) &&
+                        (fromDate <= subToDate)) ||
+                    ((toDate >= subFromDate) &&
+                        (toDate <= subToDate)) ||
+                    ((subFromDate >= fromDate) &&
+                        (subFromDate <= toDate)) ||
+                    ((subToDate >= fromDate) &&
+                        (subToDate <= toDate))) {
+                    return false;
                 }
             }
+        }
+    }
 
-            function hasAllRequiredFields(emp) {
-                return (emp.user.name && emp.code && emp.employeeType && emp.employeeStatus && emp.user.dob && emp.user.gender && emp.maritalStatus && emp.user.userName && emp.user.mobileNumber && emp.user.mobileNumber.length == 10 && emp.dateOfAppointment);
-            }
+    return true;
+}
 
-            function checkIfNoDup(employee, objectType, subObject) {
-                if (employee[objectType].length === 0)
-                    return true;
-                else if (objectType == "jurisdictions") {
-                    for (let i = 0; i < employee[objectType].length; i++) {
-                        if (typeof employee[objectType][i] == "object" && employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
-                            return false;
-                        else if (employee[objectType][i] == subObject.boundary)
-                            return false;
-                    }
-                }
 
-                return true;
-            }
-
-            function validateDates(employee, objectType, subObject) {
-                if (objectType == "assignments" && subObject.isPrimary) {
-                    for (let i = 0; i < employee[objectType].length; i++) {
-                        if (employee[objectType][i].isPrimary && (editIndex == -1 || (editIndex > -1 && i != editIndex))) {
-                            var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
-                            var fromDate = new Date(employee[objectType][i].fromDate.split("/")[1] + "/" + employee[objectType][i].fromDate.split("/")[0] + "/" + employee[objectType][i].fromDate.split("/")[2]).getTime();
-                            var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();
-                            var toDate = new Date(employee[objectType][i].toDate.split("/")[1] + "/" + employee[objectType][i].toDate.split("/")[0] + "/" + employee[objectType][i].toDate.split("/")[2]).getTime();
-
-                            if (((fromDate >= subFromDate) &&
-                                    (fromDate <= subToDate)) ||
-                                ((toDate >= subFromDate) &&
-                                    (toDate <= subToDate)) ||
-                                ((subFromDate >= fromDate) &&
-                                    (subFromDate <= toDate)) ||
-                                ((subToDate >= fromDate) &&
-                                    (subToDate <= toDate))) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                return true;
-            }
-
+$(document).ready(function() {
             getDropdown("employeeType", function(res) {
                 employeeType = res;
                 checkCount();
@@ -1634,30 +1634,15 @@ $(document).ready(function() {
             }
 
             function getPositions(_this) {
-                    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
-                        if (employeeSubObject["assignments"].isPrimary == "true") {
-                            if ($("#assignments\\.fromDate").val()) {
-                                var _date = $("#assignments\\.fromDate").val();
-                                commonApiPost("hr-masters", "vacantpositions", "_search", {
-                                    tenantId,
-                                    departmentId: $("#assignments\\.department").val(),
-                                    designationId: $("#assignments\\.designation").val(),
-                                    asOnDate: _date
-                                }, function(err, res) {
-                                    if (res) {
-                                        commonObject["assignments_position"] = res.Position;
-                                        $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
-                                        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
-                                            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-                                        }
-                                    }
-                                });
-                            }
-                        } else {
-                            commonApiPost("hr-masters", "positions", "_search", {
+                if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
+                    if (employeeSubObject["assignments"].isPrimary == "true") {
+                        if ($("#assignments\\.fromDate").val()) {
+                            var _date = $("#assignments\\.fromDate").val();
+                            commonApiPost("hr-masters", "vacantpositions", "_search", {
                                 tenantId,
                                 departmentId: $("#assignments\\.department").val(),
-                                designationId: $("#assignments\\.designation").val()
+                                designationId: $("#assignments\\.designation").val(),
+                                asOnDate: _date
                             }, function(err, res) {
                                 if (res) {
                                     commonObject["assignments_position"] = res.Position;
@@ -1668,239 +1653,253 @@ $(document).ready(function() {
                                 }
                             });
                         }
+                    } else {
+                        commonApiPost("hr-masters", "positions", "_search", {
+                            tenantId,
+                            departmentId: $("#assignments\\.department").val(),
+                            designationId: $("#assignments\\.designation").val()
+                        }, function(err, res) {
+                            if (res) {
+                                commonObject["assignments_position"] = res.Position;
+                                $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+                                for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+                                    $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+                                }
+                            }
+                        });
                     }
                 }
+            }
 
 
-                if (getUrlVars()["type"] == "update") {
-                    try {
-                        if (getUrlVars()["id"]) {
-                            commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+            if (getUrlVars()["type"] == "update") {
+                try {
+                    if (getUrlVars()["id"]) {
+                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                            tenantId
+                        }, function(err, res) {
+                            var currentEmployee = res.Employee;
+                            showAndPrint(currentEmployee);
+                        });
+                    } else {
+                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                            tenantId
+                        }, function(err, res) {
+                            var obj = res.Employee[0];
+                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
                                 tenantId
-                            }, function(err, res) {
-                                var currentEmployee = res.Employee;
+                            }, function(err, res2) {
+                                var currentEmployee = res2.Employee;
                                 showAndPrint(currentEmployee);
                             });
-                        } else {
-                            commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                                tenantId
-                            }, function(err, res) {
-                                var obj = res.Employee[0];
-                                commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                    tenantId
-                                }, function(err, res2) {
-                                    var currentEmployee = res2.Employee;
-                                    showAndPrint(currentEmployee);
-                                });
-                            });
-                        }
-                    } catch (e) {
-                        console.log(e);
+                        });
                     }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            function showAndPrint(currentEmployee) {
+                employee = currentEmployee;
+                $("#code").prop("disabled", true);
+                printValue("", currentEmployee);
+                displayFiles(employee);
+
+                if (currentEmployee["assignments"].length > 0) {
+                    updateTable("#agreementTableBody", 'assignmentDetailModal', "assignments")
                 }
 
-                function showAndPrint(currentEmployee) {
-                    employee = currentEmployee;
-                    $("#code").prop("disabled", true);
-                    printValue("", currentEmployee);
-                    displayFiles(employee);
-
-                    if (currentEmployee["assignments"].length > 0) {
-                        updateTable("#agreementTableBody", 'assignmentDetailModal', "assignments")
-                    }
-
-                    if (currentEmployee["jurisdictions"].length > 0) {
-                        updateTable("#jurisdictionTableBody", 'jurisdictionDetailModal', "jurisdictions")
-                    }
-
-                    if (currentEmployee["serviceHistory"].length > 0) {
-                        updateTable("#serviceHistoryTableBody", 'serviceHistoryDetailModal', "serviceHistory")
-                    }
-
-                    if (currentEmployee["probation"].length > 0) {
-                        updateTable("#probationTableBody", 'probationDetailModal', "probation")
-                    }
-
-                    if (currentEmployee["regularisation"].length > 0) {
-                        updateTable("#regularisationTableBody", 'regularisationDetailModal', "regularisation")
-                    }
-
-                    if (currentEmployee["education"].length > 0) {
-                        updateTable("#educationTableBody", 'educationDetailModal', "education")
-                    }
-
-                    if (currentEmployee["technical"].length > 0) {
-                        updateTable("#technicalTableBody", 'technicalDetailModal', "technical")
-                    }
-
-                    if (currentEmployee["test"].length > 0) {
-                        updateTable("#testTableBody", '#testDetailModal', "test")
-                    }
+                if (currentEmployee["jurisdictions"].length > 0) {
+                    updateTable("#jurisdictionTableBody", 'jurisdictionDetailModal', "jurisdictions")
                 }
 
-                if (getUrlVars()["type"] == "view") {
-                    try {
-
-                        if (getUrlVars()["id"]) {
-                            commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                                tenantId
-                            }, function(err, res) {
-                                var currentEmployee = res.Employee;
-                                showAndPrint2(currentEmployee);
-                            });
-                        } else {
-                            commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                                tenantId
-                            }, function(err, res) {
-                                var obj = res.Employee[0];
-                                commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                    tenantId
-                                }, function(err, res2) {
-                                    var currentEmployee = res2.Employee;
-                                    showAndPrint2(currentEmployee);
-                                })
-                            });
-                        }
-
-                        $("#createEmployeeForm input").prop("disabled", true);
-
-                        $("#createEmployeeForm select").prop("disabled", true);
-
-                        $("#createEmployeeForm textarea").prop("disabled", true);
-
-                        $("#addEmployee").hide();
-
-                        $(".btn-default").hide();
-
-                    } catch (e) {
-                        console.log(e);
-                    }
+                if (currentEmployee["serviceHistory"].length > 0) {
+                    updateTable("#serviceHistoryTableBody", 'serviceHistoryDetailModal', "serviceHistory")
                 }
 
-                function showAndPrint2(currentEmployee) {
-                    employee = currentEmployee;
-                    printValue("", currentEmployee);
-                    displayFiles(employee);
-
-                    if (currentEmployee["assignments"].length > 0) {
-                        updateTable("#agreementTableBody", 'xyz', "assignments")
-                    }
-
-                    if (currentEmployee["jurisdictions"].length > 0) {
-                        updateTable("#jurisdictionTableBody", 'xyz', "jurisdictions")
-                    }
-
-                    if (currentEmployee["serviceHistory"].length > 0) {
-                        updateTable("#serviceHistoryTableBody", 'xyz', "serviceHistory")
-                    }
-
-                    if (currentEmployee["probation"].length > 0) {
-                        updateTable("#probationTableBody", 'xyz', "probation")
-                    }
-
-                    if (currentEmployee["regularisation"].length > 0) {
-                        updateTable("#regularisationTableBody", 'xyz', "regularisation")
-                    }
-
-                    if (currentEmployee["education"].length > 0) {
-                        updateTable("#educationTableBody", 'xyz', "education")
-                    }
-
-                    if (currentEmployee["technical"].length > 0) {
-                        updateTable("#technicalTableBody", 'xyz', "technical")
-                    }
-
-                    if (currentEmployee["test"].length > 0) {
-                        updateTable("#testTableBody", 'xyz', "test")
-                    }
+                if (currentEmployee["probation"].length > 0) {
+                    updateTable("#probationTableBody", 'probationDetailModal', "probation")
                 }
 
-                function printValue(object = "", values) {
-                    if (object != "") {
+                if (currentEmployee["regularisation"].length > 0) {
+                    updateTable("#regularisationTableBody", 'regularisationDetailModal', "regularisation")
+                }
 
+                if (currentEmployee["education"].length > 0) {
+                    updateTable("#educationTableBody", 'educationDetailModal', "education")
+                }
+
+                if (currentEmployee["technical"].length > 0) {
+                    updateTable("#technicalTableBody", 'technicalDetailModal', "technical")
+                }
+
+                if (currentEmployee["test"].length > 0) {
+                    updateTable("#testTableBody", '#testDetailModal', "test")
+                }
+            }
+
+            if (getUrlVars()["type"] == "view") {
+                try {
+
+                    if (getUrlVars()["id"]) {
+                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                            tenantId
+                        }, function(err, res) {
+                            var currentEmployee = res.Employee;
+                            showAndPrint2(currentEmployee);
+                        });
                     } else {
-                        for (var key in values) {
-                            if (key == "documents") continue;
-                            if (typeof values[key] === "object" && key == "user") {
-                                for (ckey in values[key]) {
-                                    if (values[key][ckey]) {
-                                        if (["signature", "photo"].indexOf(ckey) > -1) continue;
-                                        //Get description
-                                        if (ckey == "dob") {
-                                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
+                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                            tenantId
+                        }, function(err, res) {
+                            var obj = res.Employee[0];
+                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                tenantId
+                            }, function(err, res2) {
+                                var currentEmployee = res2.Employee;
+                                showAndPrint2(currentEmployee);
+                            })
+                        });
+                    }
 
-                                        } else if (ckey == "active") {
-                                            if ([true, "true"].indexOf(values[key][ckey]) > -1) {
-                                                $('[data-active="yes"]').prop("checked", true);
-                                            } else {
-                                                $('[data-active="no"]').prop("checked", false);
-                                            }
+                    $("#createEmployeeForm input").prop("disabled", true);
+
+                    $("#createEmployeeForm select").prop("disabled", true);
+
+                    $("#createEmployeeForm textarea").prop("disabled", true);
+
+                    $("#addEmployee").hide();
+
+                    $(".btn-default").hide();
+
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            function showAndPrint2(currentEmployee) {
+                employee = currentEmployee;
+                printValue("", currentEmployee);
+                displayFiles(employee);
+
+                if (currentEmployee["assignments"].length > 0) {
+                    updateTable("#agreementTableBody", 'xyz', "assignments")
+                }
+
+                if (currentEmployee["jurisdictions"].length > 0) {
+                    updateTable("#jurisdictionTableBody", 'xyz', "jurisdictions")
+                }
+
+                if (currentEmployee["serviceHistory"].length > 0) {
+                    updateTable("#serviceHistoryTableBody", 'xyz', "serviceHistory")
+                }
+
+                if (currentEmployee["probation"].length > 0) {
+                    updateTable("#probationTableBody", 'xyz', "probation")
+                }
+
+                if (currentEmployee["regularisation"].length > 0) {
+                    updateTable("#regularisationTableBody", 'xyz', "regularisation")
+                }
+
+                if (currentEmployee["education"].length > 0) {
+                    updateTable("#educationTableBody", 'xyz', "education")
+                }
+
+                if (currentEmployee["technical"].length > 0) {
+                    updateTable("#technicalTableBody", 'xyz', "technical")
+                }
+
+                if (currentEmployee["test"].length > 0) {
+                    updateTable("#testTableBody", 'xyz', "test")
+                }
+            }
+
+            function printValue(object = "", values) {
+                if (object != "") {
+
+                } else {
+                    for (var key in values) {
+                        if (key == "documents") continue;
+                        if (typeof values[key] === "object" && key == "user") {
+                            for (ckey in values[key]) {
+                                if (values[key][ckey]) {
+                                    if (["signature", "photo"].indexOf(ckey) > -1) continue;
+                                    //Get description
+                                    if (ckey == "dob") {
+                                        $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
+
+                                    } else if (ckey == "active") {
+                                        if ([true, "true"].indexOf(values[key][ckey]) > -1) {
+                                            $('[data-active="yes"]').prop("checked", true);
                                         } else {
-                                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
+                                            $('[data-active="no"]').prop("checked", false);
+                                        }
+                                    } else {
+                                        $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
 
-                                        }
                                     }
                                 }
-                            } else if (key == "physicallyDisabled") {
-                                if ([true, "true"].indexOf(values[key]) > -1) {
-                                    $('[data-ph="yes"]').prop("checked", true);
-                                } else {
-                                    $('[data-ph="no"]').prop("checked", true);
-                                }
-                            } else if (key == "bank" && values[key]) {
-                                commonApiPost("egf-masters", "bankbranches", "_search", {
-                                    tenantId,
-                                    "bank.id": values[key]
-                                }, function(err, res) {
-                                    if (res) {
-                                        commonObject["bankbranches"] = res["bankBranches"];
-                                        $(`#bankBranch`).html(`<option value=''>Select</option>`)
-                                        for (var i = 0; i < commonObject["bankbranches"].length; i++) {
-                                            $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
-                                        }
-                                        $("[name='" + key + "']").val(values[key] ? values[key] : "");
-                                    }
-                                })
-                            } else if (values[key]) {
-                                $("[name='" + key + "']").val(values[key] ? values[key] : "");
+                            }
+                        } else if (key == "physicallyDisabled") {
+                            if ([true, "true"].indexOf(values[key]) > -1) {
+                                $('[data-ph="yes"]').prop("checked", true);
                             } else {
-
+                                $('[data-ph="no"]').prop("checked", true);
                             }
+                        } else if (key == "bank" && values[key]) {
+                            commonApiPost("egf-masters", "bankbranches", "_search", {
+                                tenantId,
+                                "bank.id": values[key]
+                            }, function(err, res) {
+                                if (res) {
+                                    commonObject["bankbranches"] = res["bankBranches"];
+                                    $(`#bankBranch`).html(`<option value=''>Select</option>`)
+                                    for (var i = 0; i < commonObject["bankbranches"].length; i++) {
+                                        $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
+                                    }
+                                    $("[name='" + key + "']").val(values[key] ? values[key] : "");
+                                }
+                            })
+                        } else if (values[key]) {
+                            $("[name='" + key + "']").val(values[key] ? values[key] : "");
+                        } else {
+
                         }
                     }
                 }
+            }
 
 
-                function displayFiles(employee) {
-                    var tBody = "#fileBody",
-                        count = 1;
-                    $(tBody).html("");
+            function displayFiles(employee) {
+                var tBody = "#fileBody",
+                    count = 1;
+                $(tBody).html("");
 
-                    if (employee.user && employee.user.signature) {
-                        appendTr(tBody, count, "Signature", employee.user.signature);
-                        count++;
-                    }
+                if (employee.user && employee.user.signature) {
+                    appendTr(tBody, count, "Signature", employee.user.signature);
+                    count++;
+                }
 
-                    if (employee.user && employee.user.photo) {
-                        appendTr(tBody, count, "Photo", employee.user.photo);
-                        count++;
-                    }
+                if (employee.user && employee.user.photo) {
+                    appendTr(tBody, count, "Photo", employee.user.photo);
+                    count++;
+                }
 
-                    for (var key in employee) {
-                        if (key == "documents" && employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
-                            for (var i = 0; i < employee[key].length; i++) {
-                                appendTr(tBody, count, "Documents", employee[key][i]);
-                                count++;
-                            }
-                        } else if (employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
-                            for (var i = 0; i < employee[key].length; i++) {
-                                if (typeof employee[key][i] == "object") {
-                                    for (key2 in employee[key][i]) {
-                                        if (key2 == "documents" && employee[key][i][key2].constructor == Array && employee[key][i][key2].length > 0) {
-                                            for (var j = 0; j < employee[key][i][key2].length; j++) {
-                                                appendTr(tBody, count, key, employee[key][i][key2][j]);
-                                                count++;
-                                            }
+                for (var key in employee) {
+                    if (key == "documents" && employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
+                        for (var i = 0; i < employee[key].length; i++) {
+                            appendTr(tBody, count, "Documents", employee[key][i]);
+                            count++;
+                        }
+                    } else if (employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
+                        for (var i = 0; i < employee[key].length; i++) {
+                            if (typeof employee[key][i] == "object") {
+                                for (key2 in employee[key][i]) {
+                                    if (key2 == "documents" && employee[key][i][key2].constructor == Array && employee[key][i][key2].length > 0) {
+                                        for (var j = 0; j < employee[key][i][key2].length; j++) {
+                                            appendTr(tBody, count, key, employee[key][i][key2][j]);
+                                            count++;
                                         }
                                     }
                                 }
@@ -1908,12 +1907,13 @@ $(document).ready(function() {
                         }
                     }
                 }
+            }
 
-                function appendTr(tBodyName, count, name, fileId) {
-                    if ($("#fileTable").css('display') == 'none')
-                        $("#fileTable").show();
+            function appendTr(tBodyName, count, name, fileId) {
+                if ($("#fileTable").css('display') == 'none')
+                    $("#fileTable").show();
 
-                    $(tBodyName).append(`<tr data-key=${count}>
+                $(tBodyName).append(`<tr data-key=${count}>
                             <td>
                               ${count}
                             </td>
@@ -1949,7 +1949,7 @@ $(document).ready(function() {
                   $("[data-key='"+ count +"'] button").text("Undo");
                 }
               }
-              
+
             function loadUI() {
 
                 commonApiPost("hr-masters", "hrconfigurations", "_search", {

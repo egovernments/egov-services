@@ -1215,7 +1215,6 @@ function clearModalInput(object, properties) {
 function updateTable(tableName, modalName, object) {
     $(tableName).html(``);
     for (let i = 0; i < employee[object].length; i++) {
-        $(tableName).append(`<tr>`);
         if (object == "assignments") {
             commonApiPost("hr-masters", "positions", "_search", {
                 tenantId,
@@ -1226,6 +1225,7 @@ function updateTable(tableName, modalName, object) {
                 } else {
                     assignments_position = [];
                 }
+                $(tableName).append(`<tr>`);
                 $(tableName).append(`<td data-label=${"fromDate"}>
 
                                   ${employee[object][i]["fromDate"] || ""}
@@ -1279,6 +1279,7 @@ function updateTable(tableName, modalName, object) {
                 } else {
                     bnd = [];
                 }
+                $(tableName).append(`<tr>`);
                 $(tableName).append(`<td data-label=${"jurisdictionsType"}>
                                     ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
                                     </td>`)
@@ -1288,6 +1289,7 @@ function updateTable(tableName, modalName, object) {
                 closeTR(tableName, modalName, object, i);
             });
         } else if (object == "serviceHistory") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"serviceInfo"}>
                                   ${employee[object][i]["serviceInfo"] || ""}
                             </td>`)
@@ -1306,6 +1308,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`);
             closeTR(tableName, modalName, object, i);
         } else if (object == "probation" || object == "regularisation") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"designation"}>
                                     ${getNameById("designation",employee[object][i]["designation"],"")}
                                 </td>`)
@@ -1326,6 +1329,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`);
             closeTR(tableName, modalName, object, i);
         } else if (object == "education") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"qualification"}>
                                   ${employee[object][i]["qualification"] || ""}
                                 </td>`)
@@ -1343,6 +1347,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`);
             closeTR(tableName, modalName, object, i);
         } else if (object == "technical") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"skill"}>
                                   ${employee[object][i]["skill"] || ""}
                                 </td>`)
@@ -1360,6 +1365,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`)
             closeTR(tableName, modalName, object, i);
         } else if (object == "test") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"test"}>
                                   ${employee[object][i]["test"] || ""}
                             </td>`)

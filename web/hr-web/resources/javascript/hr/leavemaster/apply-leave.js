@@ -193,7 +193,7 @@ class ApplyLeave extends React.Component {
                     code: obj.code,
                     employee: obj.id
                   },
-                 departmentId: this.getPrimaryAssigmentDep(obj,"department")
+                 departmentId: _this.getPrimaryAssigmentDep(obj,"department")
               })
             }
           });
@@ -208,7 +208,7 @@ class ApplyLeave extends React.Component {
                     code: obj.code,
                     employee: obj.id
                   },
-                 departmentId: this.getPrimaryAssigmentDep(obj,"department")
+                 departmentId: _this.getPrimaryAssigmentDep(obj,"department")
               })
             }
           })

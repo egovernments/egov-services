@@ -33,7 +33,6 @@ class UpdateLeave extends React.Component {
     this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
     this.getPrimaryAssigmentDep = this.getPrimaryAssigmentDep.bind(this);
     this.handleProcess = this.handleProcess.bind(this);
-    this.getPrimaryAssigmentDep=this.getPrimaryAssigmentDep.bind(this);
 }
 
 
@@ -75,7 +74,7 @@ class UpdateLeave extends React.Component {
             _this.setState({
                leaveSet: _leaveSet,
                leaveNumber: _leaveSet.applicationNumber,
-               departmentId:this.getPrimaryAssigmentDep(employee,"department"),
+               departmentId: _this.getPrimaryAssigmentDep(employee,"department"),
                employeeid:employee.id
             })
           }

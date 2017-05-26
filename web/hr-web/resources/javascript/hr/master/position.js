@@ -142,7 +142,6 @@ addOrUpdate(e){
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(body),
-            async: false,
             contentType: 'application/json',
             headers:{
               'auth-token': authToken
@@ -165,7 +164,6 @@ addOrUpdate(e){
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(body),
-            async: false,
             contentType: 'application/json',
             headers:{
               'auth-token': authToken

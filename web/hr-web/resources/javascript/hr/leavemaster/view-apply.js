@@ -62,7 +62,7 @@ componentDidMount() {
             id: empIds.join(",")
           },function(err, res2){
             if(res2)  {
-              employees = res2["Employee"];
+              var employees = res2["Employee"];
               for(var i=0; i<leaveApp.length; i++) {
                 employees.map(function(item, ind) {
                   if(item.id == leaveApp[i].employee) {

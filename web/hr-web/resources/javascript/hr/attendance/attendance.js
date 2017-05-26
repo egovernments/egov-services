@@ -131,7 +131,7 @@ class Attendance extends React.Component {
     var endDate=(parseInt(queryParam["year"])==new Date().getFullYear()&&parseInt(queryParam["month"])==new Date().getMonth())?new Date():new Date(parseInt(queryParam["year"]), parseInt(queryParam["month"])+1, 0);
     var now = new Date();
     var currentDate = new Date(queryParam["year"],queryParam["month"],1);
-    var count1 = 5, hrconfigurations = {}, employeesTemp = [], empLeaveList = [], currentAttendance = [], allHolidayList = [];
+    var count1 = 5, hrConfigurations = {}, employeesTemp = [], empLeaveList = [], currentAttendance = [], allHolidayList = [];
     var employee = "";
 
     const calculate = function() {

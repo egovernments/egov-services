@@ -11,7 +11,7 @@ $(document).ready(function() {
             for (var i = 2000; i <= new Date().getFullYear(); i++) {
                 yearOfPassing.push(i);
             }
-            
+
             //final post object
             var employee = {
                 code: "",
@@ -1185,7 +1185,773 @@ $(document).ready(function() {
 
             }
 
+            function enableAndDisable(id) {
+                $(`#${id}`).toggle();
+            }
+
+            //common add and update
+            function commonAddAndUpdate(tableName, modalName, object) {
+                // if(switchValidation(object))
+                if ($("#createEmployeeForm").valid()) {
+                    if (checkIfNoDup(employee, object, employeeSubObject[object])) {
+
+                        if (validateDates(employee, object, employeeSubObject[object])) {
+                            if (editIndex != -1) {
+                                if (object == "assignments") {
+                                    var hod_value = employeeSubObject[object]["hod"];
+                                    employeeSubObject[object]["hod"] = [];
+                                    if (((hod_value.constructor == Array && hod_value.length) || [true, "true"].indexOf(hod_value) > -1) && tempListBox.length > 0) {
+                                        tempListBox.map(function(val) {
+                                            employeeSubObject[object]["hod"].push(val);
+                                        })
+                                        tempListBox = [];
+                                    }
+                                }
+                                employee[object][editIndex] = employeeSubObject[object];
+                                updateTable("#" + tableName, modalName, object);
+                            } else {
+                                if (object == "assignments") {
+                                    var hod_value = employeeSubObject[object]["hod"];
+                                    employeeSubObject[object]["hod"] = [];
+                                    if ([true, "true"].indexOf(hod_value) > -1 && tempListBox.length > 0) {
+                                        tempListBox.map(function(val) {
+                                            employeeSubObject[object]["hod"].push(val);
+                                        })
+                                        tempListBox = [];
+                                    }
+                                    employee[object].push(Object.assign({}, employeeSubObject[object]));
+                                    updateTable("#" + tableName, modalName, object);
+                                } else {
+                                    employee[object].push(Object.assign({}, employeeSubObject[object]));
+                                    updateTable("#" + tableName, modalName, object);
+                                }
+
+                            }
+                            $(`#${modalName}`).modal("hide");
+                        } else {
+                            $(".error-p").text("Assignment dates overlapping.");
+                            $(".error-p").show();
+                        }
+                    } else {
+                        $(".error-p").text("Duplicate entry not allowed.");
+                        $(".error-p").show();
+                    }
+                } else {
+                    return;
+                }
+            }
+
+            function fillValueToObject(currentState) {
+                if (currentState.id.includes(".")) {
+
+                    var splitResult = currentState.id.split(".");
+                    if (splitResult[0] === "user") {
+                        if (currentState.id == "user.active") {
+                            employee[splitResult[0]][splitResult[1]] = currentState.value;
+                        } else if (currentState.type === "file") {
+                            employee[splitResult[0]][splitResult[1]] = currentState.files;
+                        } else {
+                            employee[splitResult[0]][splitResult[1]] = currentState.value;
+                        }
+                    } else {
+                        if (currentState.id == "assignments.mainDepartments") {
+                            tempListBox = [];
+                            for (var i = 0; i < $(currentState).val().length; i++) {
+                                tempListBox.push({
+                                    department: $(currentState).val()[i]
+                                })
+                            }
+
+
+                        } else if (currentState.type === "file") {
+                            if (!employeeSubObject[splitResult[0]][splitResult[1]])
+                                employeeSubObject[splitResult[0]][splitResult[1]] = [];
+                            for (var i = 0; i < currentState.files.length; i++) {
+                                employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.files[i]);
+                            }
+                        } else
+                            employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
+                    }
+
+                } else {
+                    if (currentState.id == "languagesKnown") {
+                        employee[currentState.id] = $(currentState).val();
+                    } else if (currentState.type === "file") {
+                        if (!employee[currentState.id])
+                            employee[currentState.id] = [];
+                        for (var i = 0; i < currentState.files.length; i++) {
+                            employee[currentState.id].push(currentState.files[i]);
+                        }
+                    } else {
+                        employee[currentState.id] = currentState.value;
+                    }
+                }
+            }
+
+            function clearModalInput(object, properties) {
+                for (var variable in properties) {
+                    if (properties.hasOwnProperty(variable)) {
+                        if (variable == "isPrimary") {
+                            $('[data-primary="yes"]').prop("checked", false);
+                            $('[data-primary="no"]').prop("checked", true);
+                        } else if (variable == "hod") {
+                            $('#departments').hide();
+                            $('[data-hod="yes"]').prop("checked", false);
+                            $('[data-hod="no"]').prop("checked", true);
+                        } else
+                            $("#" + object + "\\." + variable).val(properties[variable]);
+                    }
+                }
+            }
+
+            function updateTable(tableName, modalName, object) {
+                $(tableName).html(``);
+                for (var i = 0; i < employee[object].length; i++) {
+                    $(tableName).append(`<tr>`);
+                    if (object == "assignments") {
+                        $(tableName).append(`<td data-label=${"fromDate"}>
+
+                                  ${employee[object][i]["fromDate"] || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"toDate"}>
+
+                                  ${employee[object][i]["toDate"] || ""}
+                                                </td>`)
+                        $(tableName).append(`<td data-label=${"department"}>
+                                  ${getNameById("department",employee[object][i]["department"],"") || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"designation"}>
+                                  ${getNameById("designation",employee[object][i]["designation"],"") || ""}
+                              </td>`)
+                        try {
+                            assignments_position = commonApiPost("hr-masters", "positions", "_search", {
+                                tenantId,
+                                id: employee[object][i]["position"]
+                            }).responseJSON["Position"] || [];
+                        } catch (e) {
+                            console.log(e);
+                            assignments_position = [];
+                        }
+                        $(tableName).append(`<td data-label=${"position"}>
+
+                                                        ${assignments_position.length>0?assignments_position[0]["name"]:""}
+                              </td>`)
+                        $(tableName).append(`<td data-label=${"isPrimary"}>
+
+                                                        ${employee[object][i]["isPrimary"] || ""}
+                                                  </td>`)
+                        $(tableName).append(`<td data-label=${"fund"}>
+                                                                            ${getNameById("fund",employee[object][i]["fund"],"") || ""}
+                                                                      </td>`)
+                        $(tableName).append(`<td data-label=${"function"}>
+                                                                                                ${getNameById("function",employee[object][i]["function"],"") || ""}
+                                                                                          </td>`)
+                        $(tableName).append(`<td data-label=${"functionary"}>
+                                                                                                                    ${getNameById("functionary",employee[object][i]["functionary"],"") || ""}
+                                                                                                              </td>`)
+                        $(tableName).append(`<td data-label=${"grade"}>
+                                                                                                                                        ${getNameById("grade",employee[object][i]["grade"],"") || ""}
+                                                                                                                                  </td>`)
+                        $(tableName).append(`<td data-label=${"hod"}>
+        ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
+
+        </td>`)
+
+                        $(tableName).append(`<td data-label=${"govtOrderNumber"}>
+
+                                                                                                                                                                              ${employee[object][i]["govtOrderNumber"] || ""}
+                                                                                                                                                                        </td>`)
+                        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                              </td>`)
+
+                    } else if (object == "jurisdictions") {
+                        try {
+                            commonApiGet("egov-location", "boundarys", "", {
+                                "Boundary.id": (typeof employee[object][i] == "object" ? employee[object][i]["boundary"] : employee[object][i]),
+                                "Boundary.tenantId": tenantId
+                            }, function(err, res) {
+                                if (res) {
+                                    bnd = res.Boundary;
+                                    $(tableName).append(`<td data-label=${"jurisdictionsType"}>
+                                    ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
+                                    </td>`)
+                                    $(tableName).append(`<td data-label=${"boundary"}>
+                                          ${bnd.length > 0 ? bnd[0]["name"] : ""}
+                                    </td>`)
+                                }
+                            });
+                        } catch (e) {
+                            console.log(e);
+                            bnd = [];
+                        }
+                    } else if (object == "serviceHistory") {
+                        $(tableName).append(`<td data-label=${"serviceInfo"}>
+
+                                  ${employee[object][i]["serviceInfo"] || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"serviceFrom"}>
+
+                                  ${employee[object][i]["serviceFrom"] || ""}
+                                                </td>`)
+                        $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                          ${employee[object][i]["remarks"]}
+                                                                                        </td>`)
+                        $(tableName).append(`<td data-label=${"orderNo"}>
+
+                                                                                                                                                          ${employee[object][i]["orderNo"] || ""}
+                                                                                                                                                                        </td>`)
+
+                        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                              </td>`)
+                    } else if (object == "probation" || object == "regularisation") {
+                        $(tableName).append(`<td data-label=${"designation"}>
+            ${getNameById("designation",employee[object][i]["designation"],"")}
+        </td>`)
+                        $(tableName).append(`<td data-label=${"declaredOn"}>
+
+                                  ${employee[object][i]["declaredOn"] || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"orderNo"}>
+                          ${employee[object][i]["orderNo"]}                                                               </td>`)
+                        $(tableName).append(`<td data-label=${"orderDate"}>
+
+                                  ${employee[object][i]["orderDate"] || ""}
+                                                </td>`)
+                        $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                          ${employee[object][i]["remarks"] || ""}
+                                                                                        </td>`)
+                        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                              </td>`)
+                    } else if (object == "education") {
+
+                        $(tableName).append(`<td data-label=${"qualification"}>
+
+                                  ${employee[object][i]["qualification"] || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"majorSubject"}>
+                          ${employee[object][i]["majorSubject"] || ""}                                                               </td>`)
+                        $(tableName).append(`<td data-label=${"yearOfPassing"}>
+
+                                  ${employee[object][i]["yearOfPassing"] || ""}
+                                                </td>`)
+                        $(tableName).append(`<td data-label=${"university"}>
+
+                                                                          ${employee[object][i]["university"] || ""}
+                                                                                        </td>`)
+                        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                              </td>`)
+                    } else if (object == "technical") {
+
+                        $(tableName).append(`<td data-label=${"skill"}>
+
+                                  ${employee[object][i]["skill"] || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"grade"}>
+                          ${employee[object][i]["grade"] || ""}                                                               </td>`)
+                        $(tableName).append(`<td data-label=${"yearOfPassing"}>
+
+                                  ${employee[object][i]["yearOfPassing"] || ""}
+                                                </td>`)
+                        $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                          ${employee[object][i]["remarks"] || ""}
+                                                                                        </td>`)
+                        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                              </td>`)
+                    } else if (object == "test") {
+
+                        $(tableName).append(`<td data-label=${"test"}>
+
+                                  ${employee[object][i]["test"] || ""}
+                            </td>`)
+                        $(tableName).append(`<td data-label=${"yearOfPassing"}>
+
+                                  ${employee[object][i]["yearOfPassing"] || ""}
+                                                </td>`)
+                        $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                          ${employee[object][i]["remarks"] || ""}
+                                                                                        </td>`)
+                        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                              </td>`)
+                    }
+
+                    if (getUrlVars()["type"] != "view") {
+                        $(tableName).append(`<td data-label="Action">
+                        <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
+                        <button type="button" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></button>
+                      </td>`);
+                    } else {
+                        $(tableName).append(`<td data-label="Action">
+                        NA
+                      </td>`);
+                    }
+
+                    $(tableName).append(`</tr>`);
+                }
+            }
+
+            function getHodDetails(object) {
+                var returnObj = "<ol>";
+                for (var i = 0; i < object.length; i++) {
+                    returnObj += `<li>${getNameById("department",object[i]["department"],"")}</li>`
+                }
+                returnObj += "</ol>";
+                return returnObj;
+            }
+
+            //common edit mark index
+            function markEditIndex(index = -1, modalName = "", object = "") {
+                editIndex = index;
+                $('#' + modalName).modal('show');
+                //assignments  details modal when it edit modalName
+                $('#' + modalName).on('shown.bs.modal', function(e) {
+                        if (editIndex != -1) {
+                            if (object == "jurisdictions") {
+                                //Get the boundary to get boundaryType
+                                commonApiGet("egov-location", "boundarys", "", {
+                                    "Boundary.id": employee[object][editIndex],
+                                    "Boundary.tenantId": tenantId
+                                }, function(err, res) {
+                                    if (res) {
+                                        var _bnd = res.Boundary;
+                                        if (_bnd && _bnd.length) {
+                                            var jType = _bnd[0]["boundaryType"].id;
+                                            commonApiPost("egov-location", "boundarys", "getByBoundaryType", {
+                                                boundaryTypeId: jType,
+                                                tenantId
+                                            }, function(err, res) {
+                                                if (res) {
+                                                    commonObject["jurisdictions_boundary"] = res.Boundary;
+                                                    if (jType == "CITY") {
+                                                        commonObject["juridictionTypeForCity"] = commonObject["jurisdictions_boundary"];
+                                                    } else if (jType == "WARD") {
+                                                        commonObject["juridictionTypeForWard"] = commonObject["jurisdictions_boundary"];
+                                                    } else {
+                                                        commonObject["juridictionTypeForZone"] = commonObject["jurisdictions_boundary"];
+                                                    }
+                                                    $(`#jurisdictions\\.boundary`).html(`<option value=''>Select</option>`)
+
+                                                    for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
+                                                        $(`#jurisdictions\\.boundary`).append(`<option value='${commonObject["jurisdictions_boundary"][i]['id']}'>${commonObject["jurisdictions_boundary"][i]['name']}</option>`)
+                                                    }
+
+                                                    employeeSubObject[object] = {
+                                                        jurisdictionsType: jType,
+                                                        boundary: employee[object][editIndex]
+                                                    }
+
+                                                    for (key in employeeSubObject[object]) {
+                                                        $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
+                                for (var key in employeeSubObject[object]) {
+                                    if (key == "documents")
+                                        continue;
+                                    else if (key == "position") {
+                                        setTimeout(function(key, object) {
+                                            getPositions({
+                                                id: "assignments.department"
+                                            });
+                                            $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                                        }, 200, key, object);
+                                    }
+
+                                    if (key == "isPrimary") {
+                                        if (employeeSubObject[object][key] == "true" || employeeSubObject[object][key] == true) {
+                                            $('[data-primary="yes"]').prop("checked", true);
+                                            $('[data-primary="no"]').prop("checked", false);
+                                        } else {
+                                            $('[data-primary="yes"]').prop("checked", false);
+                                            $('[data-primary="no"]').prop("checked", true);
+                                        }
+                                    } else if (key == "hod") {
+                                        if ((employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length) || (employeeSubObject[object][key] == true || employeeSubObject[object][key] == "true")) {
+                                            $('[data-hod="yes"]').prop("checked", true);
+                                            $('[data-hod="no"]').prop("checked", false);
+                                            $("#departments").show();
+                                            tempListBox = Object.assign([], employeeSubObject[object][key]);
+                                            $("#assignments\\.mainDepartments option:selected").removeAttr("selected");
+                                            var _val = [];
+                                            for (var i = 0; i < employeeSubObject[object][key].length; i++) {
+                                                $("#assignments\\.mainDepartments option[value=" + employeeSubObject[object][key][i].department + "]").attr("selected", true);
+                                                _val.push(employeeSubObject[object][key][i].department);
+                                            }
+                                            $("#assignments\\.mainDepartments").val(_val);
+                                        } else {
+                                            $('[data-hod="yes"]').prop("checked", false);
+                                            $('[data-hod="no"]').prop("checked", true);
+                                        }
+                                    } else
+                                        $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+
+                                }
+                            }
+                        }
+                    })
+                    // alert("fired");
+            }
+
+            //common Delete
+            function commonDeleteFunction(tableName, modalName, object, index) {
+                employee[object].splice(index, 1);
+                updateTable(tableName, modalName, object);
+            }
+
+            function addMandatoryStart(validationObject, prefix = "") {
+                for (var key in validationObject) {
+                    if (prefix === "") {
+                        if (validationObject[key].required) {
+                            $(`label[for=${key}]`).append(`<span> *</span>`);
+                        }
+                    } else {
+                        if (validationObject[key].required) {
+                            $(`label[for=${prefix}\\.${key}]`).append(`<span> *</span>`);
+                        }
+                    }
+                    // $(`#${key}`).attr("disabled",true);
+                };
+            }
+
+            function getPositions(_this) {
+                    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
+                        if (employeeSubObject["assignments"].isPrimary == "true") {
+                            if ($("#assignments\\.fromDate").val()) {
+                                var _date = $("#assignments\\.fromDate").val();
+                                commonApiPost("hr-masters", "vacantpositions", "_search", {
+                                    tenantId,
+                                    departmentId: $("#assignments\\.department").val(),
+                                    designationId: $("#assignments\\.designation").val(),
+                                    asOnDate: _date
+                                }, function(err, res) {
+                                    if (res) {
+                                        commonObject["assignments_position"] = res.Position;
+                                        $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+                                        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+                                            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            commonApiPost("hr-masters", "positions", "_search", {
+                                tenantId,
+                                departmentId: $("#assignments\\.department").val(),
+                                designationId: $("#assignments\\.designation").val()
+                            }, function(err, res) {
+                                if (res) {
+                                    commonObject["assignments_position"] = res.Position;
+                                    $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+                                    for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+                                        $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
+
+                if (getUrlVars()["type"] == "update") {
+                    try {
+                        if (getUrlVars()["id"]) {
+                            commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                                tenantId
+                            }, function(err, res) {
+                                var currentEmployee = res.Employee;
+                                showAndPrint(currentEmployee);
+                            });
+                        } else {
+                            commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                                tenantId
+                            }, function(err, res) {
+                                var obj = res.Employee[0];
+                                commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                    tenantId
+                                }, function(err, res2) {
+                                    var currentEmployee = res2.Employee;
+                                    showAndPrint(currentEmployee);
+                                });
+                            });
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+
+                function showAndPrint(currentEmployee) {
+                    employee = currentEmployee;
+                    $("#code").prop("disabled", true);
+                    printValue("", currentEmployee);
+                    displayFiles(employee);
+
+                    if (currentEmployee["assignments"].length > 0) {
+                        updateTable("#agreementTableBody", 'assignmentDetailModal', "assignments")
+                    }
+
+                    if (currentEmployee["jurisdictions"].length > 0) {
+                        updateTable("#jurisdictionTableBody", 'jurisdictionDetailModal', "jurisdictions")
+                    }
+
+                    if (currentEmployee["serviceHistory"].length > 0) {
+                        updateTable("#serviceHistoryTableBody", 'serviceHistoryDetailModal', "serviceHistory")
+                    }
+
+                    if (currentEmployee["probation"].length > 0) {
+                        updateTable("#probationTableBody", 'probationDetailModal', "probation")
+                    }
+
+                    if (currentEmployee["regularisation"].length > 0) {
+                        updateTable("#regularisationTableBody", 'regularisationDetailModal', "regularisation")
+                    }
+
+                    if (currentEmployee["education"].length > 0) {
+                        updateTable("#educationTableBody", 'educationDetailModal', "education")
+                    }
+
+                    if (currentEmployee["technical"].length > 0) {
+                        updateTable("#technicalTableBody", 'technicalDetailModal', "technical")
+                    }
+
+                    if (currentEmployee["test"].length > 0) {
+                        updateTable("#testTableBody", '#testDetailModal', "test")
+                    }
+                }
+
+                if (getUrlVars()["type"] == "view") {
+                    try {
+
+                        if (getUrlVars()["id"]) {
+                            commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                                tenantId
+                            }, function(err, res) {
+                                var currentEmployee = res.Employee;
+                                showAndPrint2(currentEmployee);
+                            });
+                        } else {
+                            commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                                tenantId
+                            }, function(err, res) {
+                                var obj = res.Employee[0];
+                                commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                    tenantId
+                                }, function(err, res2) {
+                                    var currentEmployee = res2.Employee;
+                                    showAndPrint2(currentEmployee);
+                                })
+                            });
+                        }
+
+                        $("#createEmployeeForm input").prop("disabled", true);
+
+                        $("#createEmployeeForm select").prop("disabled", true);
+
+                        $("#createEmployeeForm textarea").prop("disabled", true);
+
+                        $("#addEmployee").hide();
+
+                        $(".btn-default").hide();
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+
+                function showAndPrint2(currentEmployee) {
+                    employee = currentEmployee;
+                    printValue("", currentEmployee);
+                    displayFiles(employee);
+
+                    if (currentEmployee["assignments"].length > 0) {
+                        updateTable("#agreementTableBody", 'xyz', "assignments")
+                    }
+
+                    if (currentEmployee["jurisdictions"].length > 0) {
+                        updateTable("#jurisdictionTableBody", 'xyz', "jurisdictions")
+                    }
+
+                    if (currentEmployee["serviceHistory"].length > 0) {
+                        updateTable("#serviceHistoryTableBody", 'xyz', "serviceHistory")
+                    }
+
+                    if (currentEmployee["probation"].length > 0) {
+                        updateTable("#probationTableBody", 'xyz', "probation")
+                    }
+
+                    if (currentEmployee["regularisation"].length > 0) {
+                        updateTable("#regularisationTableBody", 'xyz', "regularisation")
+                    }
+
+                    if (currentEmployee["education"].length > 0) {
+                        updateTable("#educationTableBody", 'xyz', "education")
+                    }
+
+                    if (currentEmployee["technical"].length > 0) {
+                        updateTable("#technicalTableBody", 'xyz', "technical")
+                    }
+
+                    if (currentEmployee["test"].length > 0) {
+                        updateTable("#testTableBody", 'xyz', "test")
+                    }
+                }
+
+                function printValue(object = "", values) {
+                    if (object != "") {
+
+                    } else {
+                        for (var key in values) {
+                            if (key == "documents") continue;
+                            if (typeof values[key] === "object" && key == "user") {
+                                for (ckey in values[key]) {
+                                    if (values[key][ckey]) {
+                                        if (["signature", "photo"].indexOf(ckey) > -1) continue;
+                                        //Get description
+                                        if (ckey == "dob") {
+                                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
+
+                                        } else if (ckey == "active") {
+                                            if ([true, "true"].indexOf(values[key][ckey]) > -1) {
+                                                $('[data-active="yes"]').prop("checked", true);
+                                            } else {
+                                                $('[data-active="no"]').prop("checked", false);
+                                            }
+                                        } else {
+                                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
+
+                                        }
+                                    }
+                                }
+                            } else if (key == "physicallyDisabled") {
+                                if ([true, "true"].indexOf(values[key]) > -1) {
+                                    $('[data-ph="yes"]').prop("checked", true);
+                                } else {
+                                    $('[data-ph="no"]').prop("checked", true);
+                                }
+                            } else if (key == "bank" && values[key]) {
+                                commonApiPost("egf-masters", "bankbranches", "_search", {
+                                    tenantId,
+                                    "bank.id": values[key]
+                                }, function(err, res) {
+                                    if (res) {
+                                        commonObject["bankbranches"] = res["bankBranches"];
+                                        $(`#bankBranch`).html(`<option value=''>Select</option>`)
+                                        for (var i = 0; i < commonObject["bankbranches"].length; i++) {
+                                            $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
+                                        }
+                                        $("[name='" + key + "']").val(values[key] ? values[key] : "");
+                                    }
+                                })
+                            } else if (values[key]) {
+                                $("[name='" + key + "']").val(values[key] ? values[key] : "");
+                            } else {
+
+                            }
+                        }
+                    }
+                }
+
+
+                function displayFiles(employee) {
+                    var tBody = "#fileBody",
+                        count = 1;
+                    $(tBody).html("");
+
+                    if (employee.user && employee.user.signature) {
+                        appendTr(tBody, count, "Signature", employee.user.signature);
+                        count++;
+                    }
+
+                    if (employee.user && employee.user.photo) {
+                        appendTr(tBody, count, "Photo", employee.user.photo);
+                        count++;
+                    }
+
+                    for (var key in employee) {
+                        if (key == "documents" && employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
+                            for (var i = 0; i < employee[key].length; i++) {
+                                appendTr(tBody, count, "Documents", employee[key][i]);
+                                count++;
+                            }
+                        } else if (employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
+                            for (var i = 0; i < employee[key].length; i++) {
+                                if (typeof employee[key][i] == "object") {
+                                    for (key2 in employee[key][i]) {
+                                        if (key2 == "documents" && employee[key][i][key2].constructor == Array && employee[key][i][key2].length > 0) {
+                                            for (var j = 0; j < employee[key][i][key2].length; j++) {
+                                                appendTr(tBody, count, key, employee[key][i][key2][j]);
+                                                count++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function appendTr(tBodyName, count, name, fileId) {
+                    if ($("#fileTable").css('display') == 'none')
+                        $("#fileTable").show();
+
+                    $(tBodyName).append(`<tr data-key=${count}>
+                            <td>
+                              ${count}
+                            </td>
+                            <td>
+                              ${titleCase(name)}
+                            </td>
+                            <td>
+                              <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                                Download
+                              </a>
+                            </td>
+                            <td>
+                              ${getUrlVars()["type"] == "view" ? "" : "<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
+                            </td>
+                          </tr>`);
+              }
+
+              function deleteFile(e, name, fileId, count) {
+                e.stopPropagation();
+
+                if($("[data-key='"+ count +"']").css("backgroundColor") == "rgb(211, 211, 211)") {
+                  var ind = filesToBeDeleted[name.toLowerCase()].indexOf(fileId);
+                  filesToBeDeleted[name.toLowerCase()].splice(ind, 1);
+                  $("[data-key='"+ count +"']").css("backgroundColor","#ffffff");
+                  $("[data-key='"+ count +"']").css("textDecoration","");
+                  $("[data-key='"+ count +"'] button").text("Delete");
+                } else {
+                  if(!filesToBeDeleted[name.toLowerCase()])
+                    filesToBeDeleted[name.toLowerCase()] = [];
+                  filesToBeDeleted[name.toLowerCase()].push(fileId);
+                  $("[data-key='"+ count +"']").css("backgroundColor","#d3d3d3");
+                  $("[data-key='"+ count +"']").css("textDecoration","line-through");
+                  $("[data-key='"+ count +"'] button").text("Undo");
+                }
+              }
+              
             function loadUI() {
+
                 commonApiPost("hr-masters", "hrconfigurations", "_search", {
                     tenantId
                 }, function(err, res) {
@@ -1592,70 +2358,6 @@ $(document).ready(function() {
                 //initial setup
                 $("#departments").hide();
 
-                //it will split object string where it has .
-                function fillValueToObject(currentState) {
-                    if (currentState.id.includes(".")) {
-
-                        var splitResult = currentState.id.split(".");
-                        if (splitResult[0] === "user") {
-                            if (currentState.id == "user.active") {
-                                employee[splitResult[0]][splitResult[1]] = currentState.value;
-                            } else if (currentState.type === "file") {
-                                employee[splitResult[0]][splitResult[1]] = currentState.files;
-                            } else {
-                                employee[splitResult[0]][splitResult[1]] = currentState.value;
-                            }
-                        } else {
-                            if (currentState.id == "assignments.mainDepartments") {
-                                tempListBox = [];
-                                for (var i = 0; i < $(currentState).val().length; i++) {
-                                    tempListBox.push({
-                                        department: $(currentState).val()[i]
-                                    })
-                                }
-
-
-                            } else if (currentState.type === "file") {
-                                if (!employeeSubObject[splitResult[0]][splitResult[1]])
-                                    employeeSubObject[splitResult[0]][splitResult[1]] = [];
-                                for (var i = 0; i < currentState.files.length; i++) {
-                                    employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.files[i]);
-                                }
-                            } else
-                                employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
-                        }
-
-                    } else {
-                        if (currentState.id == "languagesKnown") {
-                            employee[currentState.id] = $(currentState).val();
-                        } else if (currentState.type === "file") {
-                            if (!employee[currentState.id])
-                                employee[currentState.id] = [];
-                            for (var i = 0; i < currentState.files.length; i++) {
-                                employee[currentState.id].push(currentState.files[i]);
-                            }
-                        } else {
-                            employee[currentState.id] = currentState.value;
-                        }
-                    }
-                }
-
-                function clearModalInput(object, properties) {
-                    for (var variable in properties) {
-                        if (properties.hasOwnProperty(variable)) {
-                            if (variable == "isPrimary") {
-                                $('[data-primary="yes"]').prop("checked", false);
-                                $('[data-primary="no"]').prop("checked", true);
-                            } else if (variable == "hod") {
-                                $('#departments').hide();
-                                $('[data-hod="yes"]').prop("checked", false);
-                                $('[data-hod="no"]').prop("checked", true);
-                            } else
-                                $("#" + object + "\\." + variable).val(properties[variable]);
-                        }
-                    }
-                }
-
                 //need to cleat editIndex and temprory pbject
                 $('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
                     $('.error-p').hide();
@@ -1773,379 +2475,6 @@ $(document).ready(function() {
                     clearModalInput("test", employeeSubObject["test"]);
 
                 })
-
-
-                function enableAndDisable(id) {
-                    $(`#${id}`).toggle();
-                }
-
-                //common update
-                function updateTable(tableName, modalName, object) {
-                    $(tableName).html(``);
-                    for (var i = 0; i < employee[object].length; i++) {
-                        $(tableName).append(`<tr>`);
-                        if (object == "assignments") {
-                            $(tableName).append(`<td data-label=${"fromDate"}>
-
-                                  ${employee[object][i]["fromDate"] || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"toDate"}>
-
-                                  ${employee[object][i]["toDate"] || ""}
-                                                </td>`)
-                            $(tableName).append(`<td data-label=${"department"}>
-                                  ${getNameById("department",employee[object][i]["department"],"") || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"designation"}>
-                                  ${getNameById("designation",employee[object][i]["designation"],"") || ""}
-                              </td>`)
-                            try {
-                                assignments_position = commonApiPost("hr-masters", "positions", "_search", {
-                                    tenantId,
-                                    id: employee[object][i]["position"]
-                                }).responseJSON["Position"] || [];
-                            } catch (e) {
-                                console.log(e);
-                                assignments_position = [];
-                            }
-                            $(tableName).append(`<td data-label=${"position"}>
-
-                                                        ${assignments_position.length>0?assignments_position[0]["name"]:""}
-                              </td>`)
-                            $(tableName).append(`<td data-label=${"isPrimary"}>
-
-                                                        ${employee[object][i]["isPrimary"] || ""}
-                                                  </td>`)
-                            $(tableName).append(`<td data-label=${"fund"}>
-                                                                            ${getNameById("fund",employee[object][i]["fund"],"") || ""}
-                                                                      </td>`)
-                            $(tableName).append(`<td data-label=${"function"}>
-                                                                                                ${getNameById("function",employee[object][i]["function"],"") || ""}
-                                                                                          </td>`)
-                            $(tableName).append(`<td data-label=${"functionary"}>
-                                                                                                                    ${getNameById("functionary",employee[object][i]["functionary"],"") || ""}
-                                                                                                              </td>`)
-                            $(tableName).append(`<td data-label=${"grade"}>
-                                                                                                                                        ${getNameById("grade",employee[object][i]["grade"],"") || ""}
-                                                                                                                                  </td>`)
-                            $(tableName).append(`<td data-label=${"hod"}>
-        ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
-
-        </td>`)
-
-                            $(tableName).append(`<td data-label=${"govtOrderNumber"}>
-
-                                                                                                                                                                              ${employee[object][i]["govtOrderNumber"] || ""}
-                                                                                                                                                                        </td>`)
-                            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-
-                        } else if (object == "jurisdictions") {
-                            try {
-                                commonApiGet("egov-location", "boundarys", "", {
-                                    "Boundary.id": (typeof employee[object][i] == "object" ? employee[object][i]["boundary"] : employee[object][i]),
-                                    "Boundary.tenantId": tenantId
-                                }, function(err, res) {
-                                    if (res) {
-                                        bnd = res.Boundary;
-                                        $(tableName).append(`<td data-label=${"jurisdictionsType"}>
-                                    ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
-                                    </td>`)
-                                        $(tableName).append(`<td data-label=${"boundary"}>
-                                          ${bnd.length > 0 ? bnd[0]["name"] : ""}
-                                    </td>`)
-                                    }
-                                });
-                            } catch (e) {
-                                console.log(e);
-                                bnd = [];
-                            }
-                        } else if (object == "serviceHistory") {
-                            $(tableName).append(`<td data-label=${"serviceInfo"}>
-
-                                  ${employee[object][i]["serviceInfo"] || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"serviceFrom"}>
-
-                                  ${employee[object][i]["serviceFrom"] || ""}
-                                                </td>`)
-                            $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"]}
-                                                                                        </td>`)
-                            $(tableName).append(`<td data-label=${"orderNo"}>
-
-                                                                                                                                                          ${employee[object][i]["orderNo"] || ""}
-                                                                                                                                                                        </td>`)
-
-                            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-                        } else if (object == "probation" || object == "regularisation") {
-                            $(tableName).append(`<td data-label=${"designation"}>
-            ${getNameById("designation",employee[object][i]["designation"],"")}
-        </td>`)
-                            $(tableName).append(`<td data-label=${"declaredOn"}>
-
-                                  ${employee[object][i]["declaredOn"] || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"orderNo"}>
-                          ${employee[object][i]["orderNo"]}                                                               </td>`)
-                            $(tableName).append(`<td data-label=${"orderDate"}>
-
-                                  ${employee[object][i]["orderDate"] || ""}
-                                                </td>`)
-                            $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"] || ""}
-                                                                                        </td>`)
-                            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-                        } else if (object == "education") {
-
-                            $(tableName).append(`<td data-label=${"qualification"}>
-
-                                  ${employee[object][i]["qualification"] || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"majorSubject"}>
-                          ${employee[object][i]["majorSubject"] || ""}                                                               </td>`)
-                            $(tableName).append(`<td data-label=${"yearOfPassing"}>
-
-                                  ${employee[object][i]["yearOfPassing"] || ""}
-                                                </td>`)
-                            $(tableName).append(`<td data-label=${"university"}>
-
-                                                                          ${employee[object][i]["university"] || ""}
-                                                                                        </td>`)
-                            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-                        } else if (object == "technical") {
-
-                            $(tableName).append(`<td data-label=${"skill"}>
-
-                                  ${employee[object][i]["skill"] || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"grade"}>
-                          ${employee[object][i]["grade"] || ""}                                                               </td>`)
-                            $(tableName).append(`<td data-label=${"yearOfPassing"}>
-
-                                  ${employee[object][i]["yearOfPassing"] || ""}
-                                                </td>`)
-                            $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"] || ""}
-                                                                                        </td>`)
-                            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-                        } else if (object == "test") {
-
-                            $(tableName).append(`<td data-label=${"test"}>
-
-                                  ${employee[object][i]["test"] || ""}
-                            </td>`)
-                            $(tableName).append(`<td data-label=${"yearOfPassing"}>
-
-                                  ${employee[object][i]["yearOfPassing"] || ""}
-                                                </td>`)
-                            $(tableName).append(`<td data-label=${"remarks"}>
-
-                                                                          ${employee[object][i]["remarks"] || ""}
-                                                                                        </td>`)
-                            $(tableName).append(`<td data-label=${"documents"}>
-
-                                                                                                                                                                                                    ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
-                                                                                                                                                                                              </td>`)
-                        }
-
-                        if (getUrlVars()["type"] != "view") {
-                            $(tableName).append(`<td data-label="Action">
-                        <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
-                        <button type="button" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></button>
-                      </td>`);
-                        } else {
-                            $(tableName).append(`<td data-label="Action">
-                        NA
-                      </td>`);
-                        }
-
-                        $(tableName).append(`</tr>`);
-                    }
-                }
-
-                function getHodDetails(object) {
-                    var returnObj = "<ol>";
-                    for (var i = 0; i < object.length; i++) {
-                        returnObj += `<li>${getNameById("department",object[i]["department"],"")}</li>`
-                    }
-                    returnObj += "</ol>";
-                    return returnObj;
-                }
-
-                //common edit mark index
-                function markEditIndex(index = -1, modalName = "", object = "") {
-                    editIndex = index;
-                    $('#' + modalName).modal('show');
-                    //assignments  details modal when it edit modalName
-                    $('#' + modalName).on('shown.bs.modal', function(e) {
-                            if (editIndex != -1) {
-                                if (object == "jurisdictions") {
-                                    //Get the boundary to get boundaryType
-                                    commonApiGet("egov-location", "boundarys", "", {
-                                        "Boundary.id": employee[object][editIndex],
-                                        "Boundary.tenantId": tenantId
-                                    }, function(err, res) {
-                                        if (res) {
-                                            var _bnd = res.Boundary;
-                                            if (_bnd && _bnd.length) {
-                                                var jType = _bnd[0]["boundaryType"].id;
-                                                commonApiPost("egov-location", "boundarys", "getByBoundaryType", {
-                                                    boundaryTypeId: jType,
-                                                    tenantId
-                                                }, function(err, res) {
-                                                    if (res) {
-                                                        commonObject["jurisdictions_boundary"] = res.Boundary;
-                                                        if (jType == "CITY") {
-                                                            commonObject["juridictionTypeForCity"] = commonObject["jurisdictions_boundary"];
-                                                        } else if (jType == "WARD") {
-                                                            commonObject["juridictionTypeForWard"] = commonObject["jurisdictions_boundary"];
-                                                        } else {
-                                                            commonObject["juridictionTypeForZone"] = commonObject["jurisdictions_boundary"];
-                                                        }
-                                                        $(`#jurisdictions\\.boundary`).html(`<option value=''>Select</option>`)
-
-                                                        for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
-                                                            $(`#jurisdictions\\.boundary`).append(`<option value='${commonObject["jurisdictions_boundary"][i]['id']}'>${commonObject["jurisdictions_boundary"][i]['name']}</option>`)
-                                                        }
-
-                                                        employeeSubObject[object] = {
-                                                            jurisdictionsType: jType,
-                                                            boundary: employee[object][editIndex]
-                                                        }
-
-                                                        for (key in employeeSubObject[object]) {
-                                                            $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
-                                    for (var key in employeeSubObject[object]) {
-                                        if (key == "documents")
-                                            continue;
-                                        else if (key == "position") {
-                                            setTimeout(function(key, object) {
-                                                getPositions({
-                                                    id: "assignments.department"
-                                                });
-                                                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-                                            }, 200, key, object);
-                                        }
-
-                                        if (key == "isPrimary") {
-                                            if (employeeSubObject[object][key] == "true" || employeeSubObject[object][key] == true) {
-                                                $('[data-primary="yes"]').prop("checked", true);
-                                                $('[data-primary="no"]').prop("checked", false);
-                                            } else {
-                                                $('[data-primary="yes"]').prop("checked", false);
-                                                $('[data-primary="no"]').prop("checked", true);
-                                            }
-                                        } else if (key == "hod") {
-                                            if ((employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length) || (employeeSubObject[object][key] == true || employeeSubObject[object][key] == "true")) {
-                                                $('[data-hod="yes"]').prop("checked", true);
-                                                $('[data-hod="no"]').prop("checked", false);
-                                                $("#departments").show();
-                                                tempListBox = Object.assign([], employeeSubObject[object][key]);
-                                                $("#assignments\\.mainDepartments option:selected").removeAttr("selected");
-                                                var _val = [];
-                                                for (var i = 0; i < employeeSubObject[object][key].length; i++) {
-                                                    $("#assignments\\.mainDepartments option[value=" + employeeSubObject[object][key][i].department + "]").attr("selected", true);
-                                                    _val.push(employeeSubObject[object][key][i].department);
-                                                }
-                                                $("#assignments\\.mainDepartments").val(_val);
-                                            } else {
-                                                $('[data-hod="yes"]').prop("checked", false);
-                                                $('[data-hod="no"]').prop("checked", true);
-                                            }
-                                        } else
-                                            $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-
-                                    }
-                                }
-                            }
-                        })
-                        // alert("fired");
-                }
-
-                //common add and update
-                function commonAddAndUpdate(tableName, modalName, object) {
-                    // if(switchValidation(object))
-                    if ($("#createEmployeeForm").valid()) {
-                        if (checkIfNoDup(employee, object, employeeSubObject[object])) {
-
-                            if (validateDates(employee, object, employeeSubObject[object])) {
-                                if (editIndex != -1) {
-                                    if (object == "assignments") {
-                                        var hod_value = employeeSubObject[object]["hod"];
-                                        employeeSubObject[object]["hod"] = [];
-                                        if (((hod_value.constructor == Array && hod_value.length) || [true, "true"].indexOf(hod_value) > -1) && tempListBox.length > 0) {
-                                            tempListBox.map(function(val) {
-                                                employeeSubObject[object]["hod"].push(val);
-                                            })
-                                            tempListBox = [];
-                                        }
-                                    }
-                                    employee[object][editIndex] = employeeSubObject[object];
-                                    updateTable("#" + tableName, modalName, object);
-                                } else {
-                                    if (object == "assignments") {
-                                        var hod_value = employeeSubObject[object]["hod"];
-                                        employeeSubObject[object]["hod"] = [];
-                                        if ([true, "true"].indexOf(hod_value) > -1 && tempListBox.length > 0) {
-                                            tempListBox.map(function(val) {
-                                                employeeSubObject[object]["hod"].push(val);
-                                            })
-                                            tempListBox = [];
-                                        }
-                                        employee[object].push(Object.assign({}, employeeSubObject[object]));
-                                        updateTable("#" + tableName, modalName, object);
-                                    } else {
-                                        employee[object].push(Object.assign({}, employeeSubObject[object]));
-                                        updateTable("#" + tableName, modalName, object);
-                                    }
-
-                                }
-                                $(`#${modalName}`).modal("hide");
-                            } else {
-                                $(".error-p").text("Assignment dates overlapping.");
-                                $(".error-p").show();
-                            }
-                        } else {
-                            $(".error-p").text("Duplicate entry not allowed.");
-                            $(".error-p").show();
-                        }
-                    } else {
-                        return;
-                    }
-                }
-
-                //common Delete
-                function commonDeleteFunction(tableName, modalName, object, index) {
-                    employee[object].splice(index, 1);
-                    updateTable(tableName, modalName, object);
-                }
-
 
                 final_validatin_rules = Object.assign(validation_rules, commom_fields_rules);
                 for (var key in final_validatin_rules) {
@@ -2307,22 +2636,6 @@ $(document).ready(function() {
                     }
                 })
 
-
-                function addMandatoryStart(validationObject, prefix = "") {
-                    for (var key in validationObject) {
-                        if (prefix === "") {
-                            if (validationObject[key].required) {
-                                $(`label[for=${key}]`).append(`<span> *</span>`);
-                            }
-                        } else {
-                            if (validationObject[key].required) {
-                                $(`label[for=${prefix}\\.${key}]`).append(`<span> *</span>`);
-                            }
-                        }
-                        // $(`#${key}`).attr("disabled",true);
-                    };
-                }
-
                 addMandatoryStart(assignmentDetailValidation, "assignments");
 
                 addMandatoryStart(jurisdictions, "jurisdictions");
@@ -2340,322 +2653,5 @@ $(document).ready(function() {
                 addMandatoryStart(technical, "technical");
 
                 addMandatoryStart(user, "user");
-
-                function getPositions(_this) {
-                    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
-                        if (employeeSubObject["assignments"].isPrimary == "true") {
-                            if ($("#assignments\\.fromDate").val()) {
-                                var _date = $("#assignments\\.fromDate").val();
-                                commonApiPost("hr-masters", "vacantpositions", "_search", {
-                                    tenantId,
-                                    departmentId: $("#assignments\\.department").val(),
-                                    designationId: $("#assignments\\.designation").val(),
-                                    asOnDate: _date
-                                }, function(err, res) {
-                                    if (res) {
-                                        commonObject["assignments_position"] = res.Position;
-                                        $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
-                                        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
-                                            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-                                        }
-                                    }
-                                });
-                            }
-                        } else {
-                            commonApiPost("hr-masters", "positions", "_search", {
-                                tenantId,
-                                departmentId: $("#assignments\\.department").val(),
-                                designationId: $("#assignments\\.designation").val()
-                            }, function(err, res) {
-                                if (res) {
-                                    commonObject["assignments_position"] = res.Position;
-                                    $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
-                                    for (var i = 0; i < commonObject["assignments_position"].length; i++) {
-                                        $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-
-
-                if (getUrlVars()["type"] == "update") {
-                    try {
-                        if (getUrlVars()["id"]) {
-                            commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                                tenantId
-                            }, function(err, res) {
-                                var currentEmployee = res.Employee;
-                                showAndPrint(currentEmployee);
-                            });
-                        } else {
-                            commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                                tenantId
-                            }, function(err, res) {
-                                var obj = res.Employee[0];
-                                commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                    tenantId
-                                }, function(err, res2) {
-                                    var currentEmployee = res2.Employee;
-                                    showAndPrint(currentEmployee);
-                                });
-                            });
-                        }
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-
-                function showAndPrint(currentEmployee) {
-                    employee = currentEmployee;
-                    $("#code").prop("disabled", true);
-                    printValue("", currentEmployee);
-                    displayFiles(employee);
-
-                    if (currentEmployee["assignments"].length > 0) {
-                        updateTable("#agreementTableBody", 'assignmentDetailModal', "assignments")
-                    }
-
-                    if (currentEmployee["jurisdictions"].length > 0) {
-                        updateTable("#jurisdictionTableBody", 'jurisdictionDetailModal', "jurisdictions")
-                    }
-
-                    if (currentEmployee["serviceHistory"].length > 0) {
-                        updateTable("#serviceHistoryTableBody", 'serviceHistoryDetailModal', "serviceHistory")
-                    }
-
-                    if (currentEmployee["probation"].length > 0) {
-                        updateTable("#probationTableBody", 'probationDetailModal', "probation")
-                    }
-
-                    if (currentEmployee["regularisation"].length > 0) {
-                        updateTable("#regularisationTableBody", 'regularisationDetailModal', "regularisation")
-                    }
-
-                    if (currentEmployee["education"].length > 0) {
-                        updateTable("#educationTableBody", 'educationDetailModal', "education")
-                    }
-
-                    if (currentEmployee["technical"].length > 0) {
-                        updateTable("#technicalTableBody", 'technicalDetailModal', "technical")
-                    }
-
-                    if (currentEmployee["test"].length > 0) {
-                        updateTable("#testTableBody", '#testDetailModal', "test")
-                    }
-                }
-
-                if (getUrlVars()["type"] == "view") {
-                    try {
-
-                        if (getUrlVars()["id"]) {
-                            commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                                tenantId
-                            }, function(err, res) {
-                                var currentEmployee = res.Employee;
-                                showAndPrint2(currentEmployee);
-                            });
-                        } else {
-                            commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                                tenantId
-                            }, function(err, res) {
-                                var obj = res.Employee[0];
-                                commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                    tenantId
-                                }, function(err, res2) {
-                                    var currentEmployee = res2.Employee;
-                                    showAndPrint2(currentEmployee);
-                                })
-                            });
-                        }
-
-                        $("#createEmployeeForm input").prop("disabled", true);
-
-                        $("#createEmployeeForm select").prop("disabled", true);
-
-                        $("#createEmployeeForm textarea").prop("disabled", true);
-
-                        $("#addEmployee").hide();
-
-                        $(".btn-default").hide();
-
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-
-                function showAndPrint2(currentEmployee) {
-                    employee = currentEmployee;
-                    printValue("", currentEmployee);
-                    displayFiles(employee);
-
-                    if (currentEmployee["assignments"].length > 0) {
-                        updateTable("#agreementTableBody", 'xyz', "assignments")
-                    }
-
-                    if (currentEmployee["jurisdictions"].length > 0) {
-                        updateTable("#jurisdictionTableBody", 'xyz', "jurisdictions")
-                    }
-
-                    if (currentEmployee["serviceHistory"].length > 0) {
-                        updateTable("#serviceHistoryTableBody", 'xyz', "serviceHistory")
-                    }
-
-                    if (currentEmployee["probation"].length > 0) {
-                        updateTable("#probationTableBody", 'xyz', "probation")
-                    }
-
-                    if (currentEmployee["regularisation"].length > 0) {
-                        updateTable("#regularisationTableBody", 'xyz', "regularisation")
-                    }
-
-                    if (currentEmployee["education"].length > 0) {
-                        updateTable("#educationTableBody", 'xyz', "education")
-                    }
-
-                    if (currentEmployee["technical"].length > 0) {
-                        updateTable("#technicalTableBody", 'xyz', "technical")
-                    }
-
-                    if (currentEmployee["test"].length > 0) {
-                        updateTable("#testTableBody", 'xyz', "test")
-                    }
-                }
-
-                function printValue(object = "", values) {
-                    if (object != "") {
-
-                    } else {
-                        for (var key in values) {
-                            if (key == "documents") continue;
-                            if (typeof values[key] === "object" && key == "user") {
-                                for (ckey in values[key]) {
-                                    if (values[key][ckey]) {
-                                        if (["signature", "photo"].indexOf(ckey) > -1) continue;
-                                        //Get description
-                                        if (ckey == "dob") {
-                                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
-
-                                        } else if (ckey == "active") {
-                                            if ([true, "true"].indexOf(values[key][ckey]) > -1) {
-                                                $('[data-active="yes"]').prop("checked", true);
-                                            } else {
-                                                $('[data-active="no"]').prop("checked", false);
-                                            }
-                                        } else {
-                                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
-
-                                        }
-                                    }
-                                }
-                            } else if (key == "physicallyDisabled") {
-                                if ([true, "true"].indexOf(values[key]) > -1) {
-                                    $('[data-ph="yes"]').prop("checked", true);
-                                } else {
-                                    $('[data-ph="no"]').prop("checked", true);
-                                }
-                            } else if (key == "bank" && values[key]) {
-                                commonApiPost("egf-masters", "bankbranches", "_search", {
-                                    tenantId,
-                                    "bank.id": values[key]
-                                }, function(err, res) {
-                                    if (res) {
-                                        commonObject["bankbranches"] = res["bankBranches"];
-                                        $(`#bankBranch`).html(`<option value=''>Select</option>`)
-                                        for (var i = 0; i < commonObject["bankbranches"].length; i++) {
-                                            $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
-                                        }
-                                        $("[name='" + key + "']").val(values[key] ? values[key] : "");
-                                    }
-                                })
-                            } else if (values[key]) {
-                                $("[name='" + key + "']").val(values[key] ? values[key] : "");
-                            } else {
-
-                            }
-                        }
-                    }
-                }
-
-
-                function displayFiles(employee) {
-                    var tBody = "#fileBody",
-                        count = 1;
-                    $(tBody).html("");
-
-                    if (employee.user && employee.user.signature) {
-                        appendTr(tBody, count, "Signature", employee.user.signature);
-                        count++;
-                    }
-
-                    if (employee.user && employee.user.photo) {
-                        appendTr(tBody, count, "Photo", employee.user.photo);
-                        count++;
-                    }
-
-                    for (var key in employee) {
-                        if (key == "documents" && employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
-                            for (var i = 0; i < employee[key].length; i++) {
-                                appendTr(tBody, count, "Documents", employee[key][i]);
-                                count++;
-                            }
-                        } else if (employee[key] && employee[key].constructor == Array && employee[key].length > 0) {
-                            for (var i = 0; i < employee[key].length; i++) {
-                                if (typeof employee[key][i] == "object") {
-                                    for (key2 in employee[key][i]) {
-                                        if (key2 == "documents" && employee[key][i][key2].constructor == Array && employee[key][i][key2].length > 0) {
-                                            for (var j = 0; j < employee[key][i][key2].length; j++) {
-                                                appendTr(tBody, count, key, employee[key][i][key2][j]);
-                                                count++;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                function appendTr(tBodyName, count, name, fileId) {
-                    if ($("#fileTable").css('display') == 'none')
-                        $("#fileTable").show();
-
-                    $(tBodyName).append(`<tr data-key=${count}>
-                            <td>
-                              ${count}
-                            </td>
-                            <td>
-                              ${titleCase(name)}
-                            </td>
-                            <td>
-                              <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
-                                Download
-                              </a>
-                            </td>
-                            <td>
-                              ${getUrlVars()["type"] == "view" ? "" : "<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
-                            </td>
-                          </tr>`);
-              }
-
-              function deleteFile(e, name, fileId, count) {
-                e.stopPropagation();
-
-                if($("[data-key='"+ count +"']").css("backgroundColor") == "rgb(211, 211, 211)") {
-                  var ind = filesToBeDeleted[name.toLowerCase()].indexOf(fileId);
-                  filesToBeDeleted[name.toLowerCase()].splice(ind, 1);
-                  $("[data-key='"+ count +"']").css("backgroundColor","#ffffff");
-                  $("[data-key='"+ count +"']").css("textDecoration","");
-                  $("[data-key='"+ count +"'] button").text("Delete");
-                } else {
-                  if(!filesToBeDeleted[name.toLowerCase()])
-                    filesToBeDeleted[name.toLowerCase()] = [];
-                  filesToBeDeleted[name.toLowerCase()].push(fileId);
-                  $("[data-key='"+ count +"']").css("backgroundColor","#d3d3d3");
-                  $("[data-key='"+ count +"']").css("textDecoration","line-through");
-                  $("[data-key='"+ count +"'] button").text("Undo");
-                }
-              }
             }
 });

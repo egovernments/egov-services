@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,8 +43,8 @@ public class EmployeeRepository {
     }
 
     public EmployeeRes getEmployeeForPositionAndTenantId(final Long posId, final LocalDate asOnDate, final String tenantId) {
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
-        return restTemplate.postForObject(employeesByPositionIdurl,wrapper,EmployeeRes.class, tenantId, posId, asOnDate);
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
+        return restTemplate.postForObject(employeesByPositionIdurl,wrapper,EmployeeRes.class, tenantId, posId, asOnDate.toString("dd/MM/yyyy"));
     }
 
     public EmployeeRes getEmployeeForUserIdAndTenantId(final Long userId,final String tenantId) {

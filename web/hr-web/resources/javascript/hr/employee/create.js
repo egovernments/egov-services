@@ -1439,7 +1439,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
 
                                         employeeSubObject[object] = {
                                             jurisdictionsType: jType,
-                                            boundary: employee[object][editIndex]
+                                            boundary: (typeof employee[object][editIndex] == "object" ? employee[object][editIndex]["boundary"] : employee[object][editIndex])
                                         }
 
                                         for (key in employeeSubObject[object]) {
@@ -1459,8 +1459,9 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                             setTimeout(function(key, object) {
                                 getPositions({
                                     id: "assignments.department"
+                                }, function() {
+                                    $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
                                 });
-                                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
                             }, 200, key, object);
                         }
 
@@ -1520,7 +1521,7 @@ function addMandatoryStart(validationObject, prefix = "") {
     };
 }
 
-function getPositions(_this) {
+function getPositions(_this, cb) {
     if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
         if (employeeSubObject["assignments"].isPrimary == "true") {
             if ($("#assignments\\.fromDate").val()) {
@@ -1538,6 +1539,7 @@ function getPositions(_this) {
                             $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
                         }
                     }
+                    if(cb) cb();
                 });
             }
         } else {
@@ -1553,6 +1555,7 @@ function getPositions(_this) {
                         $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
                     }
                 }
+                if(cb) cb();
             });
         }
     }

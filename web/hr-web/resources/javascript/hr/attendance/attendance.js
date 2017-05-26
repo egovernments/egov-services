@@ -235,7 +235,7 @@ class Attendance extends React.Component {
       }
       count1--;
       if(count1 == 0) calculate();
-    }).responseJSON || [];
+    });
 
     commonApiPost("hr-employee", "employees", "_search", {
         tenantId,
@@ -488,9 +488,9 @@ class Attendance extends React.Component {
     };
     return (
       <div>
-          <h3>Attendance for the month of : {months[month]}-{year}  { getUrlVars()["departmentCode"] && getUrlVars()["designationCode"] ? ("for Department- " + getNameById( assignments_department, getUrlVars()["departmentCode"]) + " and for Designation- " + getNameById( assignments_designation , getUrlVars()["designationCode"]))
-          : ( getUrlVars()["departmentCode"] ) ? ( "for Department- " + getNameById( assignments_department , getUrlVars()["departmentCode"]))
-          : ( getUrlVars()["designationCode"] ) ? "  for Designation- " + getNameById( assignments_designation , getUrlVars()["designationCode"]) : ""}  </h3>
+          <h3>Attendance for the month of : {months[month]}-{year}  { getUrlVars()["departmentCode"] && getUrlVars()["designationCode"] ? ("for Department- " + getNameById( assignments_department || [], getUrlVars()["departmentCode"]) + " and for Designation- " + getNameById( assignments_designation || [] , getUrlVars()["designationCode"]))
+          : ( getUrlVars()["departmentCode"] ) ? ( "for Department- " + getNameById( assignments_department || [] , getUrlVars()["departmentCode"]))
+          : ( getUrlVars()["designationCode"] ) ? "  for Designation- " + getNameById( assignments_designation || [] , getUrlVars()["designationCode"]) : ""}  </h3>
           <div className="attendance-table table-responsive">
               <table className="table table-bordered" id="attendanceTable">
                   <thead>

@@ -67,9 +67,9 @@ componentDidMount() {
 
   if(type==="view"||type==="update") {
 
-    getCommonMasterById("egov-common-masters","calendaryears",{id},function(err, res) {
+    getCommonMasterById("egov-common-masters","calendaryears", id, function(err, res) {
       if(res) {
-           calenderSet = res["CalendarYear"][0];
+           var calenderSet = res["CalendarYear"][0];
           _this.setState({
             calenderSet
           })

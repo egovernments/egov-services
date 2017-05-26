@@ -1190,7 +1190,7 @@ $(document).ready(function() {
                     tenantId
                 }, function(err, res) {
                     if (res) {
-                        hrconfigurations = res;
+                        hrConfigurations = res;
                         if (hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"] == "N" || typeof(hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"]) == "undefined") {
                             $("#code").prop("disabled", false);
                         } else {

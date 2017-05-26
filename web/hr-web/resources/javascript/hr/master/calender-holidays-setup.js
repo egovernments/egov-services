@@ -83,14 +83,13 @@ componentDidMount() {
 
   if(type==="view"||type==="update")
   {
-    getCommonMasterById("egov-common-masters","holidays",{id},function(err, res) {
+    getCommonMasterById("egov-common-masters","holidays", id, function(err, res) {
       if(res) {
-        Holiday = res["Holiday"][0];
+        var Holiday = res["Holiday"][0];
+        _this.setState({
+          Holiday
+        })
       }
-
-      _this.setState({
-        Holiday
-      })
     })
   }
 

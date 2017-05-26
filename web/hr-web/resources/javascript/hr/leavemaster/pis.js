@@ -153,7 +153,7 @@ class PersonalInform extends React.Component {
       for (var i = 0; i < _emps.length; i++) {
           _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
           for(var j = 0; j < leaveBal.length; j++) {
-              if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
+              if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == _this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
                   _noDays = leaveBal[j].noOfDays;
                   _leaveId = leaveBal[j].id;
                   _createdDate = leaveBal[j].createdDate

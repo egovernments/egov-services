@@ -41,9 +41,9 @@ componentDidMount() {
   }
 
   if(type==="view"||type==="update") {
-    getCommonMasterById("hr-masters","grades",{id},function(err, res) {
+    getCommonMasterById("hr-masters","grades", id,function(err, res) {
       if(res) {
-           gradeSet = res["Grade"][0];
+           var gradeSet = res["Grade"][0];
           _this.setState({
             gradeSet
           })

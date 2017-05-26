@@ -49,30 +49,28 @@ class SearchLeaveApplication extends React.Component {
     name,
     code,
     departmentId,
-    designationId}=this.state.searchSet;
+    designationId}=this.state.searchSet, _this = this;
     e.preventDefault();
     //call api call
     var employees=[];
 
-      commonApiPost("hr-employee","employees","_search",{...this.state.searchSet, tenantId,
+    commonApiPost("hr-employee","employees","_search",{..._this.state.searchSet, tenantId,
       departmentId: departmentId || null,
       designationId: designationId || null,
       code: code || null,
-      pageSize: 500},function(err,res) {
+      pageSize: 500}, function(err,res) {
         if(res){
           employees=res["Employee"];
           flag = 1;
-          this.setState({
+          _this.setState({
             isSearchClicked:true,
             employees
           })
         }
-      })
+    })
   }
 
-  handleChange(e,name)
-  {
-
+  handleChange(e, name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,

@@ -31,9 +31,9 @@ componentDidMount() {
 
   if(type==="view"||type==="update") {
 
-    getCommonMasterById("egov-common-masters","communities",{id},function(err, res) {
+    getCommonMasterById("egov-common-masters","communities", id, function(err, res) {
       if(res) {
-           communitySet = res["Community"][0];
+          var communitySet = res["Community"][0];
           _this.setState({
             communitySet
           })

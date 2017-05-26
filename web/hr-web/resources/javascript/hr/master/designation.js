@@ -57,7 +57,7 @@ componentDidMount() {
   if(type==="view"||type==="update") {
     getCommonMasterById("hr-masters","designations",{id},function(err, res) {
       if(res) {
-           designationSet = res["Designation"][0];
+           var designationSet = res["Designation"][0];
           _this.setState({
             designationSet
           })
@@ -80,7 +80,6 @@ addOrUpdate(e) {
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(body),
-            async: false,
             contentType: 'application/json',
             headers:{
               'auth-token': authToken
@@ -99,7 +98,6 @@ addOrUpdate(e) {
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(body),
-            async: false,
             contentType: 'application/json',
             headers:{
               'auth-token': authToken

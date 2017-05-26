@@ -26,7 +26,7 @@ class PositionMaster extends React.Component{
       this.addOrUpdate=this.addOrUpdate.bind(this);
       this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
       this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
-
+      this.setInitialState = this.setInitialState.bind(this);
 }
 
 handleChange(e,name) {
@@ -46,6 +46,10 @@ handleChange(e,name) {
       }
     })
   }
+}
+
+setInitialState(initState) {
+  this.setState(initState);
 }
 
 handleChangeTwoLevel(e,pName,name) {
@@ -113,9 +117,9 @@ componentDidMount() {
   });
 
   if(type==="view"||type==="update") {
-    getCommonMasterById("hr-masters","positions",{id},function(err, res) {
+    getCommonMasterById("hr-masters","positions",id, function(err, res) {
       if(res) {
-           positionSet = res["Position"][0];
+           var positionSet = res["Position"][0];
           _this.setState({
             positionSet
           })

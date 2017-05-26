@@ -32,9 +32,9 @@ componentDidMount() {
 
   if(type==="view"||type==="update") {
 
-    getCommonMasterById("egov-common-masters","categories",{id},function(err, res) {
+    getCommonMasterById("egov-common-masters","categories", id ,function(err, res) {
       if(res) {
-           categorySet = res["Category"][0];
+           var categorySet = res["Category"][0];
           _this.setState({
             categorySet
           })

@@ -20,9 +20,9 @@ class ShowCalender extends React.Component {
      }
 
      $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Calendar");
-
+     var _this = this;
      getDropdown("years", function(res) {
-        this.setState({
+        _this.setState({
                list: res
         });
      })  

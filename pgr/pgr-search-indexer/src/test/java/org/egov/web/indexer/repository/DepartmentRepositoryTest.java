@@ -17,18 +17,18 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DepartmentRestRepositoryTest {
+public class DepartmentRepositoryTest {
 
     private static final String HOST = "http://host";
     private static final String DEPARTMENT_BY_ID_URL = "/egov-common-masters/departments/_search?id=1&tenantId=default";
 
     private MockRestServiceServer server;
-    private DepartmentRestRepository departmentRestRepository;
+    private DepartmentRepository departmentRestRepository;
 
     @Before
     public void before() {
         final RestTemplate restTemplate = new RestTemplate();
-        departmentRestRepository = new DepartmentRestRepository(restTemplate, HOST, DEPARTMENT_BY_ID_URL);
+        departmentRestRepository = new DepartmentRepository(restTemplate, HOST, DEPARTMENT_BY_ID_URL);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 

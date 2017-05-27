@@ -6,7 +6,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import org.egov.web.indexer.contract.ComplaintType;
+import org.egov.web.indexer.contract.ServiceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
@@ -14,15 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-public class ComplaintTypeRepositoryTest {
+public class ServiceTypeRepositoryTest {
 	private static final String HOST = "http://host/";
 	private MockRestServiceServer server;
-	private ComplaintTypeRepository complaintTypeRepository;
+	private ServiceTypeRepository complaintTypeRepository;
 
 	@Before
 	public void before() {
 		RestTemplate restTemplate = new RestTemplate();
-		complaintTypeRepository = new ComplaintTypeRepository(restTemplate, HOST);
+		complaintTypeRepository = new ServiceTypeRepository(restTemplate, HOST);
 		server = MockRestServiceServer.bindTo(restTemplate).build();
 	}
 
@@ -32,7 +32,7 @@ public class ComplaintTypeRepositoryTest {
 				.andRespond(withSuccess(new Resources().getFileContents("successComplaintTypeResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 
-		final ComplaintType complaintType = complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public");
+		final ServiceType complaintType = complaintTypeRepository.fetchServiceTypeByCode("AOS","ap.public");
 
 		server.verify();
 		assertEquals("10", complaintType.getSlaHours().toString());

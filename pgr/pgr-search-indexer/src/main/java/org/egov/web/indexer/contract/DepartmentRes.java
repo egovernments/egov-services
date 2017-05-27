@@ -16,10 +16,8 @@ import java.util.List;
 public class DepartmentRes {
 
     @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo = null;
+    private ResponseInfo responseInfo;
 
     @JsonProperty("Department")
-    private List<Department> department = null;
-
-
+    private List<Department> department;
 }

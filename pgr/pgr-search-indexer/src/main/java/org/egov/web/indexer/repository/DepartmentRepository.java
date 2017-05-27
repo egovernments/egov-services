@@ -11,16 +11,16 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Date;
 
 @Service
-public class DepartmentRestRepository {
+public class DepartmentRepository {
 
     private final RestTemplate restTemplate;
 
     private final String departmentByIdUrl;
 
     @Autowired
-    public DepartmentRestRepository(final RestTemplate restTemplate,
-                                    @Value("${egov.services.commonmasters.host}") final String departmentServiceHostname,
-                                    @Value("${egov.services.common_masters.department}") final String departmentByIdUrl) {
+    public DepartmentRepository(final RestTemplate restTemplate,
+                                @Value("${egov.services.commonmasters.host}") final String departmentServiceHostname,
+                                @Value("${egov.services.common_masters.department}") final String departmentByIdUrl) {
 
         this.restTemplate = restTemplate;
         this.departmentByIdUrl = departmentServiceHostname + departmentByIdUrl;

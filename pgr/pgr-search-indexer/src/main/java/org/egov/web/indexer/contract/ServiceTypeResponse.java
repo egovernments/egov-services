@@ -6,10 +6,9 @@ import org.egov.common.contract.response.ResponseInfo;
 import java.util.List;
 
 @Getter
-public class ComplaintTypeResponse {
+public class ServiceTypeResponse {
 
     private ResponseInfo responseInfo;
-
-    private List<ComplaintType> complaintTypes;
+    private List<ServiceType> complaintTypes;
 
 }

@@ -129,14 +129,18 @@ $(document).ready(function(){
 			};
 			data['attribValues'].push(obj);
 
-			obj = {};
 			obj = {
 			    key: 'aadhaarno',
 			    name:$('#aadhaarno').val() ? $('#aadhaarno').val() : ''
 			};
 			data['attribValues'].push(obj);
 
-			obj = {};
+			obj = {
+			    key: 'requesterAddress',
+			    name: $('#complainantAddress').val() ? $('#complainantAddress').val() : ''
+			};
+			data['attribValues'].push(obj);
+
 			obj = {
 			    key: 'keyword',
 			    name:'Deliverable_service'
@@ -154,7 +158,7 @@ $(document).ready(function(){
 			});
 
 			//Checklist
-			$('.checkForm *').filter(':input').each(function(){
+			$('.checkForm *').filter(':input[type="checkbox"]:checked').each(function(){
 			    obj = {};
 				obj = {
 				    key: 'CHECKLIST',

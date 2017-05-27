@@ -128,7 +128,7 @@ function getComplaint(){
 			showLoader();
 		},
 		success : function(response){
-			//console.log('Get complaint done!'+JSON.stringify(response));
+			console.log('Get complaint done!'+JSON.stringify(response));
 			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.serviceRequests.length == 0){
@@ -331,6 +331,58 @@ function complaintUpdate(obj){
 			req_obj.serviceRequest.attribValues.push(finobj);
 		}
 	}
+
+	if($('.rating').val() > 0){
+		finobj = {
+		    key: 'feedback',
+		    name: $('.rating').val()
+		};
+		req_obj.serviceRequest.attribValues.push(finobj);
+	}
+
+	if(keyword != 'Complaint'){
+
+		//Checklist
+		$('.checkForm *').filter(':input[type="checkbox"]:checked:not(:disabled)').each(function(){
+			obj = {};
+			obj = {
+			    key: 'CHECKLIST',
+			    name: $(this).attr('name')
+			};
+			obj = {};
+			obj = {
+			    key: $(this).attr('name'),
+			    name: $(this).is(':checked')
+			};
+			req_obj.serviceRequest.attribValues.push(obj);
+		});
+
+		//upload files
+		$('input[type=file]').each(function(){
+			var formData=new FormData();
+			formData.append('tenantId', 'default');
+			formData.append('module', 'SERVICES');
+			var file = $(this)[0].files[0];
+			if(!file)
+				return;
+			formData.append('file', file); 
+			var resp = fileUpload(formData);
+			var obj = {};
+			obj = {
+			    key: 'DOCUMENTS',
+			    name: $(this).attr('name')
+			};
+			req_obj.serviceRequest.attribValues.push(obj);
+			obj = {};
+			obj = {
+			    key: $(this).attr('name'),
+			    name: resp.files[0].fileStoreId
+			};
+			req_obj.serviceRequest.attribValues.push(obj);
+		});
+	}
+
+	console.log(JSON.stringify(req_obj))
 	
 	$.ajax({
 		url: "/pgr/seva/_update",
@@ -693,6 +745,7 @@ function callToLoadDefinition(searchResponse){
 
 			$('.checkForm *').filter(':input').each(function(){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
+				console.log($(this).attr('name'), obj)
 				if(obj){
 					if(JSON.parse(obj.name))
 				    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");
@@ -709,7 +762,6 @@ function callToLoadDefinition(searchResponse){
 					$(this).remove();
 				}
 			});
-			
 
 		},
 		error: function(){
@@ -719,6 +771,34 @@ function callToLoadDefinition(searchResponse){
 			hideLoader();
 		}
 	});
+}
+
+function fileUpload(formData){
+	var fresponse;
+	$.ajax({
+		url: "/filestore/v1/files",
+		type : 'POST',
+		// THIS MUST BE DONE FOR FILE UPLOADING
+		contentType: false,
+		async : false,
+		processData : false,
+		beforeSend : function(){
+			showLoader();
+		},
+		data : formData,
+		success: function(fileresponse){
+			fresponse = fileresponse;
+		},
+		error: function(){
+			bootbox.alert('Media file not uploaded!');
+			currentObj.removeAttr("disabled");
+			hideLoader();
+		},
+		complete : function(){
+			//console.log('Complete function called!');
+		}
+	});
+	return fresponse;
 }
 
 function resizeMap() {

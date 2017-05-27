@@ -589,7 +589,7 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 		this.template = this_documents;
 	}else{
 		if(!this.variable){
-			this.template = '<label class="col-sm-2 control-label"></label><div class="col-sm-3 add-margin error-msg" data-translate="'+this.description+'"></div><div class="col-sm-1"></div>';
+			this.template = '<label class="col-sm-2 control-label"></label><div class="col-sm-3 add-margin success-msg" data-translate="'+this.description+'"></div><div class="col-sm-1"></div>';
 		}else{
 			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'String' ? 'alphabetwithspace' : value; 
 			if(this.dataType == 'number' || this.dataType == 'String' || this.dataType == 'datetime'){

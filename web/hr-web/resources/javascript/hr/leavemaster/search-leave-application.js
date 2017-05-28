@@ -94,19 +94,18 @@ class SearchLeaveApplication extends React.Component {
     }, 100);
     var _this = this;
       if (e.target.value) {
-          try {
               var code = e.target.value;
-              //Make get employee call
-              var obj = commonApiPost("hr-employee", "employees", "_search", { code, tenantId }).responseJSON["Employee"][0];
-              _this.setState({
-                  searchSet: {
-                      ..._this.state.searchSet,
-                      name: obj.name
-                  }
-              })
-          } catch (e) {
-              console.log(e);
-          }
+               commonApiPost("hr-employee", "employees", "_search", { code, tenantId },function(err,res){
+                 if(res){
+                   var obj = res["Employee"][0];
+                   _this.setState({
+                       searchSet: {
+                           ..._this.state.searchSet,
+                           name: obj.name
+                       }
+                   })
+                 }
+               });
       } else {
         _this.setState({
           searchSet: {

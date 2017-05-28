@@ -47,7 +47,21 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
     var process = [], employee;
-    var hrConfigurations = [], allHolidayList = [], _leaveSet = {};
+    var  _leaveSet = {};
+    var  hrConfigurations = [], allHolidayList = [];
+    
+    commonApiPost("hr-masters", "hrconfigurations", "_search", {
+          tenantId
+    }, function(err, res) {
+      if(res) {
+        hrConfigurations = res;
+      }
+    })
+    commonApiPost("egov-common-masters", "holidays", "_search", {
+        tenantId
+    }, function(err, res) {
+      allHolidayList = res ? res.Holiday : [];
+    });
 
     getCommonMaster("hr-leave", "leavetypes", function(err, res) {
       if(res) {
@@ -81,19 +95,6 @@ class UpdateLeave extends React.Component {
         })
       }
     });
-        
-        commonApiPost("hr-masters", "hrconfigurations", "_search", {
-              tenantId
-        }, function(err, res) {
-          if(res) {
-            hrConfigurations = res;
-          }
-        })
-        commonApiPost("egov-common-masters", "holidays", "_search", {
-            tenantId
-        }, function(err, res) {
-          allHolidayList = res ? res.Holiday : [];
-        });
 
         $('#fromDate, #toDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -150,17 +151,10 @@ class UpdateLeave extends React.Component {
                 }
               }
 
-              _this.setState({
-                leaveSet: {
-                    ..._this.state.leaveSet,
-                    [_triggerId]: $("#" + _triggerId).val(),
-                    leaveDays: _days
-                }
-              });
+
 
               setTimeout(function() {
                 if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
-                   try{
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
                       var employeeid = getUrlVars()["id"];
@@ -174,9 +168,6 @@ class UpdateLeave extends React.Component {
                           }
                         });
                       });
-                    } catch (e){
-                      console.log(e);
-                    }
                 }
               }, 200);
             }
@@ -307,9 +298,9 @@ handleProcess(e) {
                     type = getUrlVars()["type"];
                 delete tempInfo.name;
                 delete tempInfo.code;
-                commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, res) {
-                    if (res) {
-                        employee = res["Employee"][0];
+                commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, es2) {
+                    if (res2) {
+                        var employee = res2["Employee"][0];
                         if (!tempInfo.workflowDetails) {
                             tempInfo.workflowDetails = {
                                 action: ID,
@@ -341,7 +332,7 @@ handleProcess(e) {
                             }
                         });
                     }
-                })
+                });
             } else {
                 var employee;
                 var type;
@@ -570,4 +561,3 @@ ReactDOM.render(
   <UpdateLeave />,
   document.getElementById('root')
 );
-

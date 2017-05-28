@@ -125,18 +125,22 @@ $(document).ready(function(){
 			var obj = {};
 			obj = {
 			    key: 'status',
-			    name:'NEW'
+			    name:'DSNEW'
 			};
 			data['attribValues'].push(obj);
 
-			obj = {};
+			obj = {
+			    key: 'aadhaarno',
+			    name:$('#aadhaarno').val() ? $('#aadhaarno').val() : ''
+			};
+			data['attribValues'].push(obj);
+
 			obj = {
 			    key: 'requesterAddress',
-			    name:$('#complainantAddress').val() ? $('#complainantAddress').val() : ''
+			    name: $('#complainantAddress').val() ? $('#complainantAddress').val() : ''
 			};
 			data['attribValues'].push(obj);
 
-			obj = {};
 			obj = {
 			    key: 'keyword',
 			    name:'Deliverable_service'
@@ -154,7 +158,7 @@ $(document).ready(function(){
 			});
 
 			//Checklist
-			$('.checkForm *').filter(':input').each(function(){
+			$('.checkForm *').filter(':input[type="checkbox"]:checked').each(function(){
 			    obj = {};
 				obj = {
 				    key: 'CHECKLIST',

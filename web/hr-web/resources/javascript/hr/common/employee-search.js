@@ -33,7 +33,7 @@ class EmployeeSearch extends React.Component {
     var employees = [];
     commonApiPost("hr-employee","employees","_search", {
         tenantId, code, departmentId, designationId, name, pageSize:500
-      }, this.state.searchSet, function(err, res) {
+    }, function(err, res) {
         if(res) {
           employees = res.Employee;
         }
@@ -42,7 +42,7 @@ class EmployeeSearch extends React.Component {
           isSearchClicked: true,
           employees
         });
-      });
+    });
   }
   handleBlur(e) {
     setTimeout(function(){

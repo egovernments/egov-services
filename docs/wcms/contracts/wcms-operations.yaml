@@ -60,6 +60,8 @@ paths:
         - $ref: "#/parameters/name"
         - $ref: "#/parameters/mobileNumber"
         - $ref: "#/parameters/locality"
+        - $ref: "#/parameters/revenueWard"
+        - $ref: "#/parameters/doorNumber"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortResult"
@@ -551,6 +553,20 @@ parameters:
     name: locality
     in: query
     description: locality name
+    required: false
+    type: string
+    
+  revenueWard:
+    name: revenueWard
+    in: query
+    description: revenue ward name
+    required: false
+    type: string
+    
+  doorNumber:
+    name: doorNumber
+    in: query
+    description: door number
     required: false
     type: string
   

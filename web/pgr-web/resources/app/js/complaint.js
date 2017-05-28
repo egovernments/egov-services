@@ -542,7 +542,7 @@ function loadReceivingCenter(){
 
 function complaintCategory(){
 	$.ajax({
-		url: "/pgr/complaintTypeCategories/_search?tenantId=default",
+		url: "/pgr/servicecategories/_search?tenantId=default",
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -552,7 +552,7 @@ function complaintCategory(){
 		success : function(data){
 			loadDD.load({
 				element:$('#complaintTypeCategory'),
-				data:data.complaintTypeCategories,
+				data:data.serviceTypeCategories,
 				keyValue:'id',
 				keyDisplayName:'name'
 			});

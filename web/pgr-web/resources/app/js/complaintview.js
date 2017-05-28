@@ -55,6 +55,8 @@ $(document).ready(function()
 		$('.action-section').remove();
 	}
 
+	$('.rating').rating();
+
 	getComplaint();
 	
 	$('.slide-history-menu').click(function(){
@@ -104,6 +106,14 @@ $(document).ready(function()
 		}
 	});
 
+	//feepaid change event
+	$('#feepaid').change(function() {
+		if($(this).is(":checked"))
+			$('input[name="PROCESSINGFEE"]').attr('required','required');
+		else
+			$('input[name="PROCESSINGFEE"]').removeAttr('required');
+	});
+
 });
 
 function getComplaint(){
@@ -118,7 +128,7 @@ function getComplaint(){
 			showLoader();
 		},
 		success : function(response){
-			//console.log('Get complaint done!'+JSON.stringify(response));
+			console.log('Get complaint done!'+JSON.stringify(response));
 			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.serviceRequests.length == 0){
@@ -205,8 +215,20 @@ function getComplaint(){
 							translate();
 							///console.log('response with files',JSON.stringify(response));
 
-							if(keyword != 'Complaint')
+							if(keyword != 'Complaint'){
+								$('.serviceType').hide();
 								loadServiceDefinition(response);
+								if(localStorage.getItem('type') == 'EMPLOYEE'){
+									$('.feegroup').removeClass('hide');
+									if(!(AV_status == 'DSNEW' || AV_status == 'DSPROGRESS')){
+										$('input[name="PROCESSINGFEE"]').attr('disabled','disabled');
+									}
+								}
+								else{
+									$('.feegroup').addClass('hide');
+								}
+								
+							}
 
 							if(localStorage.getItem('type') == 'CITIZEN' && keyword != 'Complaint'){
 								
@@ -298,6 +320,69 @@ function complaintUpdate(obj){
 		};
 		req_obj.serviceRequest.attribValues.push(finobj);
 	}
+
+	if(localStorage.getItem('type') == 'EMPLOYEE' && keyword != 'Complaint'){
+		if(($('#status').val() == 'DSAPPROVED' && $('#feepaid').is(":checked")) || $('#status').val() == 'DSPROGRESS'){
+			//check status is approved, after update pF 
+			finobj = {
+			    key: 'PROCESSINGFEE',
+			    name: $('input[name="PROCESSINGFEE"]').val()
+			};
+			req_obj.serviceRequest.attribValues.push(finobj);
+		}
+	}
+
+	if($('.rating').val() > 0){
+		finobj = {
+		    key: 'feedback',
+		    name: $('.rating').val()
+		};
+		req_obj.serviceRequest.attribValues.push(finobj);
+	}
+
+	if(keyword != 'Complaint'){
+
+		//Checklist
+		$('.checkForm *').filter(':input[type="checkbox"]:checked:not(:disabled)').each(function(){
+			obj = {};
+			obj = {
+			    key: 'CHECKLIST',
+			    name: $(this).attr('name')
+			};
+			obj = {};
+			obj = {
+			    key: $(this).attr('name'),
+			    name: $(this).is(':checked')
+			};
+			req_obj.serviceRequest.attribValues.push(obj);
+		});
+
+		//upload files
+		$('input[type=file]').each(function(){
+			var formData=new FormData();
+			formData.append('tenantId', 'default');
+			formData.append('module', 'SERVICES');
+			var file = $(this)[0].files[0];
+			if(!file)
+				return;
+			formData.append('file', file); 
+			var resp = fileUpload(formData);
+			var obj = {};
+			obj = {
+			    key: 'DOCUMENTS',
+			    name: $(this).attr('name')
+			};
+			req_obj.serviceRequest.attribValues.push(obj);
+			obj = {};
+			obj = {
+			    key: $(this).attr('name'),
+			    name: resp.files[0].fileStoreId
+			};
+			req_obj.serviceRequest.attribValues.push(obj);
+		});
+	}
+
+	console.log(JSON.stringify(req_obj))
 	
 	$.ajax({
 		url: "/pgr/seva/_update",
@@ -458,8 +543,12 @@ function getLocality(boundaryId, localityid){
 
 function getDepartment(loadDD){
 	$.ajax({
-		url: "/eis/departments?tenantId=default",
-		type : 'GET'
+		url: "/egov-common-masters/departments/_search?tenantId=default",
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#approvalDepartment'),
@@ -473,7 +562,7 @@ function getDepartment(loadDD){
 
 function getDesignation(depId){
 	$.ajax({
-		url: "/eis/designationByDepartmentId?tenantId=default&id="+depId,
+		url: "/hr-masters/designations/_search?tenantId=default",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -493,26 +582,29 @@ function getDesignation(depId){
 function getUser(depId, desId){
 	//console.log(depId, desId);
 	$.ajax({
-		url: "/eis/assignmentsByDeptOrDesignId?tenantId=default&deptId="+depId+"&desgnId="+desId,
+		url: "/hr-employee/employees/_search?tenantId=default&departmentId="+depId+"&designationId="+desId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo),
 	}).done(function(data) {
-		loadDD.load({
-			element:$('#approvalPosition'),
-			placeholder : 'Select Position', // default - Select(optional)
-			data:data.Assignment,
-			keyValue:'position',
-			keyDisplayName:'employee'
-		});
+		$.each(data.Employee,function(i,obj)
+	    {
+			$('#approvalPosition').append($("<option />")
+				.val(obj['assignments'][0].position).text(obj['userName']));
+	    }); 
 	});
 }
 
 function getDepartmentbyId(departmentId, response){
 	$.ajax({
-		url : '/eis/departments?tenantId=default&id='+departmentId,
+		url : '/egov-common-masters/departments/_search?tenantId=default&id='+departmentId,
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo),
 		async : false,
 		success : function(depresponse){
 			var obj = {};
@@ -653,6 +745,7 @@ function callToLoadDefinition(searchResponse){
 
 			$('.checkForm *').filter(':input').each(function(){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
+				console.log($(this).attr('name'), obj)
 				if(obj){
 					if(JSON.parse(obj.name))
 				    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");
@@ -669,7 +762,6 @@ function callToLoadDefinition(searchResponse){
 					$(this).remove();
 				}
 			});
-			
 
 		},
 		error: function(){
@@ -679,6 +771,34 @@ function callToLoadDefinition(searchResponse){
 			hideLoader();
 		}
 	});
+}
+
+function fileUpload(formData){
+	var fresponse;
+	$.ajax({
+		url: "/filestore/v1/files",
+		type : 'POST',
+		// THIS MUST BE DONE FOR FILE UPLOADING
+		contentType: false,
+		async : false,
+		processData : false,
+		beforeSend : function(){
+			showLoader();
+		},
+		data : formData,
+		success: function(fileresponse){
+			fresponse = fileresponse;
+		},
+		error: function(){
+			bootbox.alert('Media file not uploaded!');
+			currentObj.removeAttr("disabled");
+			hideLoader();
+		},
+		complete : function(){
+			//console.log('Complete function called!');
+		}
+	});
+	return fresponse;
 }
 
 function resizeMap() {

@@ -1,0 +1,21 @@
+CREATE TABLE marrying_person(
+	id BIGINT PRIMARY KEY,  
+	name CHARACTER VARYING(250),
+	parentname CHARACTER VARYING(250),
+	street CHARACTER VARYING(250),
+	locality CHARACTER VARYING(250),
+	city CHARACTER VARYING(250),
+    dob BIGINT,
+	status CHARACTER VARYING(250),
+    aadhaar CHARACTER VARYING(250),
+    mobileno CHARACTER VARYING(250),
+    email CHARACTER VARYING(250),
+    religion INTEGER,
+    religionpractice CHARACTER VARYING(250),
+    education CHARACTER VARYING(250),
+    occupation CHARACTER VARYING(250),
+    handicapped CHARACTER VARYING(250),
+    residenceaddress CHARACTER VARYING(250),
+	photo CHARACTER VARYING(250),
+	nationality CHARACTER VARYING(250)
+)

@@ -632,7 +632,7 @@ function inboxloadmethod(){
 
 function getPosition(){
 	$.ajax({
-		url : '/eis/_assignmentByEmployeeId?tenantId=default&employeeId='+localStorage.getItem('id'),
+		url : '/hr-employee/employees/_search?tenantId=default&id='+localStorage.getItem('id'),
 		type : 'POST',
 		processData : false,
 		contentType: "application/json",
@@ -640,8 +640,8 @@ function getPosition(){
 		async : false,
 		success : function(response){
 			try{
-				positionId = response.Assignment[0].position;
-				$('.profile-text').text(response.Assignment[0].employee);
+				positionId = response.Employee[0].assignments[0].position;
+				$('.profile-text').text(response.Employee[0].userName);
 			}catch(e){
 
 			}
@@ -657,7 +657,7 @@ function getPosition(){
 }
 
 $.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
-	if(aData[3] == 'COMPLETED' || aData[3] == 'WITHDRAWN' || aData[3] == 'REJECTED')
+	if(aData[4] == 'COMPLETED' || aData[4] == 'WITHDRAWN' || aData[4] == 'REJECTED' || aData[4] == 'DSAPPROVED' || aData[4] == 'DSREJECTED')
 		return false;
 	else
 		return true;

@@ -1215,22 +1215,7 @@ function clearModalInput(object, properties) {
 function updateTable(tableName, modalName, object) {
     $(tableName).html(``);
     for (let i = 0; i < employee[object].length; i++) {
-        $(tableName).append(`<tr>`);
         if (object == "assignments") {
-            $(tableName).append(`<td data-label=${"fromDate"}>
-
-                                  ${employee[object][i]["fromDate"] || ""}
-                            </td>`)
-            $(tableName).append(`<td data-label=${"toDate"}>
-
-                                  ${employee[object][i]["toDate"] || ""}
-                                                </td>`)
-            $(tableName).append(`<td data-label=${"department"}>
-                                  ${getNameById("department",employee[object][i]["department"],"") || ""}
-                            </td>`)
-            $(tableName).append(`<td data-label=${"designation"}>
-                                  ${getNameById("designation",employee[object][i]["designation"],"") || ""}
-                              </td>`)
             commonApiPost("hr-masters", "positions", "_search", {
                 tenantId,
                 id: employee[object][i]["position"]
@@ -1240,6 +1225,21 @@ function updateTable(tableName, modalName, object) {
                 } else {
                     assignments_position = [];
                 }
+                $(tableName).append(`<tr>`);
+                $(tableName).append(`<td data-label=${"fromDate"}>
+
+                                  ${employee[object][i]["fromDate"] || ""}
+                            </td>`)
+                $(tableName).append(`<td data-label=${"toDate"}>
+
+                                  ${employee[object][i]["toDate"] || ""}
+                                                </td>`)
+                $(tableName).append(`<td data-label=${"department"}>
+                                  ${getNameById("department",employee[object][i]["department"],"") || ""}
+                            </td>`)
+                $(tableName).append(`<td data-label=${"designation"}>
+                                  ${getNameById("designation",employee[object][i]["designation"],"") || ""}
+                              </td>`)
                 $(tableName).append(`<td data-label=${"position"}>
                                         ${assignments_position.length>0?assignments_position[0]["name"]:""}
                                     </td>`)
@@ -1267,7 +1267,7 @@ function updateTable(tableName, modalName, object) {
                 $(tableName).append(`<td data-label=${"documents"}>
                                         ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
                                     </td>`)
-                closeTR(tableName, modalName, object, i);                                                                                                                                                                             
+                closeTR(tableName, modalName, object, i);
             });
         } else if (object == "jurisdictions") {
             commonApiGet("egov-location", "boundarys", "", {
@@ -1279,6 +1279,7 @@ function updateTable(tableName, modalName, object) {
                 } else {
                     bnd = [];
                 }
+                $(tableName).append(`<tr>`);
                 $(tableName).append(`<td data-label=${"jurisdictionsType"}>
                                     ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
                                     </td>`)
@@ -1288,6 +1289,7 @@ function updateTable(tableName, modalName, object) {
                 closeTR(tableName, modalName, object, i);
             });
         } else if (object == "serviceHistory") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"serviceInfo"}>
                                   ${employee[object][i]["serviceInfo"] || ""}
                             </td>`)
@@ -1306,6 +1308,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`);
             closeTR(tableName, modalName, object, i);
         } else if (object == "probation" || object == "regularisation") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"designation"}>
                                     ${getNameById("designation",employee[object][i]["designation"],"")}
                                 </td>`)
@@ -1326,6 +1329,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`);
             closeTR(tableName, modalName, object, i);
         } else if (object == "education") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"qualification"}>
                                   ${employee[object][i]["qualification"] || ""}
                                 </td>`)
@@ -1343,6 +1347,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`);
             closeTR(tableName, modalName, object, i);
         } else if (object == "technical") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"skill"}>
                                   ${employee[object][i]["skill"] || ""}
                                 </td>`)
@@ -1360,6 +1365,7 @@ function updateTable(tableName, modalName, object) {
                                 </td>`)
             closeTR(tableName, modalName, object, i);
         } else if (object == "test") {
+            $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"test"}>
                                   ${employee[object][i]["test"] || ""}
                             </td>`)
@@ -1401,7 +1407,7 @@ function getHodDetails(object) {
     return returnObj;
 }
 
-//common edit mark index
+//common edit mark index - tested123
 function markEditIndex(index = -1, modalName = "", object = "") {
     editIndex = index;
     $('#' + modalName).modal('show');
@@ -1411,7 +1417,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                 if (object == "jurisdictions") {
                     //Get the boundary to get boundaryType
                     commonApiGet("egov-location", "boundarys", "", {
-                        "Boundary.id": employee[object][editIndex],
+                        "Boundary.id": (typeof employee[object][editIndex] == "object" ? employee[object][editIndex]["boundary"] : employee[object][editIndex]),
                         "Boundary.tenantId": tenantId
                     }, function(err, res) {
                         if (res) {
@@ -1439,7 +1445,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
 
                                         employeeSubObject[object] = {
                                             jurisdictionsType: jType,
-                                            boundary: employee[object][editIndex]
+                                            boundary: (typeof employee[object][editIndex] == "object" ? employee[object][editIndex]["boundary"] : employee[object][editIndex])
                                         }
 
                                         for (key in employeeSubObject[object]) {
@@ -1459,8 +1465,9 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                             setTimeout(function(key, object) {
                                 getPositions({
                                     id: "assignments.department"
+                                }, function() {
+                                    $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
                                 });
-                                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
                             }, 200, key, object);
                         }
 
@@ -1520,7 +1527,7 @@ function addMandatoryStart(validationObject, prefix = "") {
     };
 }
 
-function getPositions(_this) {
+function getPositions(_this, cb) {
     if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
         if (employeeSubObject["assignments"].isPrimary == "true") {
             if ($("#assignments\\.fromDate").val()) {
@@ -1538,6 +1545,7 @@ function getPositions(_this) {
                             $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
                         }
                     }
+                    if (cb) cb();
                 });
             }
         } else {
@@ -1553,6 +1561,7 @@ function getPositions(_this) {
                         $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
                     }
                 }
+                if (cb) cb();
             });
         }
     }
@@ -1772,7 +1781,6 @@ function appendTr(tBodyName, count, name, fileId) {
 
 function loadUI() {
 
-
                 commonApiPost("hr-masters", "hrconfigurations", "_search", {
                     tenantId
                 }, function(err, res) {
@@ -1843,6 +1851,63 @@ function loadUI() {
                         }
                     }
                 }
+
+
+            if (getUrlVars()["type"] == "update") {
+                if (getUrlVars()["id"]) {
+                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                            tenantId
+                        }, function(err, res) {
+                            var currentEmployee = res.Employee;
+                            showAndPrint(currentEmployee);
+                        });
+                    } else {
+                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                            tenantId
+                        }, function(err, res) {
+                            var obj = res.Employee[0];
+                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                tenantId
+                            }, function(err, res2) {
+                                var currentEmployee = res2.Employee;
+                                showAndPrint(currentEmployee);
+                            });
+                        });
+                    }
+            }
+
+            if (getUrlVars()["type"] == "view") {
+                if (getUrlVars()["id"]) {
+                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
+                            tenantId
+                        }, function(err, res) {
+                            var currentEmployee = res.Employee;
+                            showAndPrint2(currentEmployee);
+                        });
+                    } else {
+                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
+                            tenantId
+                        }, function(err, res) {
+                            var obj = res.Employee[0];
+                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+                                tenantId
+                            }, function(err, res2) {
+                                var currentEmployee = res2.Employee;
+                                showAndPrint2(currentEmployee);
+                            })
+                        });
+                    }
+
+                    $("#createEmployeeForm input").prop("disabled", true);
+
+                    $("#createEmployeeForm select").prop("disabled", true);
+
+                    $("#createEmployeeForm textarea").prop("disabled", true);
+
+                    $("#addEmployee").hide();
+
+                    $(".btn-default").hide();
+            }
 
                 $("input[name='user.dob']").datepicker({
                     format: 'dd/mm/yyyy',
@@ -2308,13 +2373,6 @@ function loadUI() {
                     }
                 };
 
-                if (window.opener && window.opener.document) {
-                    var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-                    if (logo_ele && logo_ele[0]) {
-                        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-                    }
-                }
-                if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
                 $.validator.addMethod('phone', function(value) {
                     return value ? /^[0-9]{10}$/.test(value) : true;
                 }, 'Please enter a valid phone number.');
@@ -2478,6 +2536,14 @@ function loadUI() {
 }
 
 $(document).ready(function() {
+                if (window.opener && window.opener.document) {
+                    var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+                    if (logo_ele && logo_ele[0]) {
+                        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+                    }
+                }
+                if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+
             getDropdown("employeeType", function(res) {
                 employeeType = res;
                 checkCount();
@@ -2566,71 +2632,4 @@ $(document).ready(function() {
             $('#close').on("click", function() {
                 window.close();
             })
-
-
-            if (getUrlVars()["type"] == "update") {
-                try {
-                    if (getUrlVars()["id"]) {
-                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                            tenantId
-                        }, function(err, res) {
-                            var currentEmployee = res.Employee;
-                            showAndPrint(currentEmployee);
-                        });
-                    } else {
-                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                            tenantId
-                        }, function(err, res) {
-                            var obj = res.Employee[0];
-                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                tenantId
-                            }, function(err, res2) {
-                                var currentEmployee = res2.Employee;
-                                showAndPrint(currentEmployee);
-                            });
-                        });
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            if (getUrlVars()["type"] == "view") {
-                try {
-
-                    if (getUrlVars()["id"]) {
-                        commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
-                            tenantId
-                        }, function(err, res) {
-                            var currentEmployee = res.Employee;
-                            showAndPrint2(currentEmployee);
-                        });
-                    } else {
-                        commonApiPost("hr-employee", "employees", "_loggedinemployee", {
-                            tenantId
-                        }, function(err, res) {
-                            var obj = res.Employee[0];
-                            commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
-                                tenantId
-                            }, function(err, res2) {
-                                var currentEmployee = res2.Employee;
-                                showAndPrint2(currentEmployee);
-                            })
-                        });
-                    }
-
-                    $("#createEmployeeForm input").prop("disabled", true);
-
-                    $("#createEmployeeForm select").prop("disabled", true);
-
-                    $("#createEmployeeForm textarea").prop("disabled", true);
-
-                    $("#addEmployee").hide();
-
-                    $(".btn-default").hide();
-
-                } catch (e) {
-                    console.log(e);
-                }
-            }
 });

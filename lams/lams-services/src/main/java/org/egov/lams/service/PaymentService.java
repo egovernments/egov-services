@@ -274,7 +274,7 @@ public class PaymentService {
 
 		// FIXME get the query String from query builder //FIXME do the
 		// jdbctemplate in repository
-		String sql = "select *,agreement.id as agreementid from eglams_agreement agreement "
+		String sql = "select *,agreement.id as lamsagreementid from eglams_agreement agreement "
 				+ "INNER JOIN eglams_demand demand ON agreement.id=demand.agreementid"
 				+ " where agreement.acknowledgementnumber='" + consumerCode + "' OR agreement.agreement_no='"
 				+ consumerCode + "'";

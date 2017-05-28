@@ -17,7 +17,7 @@ public class ErrorHandler {
 	private ResponseInfoFactory responseInfoFactory;
 
 	
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingHeaders(HttpHeaders headers) {
+	/*public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingHeaders(HttpHeaders headers) {
 		Error error = new Error();
 		error.setCode(400);
 		error.setMessage("Missing Header Informatin");
@@ -30,9 +30,9 @@ public class ErrorHandler {
 		errorResponse.setError(error);
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
+	}*/
 
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingParametes(BindingResult bindingResult, HttpHeaders headers) {
+	/*public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingParametes(BindingResult bindingResult, HttpHeaders headers) {
 		Error error = new Error();
 		error.setCode(400);
 		error.setMessage("Missing Request Parameter");
@@ -65,5 +65,5 @@ public class ErrorHandler {
 		errorResponse.setError(error);
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+	}*/
 }

@@ -40,18 +40,25 @@
 
 package org.egov.asset.web.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
+import org.egov.asset.contract.RevaluationRequest;
+import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.Revaluation;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +67,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,6 +90,9 @@ public class AssetController {
 
 	@Autowired
 	private AssetValidator assetValidator;
+	
+	@Autowired
+	private RevaluationService revaluationService;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -138,6 +149,36 @@ public class AssetController {
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
+	@PostMapping("reevaluate/_create")
+	@ResponseBody
+	public ResponseEntity<?> reevaluate(@RequestBody @Valid RevaluationRequest revaluationRequest, BindingResult bindingResult) {
+
+		logger.info("create reevaluate:" + revaluationRequest);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, need to be done.
+		
+		RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
+		
+		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("reevaluate")
+	@ResponseBody
+	public ResponseEntity<?> get() {
+		System.out.println("get");
+		RevaluationRequest revaluationResponse = new RevaluationRequest();
+		Revaluation revaluation = new Revaluation();
+		revaluationResponse.setRevaluation(revaluation);
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setUserInfo(new User());
+		revaluation.setCreatedDate(new Date().getTime());
+		revaluationResponse.setRequestInfo(requestInfo);
+		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+	}
+	
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 

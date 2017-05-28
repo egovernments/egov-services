@@ -40,6 +40,9 @@
 
 package org.egov.asset.web.wrapperfactory;
 
+import java.util.Date;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -47,13 +50,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @Component
 public class ResponseInfoFactory {
-    public ResponseInfo createResponseInfoFromRequestHeaders(@RequestHeader HttpHeaders headers, Boolean success) {
-        String apiId = headers.getFirst("apiId");
-        String ver = headers.getFirst("ver");
-        String ts = headers.getFirst("ts");
-        String resMsgId = "uief87324"; // FIXME : Hard-coded
-        String msgId = headers.getFirst("msgId");
-        String responseStatus = success ? "successful" : "failed";
-		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
+    public ResponseInfo createResponseInfoFromRequestHeaders(RequestInfo requestInfo) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setApiId(requestInfo.getApiId());
+        responseInfo.setMsgId(requestInfo.getMsgId());
+        //responseInfo.setResMsgId("");
+        //responseInfo.setStatus(status);
+        responseInfo.setTs(new Date().toString());
+        responseInfo.setVer("v1");
+        
+		return responseInfo;
     }
 }

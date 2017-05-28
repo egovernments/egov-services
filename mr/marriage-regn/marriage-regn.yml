@@ -564,6 +564,323 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags: 
        - Service Configuration  
+
+  /marriageRegns/report/regns/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Search Marriage registrations for criteria.
+      description: |
+         Get the list of marriage registrations for given criteria.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - name: husbandReligion
+          in: query
+          description: Religion of husband.
+          required: true
+          type: string
+        - name: wifeReligion
+          in: query
+          description: Religion of wife.
+          required: true
+          type: string
+        - name: regnStatus
+          in: query
+          description: Status of the marriage registration application. If not specified, all statuses will be considered for query.
+          required: false
+          type: string
+        - name: husbandHandicapped
+          in: query
+          description: Was the husband handicapped at the time of marriage?
+          required: false
+          type: boolean
+        - name: wifeHandicapped
+          in: query
+          description: Was the wife handicapped at the time of marriage?
+          required: false
+          type: boolean
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByReligion/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Religion-wise count of marriage registrations for a date-range.
+      description: |
+         Get the count of marriage registrations grouped by religion for a given date-range. The husband's religion is considered here. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByRegnUnit/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: RegistrationUnit-wise count of marriage registrations for a date-range.
+      description: |
+         Get the count of marriage registrations and reissues grouped by registration unit for a given date-range. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByAge/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Age-wise count of marriage registrations for a date-range.
+      description: |
+         Get the count of marriage registrations grouped by age ranges for a given date-range. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByApprovalDays/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Count of marriage registrations by time taken for approval in a date-range.
+      description: |
+         Get the count of marriage registration applications grouped by ranges of days taken for approval for a given date-range. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/fundCollection/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Fund collected for marriage regns or reissue broken down by month for a given month-range.
+      description: |
+         Get the total of fund collected for marriage registrations or reissue of certificates, broken down by month for a given month-range.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromMonth
+          in: query
+          description: From this month of registration. Accepts in MM/YYYY format.
+          required: true
+          type: string
+        - name: toMonth
+          in: query
+          description: Till this month of registration. Accepts in MM/YYYY format.
+          required: true
+          type: string
+        - name: regnUnit
+          in: query
+          description: Registration unit code.
+          required: false
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /marriageRegns/report/maritalStatus/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Count of marriage registrations by marital status of husband and wife.
+      description: |
+         Get the count of marriage registrations grouped by marital status of husband and wife.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - name: regnUnit
+          in: query
+          description: Registration unit code.
+          required: false
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 definitions:
   RegistrationUnit:
     title: Registration Unit
@@ -980,14 +1297,14 @@ definitions:
       code:
         description: Code to identify a document type.
         type: string
-      proof:
+      documentProof:
         description: proof type that a document is used for.
         enum:
           - COMMON
           - AGE
-          - ADDRESS_PROOF
+          - ADDRESS
         type: string
-      regnType:
+      applicationType:
         description: Type of transaction
         enum:
           - REGISTRATION
@@ -1008,8 +1325,8 @@ definitions:
     required:
       - name
       - code
-      - proof
-      - regnType
+      - documentProof
+      - applicationType
       - isActive
       - isIndividual
       - isRequired
@@ -1293,23 +1610,32 @@ definitions:
       totalResults:
         type: integer
         format: int32
-        description: total results of the Pagination
+        description: total results inside the current page
       totalPages:
         type: integer
         format: int32
-        description: total pages of the Pagination
+        description: total pages of results for given search criteria
       pageSize:
         type: integer
         format: int32
-        description: Number of records per page in the Pagination, Default value is 20
+        description: Number of records per page in the Pagination, Default value is 20. This property is used in both request and response.
       currentPage:
         type: integer
         format: int32
-        description: current page of the Pagination
+        description: current page of the Pagination given in response
       offSet:
         type: integer
         format: int32
-        description: page number of the Pagination, Default value is 0  
+        description: page number input given during request, Default value is 0. In response, this parameter needs to be ignored.
+  ReportQuery:
+    type: object
+    properties:
+      location:
+        type: string
+        description: The URL for Elastic Search with query parameters to be used by the client of the API to access and get the results
+      body:
+        type: string
+        description: The content to put in HTTP Body for searching ES. Note that ES search API accepts query in body part in a HTTP GET request.
   MarriageRegnRequest:
     properties:
       requestInfo:
@@ -1423,6 +1749,13 @@ definitions:
         items: 
          $ref: '#/definitions/ServiceConfigKeyValues'
      
+  ReportResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      reportQuery:
+        $ref: '#/definitions/ReportQuery'
+    type: object
   ResponseInfo:
     type: object
     properties:
@@ -1543,4 +1876,6 @@ tags:
   - name: Marriage Document Type
     description: Everything you need to handle Marriage Document Type Master data. 
   - name: Service Configuration
-    description: Search Configuration parameters and values for the service.   
+    description: Search Configuration parameters and values for the service.
+  - name: Report
+    description: Reports for the service.

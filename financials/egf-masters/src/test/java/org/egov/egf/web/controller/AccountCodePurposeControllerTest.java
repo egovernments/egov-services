@@ -84,7 +84,7 @@ public class AccountCodePurposeControllerTest {
 		assertEquals("default", actualRequest.getAccountCodePurpose().getTenantId());
 	}
 
-	@Test
+	/*@Test
 	public void testSearch() throws IOException, Exception {
 
 		final ArgumentCaptor<AccountCodePurposeContractRequest> argumentCaptor = ArgumentCaptor
@@ -105,7 +105,7 @@ public class AccountCodePurposeControllerTest {
 		assertEquals("did", actualRequest.getRequestInfo().getDid());
 		assertEquals("msgId", actualRequest.getRequestInfo().getMsgId());
 		assertEquals("requesterId", actualRequest.getRequestInfo().getRequesterId());
-	}
+	}*/
 
 	@Test
 	public void testUpdateAll() throws IOException, Exception {

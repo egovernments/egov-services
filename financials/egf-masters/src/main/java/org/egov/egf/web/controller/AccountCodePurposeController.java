@@ -2,6 +2,7 @@ package org.egov.egf.web.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -10,13 +11,14 @@ import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContract;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContractRequest;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContractResponse;
+import org.egov.egf.persistence.queue.contract.AccountCodePurposeGetRequest;
 import org.egov.egf.persistence.queue.contract.Pagination;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountCodePurposeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/accountcodepurposes")
 public class AccountCodePurposeController {
+	
 	@Autowired
 	private AccountCodePurposeService accountCodePurposeService;
 
@@ -119,10 +122,10 @@ public class AccountCodePurposeController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public AccountCodePurposeContractResponse search(
-			@ModelAttribute AccountCodePurposeContract accountCodePurposeContracts,
+			@ModelAttribute AccountCodePurposeGetRequest accountCodePurposeGetRequest,
 			@RequestBody RequestInfo requestInfo, BindingResult errors) {
 		AccountCodePurposeContractRequest accountCodePurposeContractRequest = new AccountCodePurposeContractRequest();
-		accountCodePurposeContractRequest.setAccountCodePurpose(accountCodePurposeContracts);
+		accountCodePurposeContractRequest.setAccountCodePurposeGetRequest(accountCodePurposeGetRequest);
 		accountCodePurposeContractRequest.setRequestInfo(requestInfo);
 		accountCodePurposeService.validate(accountCodePurposeContractRequest, "search", errors);
 		if (errors.hasErrors()) {
@@ -132,44 +135,17 @@ public class AccountCodePurposeController {
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
 		accountCodePurposeContractResponse.setPage(new Pagination());
-		Page<AccountCodePurpose> allAccountCodePurposes;
-		ModelMapper model = new ModelMapper();
+		List<AccountCodePurpose> accountCodePurposesList = null;
+		accountCodePurposesList = accountCodePurposeService.getAccountCodePurposes(accountCodePurposeGetRequest);
 
-		allAccountCodePurposes = accountCodePurposeService.search(accountCodePurposeContractRequest);
+		ModelMapper model = new ModelMapper();
 		AccountCodePurposeContract accountCodePurposeContract = null;
-		for (AccountCodePurpose b : allAccountCodePurposes) {
+		for (AccountCodePurpose b : accountCodePurposesList) {
 			accountCodePurposeContract = new AccountCodePurposeContract();
 			model.map(b, accountCodePurposeContract);
 			accountCodePurposeContractResponse.getAccountCodePurposes().add(accountCodePurposeContract);
 		}
-		accountCodePurposeContractResponse.getPage().map(allAccountCodePurposes);
-		accountCodePurposeContractResponse
-				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
-		accountCodePurposeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		return accountCodePurposeContractResponse;
-	}
-
-	@PostMapping(value = "/{uniqueId}/view")
-
-	@ResponseStatus(HttpStatus.OK)
-	public AccountCodePurposeContractResponse view(
-
-			@ModelAttribute AccountCodePurposeContractRequest accountCodePurposeContractRequest, BindingResult errors,
-
-			@PathVariable Long uniqueId) {
-		accountCodePurposeService.validate(accountCodePurposeContractRequest, "view", errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);
-		AccountCodePurpose accountCodePurposeFromDb = accountCodePurposeService.findOne(uniqueId);
-		AccountCodePurposeContract accountCodePurpose = accountCodePurposeContractRequest.getAccountCodePurpose();
-
-		ModelMapper model = new ModelMapper();
-		model.map(accountCodePurposeFromDb, accountCodePurpose);
-
-		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
-		accountCodePurposeContractResponse.setAccountCodePurpose(accountCodePurpose);
+		accountCodePurposeContractResponse.getPage().map(new PageImpl<AccountCodePurpose>(accountCodePurposesList));
 		accountCodePurposeContractResponse
 				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
 		accountCodePurposeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());

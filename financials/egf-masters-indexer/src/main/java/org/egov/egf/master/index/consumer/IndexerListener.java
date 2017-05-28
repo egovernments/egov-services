@@ -76,6 +76,31 @@ public class IndexerListener {
 	@KafkaListener(id = "${kafka.topics.egov.index.id}", topics = "${kafka.topics.egov.index.name}", group = "${kafka.topics.egov.index.group}")
 	public void listen(HashMap<String, Object> financialContractRequestMap) {
 
+		if (financialContractRequestMap.get("AccountCodePurpose") != null) {
+
+			AccountCodePurposeContractResponse accountCodePurposeContractResponse;
+
+			accountCodePurposeContractResponse = ObjectMapperFactory.create().convertValue(
+					financialContractRequestMap.get("AccountCodePurpose"), AccountCodePurposeContractResponse.class);
+
+			if (accountCodePurposeContractResponse.getAccountCodePurposes() != null
+					&& !accountCodePurposeContractResponse.getAccountCodePurposes().isEmpty()) {
+				for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractResponse
+						.getAccountCodePurposes()) {
+					RequestContext.setId("" + accountCodePurposeContract);
+					elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
+							accountCodePurposeContract.getTenantId() + "" + accountCodePurposeContract.getName(),
+							accountCodePurposeContract);
+				}
+			} else if (accountCodePurposeContractResponse.getAccountCodePurpose() != null) {
+				RequestContext.setId("" + accountCodePurposeContractResponse.getAccountCodePurpose());
+				elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
+						accountCodePurposeContractResponse.getAccountCodePurpose().getTenantId() + ""
+								+ accountCodePurposeContractResponse.getAccountCodePurpose().getName(),
+						accountCodePurposeContractResponse.getAccountCodePurpose());
+			}
+		}
+
 		if (financialContractRequestMap.get("Bank") != null) {
 
 			BankContractResponse bankContractResponse;
@@ -141,31 +166,6 @@ public class IndexerListener {
 						bankAccountContractResponse.getBankAccount().getTenantId() + ""
 								+ bankAccountContractResponse.getBankAccount().getAccountNumber(),
 						bankAccountContractResponse.getBankAccount());
-			}
-		}
-
-		if (financialContractRequestMap.get("AccountCodePurpose") != null) {
-
-			AccountCodePurposeContractResponse accountCodePurposeContractResponse;
-
-			accountCodePurposeContractResponse = ObjectMapperFactory.create().convertValue(
-					financialContractRequestMap.get("AccountCodePurpose"), AccountCodePurposeContractResponse.class);
-
-			if (accountCodePurposeContractResponse.getAccountCodePurposes() != null
-					&& !accountCodePurposeContractResponse.getAccountCodePurposes().isEmpty()) {
-				for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractResponse
-						.getAccountCodePurposes()) {
-					RequestContext.setId("" + accountCodePurposeContract);
-					elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
-							accountCodePurposeContract.getTenantId() + "" + accountCodePurposeContract.getName(),
-							accountCodePurposeContract);
-				}
-			} else if (accountCodePurposeContractResponse.getAccountCodePurpose() != null) {
-				RequestContext.setId("" + accountCodePurposeContractResponse.getAccountCodePurpose());
-				elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
-						accountCodePurposeContractResponse.getAccountCodePurpose().getTenantId() + ""
-								+ accountCodePurposeContractResponse.getAccountCodePurpose().getName(),
-						accountCodePurposeContractResponse.getAccountCodePurpose());
 			}
 		}
 
@@ -305,18 +305,19 @@ public class IndexerListener {
 				for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailContractResponse
 						.getChartOfAccountDetails()) {
 					RequestContext.setId("" + chartOfAccountDetailContract);
-					elasticSearchRepository
-							.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
-									chartOfAccountDetailContract.getTenantId() + ""
-											+ chartOfAccountDetailContract.getChartOfAccount().getGlcode(),
-									chartOfAccountDetailContract);
+					elasticSearchRepository.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
+							chartOfAccountDetailContract.getTenantId() + ""
+									+ chartOfAccountDetailContract.getChartOfAccount().getGlcode(),
+							chartOfAccountDetailContract);
 				}
 			} else if (chartOfAccountDetailContractResponse.getChartOfAccountDetail() != null) {
 				RequestContext.setId("" + chartOfAccountDetailContractResponse.getChartOfAccountDetail());
-				elasticSearchRepository.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
-						chartOfAccountDetailContractResponse.getChartOfAccountDetail().getTenantId() + ""
-								+ chartOfAccountDetailContractResponse.getChartOfAccountDetail().getChartOfAccount().getGlcode(),
-						chartOfAccountDetailContractResponse.getChartOfAccountDetail());
+				elasticSearchRepository
+						.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
+								chartOfAccountDetailContractResponse.getChartOfAccountDetail().getTenantId() + ""
+										+ chartOfAccountDetailContractResponse.getChartOfAccountDetail()
+												.getChartOfAccount().getGlcode(),
+								chartOfAccountDetailContractResponse.getChartOfAccountDetail());
 			}
 		}
 

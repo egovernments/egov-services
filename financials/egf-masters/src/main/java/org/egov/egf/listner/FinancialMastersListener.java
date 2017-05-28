@@ -172,6 +172,28 @@ public class FinancialMastersListener {
 	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
 	public void process(HashMap<String, Object> financialContractRequestMap) {
 
+		if (financialContractRequestMap.get("AccountCodePurposeCreate") != null) {
+
+			AccountCodePurposeContractResponse accountCodePurposeContractResponse = accountCodePurposeService
+					.create(financialContractRequestMap);
+
+			HashMap<String, Object> accountCodePurposeContractResponseMap = new HashMap<String, Object>();
+			accountCodePurposeContractResponseMap.put("AccountCodePurpose", accountCodePurposeContractResponse);
+			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey, accountCodePurposeContractResponseMap);
+		}
+
+		if (financialContractRequestMap.get("AccountCodePurposeUpdate") != null) {
+
+			AccountCodePurposeContractResponse accountCodePurposeContractResponse = accountCodePurposeService
+					.update(financialContractRequestMap);
+
+			HashMap<String, Object> accountCodePurposeContractResponseMap = new HashMap<String, Object>();
+			accountCodePurposeContractResponseMap.put("AccountCodePurpose", accountCodePurposeContractResponse);
+			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey,
+					accountCodePurposeContractResponseMap);
+
+		}
+
 		if (financialContractRequestMap.get("BankCreate") != null) {
 			BankContractResponse bankContractResponse = bankService.create(financialContractRequestMap);
 			HashMap<String, Object> bankContractResponseMap = new HashMap<String, Object>();
@@ -239,33 +261,6 @@ public class FinancialMastersListener {
 			HashMap<String, Object> bankAccountContractResponseMap = new HashMap<String, Object>();
 			bankAccountContractResponseMap.put("BankAccount", bankAccountContractResponse);
 			financialProducer.sendMessage(completedTopic, bankAccountCompletedKey, bankAccountContractResponseMap);
-		}
-
-		if (financialContractRequestMap.get("AccountCodePurposeCreate") != null) {
-			AccountCodePurposeContractResponse accountCodePurposeContractResponse = accountCodePurposeService
-					.create(financialContractRequestMap);
-			HashMap<String, Object> accountCodePurposeContractResponseMap = new HashMap<String, Object>();
-			accountCodePurposeContractResponseMap.put("AccountCodePurpose", accountCodePurposeContractResponse);
-			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey,
-					accountCodePurposeContractResponseMap);
-		}
-
-		if (financialContractRequestMap.get("AccountCodePurposeUpdateAll") != null) {
-			AccountCodePurposeContractResponse accountCodePurposeContractResponse = accountCodePurposeService
-					.updateAll(financialContractRequestMap);
-			HashMap<String, Object> accountCodePurposeContractResponseMap = new HashMap<String, Object>();
-			accountCodePurposeContractResponseMap.put("AccountCodePurpose", accountCodePurposeContractResponse);
-			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey,
-					accountCodePurposeContractResponseMap);
-		}
-
-		if (financialContractRequestMap.get("AccountCodePurposeUpdate") != null) {
-			AccountCodePurposeContractResponse accountCodePurposeContractResponse = accountCodePurposeService
-					.update(financialContractRequestMap);
-			HashMap<String, Object> accountCodePurposeContractResponseMap = new HashMap<String, Object>();
-			accountCodePurposeContractResponseMap.put("AccountCodePurpose", accountCodePurposeContractResponse);
-			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey,
-					accountCodePurposeContractResponseMap);
 		}
 
 		if (financialContractRequestMap.get("AccountDetailKeyCreate") != null) {

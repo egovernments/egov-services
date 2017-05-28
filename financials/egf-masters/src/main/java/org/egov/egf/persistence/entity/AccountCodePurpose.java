@@ -39,37 +39,40 @@
  */
 package org.egov.egf.persistence.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
 @Setter
-@Entity
-@Table(name = "egf_accountcodepurpose")
-@SequenceGenerator(name = AccountCodePurpose.SEQ_EGF_ACCOUNTCODEPURPOSE, sequenceName = AccountCodePurpose.SEQ_EGF_ACCOUNTCODEPURPOSE, allocationSize = 1)
-public class AccountCodePurpose extends AbstractAuditable {
+@ToString
+public class AccountCodePurpose {
 
-	private static final long serialVersionUID = 1L;
-	public static final String SEQ_EGF_ACCOUNTCODEPURPOSE = "SEQ_EGF_ACCOUNTCODEPURPOSE";
-
-	@Id
-	@GeneratedValue(generator = SEQ_EGF_ACCOUNTCODEPURPOSE, strategy = GenerationType.SEQUENCE)
 	private Long id;
+
+	private Long createdBy;
+
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	private Date lastModifiedDate;
+
+	@NotNull
+	private String tenantId;
 
 	@NotNull
 	@Length(max = 256, min = 3)
@@ -78,6 +81,10 @@ public class AccountCodePurpose extends AbstractAuditable {
 	public AccountCodePurpose(AccountCodePurposeContract contract) {
 		this.setId(contract.getId());
 		this.setName(contract.getName());
+		this.setCreatedBy(contract.getCreatedBy());
+		this.setCreatedDate(contract.getCreatedDate());
+		this.setLastModifiedBy(contract.getLastModifiedBy());
+		this.setLastModifiedDate(contract.getLastModifiedDate());
 		this.setTenantId(contract.getTenantId());
 	}
 }

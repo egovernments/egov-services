@@ -13,17 +13,13 @@ import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContract;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContractRequest;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContractResponse;
+import org.egov.egf.persistence.queue.contract.AccountCodePurposeGetRequest;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
-import org.egov.egf.persistence.repository.AccountCodePurposeJpaRepository;
 import org.egov.egf.persistence.repository.AccountCodePurposeQueueRepository;
-import org.egov.egf.persistence.specification.AccountCodePurposeSpecification;
+import org.egov.egf.persistence.repository.AccountCodePurposeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -35,7 +31,7 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class AccountCodePurposeService {
 
-	private final AccountCodePurposeJpaRepository accountCodePurposeJpaRepository;
+	private final AccountCodePurposeRepository accountCodePurposeRepository;
 
 	private final AccountCodePurposeQueueRepository accountCodePurposeQueueRepository;
 
@@ -43,14 +39,14 @@ public class AccountCodePurposeService {
 	private EntityManager entityManager;
 
 	@Autowired
-	public AccountCodePurposeService(final AccountCodePurposeJpaRepository accountCodePurposeJpaRepository,
-			final AccountCodePurposeQueueRepository accountCodePurposeQueueRepository) {
-		this.accountCodePurposeJpaRepository = accountCodePurposeJpaRepository;
-		this.accountCodePurposeQueueRepository = accountCodePurposeQueueRepository;
-	}
+	private SmartValidator validator;
 
 	@Autowired
-	private SmartValidator validator;
+	public AccountCodePurposeService(final AccountCodePurposeRepository accountCodePurposeRepository,
+			final AccountCodePurposeQueueRepository accountCodePurposeQueueRepository) {
+		this.accountCodePurposeRepository = accountCodePurposeRepository;
+		this.accountCodePurposeQueueRepository = accountCodePurposeQueueRepository;
+	}
 
 	public void push(final AccountCodePurposeContractRequest accountCodePurposeContractRequest) {
 		accountCodePurposeQueueRepository.push(accountCodePurposeContractRequest);
@@ -58,108 +54,47 @@ public class AccountCodePurposeService {
 
 	@Transactional
 	public AccountCodePurposeContractResponse create(HashMap<String, Object> financialContractRequestMap) {
-		final AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("AccountCodePurposeCreate"),
-						AccountCodePurposeContractRequest.class);
+		AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("AccountCodePurposeCreate"), AccountCodePurposeContractRequest.class);
+		accountCodePurposeContractRequest = accountCodePurposeRepository.create(accountCodePurposeContractRequest);
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
 		ModelMapper modelMapper = new ModelMapper();
-		if (accountCodePurposeContractRequest.getAccountCodePurposes() != null
-				&& !accountCodePurposeContractRequest.getAccountCodePurposes().isEmpty()) {
-			for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
-					.getAccountCodePurposes()) {
-				AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
-				accountCodePurposeJpaRepository.save(accountCodePurposeEntity);
-				AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
-						AccountCodePurposeContract.class);
-				accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
-			}
-		} else if (accountCodePurposeContractRequest.getAccountCodePurpose() != null) {
-			AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(
-					accountCodePurposeContractRequest.getAccountCodePurpose());
-			accountCodePurposeJpaRepository.save(accountCodePurposeEntity);
+		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
+				.getAccountCodePurposes()) {
+			AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
 			AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
 					AccountCodePurposeContract.class);
-			accountCodePurposeContractResponse.setAccountCodePurpose(resp);
+			accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
 		}
 		accountCodePurposeContractResponse
 				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
 		return accountCodePurposeContractResponse;
-	}
 
-	@Transactional
-	public AccountCodePurposeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
-		final AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("AccountCodePurposeUpdateAll"),
-						AccountCodePurposeContractRequest.class);
-		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
-		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
-		ModelMapper modelMapper = new ModelMapper();
-		if (accountCodePurposeContractRequest.getAccountCodePurposes() != null
-				&& !accountCodePurposeContractRequest.getAccountCodePurposes().isEmpty()) {
-			for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
-					.getAccountCodePurposes()) {
-				AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
-				accountCodePurposeEntity.setVersion(findOne(accountCodePurposeEntity.getId()).getVersion());
-				accountCodePurposeJpaRepository.save(accountCodePurposeEntity);
-				AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
-						AccountCodePurposeContract.class);
-				accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
-			}
-		}
-		accountCodePurposeContractResponse
-				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
-		return accountCodePurposeContractResponse;
 	}
 
 	@Transactional
 	public AccountCodePurposeContractResponse update(HashMap<String, Object> financialContractRequestMap) {
-		final AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("AccountCodePurposeUpdate"),
-						AccountCodePurposeContractRequest.class);
+		AccountCodePurposeContractRequest accountCodePurposeContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("AccountCodePurposeUpdate"), AccountCodePurposeContractRequest.class);
+		accountCodePurposeContractRequest = accountCodePurposeRepository.update(accountCodePurposeContractRequest);
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
 		ModelMapper modelMapper = new ModelMapper();
-		AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(
-				accountCodePurposeContractRequest.getAccountCodePurpose());
-		accountCodePurposeEntity
-				.setVersion(accountCodePurposeJpaRepository.findOne(accountCodePurposeEntity.getId()).getVersion());
-		accountCodePurposeJpaRepository.save(accountCodePurposeEntity);
-		AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity, AccountCodePurposeContract.class);
-		accountCodePurposeContractResponse.setAccountCodePurpose(resp);
+		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
+				.getAccountCodePurposes()) {
+			AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
+			AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
+					AccountCodePurposeContract.class);
+			accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
+		}
 		accountCodePurposeContractResponse
 				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
 		return accountCodePurposeContractResponse;
 	}
 
-	@Transactional
-	public AccountCodePurpose create(final AccountCodePurpose accountCodePurpose) {
-		return accountCodePurposeJpaRepository.save(accountCodePurpose);
-	}
-
-	@Transactional
-	public AccountCodePurpose update(final AccountCodePurpose accountCodePurpose) {
-		return accountCodePurposeJpaRepository.save(accountCodePurpose);
-	}
-
-	public List<AccountCodePurpose> findAll() {
-		return accountCodePurposeJpaRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
-
-	public AccountCodePurpose findByName(String name) {
-		return accountCodePurposeJpaRepository.findByName(name);
-	}
-
-	public AccountCodePurpose findOne(Long id) {
-		return accountCodePurposeJpaRepository.findOne(id);
-	}
-
-	public Page<AccountCodePurpose> search(AccountCodePurposeContractRequest accountCodePurposeContractRequest) {
-		final AccountCodePurposeSpecification specification = new AccountCodePurposeSpecification(
-				accountCodePurposeContractRequest.getAccountCodePurpose());
-		Pageable page = new PageRequest(accountCodePurposeContractRequest.getPage().getOffSet(),
-				accountCodePurposeContractRequest.getPage().getPageSize());
-		return accountCodePurposeJpaRepository.findAll(specification, page);
+	public List<AccountCodePurpose> getAccountCodePurposes(AccountCodePurposeGetRequest accountCodePurposeGetRequest) {
+		return accountCodePurposeRepository.findForCriteria(accountCodePurposeGetRequest);
 	}
 
 	public BindingResult validate(AccountCodePurposeContractRequest accountCodePurposeContractRequest, String method,
@@ -172,9 +107,8 @@ public class AccountCodePurposeService {
 						"AccountCodePurpose to edit must not be null");
 				validator.validate(accountCodePurposeContractRequest.getAccountCodePurpose(), errors);
 				break;
-			case "view":
-				// validator.validate(accountCodePurposeContractRequest.getAccountCodePurpose(),
-				// errors);
+			case "search":
+				validator.validate(accountCodePurposeContractRequest.getAccountCodePurposeGetRequest(), errors);
 				break;
 			case "create":
 				Assert.notNull(accountCodePurposeContractRequest.getAccountCodePurposes(),

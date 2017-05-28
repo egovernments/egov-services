@@ -24,9 +24,8 @@ public class AccountCodePurposeQueueRepository {
 		HashMap<String, Object> accountCodePurposeContractRequestMap = new HashMap<String, Object>();
 		if ("create".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
 			accountCodePurposeContractRequestMap.put("AccountCodePurposeCreate", accountCodePurposeContractRequest);
-		else if ("updateAll".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
-			accountCodePurposeContractRequestMap.put("AccountCodePurposeUpdateAll", accountCodePurposeContractRequest);
-		else if ("update".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
+		else if ("updateAll".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction())
+				|| "update".equalsIgnoreCase(accountCodePurposeContractRequest.getRequestInfo().getAction()))
 			accountCodePurposeContractRequestMap.put("AccountCodePurposeUpdate", accountCodePurposeContractRequest);
 
 		financialProducer.sendMessage(accountCodePurposeValidatedTopic, accountCodePurposeValidatedKey,

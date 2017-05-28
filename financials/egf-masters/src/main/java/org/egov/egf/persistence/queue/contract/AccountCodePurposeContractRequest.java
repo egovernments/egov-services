@@ -49,4 +49,5 @@ public @Data class AccountCodePurposeContractRequest {
 	private List<AccountCodePurposeContract> accountCodePurposes = new ArrayList<AccountCodePurposeContract>();
 	private AccountCodePurposeContract accountCodePurpose = new AccountCodePurposeContract();
 	private Pagination page = new Pagination();
+	private AccountCodePurposeGetRequest accountCodePurposeGetRequest = new AccountCodePurposeGetRequest();
 }

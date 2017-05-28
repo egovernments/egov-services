@@ -87,7 +87,7 @@ public class ChartOfAccountService {
 		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
 		return chartOfAccountContractResponse;
 	}
-	
+
 	@Transactional
 	public ChartOfAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
@@ -109,8 +109,6 @@ public class ChartOfAccountService {
 		return chartOfAccountContractResponse;
 	}
 
-	
-	
 	@Transactional
 	public ChartOfAccountContractResponse update(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
@@ -135,8 +133,7 @@ public class ChartOfAccountService {
 
 	private void setChartOfAccount(final ChartOfAccount chartOfAccount) {
 		if (chartOfAccount.getAccountCodePurpose() != null) {
-			final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-					.findOne(chartOfAccount.getAccountCodePurpose());
+			final AccountCodePurpose accountCodePurpose = null;// accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose());
 			if (accountCodePurpose == null)
 				throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
 						" Invalid accountCodePurpose");
@@ -240,8 +237,7 @@ public class ChartOfAccountService {
 		final ModelMapper model = new ModelMapper();
 		for (final ChartOfAccountContract chartOfAccount : chartOfAccountContractRequest.getChartOfAccounts()) {
 			if (chartOfAccount.getAccountCodePurpose() != null) {
-				final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-						.findOne(chartOfAccount.getAccountCodePurpose().getId());
+				final AccountCodePurpose accountCodePurpose = null;//accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
 				if (accountCodePurpose == null)
 					throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
 							" Invalid accountCodePurpose");
@@ -256,8 +252,7 @@ public class ChartOfAccountService {
 		}
 		final ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
 		if (chartOfAccount.getAccountCodePurpose() != null) {
-			final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-					.findOne(chartOfAccount.getAccountCodePurpose().getId());
+			final AccountCodePurpose accountCodePurpose = null;//accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
 			if (accountCodePurpose == null)
 				throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
 						" Invalid accountCodePurpose");

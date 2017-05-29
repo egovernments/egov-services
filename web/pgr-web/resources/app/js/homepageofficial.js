@@ -462,7 +462,7 @@ function worklist(){
 			}
 	    } },
 		{ "title":dt_comments, "width": "25%", "render": function ( data, type, full, meta ) {
-			var text = 'Complaint Number '+(full.serviceRequestId)+' for '+(full.serviceName)+' filed on '+(full.requestedDatetime)+'. Date of Resolution is '+(full.expectedDatetime);
+			var text = 'Service Request Number '+(full.serviceRequestId)+' for '+(full.serviceName)+' filed on '+(full.requestedDatetime)+'. Date of Resolution is '+(full.expectedDatetime);
 			return text;
 	    } },
 		{ "data" : null, "target":-1,"defaultContent": '<i class="fa fa-history inbox-history history-size" class="tooltip-secondary" data-toggle="tooltip" title="History"></i>'},
@@ -609,7 +609,8 @@ function inboxloadmethod(){
 	//bootbox.alert('came to my parent'+focussedmenu);
 	//bootbox.alert('Nature of work'+now);
 	clearnow();
-	if(focussedmenu == 'worklist'){
+	worklist();
+	/*if(focussedmenu == 'worklist'){
 		worklist();
 		//nature of work make it stable
 		setTimeout(function(){ 
@@ -627,7 +628,7 @@ function inboxloadmethod(){
 		drafts();
 	}else if(focussedmenu == 'notifications'){
 		notifications();
-	}
+	}*/
 }
 
 function getPosition(){

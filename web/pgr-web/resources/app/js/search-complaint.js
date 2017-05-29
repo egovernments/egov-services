@@ -71,8 +71,9 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		hideLoader();
 	});
 
-	if(keyword != 'Complaint')
+	if(keyword != 'Complaint'){
 		$('.complaintSection').hide();
+	}
 
     $('#toggle-searchcomp').click(function () {
         if ($(this).data('translate') == "core.lbl.more") {
@@ -324,8 +325,14 @@ function complaintType(){
 }					
 
 function loadStatus(){
+	var appendURL = '';
+	
+	if(keyword != 'Complaint')
+		appendURL = '&keyword=Deliverable_service';
+	else
+		appendURL = '';
 	$.ajax({
-		url: "/workflow/v1/statuses/_search?tenantId=default",
+		url: "/workflow/v1/statuses/_search?tenantId=default"+appendURL,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,

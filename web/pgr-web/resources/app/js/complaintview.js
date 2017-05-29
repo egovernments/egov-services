@@ -128,7 +128,7 @@ function getComplaint(){
 			showLoader();
 		},
 		success : function(response){
-			console.log('Get complaint done!'+JSON.stringify(response));
+			//console.log('Get complaint done!'+JSON.stringify(response));
 			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.serviceRequests.length == 0){
@@ -382,7 +382,7 @@ function complaintUpdate(obj){
 		});
 	}
 
-	console.log(JSON.stringify(req_obj))
+	//console.log(JSON.stringify(req_obj))
 	
 	$.ajax({
 		url: "/pgr/seva/_update",

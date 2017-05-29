@@ -688,10 +688,15 @@ definitions:
       vacantLand:
         $ref: "#/definitions/VacantLandProperty"
       floors:
-        description: Owners
+        description: Floors
         type: array
         items:
           $ref: '#/definitions/Floor'
+      documents:
+        description: documents
+        type: array
+        items:
+          $ref: '#/definitions/Document'
       channel:
         type: string
         description: channel of the PropertyDetail
@@ -992,11 +997,7 @@ definitions:
         format: int64
         description: unique id of the ApplicationType.
       documentType:
-        $ref: '#/definitions/DocumentType'        
-      property:
-        type: integer
-        format: int64
-        description: unique id of the Property.
+        $ref: '#/definitions/DocumentType'
       fileStore:
         type: string
         description: File store reference key.

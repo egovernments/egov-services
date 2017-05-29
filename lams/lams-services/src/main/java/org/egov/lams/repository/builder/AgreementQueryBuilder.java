@@ -155,7 +155,7 @@ public class AgreementQueryBuilder {
 		if (agreementsModel.getSize() != null)
 			preparedStatementValues.add(agreementsModel.getSize());
 		else
-			preparedStatementValues.add(20);
+			preparedStatementValues.add(500);
 
 		selectQuery.append(" OFFSET ?");
 

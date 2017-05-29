@@ -164,6 +164,9 @@ class UploadLeaveApplication extends React.Component{
           var allHolidayList = Object.assign([],this.state.allHolidayList);
           var hrConfigurations = Object.assign({},this.state.hrConfigurations);
 
+          console.log("this.state.employees",this.state.employees);
+
+          console.log("this.state._leaveTypes",this.state._leaveTypes);
           duplicateInfo.forEach(function(d){
             errorObject.push(d);
           });

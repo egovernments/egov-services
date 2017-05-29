@@ -1,0 +1,387 @@
+swagger: '2.0'
+
+info:
+  version: "1.1.0"
+  title: Voucher Service
+  description: Voucher services APIs - to create, update and search Voucher. 
+  contact:
+    name: Manikanta P T
+    email: info@egovernments.org
+  
+basePath: "/egf-voucher/v110"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egf-voucher/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.egf.voucher'
+paths:
+    /vouchers/_search:
+      post:
+        summary: Get the list of vouchers
+        description: vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the Voucher
+            maxLength: 16
+          - name: type
+            type: string
+            in: query
+            description: type of the Voucher
+            maxLength: 16
+          - name: description
+            type: string
+            in: query
+            description: description of the Voucher
+            maxLength: 256
+          - name: voucherNumber
+            type: string
+            in: query
+            description: voucher number of the Voucher
+            maxLength: 32
+          - name: voucherDate
+            type: string
+            format: date
+            in: query
+            description: voucher date of the Voucher
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: fund of the Voucher
+          - name: fiscalPeriod
+            type: integer
+            format: int64
+            in: query
+            description: fiscal period of the Voucher
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: status of the Voucher
+          - name: originalVhId
+            type: integer
+            format: int64
+            in: query
+            description: original vh id of the Voucher
+          - name: refVhId
+            type: integer
+            format: int64
+            in: query
+            description: ref vh id of the Voucher
+          - name: moduleId
+            type: integer
+            format: int64
+            in: query
+            description: module id of the Voucher
+          - name: glcode
+            type: string
+            in: query
+            description: glcode of the voucher
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
+        responses:
+          200:
+            description: Voucher retrieved Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_create:
+      post:
+        summary: Create  new  vouchers
+        description: Create  new vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: voucherRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/{id}/_update:
+      post:
+        summary: Update any of the vouchers
+        description: Update any of the vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Voucher
+            required: true
+            type: integer
+            format: int64
+          - name: voucherRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          200:
+            description: Voucher updated Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+definitions:
+    Voucher:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Voucher
+        name:
+          type: string
+          description: name of the Voucher
+          maxLength: 16
+        type:
+          type: string
+          description: type of the Voucher
+          maxLength: 16
+        description:
+          type: string
+          description: description of the Voucher
+          maxLength: 256
+        voucherNumber:
+          type: string
+          description: voucher number of the Voucher
+          maxLength: 32
+        voucherDate:
+          type: string
+          format: date
+          description: voucher date of the Voucher
+        fund:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Fund"
+        fiscalPeriod:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/FiscalPeriod"
+        status:
+          $ref: "#/definitions/EgfStatus"
+        originalVhId:
+          type: integer
+          format: int64
+          description: original vh id of the Voucher
+        refVhId:
+          type: integer
+          format: int64
+          description: ref vh id of the Voucher
+        cgvn:
+          type: string
+          description: cgvn of the Voucher
+        moduleId:
+          type: integer
+          format: int64
+          description: module id of the Voucher
+        ledgers:
+          type:  array
+          description:  ledgers of the Voucher
+          items:
+            $ref: "#/definitions/Ledger"
+        vouchermis:
+          $ref: "#/definitions/Vouchermis"
+      required:
+      - name
+      - type
+      - voucherDate
+    Ledger:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Ledger
+        orderId:
+          type: integer
+          format: int32
+          description: order id of the Ledger
+        chartOfAccount:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/ChartOfAccount"
+        glcode:
+          type: string
+          description: glcode of the Ledger
+          maxLength: 16
+        debitAmount:
+          type: number
+          format: double
+          description: debit amount of the Ledger
+        creditAmount:
+          type: number
+          format: double
+          description: credit amount of the Ledger
+        voucher:
+          $ref: "#/definitions/Voucher"
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Function"
+        ledgerDetails:
+          type:  array
+          description:  ledger details of the Ledger
+          items:
+            $ref: "#/definitions/LedgerDetail"
+        isSubLedger:
+          type: boolean
+          description: is sub ledger of the Ledger
+      required:
+      - glcode
+      - debitAmount
+      - creditAmount
+    Vouchermis:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Vouchermis
+        fundsource:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Fundsource"
+        billNumber:
+          type: string
+          description: bill number of the Vouchermis
+        boundary:
+          type: integer
+          format: int64
+          description: boundary of the Vouchermis
+        departmentId:
+          type: integer
+          format: int64
+          description: department id of the Vouchermis
+        scheme:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Scheme"
+        subScheme:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/SubScheme"
+        functionary:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Functionary"
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Function"
+        sourcePath:
+          type: string
+          description: source path of the Vouchermis
+        budgetAppropriationNo:
+          type: string
+          description: budget appropriation no of the Vouchermis
+        budgetCheckRequired:
+          type: boolean
+          description: budget check required of the Vouchermis
+        voucher:
+          $ref: "#/definitions/Voucher"
+    LedgerDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the LedgerDetail
+        ledger:
+          $ref: "#/definitions/Ledger"
+        accountDetailKey:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/AccountDetailKey"
+        accountDetailType:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/AccountDetailType"
+        amount:
+          type: number
+          format: double
+          description: amount of the LedgerDetail
+      required:
+      - accountDetailKey
+      - accountDetailType
+      - amount
+    VoucherRequest:
+      description: Contract class to receive request. Array of Voucher items  are used in case of create . Where as single Voucher item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+    VoucherResponse:
+      description: Contract class to send response. Array of Voucher items  are used in case of search results or response for create. Where as single Voucher item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Page'
+    EgfStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the EgfStatus
+        moduleType:
+          type: string
+          description: module type of the EgfStatus
+        code:
+          type: string
+          description: code of the EgfStatus
+        description:
+          type: string
+          description: description of the EgfStatus
+      required:
+      - id
+      - moduleType
+      - code
+      - description          
+

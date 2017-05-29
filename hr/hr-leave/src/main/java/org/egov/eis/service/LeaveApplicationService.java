@@ -181,4 +181,8 @@ public class LeaveApplicationService {
         return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
     }
 
+    public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication, final RequestInfo requestInfo) {
+        return leaveApplicationRepository.getLeaveApplicationForDateRange(leaveApplication, requestInfo);
+    }
+
 }

@@ -56,6 +56,7 @@ import javax.persistence.Table;
 import org.egov.demand.web.contract.BillDetailInfo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -135,6 +136,17 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 				.append(description).append(", additionalFlag=").append(additionalFlag).append(", egDemandReason=")
 				.append(egDemandReason).append(purpose).append("]");
 		return builder.toString();
+	}
+	
+	public BillDetailInfo toDomain(){
+		
+		//private Installment egInstallmentMaster;
+		//private Integer additionalFlag;
+		//private EgDemandReason egDemandReason;
+		//private String tenantId;
+		return BillDetailInfo.builder().billId(id).billId(egBill.getId()).creditAmount(crAmount).glCode(glcode)
+		.amountCollected(collectedAmount).debitAmount(drAmount).functionCode(functionCode).orderNo(orderNo)
+		.description(description).purpose(purpose).build();
 	}
 
 	/**

@@ -58,6 +58,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.egov.demand.web.contract.Bill;
+import org.egov.demand.web.contract.BillDetailInfo;
 import org.egov.demand.web.contract.BillInfo;
 
 import lombok.AllArgsConstructor;
@@ -110,7 +111,7 @@ public class EgBill implements java.io.Serializable {
 	@Column(name = "modified_date")
 	private Date modifiedDate;
 	@OneToMany(mappedBy = "egBill", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<EgBillDetails> egBillDetails = new ArrayList<EgBillDetails>();
+	private List<EgBillDetails> egBillDetails = new ArrayList<>();
 	@Column(name = "is_history")
 	private String is_History;
 	@Column(name = "is_cancelled")
@@ -193,7 +194,12 @@ public class EgBill implements java.io.Serializable {
 	}
 
 	public BillInfo toDomain() {
-		return BillInfo.builder().id(id).demandId(egDemand).citizenName(citizenName).citizenAddress(citizenAddress).billNumber(billNo).build();
+		
+		List<BillDetailInfo> billDetailInfos = new ArrayList<>();
+		for (EgBillDetails egBillDetailInfo : egBillDetails) {
+			billDetailInfos.add(egBillDetailInfo.toDomain());			
+		}
+		return BillInfo.builder().id(id).demandId(egDemand).citizenName(citizenName).citizenAddress(citizenAddress).billNumber(billNo).billDetailInfos(billDetailInfos).build();
 	}
 	
 	@Override

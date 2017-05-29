@@ -9,12 +9,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
+@ToString
 public class DemandReasonCriteria {
 	private Long id;
 	private String moduleName;

@@ -49,8 +49,8 @@ public class PgrWorkflow implements Workflow {
         state.setSenderName(processInstance.getSenderName());
         state.setStatus(State.StateStatus.INPROGRESS);
         state.setValue(processInstance.getStatus());
-        state.setComments("Complaint is created with CRN : " + processInstance.getValueForKey("crn"));
-        state.setNatureOfTask("Grievance");
+        state.setComments("Service Request is created with SRN : " + processInstance.getValueForKey("crn"));
+        state.setNatureOfTask("Service Request");
         state.setOwnerPosition(resolveAssignee(processInstance));
         state.setExtraInfo(processInstance.getValueForKey("statusDetails"));
         state.setDateInfo(processInstance.getCreatedDate());

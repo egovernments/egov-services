@@ -7,6 +7,7 @@ import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.model.Revaluation;
+import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.RevaluationRepository;
 import org.slf4j.Logger;
@@ -62,6 +63,16 @@ public class RevaluationService {
 	
 	public void create(RevaluationRequest revaluationRequest) {
 		revaluationRepository.create(revaluationRequest);
+	}
+	
+	public RevaluationResponse search(RevaluationCriteria revaluationCriteria) {
+		List<Revaluation> revaluations = null;
+		try{
+			revaluations = revaluationRepository.search(revaluationCriteria);
+		} catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return getRevaluationResponse(revaluations);
 	}
 	
 	private RevaluationResponse getRevaluationResponse(List<Revaluation> revaluations) {

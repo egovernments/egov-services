@@ -54,6 +54,7 @@ import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Revaluation;
+import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
@@ -165,20 +166,23 @@ public class AssetController {
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("reevaluate")
+	@PostMapping("reevaluate/_search")
 	@ResponseBody
-	public ResponseEntity<?> get() {
-		System.out.println("get");
-		RevaluationRequest revaluationResponse = new RevaluationRequest();
-		Revaluation revaluation = new Revaluation();
-		revaluationResponse.setRevaluation(revaluation);
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setUserInfo(new User());
-		revaluation.setCreatedDate(new Date().getTime());
-		revaluationResponse.setRequestInfo(requestInfo);
+	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute RevaluationCriteria revaluationCriteria,BindingResult bindingResult) {
+
+		logger.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, need to be done.
+		
+		RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
+		
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
 	}
-	
+		
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 

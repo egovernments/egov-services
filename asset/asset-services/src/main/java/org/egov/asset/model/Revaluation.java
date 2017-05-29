@@ -47,8 +47,8 @@ public class Revaluation extends AuditDetails  {
   @JsonProperty("reasonForRevaluation")
   private String reasonForRevaluation = null;
 
-  @JsonProperty("fixedAssetsWrittenOffAccountCode")
-  private Long fixedAssetsWrittenOffAccountCode = null;
+  @JsonProperty("fixedAssetsWrittenOffAccount")
+  private Long fixedAssetsWrittenOffAccount = null;
 
   @JsonProperty("function")
   private Long function = null;

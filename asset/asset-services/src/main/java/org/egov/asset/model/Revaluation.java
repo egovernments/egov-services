@@ -15,7 +15,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class Revaluation extends AuditDetails  {
+public class Revaluation {
 	
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -67,6 +67,9 @@ public class Revaluation extends AuditDetails  {
   
   @JsonProperty("status")
   private RevaluationStatus status = null;
+  
+  @JsonProperty("auditDetails")
+  private AuditDetails auditDetails;
   
 
 }

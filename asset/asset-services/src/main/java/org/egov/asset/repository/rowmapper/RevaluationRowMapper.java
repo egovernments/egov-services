@@ -3,6 +3,7 @@ package org.egov.asset.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
@@ -33,10 +34,12 @@ public class RevaluationRowMapper implements RowMapper<Revaluation>{
 			revaluation.setSubScheme((Long)rs.getLong("subscheme"));
 			revaluation.setComments(rs.getString("comments"));
 			revaluation.setStatus(RevaluationStatus.fromValue(rs.getString("status")));
-			revaluation.setCreatedBy(rs.getString("createdby"));
-			revaluation.setCreatedDate((Long)rs.getLong("createddate"));
-			revaluation.setLastModifiedBy(rs.getString("lastmodifiedby"));
-			revaluation.setLastModifiedDate((Long)rs.getLong("lastmodifieddate"));
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(rs.getString("createdby"));
+			auditDetails.setCreatedDate((Long)rs.getLong("createddate"));
+			auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
+			auditDetails.setLastModifiedDate((Long)rs.getLong("lastmodifieddate"));
+			revaluation.setAuditDetails(auditDetails);
 			
 		}catch(Exception ex){
 			ex.printStackTrace();

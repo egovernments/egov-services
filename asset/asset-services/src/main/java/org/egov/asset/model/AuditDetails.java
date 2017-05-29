@@ -1,6 +1,7 @@
 package org.egov.asset.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,16 +12,16 @@ import lombok.ToString;
 @ToString
 public class AuditDetails {
 	
-	  @JsonIgnore
+	  @JsonProperty("createdBy")
 	  private String createdBy = null;
 	  
-	  @JsonIgnore
+	  @JsonProperty("createdDate")
 	  private Long createdDate = null;
 	  
-	  @JsonIgnore
+	  @JsonProperty("lastModifiedBy")
 	  private String lastModifiedBy = null;
 	  
-	  @JsonIgnore
+	  @JsonProperty("lastModifiedDate")
 	  private Long lastModifiedDate = null;
 
 }

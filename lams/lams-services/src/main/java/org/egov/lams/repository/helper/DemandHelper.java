@@ -6,6 +6,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.DemandReasonCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,24 @@ public class DemandHelper {
 		if (agreement.getSource().equals(Source.DATA_ENTRY))
 			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonName());
 		return urlParams.toString();
+	}
+	
+	public DemandReasonCriteria getDemandReasonModelAttribute(AgreementRequest agreementRequest) {
+		Agreement agreement = agreementRequest.getAgreement();
+
+		DemandReasonCriteria demandReasonCriteria = new DemandReasonCriteria();
+		logger.info("the criteria for demandReasonSearch are ::: " + demandReasonCriteria);
+		
+		demandReasonCriteria.setFromDate(agreement.getCommencementDate());
+		demandReasonCriteria.setToDate(agreement.getExpiryDate());
+		demandReasonCriteria.setInstallmentType(agreement.getPaymentCycle().toString());
+		demandReasonCriteria.setModuleName(propertiesManager.getDemandModuleName());
+		demandReasonCriteria.setTaxCategory(propertiesManager.getTaxCategoryName());
+		demandReasonCriteria.setTaxPeriod(agreement.getTimePeriod().toString());
+		demandReasonCriteria.setTenantId(agreement.getTenantId());
+
+		if (agreement.getSource().equals(Source.DATA_ENTRY))
+			demandReasonCriteria.setTaxReason(propertiesManager.getTaxReasonName());
+		return demandReasonCriteria;
 	}
 }

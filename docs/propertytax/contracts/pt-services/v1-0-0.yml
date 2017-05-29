@@ -19,7 +19,7 @@ info:
   
   title: eGov Property Tax Information System.
   description: |
-    APIs available for Property Tax.
+    APIs for Property Tax module. This modules handles registration of new properties, changes to existing properties (Detail Updates, division of property, amalgmation of properties, title transfer etc.), search of required properties and property tax calculation, demand generation, notices to enable ULBs to cmpletely manage the proeprties within their jurisdiction.
   contact:
     name: Ramki
 host: phoenix-qa.egovernments.org
@@ -38,6 +38,9 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
         - name: active
           in: query
           description: True will be set in cases where only active properties are needed and False will be set when inactive properties are needed and no value will be set when all properties are needed.
@@ -55,9 +58,6 @@ paths:
           maxLength: 128
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
         - name: oldUpicNo
           in: query
           required: false
@@ -203,99 +203,7 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
-      
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      fields:
-        type: object
-    required:
-      - code
-      - message
 
-  Address:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the Address
-      tenantId:
-        type: string
-        description: tenant id of the Address
-        maxLength: 128
-        minLength: 4
-      houseNoBldgApt:
-        type: string
-        description: house no bldg apt of the Address
-        maxLength: 32
-        minLength: 4
-      streetRoadLine:
-        type: string
-        description: street road line of the Address
-        maxLength: 256
-        minLength: 4
-      landmark:
-        type: string
-        description: landmark of the Address
-        maxLength: 256
-        minLength: 4
-      areaLocalitySector:
-        type: string
-        description: area locality sector of the Address
-        maxLength: 256
-        minLength: 4
-      cityTownVillage:
-        type: string
-        description: city town village of the Address
-        maxLength: 256
-        minLength: 4
-      district:
-        type: string
-        description: district of the Address
-        maxLength: 100
-        minLength: 4
-      subDistrict:
-        type: string
-        description: sub district of the Address
-        maxLength: 100
-        minLength: 4
-      postOffice:
-        type: string
-        description: post office of the Address
-        maxLength: 100
-        minLength: 4
-      state:
-        type: string
-        description: state of the Address
-        maxLength: 100
-        minLength: 4
-      country:
-        type: string
-        description: country of the Address
-        maxLength: 50
-        minLength: 4
-      pinCode:
-        type: string
-        description: pin code of the Address
-        maxLength: 10
-        minLength: 6
-      type:
-        type: string
-        description: type of the Address
-        maxLength: 50
-        minLength: 4
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/
-    required:
-    - tenantId
     
   Property:
     type: object
@@ -330,12 +238,12 @@ definitions:
         maxLength: 256
         minLength: 1
       address:
-        $ref: "#/definitions/Address"
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
       owners:
         description: Owners
         type: array
         items:
-          $ref: '#/definitions/User'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
       propertyDetail:
         $ref: "#/definitions/PropertyDetail"
       assessmentDate:
@@ -780,156 +688,51 @@ definitions:
     required:
     - tenantId
 
-  Role:
-    type: object
-    properties:
-      name:
-        type: string
-        description: name of the Role
-        maxLength: 32
-        minLength: 1
-      code:
-        type: string
-        description: code of the Role
-        maxLength: 32
-        minLength: 1
-
-  User:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the User
-      tenantId:
-        type: string
-        description: tenant id of the User
-        maxLength: 128
-        minLength: 4
-      username:
-        type: string
-        description: username of the User
-        maxLength: 64
-        minLength: 1
-      title:
-        type: string
-        description: title of the User
-        maxLength: 8
-        minLength: 1
-      salutation:
-        type: string
-        description: salutation of the User
-        maxLength: 5
-        minLength: 1
-      guardian:
-        type: string
-        description: guardian of the User
-        maxLength: 100
-        minLength: 1
-      guardianRelation:
-        type: string
-        description: guardian relation of the User
-        maxLength: 32
-        minLength: 1
-      name:
-        type: string
-        description: name of the User
-        maxLength: 100
-        minLength: 1
-      gender:
-        type: string
-        description: gender of the User
-        maxLength: 8
-        minLength: 1
-      mobileNumber:
-        type: string
-        description: mobile number of the User
-        maxLength: 10
-        minLength: 1
-      emailId:
-        type: string
-        description: email id of the User
-        maxLength: 128
-        minLength: 1
-      pan:
-        type: string
-        description: pan of the User
-        maxLength: 10
-        minLength: 10
-      aadhaarNumber:
-        type: string
-        description: aadhaar number of the User
-        maxLength: 12
-        minLength: 12
-      type:
-        type: string
-        description: type of the User
-        maxLength: 16
-        minLength: 1
-      roles:
-        description: Owners
-        type: array
-        items:
-          $ref: '#/definitions/Role'
-    required:
-    - tenantId
-
   VacantLandProperty:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the VacantLandProperty
-      tenantId:
-        type: string
-        description: tenant id of the VacantLandProperty
-        maxLength: 128
-        minLength: 4
-      surveyNumber:
-        type: string
-        description: survey number of the VacantLandProperty
-        maxLength: 64
-        minLength: 4
-      pattaNumber:
-        type: string
-        description: patta number of the VacantLandProperty
-        maxLength: 64
-        minLength: 4
-      marketValue:
-        type: number
-        format: double
-        description: market value of the VacantLandProperty
-      capitalValue:
-        type: number
-        format: double
-        description: capital value of the VacantLandProperty
-      layoutApprovedAuth:
-        type: string
-        description: layout approved auth of the VacantLandProperty
-        maxLength: 64
-        minLength: 4
-      layoutPermissionNo:
-        type: string
-        description: layout permission no of the VacantLandProperty
-        maxLength: 64
-        minLength: 4
-      layoutPermissionDate:
-        type: string
-        format: date
-        description: layout permission date of the VacantLandProperty
-      resdPlotArea:
-        type: number
-        format: double
-        description: resd plot area of the VacantLandProperty
-      nonResdPlotArea:
-        type: number
-        format: double
-        description: non resd plot area of the VacantLandProperty
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-    - tenantId
+    allOf: 
+    - $ref: '#/definitions/Property'
+    - type: object
+      properties:
+        surveyNumber:
+          type: string
+          description: survey number of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        pattaNumber:
+          type: string
+          description: patta number of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        marketValue:
+          type: number
+          format: double
+          description: market value of the VacantLandProperty
+        capitalValue:
+          type: number
+          format: double
+          description: capital value of the VacantLandProperty
+        layoutApprovedAuth:
+          type: string
+          description: layout approved auth of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        layoutPermissionNo:
+          type: string
+          description: layout permission no of the VacantLandProperty
+          maxLength: 64
+          minLength: 4
+        layoutPermissionDate:
+          type: string
+          format: date
+          description: layout permission date of the VacantLandProperty
+        resdPlotArea:
+          type: number
+          format: double
+          description: resd plot area of the VacantLandProperty
+        nonResdPlotArea:
+          type: number
+          format: double
+          description: non resd plot area of the VacantLandProperty
 
   WorkFlowDetails:
     type: object

@@ -42,7 +42,7 @@ public class DataSyncTask {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
-    @Scheduled(fixedRateString = "${rateInSeconds}")
+    @Scheduled(fixedRateString = "${rate-in-milliseconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
         LocalDateTime ldt = LocalDateTime.now();

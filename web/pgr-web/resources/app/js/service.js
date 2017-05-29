@@ -63,7 +63,7 @@ $(document).ready(function(){
 
 	//typeahead initialize
 	var locationtypeahead = new $.typeahead({
-		url : '/egov-location/boundarys/getLocationByLocationName?tenantId=default&locationName=%QUERY',
+		url : '/egov-location/boundarys/getLocationByLocationName?tenantId='+tenantId+'&locationName=%QUERY',
 		element : $('#location'),
 		keyValue:'id',
 		keyDisplayName:'name',
@@ -104,7 +104,7 @@ $(document).ready(function(){
 			data['serviceName'] = '';
 			data['requestedDatetime'] = "";
 			data['mediaUrl'] = "";
-			data['tenantId'] = 'default';
+			data['tenantId'] = tenantId;
 			data["isAttribValuesPopulated"]=true;
 			data["isForNewSchema"]=true;
 
@@ -176,7 +176,7 @@ $(document).ready(function(){
 			//upload files
 			$('input[type=file]').each(function(){
 				var formData=new FormData();
-				formData.append('tenantId', 'default');
+				formData.append('tenantId', tenantId);
 				formData.append('module', 'SERVICES');
 				var file = $(this)[0].files[0];
 				if(!file)
@@ -236,7 +236,7 @@ $(document).ready(function(){
 
 function loadServiceDefinition(code){
 	$.ajax({
-		url: "/pgr/servicedefinition/_search?tenantId=default&serviceCode="+code,
+		url: "/pgr/servicedefinition/_search?tenantId="+tenantId+"&serviceCode="+code,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -314,7 +314,7 @@ function doCheckUser(){
 		var userRequestInfo = {};
 		userRequestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		userRequestInfo['id'] = userArray;
-		userRequestInfo['tenantId'] = 'default';
+		userRequestInfo['tenantId'] = tenantId;
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',

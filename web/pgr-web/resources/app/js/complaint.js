@@ -73,7 +73,7 @@ $(document).ready(function()
 	$('#complaintTypeCategory').change(function() {
 		if ($(this).val()) {
 			$.ajax({
-				url: "/pgr/services/_search?type=category&categoryId="+$(this).val()+"&tenantId=default",
+				url: "/pgr/services/_search?type=category&categoryId="+$(this).val()+"&tenantId="+tenantId,
 				type : 'POST',
 				data : JSON.stringify(requestInfo),
 				dataType: 'json',
@@ -95,7 +95,7 @@ $(document).ready(function()
 
 	//typeahead initialize
 	var locationtypeahead = new $.typeahead({
-		url : '/egov-location/boundarys/getLocationByLocationName?tenantId=default&locationName=%QUERY',
+		url : '/egov-location/boundarys/getLocationByLocationName?tenantId='+tenantId+'&locationName=%QUERY',
 		element : $('#location'),
 		keyValue:'id',
 		keyDisplayName:'name',
@@ -294,7 +294,7 @@ $(document).ready(function()
 				data['serviceName'] = $('#complaintType option:selected').text() ? $('#complaintType option:selected').text() : '';
 				data['requestedDatetime'] = "";
 				data['mediaUrl'] = "";
-				data['tenantId'] = 'default';
+				data['tenantId'] = tenantId;
 				data["isAttribValuesPopulated"]=true;
 
 				data['attribValues'] = [];
@@ -350,7 +350,7 @@ $(document).ready(function()
 						if(filefilledlength > 0){
 							//AJAX Fileupload
 							var formData=new FormData();
-							formData.append('tenantId', 'default');
+							formData.append('tenantId', tenantId);
 							formData.append('module', 'PGR');
 							formData.append('tag', response.serviceRequests[0].serviceRequestId);
 							// Main magic with files here
@@ -441,7 +441,7 @@ function doCheckUser(){
 		var userRequestInfo = {};
 		userRequestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		userRequestInfo['id'] = userArray;
-		userRequestInfo['tenantId'] = 'default';
+		userRequestInfo['tenantId'] = tenantId;
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',
@@ -496,7 +496,7 @@ function typingfeelintypeahead(text, input, typeaheadtext){
 
 function loadReceivingMode(){
 	$.ajax({
-		url : "/pgr/receivingmode/_search?tenantId=default",
+		url : "/pgr/receivingmode/_search?tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -519,7 +519,7 @@ function loadReceivingMode(){
 
 function loadReceivingCenter(){
 	$.ajax({
-		url : "/pgr/receivingcenter/_search?tenantId=default",
+		url : "/pgr/receivingcenter/_search?tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -542,7 +542,7 @@ function loadReceivingCenter(){
 
 function complaintCategory(){
 	$.ajax({
-		url: "/pgr/servicecategories/_search?tenantId=default",
+		url: "/pgr/servicecategories/_search?tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -565,7 +565,7 @@ function complaintCategory(){
 
 function topComplaintTypes(){
 	$.ajax({
-		url: "/pgr/services/_search?type=frequency&count=5&tenantId=default",
+		url: "/pgr/services/_search?type=frequency&count=5&tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',

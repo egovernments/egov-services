@@ -115,7 +115,7 @@ $(document).ready(function()
 		reqObj['RequestInfo'] = RequestInfo.requestInfo;
 		reqObj['existingPassword'] = $('#old-pass').val();
 		reqObj['newPassword'] = $('#new-pass').val();
-		reqObj['tenantId'] = 'default';
+		reqObj['tenantId'] = tenantId;
 
 		if($('#password-form').valid() && password){
 			$.ajax({
@@ -156,7 +156,7 @@ $(document).ready(function()
 			"destroy":true,
 	        "aaSorting": [],
 			"ajax": {
-				"url": "/workflow/history?tenantId=default&workflowId="+stateId,
+				"url": "/workflow/history?tenantId="+tenantId+"&workflowId="+stateId,
 				"dataSrc":"",
 			},
 			"columns": [
@@ -436,7 +436,7 @@ function worklist(){
 		"autoWidth": false,
         "aaSorting": [],
 		"ajax": {
-			url : "/pgr/seva/_search?tenantId=default&assignment_id="+positionId,
+			url : "/pgr/seva/_search?tenantId="+tenantId+"&assignment_id="+positionId,
 			type: 'POST',
 			contentType: "application/json",
             processData : true,
@@ -633,7 +633,7 @@ function inboxloadmethod(){
 
 function getPosition(){
 	$.ajax({
-		url : '/hr-employee/employees/_search?tenantId=default&id='+localStorage.getItem('id'),
+		url : '/hr-employee/employees/_search?tenantId='+tenantId+'&id='+localStorage.getItem('id'),
 		type : 'POST',
 		processData : false,
 		contentType: "application/json",

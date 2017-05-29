@@ -30,7 +30,7 @@ $(document).on('click','.services-item .services .content',function(){
 
 function getAllServices(){
 	$.ajax({
-		url: "/pgr/services/_search?type=all&tenantId=default",
+		url: "/pgr/services/_search?type=all&tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',

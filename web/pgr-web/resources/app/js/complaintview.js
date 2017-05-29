@@ -118,7 +118,7 @@ $(document).ready(function()
 
 function getComplaint(){
 	$.ajax({
-		url: "/pgr/seva/_search?tenantId=default&serviceRequestId="+srn,
+		url: "/pgr/seva/_search?tenantId="+tenantId+"&serviceRequestId="+srn,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -168,14 +168,14 @@ function getComplaint(){
 			}
 
 			$.ajax({
-				url: "/filestore/v1/files/tag?tenantId=default&tag="+srn,
+				url: "/filestore/v1/files/tag?tenantId="+tenantId+"&tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
 					//console.log(fileresponse.files)
 
 					//History
 					$.ajax({
-						url : "/workflow/history?tenantId=default&workflowId="+AV_stateId,
+						url : "/workflow/history?tenantId="+tenantId+"&workflowId="+AV_stateId,
 						type : 'GET',
 						success : function(work_response){
 
@@ -292,7 +292,7 @@ function complaintUpdate(obj){
 	var time = new Date().toLocaleTimeString();
 	var date = dat.split("/").join("-");
 	req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
-	req_obj.serviceRequest['tenantId'] = 'default';
+	req_obj.serviceRequest['tenantId'] = tenantId;
 	req_obj.serviceRequest['isAttribValuesPopulated'] = true;
 
 	for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
@@ -360,7 +360,7 @@ function complaintUpdate(obj){
 		//upload files
 		$('input[type=file]').each(function(){
 			var formData=new FormData();
-			formData.append('tenantId', 'default');
+			formData.append('tenantId', tenantId);
 			formData.append('module', 'SERVICES');
 			var file = $(this)[0].files[0];
 			if(!file)
@@ -401,7 +401,7 @@ function complaintUpdate(obj){
 			if(filefilledlength > 0){
 				
 				var formData=new FormData();
-				formData.append('tenantId', 'default');
+				formData.append('tenantId', tenantId);
 				formData.append('module', 'PGR');
 				formData.append('tag', srn);
 				// Main magic with files here
@@ -432,7 +432,7 @@ function complaintUpdate(obj){
 					}
 				});
 			}else{
-				bootbox.alert(translate('pgr.msg.success.grievanceupdated'), function(){ 
+				bootbox.alert('Grievance / Service updated successfully', function(){ 
 					window.location.reload();
 				});
 			}
@@ -449,7 +449,7 @@ function complaintUpdate(obj){
 
 function complaintType(loadDD, serviceName){
 	$.ajax({
-		url: "/pgr/services/_search?type=ALL&tenantId=default",
+		url: "/pgr/services/_search?type=ALL&tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -480,7 +480,7 @@ function nextStatus(loadDD){
 
 	//List of all status and get the code respective status
 	$.ajax({
-		url : '/workflow/v1/nextstatuses/_search?tenantId=default&currentStatusCode='+AV_status+appendURL,
+		url : '/workflow/v1/nextstatuses/_search?tenantId='+tenantId+'&currentStatusCode='+AV_status+appendURL,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -501,7 +501,7 @@ function nextStatus(loadDD){
 
 function getWard(loadDD, wardId){
 	$.ajax({
-		url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=Administration",
+		url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId="+tenantId+"&boundaryTypeName=Ward&hierarchyTypeName=Administration",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -521,7 +521,7 @@ function getWard(loadDD, wardId){
 
 function getLocality(boundaryId, localityid){
 	$.ajax({
-		url: "/egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId="+boundaryId,
+		url: "/egov-location/boundarys/childLocationsByBoundaryId?tenantId="+tenantId+"&boundaryId="+boundaryId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -543,7 +543,7 @@ function getLocality(boundaryId, localityid){
 
 function getDepartment(loadDD){
 	$.ajax({
-		url: "/egov-common-masters/departments/_search?tenantId=default",
+		url: "/egov-common-masters/departments/_search?tenantId="+tenantId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -562,7 +562,7 @@ function getDepartment(loadDD){
 
 function getDesignation(depId){
 	$.ajax({
-		url: "/hr-masters/designations/_search?tenantId=default",
+		url: "/hr-masters/designations/_search?tenantId="+tenantId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -582,7 +582,7 @@ function getDesignation(depId){
 function getUser(depId, desId){
 	//console.log(depId, desId);
 	$.ajax({
-		url: "/hr-employee/employees/_search?tenantId=default&departmentId="+depId+"&designationId="+desId,
+		url: "/hr-employee/employees/_search?tenantId="+tenantId+"&departmentId="+depId+"&designationId="+desId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -599,7 +599,7 @@ function getUser(depId, desId){
 
 function getDepartmentbyId(departmentId, response){
 	$.ajax({
-		url : '/egov-common-masters/departments/_search?tenantId=default&id='+departmentId,
+		url : '/egov-common-masters/departments/_search?tenantId='+tenantId+'&id='+departmentId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -620,7 +620,7 @@ function getDepartmentbyId(departmentId, response){
 
 function getBoundarybyId(id, name, response){
 	$.ajax({
-		url : '/egov-location/boundarys?tenantId=default&boundary='+id,
+		url : '/egov-location/boundarys?tenantId='+tenantId+'&boundary='+id,
 		async : false,
 		success : function(lresponse){
 			var obj = {};
@@ -636,7 +636,7 @@ function getBoundarybyId(id, name, response){
 
 function getReceivingCenterbyId(receivingcenter, response){
 	$.ajax({
-		url : "/pgr/receivingcenter/_search?tenantId=default&id="+receivingcenter,
+		url : "/pgr/receivingcenter/_search?tenantId="+tenantId+"&id="+receivingcenter,
 		type: 'POST',
 		dataType: 'json',
 		processData : false,
@@ -669,7 +669,7 @@ function getAddressbyLatLng(lat, lng, response){
 
 function loadServiceDefinition(searchResponse){
 	$.ajax({
-		url: "/pgr/services/_search?type=all&tenantId=default",
+		url: "/pgr/services/_search?type=all&tenantId="+tenantId,
 		type : 'POST',
 		async : false,
 		data : JSON.stringify(requestInfo),
@@ -695,7 +695,7 @@ function loadServiceDefinition(searchResponse){
 
 function callToLoadDefinition(searchResponse){
 	$.ajax({
-		url: "/pgr/servicedefinition/_search?tenantId=default&serviceCode="+serviceCode,
+		url: "/pgr/servicedefinition/_search?tenantId="+tenantId+"&serviceCode="+serviceCode,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		async : false,
@@ -758,7 +758,7 @@ function callToLoadDefinition(searchResponse){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
 				//console.log($(this).attr('name'), obj ? obj.name : 'nothing')
 				if(obj){
-					$(this).parent('div').html('<a href="/filestore/v1/files/id?fileStoreId='+obj.name+'&tenantId=default" download>Download</a>')
+					$(this).parent('div').html('<a href="/filestore/v1/files/id?fileStoreId='+obj.name+'&tenantId='+tenantId+'" download>Download</a>')
 					$(this).remove();
 				}
 			});

@@ -104,7 +104,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	    	return;
 	    }
 
-	    var searchURL = '/pgr/seva/_search?tenantId=default&'+formData;
+	    var searchURL = '/pgr/seva/_search?tenantId='+tenantId+'&'+formData;
 
     	tableContainer = $("#complaintSearchResults").DataTable( {
     		"ajax": {
@@ -192,7 +192,7 @@ $("#complaintSearchResults").on('click','tbody tr',function(event) {
 
 function loadDeparment(){
 	$.ajax({
-		url: "/egov-common-masters/departments/_search?tenantId=default",
+		url: "/egov-common-masters/departments/_search?tenantId="+tenantId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -213,7 +213,7 @@ function getDepartmentbyId(departmentId){
 
 function loadBoundarys(){
 	$.ajax({
-		url : '/egov-location/boundarys?boundary.tenantId=default',
+		url : '/egov-location/boundarys?boundary.tenantId='+tenantId,
 		success : function(data){
 			ward = data.Boundary;
 		}
@@ -284,7 +284,7 @@ function getquarter(d) {
 
 function loadReceivingMode(){
 	$.ajax({
-		url : "/pgr/receivingmode/_search?tenantId=default",
+		url : "/pgr/receivingmode/_search?tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',
@@ -332,7 +332,7 @@ function loadStatus(){
 	else
 		appendURL = '';
 	$.ajax({
-		url: "/workflow/v1/statuses/_search?tenantId=default"+appendURL,
+		url: "/workflow/v1/statuses/_search?tenantId="+tenantId+appendURL,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -351,7 +351,7 @@ function loadStatus(){
 
 function loadWard(){
 	$.ajax({
-		url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default",
+		url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId="+tenantId,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,

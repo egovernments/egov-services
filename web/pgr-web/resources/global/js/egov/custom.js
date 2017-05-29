@@ -37,10 +37,12 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-var openedWindows = [];
+var openedWindows = [], tenantId;
 var locale = [];
 $(document).ready(function()
 {
+	tenantId = localStorage.getItem("tenantId");
+
 	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
 	    	var patt = new RegExp("maps.googleapis.com");
@@ -412,6 +414,7 @@ function clearLocalStorage(){
 	localStorage.removeItem('auth');
 	localStorage.removeItem('type');
 	localStorage.removeItem('id');
+	localStorage.removeItem('tenantId');
 }
 
 var RI = function(auth){

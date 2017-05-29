@@ -37,7 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
+var tenant = getUrlParameter('tenant') ? getUrlParameter('tenant') : 'default';
 $(document).ready(function()
 {
 
@@ -153,12 +153,13 @@ $(document).ready(function()
 					password : $('#password').val(),
 					grant_type: 'password',
 					scope : 'read',
-					tenantId : 'default'
+					tenantId : tenant
 				},
 				success : function(response){
 					localStorage.setItem("auth", response.access_token);
 					localStorage.setItem("type", response.UserRequest.type);
 					localStorage.setItem("id", response.UserRequest.id);
+					localStorage.setItem("tenantId", response.UserRequest.tenantId);
 					if(localStorage.getItem("type") == 'CITIZEN')
 						window.open("templates/homepagecitizen.html","_self");
 					else if(localStorage.getItem("type") == 'EMPLOYEE')

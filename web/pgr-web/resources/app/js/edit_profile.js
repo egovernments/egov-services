@@ -52,7 +52,7 @@ $(document).ready(function(){
 			var data = getFormData($form);
 			data['active'] = true;
 			data['type'] = localStorage.getItem("type");
-			data['tenantId'] = 'default';
+			data['tenantId'] = tenantId;
 			data['id'] = localStorage.getItem("id");
 			reqObj['User'] = data;
  			//ajax call
@@ -94,7 +94,7 @@ function doCheckUser(){
 		var requestInfo = {};
 		requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 		requestInfo['id'] = userArray;
-		requestInfo['tenantId'] = 'default';
+		requestInfo['tenantId'] = tenantId;
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',

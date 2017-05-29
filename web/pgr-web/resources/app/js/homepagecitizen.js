@@ -50,7 +50,7 @@ $(document).ready(function()
 
 	obj['RequestInfo'] = RequestInfo.requestInfo;
 	obj['id'] = userArray;
-	obj['tenantId'] = 'default';
+	obj['tenantId'] = tenantId;
 
 	$.ajax({
 		url : "/user/_search",
@@ -131,7 +131,7 @@ $(document).ready(function()
 		reqObj['RequestInfo'] = RequestInfo.requestInfo;
 		reqObj['existingPassword'] = $('#old-pass').val();
 		reqObj['newPassword'] = $('#new-pass').val();
-		reqObj['tenantId'] = 'default';
+		reqObj['tenantId'] = tenantId;
 
 		if($('#password-form').valid() && password){
 			$.ajax({
@@ -184,7 +184,7 @@ $(document).on('click','.services-item .services .content',function(){
 
 function loadComplaints(){
 	$.ajax({
-		url : "/pgr/seva/_search?tenantId=default&userId="+localStorage.getItem("id"),
+		url : "/pgr/seva/_search?tenantId="+tenantId+"&userId="+localStorage.getItem("id"),
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
@@ -236,7 +236,7 @@ var serviceResult, complaintResult;
 
 function getAllServices(){
 	$.ajax({
-		url: "/pgr/services/_search?type=all&tenantId=default",
+		url: "/pgr/services/_search?type=all&tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',

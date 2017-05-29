@@ -1,10 +1,9 @@
 package org.egov.demand.domain.service;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
+import org.apache.log4j.Logger;
 import org.egov.demand.persistence.entity.EgDemandReason;
 import org.egov.demand.persistence.repository.DemandReasonRepository;
 import org.egov.demand.web.contract.DemandReasonCriteria;
@@ -19,6 +18,8 @@ public class DemandReasonService {
 	private DemandReasonRepository demandReasonRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	private static final Logger LOGGER = Logger.getLogger(DemandReasonService.class);
 
 	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName,
 			String tenantId) {
@@ -26,6 +27,7 @@ public class DemandReasonService {
 	}
 
 	public List<EgDemandReason> search(DemandReasonCriteria demandReasonCriteria) {
+		LOGGER.info("the request criteria for reason search : "+demandReasonCriteria);
 		StringBuilder queryStr = new StringBuilder();
 		queryStr.append("from EgDemandReason dr where dr.tenantId=:tenantId");
 		if (demandReasonCriteria.getModuleName()!=null) {

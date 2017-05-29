@@ -132,7 +132,10 @@
                 "isAddressedText": {
                     "type": "keyword"
                 },
-                "isSLA": {
+                "isWithinSLA": {
+                    "type": "integer"
+                },
+                "isWithinSLAText": {
                     "type": "keyword"
                 },
                 "landmarkDetails": {

@@ -32,8 +32,8 @@ public class DemandHelper {
 		StringBuilder urlParams = new StringBuilder();
 		urlParams.append("?moduleName=" + propertiesManager.getDemandModuleName());
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
-		urlParams.append("&fromDate=" + DateFormatUtils.format(agreement.getCommencementDate(), "dd/MM/yyyy"));
-		urlParams.append("&toDate=" + DateFormatUtils.format(agreement.getExpiryDate(), "dd/MM/yyyy"));
+		urlParams.append("&fromDate=" + agreement.getCommencementDate());
+		urlParams.append("&toDate=" + agreement.getExpiryDate());
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
 		urlParams.append("&tenantId=" + agreement.getTenantId());

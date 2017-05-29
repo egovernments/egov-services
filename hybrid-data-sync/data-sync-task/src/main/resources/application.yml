@@ -29,7 +29,7 @@ sync:
   info:
     - sourceTable: eg_department
       destinationTable: eg_department
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -59,7 +59,7 @@ sync:
 
     - sourceTable: eg_designation
       destinationTable: egeis_designation
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -100,7 +100,7 @@ sync:
 
     - sourceTable: egeis_deptdesig
       destinationTable: egeis_departmentdesignation
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -122,7 +122,7 @@ sync:
 
     - sourceTable: eg_position
       destinationTable: egeis_position
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -945,7 +945,7 @@ sync:
 
     - sourceTable: eg_hierarchy_type
       destinationTable: eg_hierarchy_type
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1005,7 +1005,7 @@ sync:
 
     - sourceTable: eg_crosshierarchy
       destinationTable: eg_crosshierarchy
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1048,7 +1048,7 @@ sync:
 
     - sourceTable: eg_role
       destinationTable: eg_role
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1107,7 +1107,7 @@ sync:
 
     - sourceTable: eg_uom
       destinationTable: eg_uom
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1179,7 +1179,7 @@ sync:
 
     - sourceTable: eg_uomcategory
       destinationTable: eg_uomcategory
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id

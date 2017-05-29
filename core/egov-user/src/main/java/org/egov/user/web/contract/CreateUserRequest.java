@@ -11,8 +11,8 @@ public class CreateUserRequest {
     private RequestInfo requestInfo;
     private UserRequest user;
 
-    public User toDomain() {
-        return user.toDomain(loggedInUserId());
+    public User toDomain(boolean isCreate) {
+        return user.toDomain(loggedInUserId(), isCreate);
     }
 
     private Long loggedInUserId() {

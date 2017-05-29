@@ -116,7 +116,7 @@ public class UserRequest {
 	}
 
 	@JsonIgnore
-	public User toDomain(Long loggedInUserId) {
+	public User toDomain(Long loggedInUserId, boolean isCreate) {
 		return User.builder()
 				.id(this.id)
 				.name(this.name)
@@ -127,12 +127,12 @@ public class UserRequest {
 				.altContactNumber(this.altContactNumber)
 				.pan(this.pan)
 				.aadhaarNumber(this.aadhaarNumber)
-				.active(this.active)
+				.active(isActive(isCreate))
 				.dob(this.dob)
 				.passwordExpiryDate(this.pwdExpiryDate)
 				.locale(this.locale)
 				.type(this.type)
-				.accountLocked(this.accountLocked)
+				.accountLocked(isAccountLocked(isCreate))
 				.signature(this.signature)
 				.photo(this.photo)
 				.identificationMark(this.identificationMark)
@@ -149,6 +149,20 @@ public class UserRequest {
 				.correspondenceAddress(toDomainCorrespondenceAddress())
 				.guardian(fatherOrHusbandName)
 				.build();
+	}
+
+	private Boolean isActive(boolean isCreate) {
+		if (this.active == null && isCreate) {
+			return false;
+		}
+		return this.active;
+	}
+
+	private Boolean isAccountLocked(boolean isCreate) {
+		if (this.accountLocked == null && isCreate) {
+			return false;
+		}
+		return this.accountLocked;
 	}
 
 	private Address toDomainPermanentAddress() {

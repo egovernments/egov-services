@@ -25,6 +25,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setTenantId(serviceRequest.getTenantId());
         document.setKeywords(serviceType.getKeywords());
         document.setCrn(serviceRequest.getCrn());
+        document.setId(serviceRequest.getCrn());
         document.setCreatedDate(toDate(serviceRequest.getCreatedDate()));
         document.setLastModifiedDate(toDate(serviceRequest.getLastModifiedDate()));
         document.setEscalationDate(toDate(serviceRequest.getEscalationDate()));

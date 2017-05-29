@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: 1.0.0
   title: Common Object Definitions
-  description: Definitions of common objects used across the modules. Thes objects will/may be commonly used by all eGov API deicitions. There are no paths defined in this spec as these objects cannot be used solely on their own.
+  description: Definitions of common objects used across the modules. These objects will/may be commonly used by all eGov API deicitions. There are no paths defined in this spec as these objects cannot be used solely on their own.
   contact:
     name:  eGov
     email: info@egovernments.org
@@ -26,7 +26,7 @@ parameters:
   tenantId:
     name: tenantId
     in: query
-    description: Unique id for for a tenant.
+    description: Unique id for a tenant.
     required: true
     type: string
     format: varchar
@@ -34,7 +34,7 @@ parameters:
   lastChangedSince:
     name: lastChangedSince
     description: |
-      epoch of the time since when the changes on the object should be picked up. Search results from this parameter should include both newly created objects since this time as well as any modified objects since this time. This criterion is included to help polling clients to get the changes in system since a last tme they synchronized with the platform.
+      epoch of the time since when the changes on the object should be picked up. Search results from this parameter should include both newly created objects since this time as well as any modified objects since this time. This criterion is included to help polling clients to get the changes in system since a last time they synchronized with the platform.
     in: query
     required: false
     type: integer
@@ -44,7 +44,7 @@ parameters:
 definitions:
   RequestInfo:
     type: object
-    description: RequestInfo should be used to carry meta information about teh requests to the server as described in the fields below. All eGov APIs will use requestinfo as a part of the request body to carry this meta information. Some of this information will be returned back from the server as part of the ResponseInfo in the response body to ensure correlation.
+    description: RequestInfo should be used to carry meta information about the requests to the server as described in the fields below. All eGov APIs will use requestinfo as a part of the request body to carry this meta information. Some of this information will be returned back from the server as part of the ResponseInfo in the response body to ensure correlation.
     properties:
       apiId:
         type: string
@@ -73,7 +73,7 @@ definitions:
         description: UserId of the user calling
       authToken:
         type: string
-        description: //session/jwt/saml token/oauth token - the usua value that would go into HTTP bearer token
+        description: //session/jwt/saml token/oauth token - the usual value that would go into HTTP bearer token
       userInfo:
         $ref: '#/definitions/UserInfo'
       correlationId:
@@ -109,7 +109,7 @@ definitions:
         description: email address of the authenticated user
       primaryrole:
         type: array
-        description: List of all the roles for teh primary tenant
+        description: List of all the roles for the primary tenant
         items:
           $ref: '#/definitions/Role'
       additionalroles:
@@ -125,7 +125,7 @@ definitions:
   Role:
     type: object
     description: |
-      minimal representation of teh Roles n the system to be carried along in UserInfo with RequestInfo meta data. Actual authorization service to extend this to have more role related attributes
+      minimal representation of the Roles in the system to be carried along in UserInfo with RequestInfo meta data. Actual authorization service to extend this to have more role related attributes
     properties:
       name: 
         type: string
@@ -186,20 +186,20 @@ definitions:
       
   Error:
     type: object
-    description: Error object will be returned as a part of reponse body in conjunction with ResponseInfo as part of ErrorResponse whenever the request processing ssttau in the ResponseInfo is FAILED. HTTP return in this scenario will usually be HTTP 400. 
+    description: Error object will be returned as a part of reponse body in conjunction with ResponseInfo as part of ErrorResponse whenever the request processing status in the ResponseInfo is FAILED. HTTP return in this scenario will usually be HTTP 400. 
     properties:
       code:
         type: string
-        description: Error Code will be module specific error lable/code to identiffy the error. All modules should also publish te Error codes with their specific localized values in localization service to ensure clients can prinnt locale specific error messages. Example for error code would be User.NotFound to indicate User Not Foubnd by User/Authentication service. All services must decalre their possible Error Codes with brief description in the error response section of their API path.
+        description: Error Code will be module specific error label/code to identiffy the error. All modules should also publish the Error codes with their specific localized values in localization service to ensure clients can print locale specific error messages. Example for error code would be User.NotFound to indicate User Not Found by User/Authentication service. All services must declare their possible Error Codes with brief description in the error response section of their API path.
       message:
         type: string
-        description: English locale message of the error code. Clients should make a separate call to get the other locale description if configured with the service. Clients may choose to cache these locale specific messages to enhance performance with a reasonable TTL (May be defined by te localization service based on tenant + module combination).
+        description: English locale message of the error code. Clients should make a separate call to get the other locale description if configured with the service. Clients may choose to cache these locale specific messages to enhance performance with a reasonable TTL (May be defined by the localization service based on tenant + module combination).
       description:
         type: string
         description: Optional long description of the error to help clients take remedial action. This will not be available as part of localization service.
       params:
         type: array
-        description: Some error messages may carry replaceable fields (say $1, $2) to provide more context to the message. E.g. Format related errors may want to indicate the actual field forwhich the format is invalid. Client's should use the values in the param array to replace those fields. 
+        description: Some error messages may carry replaceable fields (say $1, $2) to provide more context to the message. E.g. Format related errors may want to indicate the actual field for which the format is invalid. Client's should use the values in the param array to replace those fields. 
         items: 
           type: string
     required:
@@ -208,7 +208,7 @@ definitions:
       
   ErrorRes:
     type: object
-    description: All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadat and Error object as actual representation of error. In case of bulk apis, some apis may chose to return the array of Error objects to indicate individual failure.
+    description: All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadata and Error object as actual representation of error. In case of bulk apis, some apis may chose to return the array of Error objects to indicate individual failure.
     properties:
       ResponseInfo:
         $ref: '#/definitions/ResponseInfo'

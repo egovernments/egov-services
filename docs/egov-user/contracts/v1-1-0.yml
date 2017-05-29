@@ -5,7 +5,7 @@ info:
   title: User Service
   description: User services APIs - to create, update and search users. All individuals interacting with the platform - Citizens, Employees, Contractors, Vendors etc. are considered as users of the platform
   contact:
-    name: Elzan Mathew
+    name: eGov
     email: info@egovernments.org
   
 basePath: "/users/v110"
@@ -73,7 +73,7 @@ paths:
     post:
       summary: Search the users in the system based on the criterion specified. 
       description: |
-        Search and get user(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed user will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of Users as defined in UserRes model.
+        Search and get user(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameters are passed user will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of Users as defined in UserRes model.
         
         By default results will be sorted by UserName
       parameters:
@@ -145,7 +145,7 @@ definitions:
            - OTHERS
       mobileNumber:
         type: string
-        description: Mobile number ofuser the user
+        description: Mobile number of the user
         maxLength: 10
       emailId:
         type: string
@@ -224,7 +224,7 @@ definitions:
       dob:
         type: string
         format: date
-        description: Data of bith of the user in dd/mm/yyyy format.
+        description: Date of birth of the user in dd/mm/yyyy format.
       altContactNumber:
         type: string
         description: Alternate contact number of the user

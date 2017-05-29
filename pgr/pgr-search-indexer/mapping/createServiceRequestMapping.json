@@ -2,7 +2,7 @@
     "mappings": {
         "serviceRequest": {
             "_all": {
-                "enabled": false
+                "enabled": true
             },
             "properties": {
                 "assigneeId": {

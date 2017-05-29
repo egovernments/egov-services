@@ -41,23 +41,4 @@ public class DemandHelper {
 			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonName());
 		return urlParams.toString();
 	}
-	
-	public DemandReasonCriteria getDemandReasonModelAttribute(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-
-		DemandReasonCriteria demandReasonCriteria = new DemandReasonCriteria();
-		logger.info("the criteria for demandReasonSearch are ::: " + demandReasonCriteria);
-		
-		demandReasonCriteria.setFromDate(agreement.getCommencementDate());
-		demandReasonCriteria.setToDate(agreement.getExpiryDate());
-		demandReasonCriteria.setInstallmentType(agreement.getPaymentCycle().toString());
-		demandReasonCriteria.setModuleName(propertiesManager.getDemandModuleName());
-		demandReasonCriteria.setTaxCategory(propertiesManager.getTaxCategoryName());
-		demandReasonCriteria.setTaxPeriod(agreement.getTimePeriod().toString());
-		demandReasonCriteria.setTenantId(agreement.getTenantId());
-
-		if (agreement.getSource().equals(Source.DATA_ENTRY))
-			demandReasonCriteria.setTaxReason(propertiesManager.getTaxReasonName());
-		return demandReasonCriteria;
-	}
 }

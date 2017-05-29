@@ -8,6 +8,7 @@ import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.NoticeRepository;
+import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -23,18 +24,24 @@ public class NoticeService {
 	@Autowired
 	private AgreementService agreementService;
 	
+	@Autowired
+	private WorkFlowRepository workFlowRepository;
+	
 	public NoticeResponse generateNotice(NoticeRequest noticeRequest) {
+
+		Notice notice = noticeRequest.getNotice();
+		List<Agreement> agreements = getAgreementByAuckNumOrAgreementNum(notice.getTenantId(),
+				notice.getAgreementNumber(), notice.getAcknowledgementNumber(), noticeRequest.getRequestInfo());
+
+		Agreement agreement = agreements.get(0);
+		notice.toNotice(agreement);
+		notice.setCommissionerName(workFlowRepository.getCommissionerName(agreement.getStateId(),
+				agreement.getTenantId(), noticeRequest.getRequestInfo()));
 		
-		List<Agreement> agreements = getAgreementByAuckNumOrAgreementNum(noticeRequest.getNotice().getTenantId(),
-											noticeRequest.getNotice().getAgreementNumber(),
-											noticeRequest.getNotice().getAcknowledgementNumber(),noticeRequest.getRequestInfo());
-		
-		noticeRequest.getNotice().toNotice(agreements.get(0));
-		
-		Notice notice = noticeRepository.createNotice(noticeRequest);
+		notice = noticeRepository.createNotice(noticeRequest);
 		List<Notice> notices = new ArrayList<>();
 		notices.add(notice);
-		
+
 		return getNoticeResponse(notices);
 	}
 	

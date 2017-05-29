@@ -2,7 +2,7 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
-import org.egov.lams.repository.helper.AmountInWordUtil;
+import org.egov.lams.util.AmountInWordUtil;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -127,4 +127,10 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.agreement}")
 	private String updateAgreementTopic;
+	
+	@Value("${egov.services.egov-common-workflows_service.hostname}")
+	public String commonWorkFlowServiceHostName;
+	
+	@Value("${egov.services.egov-common-workflows_service.historypath}")
+	public String commonWorkFlowServiceHistoryPath;
 }

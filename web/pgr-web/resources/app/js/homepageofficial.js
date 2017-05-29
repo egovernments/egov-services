@@ -142,6 +142,7 @@ $(document).ready(function()
 	
 	getPosition();
 	worklist();
+	getStatus();
 	
 	$("#official_inbox").on('click','tbody tr td i.inbox-history',function(e) {
 		var tr = $(this).closest('tr');
@@ -456,10 +457,21 @@ function worklist(){
 			}
 	    } },
 		{ "title":dt_status, "width": "15%", "render": function ( data, type, full, meta ) {
+			var st, kw;
 			for (var item of full.attribValues) {
-				if(item['key']=='status')
-					return item['name'];
+				if(item['key']=='status'){
+					st =  item['name'];
+				}else if(item['key']=='keyword'){
+					kw =  item['name'];
+				}
 			}
+			if(kw != 'Complaint'){
+				var results = (JSON.parse(localStorage.getItem('status'))).filter(function (el) {
+				  return el.code == st;
+				});
+				return results[0] ? results[0].name : st;
+			}else
+				return st;
 	    } },
 		{ "title":dt_comments, "width": "25%", "render": function ( data, type, full, meta ) {
 			var text = 'Service Request Number '+(full.serviceRequestId)+' for '+(full.serviceName)+' filed on '+(full.requestedDatetime)+'. Date of Resolution is '+(full.expectedDatetime);
@@ -663,3 +675,16 @@ $.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
 	else
 		return true;
 });
+
+function getStatus(){
+	$.ajax({
+		url: "/workflow/v1/statuses/_search?tenantId="+tenantId+'&keyword=Deliverable_service',
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
+	}).done(function(data) {
+		localStorage.setItem('status', JSON.stringify(data.statuses));
+	});
+}

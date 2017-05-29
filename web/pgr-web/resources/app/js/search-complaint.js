@@ -159,10 +159,21 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 					return wardname+' - '+localityname;
 			    } },
 				{data: 'values.status', "render": function ( data, type, full, meta ) {
+					var st, kw;
 					for (var item of full.attribValues) {
-						if(item['key']=='status')
-							return item['name'];
+						if(item['key']=='status'){
+							st =  item['name'];
+						}else if(item['key']=='keyword'){
+							kw =  item['name'];
+						}
 					}
+					if(kw != 'Complaint'){
+						var results = (JSON.parse(localStorage.getItem('status'))).filter(function (el) {
+						  return el.code == st;
+						});
+						return results[0] ? results[0].name : st;
+					}else
+						return st;
 			    }},
 				{data: 'values.departmentId', "render": function ( data, type, full, meta ) {
 					for (var item of full.attribValues) {

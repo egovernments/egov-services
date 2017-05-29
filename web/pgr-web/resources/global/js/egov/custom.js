@@ -415,6 +415,7 @@ function clearLocalStorage(){
 	localStorage.removeItem('type');
 	localStorage.removeItem('id');
 	localStorage.removeItem('tenantId');
+	localStorage.removeItem('status');
 }
 
 var RI = function(auth){

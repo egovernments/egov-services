@@ -179,6 +179,15 @@ function getComplaint(){
 						type : 'GET',
 						success : function(work_response){
 
+							if(keyword != 'Complaint'){
+								for(var i=0;i<work_response.length;i++){
+									JSON.parse(localStorage.getItem('status')).filter(function (el) {
+									  el.code == work_response[i].status ? work_response[i].status = el.name :'';
+									  return;
+									});
+								}
+							}
+
 							//console.log('Work flow histry',JSON.stringify(work_response));
 
 							var wf_response = {};
@@ -745,7 +754,7 @@ function callToLoadDefinition(searchResponse){
 
 			$('.checkForm *').filter(':input').each(function(){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
-				console.log($(this).attr('name'), obj)
+				//console.log($(this).attr('name'), obj)
 				if(obj){
 					if(JSON.parse(obj.name))
 				    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");

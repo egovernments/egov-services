@@ -81,6 +81,7 @@ $(document).ready(function()
 		$($(this).data('show-screen')).show();
 	});
 
+	getStatus();
 	loadComplaints();
 
 	$('.inboxLoad').click(function(){
@@ -188,6 +189,7 @@ function loadComplaints(){
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
+		async: false,
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo),
 		beforeSend : function(){
@@ -195,12 +197,23 @@ function loadComplaints(){
 		},
 		success : function(response){
 			//$("#grievance-template").html('');
+			for(var i=0;i<response.serviceRequests.length;i++){
+				JSON.parse(localStorage.getItem('status')).filter(function (el) {
+					for (var item of response.serviceRequests[i].attribValues) {
+						if(item['key'] == 'status'){
+							el.code == item['name'] ? item['name'] = el.name : '';
+							return;
+						}
+					}
+				});
+			}
 			var source   = $("#grievance-template").html();
 			var template = Handlebars.compile(source);
 			var html = template(response.serviceRequests);
 			$('.inboxHeight').remove();
 			$('.grievanceresponse').append(html);
-			$('.grievanceresponse .reloadtemplate').matchHeight();
+			detachedele = $('.grievanceresponse').html();
+			$('.grievanceresponse .reloadtemplate .msg').matchHeight();
 		},
 		error : function(){
 			bootbox.alert('Error!')
@@ -212,24 +225,29 @@ function loadComplaints(){
 	});
 }
 
+var detachedele;
+
 function search(elem) {
 	var searchText = $(elem).val(); 
+	//$('.grievanceresponse').html(detachedele);
 	if($.trim(searchText)){
 		$(".reloadtemplate").each(function() {
-			console.log('searchText', $.trim(searchText));
 	         var $this = $(this)
 	         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
-	             $this.hide();
+				$this.hide();
 	         }else {
 		         $this.show();
 		     }
+		     $('.grievanceresponse .reloadtemplate:visible .msg').matchHeight();
 	    });
 	}else{
 		$(".reloadtemplate").each(function() {
 			var $this = $(this);
 			$this.show();
+			$('.grievanceresponse .reloadtemplate:visible .msg').matchHeight();
 		});
 	}
+
 }
 
 var serviceResult, complaintResult;
@@ -275,4 +293,18 @@ Handlebars.registerHelper('contains', function(string, checkString) {
 //Short code
 function matchRuleShort(str, rule) {
   return new RegExp("^" + rule.split("*").join(".*") + "$").test(str);
+}
+
+function getStatus(){
+	$.ajax({
+		url: "/workflow/v1/statuses/_search?tenantId="+tenantId+'&keyword=Deliverable_service',
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		async : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
+	}).done(function(data) {
+		localStorage.setItem('status', JSON.stringify(data.statuses));
+	});
 }

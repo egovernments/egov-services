@@ -23,8 +23,10 @@ public class DemandReasonCriteria {
 	private String taxCategory;
 	private String taxReason;
 	private String taxPeriod;
-	private Date fromDate;
-	private Date toDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private String fromDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private String toDate;
 	private String tenantId;
 	private String installmentType;
 }

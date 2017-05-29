@@ -6,7 +6,6 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.web.contract.AgreementRequest;
-import org.egov.lams.web.contract.DemandReasonCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,8 @@ public class DemandHelper {
 		StringBuilder urlParams = new StringBuilder();
 		urlParams.append("?moduleName=" + propertiesManager.getDemandModuleName());
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
-		urlParams.append("&fromDate=" + agreement.getCommencementDate());
-		urlParams.append("&toDate=" + agreement.getExpiryDate());
+		urlParams.append("&fromDate=" + DateFormatUtils.format(agreement.getCommencementDate(), "dd/MM/yyyy"));
+		urlParams.append("&toDate=" + DateFormatUtils.format(agreement.getExpiryDate(), "dd/MM/yyyy"));
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
 		urlParams.append("&tenantId=" + agreement.getTenantId());

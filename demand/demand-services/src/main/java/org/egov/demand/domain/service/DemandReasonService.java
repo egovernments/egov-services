@@ -1,8 +1,12 @@
 package org.egov.demand.domain.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.apache.log4j.Logger;
 import org.egov.demand.persistence.entity.EgDemandReason;
 import org.egov.demand.persistence.repository.DemandReasonRepository;
@@ -18,7 +22,7 @@ public class DemandReasonService {
 	private DemandReasonRepository demandReasonRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(DemandReasonService.class);
 
 	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName,
@@ -27,46 +31,54 @@ public class DemandReasonService {
 	}
 
 	public List<EgDemandReason> search(DemandReasonCriteria demandReasonCriteria) {
-		LOGGER.info("the request criteria for reason search : "+demandReasonCriteria);
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		LOGGER.info("the request criteria for reason search : " + demandReasonCriteria);
 		StringBuilder queryStr = new StringBuilder();
 		queryStr.append("from EgDemandReason dr where dr.tenantId=:tenantId");
-		if (demandReasonCriteria.getModuleName()!=null) {
+		if (demandReasonCriteria.getModuleName() != null) {
 			queryStr.append(" and dr.egInstallmentMaster.module=:moduleName");
 		}
-		if (demandReasonCriteria.getTaxCategory()!=null) {
+		if (demandReasonCriteria.getTaxCategory() != null) {
 			queryStr.append(" and dr.egDemandReasonMaster.egReasonCategory.code=:reasonCategory");
 		}
-		if (demandReasonCriteria.getTaxReason()!=null) {
+		if (demandReasonCriteria.getTaxReason() != null) {
 			queryStr.append(" and dr.egDemandReasonMaster.code=:taxReason");
 		}
-		if (demandReasonCriteria.getInstallmentType()!=null) {
+		if (demandReasonCriteria.getInstallmentType() != null) {
 			queryStr.append(" and dr.egInstallmentMaster.installmentType=:installmenttype");
 		}
-		if (demandReasonCriteria.getFromDate()!=null) {
+		if (demandReasonCriteria.getFromDate() != null) {
 			queryStr.append(" and dr.egInstallmentMaster.fromDate>=:fromDate");
 		}
-		if (demandReasonCriteria.getToDate()!=null) {
+		if (demandReasonCriteria.getToDate() != null) {
 			queryStr.append(" and dr.egInstallmentMaster.toDate<=:toDate");
 		}
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());
-		if (demandReasonCriteria.getModuleName()!=null) {
+		if (demandReasonCriteria.getModuleName() != null) {
 			query.setString("moduleName", demandReasonCriteria.getModuleName());
 		}
-		if (demandReasonCriteria.getTaxCategory()!=null) {
+		if (demandReasonCriteria.getTaxCategory() != null) {
 			query.setString("reasonCategory", demandReasonCriteria.getTaxCategory());
 		}
-		if (demandReasonCriteria.getTaxReason()!=null) {
+		if (demandReasonCriteria.getTaxReason() != null) {
 			query.setString("taxReason", demandReasonCriteria.getTaxReason());
 		}
-		if (demandReasonCriteria.getInstallmentType()!=null) {
+		if (demandReasonCriteria.getInstallmentType() != null) {
 			query.setString("installmenttype", demandReasonCriteria.getInstallmentType());
 		}
-		if (demandReasonCriteria.getFromDate()!=null) {
-			query.setDate("fromDate", demandReasonCriteria.getFromDate());
-		}
-		if (demandReasonCriteria.getToDate()!=null) {
-			query.setDate("toDate", demandReasonCriteria.getToDate());
+
+		try {
+			if (demandReasonCriteria.getFromDate() != null) {
+				query.setDate("fromDate", dateFormat.parse(demandReasonCriteria.getFromDate()));
+			}
+			if (demandReasonCriteria.getToDate() != null) {
+				query.setDate("toDate", dateFormat.parse(demandReasonCriteria.getToDate()));
+			}
+		} catch (ParseException e) {
+			LOGGER.error("the exception in demandReasonService : " + e);
+			throw new RuntimeException(e);
 		}
 		return (List<EgDemandReason>) query.list();
 	}

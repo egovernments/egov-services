@@ -41,7 +41,7 @@ var openedWindows = [], tenantId;
 var locale = [];
 $(document).ready(function()
 {
-	tenantId = localStorage.getItem("tenantId");
+	tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : getUrlParameter('tenant') ? getUrlParameter('tenant') : 'default';
 
 	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {

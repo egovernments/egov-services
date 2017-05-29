@@ -37,7 +37,6 @@
  *
  *    In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-var tenant = getUrlParameter('tenant') ? getUrlParameter('tenant') : 'default';
 $(document).ready(function(){
 
 	var password = false;
@@ -75,7 +74,7 @@ $(document).ready(function(){
 			var obj = {};
 			obj['RequestInfo'] = RI.requestInfo;
 			var data={};
-			data['tenantId']  = tenant;
+			data['tenantId']  = tenantId;
 			data['mobileNumber'] = $('#mobileNumber').val();
 			obj['otp'] = data;
 			//user_otp
@@ -121,7 +120,7 @@ $(document).ready(function(){
 			var obj = {};
 			obj['RequestInfo'] = RI.requestInfo;
 			var data={};
-			data['tenantId']  = tenant;
+			data['tenantId']  = tenantId;
 			data['identity'] = $('#mobileNumber').val();
 			data['otp'] = $('#activationcode').val();
 			obj['otp'] = data;
@@ -144,7 +143,7 @@ $(document).ready(function(){
 					data['active'] = true;
 					data['type'] = 'CITIZEN';
 					data['otpReference'] =  response.otp.UUID;
-					data['tenantId'] = tenant;
+					data['tenantId'] = tenantId;
 					reqObj['User'] = data;
 
 					$.ajax({

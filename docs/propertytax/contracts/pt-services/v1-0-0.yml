@@ -292,24 +292,8 @@ definitions:
         description: type of the Address
         maxLength: 50
         minLength: 4
-      createdBy:
-        type: string
-        description: created by of the Address
-        maxLength: 16
-        minLength: 1
-      createdDate:
-        type: string
-        format: date
-        description: created date of the Address
-      lastModifiedBy:
-        type: string
-        description: last modified by of the Address
-        maxLength: 16
-        minLength: 1
-      lastModifiedDate:
-        type: string
-        format: date
-        description: last modified date of the Address
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/
     required:
     - tenantId
     

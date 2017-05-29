@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
@@ -85,18 +86,30 @@ public class DemandRepository {
 
 	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
 
+		Agreement agreement = agreementRequest.getAgreement();
 		List<Demand> demands = new ArrayList<>();
 		List<DemandDetails> demandDetails = new ArrayList<>();
 		Demand demand = new Demand();
-		demand.setTenantId(agreementRequest.getAgreement().getTenantId());
+		demand.setTenantId(agreement.getTenantId());
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
 
+		int goodWill = 0;
+		int advance = 0;
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
+			
 			demandDetail = new DemandDetails();
-			// rent has to be not null
-			demandDetail.setTaxAmount(BigDecimal.valueOf(agreementRequest.getAgreement().getRent()));
+			if("Rent".equals(demandReason.getName()))
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+			else if ("Goodwill Amount".equals(demandReason.getName()) &&  goodWill == 0){
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+				goodWill++;
+				
+			}else if("Advance Tax".equals(demandReason.getName()) &&  advance == 0){
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
+				advance++;
+			}
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());

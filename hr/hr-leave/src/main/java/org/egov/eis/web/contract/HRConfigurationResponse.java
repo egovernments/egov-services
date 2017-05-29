@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.empernments.org
+ *  is available at http://www.egovernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,61 +35,36 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.web.contract;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Component
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
 @ToString
-public class PropertiesManager {
+public class HRConfigurationResponse {
 
-    @Value("${egov.services.common_workflow_service.hostname}")
-    private String commonWorkFlowServiceHostName;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @Value("${egov.services.common_workflow_service.process.basepath}")
-    private String commonWorkFlowServiceProcessBasePath;
+    @JsonProperty("HRConfiguration")
+    private Map<String, List<String>> hrConfiguration = new HashMap<>();
 
-    @Value("${egov.services.common_workflow_service.process.startpath}")
-    private String commonWorkFlowServiceProcessStartPath;
-
-    @Value("${egov.services.common_workflow_service.process.updatepath}")
-    private String commonWorkFlowServiceProcessUpdatePath;
-
-    @Value("${egov.services.workflow_service.hostname.businesskey}")
-    private String workflowServiceBusinessKey;
-    
-    @Value("${egov.services.hr_masters_service.hostname}")
-    private String hrMastersServiceHostName;
-
-    @Value("${egov.services.hr_masters_service.hrstatus.basepath}")
-    private String hrMastersServiceHRStatusBasePath;
-
-    @Value("${egov.services.hr_masters_service.hrstatuses.searchpath}")
-    private String hrMastersServiceStatusesSearchPath;
-
-    @Value("${egov.services.hr_masters_service.hrstatuses.key}")
-    private String hrMastersServiceStatusesKey;
-    
-    @Value("${egov.services.hr_masters_service.hrconfiguration.basepath}")
-    private String hrMastersServiceHRConfigurationBasePath;
-
-    @Value("${egov.services.hr_masters_service.hrconfigurations.searchpath}")
-    private String hrMastersServiceConfigurationsSearchPath;
-
-    @Value("${egov.services.hr_masters_service.hrconfigurations.key}")
-    private String hrMastersServiceConfigurationsKey;
 }

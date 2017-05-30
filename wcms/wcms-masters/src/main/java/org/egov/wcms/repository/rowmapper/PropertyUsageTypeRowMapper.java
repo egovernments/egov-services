@@ -42,17 +42,17 @@ package org.egov.wcms.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PropertyUsageTypeRowMapper implements RowMapper<PropertyUsageType>  {
+public class PropertyUsageTypeRowMapper implements RowMapper<PropertyTypeUsageType>  {
 
     @Override
-    public PropertyUsageType mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public PropertyTypeUsageType mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        PropertyUsageType propUsageType = new PropertyUsageType();
+        PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
         propUsageType.setId(rs.getLong("id"));
         propUsageType.setPropertyTypeId(rs.getLong("property_type"));
         propUsageType.setUsageTypeId(rs.getLong("usage_type"));

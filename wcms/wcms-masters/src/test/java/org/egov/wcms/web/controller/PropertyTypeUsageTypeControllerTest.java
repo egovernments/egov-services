@@ -51,7 +51,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.util.FileUtils;
 import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
@@ -103,10 +103,10 @@ public class PropertyTypeUsageTypeControllerTest {
                 .andExpect(content().json(getFileContents("propertyusagetyperesponse.json")));
 		*/
 		
-		List<PropertyUsageType> propertyUsageTypes = new ArrayList<>();
+		List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        PropertyUsageType propertyUsageType = new PropertyUsageType();
+        PropertyTypeUsageType propertyUsageType = new PropertyTypeUsageType();
         propertyUsageType.setActive(true);
         propertyUsageType.setUsageType("USG");
         propertyUsageType.setPropertyType("PRO");
@@ -128,8 +128,8 @@ public class PropertyTypeUsageTypeControllerTest {
 	                .andExpect(content().json(getFileContents("propertyusagetyperesponse.json")));
 	}
 	
-	private PropertyUsageType getPropertyUsageType() {
-		PropertyUsageType propUsageType = new PropertyUsageType();
+	private PropertyTypeUsageType getPropertyUsageType() {
+		PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
 		propUsageType.setActive(true);
 		propUsageType.setId(2L);
 		propUsageType.setPropertyType("RES");

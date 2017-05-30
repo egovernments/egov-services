@@ -43,7 +43,7 @@ package org.egov.wcms.web.contract;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -65,6 +65,6 @@ public class PropertyUsageTypeRequest {
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("PropertyUsageType")
-    private PropertyUsageType propertyUsageType ;
+    @JsonProperty("propertyUsageType")
+    private PropertyTypeUsageType propertyTypeUsageType ;
 }

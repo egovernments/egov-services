@@ -50,7 +50,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
@@ -87,8 +87,8 @@ public class PropertyUsageTypeRepositoryTest {
 		user.setId(2L);
 		requestInfo.setUserInfo(user);
 		propUsageTypeRequest.setRequestInfo(requestInfo);
-		PropertyUsageType propUsageType = Mockito.mock(PropertyUsageType.class);
-		propUsageTypeRequest.setPropertyUsageType(propUsageType);
+		PropertyTypeUsageType propUsageType = Mockito.mock(PropertyTypeUsageType.class);
+		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
 
 		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 		assertTrue(propUsageTypeRequest.equals(propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest)));
@@ -98,8 +98,8 @@ public class PropertyUsageTypeRepositoryTest {
 	public void test_Should_Create_PropertyUsageType_NotNullCheck() {
 		
 		PropertyUsageTypeRequest propUsageTypeRequest = getPropertyUsageType();
-		Object[] obj = new Object[] {propUsageTypeRequest.getPropertyUsageType().getId(), propUsageTypeRequest.getPropertyUsageType().getPropertyType(), propUsageTypeRequest.getPropertyUsageType().getUsageType(), propUsageTypeRequest.getPropertyUsageType().isActive(),
-        		propUsageTypeRequest.getPropertyUsageType().getTenantId(), new Date(new java.util.Date().getTime()), propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
+		Object[] obj = new Object[] {propUsageTypeRequest.getPropertyTypeUsageType().getId(), propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(), propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(), propUsageTypeRequest.getPropertyTypeUsageType().isActive(),
+        		propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), new Date(new java.util.Date().getTime()), propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
 	    when(jdbcTemplate.update("query", obj)).thenReturn(1);
 		assertNotNull(propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest));
 	}
@@ -110,7 +110,7 @@ public class PropertyUsageTypeRepositoryTest {
 		PropertyUsageTypeGetRequest propUsageTypeGetRequest = Mockito.mock(PropertyUsageTypeGetRequest.class);
 		String queryString = "MyQuery" ;
 		when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(queryString);
-		List<PropertyUsageType> propUsageTypes = new ArrayList<>();
+		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
 		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
 				.thenReturn(propUsageTypes);
 
@@ -124,7 +124,7 @@ public class PropertyUsageTypeRepositoryTest {
 		PropertyUsageTypeGetRequest propUsageTypeGetRequest = Mockito.mock(PropertyUsageTypeGetRequest.class);
 		String queryString = "MyQuery" ;
 		when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(null);
-		List<PropertyUsageType> propUsageTypes = new ArrayList<>();
+		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
 		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
 				.thenReturn(propUsageTypes);
 
@@ -134,7 +134,7 @@ public class PropertyUsageTypeRepositoryTest {
 	
 	private PropertyUsageTypeRequest getPropertyUsageType() {
 		PropertyUsageTypeRequest propUsageTypeRequest = new PropertyUsageTypeRequest();
-		PropertyUsageType propUsageType = new PropertyUsageType();
+		PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
 		propUsageType.setActive(true);
 		propUsageType.setId(2L);
 		propUsageType.setPropertyType("RES");
@@ -144,7 +144,7 @@ public class PropertyUsageTypeRepositoryTest {
 		user.setId(2L);
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setUserInfo(user);
-		propUsageTypeRequest.setPropertyUsageType(propUsageType);
+		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
 		propUsageTypeRequest.setRequestInfo(requestInfo);
 		return propUsageTypeRequest;
 	}

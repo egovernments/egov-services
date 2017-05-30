@@ -58,7 +58,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class PropertyUsageType {
+public class PropertyTypeUsageType {
 	
 	public static final String SEQ_PROPERTYUSAGETYPE = "seq_egwtr_property_usage_type";
 	

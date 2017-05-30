@@ -49,7 +49,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
@@ -75,7 +75,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/propertyUsageType")
+@RequestMapping("/propertytype-usagetype")
 public class PropertyTypeUsageTypeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PropertyTypeUsageTypeController.class);
@@ -106,8 +106,8 @@ public class PropertyTypeUsageTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PropertyUsageType propUsageType = propUsageTypeService.createPropertyUsageType(applicationProperties.getCreatePropertyUsageTopicName(),"propertyusage-create", propUsageTypeRequest);
-        List<PropertyUsageType> propUsageTypes = new ArrayList<>();
+        final PropertyTypeUsageType propUsageType = propUsageTypeService.createPropertyUsageType(applicationProperties.getCreatePropertyUsageTopicName(),"propertyusage-create", propUsageTypeRequest);
+        List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
         propUsageTypes.add(propUsageType);
         return getSuccessResponse(propUsageTypes, propUsageTypeRequest.getRequestInfo());
     }
@@ -130,7 +130,7 @@ public class PropertyTypeUsageTypeController {
         }
 
         // Call service
-        List<PropertyUsageType> propUsageTypes = null;
+        List<PropertyTypeUsageType> propUsageTypes = null;
         try {
         	propUsageTypes = propUsageTypeService.getPropertyUsageTypes(propUsageTypeRequest);
         } catch (Exception exception) {
@@ -169,7 +169,7 @@ public class PropertyTypeUsageTypeController {
     
     
 	private Error getError(final PropertyUsageTypeRequest propUsageTypeRequest) {
-    	PropertyUsageType propUsageType = propUsageTypeRequest.getPropertyUsageType();
+    	PropertyTypeUsageType propUsageType = propUsageTypeRequest.getPropertyTypeUsageType();
     	List<ErrorField> errorFields = new ArrayList<>();
     	validatePropertyTypeValue(errorFields, propUsageType);
     	validateUsageTypeValue(errorFields, propUsageType);
@@ -190,7 +190,7 @@ public class PropertyTypeUsageTypeController {
                 .build();
     }
 	
-	private List<ErrorField> validatePropertyTypeValue(List<ErrorField> errorFields, PropertyUsageType propUsageType){
+	private List<ErrorField> validatePropertyTypeValue(List<ErrorField> errorFields, PropertyTypeUsageType propUsageType){
 		if (propUsageType.getPropertyType() == null || propUsageType.getPropertyType().isEmpty()){
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PROPERTYTYPE_MANDATORY_CODE)
@@ -202,7 +202,7 @@ public class PropertyTypeUsageTypeController {
 		return errorFields;
 	}
 	
-	private List<ErrorField> validateUsageTypeValue(List<ErrorField> errorFields, PropertyUsageType propUsageType) {
+	private List<ErrorField> validateUsageTypeValue(List<ErrorField> errorFields, PropertyTypeUsageType propUsageType) {
 		if (propUsageType.getUsageType() == null || propUsageType.getUsageType().isEmpty()){
         	final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
@@ -214,7 +214,7 @@ public class PropertyTypeUsageTypeController {
 		return errorFields;
 	}
 	
-	private List<ErrorField> validateTenantValue(List<ErrorField> errorFields, PropertyUsageType propUsageType) { 
+	private List<ErrorField> validateTenantValue(List<ErrorField> errorFields, PropertyTypeUsageType propUsageType) { 
 		if(propUsageType.getTenantId() == null || propUsageType.getTenantId().isEmpty()){
 			final ErrorField errorField = ErrorField.builder()
 					.code(WcmsConstants.TENANTID_MANDATORY_CODE)
@@ -227,7 +227,7 @@ public class PropertyTypeUsageTypeController {
 	}
 	
 	
-	private ResponseEntity<?> getSuccessResponse(List<PropertyUsageType> propertyUsageTypes, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<PropertyTypeUsageType> propertyUsageTypes, RequestInfo requestInfo) {
         PropertyUsageTypeResponse propUsageTypeResponse = new PropertyUsageTypeResponse();
         propUsageTypeResponse.setPropertyUsageTypes(propertyUsageTypes);
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

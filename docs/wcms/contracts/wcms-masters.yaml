@@ -97,9 +97,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/CategoryType'
+              $ref: '#/definitions/CategoryTypeRes'
           400:
             description: Invalid input
             schema:
@@ -123,7 +121,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PipeSizeTypeRes"
+              $ref: "#/definitions/PipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -150,7 +148,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PipeSizeTypeRes"
+              $ref: "#/definitions/PipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -177,9 +175,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PipeSizeTypesRes'
+              $ref: '#/definitions/PipeSizeTypesRes'
           400:
             description: Invalid input
             schema:
@@ -203,7 +199,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeRes"
+              $ref: "#/definitions/DocumentTypesRes"
           '400':
             description: Request failed
             schema:
@@ -230,7 +226,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeRes"
+              $ref: "#/definitions/DocumentTypesRes"
           '400':
             description: Request failed
             schema:
@@ -255,9 +251,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/DocumentTypesRes'
+              $ref: '#/definitions/DocumentTypesRes'
           400:
             description: Invalid input
             schema:
@@ -279,9 +273,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/SourceTypesRes'
+              $ref: '#/definitions/SourceTypesRes'
           400:
             description: Invalid input
             schema:
@@ -303,9 +295,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/ConnectionTypesRes'
+              $ref: '#/definitions/ConnectionTypesRes'
           400:
             description: Invalid input
             schema:
@@ -351,7 +341,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypeRes"
+              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
           '400':
             description: Request failed
             schema:
@@ -378,7 +368,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypeRes"
+              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
           '400':
             description: Request failed
             schema:
@@ -403,9 +393,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PropertyTypeCategoryTypesRes'
+              $ref: '#/definitions/PropertyTypeCategoryTypesRes'
           400:
             description: Invalid input
             schema:
@@ -429,7 +417,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypePipeSizeTypeRes"
+              $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -456,7 +444,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypePipeSizeTypeRes"
+              $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -481,9 +469,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PropertyTypePipeSizeTypesRes'
+              $ref: '#/definitions/PropertyTypePipeSizeTypesRes'
           400:
             description: Invalid input
             schema:
@@ -507,7 +493,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeUsageTypeRes"
+              $ref: "#/definitions/PropertyTypeUsageTypesRes"
           '400':
             description: Request failed
             schema:
@@ -534,7 +520,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeUsageTypeRes"
+              $ref: "#/definitions/PropertyTypeUsageTypesRes"
           '400':
             description: Request failed
             schema:
@@ -559,9 +545,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PropertyTypeUsageTypesRes'
+              $ref: '#/definitions/PropertyTypeUsageTypesRes'
           400:
             description: Invalid input
             schema:
@@ -585,7 +569,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeApplicationTypeRes"
+              $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
             description: Request failed
             schema:
@@ -612,7 +596,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeApplicationTypeRes"
+              $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
             description: Request failed
             schema:
@@ -637,9 +621,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/DocumentTypeApplicationTypesRes'
+              $ref: '#/definitions/DocumentTypeApplicationTypesRes'
           400:
             description: Invalid input
             schema:
@@ -740,14 +722,6 @@
         - RequestInfo
         - propertyTypeCategoryType
     
-    PropertyTypeCategoryTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeCategoryType:
-          $ref: '#/definitions/PropertyTypeCategoryType'
-          
     PropertyTypeCategoryTypesRes:
       type: object
       properties:
@@ -796,14 +770,6 @@
         - RequestInfo
         - propertyTypePipeSizeType
     
-    PropertyTypePipeSizeTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypePipeSizeType:
-          $ref: '#/definitions/PropertyTypePipeSizeType'
-          
     PropertyTypePipeSizeTypesRes:
       type: object
       properties:
@@ -852,14 +818,6 @@
         - RequestInfo
         - propertyTypeUsageType
     
-    PropertyTypeUsageTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeUsageType:
-          $ref: '#/definitions/PropertyTypeUsageType'
-          
     PropertyTypeUsageTypesRes:
       type: object
       properties:
@@ -908,14 +866,6 @@
         - RequestInfo
         - documentTypeApplicationType
     
-    DocumentTypeApplicationTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentTypeApplicationType:
-          $ref: '#/definitions/DocumentTypeApplicationType'
-          
     DocumentTypeApplicationTypesRes:
       type: object
       properties:
@@ -1087,14 +1037,6 @@
         - RequestInfo
         - document
     
-    DocumentTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentType:
-          $ref: '#/definitions/DocumentType'
-          
     DocumentTypesRes:
       type: object
       properties:
@@ -1226,8 +1168,11 @@
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        CategoryType:
-          $ref: '#/definitions/CategoryType'
+        CategoryTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/CategoryType'
     
     CategoryType:
       type: object

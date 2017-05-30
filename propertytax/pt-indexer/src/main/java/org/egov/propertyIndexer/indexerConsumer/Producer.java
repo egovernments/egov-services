@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.egov.models.Property;
+import org.egov.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ public class Producer {
 	private Environment environment;
 
 	@Autowired
-	KafkaTemplate<String, Property> kafkaTemplate;
+	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
 
 
 
@@ -38,16 +38,16 @@ public class Producer {
 	}
 
 	@Bean
-	public ProducerFactory<String, Property> producerFactory(){
+	public ProducerFactory<String, PropertyRequest> producerFactory(){
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
 	@Bean
-	public KafkaTemplate<String, Property> kafkaTemplate(){
+	public KafkaTemplate<String, PropertyRequest> kafkaTemplate(){
 		return new KafkaTemplate<>(producerFactory());
 	}
 
-	public void send(String topic,Property property){
-		kafkaTemplate.send(topic, property);
+	public void send(String topic,PropertyRequest propertyRequest){
+		kafkaTemplate.send(topic, propertyRequest);
 	}
 }

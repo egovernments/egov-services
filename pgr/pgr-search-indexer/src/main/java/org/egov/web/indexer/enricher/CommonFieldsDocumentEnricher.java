@@ -3,6 +3,7 @@ package org.egov.web.indexer.enricher;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.contract.ServiceType;
 import org.egov.web.indexer.contract.SevaRequest;
+import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +38,13 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setServiceTypeCode(serviceRequest.getServiceCode());
         document.setServiceStatusName(serviceRequest.getDynamicSingleValue(SERVICE_STATUS));
         document.setComplaintSLADays(serviceType.getSlaHours());
-//        setServiceLatitudeAndLongitude(document, serviceRequest);
+        setServiceLatitudeAndLongitude(document, serviceRequest);
     }
 
-//    private void setServiceLatitudeAndLongitude(ServiceRequestDocument document, ServiceRequest serviceRequest) {
-//        if (serviceRequest.getLat() != null && serviceRequest.getLng() != null) {
-//            document.setServiceGeo(new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng()));
-//        }
-//    }
+    private void setServiceLatitudeAndLongitude(ServiceRequestDocument document, ServiceRequest serviceRequest) {
+        if (serviceRequest.getLat() != null && serviceRequest.getLng() != null) {
+            document.setServiceGeo(new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng()));
+        }
+    }
 }
 

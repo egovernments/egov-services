@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
+import org.egov.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,15 +56,15 @@ public class Consumer {
 	}
 
 	@Bean
-	public ConsumerFactory<String, Property> consumerFactory(){
+	public ConsumerFactory<String, PropertyRequest> consumerFactory(){
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(),new StringDeserializer(),
-				new JsonDeserializer<>(Property.class));
+				new JsonDeserializer<>(PropertyRequest.class));
 
 	}
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, Property> kafkaListenerContainerFactory(){
-		ConcurrentKafkaListenerContainerFactory<String, Property> factory=new ConcurrentKafkaListenerContainerFactory<String,Property>();
+	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory(){
+		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory=new ConcurrentKafkaListenerContainerFactory<String,PropertyRequest>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -85,7 +86,8 @@ public class Consumer {
 	}
 
 	@KafkaListener(topics="#{environment.getProperty('propertyIndexer.create')}")
-	public void receive(Property property) throws IOException{
+	public void receive(PropertyRequest propertyRequest) throws IOException{
+		for(Property property : propertyRequest.getProperties()){
 		String propertyData=	new ObjectMapper().writeValueAsString(property);
 		client.execute(
 				new Index.Builder(propertyData)
@@ -93,6 +95,7 @@ public class Consumer {
 				.type(environment.getProperty("property.indexType"))
 				.build()
 				);
+		}
 		client.shutdownClient();
 
 	}

@@ -1,12 +1,17 @@
 package org.egov.models;
 
-import java.time.LocalDate;
 import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+
 import lombok.ToString;
 
 /**
@@ -20,27 +25,34 @@ import lombok.ToString;
 
 public class Property {
 
-	private String id;
+	private Integer id;
 
-	@NonNull
+	@NotNull
+	@Size(min=8, max= 128)
 	private String upicNo;
-
+	
+	@Size(min=8, max= 128)
 	private String oldUpicNo;
-
+	
+	
+	@Size(min=8, max= 128)
 	private String vltUpicNo;
 
-	@NonNull
+	@NotNull
+	@Size(min=1, max= 256)
 	private String creationReason;
 
+	@Valid
 	private Address address;
 
+	@Valid
 	private List<User> owners;
 
-	@NonNull
+	@NotNull
 
 	private String assessmentDate;
 
-	@NonNull
+	@NotNull
 
 	private String occupancyDate;
 
@@ -68,22 +80,20 @@ public class Property {
 
 	private Boolean isUnderWorkflow;
 
-	private PropertyBoundary propertyBoundary;
-
+	@Valid
+	private PropertyBoundary boundary;
+	
+    @Valid
 	private PropertyDetail propertydetails;
 
-	@NonNull
+	@NotNull
+	@Size(min=4, max= 16)
 	private String channel;
 
-	private String createdBy;
+	private AuditDetails auditDetails;
 
-	private String createdDate;
-
-	private String lastModifiedBy;
-
-	private String lastModifiedDate;
-
-	@NonNull
+	@NotNull
+	@Size(min=4, max= 128)
 	private String tenantId;
 
 }

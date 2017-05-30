@@ -1,12 +1,14 @@
 package org.egov.models;
 
 import java.util.List;
-import java.util.Objects;
+
+import javax.validation.Valid;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -18,10 +20,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Getter
+@Setter
 public class PropertyRequest {
 
 	private RequestInfo requestInfo;
 
+	//@NotNull
+	@Valid
 	private List<Property> properties;
 
 }

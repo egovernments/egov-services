@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -66,6 +66,6 @@ public class PropertyUsageTypeResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	private List<PropertyUsageType> PropertyUsageTypes = new ArrayList<PropertyUsageType>();
+	private List<PropertyTypeUsageType> PropertyUsageTypes = new ArrayList<PropertyTypeUsageType>();
 
 }

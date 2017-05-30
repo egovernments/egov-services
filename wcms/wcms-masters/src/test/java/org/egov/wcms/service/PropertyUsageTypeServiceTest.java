@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyUsageType;
+import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.producers.PropertyUsageTypeProducer;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
 import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
@@ -79,8 +79,8 @@ public class PropertyUsageTypeServiceTest {
 
 	@Test
 	public void test_Should_Find_Search_Valid() {
-		List<PropertyUsageType> propUsageTypes = new ArrayList<>();
-		propUsageTypes.add(Mockito.mock(PropertyUsageType.class));
+		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
+		propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
 		
 		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyUsageTypeGetRequest.class))).thenReturn(propUsageTypes);
 		assertTrue(propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyUsageTypeGetRequest.class))));
@@ -88,8 +88,8 @@ public class PropertyUsageTypeServiceTest {
 	
 	@Test
 	public void test_Should_Find_Search_Invalid() {
-		List<PropertyUsageType> propUsageTypes = new ArrayList<>();
-		propUsageTypes.add(Mockito.mock(PropertyUsageType.class));
+		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
+		propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
 		
 		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyUsageTypeGetRequest.class))).thenReturn(null);
 		assertTrue(!propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyUsageTypeGetRequest.class))));
@@ -97,11 +97,11 @@ public class PropertyUsageTypeServiceTest {
 	
 	@Test
 	public void test_Should_Create() {
-		PropertyUsageType propUsageType = getPropertyUsageType();
-		List<PropertyUsageType> propertyUsageTypes = new ArrayList<>();
+		PropertyTypeUsageType propUsageType = getPropertyUsageType();
+		List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
 		propertyUsageTypes.add(propUsageType);
 		PropertyUsageTypeRequest propUsageTypeRequest = new PropertyUsageTypeRequest();
-		propUsageTypeRequest.setPropertyUsageType(propUsageType);
+		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
 		PropertyUsageTypeResponse propUsageTypeResponse = new PropertyUsageTypeResponse();
 		propUsageTypeResponse.setResponseInfo(null);
 		propUsageTypeResponse.setPropertyUsageTypes(propertyUsageTypes);
@@ -112,9 +112,9 @@ public class PropertyUsageTypeServiceTest {
 		
 	}
 
-	private PropertyUsageType getPropertyUsageType() {
+	private PropertyTypeUsageType getPropertyUsageType() {
 
-		PropertyUsageType propUsageType = new PropertyUsageType();
+		PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
 		propUsageType.setActive(true);
 		propUsageType.setId(2L);
 		propUsageType.setPropertyType("RES");

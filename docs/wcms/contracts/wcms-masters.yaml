@@ -97,9 +97,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/CategoryType'
+              $ref: '#/definitions/CategoryTypeRes'
           400:
             description: Invalid input
             schema:
@@ -123,7 +121,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PipeSizeTypeRes"
+              $ref: "#/definitions/PipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -150,7 +148,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PipeSizeTypeRes"
+              $ref: "#/definitions/PipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -171,13 +169,13 @@
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/code"
           - $ref: "#/parameters/name"
+          - $ref: "#/parameters/sizeInInch"
+          - $ref: "#/parameters/sizeInMilimeter"
         responses:
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PipeSizeTypesRes'
+              $ref: '#/definitions/PipeSizeTypesRes'
           400:
             description: Invalid input
             schema:
@@ -201,7 +199,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeRes"
+              $ref: "#/definitions/DocumentTypesRes"
           '400':
             description: Request failed
             schema:
@@ -228,7 +226,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeRes"
+              $ref: "#/definitions/DocumentTypesRes"
           '400':
             description: Request failed
             schema:
@@ -253,9 +251,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/DocumentTypesRes'
+              $ref: '#/definitions/DocumentTypesRes'
           400:
             description: Invalid input
             schema:
@@ -277,9 +273,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/SourceTypesRes'
+              $ref: '#/definitions/SourceTypesRes'
           400:
             description: Invalid input
             schema:
@@ -301,9 +295,7 @@
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/ConnectionTypesRes'
+              $ref: '#/definitions/ConnectionTypesRes'
           400:
             description: Invalid input
             schema:
@@ -349,7 +341,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypeRes"
+              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
           '400':
             description: Request failed
             schema:
@@ -376,7 +368,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypeRes"
+              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
           '400':
             description: Request failed
             schema:
@@ -395,17 +387,13 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/propertyTypeId"
-          - $ref: "#/parameters/categoryTypeId"
+          - $ref: "#/parameters/propertyTypeCode"
+          - $ref: "#/parameters/categoryTypeCode"
         responses:
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PropertyTypeCategoryTypesRes'
+              $ref: '#/definitions/PropertyTypeCategoryTypesRes'
           400:
             description: Invalid input
             schema:
@@ -429,7 +417,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypePipeSizeTypeRes"
+              $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -456,7 +444,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypePipeSizeTypeRes"
+              $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
           '400':
             description: Request failed
             schema:
@@ -475,17 +463,13 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/propertyTypeId"
-          - $ref: "#/parameters/pipeSizeTypeId"
+          - $ref: "#/parameters/propertyTypeCode"
+          - $ref: "#/parameters/pipeSizeTypeCode"
         responses:
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PropertyTypePipeSizeTypesRes'
+              $ref: '#/definitions/PropertyTypePipeSizeTypesRes'
           400:
             description: Invalid input
             schema:
@@ -509,7 +493,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeUsageTypeRes"
+              $ref: "#/definitions/PropertyTypeUsageTypesRes"
           '400':
             description: Request failed
             schema:
@@ -536,7 +520,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypeUsageTypeRes"
+              $ref: "#/definitions/PropertyTypeUsageTypesRes"
           '400':
             description: Request failed
             schema:
@@ -555,17 +539,13 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/propertyTypeId"
-          - $ref: "#/parameters/usageTypeId"
+          - $ref: "#/parameters/propertyTypeCode"
+          - $ref: "#/parameters/usageTypeCode"
         responses:
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/PropertyTypeUsageTypesRes'
+              $ref: '#/definitions/PropertyTypeUsageTypesRes'
           400:
             description: Invalid input
             schema:
@@ -589,7 +569,7 @@
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeApplicationTypeRes"
+              $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
             description: Request failed
             schema:
@@ -616,7 +596,7 @@
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/DocumentTypeApplicationTypeRes"
+              $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
             description: Request failed
             schema:
@@ -635,17 +615,13 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/documentTypeId"
-          - $ref: "#/parameters/applicationTypeId"
+          - $ref: "#/parameters/documentTypeCode"
+          - $ref: "#/parameters/applicationTypeCode"
         responses:
           200: 
             description: Successful response
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/DocumentTypeApplicationTypesRes'
+              $ref: '#/definitions/DocumentTypeApplicationTypesRes'
           400:
             description: Invalid input
             schema:
@@ -677,54 +653,60 @@
       type: string
       minLength: 0
       maxLength: 100
-      
-    propertyTypeId:
-      name: propertyTypeId
-      in: query
-      description: unique identifier of property type
-      required: false
-      type: integer
-      format: int64
-      
-    categoryTypeId:
-      name: categoryTypeId
-      in: query
-      description: unique identifier of category type
-      required: false
-      type: integer
-      format: int64
-      
-    pipeSizeTypeId:
-      name: pipeSizeTypeId
-      in: query
-      description: unique identifier of pipe size type
-      required: false
-      type: integer
-      format: int64
-      
-    usageTypeId:
-      name: usageTypeId
-      in: query
-      description: unique identifier of usage type
-      required: false
-      type: integer
-      format: int64
     
-    documentTypeId:
-      name: documentTypeId
+    sizeInMilimeter:
+      name: sizeInMilimeter
       in: query
-      description: unique identifier of document type
+      type: number
+      description: Unique H.S.C pipe size in milli-meters.
+  
+    sizeInInch:
+      name: sizeInInch
+      in: query
+      type: number
+      description: H.S.C pipe size in inches.
+      
+    propertyTypeCode:
+      name: propertyTypeCode
+      in: query
+      description: unique code of property type
       required: false
-      type: integer
-      format: int64
+      type: string
+
+    categoryTypeCode:
+      name: categoryTypeCode
+      in: query
+      description: unique code of category type
+      required: false
+      type: string
+      
+    pipeSizeTypeCode:
+      name: pipeSizeTypeCode
+      in: query
+      description: unique code of pipe size type
+      required: false
+      type: string
+      
+    usageTypeCode:
+      name: usageTypeCode
+      in: query
+      description: unique code of usage type
+      required: false
+      type: string
     
-    applicationTypeId:
-      name: applicationTypeId
+    documentTypeCode:
+      name: documentTypeCode
+      in: query
+      description: unique code of document type
+      required: false
+      type: string
+
+    applicationTypeCode:
+      name: applicationTypeCode
       in: query
       description: unique identifier of application type
       required: false
-      type: integer
-      format: int64
+      type: string
       
   definitions:
   
@@ -740,14 +722,6 @@
         - RequestInfo
         - propertyTypeCategoryType
     
-    PropertyTypeCategoryTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeCategoryType:
-          $ref: '#/definitions/PropertyTypeCategoryType'
-          
     PropertyTypeCategoryTypesRes:
       type: object
       properties:
@@ -779,6 +753,10 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - propertyTypeId
+        - categoryTypeId
+        - tenantId
           
   # Proprty Type and PipeSize Type mapping definition
     PropertyTypePipeSizeTypeReq:
@@ -792,14 +770,6 @@
         - RequestInfo
         - propertyTypePipeSizeType
     
-    PropertyTypePipeSizeTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypePipeSizeType:
-          $ref: '#/definitions/PropertyTypePipeSizeType'
-          
     PropertyTypePipeSizeTypesRes:
       type: object
       properties:
@@ -831,8 +801,11 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-          
-          
+      required:
+        - propertyTypeId
+        - pipeSizeTypeId
+        - tenantId
+
   # Proprty Type and Usage Type mapping definition
     PropertyTypeUsageTypeReq:
       type: object
@@ -845,14 +818,6 @@
         - RequestInfo
         - propertyTypeUsageType
     
-    PropertyTypeUsageTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeUsageType:
-          $ref: '#/definitions/PropertyTypeUsageType'
-          
     PropertyTypeUsageTypesRes:
       type: object
       properties:
@@ -884,6 +849,10 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - propertyTypeId
+        - usageTypeId
+        - tenantId
 
   # Document Type and Application Type mapping definition
     DocumentTypeApplicationTypeReq:
@@ -897,14 +866,6 @@
         - RequestInfo
         - documentTypeApplicationType
     
-    DocumentTypeApplicationTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentTypeApplicationType:
-          $ref: '#/definitions/DocumentTypeApplicationType'
-          
     DocumentTypeApplicationTypesRes:
       type: object
       properties:
@@ -931,11 +892,22 @@
           type: integer
           format: int64
           description: unique identifier of application type object
+        fileStoreId:
+          type: integer
+          format: int64
+          description: unique identifier of uploaded file object
+        filePath:
+          type: string
+          description: absolute path of uploaded file object
         tenantId:
           type: string
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - documentTypeId
+        - applicationTypeId
+        - tenantId
 
   # Application Type definitions
     ApplicationTypesRes:
@@ -975,7 +947,10 @@
           type: string
           description: human readable description should be assigned by user.
           maxLength: 100
-  
+      required:
+        - code
+        - name
+
   # WaterConnection Type definitions
     ConnectionTypesRes:
       type: object
@@ -1062,14 +1037,6 @@
         - RequestInfo
         - document
     
-    DocumentTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentType:
-          $ref: '#/definitions/DocumentType'
-          
     DocumentTypesRes:
       type: object
       properties:
@@ -1109,6 +1076,10 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - name
+        - tenantId
   
   # PipeSize Type definitions
     PipeSizeTypeReq:
@@ -1175,8 +1146,11 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-          
-          
+      required:
+        - code
+        - name
+        - tenantId
+
   # Category Type definitions
     CategoryTypeReq:
       type: object
@@ -1194,8 +1168,11 @@
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        CategoryType:
-          $ref: '#/definitions/CategoryType'
+        CategoryTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/CategoryType'
     
     CategoryType:
       type: object
@@ -1225,5 +1202,9 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - name
+        - tenantId
           
   

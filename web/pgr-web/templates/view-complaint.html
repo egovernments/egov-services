@@ -40,7 +40,7 @@
 						<div class="panel panel-primary" data-collapsed="0">
 							<div class="panel-heading">
 								<div class="panel-title">
-									{{serviceRequestId}}
+									 <span data-translate="pgr.lbl.srn"></span>: {{serviceRequestId}}
 								</div>
 							</div>
 							<div class="panel-body">
@@ -62,18 +62,43 @@
 										{{/if}}
 									</div>
 								</div>
-				
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.srn"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Email"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{serviceRequestId}}
+										{{#if email}}
+											{{email}}
+										{{else}}
+											N/A
+										{{/if}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="Registered Date"></div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Address"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{requestedDatetime}}
+										{{#each attribValues}}
+										    {{#if (contains this.key "requesterAddress")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
 									</div>
 								</div>
 								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Aadhaar No."></div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{#each attribValues}}
+										    {{#if (contains this.key "aadhaarno")}}
+												{{this.name}}
+										    {{/if}}
+										{{/each}}
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Description"></div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{description}}
+									</div>
+								</div>
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Grievance / Service Type"></div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{serviceName}}
+									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="Department"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{values.departmetName}}
@@ -83,16 +108,19 @@
 										    {{/if}}
 										{{/each}}
 									</div>
+								</div>
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="Registered Date"></div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{requestedDatetime}}
+									</div>
+									
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.nextescalation.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{expectedDatetime}}
 									</div> 
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="Grievance / Service Type"></div>
-									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{serviceName}}
-									</div>
 									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.filedvia"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{#each attribValues}}
@@ -101,22 +129,16 @@
 										    {{/if}}
 										{{/each}}
 									</div>
-								</div>
-								<div class="row add-border">
-								{{#if values.recCenterText}}
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.receivingcenter"></div>
-									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{#each attribValues}}
-										    {{#if (contains this.key "recCenterText")}}
-												{{this.name}}
-										    {{/if}}
-										{{/each}}
-									</div>
-								{{/if}}
-									<div class="col-md-3 col-xs-6 add-margin" data-translate="Description"></div>
-									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{description}}
-									</div>
+									{{#if values.recCenterText}}
+										<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.receivingcenter"></div>
+										<div class="col-md-3 col-xs-6 add-margin view-content">
+											{{#each attribValues}}
+											    {{#if (contains this.key "recCenterText")}}
+													{{this.name}}
+											    {{/if}}
+											{{/each}}
+										</div>
+									{{/if}}
 								</div>
 					{{/serviceRequests}}
 								<div class="row add-border">
@@ -157,7 +179,7 @@
 													    {{/if}}
 													{{/each}}
 													{{#each attribValues}}
-													    {{#if (contains this.key "LocationName")}}
+													    {{#if (contains this.key "locationName")}}
 															{{this.name}}
 													    {{/if}}
 													{{/each}}

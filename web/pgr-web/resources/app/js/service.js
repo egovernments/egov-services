@@ -265,6 +265,7 @@ function loadServiceDefinition(code){
 				$('#servicesBlockDocs').parents('.panel-primary').hide();
 
 			patternvalidation();
+			initDatePicker();
 			translate();
 		},
 		error: function(){

@@ -42,7 +42,7 @@ var locale = [];
 $(document).ready(function()
 {
 	tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : getUrlParameter('tenant') ? getUrlParameter('tenant') : 'default';
-
+	
 	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
 	    	var patt = new RegExp("maps.googleapis.com");
@@ -59,10 +59,8 @@ $(document).ready(function()
 	try { $(":input").inputmask(); }catch(e){}
 	
 	try { 
-		$(".datepicker").datepicker({
-			format: "dd-mm-yyyy",
-			autoclose: true 
-		}); 
+		
+		initDatePicker();
 
 		}catch(e){
 		//console.warn("No Date Picker");
@@ -418,6 +416,13 @@ function clearLocalStorage(){
 	localStorage.removeItem('status');
 }
 
+function initDatePicker(){
+	$(".datepicker").datepicker({
+		format: "dd-mm-yyyy",
+		autoclose: true 
+	}); 
+}
+
 var RI = function(auth){
 	this.apiId = 'org.egov.pgr';
     this.ver = '1.0';
@@ -595,8 +600,8 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 		if(!this.variable){
 			this.template = '<label class="col-sm-2 control-label"></label><div class="col-sm-3 add-margin success-msg" data-translate="'+this.description+'"></div><div class="col-sm-1"></div>';
 		}else{
-			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'String' ? 'alphabetwithspace' : value; 
-			if(this.dataType == 'number' || this.dataType == 'String' || this.dataType == 'datetime'){
+			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'string' ? 'alphabetwithspace' : value; 
+			if(this.dataType == 'number' || this.dataType == 'string'){
 				if(this.name == 'PROCESSINGFEE' && this.mode == '')
 					this.template = '';
 				else if(localStorage.getItem('type') == 'EMPLOYEE' && this.name == 'PROCESSINGFEE' && this.mode == 'disabled')
@@ -604,7 +609,8 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 				else
 					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
 
-			}
+			}else if(this.dataType == 'datetime' || this.dataType == 'date')
+				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control datepicker" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
 			else if(this.dataType == 'text')
 				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-3 add-margin"> <textarea class="form-control patternvalidation" name="'+this.name+'" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' ></textarea> </div><div class="col-sm-1"></div>';
 			else if(this.dataType == 'singlevaluelist' || this.dataType == 'multivaluelist'){

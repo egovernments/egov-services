@@ -1,11 +1,11 @@
 package org.egov.models;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 /**
@@ -17,46 +17,57 @@ import lombok.ToString;
 @ToString
 
 public class Floor {
-	@NonNull
-	private String id;
+	
+	private Integer id;
 
-	@NonNull
+	@NotNull
+	@Size(min=1, max= 16)
 	private String floorNo;
-
+	
+	@Size(min=1, max= 8)
 	private String unitNo;
-
+	
+	@Size(min=1, max= 16)
 	private String type;
 
 	private Double length;
 
 	private Double width;
 
-	@NonNull
+	@NotNull
 	private Double builtupArea;
 
 	private Double assessableArea;
 
 	private Double bpaBuiltupArea;
 
+	@Size(min=1, max= 16)
 	private String category;
 
-	@NonNull
+	@NotNull
+	@Size(min=1, max= 16)
 	private String usage;
 
-	@NonNull
+	@NotNull
+	@Size(min=1, max= 16)
 	private String occupancy;
 
-	@NonNull
+	@NotNull
+	@Size(min=1, max= 16)
 	private String structure;
 
+	@Size(min=1, max= 16)
 	private String depreciation;
-
+	
+	@Size(min=1, max= 128)
 	private String occupierName;
-
+	
+	@Size(min=1, max= 128)
 	private String firmName;
 
 	private Double rentCollected;
 
+	@Size(min=1, max=32)
 	private String exemptionReason;
 
 	private Boolean isStructured;
@@ -65,26 +76,25 @@ public class Floor {
 
 	private String constCompletionDate;
 
+	@Size(min=1, max= 16)
 	private String bpaNo;
 
-	private LocalDate bpaDate;
+	private String bpaDate;
 
 	private Double manualArv;
 
 	private Double arv;
 
+	@Size(min=1, max=64)
 	private String electricMeterNo;
-
+	
+	@Size(min=1, max= 64)
 	private String waterMeterNo;
 
-	private String createdBy;
-
-	private String createdDate;
-
-	private String lastModifiedBy;
-
-	private String lastModifiedDate;
-
+	private AuditDetails auditDetails;
+	
+    @NotNull
+    @Size(min=4, max= 128)
 	private String tenantId;
 
 }

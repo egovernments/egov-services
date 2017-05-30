@@ -171,6 +171,8 @@
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/code"
           - $ref: "#/parameters/name"
+          - $ref: "#/parameters/sizeInInch"
+          - $ref: "#/parameters/sizeInMilimeter"
         responses:
           200: 
             description: Successful response
@@ -395,10 +397,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/propertyTypeId"
-          - $ref: "#/parameters/categoryTypeId"
+          - $ref: "#/parameters/propertyTypeCode"
+          - $ref: "#/parameters/categoryTypeCode"
         responses:
           200: 
             description: Successful response
@@ -475,10 +475,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/propertyTypeId"
-          - $ref: "#/parameters/pipeSizeTypeId"
+          - $ref: "#/parameters/propertyTypeCode"
+          - $ref: "#/parameters/pipeSizeTypeCode"
         responses:
           200: 
             description: Successful response
@@ -555,10 +553,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/propertyTypeId"
-          - $ref: "#/parameters/usageTypeId"
+          - $ref: "#/parameters/propertyTypeCode"
+          - $ref: "#/parameters/usageTypeCode"
         responses:
           200: 
             description: Successful response
@@ -635,10 +631,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/documentTypeId"
-          - $ref: "#/parameters/applicationTypeId"
+          - $ref: "#/parameters/documentTypeCode"
+          - $ref: "#/parameters/applicationTypeCode"
         responses:
           200: 
             description: Successful response
@@ -677,54 +671,60 @@
       type: string
       minLength: 0
       maxLength: 100
-      
-    propertyTypeId:
-      name: propertyTypeId
-      in: query
-      description: unique identifier of property type
-      required: false
-      type: integer
-      format: int64
-      
-    categoryTypeId:
-      name: categoryTypeId
-      in: query
-      description: unique identifier of category type
-      required: false
-      type: integer
-      format: int64
-      
-    pipeSizeTypeId:
-      name: pipeSizeTypeId
-      in: query
-      description: unique identifier of pipe size type
-      required: false
-      type: integer
-      format: int64
-      
-    usageTypeId:
-      name: usageTypeId
-      in: query
-      description: unique identifier of usage type
-      required: false
-      type: integer
-      format: int64
     
-    documentTypeId:
-      name: documentTypeId
+    sizeInMilimeter:
+      name: sizeInMilimeter
       in: query
-      description: unique identifier of document type
+      type: number
+      description: Unique H.S.C pipe size in milli-meters.
+  
+    sizeInInch:
+      name: sizeInInch
+      in: query
+      type: number
+      description: H.S.C pipe size in inches.
+      
+    propertyTypeCode:
+      name: propertyTypeCode
+      in: query
+      description: unique code of property type
       required: false
-      type: integer
-      format: int64
+      type: string
+
+    categoryTypeCode:
+      name: categoryTypeCode
+      in: query
+      description: unique code of category type
+      required: false
+      type: string
+      
+    pipeSizeTypeCode:
+      name: pipeSizeTypeCode
+      in: query
+      description: unique code of pipe size type
+      required: false
+      type: string
+      
+    usageTypeCode:
+      name: usageTypeCode
+      in: query
+      description: unique code of usage type
+      required: false
+      type: string
     
-    applicationTypeId:
-      name: applicationTypeId
+    documentTypeCode:
+      name: documentTypeCode
+      in: query
+      description: unique code of document type
+      required: false
+      type: string
+
+    applicationTypeCode:
+      name: applicationTypeCode
       in: query
       description: unique identifier of application type
       required: false
-      type: integer
-      format: int64
+      type: string
       
   definitions:
   
@@ -779,6 +779,10 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - propertyTypeId
+        - categoryTypeId
+        - tenantId
           
   # Proprty Type and PipeSize Type mapping definition
     PropertyTypePipeSizeTypeReq:
@@ -831,8 +835,11 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-          
-          
+      required:
+        - propertyTypeId
+        - pipeSizeTypeId
+        - tenantId
+
   # Proprty Type and Usage Type mapping definition
     PropertyTypeUsageTypeReq:
       type: object
@@ -884,6 +891,10 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - propertyTypeId
+        - usageTypeId
+        - tenantId
 
   # Document Type and Application Type mapping definition
     DocumentTypeApplicationTypeReq:
@@ -931,11 +942,22 @@
           type: integer
           format: int64
           description: unique identifier of application type object
+        fileStoreId:
+          type: integer
+          format: int64
+          description: unique identifier of uploaded file object
+        filePath:
+          type: string
+          description: absolute path of uploaded file object
         tenantId:
           type: string
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - documentTypeId
+        - applicationTypeId
+        - tenantId
 
   # Application Type definitions
     ApplicationTypesRes:
@@ -975,7 +997,10 @@
           type: string
           description: human readable description should be assigned by user.
           maxLength: 100
-  
+      required:
+        - code
+        - name
+
   # WaterConnection Type definitions
     ConnectionTypesRes:
       type: object
@@ -1109,6 +1134,10 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - name
+        - tenantId
   
   # PipeSize Type definitions
     PipeSizeTypeReq:
@@ -1175,8 +1204,11 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-          
-          
+      required:
+        - code
+        - name
+        - tenantId
+
   # Category Type definitions
     CategoryTypeReq:
       type: object
@@ -1225,5 +1257,9 @@
           description: Unique Identifier of the tenant   
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - name
+        - tenantId
           
   

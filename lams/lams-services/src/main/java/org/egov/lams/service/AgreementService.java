@@ -94,8 +94,10 @@ public class AgreementService {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
+		for(int i=0;i< agreement.getTimePeriod();i++){
+		calendar.add(Calendar.YEAR,1);
 		calendar.add(Calendar.HOUR, -24);
+		}
 		Date expiryDate = calendar.getTime();
 		agreement.setExpiryDate(expiryDate);
 		logger.info("The closeDate calculated is " + expiryDate + "from commencementDate of "

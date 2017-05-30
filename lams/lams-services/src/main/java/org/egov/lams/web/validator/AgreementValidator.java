@@ -80,9 +80,11 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			errors.rejectValue("Agreement.bankGuaranteeDate", "","bank Guarantee Date date should be lesser than current date");
 		if(agreement.getSource().equals(Source.DATA_ENTRY)){
 			
+			if(agreement.getCollectedSecurityDeposit() != null)
 			if((agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
 				errors.rejectValue("Agreement.CollectedSecurotyDeposit","","collectedSecurityDeposit should not be greater than security deposit");
 			
+			if(agreement.getCollectedGoodWillAmount() != null)
 			if((agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
 				errors.rejectValue("Agreement.CollectedGoodWillAmount","","CollectedGoodWillAmount should not be greater than GoodWillAmount");
 			

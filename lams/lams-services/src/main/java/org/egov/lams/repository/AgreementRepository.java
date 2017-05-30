@@ -224,14 +224,6 @@ public class AgreementRepository {
 
 		logger.info("AgreementDao agreement::" + agreement);
 		
-		String agreementIdQuery = "select nextval('seq_eglams_agreement')";
-		try {
-			agreement.setId(jdbcTemplate.queryForObject(agreementIdQuery,Long.class));
-		} catch (DataAccessException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex.getMessage());
-		}
-
 		String agreementinsert = AgreementQueryBuilder.insertAgreementQuery();
 		
 		Long rentIncrement = null;
@@ -380,5 +372,14 @@ public class AgreementRepository {
 			}
 		}*/
 	
+	}
+	public Long getAgreementID(){
+		String agreementIdQuery = "select nextval('seq_eglams_agreement')";
+		try {
+				return jdbcTemplate.queryForObject(agreementIdQuery,Long.class);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 }

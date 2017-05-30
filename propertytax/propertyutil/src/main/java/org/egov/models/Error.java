@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,6 @@ public class Error {
 
 	private String description;
 
-	private Object filelds;
+	private Map<String,String> filelds;
 
 }

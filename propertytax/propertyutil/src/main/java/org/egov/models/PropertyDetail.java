@@ -1,14 +1,15 @@
 package org.egov.models;
 
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * PropertyDetail
@@ -20,34 +21,43 @@ import java.util.List;
 @ToString
 public class PropertyDetail {
 
-	private String id;
+	private Integer id;
 
+	@Size(min=1, max=64)
 	private String regdDocNo;
 
-	private LocalDate regdDocDate;
+	private String regdDocDate;
 
-	private LocalDate occupancyDate;
+	private String occupancyDate;
 
+	@Size(min=1, max= 16)
 	private String reason;
 
+	@Size(min=1, max=4)
 	private String status;
 
 	private Boolean isVerified;
 
-	private LocalDate verificationDate;
+	private String verificationDate;
 
 	private Boolean isExempted;
 
+	@Size(min=1, max=32)
 	private String exemptionReason;
 
+	@Size(min=1, max= 16)
 	private String propertyType;
 
+	@Size(min=1, max= 16)
 	private String category;
 
+	@Size(min=1, max= 16)
 	private String usage;
 
+	@Size(min=1, max= 16)
 	private String department;
 
+	@Size(min=1, max= 16)
 	private String apartment;
 
 	private Double length;
@@ -62,18 +72,24 @@ public class PropertyDetail {
 
 	private Long noOfFloors;
 
+	@Valid
 	private List<Floor> floors;
 
 	private Boolean isSuperStructure;
 
+	@Size(min=1, max= 128)
 	private String landOwner;
 
+	@Size(min=1, max= 16)
 	private String floorType;
 
+	@Size(min=1, max= 16)
 	private String woodType;
 
+	@Size(min=1, max= 16)
 	private String roofType;
 
+	@Size(min=1, max= 16)
 	private String wallType;
 
 	private Boolean lift;
@@ -89,23 +105,24 @@ public class PropertyDetail {
 	private Boolean waterHarvesting;
 
 	private Boolean cableConnection;
-
+	
+    @Valid
 	private VacantLandProperty vacantLand;
 
 	@NonNull
+	@Size(min=4, max= 16)
 	private String channel;
 
+	@Size(min=1, max=32)
 	private String applicationNo;
 
-	private String createdBy;
+	private AuditDetails auditDetails;
 
-	private String createdDate;
-
-	private String lastModifiedBy;
-
-	private LocalDate lastModifiedDate;
-
-	// @NonNull
+	@NonNull
+	@Size(min=4, max= 128)
 	private String tenantId;
 
+	private WorkflowDetails workFlowDetails;
+	
+	private List<Document> documents;
 }

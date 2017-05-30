@@ -2,16 +2,28 @@ var flag = 0;
 class EmployeeSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],searchSet:{
-    code:"",
-    departmentId:"",
-    designationId:"",
-    employeeType:"",
-    asOnDate:"",
-    name:"",mobileNumber:"",pan:"",aadhaarNumber:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
-    this.handleChange=this.handleChange.bind(this);
-    this.search=this.search.bind(this);
-    this.handleBlur=this.handleBlur.bind(this);
+    this.state = {
+        employees: [],
+        searchSet: {
+            code: "",
+            departmentId: "",
+            designationId: "",
+            employeeType: "",
+            asOnDate: "",
+            name: "",
+            mobileNumber: "",
+            pan: "",
+            aadhaarNumber: ""
+        },
+        isSearchClicked: false,
+        employeeTypeList: [],
+        departmentList: [],
+        designationList: [],
+        modified: false
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.search = this.search.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
   }
 
@@ -37,11 +49,19 @@ class EmployeeSearch extends React.Component {
         if(res) {
           employees = res.Employee;
         }
+
         flag = 1;
         _this.setState({
           isSearchClicked: true,
-          employees
+          employees,
+          modified: true
         });
+
+        setTimeout(function() {
+          _this.setState({
+            modified: false
+          })
+        }, 1200);
     });
   }
   handleBlur(e) {
@@ -83,7 +103,7 @@ class EmployeeSearch extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.employees.length!=this.state.employees.length) {
+      if (this.state.modified && this.state.employees.length) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [

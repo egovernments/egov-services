@@ -300,11 +300,11 @@ public class BoundaryService {
 	public Optional<Boundary> getBoundaryByNumberAndType(Long boundaryNum, String boundaryTypeName, String tenantId) {
 		if (boundaryNum != null && !StringUtils.isEmpty(boundaryTypeName)) {
 			final BoundaryType boundaryType = boundaryTypeService
-					.getBoundaryTypeByNameAndHierarchyTypeName(boundaryTypeName, "ADMINISTRATION");
+					.getBoundaryTypeByNameAndHierarchyTypeName(boundaryTypeName, "ADMINISTRATION", tenantId);
 			final Boundary boundary = this.getBoundaryByTypeAndNo(boundaryType, boundaryNum);
 			if (boundary == null) {
 				final BoundaryType cityBoundaryType = boundaryTypeService
-						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION");
+						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION", tenantId);
 				return Optional.ofNullable(
 						this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(), tenantId).get(0));
 			}

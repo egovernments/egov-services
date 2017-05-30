@@ -141,8 +141,8 @@ $(document).ready(function()
 	});
 	
 	getPosition();
-	worklist();
 	getStatus();
+	worklist();
 	
 	$("#official_inbox").on('click','tbody tr td i.inbox-history',function(e) {
 		var tr = $(this).closest('tr');
@@ -437,7 +437,7 @@ function worklist(){
 		"autoWidth": false,
         "aaSorting": [],
 		"ajax": {
-			url : "/pgr/seva/_search?tenantId="+tenantId+"&assignment_id="+positionId,
+			url : "/pgr/seva/_search?tenantId="+tenantId+"&assignmentId="+positionId,
 			type: 'POST',
 			contentType: "application/json",
             processData : true,
@@ -469,7 +469,7 @@ function worklist(){
 				var results = (JSON.parse(localStorage.getItem('status'))).filter(function (el) {
 				  return el.code == st;
 				});
-				return results[0] ? results[0].name : st;
+				return results[0] ? results[0].name.toUpperCase() : st;
 			}else
 				return st;
 	    } },
@@ -669,22 +669,23 @@ function getPosition(){
 	})
 }
 
-$.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
-	if(aData[4] == 'COMPLETED' || aData[4] == 'WITHDRAWN' || aData[4] == 'REJECTED' || aData[4] == 'DSAPPROVED' || aData[4] == 'DSREJECTED')
-		return false;
-	else
-		return true;
-});
-
 function getStatus(){
 	$.ajax({
 		url: "/workflow/v1/statuses/_search?tenantId="+tenantId+'&keyword=Deliverable_service',
 		type : 'POST',
 		dataType: 'json',
 		processData : false,
+		async : false,
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		localStorage.setItem('status', JSON.stringify(data.statuses));
 	});
 }
+
+$.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
+	if(aData[4] == 'COMPLETED' || aData[4] == 'WITHDRAWN' || aData[4] == 'REJECTED' || aData[4] == 'APPROVED')
+		return false;
+	else
+		return true;
+});

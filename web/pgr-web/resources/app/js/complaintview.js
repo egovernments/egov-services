@@ -128,7 +128,7 @@ function getComplaint(){
 			showLoader();
 		},
 		success : function(response){
-			//console.log('Get complaint done!'+JSON.stringify(response));
+			console.log('Get complaint done!'+JSON.stringify(response));
 			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.serviceRequests.length == 0){
@@ -212,7 +212,7 @@ function getComplaint(){
 								getReceivingCenterbyId(AV_receivingcenter, response);
 
 							if(AV_locationId)
-								getBoundarybyId(AV_locationId,'LocationName', response);
+								//getBoundarybyId(AV_locationId,'LocationName', response);
 
 							if(AV_childLocationId)
 								getBoundarybyId(AV_childLocationId, 'ChildLocationName', response);
@@ -255,6 +255,8 @@ function getComplaint(){
 								else
 									nextStatus(loadDD);
 							}
+
+							//console.log(JSON.stringify(response.serviceRequests[0]))
 
 						},
 						error:function(){
@@ -750,7 +752,7 @@ function callToLoadDefinition(searchResponse){
 
 			$('.checkForm *').filter(':input').each(function(){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
-				//console.log($(this).attr('name'), obj)
+				console.log($(this).attr('name'), obj)
 				if(obj){
 					if(JSON.parse(obj.name))
 				    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");

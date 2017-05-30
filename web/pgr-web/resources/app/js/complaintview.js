@@ -179,7 +179,7 @@ function getComplaint(){
 						type : 'GET',
 						success : function(work_response){
 
-							if(keyword != 'Complaint'){
+							if(keyword != 'Complaint' && localStorage.getItem('status')){
 								for(var i=0;i<work_response.length;i++){
 									JSON.parse(localStorage.getItem('status')).filter(function (el) {
 									  el.code == work_response[i].status ? work_response[i].status = el.name :'';
@@ -239,16 +239,6 @@ function getComplaint(){
 								
 							}
 
-							if(localStorage.getItem('type') == 'CITIZEN' && keyword != 'Complaint'){
-								
-							}else{
-								var loadDD = new $.loadDD();
-								nextStatus(loadDD);
-							}
-
-							if(keyword != 'Complaint' && localStorage.getItem('type') == 'CITIZEN')
-								$('.action-section').remove();
-
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								$('#status').attr('required','required');
 								var wardId = AV_locationId;
@@ -258,6 +248,12 @@ function getComplaint(){
 								getWard(loadDD, wardId);
 								getLocality(wardId, localityid);
 								getDepartment(loadDD);
+								nextStatus(loadDD);
+							}else if(localStorage.getItem('type') == 'CITIZEN'){
+								if(keyword != 'Complaint')
+									$('.action-section').remove();
+								else
+									nextStatus(loadDD);
 							}
 
 						},

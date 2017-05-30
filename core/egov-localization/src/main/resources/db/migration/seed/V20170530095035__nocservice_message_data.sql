@@ -1,0 +1,11 @@
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.application.architecture','Application of architecture','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.certificate.fire','Certificate of establishment of fire brigade','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.license.agency','Format A certificate of license agency','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.letter.fire','Undertaking letter of good maintainance of fire extinguisher system','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.safety.guideline','Whether fire extinguishers are installed as per safety guidelines','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.emergency.exit','Whether emergency exit is present in the building','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.building.name','Building name','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.complex.name','Housing complex name','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.survey.number','Survey number','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.citysurvey.number','City survey number ','default');
+insert into message (id,locale,code,message,tenantid) values(nextval('SEQ_MESSAGE'),'en_IN','core.property.number','Property number','default');

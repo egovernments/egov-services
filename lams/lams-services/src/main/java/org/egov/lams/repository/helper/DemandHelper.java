@@ -1,5 +1,7 @@
 package org.egov.lams.repository.helper;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
@@ -19,7 +21,7 @@ public class DemandHelper {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public String getDemandReasonUrlParams(AgreementRequest agreementRequest) {
+	public String getDemandReasonUrlParams(AgreementRequest agreementRequest, String taxReason, Date date) {
 
 		Agreement agreement = agreementRequest.getAgreement();
 
@@ -32,12 +34,16 @@ public class DemandHelper {
 		urlParams.append("?moduleName=" + propertiesManager.getDemandModuleName());
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
 		urlParams.append("&fromDate=" + DateFormatUtils.format(agreement.getCommencementDate(), "dd/MM/yyyy"));
-		urlParams.append("&toDate=" + DateFormatUtils.format(agreement.getExpiryDate(), "dd/MM/yyyy"));
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
 		urlParams.append("&tenantId=" + agreement.getTenantId());
-		if (agreement.getSource().equals(Source.DATA_ENTRY))
-			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonName());
+		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonRent());
+			urlParams.append("&toDate=" + DateFormatUtils.format(agreement.getExpiryDate(), "dd/MM/yyyy"));
+		} else {
+			urlParams.append("&taxReason=" + taxReason);
+			urlParams.append("&toDate=" + DateFormatUtils.format(date, "dd/MM/yyyy"));
+		}
 		return urlParams.toString();
 	}
 }

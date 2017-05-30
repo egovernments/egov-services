@@ -3,6 +3,7 @@ package org.egov.lams.repository;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -43,9 +44,23 @@ public class DemandRepository {
 	DemandHelper demandHelper;
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
+		
+		List<DemandReason> demandReasons = new ArrayList<>();
+		String taxReason = propertiesManager.getTaxReasonAdvanceTax();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agreementRequest.getAgreement().getCommencementDate());
+		calendar.add(Calendar.MONTH,1);
+		Date date = calendar.getTime();
+		for(int i=0;i<3;i++){
 
+		if(i == 1)
+			taxReason = propertiesManager.getTaxReasonGoodWillAmount();
+		else if (i ==2)
+			taxReason = propertiesManager.getTaxReasonRent();
+			date = agreementRequest.getAgreement().getExpiryDate();
+		
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
-				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
+				+ demandHelper.getDemandReasonUrlParams(agreementRequest,taxReason,date);
 
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
@@ -80,8 +95,9 @@ public class DemandRepository {
 			e.printStackTrace();
 		}
 		System.out.println("demandReasonResponse:" + demandReasonResponse);
-		// Todo if api returns exception object
-		return demandReasonResponse.getDemandReasons();
+		demandReasons.addAll(demandReasonResponse.getDemandReasons());
+		}
+		return demandReasons;
 	}
 
 	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
@@ -94,22 +110,17 @@ public class DemandRepository {
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
 
-		int goodWill = 0;
-		int advance = 0;
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
 			
 			demandDetail = new DemandDetails();
 			LOGGER.info("the demand reason object in the loop : "+ demandReason);
-			if ("Rent".equalsIgnoreCase(demandReason.getName())) {
+			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-			} else if ("Goodwill Amount".equalsIgnoreCase(demandReason.getName()) && goodWill == 0) {
+			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName()) ) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
-				goodWill++;
-
-			} else if ("Advance Tax".equalsIgnoreCase(demandReason.getName()) && advance == 0) {
+			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
-				advance++;
 			}
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);

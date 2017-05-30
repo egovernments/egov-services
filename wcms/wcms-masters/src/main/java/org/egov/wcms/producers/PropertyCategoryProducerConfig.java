@@ -39,7 +39,7 @@
  */
 package org.egov.wcms.producers;
 
- import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -54,7 +54,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class ConnectionCategoryProducerConfig {
+public class PropertyCategoryProducerConfig {
 
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
@@ -94,5 +94,9 @@ public class ConnectionCategoryProducerConfig {
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
+    
+    @Bean
+    public PropertyCategoryProducer sender() {
+        return new PropertyCategoryProducer();
+    }
 }
-

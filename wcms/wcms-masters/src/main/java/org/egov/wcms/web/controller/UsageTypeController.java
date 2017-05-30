@@ -209,9 +209,9 @@ public class UsageTypeController {
         UsageType usageType=usageTypeRequest.getUsageType();
         if(usageType.getTenantId()==null || usageType.getTenantId().isEmpty()){
             final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.TEANANTID_MANDATORY_CODE)
-                    .message(WcmsConstants.TEANANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.TEANANTID_MANADATORY_FIELD_NAME)
+                    .code(WcmsConstants.TENANTID_MANDATORY_CODE)
+                    .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         } else return;

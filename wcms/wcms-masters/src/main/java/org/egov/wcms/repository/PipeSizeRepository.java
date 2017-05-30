@@ -79,7 +79,11 @@ public class PipeSizeRepository {
         LOGGER.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeInsert = pipeSizeQueryBuilder.insertPipeSizeQuery();
         final PipeSize pipeSize = pipeSizeRequest.getPipeSize();
-        Object[] obj = new Object[] {Long.valueOf(pipeSize.getCode()),pipeSize.getCode(),pipeSize.getSizeInMilimeter(),pipeSize.getSizeInInch(),pipeSize.getActive(),Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+        Object[] obj = new Object[] {Long.valueOf(pipeSize.getCode()),pipeSize.getCode(),
+        		pipeSize.getSizeInMilimeter(),pipeSize.getSizeInInch(),pipeSize.getActive(),
+        		Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
+        		Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
+        		new Date(new java.util.Date().getTime()),
                 new Date(new java.util.Date().getTime()),pipeSize.getTenantId() };
         jdbcTemplate.update(pipeSizeInsert, obj);
         return pipeSizeRequest;

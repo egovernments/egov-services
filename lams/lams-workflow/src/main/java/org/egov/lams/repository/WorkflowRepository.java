@@ -125,7 +125,7 @@ public class WorkflowRepository {
 		processInstance.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
 		processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
 		processInstance.setAssignee(assignee);
-		processInstance.setComments("statrting workflow from lams-workflow consumer app");
+		processInstance.setComments("acknowledgementNumber : "+agreement.getAcknowledgementNumber());
 		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
 		processInstance.setTenantId(agreement.getTenantId());
 		processInstanceRequest.setProcessInstance(processInstance);

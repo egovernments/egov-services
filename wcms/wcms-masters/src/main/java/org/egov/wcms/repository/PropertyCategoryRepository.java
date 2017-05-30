@@ -107,7 +107,7 @@ public class PropertyCategoryRepository {
         		new Object[] {propertyCategoryRequest.getCategoryType()}, Long.class));
         }
         }catch(EmptyResultDataAccessException e){
-        	LOGGER.error("EmptyResultDataAccessException: Query returned empty RS.");
+        	LOGGER.info("EmptyResultDataAccessException: Query returned empty RS.");
         	
         }
         

@@ -9,46 +9,59 @@
                     "type": "long"
                 },
                 "assigneeName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "categoryId": {
                     "type": "long"
                 },
                 "categoryName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityCode": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityDistrictCode": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityDistrictName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityDomainUrl": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityGrade": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "cityRegionName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "closedByFunctionaryName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "requesterEmail": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "requesterMobile": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "requesterName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "serviceStatusAgeingDaysFromDue": {
                     "type": "long"
@@ -60,7 +73,8 @@
                     "type": "geo_point"
                 },
                 "serviceStatusIsClosed": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "serviceStatusPeriod": {
                     "type": "double"
@@ -73,13 +87,16 @@
                     "type": "long"
                 },
                 "serviceStatusName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "serviceTypeCode": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "serviceTypeName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "createdDate": {
                     "type": "date",
@@ -90,19 +107,24 @@
                     "format": "date_optional_time"
                 },
                 "crn": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "departmentCode": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "departmentName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "details": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "durationRange": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "escalationDate": {
                     "type": "date",
@@ -112,58 +134,70 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "isInProcess": {
-                    "type": "integer"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "isInProcessText": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "isClosed": {
                     "type": "integer"
                 },
                 "isClosedText": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "isAddressed": {
                     "type": "integer"
                 },
                 "isAddressedText": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "isWithinSLA": {
                     "type": "integer"
                 },
                 "isWithinSLAText": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "landmarkDetails": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "localityGeo": {
                     "type": "geo_point"
                 },
                 "localityName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "localityNo": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "reOpened": {
                     "type": "integer"
                 },
                 "reasonForRejection": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "receivingMode": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "isRegistered": {
                     "type": "integer"
                 },
                 "isRegisteredText": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "rejected": {
                     "type": "integer"
@@ -172,22 +206,27 @@
                     "type": "double"
                 },
                 "source": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "wardGeo": {
                     "type": "geo_point"
                 },
                 "wardName": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "wardNo": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "tenantId": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "keyword": {
-                    "type": "keyword"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "processingFee": {
                     "type": "double"

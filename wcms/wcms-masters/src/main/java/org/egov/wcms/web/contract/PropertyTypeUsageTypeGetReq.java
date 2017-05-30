@@ -55,7 +55,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 
-public class PropertyUsageTypeGetRequest {
+public class PropertyTypeUsageTypeGetReq {
 
 	
     private List<Long> id;

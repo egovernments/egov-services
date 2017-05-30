@@ -52,9 +52,9 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeResponse;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypesRes;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
@@ -94,7 +94,7 @@ public class PropertyTypeUsageTypeController {
     
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final PropertyUsageTypeRequest propUsageTypeRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid  final PropertyTypeUsageTypeReq propUsageTypeRequest,
                                     final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -114,7 +114,7 @@ public class PropertyTypeUsageTypeController {
     
     @PostMapping(value = "/_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid PropertyUsageTypeGetRequest propUsageTypeRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid PropertyTypeUsageTypeGetReq propUsageTypeRequest,
                                     BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
                                     BindingResult requestBodyBindingResult) {
         RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -156,7 +156,7 @@ public class PropertyTypeUsageTypeController {
         return errRes;
     }
     
-    private List<ErrorResponse> validateUsageTypeRequest(final PropertyUsageTypeRequest propUsageTypeRequest) {
+    private List<ErrorResponse> validateUsageTypeRequest(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(propUsageTypeRequest);
@@ -168,7 +168,7 @@ public class PropertyTypeUsageTypeController {
     }
     
     
-	private Error getError(final PropertyUsageTypeRequest propUsageTypeRequest) {
+	private Error getError(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
     	PropertyTypeUsageType propUsageType = propUsageTypeRequest.getPropertyTypeUsageType();
     	List<ErrorField> errorFields = new ArrayList<>();
     	validatePropertyTypeValue(errorFields, propUsageType);
@@ -228,12 +228,12 @@ public class PropertyTypeUsageTypeController {
 	
 	
 	private ResponseEntity<?> getSuccessResponse(List<PropertyTypeUsageType> propertyUsageTypes, RequestInfo requestInfo) {
-        PropertyUsageTypeResponse propUsageTypeResponse = new PropertyUsageTypeResponse();
-        propUsageTypeResponse.setPropertyUsageTypes(propertyUsageTypes);
+        PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
+        propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         propUsageTypeResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<PropertyUsageTypeResponse>(propUsageTypeResponse, HttpStatus.OK);
+        return new ResponseEntity<PropertyTypeUsageTypesRes>(propUsageTypeResponse, HttpStatus.OK);
 
     }
     

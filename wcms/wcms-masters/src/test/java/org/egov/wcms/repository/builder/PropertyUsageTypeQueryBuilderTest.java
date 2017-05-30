@@ -45,7 +45,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.junit.Test;
 
 public class PropertyUsageTypeQueryBuilderTest {
@@ -54,7 +54,7 @@ public class PropertyUsageTypeQueryBuilderTest {
 	public void plainQueryCheck() {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
-		PropertyUsageTypeGetRequest propUsageTypeGetRequest = new PropertyUsageTypeGetRequest();
+		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
         propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
 		assertEquals("SELECT * FROM egwtr_property_usage_type proUseType", propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
 	}
@@ -63,7 +63,7 @@ public class PropertyUsageTypeQueryBuilderTest {
 	public void queryWithTenantIdCheck(){
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
-		PropertyUsageTypeGetRequest propUsageTypeGetRequest = new PropertyUsageTypeGetRequest();
+		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
 		propUsageTypeGetRequest.setTenantId("DEFAULT");
         propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
 		assertEquals("SELECT * FROM egwtr_property_usage_type proUseType WHERE proUseType.tenantid = ?", propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
@@ -73,7 +73,7 @@ public class PropertyUsageTypeQueryBuilderTest {
 	public void queryWithIDWithoutTenantIdCheck(){
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
-		PropertyUsageTypeGetRequest propUsageTypeGetRequest = new PropertyUsageTypeGetRequest();
+		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
 		List<Long> idList = new ArrayList<>();
 		idList.add(2L);
 		propUsageTypeGetRequest.setId(idList);

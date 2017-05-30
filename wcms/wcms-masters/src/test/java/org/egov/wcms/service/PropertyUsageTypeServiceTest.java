@@ -51,9 +51,9 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.producers.PropertyUsageTypeProducer;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeResponse;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypesRes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -82,8 +82,8 @@ public class PropertyUsageTypeServiceTest {
 		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
 		propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
 		
-		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyUsageTypeGetRequest.class))).thenReturn(propUsageTypes);
-		assertTrue(propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyUsageTypeGetRequest.class))));
+		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyTypeUsageTypeGetReq.class))).thenReturn(propUsageTypes);
+		assertTrue(propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyTypeUsageTypeGetReq.class))));
 	}
 	
 	@Test
@@ -91,8 +91,8 @@ public class PropertyUsageTypeServiceTest {
 		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
 		propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
 		
-		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyUsageTypeGetRequest.class))).thenReturn(null);
-		assertTrue(!propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyUsageTypeGetRequest.class))));
+		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyTypeUsageTypeGetReq.class))).thenReturn(null);
+		assertTrue(!propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyTypeUsageTypeGetReq.class))));
 	}
 	
 	@Test
@@ -100,13 +100,13 @@ public class PropertyUsageTypeServiceTest {
 		PropertyTypeUsageType propUsageType = getPropertyUsageType();
 		List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
 		propertyUsageTypes.add(propUsageType);
-		PropertyUsageTypeRequest propUsageTypeRequest = new PropertyUsageTypeRequest();
+		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
 		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
-		PropertyUsageTypeResponse propUsageTypeResponse = new PropertyUsageTypeResponse();
+		PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
 		propUsageTypeResponse.setResponseInfo(null);
-		propUsageTypeResponse.setPropertyUsageTypes(propertyUsageTypes);
+		propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
 		
-		when(propUsageTypeService.create(any(PropertyUsageTypeRequest.class))).thenReturn(propUsageTypeRequest);
+		when(propUsageTypeService.create(any(PropertyTypeUsageTypeReq.class))).thenReturn(propUsageTypeRequest);
 		assertTrue(propUsageTypeRequest.equals(propUsageTypeService.create(propUsageTypeRequest)));
 		
 		

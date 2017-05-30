@@ -54,7 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.util.FileUtils;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -114,7 +114,7 @@ public class PropertyTypeUsageTypeControllerTest {
         propertyUsageType.setId(2L);
         propertyUsageTypes.add(propertyUsageType);
 		
-        PropertyUsageTypeGetRequest propUsageTypeGetRequest = Mockito.mock(PropertyUsageTypeGetRequest.class);
+        PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
 		
 		when(propertyUsageTypeService.getPropertyUsageTypes(propUsageTypeGetRequest)).thenReturn(propertyUsageTypes); 
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);

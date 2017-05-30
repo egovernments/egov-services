@@ -54,8 +54,8 @@ import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -81,7 +81,7 @@ public class PropertyUsageTypeRepositoryTest {
 
 	@Test
 	public void test_Should_Create_PropertyUsageType() {
-		PropertyUsageTypeRequest propUsageTypeRequest = new PropertyUsageTypeRequest();
+		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
 		RequestInfo requestInfo = new RequestInfo();
 		User user = new User();
 		user.setId(2L);
@@ -97,7 +97,7 @@ public class PropertyUsageTypeRepositoryTest {
 	@Test
 	public void test_Should_Create_PropertyUsageType_NotNullCheck() {
 		
-		PropertyUsageTypeRequest propUsageTypeRequest = getPropertyUsageType();
+		PropertyTypeUsageTypeReq propUsageTypeRequest = getPropertyUsageType();
 		Object[] obj = new Object[] {propUsageTypeRequest.getPropertyTypeUsageType().getId(), propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(), propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(), propUsageTypeRequest.getPropertyTypeUsageType().isActive(),
         		propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), new Date(new java.util.Date().getTime()), propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
 	    when(jdbcTemplate.update("query", obj)).thenReturn(1);
@@ -107,7 +107,7 @@ public class PropertyUsageTypeRepositoryTest {
 	@Test
 	public void test_Should_Find_PropertyUsageType_Valid() {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		PropertyUsageTypeGetRequest propUsageTypeGetRequest = Mockito.mock(PropertyUsageTypeGetRequest.class);
+		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
 		String queryString = "MyQuery" ;
 		when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(queryString);
 		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
@@ -121,7 +121,7 @@ public class PropertyUsageTypeRepositoryTest {
 	@Test
 	public void test_Should_Find_PropertyUsageType_Invalid() {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		PropertyUsageTypeGetRequest propUsageTypeGetRequest = Mockito.mock(PropertyUsageTypeGetRequest.class);
+		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
 		String queryString = "MyQuery" ;
 		when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(null);
 		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
@@ -132,8 +132,8 @@ public class PropertyUsageTypeRepositoryTest {
 				propUsageTypes.equals(propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest)));
 	}
 	
-	private PropertyUsageTypeRequest getPropertyUsageType() {
-		PropertyUsageTypeRequest propUsageTypeRequest = new PropertyUsageTypeRequest();
+	private PropertyTypeUsageTypeReq getPropertyUsageType() {
+		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
 		PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
 		propUsageType.setActive(true);
 		propUsageType.setId(2L);

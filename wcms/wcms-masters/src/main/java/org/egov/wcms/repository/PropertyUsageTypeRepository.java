@@ -46,8 +46,8 @@ import java.util.List;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class PropertyUsageTypeRepository {
     @Autowired
     private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
 
-    public PropertyUsageTypeRequest persistCreateUsageType(final PropertyUsageTypeRequest propUsageTypeRequest) {
+    public PropertyTypeUsageTypeReq persistCreateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         LOGGER.info("Property Usage Type Request::" + propUsageTypeRequest);
         final String propUsageTypeInsert = propUsageTypeQueryBuilder.getPersistQuery(); 
         Object[] obj = new Object[] {propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(), propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(), propUsageTypeRequest.getPropertyTypeUsageType().isActive(),
@@ -77,7 +77,7 @@ public class PropertyUsageTypeRepository {
         return propUsageTypeRequest;
     }
     
-    public List<PropertyTypeUsageType> getPropertyUsageType(PropertyUsageTypeGetRequest propUsageTypeGetRequest) {
+    public List<PropertyTypeUsageType> getPropertyUsageType(PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
     	List<Object> preparedStatementValues = new ArrayList<Object>();
         String queryStr =  propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
         List<PropertyTypeUsageType> propUsageTypes = jdbcTemplate.query(queryStr,preparedStatementValues.toArray(), propUsageTypeMapper);

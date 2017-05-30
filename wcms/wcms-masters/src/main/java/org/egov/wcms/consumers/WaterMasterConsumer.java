@@ -54,7 +54,7 @@ import org.egov.wcms.web.contract.ConnectionCategoryRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.UsageTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +110,7 @@ public class WaterMasterConsumer {
             else if(record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
             	propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
-            	propUsageType.create(objectMapper.readValue(record.value(), PropertyUsageTypeRequest.class));
+            	propUsageType.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
             	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));            	
         } catch (final IOException e) {

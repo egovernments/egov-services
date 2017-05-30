@@ -41,7 +41,7 @@ package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -57,7 +57,7 @@ public class PropertyUsageTypeQueryBuilder {
     }
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(PropertyUsageTypeGetRequest propUsageTypeGetRequest, List preparedStatementValues) {
+    public String getQuery(PropertyTypeUsageTypeGetReq propUsageTypeGetRequest, List preparedStatementValues) {
         StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, propUsageTypeGetRequest);
@@ -68,7 +68,7 @@ public class PropertyUsageTypeQueryBuilder {
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			PropertyUsageTypeGetRequest propUsageTypeGetRequest) {
+			PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
 
 		if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getTenantId() == null )
 			return;

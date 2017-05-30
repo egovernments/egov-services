@@ -46,8 +46,8 @@ import java.util.List;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.producers.PropertyUsageTypeProducer;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
-import org.egov.wcms.web.contract.PropertyUsageTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
+import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +67,11 @@ public class PropertyUsageTypeService {
     @Autowired
     private PropertyUsageTypeProducer propUsageTypeProducer;
 
-   public PropertyUsageTypeRequest create(final PropertyUsageTypeRequest propUsageTypeRequest) {
+   public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
        return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
    }
    
-   public PropertyTypeUsageType createPropertyUsageType(final String topic,final String key,final PropertyUsageTypeRequest propUsageTypeRequest) {
+   public PropertyTypeUsageType createPropertyUsageType(final String topic,final String key,final PropertyTypeUsageTypeReq propUsageTypeRequest) {
        final ObjectMapper mapper = new ObjectMapper();
        String propUsageTypeValue = null;
        try {
@@ -89,11 +89,11 @@ public class PropertyUsageTypeService {
        return propUsageTypeRequest.getPropertyTypeUsageType();
    }
    
-   public List<PropertyTypeUsageType> getPropertyUsageTypes(PropertyUsageTypeGetRequest propUsageTypeGetRequest) {
+   public List<PropertyTypeUsageType> getPropertyUsageTypes(PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
        return propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest);
    }
    
-   public boolean checkPropertyUsageTypeExists(PropertyUsageTypeRequest propUsageTypeRequest){
+   public boolean checkPropertyUsageTypeExists(PropertyTypeUsageTypeReq propUsageTypeRequest){
 	   // Get IDs for Property Type and Usage Type
 	   getIdForRequestCodes(propUsageTypeRequest);
 	   List<PropertyTypeUsageType> propUsageTypes = propUsageTypeRepository.checkPropertyUsageTypeExists(propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(), 
@@ -104,7 +104,7 @@ public class PropertyUsageTypeService {
 	   return false;
    }
    
-	private PropertyUsageTypeRequest getIdForRequestCodes(PropertyUsageTypeRequest propUsageTypeRequest) {
+	private PropertyTypeUsageTypeReq getIdForRequestCodes(PropertyTypeUsageTypeReq propUsageTypeRequest) {
 		// Hit the Property Tax APIs to verify and get the IDs for the Code.
 		// Once APIs are available, remove random number function. 
 		int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);

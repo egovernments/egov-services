@@ -125,9 +125,10 @@ public class WorkflowRepository {
 		processInstance.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
 		processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
 		processInstance.setAssignee(assignee);
-		processInstance.setComments("acknowledgementNumber : "+agreement.getAcknowledgementNumber());
+		processInstance.setComments(workFlowDetails.getComments());
 		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
 		processInstance.setTenantId(agreement.getTenantId());
+		processInstance.setDetails("Acknowledgement Number : " + agreement.getAcknowledgementNumber());
 		processInstanceRequest.setProcessInstance(processInstance);
 		processInstanceRequest.setRequestInfo(requestInfo);
 

@@ -171,6 +171,7 @@ class UploadLeaveApplication extends React.Component{
             errorObject.push(d);
           });
           var leaveArray =[],employeeArray=[];
+
           var checkLeave = [],checkEmployee=[];
           this.state._leaveTypes.forEach(function(d) {
             checkLeave.push(d.name);
@@ -204,7 +205,7 @@ class UploadLeaveApplication extends React.Component{
 
             var d = tempInfo[k];
 
-
+            d.errorMessage = "";
 
             ////console.log("from",d.fromDate);
             ////console.log("to",d.toDate);
@@ -346,7 +347,7 @@ class UploadLeaveApplication extends React.Component{
                               "fromDate": d.fromDate,
                               "toDate": d.toDate,
                               "leaveDays":d.leaveDays,
-                              "successMessage" : d.successMessage
+                              "successMessage" : "Employee Leaves Applied successfully"
             });
 
 
@@ -384,37 +385,37 @@ class UploadLeaveApplication extends React.Component{
 
         });
             console.log("finalSuccessObject",finalSuccessObject);
-          // var ep1=new ExcelPlus();
-          // var b=0;
-          //
-          //   ep1.createFile("Success");
-          //   ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
-          //   for(b=0;b<finalValidatedServerObject.length;b++){
-          //     ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].calendarYear,finalValidatedServerObject[b].noOfDays,finalValidatedServerObject[b].successMessage])
-          //   }
-          //   ep1.saveAs("success.xlsx");
-          //
-          // var ep2=new ExcelPlus();
-          // var b=0;
-          //
-          //   ep2.createFile("Error");
-          //   ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
-          //   for(b=0;b<errorObject.length;b++){
-          //     ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMessage])
-          //   }
-          //   ep2.saveAs("error.xlsx");
-          //
-          //
-          //   finalValidatedServerObject.forEach(function(d){
-          //   ////console.log(d);
-          //       finalSuccessObject.push({"employee": d.employee,
-          //                       "calendarYear": d.calendarYear,
-          //                       "leaveType":  { "id": d.leaveType["id"]},
-          //                       "noOfDays" : d.noOfDays,
-          //                       "tenantId": d.tenantId
-          //                     });
-          //   });
-          //console.log("FINSSL SNJNCJ",finalSuccessObject);
+          var ep1=new ExcelPlus();
+          var b=0;
+
+            ep1.createFile("Success");
+            ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
+            for(b=0;b<finalValidatedServerObject.length;b++){
+              ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].calendarYear,finalValidatedServerObject[b].noOfDays,finalValidatedServerObject[b].successMessage])
+            }
+            ep1.saveAs("success.xlsx");
+
+          var ep2=new ExcelPlus();
+          var b=0;
+
+            ep2.createFile("Error");
+            ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+            for(b=0;b<errorObject.length;b++){
+              ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMessage])
+            }
+            ep2.saveAs("error.xlsx");
+
+
+            finalValidatedServerObject.forEach(function(d){
+            ////console.log(d);
+                finalSuccessObject.push({"employee": d.employee,
+                                "calendarYear": d.calendarYear,
+                                "leaveType":  { "id": d.leaveType["id"]},
+                                "noOfDays" : d.noOfDays,
+                                "tenantId": d.tenantId
+                              });
+            });
+          console.log("FINSSL SNJNCJ",finalSuccessObject);
 
           if(serverObject.length!==0){
 

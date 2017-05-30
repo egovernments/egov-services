@@ -27,7 +27,7 @@ public class DemandHelper {
 
 		logger.info("the criteria for demandReasonSearch are ::: " + "?moduleName="
 				+ propertiesManager.getDemandModuleName() + "&taxPeriod=" + agreement.getTimePeriod() + "&fromDate="
-				+ agreement.getCommencementDate() + "&toDate=" + agreement.getExpiryDate() + "&installmentType="
+				+ agreement.getCommencementDate() + "&toDate=" + date + "&installmentType="
 				+ agreement.getPaymentCycle().toString() + "&taxCategory=" + propertiesManager.getTaxCategoryName());
 
 		StringBuilder urlParams = new StringBuilder();

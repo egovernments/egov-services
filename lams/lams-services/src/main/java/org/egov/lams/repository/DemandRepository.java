@@ -55,9 +55,10 @@ public class DemandRepository {
 
 		if(i == 1)
 			taxReason = propertiesManager.getTaxReasonGoodWillAmount();
-		else if (i ==2)
+		else if (i == 2){
 			taxReason = propertiesManager.getTaxReasonRent();
 			date = agreementRequest.getAgreement().getExpiryDate();
+		}
 		
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
 				+ demandHelper.getDemandReasonUrlParams(agreementRequest,taxReason,date);

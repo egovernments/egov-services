@@ -10,7 +10,9 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -26,7 +28,8 @@ public class RoleController {
     @PostMapping(value = "_search")
     public RoleResponse getRoles(@RequestParam(value = "code", required = false) String code,
                                  @RequestBody final RoleRequest roleRequest) {
-        RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(code).build();
+        RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().
+                codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).build();
         List<Role> roles = roleService.getRoles(roleSearchCriteria);
         return getSuccessResponse(roles);
     }

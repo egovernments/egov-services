@@ -22,15 +22,20 @@ public class RoleFinderQueryBuilder implements BaseQueryBuilder {
     }
 
     private boolean shouldFilter() {
-        return !criteria.getCodes().isEmpty();
+        return !filters.isEmpty();
+    }
+
+    private boolean shouldFilterCodes() {
+        return criteria.getCodes() != null && !criteria.getCodes().isEmpty();
     }
 
     private void filterRoleCodes() {
-
-        List<String> sqlStringifiedCodes = new ArrayList<>();
-        for (String roleName : criteria.getCodes()) {
-            sqlStringifiedCodes.add(String.format("'%s'", roleName));
+        if (shouldFilterCodes()) {
+            List<String> sqlStringifiedCodes = new ArrayList<>();
+            for (String roleName : criteria.getCodes()) {
+                sqlStringifiedCodes.add(String.format("'%s'", roleName));
+            }
+            filters.add("r.code in (" + String.join(",", sqlStringifiedCodes) + ")");
         }
-        filters.add("r.code in (" + String.join(",", sqlStringifiedCodes) + ")");
     }
 }

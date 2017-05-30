@@ -100,8 +100,8 @@ public class Consumer {
 				if(user.getId() !=null){
 
 					Map<String,Object> userSearchRequestInfo=new HashMap<String,Object >();
-					userSearchRequestInfo.put("username",propertyRequest.getProperties().get(0).getOwners().get(0).getUsername());
-					userSearchRequestInfo.put("tenantId",propertyRequest.getProperties().get(0).getOwners().get(0).getTenantId());
+					userSearchRequestInfo.put("username",user.getUsername());
+					userSearchRequestInfo.put("tenantId",user.getTenantId());
 					userSearchRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
 
 					UserResponseInfo userResponse= restTemplate.postForObject(env.getProperty("user.searchUrl"), userSearchRequestInfo, UserResponseInfo.class);
@@ -109,7 +109,7 @@ public class Consumer {
 					if(userResponse.getResponseInfo().getStatus().equalsIgnoreCase(env.getProperty("statusCode"))){
 						if(userResponse.getUsers()==null){
 							Map<String,Object> userCreateRequestInfo=new HashMap<String,Object >();
-							userCreateRequestInfo.put("User",propertyRequest.getProperties().get(0).getOwners());
+							userCreateRequestInfo.put("User",user);
 							userCreateRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
 
 
@@ -117,18 +117,19 @@ public class Consumer {
 									userCreateRequestInfo, UserResponseInfo.class);	
 						}
 						else{
-							propertyRequest.getProperties().get(0).getOwners().get(0).setId(userResponse.getUsers().get(0).getId());
+							user.setId(userResponse.getUsers().get(0).getId());
 							kafkaTemplate.send(env.getProperty("update.user"), propertyRequest);
 						}
 					}
 
 				}else{
 					Map<String,Object> userCreateRequestInfo=new HashMap<String,Object >();
-					userCreateRequestInfo.put("User",propertyRequest.getProperties().get(0).getOwners());
+					userCreateRequestInfo.put("User",user);
 					userCreateRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
 
 					UserResponseInfo userCreateResponse = restTemplate.postForObject(env.getProperty("user.createUrl"),
 							userCreateRequestInfo, UserResponseInfo.class);
+					user.setId(userCreateResponse.getUsers().get(0).getId());
 					kafkaTemplate.send(env.getProperty("update.user"), propertyRequest);
 
 				}

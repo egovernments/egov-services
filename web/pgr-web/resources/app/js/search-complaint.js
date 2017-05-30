@@ -318,7 +318,7 @@ function loadReceivingMode(){
 
 function complaintType(){
 	$.ajax({
-		url: "/pgr/services/_search?type=all&tenantId=ap.public",
+		url: "/pgr/services/_search?type=all&tenantId="+tenantId,
 		type : 'POST',
 		data : JSON.stringify(requestInfo),
 		dataType: 'json',

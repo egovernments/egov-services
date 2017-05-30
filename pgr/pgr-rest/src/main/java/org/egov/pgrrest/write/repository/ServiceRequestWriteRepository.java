@@ -204,7 +204,9 @@ public class ServiceRequestWriteRepository {
     private void setReceivingMode(ServiceRequestRecord serviceRequestRecord, Complaint complaint) {
         if (StringUtils.isNotEmpty(serviceRequestRecord.getReceivingMode())) {
             final String receivingModeInUpperCase = serviceRequestRecord.getReceivingMode().toUpperCase();
-            complaint.setReceivingMode(receivingModeRepository.findByCode(receivingModeInUpperCase));
+            final ReceivingMode receivingMode = receivingModeRepository
+                .findByCodeAndTenantId(receivingModeInUpperCase, complaint.getTenantId());
+            complaint.setReceivingMode(receivingMode);
         }
     }
 

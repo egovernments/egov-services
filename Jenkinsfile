@@ -10,7 +10,7 @@ def notifier = "";
 try {
     node("slave"){
         checkout([
-            $class: 'GitSCM',
+            scm: 'GitSCM',
             branches: [[name: 'origin/master']],
             sparseCheckoutPaths: [[path:'jenkins'], [path: 'Jenkinsfile'], [path: 'build.sh'], [path: path]]
         ])

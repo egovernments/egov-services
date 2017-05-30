@@ -117,10 +117,10 @@ class EmployeeSearch extends React.Component {
     }
 
     getDropdown("assignments_designation", function(res) {
-      checkCountAndCall("departmentList", res);
+      checkCountAndCall("designationList", res);
     });
     getDropdown("assignments_department", function(res) {
-      checkCountAndCall("designationList", res);
+      checkCountAndCall("departmentList", res);
     });
     getDropdown("assignments_position", function(res) {
       checkCountAndCall("assignments_position", res);

@@ -1092,15 +1092,7 @@
       required:
         - RequestInfo
         - pipesize
-  
-    PipeSizeTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PipeSizeType:
-          $ref: '#/definitions/PipeSizeType'
-          
+
     PipeSizeTypesRes:
       type: object
       properties:

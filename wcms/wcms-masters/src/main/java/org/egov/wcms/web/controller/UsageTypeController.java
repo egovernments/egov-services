@@ -170,7 +170,6 @@ public class UsageTypeController {
 
 
     private Error getError(final UsageTypeRequest usageTypeRequest) {
-        UsageType usageType = usageTypeRequest.getUsageType();
         List<ErrorField> errorFields = getErrorFields(usageTypeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_USAGETYPE_REQUEST_MESSAGE)
@@ -184,6 +183,9 @@ public class UsageTypeController {
         addTeanantIdValidationErrors(usageTypeRequest,errorFields);
         addActiveValidationErrors(usageTypeRequest,errorFields);
         return errorFields;
+    }
+    
+    private void validatePropertyData(DonationRequest donationRequest){
     }
 
     private void addUsageTypeNameValidationErrors(UsageTypeRequest usageTypeRequest, List<ErrorField> errorFields) {

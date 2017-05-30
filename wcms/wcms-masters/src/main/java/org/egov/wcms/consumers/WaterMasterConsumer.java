@@ -45,10 +45,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.service.ConnectionCategoryService;
+import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PipeSizeService;
+import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.web.contract.ConnectionCategoryRequest;
+import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
+import org.egov.wcms.web.contract.PropertyUsageTypeRequest;
 import org.egov.wcms.web.contract.UsageTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,12 +74,18 @@ public class WaterMasterConsumer {
 
     @Autowired
     private ConnectionCategoryService categoryService;
+    
+    @Autowired
+    private PropertyUsageTypeService propUsageType;
+    
+    @Autowired
+    private DonationService donationService;
 
     @Autowired
     private PipeSizeService pipeSizeService;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.usagetype.create.name}","${kafka.topics.usagetype.update.name}",
-            "${kafka.topics.category.create.name}","${kafka.topics.category.update.name}","${kafka.topics.pipesize.create.name}","${kafka.topics.pipesize.update.name}" })
+            "${kafka.topics.category.create.name}","${kafka.topics.category.update.name}","${kafka.topics.pipesize.create.name}","${kafka.topics.pipesize.update.name}", "${kafka.topics.propertyusage.create.name}", "${kafka.topics.donation.create.name}" })
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -92,6 +102,11 @@ public class WaterMasterConsumer {
                 pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeRequest.class));
             else if(record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
                 pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeRequest.class));
+            else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
+            	propUsageType.create(objectMapper.readValue(record.value(), PropertyUsageTypeRequest.class));
+            else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
+            	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
+            	
         } catch (final IOException e) {
                 e.printStackTrace();
             }

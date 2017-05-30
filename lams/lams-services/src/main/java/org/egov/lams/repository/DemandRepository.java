@@ -51,6 +51,7 @@ public class DemandRepository {
 		calendar.setTime(agreementRequest.getAgreement().getCommencementDate());
 		calendar.add(Calendar.MONTH,1);
 		Date date = calendar.getTime();
+		LOGGER.info("month plus start date : " + date);
 		for(int i=0;i<3;i++){
 
 		if(i == 1)
@@ -60,6 +61,7 @@ public class DemandRepository {
 			date = agreementRequest.getAgreement().getExpiryDate();
 		}
 		
+		LOGGER.info("todate value : " + date);
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
 				+ demandHelper.getDemandReasonUrlParams(agreementRequest,taxReason,date);
 

@@ -1132,7 +1132,7 @@ sync:
           type: String
           shouldSource: True
           shouldSync: True
-	  defaultValue: NA
+          defaultValue: NA
 
         - source: conv_factor
           destination: coversionfactor

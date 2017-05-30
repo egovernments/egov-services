@@ -58,6 +58,8 @@ public class WcmsConstants {
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
+    public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
+    public static final String INVALID_PROPERTYUSAGETYPE_REQUEST_MESSAGE = "Property Type or Usage Type is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -67,9 +69,9 @@ public class WcmsConstants {
     public static final String USAGETYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Usage Type is required";
 
-    public static final String TEANANTID_MANDATORY_CODE = "wcms.0003";
-    public static final String TEANANTID_MANADATORY_FIELD_NAME = "tenantId";
-    public static final String TEANANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
+    public static final String TENANTID_MANDATORY_CODE = "wcms.0003";
+    public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
+    public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
 
     public static final String ACTIVE_MANDATORY_CODE = "wcms.0004";
     public static final String ACTIVE_MANADATORY_FIELD_NAME = "active";
@@ -82,8 +84,7 @@ public class WcmsConstants {
     public static final String CATEGORY_NAME_MANDATORY_CODE = "wcms.0006";
     public static final String CATEGORY_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String CATEGORY_NAME_MANADATORY_ERROR_MESSAGE = "Category Type is required";
-
-
+    
     public static final String PIPESIZE_SIZEINMM_MANDATORY_CODE = "wcms.0007";
     public static final String PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME = "sizeInMilimeter";
     public static final String PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE = "H.S.C Pipe Size(mm) is required";
@@ -91,8 +92,27 @@ public class WcmsConstants {
     public static final String PIPESIZE_SIZEINMM_UNIQUE_CODE = "wcms.0008";
     public static final String PIPESIZE_SIZEINMM__UNQ_FIELD_NAME = "sizeInMilimeter";
     public static final String PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE = "Entered H.S.C Pipe Size(mm) already exist.";
+    
+    public static final String PROPERTY_TYPE_MANDATORY_CODE = "wcms.0009";
+    public static final String PROPERTY_TYPE_MANDATORY_FIELD_NAME = "name";
+    public static final String PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE = "Property Type is required";
 
-
+    public static final String PROPERTYTYPE_MANDATORY_CODE = "wcms.0009";
+    public static final String PROPERTYTYPE_MANDATORY_FIELD_NAME = "propertyType";
+    public static final String PROPERTYTYPE_MANDATORY_ERROR_MESSAGE = "Property Type is Required";
+    
+    public static final String PROPERTYTYPE_USAGETYPE_UNIQUE_CODE = "wcms.0010";
+    public static final String PROPERTYTYPE_USAGETYPE_UNQ_FIELD_NAME = "propertyType";
+    public static final String PROPERTYTYPE_USAGETYPE_UNQ_ERROR_MESSAGE = "Entered combination of Property Type and Usage Type has already been mapped";
+    
+    public static final String DONATION_MANDATORY_CODE = "wcms.0011";
+    public static final String DONATION_MANDATORY_FIELD_NAME = "donationAmount";
+    public static final String DONATION_MANDATORY_ERROR_MESSAGE = "Donation Amount is required";
+    
+    public static final String FROMTO_MANDATORY_CODE = "wcms.0012";
+    public static final String FROMTO_MANDATORY_FIELD_NAME = "fromDate";
+    public static final String FROMTO_MANDATORY_ERROR_MESSAGE = "From and To Date are required";
+    
     @Autowired
         private Environment environment;
 

@@ -1,4 +1,12 @@
 class CreateAgreement extends React.Component {
+  constructor(props) {
+    super(props);
+    this.close = this.close.bind(this);
+  }
+
+  close() {
+    open(location, '_self').close();
+  }
 
   componentDidMount(){
     if(window.opener && window.opener.document) {
@@ -9,6 +17,7 @@ class CreateAgreement extends React.Component {
      }
   }
     render() {
+      let {close} = this;
       const renderMessage = function() {
         if(getUrlVars()["name"]) {
           return (
@@ -26,7 +35,7 @@ class CreateAgreement extends React.Component {
               <h3> <center><font color="ass"><strong> {getUrlVars()["ackNo"] ? decodeURIComponent(getUrlVars()["ackNo"]) : ""}</strong>  </font> </center></h3>
               <h3><center>{renderMessage()}</center></h3>
               <div className="text-center">
-                  <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                  <button type="button" className="btn btn-submit" onClick={(e)=>{close()}}>Close</button>
               </div>
             </form>
           </div>

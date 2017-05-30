@@ -95,71 +95,148 @@ paths:
 
       tags: 
        - Usage Type
-  /usageType/_create:
+       
+       
+  /category/_search:
   ######################################################
-  # Will be asynchronous.
-  # tenantId should be passed in the model.
-  # Validate tenantId before persisting.
+  # Will be synchronous.
+  # tenantId should be passed in query param.
   ######################################################
     post:
-      summary: Create a new Usage Type.
-      description: API to create new usage type.
+      summary: Get the list of categories in the system or a particular cateogry
+      description: Return(s) `Category` for the given input params.
       parameters:
-        - name: usageType
+        - name: requestInfo
           in: body
-          description: Details for the new usage type.
+          description: Commmon request info to get usage type.
           required: true
           schema:
-            $ref: '#/definitions/UsageTypeReq'
-      
-      responses:
-      ####################################################
-      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
-      ###################################################
-        201:
-          description: Usage Type created sucessfully.
-          schema:
-            $ref: '#/definitions/UsageTypeRes'
-        400:
-          description: Invalid input.
-          schema:
-            $ref: '#/definitions/ErrorRes'
-      tags:
-        - Usage Type      
-  
-  /usageType/{code}/_update:
-  ######################################################
-  # Will be asynchronous.
-  # tenantId should be passed in the model.
-  # Validate tenantId before persisting.
-  # Unique identifier of the model to be updated should be passed as path parameter. 
-  ######################################################
-   parameters:
-    - $ref: "#/parameters/usageTypeCode"
-   post:
-      summary: Update existing usage type data for the code passed.
-      description: To update an existing usage type master data.
-      parameters:
-        - name: usageType
-          in: body
-          description: Request header for the usage type with new set of values.
-          required: true
-          schema:
-            $ref: '#/definitions/UsageTypeReq'
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortCategories"
+        - name: name
+          in: query
+          description: Name of the category
+          required: false
+          type: string
+          format: varchar
+          minLength: 0
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: code
+          in: query
+          description: Unique code of the category
+          required: false
+          type: string
+          minLength: 0
+          maxLength: 20
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: id
+          in: query
+          description: Unique Id of usage type
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: active
+          in: query
+          description: True will be set in cases where only active categories are needed and False will be set when inactive categories are needed and no value will be set when all categories are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ####################################################
         200:
-          description: Usage Type updated.
+          description: Successful response
           schema:
-            $ref: '#/definitions/UsageTypeRes'
+            $ref: "#/definitions/CategoryRes"
         400:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags:
-        - Usage Type
+
+      tags: 
+       - Category
+       
+       
+  /donation/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Get the list of donations in the system or a particular donation
+      description: Return(s) `Donation` for the given input params.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info to get usage type.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortCategories"
+        - name: category
+          in: query
+          description: Name of the category
+          required: true
+          type: string
+          format: varchar
+          minLength: 0
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: usage type
+          in: query
+          description: Usage type
+          required: true
+          type: string
+          minLength: 0
+          maxLength: 20
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: id
+          in: query
+          description: Unique Id of the donation
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: active
+          in: query
+          description: True will be set in cases where only active categories are needed and False will be set when inactive categories are needed and no value will be set when all categories are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/DonationRes"
+        400:
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Donation
+       
+       
         
 definitions:
 ########################################################
@@ -303,6 +380,8 @@ definitions:
       - code 
       - active
       - tenantId
+      
+
   UsageTypeRes:
     type: object
     properties:
@@ -315,15 +394,177 @@ definitions:
   UsageTypeReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       UsageType:
+        $ref: '#/definitions/UsageType'   
+    required:
+      - tenantId
+      - RequestInfo
+      - UsageType  
+    
+      
+  Category:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the category
+      name:
+        type: string
+        description: Unique category name.
+        minLength: 3
+        maxLength: 100
+      code:
+        type: string
+        description: Unique code of the category. Based on the configration parameters, category code can be provided from the front end OR can be generated by the system.
+        minLength: 3
+        maxLength: 20
+        readOnly: true
+      description:
+        type: string
+        description: Brief description of Category .
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active category and FALSE for inactive category.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.  
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+    required:
+      - name
+      - code 
+      - active
+      - tenantId
+
+  CategoryRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Category:
         type: array
         items: 
-         $ref: '#/definitions/UsageType'   
+         $ref: '#/definitions/Category' 
+  CategoryReq:
+    type: object
+    properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
     required:
+      - tenantId
       - RequestInfo
-      - UsageType    
+      
+      
+  Donation:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the donation
+      category:
+        type: string
+        description: Unique category name.
+        minLength: 3
+        maxLength: 100
+      usageType:
+        type: string
+        description: Usage Type of the donation record
+        minLength: 3
+        maxLength: 20
+        readOnly: true
+      maxPipeSIze:
+        type: number
+        description: Max Size of the pipe
+      minPipeSIze:
+        type: number
+        description: Min Size of the pipe
+      minSumpCapacity:
+        type: number
+        description: Min capacity of the Sump
+      maxSumpCapacity:
+        type: number
+        description: Max capacity of the Sump
+      amount:
+        type: number
+        description: Donation Amount
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active category and FALSE for inactive category.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.  
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+    required:
+      - category
+      - usageType 
+      - active
+      - tenantId
+
+  DonationRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Donation:
+        type: array
+        items: 
+         $ref: '#/definitions/Donation' 
+  DonationReq:
+    type: object
+    properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+    required:
+      - tenantId
+      - RequestInfo
+  
 
 parameters:
 ##########################################################
@@ -350,6 +591,34 @@ parameters:
     name: sort
     in: query
     description: Usage types results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+  sortCategories:
+    name: sort
+    in: query
+    description: Category results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+  sortDonations:
+    name: sort
+    in: query
+    description: Category results will be sorted by name ascending by default if this parameter is not provided.
     type: array
     uniqueItems: true
     minItems: 1

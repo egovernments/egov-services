@@ -170,7 +170,6 @@ public class UsageTypeController {
 
 
     private Error getError(final UsageTypeRequest usageTypeRequest) {
-        UsageType usageType = usageTypeRequest.getUsageType();
         List<ErrorField> errorFields = getErrorFields(usageTypeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_USAGETYPE_REQUEST_MESSAGE)
@@ -184,6 +183,9 @@ public class UsageTypeController {
         addTeanantIdValidationErrors(usageTypeRequest,errorFields);
         addActiveValidationErrors(usageTypeRequest,errorFields);
         return errorFields;
+    }
+    
+    private void validatePropertyData(DonationRequest donationRequest){
     }
 
     private void addUsageTypeNameValidationErrors(UsageTypeRequest usageTypeRequest, List<ErrorField> errorFields) {
@@ -209,9 +211,9 @@ public class UsageTypeController {
         UsageType usageType=usageTypeRequest.getUsageType();
         if(usageType.getTenantId()==null || usageType.getTenantId().isEmpty()){
             final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.TEANANTID_MANDATORY_CODE)
-                    .message(WcmsConstants.TEANANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.TEANANTID_MANADATORY_FIELD_NAME)
+                    .code(WcmsConstants.TENANTID_MANDATORY_CODE)
+                    .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         } else return;

@@ -225,8 +225,6 @@ function loadComplaints(){
 	});
 }
 
-var detachedele;
-
 function search(elem) {
 	var searchText = $(elem).val(); 
 	//$('.grievanceresponse').html(detachedele);

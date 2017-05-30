@@ -1,0 +1,26 @@
+{
+  "ResponseInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null
+},
+  "AssetCategory": [
+  {
+    "tenantId": "ap.kurnool",
+    "id": null,
+    "name": "assetcategory3",
+    "code": null,
+    "assetCategoryType": "IMMOVABLE",
+    "parent": null,
+    "depreciationMethod": "STRAIGHT_LINE_METHOD",
+    "isAssetAllow": true,
+    "assetAccount": 2,
+    "accumulatedDepreciationAccount": null,
+    "revaluationReserveAccount": null,
+    "depreciationExpenseAccount": null,
+    "unitOfMeasurement": null,
+    "version": "v1",
+    "depreciationRate": null
+  }
+  ]
+}

@@ -575,7 +575,8 @@ function topComplaintTypes(){
 			if(data.complaintTypes.length > 0){
 				$('#topcomplaint').html('');
 				$.each(data.complaintTypes,function(i,obj){
-					$('#topcomplaint').append('<a href="javascript:void(0)" data-type="'+obj.serviceCode+'" data-category="'+obj.groupId+'" class="btn btn-secondary btn-xs tag-element freq-ct" data-toggle="popover" title="Click to select the Grievance category and type">'+obj.serviceName+'</a>')
+					if(obj.keywords.indexOf('complaint') > -1)
+						$('#topcomplaint').append('<a href="javascript:void(0)" data-type="'+obj.serviceCode+'" data-category="'+obj.groupId+'" class="btn btn-secondary btn-xs tag-element freq-ct" data-toggle="popover" title="Click to select the Grievance category and type">'+obj.serviceName+'</a>')
 				});
 			}else{
 				$('#topcomplaintsection').hide();

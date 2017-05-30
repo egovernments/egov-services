@@ -94,10 +94,8 @@ public class AgreementService {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		for(int i=0;i< agreement.getTimePeriod();i++){
-		calendar.add(Calendar.YEAR,1);
-		calendar.add(Calendar.HOUR, -24);
-		}
+			calendar.add(Calendar.YEAR, 1);
+			calendar.add(Calendar.DATE, -1);
 		Date expiryDate = calendar.getTime();
 		agreement.setExpiryDate(expiryDate);
 		logger.info("The closeDate calculated is " + expiryDate + "from commencementDate of "
@@ -121,8 +119,9 @@ public class AgreementService {
 			agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 			logger.info(agreement.getAcknowledgementNumber());
 		}
-
+		agreement.setId(agreementRepository.getAgreementID());
 		try {
+
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException JsonProcessingException) {

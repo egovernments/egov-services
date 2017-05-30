@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -39,12 +40,29 @@ public class RoleControllerTest {
     @Test
     public void testShouldGetRolesForCodes() throws Exception {
         List<Role> roles = getRoles();
-        when(roleService.getRoles(Mockito.any(RoleSearchCriteria.class))).thenReturn(roles);
+        RoleSearchCriteria criteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
+        when(roleService.getRoles(criteria)).thenReturn(roles);
 
         mockMvc.perform(post("/v1/roles/_search")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(new Resources().getFileContents("roleRequest.json"))
                 .param("code", "CITIZEN,EMPLOYEE"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
+
+    }
+
+    @Test
+    public void testShouldGetRolesShouldTrimWhiteSpacesInCodes() throws Exception {
+        List<Role> roles = getRoles();
+        RoleSearchCriteria criteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
+        when(roleService.getRoles(criteria)).thenReturn(roles);
+
+        mockMvc.perform(post("/v1/roles/_search")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new Resources().getFileContents("roleRequest.json"))
+                .param("code", "  CITIZEN,   EMPLOYEE   "))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(new Resources().getFileContents("roleResponse.json")));

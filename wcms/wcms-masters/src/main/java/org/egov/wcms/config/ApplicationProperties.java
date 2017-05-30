@@ -73,6 +73,15 @@ public class ApplicationProperties {
 
 	@Value("${kafka.topics.pipesize.update.name}")
 	private String updatePipeSizeTopicName;
+	
+	@Value("${kafka.topics.propertyCategory.create.name}")
+	private String createPropertyCategoryTopicName;
+
+	@Value("${kafka.topics.propertyusage.create.name}")
+	private String createPropertyUsageTopicName;
+	
+	@Value("${kafka.topics.donation.create.name}")
+	private String createDonationTopicName;
 
 	@Autowired
 	private Environment environment;
@@ -113,5 +122,15 @@ public class ApplicationProperties {
 	public String getUpdatePipeSizeTopicName(){
 		return updatePipeSizeTopicName;
 	}
-
+	
+	public String getCreatePropertyCategoryTopicName(){
+		return createPropertyCategoryTopicName;
+	}
+	public String getCreatePropertyUsageTopicName(){
+		return createPropertyUsageTopicName;
+	}
+	
+	public String getCreateDonationTopicName(){
+		return createDonationTopicName;
+	}
 }

@@ -68,8 +68,8 @@ public class BaseRepositoryTest {
 
     @Test
     @Sql(scripts = {"/sql/clearRole.sql", "/sql/insertRoleData.sql"})
-    public void testRoleFindesForGivenCodes() throws Exception {
-        RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes("CITIZEN,EMPLOYEE").build();
+    public void testRoleFinderForGivenCodes() throws Exception {
+        RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
         RoleFinderQueryBuilder queryBuilder = new RoleFinderQueryBuilder(roleSearchCriteria);
         List<Role> roles = (List<Role>) (List<?>) baseRepository.run(queryBuilder, new RoleRowMapper());
         assertEquals(2, roles.size());

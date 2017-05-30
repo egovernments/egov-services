@@ -41,20 +41,26 @@ package org.egov.workflow.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Assignment {
 
     @JsonProperty("id")
     private Long id;
 
     @JsonProperty("department")
-    private Department department;
+    private Long department;
     
     @JsonProperty("tenantId")
     private String tenantId;
+
+    private Long position;
+
+    private Boolean isPrimary;
 
 }

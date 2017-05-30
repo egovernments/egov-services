@@ -2,14 +2,18 @@ package org.pgr.batch.service;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.pgr.batch.repository.ComplaintMessageQueueRepository;
 import org.pgr.batch.repository.ComplaintRestRepository;
 import org.pgr.batch.repository.contract.ServiceRequest;
+import org.pgr.batch.repository.contract.ServiceResponse;
+import org.pgr.batch.service.model.Position;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -32,7 +36,16 @@ public class EscalationServiceTest {
     private UserService userService;
 
     @Mock
+    private PositionService positionService;
+
+    @Mock
+    private EscalationDateService escalationDateService;
+
+    @Mock
     private ComplaintRestRepository complaintRestRepository;
+
+    @Mock
+    private ComplaintMessageQueueRepository complaintMessageQueueRepository;
 
     @InjectMocks
     private  EscalationService escalationService;
@@ -42,9 +55,10 @@ public class EscalationServiceTest {
 
     @Test
     public void test_should_check_that_complaint_gets_escalated() throws Exception {
-        List<ServiceRequest> serviceRequestList = asList(new ServiceRequest(), new ServiceRequest());
-        when(complaintRestRepository.getComplaintsEligibleForEscalation(1L)).thenReturn(serviceRequestList);
-        when(userService.getUserByUserName("system")).thenReturn(User.builder().id(1L).build());
+        List<ServiceRequest> serviceRequestList = asList(getServiceRequest(), getServiceRequest());
+        ServiceResponse serviceResponse = new ServiceResponse(null,serviceRequestList);
+        when(complaintRestRepository.getComplaintsEligibleForEscalation("default")).thenReturn(serviceResponse);
+        when(userService.getUserByUserName("system","default")).thenReturn(User.builder().id(1L).build());
 
         escalationService.escalateComplaint();
 
@@ -52,8 +66,12 @@ public class EscalationServiceTest {
         verify(workflowService).enrichWorkflowForEscalation(eq(serviceRequestList.get(1)), requestInfoArgumentCaptor.capture());
 
         List<RequestInfo> requestInfoList = requestInfoArgumentCaptor.getAllValues();
-
-
     }
 
+    private ServiceRequest getServiceRequest(){
+        return ServiceRequest.builder()
+                .attribValues(asList(new AttributeEntry("keyword","Complaint"),
+                        new AttributeEntry("assignmentId","1L")))
+                .build();
+    }
 }

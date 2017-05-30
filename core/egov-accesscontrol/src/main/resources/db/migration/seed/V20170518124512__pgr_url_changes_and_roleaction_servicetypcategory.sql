@@ -6,7 +6,7 @@ values(nextval('SEQ_EG_ACTION'),'Get all service type categories','/pgr/servicec
 
 -- role action service type and category
 
-insert into eg_roleaction(roleCode,actionid,tenantId)values('SUPERUSER',(select id from eg_action where name='Get all servicecategories'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantId)values('SUPERUSER',(select id from eg_action where name='Get all service type categories'),'default');
 insert into eg_roleaction(roleCode,actionid,tenantId)values('GO',(select id from eg_action where name='Get all service type categories'),'default');
 insert into eg_roleaction(roleCode,actionid,tenantId)values('RO',(select id from eg_action where name='Get all service type categories'),'default');
 insert into eg_roleaction(roleCode,actionid,tenantId)values('GA',(select id from eg_action where name='Get all service type categories'),'default');

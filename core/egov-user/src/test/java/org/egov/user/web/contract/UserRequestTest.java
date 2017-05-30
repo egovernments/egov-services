@@ -59,7 +59,7 @@ public class UserRequestTest {
         UserRequest userRequest = buildUserRequest();
 
 		final long loggedInUserId = 345L;
-		User userForCreate = userRequest.toDomain(loggedInUserId);
+		User userForCreate = userRequest.toDomain(loggedInUserId, true);
 
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.set(2017, 1, 1, 1, 1, 1);

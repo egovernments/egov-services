@@ -5,8 +5,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.egf.master.index.persistence.queue.contract.BankRequestDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.egov.egf.master.index.persistence.queue.contract.FinancialGenericDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,8 +37,6 @@ public class IndexerConfig {
 
 	@Value("${kafka.consumer.config.auto_offset_reset}")
 	private String autoOffsetReset;
-	@Autowired
-	private IndexerListener indexerListener;
 
 	@Bean
 	KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
@@ -67,13 +64,8 @@ public class IndexerConfig {
 		propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
 		propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 		propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, BankRequestDeserializer.class);
+		propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, FinancialGenericDeserializer.class);
 		return propsMap;
-	}
-
-	@Bean
-	public IndexerListener listener() {
-		return indexerListener;
 	}
 
 }

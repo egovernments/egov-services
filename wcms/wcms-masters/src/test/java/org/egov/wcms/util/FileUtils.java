@@ -9,5 +9,4 @@ public class FileUtils {
 		ClassLoader classLoader = getClass().getClassLoader();
 		return new String(Files.readAllBytes(new File(classLoader.getResource(path).getFile()).toPath()));
 	}
-
 }

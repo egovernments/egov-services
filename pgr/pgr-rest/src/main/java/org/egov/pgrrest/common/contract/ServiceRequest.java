@@ -7,15 +7,16 @@ import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.ServiceRequestType;
-import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Service request raised by the citizen
@@ -27,7 +28,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class ServiceRequest {
 
     private static final String LOCATION_ID = "locationId";
-    private static final String COMPLAINANT_ADDRESS = "complainantAddress";
+    private static final String REQUESTER_ADDRESS = "requesterAddress";
     private static final String RECEIVING_MODE = "receivingMode";
     private static final String RECEIVING_CENTER = "receivingCenter";
     private static final String USER_ID = "userId";
@@ -41,10 +42,10 @@ public class ServiceRequest {
     private Boolean status;
 
     @JsonProperty("serviceName")
-    private String complaintTypeName;
+    private String serviceTypeName;
 
     @JsonProperty("serviceCode")
-    private String complaintTypeCode;
+    private String serviceTypeCode;
 
     private String description;
 
@@ -94,21 +95,14 @@ public class ServiceRequest {
     private String deviceId;
 
     private String accountId;
-    
-    private Map<String, String> values = new HashMap<>();
-
-//  Short term feature flag - to support values and attribValues usage
-//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
-    @JsonProperty("isAttribValuesPopulated")
-    private boolean attribValuesPopulated;
 
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
     public ServiceRequest(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
         crn = complaint.getCrn();
         status = complaint.isClosed();
-        complaintTypeName = complaint.getComplaintType().getName();
-        complaintTypeCode = complaint.getComplaintType().getCode();
+        serviceTypeName = complaint.getServiceRequestType().getName();
+        serviceTypeCode = complaint.getServiceRequestType().getCode();
         description = complaint.getDescription();
         createdDate = complaint.getCreatedDate();
         lastModifiedDate = complaint.getLastModifiedDate();
@@ -121,11 +115,7 @@ public class ServiceRequest {
         lastName = null;
         phone = complaint.getRequester().getMobile();
         email = complaint.getRequester().getEmail();
-        values = getAdditionalValues(complaint);
-        attribValuesPopulated = true;
-        if(CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
-            attribValues = getAttributeValues(complaint);
-        } else {
+        if (!CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
             attribValues = complaint.getAttributeEntries()
                 .stream()
                 .map(attribute -> new AttributeEntry(attribute.getKey(), attribute.getCode()))
@@ -134,66 +124,24 @@ public class ServiceRequest {
         tenantId = complaint.getTenantId();
     }
 
-    private List<AttributeEntry> getAttributeValues(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
-        final ArrayList<AttributeEntry> attributeEntries = new ArrayList<>();
-        attributeEntries.add(new AttributeEntry("receivingMode", complaint.getReceivingMode()));
-        attributeEntries.add(new AttributeEntry("complaintStatus", complaint.getComplaintStatus()));
-        addAttributeEntryIfPresent(attributeEntries, "receivingCenter", complaint.getReceivingCenter());
-        addAttributeEntryIfPresent(attributeEntries, "locationId", complaint.getServiceRequestLocation().getLocationId());
-        addAttributeEntryIfPresent(attributeEntries, "childLocationId", complaint.getChildLocation());
-        addAttributeEntryIfPresent(attributeEntries, "stateId", complaint.getState());
-        addAttributeEntryIfPresent(attributeEntries, "assigneeId", toString(complaint.getAssignee()));
-        addAttributeEntryIfPresent(attributeEntries, "departmentId", toString(complaint.getDepartment()));
-        addAttributeEntryIfPresent(attributeEntries, "citizenFeedback",complaint.getCitizenFeedback());
-        return attributeEntries;
-    }
-
-    private String toString(Long longValue) {
-        return longValue == null ? null : longValue.toString();
-    }
-
-    private void addAttributeEntryIfPresent(ArrayList<AttributeEntry> attributeEntries, String key, String name) {
-        if (isEmpty(name)) {
-            return;
-        }
-        attributeEntries.add(new AttributeEntry(key, name));
-    }
-
-    private Map<String, String> getAdditionalValues(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
-        final HashMap<String, String> map = new HashMap<>();
-        map.put("receivingMode", complaint.getReceivingMode());
-        map.put("complaintStatus", complaint.getComplaintStatus());
-        addEntryIfPresent(map, "receivingCenter", complaint.getReceivingCenter());
-        addEntryIfPresent(map, "locationId", complaint.getServiceRequestLocation().getLocationId());
-        addEntryIfPresent(map, "childLocationId", complaint.getChildLocation());
-        addEntryIfPresent(map, "stateId", complaint.getState());
-        addEntryIfPresent(map, "assigneeId", toString(complaint.getAssignee()));
-        addEntryIfPresent(map, "departmentId", toString(complaint.getDepartment()));
-        addEntryIfPresent(map, "citizenFeedback",complaint.getCitizenFeedback());
-        return map;
-    }
-
-    private void addEntryIfPresent(Map<String, String> map, String key, String item) {
-        if (!isEmpty(item)) {
-            map.put(key, item);
-        }
-    }
-
-    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
+    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForCreateRequest(AuthenticatedUser
+                                                                                          authenticatedUser) {
         return toDomain(authenticatedUser, false);
     }
 
-    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
+    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForUpdateRequest(AuthenticatedUser
+                                                                                          authenticatedUser) {
         return toDomain(authenticatedUser, true);
     }
 
-    private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser, boolean isUpdate) {
-        final ServiceRequestLocation serviceRequestLocation = getComplaintLocation();
-        final Requester complainant = getComplainant();
+    private org.egov.pgrrest.read.domain.model.ServiceRequest toDomain(AuthenticatedUser authenticatedUser,
+                                                                       boolean isUpdate) {
+        final ServiceRequestLocation serviceRequestLocation = getServiceRequestLocation();
+        final Requester complainant = getRequester();
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .authenticatedUser(authenticatedUser)
             .crn(crn)
-            .complaintType(new ServiceRequestType(complaintTypeName, complaintTypeCode, tenantId))
+            .serviceRequestType(new ServiceRequestType(serviceTypeName, serviceTypeCode, tenantId))
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)
@@ -203,22 +151,23 @@ public class ServiceRequest {
             .receivingMode(getReceivingMode())
             .receivingCenter(getReceivingCenter())
             .modifyServiceRequest(isUpdate)
+            .attributeEntries(toDomainAttributeEntries())
             .build();
     }
 
-    private Requester getComplainant() {
-        final String complainantAddress = getComplainantAddress();
-        final String complainantUserId = getComplainantUserId();
+    private Requester getRequester() {
+        final String requesterAddress = getRequesterAddress();
+        final String requesterUserId = getRequesterUserId();
         return Requester.builder()
             .firstName(firstName)
             .mobile(phone)
             .email(email)
-            .userId(complainantUserId)
-            .address(complainantAddress)
+            .userId(requesterUserId)
+            .address(requesterAddress)
             .build();
     }
 
-    private ServiceRequestLocation getComplaintLocation() {
+    private ServiceRequestLocation getServiceRequestLocation() {
         final Coordinates coordinates = new Coordinates(latitude, longitude);
         return ServiceRequestLocation.builder()
             .coordinates(coordinates)
@@ -239,20 +188,27 @@ public class ServiceRequest {
         return getDynamicSingleValue(RECEIVING_CENTER);
     }
 
-    private String getComplainantUserId() {
+    private String getRequesterUserId() {
         return getDynamicSingleValue(USER_ID);
     }
 
-    private String getComplainantAddress() {
-        return getDynamicSingleValue(COMPLAINANT_ADDRESS);
+    private String getRequesterAddress() {
+        return getDynamicSingleValue(REQUESTER_ADDRESS);
     }
 
     private String getDynamicSingleValue(String key) {
-        if (attribValuesPopulated) {
-            return AttributeValues.getAttributeSingleValue(attribValues, key);
-        } else {
-            return values.get(key);
+        return AttributeValues.getAttributeSingleValue(attribValues, key);
+    }
+
+    private List<org.egov.pgrrest.common.model.AttributeEntry> toDomainAttributeEntries() {
+        if (CollectionUtils.isEmpty(attribValues)) {
+            return Collections.emptyList();
         }
+        return attribValues.stream().map(this::toDomainAttributeEntry).collect(Collectors.toList());
+    }
+
+    private org.egov.pgrrest.common.model.AttributeEntry toDomainAttributeEntry(AttributeEntry attributeEntry) {
+        return new org.egov.pgrrest.common.model.AttributeEntry(attributeEntry.getKey(), attributeEntry.getName());
     }
 
 }

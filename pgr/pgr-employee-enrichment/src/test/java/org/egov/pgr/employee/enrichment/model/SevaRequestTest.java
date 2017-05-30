@@ -64,8 +64,8 @@ public class SevaRequestTest {
 
         sevaRequest.update(new Position(designationId, departmentId));
 
-        assertEquals(designationId, sevaRequest.getValues().get(designationIdKey));
-        assertEquals(departmentId, sevaRequest.getValues().get(departmentIdKey));
+        assertEquals(designationId, sevaRequest.getDynamicSingleValue(designationIdKey));
+        assertEquals(departmentId, sevaRequest.getDynamicSingleValue(departmentIdKey));
     }
 
     @Test
@@ -79,29 +79,42 @@ public class SevaRequestTest {
         final HashMap<String, Object> requestMap = sevaRequest.getRequestMap();
         @SuppressWarnings("unchecked")
         final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) requestMap.get("serviceRequest");
-        assertEquals(expectedDate, serviceRequest.get("expectedDatetime"));
+        assertEquals("02-01-2017 03:04:00", serviceRequest.get("expectedDatetime"));
     }
 
     private SevaRequest createSevaRequest() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        final Map<String, String> valueMap = new HashMap<>();
         final Map<String, Object> userInfoMap = new HashMap<>();
-        valueMap.put(VALUES_STATE_ID, "233");
-        valueMap.put(VALUES_LOCATION_ID, "18");
-        valueMap.put(VALUES_APPROVAL_COMMENT, "this is approved");
-        valueMap.put(VALUES_ASSIGNEE_ID, "23");
-        valueMap.put(STATUS, "REGISTERED");
         userInfoMap.put("type", "EMPLOYEE");
         final Map<String, Object> requestInfoMap = new HashMap<>();
         requestInfoMap.put("userInfo", userInfoMap);
+        requestInfoMap.put("action","POST");
         serviceRequestMap.put(SERVICE_CODE, "PKJB");
         serviceRequestMap.put(STATUS, "REGISTERED");
-        serviceRequestMap.put(VALUES, valueMap);
         serviceRequestMap.put("tenantId", "tenantId");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "233");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "18");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "this is approved");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "23");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "REGISTERED");
+        attributeValues.add(registeredEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put(SERVICE_REQUEST, serviceRequestMap);
         sevaRequestMap.put(REQUEST_INFO, requestInfoMap);

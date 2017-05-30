@@ -65,48 +65,48 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "finYearRange", "startingDate", "endingDate", "active", "isActiveForPosting", "isClosed",
-        "transferClosingBalance", "fiscalPeriodList" })
+		"transferClosingBalance", "fiscalPeriodList" })
 public class FinancialYearContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @Length(min = 1, max = 25)
-    @NotBlank
-    private String finYearRange;
+	@Length(min = 1, max = 25)
+	@NotBlank
+	private String finYearRange;
 
-    @NotNull
-    private Date startingDate;
+	@NotNull
+	private Date startingDate;
 
-    @NotNull
-    private Date endingDate;
-    @NotNull
-    private Boolean active;
-    @NotNull
-    private Boolean isActiveForPosting;
+	@NotNull
+	private Date endingDate;
+	@NotNull
+	private Boolean active;
+	@NotNull
+	private Boolean isActiveForPosting;
 
-    private Boolean isClosed;
+	private Boolean isClosed;
 
-    private Boolean transferClosingBalance;
+	private Boolean transferClosingBalance;
 
-    @OrderBy("id DESC ")
-    private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
+	@OrderBy("id DESC ")
+	private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
 
-    public void setFiscalPeriod(final List<FiscalPeriod> fiscalPeriod) {
-        this.fiscalPeriodList.clear();
-        if (fiscalPeriod != null)
-            this.fiscalPeriodList.addAll(fiscalPeriod);
-    }
+	public void setFiscalPeriod(final List<FiscalPeriod> fiscalPeriod) {
+		this.fiscalPeriodList.clear();
+		if (fiscalPeriod != null)
+			this.fiscalPeriodList.addAll(fiscalPeriod);
+	}
 
-    public void addFiscalPeriod(final FiscalPeriod fiscalPeriod) {
-        this.fiscalPeriodList.add(fiscalPeriod);
-    }
+	public void addFiscalPeriod(final FiscalPeriod fiscalPeriod) {
+		this.fiscalPeriodList.add(fiscalPeriod);
+	}
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public FinancialYearContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public FinancialYearContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 }

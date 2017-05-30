@@ -1,8 +1,7 @@
 package org.egov.consumer;
 
 import org.egov.domain.model.SevaRequest;
-import org.egov.domain.service.EmailService;
-import org.egov.domain.service.SMSService;
+import org.egov.domain.service.NotificationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,29 +17,18 @@ import static org.mockito.Mockito.verify;
 public class NotificationListenerTest {
 
     @Mock
-    private SMSService smsService;
-
-    @Mock
-    private EmailService emailService;
+    private NotificationService notificationService;
 
     @InjectMocks
     private NotificationListener notificationListener;
 
     @Test
-    public void test_should_send_sms() {
+    public void test_should_send_notifications() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
 
         notificationListener.process(sevaRequestMap);
 
-        verify(smsService).send(any(SevaRequest.class));
+        verify(notificationService).notify(any(SevaRequest.class));
     }
 
-    @Test
-    public void test_should_send_email() {
-        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-
-        notificationListener.process(sevaRequestMap);
-
-        verify(emailService).send(any(SevaRequest.class));
-    }
 }

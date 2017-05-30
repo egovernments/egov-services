@@ -1,0 +1,1 @@
+Your Request for {{serviceName}} with tracking number {{crn}} is processed. Please pay a processing fee of Rs.{{fee}}/- at the {{ulbGrade}} counters.

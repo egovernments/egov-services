@@ -16,17 +16,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-    
-    @JsonProperty("id")
-    private Long id = null;
 
-    @JsonProperty("userName")
-    private String userName = null;
+	@JsonProperty("id")
+	private Long id = null;
 
-    @JsonProperty("name")
-    private String name = null;
+	@JsonProperty("userName")
+	private String userName = null;
 
-    @JsonProperty("roles")
-    private Set<Role> roles = null;
+	@JsonProperty("name")
+	private String name = null;
+
+	@JsonProperty("roles")
+	private Set<Role> roles = null;
 
 }

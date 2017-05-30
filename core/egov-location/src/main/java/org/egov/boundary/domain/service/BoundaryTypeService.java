@@ -47,7 +47,6 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
@@ -165,8 +164,9 @@ Session currentSession = entityManager.unwrap(Session.class);
 	}
 
 	public BoundaryType getBoundaryTypeByNameAndHierarchyTypeName(final String boundaryTypename,
-			final String hierarchyTypeName) {
-		return boundaryTypeRepository.findByNameAndHierarchyTypeName(boundaryTypename, hierarchyTypeName);
+																  final String hierarchyTypeName,
+																  String tenantId) {
+		return boundaryTypeRepository.findByNameAndHierarchyTypeName(boundaryTypename, hierarchyTypeName, tenantId);
 	}
 
 	public List<BoundaryType> getBoundaryTypeByHierarchyTypeName(final String name) {

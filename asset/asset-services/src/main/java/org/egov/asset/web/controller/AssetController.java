@@ -40,17 +40,20 @@
 
 package org.egov.asset.web.controller;
 
-import java.util.List;
 import javax.validation.Valid;
+
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
+import org.egov.asset.contract.RevaluationRequest;
+import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
-import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
@@ -82,6 +85,9 @@ public class AssetController {
 
 	@Autowired
 	private AssetValidator assetValidator;
+	
+	@Autowired
+	private RevaluationService revaluationService;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -93,12 +99,7 @@ public class AssetController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-
-		List<Asset> assets = assetService.getAssets(assetCriteria);
-		AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setAssets(assets);
-		assetResponse.setResponseInfo(new ResponseInfo());
-
+		AssetResponse assetResponse = assetService.getAssets(assetCriteria);
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
@@ -138,6 +139,39 @@ public class AssetController {
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
+	@PostMapping("reevaluate/_create")
+	@ResponseBody
+	public ResponseEntity<?> reevaluate(@RequestBody @Valid RevaluationRequest revaluationRequest, BindingResult bindingResult) {
+
+		logger.info("create reevaluate:" + revaluationRequest);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, need to be done.
+		
+		RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
+		
+		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("reevaluate/_search")
+	@ResponseBody
+	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute RevaluationCriteria revaluationCriteria,BindingResult bindingResult) {
+
+		logger.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, need to be done.
+		
+		RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
+		
+		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+	}
+		
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 

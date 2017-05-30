@@ -44,8 +44,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.Date;
-
 import javax.validation.constraints.NotNull;
+
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -69,6 +69,5 @@ public class AuditDetails {
     @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
-
 
 }

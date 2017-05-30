@@ -52,7 +52,7 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid BillSearchCriteria billSearchCriteria,
 			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
-		LOGGER.info("BillController  search  ::: Inside Bill controller ");
+		LOGGER.info("BillController  search billSearchCriteria : "+billSearchCriteria);
 		org.egov.demand.web.contract.BillInfo billContract = null;
 		List<org.egov.demand.web.contract.BillInfo> billContracts = new ArrayList<org.egov.demand.web.contract.BillInfo>();
 		if (bindingResult.hasErrors()) {
@@ -63,6 +63,7 @@ public class BillController {
 			billContract = bill.toDomain();
 			billContract.setConsumerCode(bill.getConsumerId());
 			billContracts.add(billContract);
+			LOGGER.info("the response of bill search : "+billContract);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

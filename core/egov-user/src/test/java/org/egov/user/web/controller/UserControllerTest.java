@@ -31,6 +31,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.ArrayUtils.isEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
@@ -168,6 +169,7 @@ public class UserControllerTest {
 				.pageNumber(0)
 				.sort(singletonList("name"))
 				.type("CITIZEN")
+				.roleCodes(Arrays.asList("roleCode1", "roleCode2"))
 				.build();
 	}
 
@@ -278,6 +280,7 @@ public class UserControllerTest {
 					userSearch.getEmailId().equals(expectedUserSearch.getEmailId()) &&
 					userSearch.isFuzzyLogic() == expectedUserSearch.isFuzzyLogic() &&
 					userSearch.isActive() == expectedUserSearch.isActive() &&
+					isEquals(userSearch.getRoleCodes(), expectedUserSearch.getRoleCodes()) &&
 					userSearch.getPageSize() == expectedUserSearch.getPageSize() &&
 					userSearch.getPageNumber() == expectedUserSearch.getPageNumber() &&
 					userSearch.getSort().equals(expectedUserSearch.getSort()) &&

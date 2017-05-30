@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.4.0</version>
+            <version>0.11.0</version>
         </dependency>
 
         <dependency>
@@ -159,8 +159,9 @@
                                     <element>CLASS</element>
                                     <excludes>
                                         <exclude>org.egov.web.indexer.contract.*</exclude>
+                                        <exclude>org.egov.web.indexer.enricher.*</exclude>
+                                        <exclude>org.egov.web.indexer.service.*</exclude>
                                         <exclude>org.egov.web.indexer.repository.contract.*</exclude>
-                                        <exclude>org.egov.web.indexer.config.IndexerProperties</exclude>
                                         <exclude>org.egov.web.indexer.http.CorrelationIdAwareRestTemplate</exclude>
                                         <exclude>org.egov.web.indexer.SearchIndexerApplication</exclude>
                                         <exclude>org.egov.web.indexer.consumer.HashMapDeserializer</exclude>
@@ -171,17 +172,6 @@
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
                                             <minimum>0.90</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>COMPLEXITY</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.3</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

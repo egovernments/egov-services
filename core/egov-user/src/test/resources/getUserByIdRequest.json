@@ -19,5 +19,9 @@
   "emailId": "emailId",
   "fuzzyLogic": true,
   "active": true,
-  "userType": "CITIZEN"
+  "userType": "CITIZEN",
+  "roleCodes": [
+    "roleCode1",
+    "roleCode2"
+  ]
 }

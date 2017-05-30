@@ -60,19 +60,19 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "code", "name", "active" })
 public class FunctionaryContract extends AuditableContract implements java.io.Serializable {
 
-    private Long id;
-    @NotNull
-    @Length(max = 16, min = 1)
-    private String code;
-    @NotNull
-    @Length(max = 256, min = 1)
-    private String name;
+	private Long id;
+	@NotNull
+	@Length(max = 16, min = 1)
+	private String code;
+	@NotNull
+	@Length(max = 256, min = 1)
+	private String name;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private Boolean active;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
 }

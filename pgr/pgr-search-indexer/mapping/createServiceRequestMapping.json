@@ -1,0 +1,198 @@
+{
+    "mappings": {
+        "serviceRequest": {
+            "_all": {
+                "enabled": true
+            },
+            "properties": {
+                "assigneeId": {
+                    "type": "long"
+                },
+                "assigneeName": {
+                    "type": "keyword"
+                },
+                "categoryId": {
+                    "type": "long"
+                },
+                "categoryName": {
+                    "type": "keyword"
+                },
+                "cityCode": {
+                    "type": "keyword"
+                },
+                "cityDistrictCode": {
+                    "type": "keyword"
+                },
+                "cityDistrictName": {
+                    "type": "keyword"
+                },
+                "cityDomainUrl": {
+                    "type": "keyword"
+                },
+                "cityGrade": {
+                    "type": "keyword"
+                },
+                "cityName": {
+                    "type": "keyword"
+                },
+                "cityRegionName": {
+                    "type": "keyword"
+                },
+                "closedByFunctionaryName": {
+                    "type": "keyword"
+                },
+                "requesterEmail": {
+                    "type": "keyword"
+                },
+                "requesterMobile": {
+                    "type": "keyword"
+                },
+                "requesterName": {
+                    "type": "keyword"
+                },
+                "serviceStatusAgeingDaysFromDue": {
+                    "type": "long"
+                },
+                "serviceDuration": {
+                    "type": "double"
+                },
+                "serviceGeo": {
+                    "type": "geo_point"
+                },
+                "serviceStatusIsClosed": {
+                    "type": "keyword"
+                },
+                "serviceStatusPeriod": {
+                    "type": "double"
+                },
+                "serviceReOpenedDate": {
+                    "type": "date",
+                    "format": "date_optional_time"
+                },
+                "serviceSLADays": {
+                    "type": "long"
+                },
+                "serviceStatusName": {
+                    "type": "keyword"
+                },
+                "serviceTypeCode": {
+                    "type": "keyword"
+                },
+                "serviceTypeName": {
+                    "type": "keyword"
+                },
+                "createdDate": {
+                    "type": "date",
+                    "format": "date_optional_time"
+                },
+                "lastModifiedDate": {
+                    "type": "date",
+                    "format": "date_optional_time"
+                },
+                "crn": {
+                    "type": "keyword"
+                },
+                "departmentCode": {
+                    "type": "keyword"
+                },
+                "departmentName": {
+                    "type": "keyword"
+                },
+                "details": {
+                    "type": "keyword"
+                },
+                "durationRange": {
+                    "type": "keyword"
+                },
+                "escalationDate": {
+                    "type": "date",
+                    "format": "date_optional_time"
+                },
+                "escalationLevel": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "keyword"
+                },
+                "isInProcess": {
+                    "type": "integer"
+                },
+                "isInProcessText": {
+                    "type": "keyword"
+                },
+                "isClosed": {
+                    "type": "integer"
+                },
+                "isClosedText": {
+                    "type": "keyword"
+                },
+                "isAddressed": {
+                    "type": "integer"
+                },
+                "isAddressedText": {
+                    "type": "keyword"
+                },
+                "isWithinSLA": {
+                    "type": "integer"
+                },
+                "isWithinSLAText": {
+                    "type": "keyword"
+                },
+                "landmarkDetails": {
+                    "type": "keyword"
+                },
+                "localityGeo": {
+                    "type": "geo_point"
+                },
+                "localityName": {
+                    "type": "keyword"
+                },
+                "localityNo": {
+                    "type": "keyword"
+                },
+                "reOpened": {
+                    "type": "integer"
+                },
+                "reasonForRejection": {
+                    "type": "keyword"
+                },
+                "receivingMode": {
+                    "type": "keyword"
+                },
+                "isRegistered": {
+                    "type": "integer"
+                },
+                "isRegisteredText": {
+                    "type": "keyword"
+                },
+                "rejected": {
+                    "type": "integer"
+                },
+                "satisfactionIndex": {
+                    "type": "double"
+                },
+                "source": {
+                    "type": "keyword"
+                },
+                "wardGeo": {
+                    "type": "geo_point"
+                },
+                "wardName": {
+                    "type": "keyword"
+                },
+                "wardNo": {
+                    "type": "keyword"
+                },
+                "tenantId": {
+                    "type": "keyword"
+                },
+                "keyword": {
+                    "type": "keyword"
+                },
+                "processingFee": {
+                    "type": "double"
+                }
+            }
+        }
+    }
+}

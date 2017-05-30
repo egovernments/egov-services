@@ -1,0 +1,56 @@
+{    "ResponseInfo": {
+        "apiId": "1",
+        "ver": "1",
+        "ts": "Sun Jan 01 01:01:01 IST 2017",
+        "resMsgId": "uief87324",
+        "msgId": "",
+        "status": "200"
+    },
+    "Employee": [
+        {
+            "id": 73,
+            "code": "658039",
+            "salutation": "MR.",
+            "name": "narasappa",
+            "userName": "narasappa",
+            "gender": null,
+            "mobileNumber": "1234567890",
+            "emailId": null,
+            "pan": null,
+            "aadhaarNumber": null,
+            "active": true,
+            "type": "EMPLOYEE",
+            "employeeStatus": 4,
+            "employeeType": 4,
+            "assignments": [
+                {
+                    "id": 2,
+                    "position": 1,
+                    "fund": null,
+                    "functionary": null,
+                    "function": null,
+                    "department": 1,
+                    "designation": 1,
+                    "hod": [],
+                    "isPrimary": true,
+                    "fromDate": "31/03/2015",
+                    "toDate": "30/03/2020",
+                    "grade": null,
+                    "govtOrderNumber": null,
+                    "documents": null,
+                    "createdBy": 1,
+                    "createdDate": "16/05/2017",
+                    "lastModifiedBy": 1,
+                    "lastModifiedDate": null,
+                    "tenantId": null
+                }
+            ],
+            "jurisdictions": [],
+            "bank": null,
+            "bankBranch": null,
+            "bankAccount": null,
+            "documents": null,
+            "tenantId": "default"
+        }
+    ]
+}

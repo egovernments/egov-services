@@ -2,8 +2,9 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
-import org.egov.lams.repository.helper.AmountInWordUtil;
+import org.egov.lams.util.AmountInWordUtil;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class Notice   {
   private String noticeNo = null;
 
   @JsonProperty("noticeDate")
+  @JsonFormat(pattern = "dd/MM/yyyy")
   private Date noticeDate = null;
 
   @JsonProperty("agreementNumber")
@@ -60,6 +62,7 @@ public class Notice   {
   private Long agreementPeriod = null;
 
   @JsonProperty("commencementDate")
+  @JsonFormat(pattern = "dd/MM/yyyy")
   private Date commencementDate = null;
 
   @JsonProperty("templateVersion")
@@ -69,6 +72,7 @@ public class Notice   {
   private String rentInWord = null;
 
   @JsonProperty("expiryDate")
+  @JsonFormat(pattern = "dd/MM/yyyy")
   private Date expiryDate = null;
 
   @JsonProperty("rent")

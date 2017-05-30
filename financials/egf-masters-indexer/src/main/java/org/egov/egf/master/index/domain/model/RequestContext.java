@@ -1,14 +1,16 @@
 package org.egov.egf.master.index.domain.model;
 
- 
-
 public class RequestContext {
 
-    public static String CORRELATION_ID = "X-CORRELATION-ID";
+	public static String CORRELATION_ID = "X-CORRELATION-ID";
 
-    private static final ThreadLocal<String> id = new ThreadLocal<>();
+	private static final ThreadLocal<String> id = new ThreadLocal<>();
 
-    public static String getId() { return id.get(); }
+	public static String getId() {
+		return id.get();
+	}
 
-    public static void setId(String correlationId) { id.set(correlationId); }
+	public static void setId(String correlationId) {
+		id.set(correlationId);
+	}
 }

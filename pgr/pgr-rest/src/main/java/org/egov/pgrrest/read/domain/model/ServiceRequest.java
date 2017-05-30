@@ -18,7 +18,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Builder
 @Getter
 public class ServiceRequest {
-    private static final String MANUAL_RECEIVING_MODE = "MANUAL";
+    public static final String PROCESSINGFEE = "PROCESSINGFEE";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -27,8 +27,8 @@ public class ServiceRequest {
     private Requester requester;
     private String crn;
     @NonNull
-    private ServiceRequestType complaintType;
-    private String complaintStatus;
+    private ServiceRequestType serviceRequestType;
+    private String serviceRequestStatus;
     private String address;
     private List<String> mediaUrls;
     private String tenantId;
@@ -41,7 +41,6 @@ public class ServiceRequest {
     private String receivingMode;
     private String receivingCenter;
     private Long department;
-    private Date lastAccessedTime;
     private String childLocation;
     private Long assignee;
     private String state;
@@ -78,10 +77,11 @@ public class ServiceRequest {
     public void validate() {
         if (isRequesterAbsent()
             || isTenantIdAbsent()
-            || isComplaintTypeAbsent()
+            || isServiceRequestTypeAbsent()
             || isDescriptionAbsent()
             || isCrnAbsent()
-            || descriptionLength()) {
+            || descriptionLength()
+            || isProcessingFeePresentForCreation()) {
             throw new InvalidComplaintException(this);
         }
     }
@@ -94,8 +94,8 @@ public class ServiceRequest {
         return isEmpty(description);
     }
 
-    public boolean isComplaintTypeAbsent() {
-        return complaintType.isAbsent();
+    public boolean isServiceRequestTypeAbsent() {
+        return serviceRequestType.isAbsent();
     }
 
     public boolean isCrnAbsent() {
@@ -106,14 +106,8 @@ public class ServiceRequest {
         this.crn = crn;
     }
 
-    public boolean isReceivingModeAbsent() {
-        return authenticatedUser.isEmployee() && isEmpty(receivingMode);
-    }
-
-    public boolean isReceivingCenterAbsent() {
-        return authenticatedUser.isEmployee()
-            && MANUAL_RECEIVING_MODE.equalsIgnoreCase(receivingMode)
-            && isEmpty(receivingCenter);
+    public boolean isProcessingFeePresentForCreation(){
+        return  modifyServiceRequest == false && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey()));
     }
 
 	public boolean descriptionLength() {

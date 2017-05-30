@@ -42,18 +42,14 @@ package org.egov.egf.persistence.entity;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.SubSchemeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -62,53 +58,61 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"scheme"},callSuper=false)
+@EqualsAndHashCode(exclude = { "scheme" }, callSuper = false)
 
 @Table(name = "egf_subscheme")
 @SequenceGenerator(name = SubScheme.SEQ, sequenceName = SubScheme.SEQ, allocationSize = 1)
-public class SubScheme extends AbstractAuditable
-{
-    public static final String SEQ = "seq_egf_subscheme";
+public class SubScheme extends AbstractAuditable {
+
+	private static final long serialVersionUID = -7328908864466939706L;
+
+	public static final String SEQ = "seq_egf_subscheme";
 	@Id
-    @GeneratedValue(generator = SubScheme.SEQ, strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = SubScheme.SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;
-	
-	@NotNull
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="scheme")
-	private Scheme scheme;
 
 	@NotNull
-	@Length(max=50,min=1)
+	private Long scheme;
+
+	@NotNull
+	@Length(max = 50, min = 1)
 	private String code;
 
 	@NotNull
-	@Length(max=50,min=1)
+	@Length(max = 50, min = 1)
 	private String name;
 
 	@NotNull
 	private Date validFrom;
-	
+
 	@NotNull
 	private Date validTo;
-	
+
 	@NotNull
 	private Boolean active;
 
- 	private Long departmentId;
- 	
- 
- 
-	 @Override
-	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+	private Long departmentId;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public SubScheme(SubSchemeContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setValidFrom(contract.getValidFrom());
+		this.setValidTo(contract.getValidTo());
+		this.setDepartmentId(contract.getDepartmentId());
+		this.setActive(contract.getActive());
+		this.setScheme(contract.getScheme() != null ? contract.getScheme().getId() : null);
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

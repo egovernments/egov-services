@@ -47,14 +47,10 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
@@ -83,13 +79,15 @@ public class UserGetRequest {
     private String pan;
 
 	@Size(max=128)
-    private String emailId;
+	private String emailId;
 
-    private boolean active = true;
+	private List<String> roleCodes;
 
-    private int pageSize = 20;
+    private Boolean active = true;
 
-    private int pageNumber = 0;
+    private Integer pageSize = 20;
+
+    private Integer pageNumber = 0;
 
     private List<String> sort = Collections.singletonList("name");
 

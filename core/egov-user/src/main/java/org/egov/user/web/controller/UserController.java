@@ -27,7 +27,7 @@ public class UserController {
 
 	@PostMapping("/citizen/_create")
 	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain();
+		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(true);
 		final User newUser = userService.createCitizen(user);
 		return createResponse(newUser);
@@ -35,7 +35,7 @@ public class UserController {
 
 	@PostMapping("/users/_createnovalidate")
 	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain();
+		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(false);
 		final User newUser = userService.createUser(user);
 		return createResponse(newUser);
@@ -61,7 +61,7 @@ public class UserController {
 	@PostMapping("/users/{id}/_updatenovalidate")
 	public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
 														  @RequestBody final CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain();
+		User user = createUserRequest.toDomain(false);
 		user.setId(id);
 		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
 		return createResponse(updatedUser);
@@ -69,7 +69,7 @@ public class UserController {
 
 	@PostMapping("/profile/_update")
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain();
+		User user = createUserRequest.toDomain(false);
 		final User updatedUser = userService.partialUpdate(user);
 		return createResponse(updatedUser);
 	}

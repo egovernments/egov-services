@@ -62,66 +62,66 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 public abstract @Data class AbstractAuditable extends AbstractPersistable<Long> {
 
-    private static final long serialVersionUID = 7138056997693406739L;
+	private static final long serialVersionUID = 7138056997693406739L;
 
-    public abstract Long getId();
+	public abstract Long getId();
 
-    @CreatedBy
-    private Long createdBy;
+	@CreatedBy
+	private Long createdBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date createdDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createdDate;
 
-    @LastModifiedBy
-    private Long lastModifiedBy;
+	@LastModifiedBy
+	private Long lastModifiedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date lastModifiedDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
+	private Date lastModifiedDate;
 
-    @NotNull
-    private String tenantId;
+	@NotNull
+	private String tenantId;
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
+	public Long getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 
-    public Long getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+	public Long getLastModifiedBy() {
+		return lastModifiedBy;
+	}
 
-    public void setLastModifiedBy(Long lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+	public void setLastModifiedBy(Long lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
 
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
 
-    @PrePersist
-    @PreUpdate
-    public void addAuditFields() {
-        if (getId() == null) {
-            this.createdDate = new Date();
-        }
-        this.lastModifiedDate = new Date();
-    }
+	@PrePersist
+	@PreUpdate
+	public void addAuditFields() {
+		if (getId() == null) {
+			this.createdDate = new Date();
+		}
+		this.lastModifiedDate = new Date();
+	}
 
 }

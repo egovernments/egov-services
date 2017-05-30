@@ -11,6 +11,7 @@ import org.egov.lams.contract.ProcessInstance;
 import org.egov.lams.contract.ProcessInstanceRequest;
 import org.egov.lams.contract.ProcessInstanceResponse;
 import org.egov.lams.contract.RequestInfo;
+import org.egov.lams.contract.RequestInfoWrapper;
 import org.egov.lams.contract.Task;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
@@ -52,7 +53,7 @@ public class WorkflowRepository {
 		try {
 			processInstanceRes = restTemplate.postForObject(url, processInstanceRequest, ProcessInstanceResponse.class);
 		} catch (Exception e) {
-			LOGGER.info("the exception from workflow service call : "+e);
+			LOGGER.info("the exception from workflow service call : " + e);
 			throw e;
 		}
 		LOGGER.info("the response object from workflow : " + processInstanceRes.getProcessInstance().getId());
@@ -139,6 +140,8 @@ public class WorkflowRepository {
 				+ agreementRequest.getAgreement().getWorkflowDetails());
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 		WorkflowDetails workflowDetails = agreement.getWorkflowDetails();
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
@@ -160,11 +163,12 @@ public class WorkflowRepository {
 			LOGGER.info("The workflow object before collection update ::: " + agreement.getWorkflowDetails());
 			String url = propertiesManager.getWorkflowServiceHostName()
 					+ propertiesManager.getWorkflowServiceSearchPath() + "?id=" + agreement.getStateId() + "&tenantId="
-					+ requestInfo.getUserInfo().getTenantId();
+					+ agreement.getTenantId();
 
 			ProcessInstanceResponse processInstanceResponse = null;
 			try {
-				processInstanceResponse = restTemplate.postForObject(url, requestInfo, ProcessInstanceResponse.class);
+				processInstanceResponse = restTemplate.postForObject(url, requestInfoWrapper,
+						ProcessInstanceResponse.class);
 			} catch (Exception e) {
 				LOGGER.info("exception from search workflow call ::: " + e);
 				throw e;

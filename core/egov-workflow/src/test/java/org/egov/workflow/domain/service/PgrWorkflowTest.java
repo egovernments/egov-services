@@ -3,33 +3,18 @@ package org.egov.workflow.domain.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.workflow.persistence.entity.State;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
+import org.egov.workflow.persistence.repository.DepartmentRestRepository;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
 import org.egov.workflow.persistence.repository.PositionRepository;
 import org.egov.workflow.persistence.repository.UserRepository;
-import org.egov.workflow.web.contract.Assignment;
-import org.egov.workflow.web.contract.Attribute;
-import org.egov.workflow.web.contract.Department;
-import org.egov.workflow.web.contract.Employee;
-import org.egov.workflow.web.contract.EmployeeRes;
-import org.egov.workflow.web.contract.PositionResponse;
-import org.egov.workflow.web.contract.ProcessInstance;
-import org.egov.workflow.web.contract.Role;
-import org.egov.workflow.web.contract.User;
-import org.egov.workflow.web.contract.UserResponse;
-import org.egov.workflow.web.contract.Value;
+import org.egov.workflow.web.contract.*;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,6 +48,9 @@ public class PgrWorkflowTest {
 	@Mock
 	private EmployeeRepository employeeRepository;
 
+    @Mock
+    private DepartmentRestRepository departmentRestRepository;
+
 	@InjectMocks
 	private PgrWorkflow workflow;
 
@@ -71,7 +59,7 @@ public class PgrWorkflowTest {
 
 	@Before
 	public void before() {
-		pgrWorkflow = new PgrWorkflow(complaintRouterService, stateService, employeeRepository, userRepository);
+		pgrWorkflow = new PgrWorkflow(complaintRouterService, stateService, employeeRepository, userRepository,departmentRestRepository);
 	}
 
 	private PositionResponse getPosition() {
@@ -146,10 +134,12 @@ public class PgrWorkflowTest {
 		final State state = prepareState();
 		final EmployeeRes employeeRes = getEmployee();
 		final UserResponse userResponse = getUserResponse();
+        final DepartmentRes departmentRes=getDepartment();
 		when(stateService.getStateByIdAndTenantId(2l,"tenantId")).thenReturn(state);
 		when(employeeRepository.getEmployeeForUserIdAndTenantId(1l,"tenantId")).thenReturn(employeeRes);
 		when(userRepository.findUserByIdAndTenantId(1L,"tenantId")).thenReturn(userResponse);
 		when(employeeRepository.getEmployeeForPositionAndTenantId(3l, new LocalDate(),"tenantId")).thenReturn(employeeRes);
+        when(departmentRestRepository.getDepartmentById(1L,"tenantId")).thenReturn(departmentRes);
 		final List<Task> actualHistory = pgrWorkflow.getHistoryDetail(TENANT_ID, "2");
 		assertEquals(3, actualHistory.size());
 	}
@@ -159,10 +149,13 @@ public class PgrWorkflowTest {
 		final State state = prepareStateForWorkflow();
 		final EmployeeRes employeeRes = getEmployee();
 		final UserResponse userResponse = getUserResponse();
-		when(stateService.getStateByIdAndTenantId(2l,TENANT_ID)).thenReturn(state);
+        final DepartmentRes departmentRes=getDepartment();
+
+        when(stateService.getStateByIdAndTenantId(2l,TENANT_ID)).thenReturn(state);
 		when(employeeRepository.getEmployeeForUserIdAndTenantId(1l,TENANT_ID)).thenReturn(employeeRes);
 		when(userRepository.findUserByIdAndTenantId(1L,TENANT_ID)).thenReturn(userResponse);
 		when(employeeRepository.getEmployeeForPositionAndTenantId(3l, new LocalDate(),TENANT_ID)).thenReturn(employeeRes);
+        when(departmentRestRepository.getDepartmentById(1L,"tenantId")).thenReturn(departmentRes);
 
 		final List<Task> actualHistory = pgrWorkflow.getHistoryDetail(TENANT_ID, "2");
 
@@ -207,12 +200,8 @@ public class PgrWorkflowTest {
 	}
 
 	private Assignment prepareAssignment() {
-		final Assignment assignment = new Assignment();
-		final Department dept = new Department();
-		dept.setId(1L);
-		dept.setCode("A");
-		dept.setName("Accounts");
-		assignment.setDepartment(dept);
+		final Assignment assignment=new Assignment();
+	    assignment.setDepartment(1L);
 		return assignment;
 	}
 
@@ -262,6 +251,13 @@ public class PgrWorkflowTest {
 		employeeRes.addEmployeeItem(employee);
 		return employeeRes;
 	}
+
+	private DepartmentRes getDepartment(){
+        final Department department=Department.builder().id(1L).name("ADMINISTRATION").code("ADM").tenantId("tenantId").build();
+        final List<Department> departmentList=new ArrayList<Department>();
+        departmentList.add(department);
+        return DepartmentRes.builder().department(departmentList).build();
+    }
 
 	private Task getTask() {
 		final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();

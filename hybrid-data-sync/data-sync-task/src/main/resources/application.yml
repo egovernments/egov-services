@@ -17,7 +17,7 @@ flyway:
   locations: db/migration/ddl,db/migration/seed
 
 state: ap
-rateInSeconds: 5000
+rate-in-milliseconds: 5000
 
 ---
 source-schemas: kurnool,adoni
@@ -29,7 +29,7 @@ sync:
   info:
     - sourceTable: eg_department
       destinationTable: eg_department
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -59,7 +59,7 @@ sync:
 
     - sourceTable: eg_designation
       destinationTable: egeis_designation
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -100,7 +100,7 @@ sync:
 
     - sourceTable: egeis_deptdesig
       destinationTable: egeis_departmentdesignation
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -122,7 +122,7 @@ sync:
 
     - sourceTable: eg_position
       destinationTable: egeis_position
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -243,7 +243,7 @@ sync:
             shouldSync: True
 
           - source: branchaddress1
-            destination: address1
+            destination: address
             type: String
             shouldSource: True
             shouldSync: True
@@ -375,7 +375,7 @@ sync:
 
         - source: isactive
           destination: active
-          Type: boolean
+          Type: Boolean
           shouldSource: True
           shouldSync: True
 
@@ -517,7 +517,7 @@ sync:
 
         - source: isactive
           destination: active
-          type: boolean
+          type: Boolean
           shouldSource: True
           shouldSync: True
 
@@ -945,7 +945,7 @@ sync:
 
     - sourceTable: eg_hierarchy_type
       destinationTable: eg_hierarchy_type
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1005,7 +1005,7 @@ sync:
 
     - sourceTable: eg_crosshierarchy
       destinationTable: eg_crosshierarchy
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1048,7 +1048,7 @@ sync:
 
     - sourceTable: eg_role
       destinationTable: eg_role
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1107,7 +1107,7 @@ sync:
 
     - sourceTable: eg_uom
       destinationTable: eg_uom
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1179,7 +1179,7 @@ sync:
 
     - sourceTable: eg_uomcategory
       destinationTable: eg_uomcategory
-      sourceTimeZone: UTC
+      sourceTimeZone: Asia/Kolkata
       columns:
         - source: id
           destination: id
@@ -1205,528 +1205,5 @@ sync:
           shouldSource: False
           shouldSync: True
           defaultValue: 1
-
-
-
-
----
-source-schemas: microservice
-destination-schema: NA
-spring:
-  profiles: ms-to-ml
-sync:
-  info:
-    - sourceTable: eg_user
-      destinationTable: eg_user
-      sourceTimeZone: Asia/Kolkata
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: title
-          destination: title
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: salutation
-          destination: salutation
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: dob
-          destination: dob
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: locale
-          destination: locale
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: username
-          destination: username
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: password
-          destination: password
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: pwdexpirydate
-          destination: pwdexpirydate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: mobilenumber
-          destination: mobilenumber
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: altcontactnumber
-          destination: altcontactnumber
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: emailid
-          destination: emailid
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: createddate
-          destination: createddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifieddate
-          destination: lastmodifieddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: createdby
-          destination: createdby
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifiedby
-          destination: lastmodifiedby
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: active
-          destination: active
-          Type: Boolean
-          shouldSource: True
-          shouldSync: True
-
-        - source: name
-          destination: name
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: gender
-          destination: gender
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: pan
-          destination: pan
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: aadhaarnumber
-          destination: aadhaarnumber
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: type
-          destination: type
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: version
-          destination: version
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: guardian
-          destination: guardian
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: guardianrelation
-          destination: guardianrelation
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: signature
-          destination: signature
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: accountlocked
-          destination: accountlocked
-          Type: Boolean
-          shouldSource: True
-          shouldSync: True
-
-        - source: tenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-    - sourceTable: egeis_employee
-      destinationTable: egeis_employee
-      sourceTimeZone: UTC
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: code
-          destination: code
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: dateofappointment
-          destination: dateofappointment
-          Type: Date
-          shouldSource: True
-          shouldSync: True
-
-        - source: dateofretirement
-          destination: dateofretirement
-          Type: Date
-          shouldSource: True
-          shouldSync: True
-
-        - source: employeestatus
-          destination: NA
-          Type: Integer
-          shouldSource: True
-          shouldSync: False
-
-        - source: custom-query
-          destination: employeestatus
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-          query: select code from microservice.egeis_hrstatus where id::varchar=?
-          queryElements:
-            - employeestatus
-
-        - source: employeetypeid
-          destination: employeetype
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: tenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-    - sourceTable: egeis_assignment
-      destinationTable: egeis_assignment
-      sourceTimeZone: UTC
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: fundid
-          destination: fund
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: functionid
-          destination: function
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: designationid
-          destination: designation
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: functionaryid
-          destination: functionary
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: departmentid
-          destination: department
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: positionid
-          destination: position
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: gradeid
-          destination: grade
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifiedby
-          destination: lastmodifiedby
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifieddate
-          destination: lastmodifieddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: createddate
-          destination: createddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: createdby
-          destination: createdby
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: fromdate
-          destination: fromdate
-          Type: Date
-          shouldSource: True
-          shouldSync: True
-
-        - source: todate
-          destination: todate
-          Type: Date
-          shouldSource: True
-          shouldSync: True
-
-        - source: NA
-          destination: version
-          Type: Integer
-          shouldSource: False
-          shouldSync: True
-          defaultValue: 0
-
-        - source: employeeid
-          destination: employee
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: isprimary
-          destination: isprimary
-          Type: Boolean
-          shouldSource: True
-          shouldSync: True
-
-        - source: tenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-    - sourceTable: egeis_hoddepartment
-      destinationTable: egeis_employee_hod
-      sourceTimeZone: UTC
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: departmentid
-          destination: hod
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: assignmentid
-          destination: assignment
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifieddate
-          destination: lastmodifieddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: tenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-    - sourceTable: egeis_employeejurisdictions
-      destinationTable: egeis_jurisdiction
-      sourceTimeZone: UTC
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: employeeid
-          destination: employee
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: custom-query
-          destination: boundarytype
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-          query: select boundarytype from microservice.eg_boundary where id::varchar=?
-          queryElements:
-            - jurisdictionid
-
-        - source: jurisdictionid
-          destination: boundary
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifieddate
-          destination: lastmodifieddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: tenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-    - sourceTable: eg_userrole
-      destinationTable: eg_userrole
-      sourceTimeZone: UTC
-      columns:
-        - source: roleid
-          destination: roleid
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: userid
-          destination: userid
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: tenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-        - source: roleidtenantid
-          destination: NA
-          Type: String
-          shouldSource: True
-          shouldSync: False
-
-    - sourceTable: egf_accountdetailkey
-      destinationTable: accountdetailkey
-      sourceTimeZone: Asia/Kolkata
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: NA
-          destination: groupid
-          Type: Integer
-          shouldSource: false
-          shouldSync: True
-          defaultValue: 1
-
-        - source: NA
-          destination: detailname
-          Type: String
-          shouldSource: false
-          shouldSync: True
-          defaultValue: employee_id
-
-        - source: key
-          destination: detailkey
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: detailtypeid
-          destination: detailtypeid
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: createdby
-          destination: createdby
-          type: Integer
-          shouldSource: True
-          shouldSync: false
-
-        - source: createddate
-          destination: createddate
-          type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: false
-
-        - source: lastmodifiedby
-          destination: lastmodifiedby
-          type: Integer
-          shouldSource: True
-          shouldSync: false
-
-        - source: lastmodifieddate
-          destination: lastmodifieddate
-          type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: false
-
-        - source: version
-          destination: version
-          type: Integer
-          shouldSource: false
-          shouldSync: false
-          defaultValue: 0 
-          
-        - source: tenantid
-          destination: NA
-          type: String
-          shouldSource: True
-          shouldSync: false
-          
 
 

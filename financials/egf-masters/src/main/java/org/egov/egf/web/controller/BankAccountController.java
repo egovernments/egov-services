@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,22 +39,23 @@ public class BankAccountController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public BankAccountContractResponse create(@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		bankAccountService.validate(bankAccountContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankAccountContractRequest.getRequestInfo().setAction("create");
 		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
 		bankAccountService.push(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
-		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
-
-			BankAccount bankAccountEntity = new BankAccount(bankAccountContract);
-			BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-			bankAccountContractResponse.getBankAccounts().add(resp);
+		if (bankAccountContractRequest.getBankAccounts() != null
+				&& !bankAccountContractRequest.getBankAccounts().isEmpty()) {
+			for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
+				bankAccountContractResponse.getBankAccounts().add(bankAccountContract);
+			}
+		} else if (bankAccountContractRequest.getBankAccount() != null) {
+			bankAccountContractResponse.setBankAccount(bankAccountContractRequest.getBankAccount());
 		}
-
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 		return bankAccountContractResponse;
@@ -66,51 +66,24 @@ public class BankAccountController {
 	public BankAccountContractResponse update(@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
 
-		ModelMapper modelMapper = new ModelMapper();
 		bankAccountService.validate(bankAccountContractRequest, "update", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankAccountContractRequest.getRequestInfo().setAction("update");
 		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
 		bankAccountContractRequest.getBankAccount().setId(uniqueId);
 		bankAccountService.push(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
-		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
-		BankAccount bankAccountEntity = new BankAccount(bankAccountContractRequest.getBankAccount());
-		BankAccountContract resp = modelMapper.map(bankAccountEntity, BankAccountContract.class);
-		bankAccountContractResponse.setBankAccount(resp);
+		bankAccountContractResponse.setBankAccount(bankAccountContractRequest.getBankAccount());
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		
 
 		return bankAccountContractResponse;
 
 	}
 
-	@GetMapping(value = "/{uniqueId}")
-	@ResponseStatus(HttpStatus.OK)
-	public BankAccountContractResponse view(@ModelAttribute BankAccountContractRequest bankAccountContractRequest,
-			BindingResult errors, @PathVariable Long uniqueId) {
-		bankAccountService.validate(bankAccountContractRequest, "view", errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
-		RequestInfo requestInfo = bankAccountContractRequest.getRequestInfo();
-		BankAccount bankAccountFromDb = bankAccountService.findOne(uniqueId);
-		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
-
-		ModelMapper model = new ModelMapper();
-		model.map(bankAccountFromDb, bankAccount);
-
-		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
-		bankAccountContractResponse.setBankAccount(bankAccount);
-		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
-		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-		return bankAccountContractResponse;
-	}
-
-	@PutMapping
+	@PostMapping("_update")
 	@ResponseStatus(HttpStatus.OK)
 	public BankAccountContractResponse updateAll(
 			@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest, BindingResult errors) {
@@ -118,17 +91,12 @@ public class BankAccountController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankAccountContractRequest.getRequestInfo().setAction("updateAll");
 		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
-
+		bankAccountService.push(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getBankAccounts()) {
-			BankAccount bankAccountFromDb = bankAccountService.findOne(bankAccountContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(bankAccountContract, bankAccountFromDb);
-			bankAccountFromDb = bankAccountService.update(bankAccountFromDb);
-			model.map(bankAccountFromDb, bankAccountContract);
 			bankAccountContractResponse.getBankAccounts().add(bankAccountContract);
 		}
 
@@ -167,6 +135,28 @@ public class BankAccountController {
 		bankAccountContractResponse.getPage().map(allBankAccounts);
 		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
 		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return bankAccountContractResponse;
+	}
+
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public BankAccountContractResponse view(@ModelAttribute BankAccountContractRequest bankAccountContractRequest,
+			BindingResult errors, @PathVariable Long uniqueId) {
+		bankAccountService.validate(bankAccountContractRequest, "view", errors);
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
+		BankAccount bankAccountFromDb = bankAccountService.findOne(uniqueId);
+		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
+
+		ModelMapper model = new ModelMapper();
+		model.map(bankAccountFromDb, bankAccount);
+
+		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
+		bankAccountContractResponse.setBankAccount(bankAccount);
+		bankAccountContractResponse.setResponseInfo(getResponseInfo(bankAccountContractRequest.getRequestInfo()));
+		bankAccountContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
 		return bankAccountContractResponse;
 	}
 

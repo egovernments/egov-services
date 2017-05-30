@@ -22,11 +22,7 @@
             "lastName": null,
             "phone": "9999999990",
             "email": "jake@maildrop.cc",
-            "deviceId": null,
-            "values": {
-                "receivingMode": "MANUAL",
-                "receivingCenter": "5"
-            }
+            "deviceId": null
         }
     ]
 }

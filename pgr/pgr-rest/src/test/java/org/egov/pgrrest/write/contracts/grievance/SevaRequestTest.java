@@ -1,110 +1,68 @@
 package org.egov.pgrrest.write.contracts.grievance;
 
 import org.egov.pgrrest.common.model.AttributeEntry;
-import org.egov.pgrrest.write.model.ComplaintRecord;
+import org.egov.pgrrest.write.model.ServiceRequestRecord;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class SevaRequestTest {
 
-    /*
+    private static final String IST = "Asia/Calcutta";
 
-    {
-   "RequestInfo":{
-      "api_id":"org.egov.pgr",
-      "ver":"1.0",
-      "ts":"04-01-2017 01:20:47",
-      "action":"POST",
-      "did":"4354648646",
-      "key":"xyz",
-      "msg_id":"654654",
-      "requester_id":"2",
-      "auth_token":null,
-      "correlationId":"33c76d89-8ec3-44bd-bb80-39e2f11cb199"
-   },
-   "ServiceRequest":{
-      "tenantId":"ap.public",
-      "service_request_id":"00626-2017-HO",
-      "status":true,
-      "service_name":"Obstruction of water flow",
-      "service_code":"OOWF",
-      "description":"foobaseasdasda",
-      "agency_responsible":null,
-      "service_notice":null,
-      "requested_datetime":"01-04-2017 13:20:47",
-      "updated_datetime":null,
-      "expected_datetime":1491205848337,
-      "address":"",
-      "address_id":"256",
-      "zipcode":null,
-      "lat":0.0,
-      "lng":0.0,
-      "media_urls":null,
-      "first_name":"rashmi",
-      "last_name":null,
-      "phone":"1234567890",
-      "email":"rashmi@mi.com",
-      "device_id":null,
-      "account_id":null,
-      "values":{
-         "receivingMode":"Website",
-         "receivingCenter":"",
-         "status":"REGISTERED",
-         "complainantAddress":"",
-         "locationId":"173",
-         "location_name":"Election Ward No 1",
-         "child_location_id":"39",
-         "assignment_id":"2",
-         "stateId":"673",
-         "designationId":"29"
-      }
-   }
-}
-
-     */
+    @Before
+    public void before() {
+        TimeZone.setDefault(TimeZone.getTimeZone(IST));
+    }
 
     @Test
     public void test_should_convert_from_seva_request_map_to_domain_complaint_record() {
         final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+        final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
-        assertNotNull(complaintRecord);
-        assertEquals("crn", complaintRecord.getCRN());
-        assertEquals(new Date(1491205848337L), complaintRecord.getEscalationDate());
-        assertEquals(Long.valueOf(29), complaintRecord.getDepartment());
-        assertEquals(Long.valueOf(3), complaintRecord.getCreatedBy());
-        assertEquals(Long.valueOf(3), complaintRecord.getLastModifiedBy());
-        assertEquals(0.0d, complaintRecord.getLatitude(), 0);
-        assertEquals(0.0d, complaintRecord.getLongitude(), 0);
-        assertEquals("complaint description", complaintRecord.getDescription());
-        assertEquals("landmark", complaintRecord.getLandmarkDetails());
-        assertEquals("firstName", complaintRecord.getComplainantName());
-        assertEquals("1234567890", complaintRecord.getComplainantMobileNumber());
-        assertEquals("email@email.com", complaintRecord.getComplainantEmail());
-        assertEquals("complainant address", complaintRecord.getComplainantAddress());
-        assertEquals("receiving mode", complaintRecord.getReceivingMode());
-        assertEquals(Long.valueOf(5), complaintRecord.getReceivingCenter());
-        assertEquals("complaintTypeCode", complaintRecord.getComplaintTypeCode());
-        assertEquals(Long.valueOf(6), complaintRecord.getAssigneeId());
-        assertEquals("REGISTERED", complaintRecord.getComplaintStatus());
-        assertEquals(Long.valueOf(7), complaintRecord.getLocation());
-        assertEquals(Long.valueOf(8), complaintRecord.getChildLocation());
-        assertEquals(Long.valueOf(9), complaintRecord.getWorkflowStateId());
-        assertEquals("ap.public", complaintRecord.getTenantId());
-        final List<AttributeEntry> actualAttributeEntries = complaintRecord.getAttributeEntries();
-        assertEquals(3, actualAttributeEntries.size());
-        assertEquals(new AttributeEntry("receivingMode", "receiving mode"), actualAttributeEntries.get(0));
-        assertEquals(new AttributeEntry("receivingCenter", "5"), actualAttributeEntries.get(1));
-        assertEquals(new AttributeEntry("stateId", "9"), actualAttributeEntries.get(2));
+        assertNotNull(serviceRequestRecord);
+        assertEquals("crn", serviceRequestRecord.getCRN());
+        final Date expectedEscalationDate = toDate(LocalDateTime.of(2017, 4, 1, 13, 20, 47));
+        assertEquals(expectedEscalationDate, serviceRequestRecord.getEscalationDate());
+        final Date expectedLastModifiedDate = toDate(LocalDateTime.of(2017, 4, 2, 13, 20, 47));
+        assertEquals(expectedLastModifiedDate, serviceRequestRecord.getLastModifiedDate());
+        final Date expectedCreatedDate = toDate(LocalDateTime.of(2017, 4, 1, 13, 20, 47));
+        assertEquals(expectedCreatedDate, serviceRequestRecord.getCreatedDate());
+        assertEquals(Long.valueOf(29), serviceRequestRecord.getDepartment());
+        assertEquals(Long.valueOf(3), serviceRequestRecord.getCreatedBy());
+        assertEquals(Long.valueOf(3), serviceRequestRecord.getLastModifiedBy());
+        assertEquals(0.0d, serviceRequestRecord.getLatitude(), 0);
+        assertEquals(0.0d, serviceRequestRecord.getLongitude(), 0);
+        assertEquals("complaint description", serviceRequestRecord.getDescription());
+        assertEquals("landmark", serviceRequestRecord.getLandmarkDetails());
+        assertEquals("firstName", serviceRequestRecord.getRequesterName());
+        assertEquals("1234567890", serviceRequestRecord.getRequesterMobileNumber());
+        assertEquals("email@email.com", serviceRequestRecord.getRequesterEmail());
+        assertEquals("complainant address", serviceRequestRecord.getRequesterAddress());
+        assertEquals("receiving mode", serviceRequestRecord.getReceivingMode());
+        assertEquals(Long.valueOf(5), serviceRequestRecord.getReceivingCenter());
+        assertEquals("complaintTypeCode", serviceRequestRecord.getServiceRequestTypeCode());
+        assertEquals(Long.valueOf(6), serviceRequestRecord.getAssigneeId());
+        assertEquals("REGISTERED", serviceRequestRecord.getServiceRequestStatus());
+        assertEquals(Long.valueOf(7), serviceRequestRecord.getLocation());
+        assertEquals(Long.valueOf(8), serviceRequestRecord.getChildLocation());
+        assertEquals(Long.valueOf(9), serviceRequestRecord.getWorkflowStateId());
+        assertEquals("ap.public", serviceRequestRecord.getTenantId());
+        final List<AttributeEntry> actualAttributeEntries = serviceRequestRecord.getAttributeEntries();
+        assertEquals(9, actualAttributeEntries.size());
+    }
+
+    private Date toDate(LocalDateTime localDateTime) {
+        return new org.egov.pgr.common.date.Date(localDateTime).toDate();
     }
 
     @Test
@@ -115,10 +73,10 @@ public class SevaRequestTest {
         userInfo.put("type", "SYSTEM");
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+        final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
-        assertNotNull(complaintRecord);
-        assertNull(complaintRecord.getComplainantUserId());
+        assertNotNull(serviceRequestRecord);
+        assertNull(serviceRequestRecord.getComplainantUserId());
     }
 
     @Test
@@ -129,10 +87,10 @@ public class SevaRequestTest {
         userInfo.put("type", "EMPLOYEE");
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+        final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
-        assertNotNull(complaintRecord);
-        assertNull(complaintRecord.getComplainantUserId());
+        assertNotNull(serviceRequestRecord);
+        assertNull(serviceRequestRecord.getComplainantUserId());
     }
 
     @Test
@@ -144,29 +102,11 @@ public class SevaRequestTest {
         userInfo.put("id", "4");
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+        final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
-        assertNotNull(complaintRecord);
-        assertEquals(Long.valueOf(4), complaintRecord.getComplainantUserId());
+        assertNotNull(serviceRequestRecord);
+        assertEquals(Long.valueOf(4), serviceRequestRecord.getComplainantUserId());
     }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test_should_return_receiving_center_as_null_when_not_present_in_request_map() {
-        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
-        final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get("serviceRequest");
-        final HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get("values");
-        values.put("receivingCenter", "");
-
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-
-        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
-
-        assertNull(complaintRecord.getReceivingCenter());
-    }
-
-
-
 
 }
 

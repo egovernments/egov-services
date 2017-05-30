@@ -77,6 +77,11 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.propertyCategory.create.name}")
 	private String createPropertyCategoryTopicName;
 
+	@Value("${kafka.topics.propertyusage.create.name}")
+	private String createPropertyUsageTopicName;
+	
+	@Value("${kafka.topics.donation.create.name}")
+	private String createDonationTopicName;
 
 	@Autowired
 	private Environment environment;
@@ -121,5 +126,11 @@ public class ApplicationProperties {
 	public String getCreatePropertyCategoryTopicName(){
 		return createPropertyCategoryTopicName;
 	}
-
+	public String getCreatePropertyUsageTopicName(){
+		return createPropertyUsageTopicName;
+	}
+	
+	public String getCreateDonationTopicName(){
+		return createDonationTopicName;
+	}
 }

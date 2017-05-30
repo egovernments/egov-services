@@ -2,6 +2,7 @@ package org.egov.pgr.employee.enrichment.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRestRepository;
 import org.egov.pgr.employee.enrichment.repository.WorkflowRepository;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.egov.pgr.employee.enrichment.model.SevaRequest.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -40,15 +42,19 @@ public class WorkflowServiceTest {
     @Test
     public void test_should_update_seva_request_with_create_workflow_response() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "locationId");
-        valuesMap.put("status", "REGISTERED");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
         serviceRequestMap.put("status", "REGISTERED");
         serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "locationId");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> statusEntry = new HashMap<>();
+        statusEntry.put("key", STATUS);
+        statusEntry.put("name", "REGISTERED");
+        attributeValues.add(statusEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().action("POST").build();
@@ -59,8 +65,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
@@ -72,8 +78,20 @@ public class WorkflowServiceTest {
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "locationId");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "COMPLETED");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
+        serviceRequestMap.put("attribValues", attributeValues);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -84,8 +102,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
@@ -97,8 +115,15 @@ public class WorkflowServiceTest {
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "locationId");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> statusEntry = new HashMap<>();
+        statusEntry.put("key", STATUS);
+        statusEntry.put("name", "REJECTED");
+        attributeValues.add(statusEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -109,21 +134,24 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void test_should_update_seva_request_with_close_workflow_response_for_withdrawn() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "locationId");
-        valuesMap.put("status", "WITHDRAWN");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "locationId");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> statusEntry = new HashMap<>();
+        statusEntry.put("key", STATUS);
+        statusEntry.put("name", "WITHDRAWN");
+        attributeValues.add(statusEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -134,27 +162,43 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithDifferentDepartment() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "1");
-        valuesMap.put("status", "PROCESSING");
-        valuesMap.put("assignmentId", "6");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "19");
-        valuesMap.put("approvalComments", "Testing complaint update");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
         serviceRequestMap.put("serviceRequestId", "00015-2016-AP");
         serviceRequestMap.put("tenantId", "ap.public");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "1");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "Testing complaint update");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "6");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "19");
+        attributeValues.add(departmentIdEntry);
+        serviceRequestMap.put("attribValues", attributeValues);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -162,39 +206,55 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("Testing complaint update")
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("Testing complaint update")
                 .complaintTypeCode("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithSameDepartment() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "1");
-        valuesMap.put("status", "PROCESSING");
-        valuesMap.put("assignmentId", "6");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "20");
-        valuesMap.put("approvalComments", "Testing complaint update");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
         serviceRequestMap.put("serviceRequestId", "00015-2016-AP");
         serviceRequestMap.put("tenantId", "ap.public");
         serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "1");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "Testing complaint update");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "6");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -202,13 +262,13 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
         final ServiceRequest complaint = ServiceRequest.builder()
-            .values(responseValues)
+            .attribValues(responseValues)
             .description("test")
             .complaintTypeCode("serviceCode")
             .build();
@@ -217,28 +277,43 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithDifferentLocation() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "2");
-        valuesMap.put("status", "PROCESSING");
-        valuesMap.put("assignmentId", "6");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "20");
-        valuesMap.put("approvalComments", "Testing complaint update");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
 
         serviceRequestMap.put("serviceRequestId", "00015-2016-AP");
         serviceRequestMap.put("tenantId", "ap.public");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "2");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "Testing complaint update");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "6");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -246,40 +321,57 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
-            .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("test").complaintTypeCode
-                ("serviceCode").build());
+            .toString())).thenReturn(ServiceRequest.builder()
+                .attribValues(responseValues)
+                .description("test")
+                .complaintTypeCode("serviceCode")
+                .build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithDifferentServiceCode() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "2");
-        valuesMap.put("status", "PROCESSING");
-        valuesMap.put("assignmentId", "6");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "20");
-        valuesMap.put("approvalComments", "Testing complaint update");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("service_code", "servicecodetest");
-
         serviceRequestMap.put("serviceRequestId", "00015-2016-AP");
         serviceRequestMap.put("tenantId", "ap.public");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "2");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "Testing complaint update");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "6");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
+        serviceRequestMap.put("attribValues", attributeValues);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -287,14 +379,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "1");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
-        responseValues.put("complaintTypeCode", "BOG");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "1"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("complaintTypeCode", "BOG"));
         final ServiceRequest complaint = ServiceRequest.builder()
-            .values(responseValues)
+            .attribValues(responseValues)
             .description("test")
             .complaintTypeCode("serviceCode")
             .build();
@@ -303,8 +395,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
@@ -326,46 +418,85 @@ public class WorkflowServiceTest {
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "2");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "Testing complaint update");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "6");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
+        serviceRequestMap.put("attribValues", attributeValues);
         serviceRequestMap.put("attribValues", attributeValues);
         final RequestInfo requestInfo = RequestInfo.builder().build();
         complaintRequestMap.put("RequestInfo", requestInfo);
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "2");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
-
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "2"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("test").complaintTypeCode
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
                 ("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithDifferentAssignments() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "2");
-        valuesMap.put("status", "PROCESSING");
-        valuesMap.put("assignmentId", "8");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "20");
-        valuesMap.put("approvalComments", "test");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
         serviceRequestMap.put("serviceRequestId", "00015-2016-AP");
         serviceRequestMap.put("tenantId", "ap.public");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "2");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "test");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "8");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -373,14 +504,14 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "2");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "2"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
 
         final ServiceRequest complaint = ServiceRequest.builder()
-            .values(responseValues)
+            .attribValues(responseValues)
             .description("test")
             .complaintTypeCode("serviceCode")
             .build();
@@ -389,28 +520,42 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithDifferentComments() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "2");
-        valuesMap.put("status", "PROCESSING");
-        valuesMap.put("assignmentId", "6");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "20");
-        valuesMap.put("approvalComments", "Testing complaint update");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
-
         serviceRequestMap.put("serviceRequestId", "00015-2016-AP");
         serviceRequestMap.put("tenantId", "ap.public");
-        serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
+        final HashMap<String, String> stateIdEntry = new HashMap<>();
+        stateIdEntry.put("key", VALUES_STATE_ID);
+        stateIdEntry.put("name", "6");
+        attributeValues.add(stateIdEntry);
+        final HashMap<String, String> locationIdEntry = new HashMap<>();
+        locationIdEntry.put("key", VALUES_LOCATION_ID);
+        locationIdEntry.put("name", "2");
+        attributeValues.add(locationIdEntry);
+        final HashMap<String, String> commentEntry = new HashMap<>();
+        commentEntry.put("key", VALUES_APPROVAL_COMMENT);
+        commentEntry.put("name", "Testing complaint update");
+        attributeValues.add(commentEntry);
+        final HashMap<String, String> assigneeEntry = new HashMap<>();
+        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("name", "6");
+        attributeValues.add(assigneeEntry);
+        final HashMap<String, String> registeredEntry = new HashMap<>();
+        registeredEntry.put("key", STATUS);
+        registeredEntry.put("name", "PROCESSING");
+        attributeValues.add(registeredEntry);
+        final HashMap<String, String> departmentIdEntry = new HashMap<>();
+        departmentIdEntry.put("key", VALUES_DEPARTMENT_ID);
+        departmentIdEntry.put("name", "20");
+        attributeValues.add(departmentIdEntry);
         serviceRequestMap.put("attribValues", attributeValues);
         complaintRequestMap.put("serviceRequest", serviceRequestMap);
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -418,21 +563,21 @@ public class WorkflowServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
-        Map<String, String> responseValues = new HashMap<String, String>();
-        responseValues.put("locationId", "2");
-        responseValues.put("departmentId", "20");
-        responseValues.put("assigneeId", "6");
-        responseValues.put("complaintStatus", "PROCESSING");
+        List<AttributeEntry> responseValues = new ArrayList<>();
+        responseValues.add(new AttributeEntry("locationId", "2"));
+        responseValues.add(new AttributeEntry("departmentId", "20"));
+        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("status", "PROCESSING"));
 
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
-            .thenReturn(ServiceRequest.builder().values(responseValues).description("test").complaintTypeCode
+            .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
                 ("serviceCode").build());
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignmentId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
     private Map<String, Attribute> getValuesWithStateId() {

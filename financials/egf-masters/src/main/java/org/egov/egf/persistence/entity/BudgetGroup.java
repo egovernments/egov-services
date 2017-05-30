@@ -37,24 +37,21 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
- 
+
 package org.egov.egf.persistence.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.BudgetGroupContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -68,53 +65,58 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"majorCode","maxCode","minCode","accountType","budgetingType"},callSuper=false)
+@EqualsAndHashCode(exclude = { "majorCode", "maxCode", "minCode", "accountType", "budgetingType" }, callSuper = false)
 
 @Table(name = "egf_budgetgroup")
 @SequenceGenerator(name = BudgetGroup.SEQ_BUDGETGROUP, sequenceName = BudgetGroup.SEQ_BUDGETGROUP, allocationSize = 1)
 public class BudgetGroup extends AbstractAuditable {
 
-    public static final String SEQ_BUDGETGROUP = "seq_egf_budgetgroup";
-    private static final long serialVersionUID = 8907540544512153346L;
-    @Id
-    @GeneratedValue(generator = SEQ_BUDGETGROUP, strategy = GenerationType.SEQUENCE)
-    private Long id;
-  
-    @Length(max = 250,min=1)
-    private String name;
+	public static final String SEQ_BUDGETGROUP = "seq_egf_budgetgroup";
+	private static final long serialVersionUID = 8907540544512153346L;
+	@Id
+	@GeneratedValue(generator = SEQ_BUDGETGROUP, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @Length(max = 250, message = "Max 250 characters are allowed for description")
-    private String description;
+	@Length(max = 250, min = 1)
+	private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "majorcode")
-    private ChartOfAccount majorCode;
+	@Length(max = 250, message = "Max 250 characters are allowed for description")
+	private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maxCode")
-    private ChartOfAccount maxCode;
+	private Long majorCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mincode")
-    private ChartOfAccount minCode;
+	private Long maxCode;
 
-    @Enumerated(value = EnumType.STRING)
-    private BudgetAccountType accountType;
+	private Long minCode;
 
-    @Enumerated(value = EnumType.STRING)
-    private BudgetingType budgetingType;
-   
-    private Boolean active;
+	@Enumerated(value = EnumType.STRING)
+	private BudgetAccountType accountType;
 
-    
+	@Enumerated(value = EnumType.STRING)
+	private BudgetingType budgetingType;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-     
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	private Boolean active;
+
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+	public BudgetGroup(BudgetGroupContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setDescription(contract.getDescription());
+		this.setMajorCode(contract.getMajorCode() != null ? contract.getMajorCode().getId() : null);
+		this.setMaxCode(contract.getMaxCode() != null ? contract.getMaxCode().getId() : null);
+		this.setMinCode(contract.getMinCode() != null ? contract.getMinCode().getId() : null);
+		this.setAccountType(contract.getAccountType());
+		this.setBudgetingType(contract.getBudgetingType());
+		this.setActive(contract.getIsActive());
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

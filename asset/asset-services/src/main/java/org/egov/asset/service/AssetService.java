@@ -72,9 +72,10 @@ public class AssetService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	public List<Asset> getAssets(AssetCriteria searchAsset) {
+	public AssetResponse getAssets(AssetCriteria searchAsset) {
 		logger.info("AssetService getAssets");
-		return assetRepository.findForCriteria(searchAsset);
+		List<Asset> assets= assetRepository.findForCriteria(searchAsset);
+		return getAssetResponse(assets);
 	}
 
 	public String getAssetName(String tenantId, String name) {

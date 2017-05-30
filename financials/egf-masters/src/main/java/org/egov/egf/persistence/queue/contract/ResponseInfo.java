@@ -46,6 +46,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
@@ -54,7 +55,7 @@ import lombok.Setter;
 public class ResponseInfo {
 
 	private String resMsgId = null;
-	
+
 	private String status = null;
 
 	private String apiId = null;

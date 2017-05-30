@@ -22,6 +22,7 @@ public class WorkflowService {
 	}
 
 	public ServiceRequest enrichWorkflowForEscalation(ServiceRequest serviceRequest, RequestInfo requestInfo) {
+		serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
         WorkflowRequest escalationRequest = serviceRequest.getWorkFlowRequestForEscalation(requestInfo);
         WorkflowResponse workflowResponse = workflowRepository.update(escalationRequest);
 

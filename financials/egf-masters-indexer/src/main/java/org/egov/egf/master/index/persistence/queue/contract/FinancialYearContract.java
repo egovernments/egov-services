@@ -61,37 +61,35 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "finYearRange", "startingDate", "endingDate", "active", "isActiveForPosting", "isClosed",
-        "transferClosingBalance", "fiscalPeriodList" })
+		"transferClosingBalance", "fiscalPeriodList" })
 public class FinancialYearContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @Length(min = 1, max = 25)
-    @NotBlank
-    private String finYearRange;
+	@Length(min = 1, max = 25)
+	@NotBlank
+	private String finYearRange;
 
-    @NotNull
-    private Date startingDate;
+	@NotNull
+	private Date startingDate;
 
-    @NotNull
-    private Date endingDate;
-    @NotNull
-    private Boolean active;
-    @NotNull
-    private Boolean isActiveForPosting;
+	@NotNull
+	private Date endingDate;
+	@NotNull
+	private Boolean active;
+	@NotNull
+	private Boolean isActiveForPosting;
 
-    private Boolean isClosed;
+	private Boolean isClosed;
 
-    private Boolean transferClosingBalance;
+	private Boolean transferClosingBalance;
 
-    
+	public Long getId() {
+		return this.id;
+	}
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public FinancialYearContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public FinancialYearContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 }

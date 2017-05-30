@@ -25,16 +25,43 @@
     "firstName": "wewwrwer",
     "phone": "1123123123",
     "email": "nseady@gmail.com",
-    "values": {
-      "receivingMode": "Website",
-      "receivingCenter": "",
-      "status": "REGISTERED",
-      "complainantAddress": "sadadadasd",
-      "locationId": "178",
-      "locationName": "Election Ward No 6",
-      "childLocationId": "169",
-      "assignmentId": "2",
-      "stateId": "355"
-    }
+    "attribValues": [
+        {
+            "key": "receivingMode",
+            "name": "Website"
+        },
+        {
+            "key": "receivingCenter",
+            "name": ""
+        },
+        {
+            "key": "status",
+            "name": "REGISTERED"
+        },
+        {
+            "key": "requesterAddress",
+            "name": "sadadadasd"
+        },
+        {
+            "key": "locationId",
+            "name": "178"
+        },
+        {
+            "key": "locationName",
+            "name": "Election Ward No 6"
+        },
+        {
+            "key": "childLocationId",
+            "name": "169"
+        },
+        {
+            "key": "assignmentId",
+            "name": "2"
+        },
+        {
+            "key": "stateId",
+            "name": "355"
+        }
+    ]
   }
 }

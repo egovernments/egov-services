@@ -1,0 +1,25 @@
+title eGov Workflow Process flow
+
+ClientSvc->+WorkflowSvc :
+activate ClientSvc
+note over ClientSvc,WorkflowSvc 
+Client call the api "/process/_start" to initate a workflow
+end note over 
+alt "BusinessKey!=Complaint"
+WorkflowSvc->+ WorkflowMatrixImpl :
+WorkflowMatrixImpl->+WorkflowMatrix :
+note over WorkflowMatrixImpl,WorkflowMatrix
+get data based on businessKey,tenantId
+end note 
+WorkflowMatrix->-WorkflowMatrixImpl : return workflow matrix data
+WorkflowMatrixImpl->+PositionSvc : find the position for the id passed by ClientSvc
+PositionSvc ->-WorkflowMatrixImpl :return potistion details 
+note over WorkflowMatrixImpl
+create new workflow state with StateStatus as "INPROGRESS"
+end note 
+WorkflowMatrixImpl->-WorkflowSvc : return the processInstance
+
+else
+WorkflowSvc->+ PgrWorkflowImpl : Do pgr workflow
+end
+WorkflowSvc->-ClientSvc: return the processInstance

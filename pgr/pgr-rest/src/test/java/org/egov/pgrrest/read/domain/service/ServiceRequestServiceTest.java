@@ -1,13 +1,15 @@
 package org.egov.pgrrest.read.domain.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.contract.*;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.junit.Test;
@@ -40,9 +42,6 @@ public class ServiceRequestServiceTest {
 
     @Mock
     private SevaNumberGeneratorService sevaNumberGeneratorService;
-
-    @Mock
-    private ComplaintJpaRepository complaintJpaRepository;
 
     @InjectMocks
     private ServiceRequestService serviceRequestService;
@@ -171,30 +170,6 @@ public class ServiceRequestServiceTest {
         assertEquals(expectedComplaint, actualComplaints.get(0));
     }
 
-    @Test
-    public void testShouldUpdateLastAccessedTime() {
-       serviceRequestService.updateLastAccessedTime("crn", "tenantId");
-        verify(complaintJpaRepository).updateLastAccessedTime(any(Date.class), eq("crn"), eq("tenantId"));
-        }
-    
-    public void test_should_fetch_all_modified_citizen_complaints_by_user_id() {
-        final ServiceRequest expectedComplaint = getComplaint();
-        when(complaintRepository.getAllModifiedServiceRequestsForCitizen(any(Long.class),any(String.class)))
-            .thenReturn(Collections.singletonList(expectedComplaint));
-        final List<ServiceRequest> actualComplaints = serviceRequestService.getAllModifiedCitizenComplaints(1L, "tenantId");
-        assertEquals(1, actualComplaints.size());
-        assertEquals(expectedComplaint, actualComplaints.get(0));
-    }
-
-    @Test
-    public void test_should_fetch_empty_list_for_invalid_userid() {
-        when(complaintRepository.getAllModifiedServiceRequestsForCitizen(any(Long.class),any(String.class)))
-            .thenReturn(new ArrayList<>());
-        final List<ServiceRequest> actualComplaints = serviceRequestService
-            .getAllModifiedCitizenComplaints(1L, "tenantId");
-        assertEquals(0, actualComplaints.size());
-    }
-
     private ServiceRequest getComplaint() {
         final Coordinates coordinates = new Coordinates(0d, 0d);
         final ServiceRequestLocation serviceRequestLocation =
@@ -211,9 +186,9 @@ public class ServiceRequestServiceTest {
             .tenantId(TENANT_ID)
             .description("description")
             .crn("crn")
-            .lastAccessedTime(new Date())
             .department(2L)
-            .complaintType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
     }
 
@@ -228,7 +203,10 @@ public class ServiceRequestServiceTest {
     }
 
     private org.egov.pgrrest.common.contract.ServiceRequest getServiceRequest() {
-        return org.egov.pgrrest.common.contract.ServiceRequest.builder().tenantId("tenantId").build();
+        return org.egov.pgrrest.common.contract.ServiceRequest.builder()
+            .tenantId("tenantId")
+            .attribValues(new ArrayList<org.egov.pgr.common.contract.AttributeEntry>())
+            .build();
     }
 
     private User populateUser() {

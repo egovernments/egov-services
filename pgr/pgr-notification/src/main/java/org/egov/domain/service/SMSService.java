@@ -1,39 +1,62 @@
 package org.egov.domain.service;
 
+import org.egov.domain.model.SMSMessageContext;
+import org.egov.domain.model.ServiceType;
 import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.Tenant;
 import org.egov.persistence.queue.MessageQueueRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.trimou.util.ImmutableMap;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SMSService {
-	private static final String SMS_ENGLISH = "sms_en";
-	private static final String NAME = "name";
-	private static final String NUMBER = "number";
-	private static final String STATUSLOWERCASE = "statusLowerCase";
-	private TemplateService templateService;
-	private MessageQueueRepository messageQueueRepository;
+    private TemplateService templateService;
+    private MessageQueueRepository messageQueueRepository;
+    private List<SMSMessageStrategy> messageStrategyList;
 
-	public SMSService(TemplateService templateService,
-					  MessageQueueRepository messageQueueRepository) {
-		this.templateService = templateService;
-		this.messageQueueRepository = messageQueueRepository;
-	}
+    public SMSService(TemplateService templateService,
+                      MessageQueueRepository messageQueueRepository,
+                      @Qualifier("smsMessageStrategies") List<SMSMessageStrategy> messageStrategyList) {
+        this.templateService = templateService;
+        this.messageQueueRepository = messageQueueRepository;
+        this.messageStrategyList = messageStrategyList;
+    }
 
-	public void send(SevaRequest sevaRequest) {
-        final String smsMessage = getSMSMessage(sevaRequest);
+    public void send(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        final List<String> smsMessages = getSMSMessages(sevaRequest, serviceType, tenant);
         final String mobileNumber = sevaRequest.getMobileNumber();
-        messageQueueRepository.sendSMS(mobileNumber, smsMessage);
+        smsMessages.forEach(message -> messageQueueRepository.sendSMS(mobileNumber, message));
     }
 
-    private String getSMSMessage(SevaRequest sevaRequest) {
-        final Map<Object, Object> map = ImmutableMap.of(
-			NAME, sevaRequest.getComplaintTypeName(),
-			NUMBER, sevaRequest.getCrn(),
-            STATUSLOWERCASE, sevaRequest.getStatusName().toLowerCase()
-		);
-        return templateService.loadByName(SMS_ENGLISH, map);
+    private List<String> getSMSMessages(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        final List<SMSMessageStrategy> strategyList = getSmsMessageStrategy(sevaRequest, serviceType);
+        return strategyList.stream()
+            .map(strategy -> getSMSMessage(sevaRequest, serviceType, strategy, tenant))
+            .collect(Collectors.toList());
     }
+
+    private String getSMSMessage(SevaRequest sevaRequest,
+                                 ServiceType serviceType,
+                                 SMSMessageStrategy strategy,
+                                 Tenant tenant) {
+        final SMSMessageContext messageContext = strategy.getMessageContext(sevaRequest, serviceType, tenant);
+        return templateService.loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
+    }
+
+    private List<SMSMessageStrategy> getSmsMessageStrategy(SevaRequest sevaRequest, ServiceType serviceType) {
+        final List<SMSMessageStrategy> strategyList = messageStrategyList.stream()
+            .filter(strategy -> strategy.matches(sevaRequest, serviceType))
+            .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(strategyList)) {
+            return Collections.singletonList(new UndefinedSMSMessageStrategy());
+        } else {
+            return strategyList;
+        }
+    }
+
 }

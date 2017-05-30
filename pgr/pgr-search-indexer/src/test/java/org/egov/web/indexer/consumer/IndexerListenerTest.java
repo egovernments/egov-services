@@ -2,16 +2,17 @@ package org.egov.web.indexer.consumer;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.web.indexer.adaptor.ComplaintAdapter;
-import org.egov.web.indexer.contract.ServiceRequest;
+import org.egov.web.indexer.contract.SevaRequest;
 import org.egov.web.indexer.repository.ElasticSearchRepository;
-import org.egov.web.indexer.repository.contract.ComplaintIndex;
+import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
+import org.egov.web.indexer.service.DocumentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.any;
@@ -21,12 +22,11 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class IndexerListenerTest {
 
-    public static final String CRN = "crn";
     @Mock
     private ElasticSearchRepository elasticSearchRepository;
 
     @Mock
-    private ComplaintAdapter complaintAdapter;
+    private DocumentService documentService;
 
     private IndexerListener indexerListener;
 
@@ -34,50 +34,34 @@ public class IndexerListenerTest {
     public void before() {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        indexerListener = new IndexerListener(elasticSearchRepository, complaintAdapter, objectMapper);
+        indexerListener = new IndexerListener(elasticSearchRepository, objectMapper, documentService);
     }
 
     @Test
-    public void test_should_index_new_complaint_instance() {
-        final ComplaintIndex complaintIndex = new ComplaintIndex();
-        complaintIndex.setCrn(CRN);
-        when(complaintAdapter.indexOnCreate(any(ServiceRequest.class))).thenReturn(complaintIndex);
+    public void test_should_index_document() {
+        final ServiceRequestDocument expectedDocumentToIndex = new ServiceRequestDocument();
         final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
+        when(documentService.enrich(any(SevaRequest.class))).thenReturn(expectedDocumentToIndex);
 
         indexerListener.listen(sevaRequestMap);
 
-        verify(elasticSearchRepository).index("complaint", CRN, complaintIndex);
-    }
-    
-    @Test
-    public void test_should_index_update_complaint() {
-        final ComplaintIndex complaintIndex = new ComplaintIndex();
-        complaintIndex.setCrn(CRN);
-        when(complaintAdapter.indexOnUpdate(any(ServiceRequest.class))).thenReturn(complaintIndex);
-        final HashMap<String, Object> sevaRequestMap = getSevaRequestMapForUpdate();
-
-        indexerListener.listen(sevaRequestMap);
-
-        verify(elasticSearchRepository).index("complaint", CRN, complaintIndex);
+        verify(elasticSearchRepository).index(expectedDocumentToIndex);
     }
 
     private HashMap<String, Object> getSevaRequestMap() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", "REGISTERED");
         final HashMap<String, Object> serviceRequest = new HashMap<>();
-        serviceRequest.put("values", valuesMap);
+        final ArrayList<HashMap<String, String>> attributeEntries = new ArrayList<>();
+        final HashMap<String, String> statusEntry = new HashMap<>();
+        statusEntry.put("key", "status");
+        statusEntry.put("name", "REGISTERED");
+        attributeEntries.add(statusEntry);
+        serviceRequest.put("attribValues", attributeEntries);
         sevaRequestMap.put("serviceRequest", serviceRequest);
-        return sevaRequestMap;
-    }
-    
-    private HashMap<String, Object> getSevaRequestMapForUpdate() {
-        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", "COMPLETED");
-        final HashMap<String, Object> serviceRequest = new HashMap<>();
-        serviceRequest.put("values", valuesMap);
-        sevaRequestMap.put("serviceRequest", serviceRequest);
+        final HashMap<String, Object> requestInfo = new HashMap<>();
+        requestInfo.put("action", "POST");
+        sevaRequestMap.put("RequestInfo", requestInfo);
+
         return sevaRequestMap;
     }
 

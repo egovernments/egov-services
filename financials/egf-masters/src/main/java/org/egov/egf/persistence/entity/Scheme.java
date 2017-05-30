@@ -41,22 +41,19 @@ package org.egov.egf.persistence.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.SchemeContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,56 +66,61 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"fund"},callSuper=false)
+@EqualsAndHashCode(exclude = { "fund" }, callSuper = false)
+public class Scheme extends AbstractAuditable {
 
-public class Scheme extends  AbstractAuditable {
-
-    private static final long serialVersionUID = 825465695975976653L;
-    public static final String SEQ = "seq_egf_scheme";
+	private static final long serialVersionUID = 825465695975976653L;
+	
+	public static final String SEQ = "seq_egf_scheme";
+	
 	@Id
-    @GeneratedValue(generator = Scheme.SEQ, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@GeneratedValue(generator = Scheme.SEQ, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-	
-	@ManyToOne
-	@JoinColumn(name="fundId")
-    private Fund fund;
+	@Column(name = "fundId")
+	private Long fund;
 
-	@Length(max=25,min=1)
-    private String code;
-	
-	@Length(max=25,min=1)
-    private String name;
+	@Length(max = 25, min = 1)
+	private String code;
+
+	@Length(max = 25, min = 1)
+	private String name;
 
 	@NotNull
-    private Date validFrom;
-	
+	private Date validFrom;
+
 	@NotNull
-    private Date validTo;
-	
+	private Date validTo;
+
 	@NotNull
-    private Boolean active;
-	
-	@Length(max=256)
-    private String description;
+	private Boolean active;
 
-   
-    private Long boundary;
+	@Length(max = 256)
+	private String description;
 
-  /*  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scheme", targetEntity = SubScheme.class)
-    private Set<SubScheme> subSchemes = new LinkedHashSet<SubScheme>(0);
-*/
-    
+	private Long boundary;
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
-    }
+		return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
+	}
 
-    @Override
-    public Long getId()
-    {
-    	return this.id;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public Scheme(SchemeContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setValidFrom(contract.getValidFrom());
+		this.setValidTo(contract.getValidTo());
+		this.setDescription(contract.getDescription());
+		this.setActive(contract.getActive());
+		this.setFund(contract.getFund() != null ? contract.getFund().getId() : null);
+		this.setBoundary(contract.getBoundary());
+		this.setTenantId(contract.getTenantId());
+	}
 }

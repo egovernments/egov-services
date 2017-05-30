@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Lease & Agreement</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/application.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/egov/custom.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/vistyle.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
+
+    <style>
+        body {
+            padding: 0;
+        }
+
+        footer {
+            background-color: #f3f4f5;
+            bottom: 0;
+            clear: both;
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+        }
+
+        footer a {
+            color: rgb(116, 101, 101);
+            text-decoration: none;
+        }
+
+        footer span.copyright {
+            float: left;
+            font-size: 11px;
+            padding: 7px;
+        }
+
+        footer span.version {
+            float: right;
+            font-size: 11px;
+            padding: 7px;
+        }
+
+        footer span.copyright a {
+            color: rgb(116, 101, 101);
+        }
+
+        footer #legal {
+            clear: left;
+            display: block;
+        }
+
+        .constrain {
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 0px;
+        }
+    </style>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="resources/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="resources/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
+
+    <script type="text/javascript" src="resources/javascript/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+    <script src="resources/javascript/moment.js"></script>
+    <script src="resources/javascript/bootstrap-datetimepicker.js"></script>
+    <script src="resources/javascript/extra.js"></script>
+</head>
+
+<body class="page-body">
+    <!-- for showing loading spinner -->
+    <div id="loadingMask" style="display: none;"></div>
+    <div id="loading" style="display: none;">
+        <div class="loading-indicator"><i class="fa fa-spinner fa-pulse fa-2x"></i></div>
+    </div>
+
+    <div class="page-container horizontal-menu" id="dashboard">
+        <!-- Menu search box -->
+        <!-- <div class="search" style="display: block;">
+        <input type="text" id="searchtree" placeholder="Quick Find"><span class="fa fa-search searchicon tooltip-secondary" data-toggle="tooltip" data-original-title="Search menu item" style="display: block;"></span>
+        <span class="applyanimation"></span>
+      </div>
+      <div class="search_list" style="display: none;">
+        <div class="list" style="top: 0px;"><ul class="ullist"></ul></div>
+      </div> -->
+
+        <header class="navbar navbar-fixed-top border-header">
+            <!-- set fixed position by adding class "navbar-fixed-top" -->
+            <div class="navbar-inner">
+                <!-- logo -->
+                <div class="navbar-brand">
+                    <a href="javascript:void(0);">
+                        <img src="resources/images/logo.jpg" height="60" class="homepage_logo">
+                    </a>
+                </div>
+
+                <div class="navbar-brand">
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">Lease & Agreement</h3>
+                </div>
+
+                <!-- notifications and other links -->
+                <ul class="nav navbar-right pull-right">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="tooltip-secondary workspace active" data-toggle="tooltip" title="" data-work="worklist" data-original-title="Worklist">
+                            <i class="fa fa-list fa-fw"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="" data-work="drafts" data-original-title="Drafts">
+                            <i class="fa fa-pencil fa-fw"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="" data-work="notifications" data-original-title="Notifications">
+                            <i class="fa fa-bell fa-fw"></i>
+                        </a>
+                    </li>
+
+                    <li class="hidden-xs menu-responsive">
+                        <a href="javascript:void(0);" class="profile-name">
+                            <i class="fa fa-user img-circle"></i> Chandragiri Murali Krishna
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="home/profile/edit" class="open-popup">
+                                    <i class="fa fa-user"></i>
+                                    <span class="title">Edit Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});">
+                                    <i class="fa fa-key"></i>
+                                    <span class="title">Change Password</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" onclick="jQuery('.add-feedback').modal('show', {backdrop: 'static'});">
+                                    <i class="fa fa-comment"></i>
+                                    <span class="title">Feedback</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="http://apemunicipalityissues.egovernments.org/servicedesk/customer/portal/2" data-strwindname="r&amp;i" class="open-popup">
+                                    <i class="fa fa-bug"></i>
+                                    <span class="title">Report an Issue</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="help" data-strwindname="help" class="open-popup">
+                                    <i class="fa fa-question"></i>
+                                    <span class="title">Help</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="" class="signout" id="logout">
+                                    <i class="fa fa-sign-out"></i>
+                                    <span class="title">Sign Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown visible-xs hidden-sm">
+                        <a href="/egi/logout" class="tooltip-secondary signout" data-toggle="tooltip" title="" data-original-title="Sign Out">
+                            <i class="fa fa-sign-out"></i>
+                        </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="http://www.egovernments.org" target="_blank">
+                            <img src="resources/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <!-- Multi level menu content -->
+        <div class="home-container">
+            <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div>
+            <div class="inline-main-content">
+                <div class="row main-space" id="worklist">
+                    <div class="col-xs-12">
+                        <!-- Middle Section -->
+                        <h4>Create Agreement Links</h4>
+                        <ul>
+                            <li><a href="app/agreements/new.html?type=Land">Land Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Shopping Complex">Shops in Shopping Complex Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Market">Markets Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Kalyana Mandapam">Kalyana mandapams Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Parking Space">Parking Spaces Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Slaughter House">Slaughter Houses Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Usufruct">Usfructs Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Community Toilet Complex">Community Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Fish Tanks">Fish Tank Agreement</a></li>
+                            <li><a href="app/agreements/new.html?type=Parks">Park Agreement</a></li>
+                        </ul>
+                        <!-- /Middle Section -->
+                        <h4>View Agreement</h4>
+                        <ul>
+                            <li><a href="app/search-agreement/view-dcb.html">View DCB </a></li>
+                            <li><a href="app/agreements/view.html">View</a></li>
+                       </ul>
+                       <h4>Create Asset</h4>
+                       <ul>
+                          <li><a href="app/asset/create-asset-category.html">Create Asset Category</a></li>
+                            <li><a href="app/asset/search-asset-category.html?type=view">Asset Category For View</a></li>
+                            <li><a href="app/asset/search-asset-category.html?type=update">Asset Category For Update</a></li>
+                           <li><a href="app/asset/create-asset.html">Create Asset </a></li>
+                           <li><a href="app/asset/search-asset.html?type=view">Asset For View</a></li>
+                           <li><a href="app/asset/search-asset.html?type=update">Asset For Update </a></li>
+                      </ul>
+                      <h4>Receipt</h4>
+                      <ul>
+                          <li>
+                              <a id="extraLink" href="">Receipt</a>
+                          </li>
+                      </ul>
+                      <h4>Agreement</h4>
+                      <ul>
+                          <li>
+                              <a  href="app/search-resources/create-agreement-ack.html"> Agreement Acknowledgement</a>
+                          </li>
+                      </ul>
+                      <h4>Function</h4>
+                      <ul>
+                          <li>
+                              <a  href="app/functions/create-function.html">Create Function</a>
+                          </li>
+                          <li>
+                            <a  href="app/functions/search-function.html">Search Function</a>
+                          </li>
+                      </ul>
+                      <h4>Data Entry Screen</h4>
+
+                        <ul>
+                            <li><a href="app/dataentry/data-entry.html?type=Land">Land Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Shopping Complex">Shops in Shopping Complex Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Market">Markets Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Kalyana Mandapam">Kalyana mandapams Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Parking Space">Parking Spaces Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Slaughter House">Slaughter Houses Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Usufruct">Usfructs Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Community Toilet Complex">Community Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Fish Tanks">Fish Tank Agreement</a></li>
+                            <li><a href="app/dataentry/data-entry.html?type=Parks">Park Agreement</a></li>
+                        </ul>
+
+                        <h4>Demand</h4>
+                        <ul>
+                            <li>
+                                <a  href="app/dataentry/edit-demand.html">Edit Demand</a>
+                            </li>
+
+                        </ul>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="clearfix simple">
+        <div class="constrain">
+            <div id="legal">
+                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
+                <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="resources/javascript/egov/custom.js"></script>
+    <script src="resources/javascript/egov/custom-menu.js"></script>
+    <script src="resources/javascript/js.cookies.js"></script>
+    <script>
+        var menuItems = [{
+            title: 'All Categories',
+            id: 'menuID',
+            // icon: 'fa fa-reorder',
+            items: [
+              {
+
+                    name: 'Lease And Agreement',
+                    id: 'itemID',
+                    icon: 'fa fa-laptop',
+                    link: '#',
+                    items: [
+                    {
+                        title: 'Land And Lease',
+                        icon: 'fa fa-laptop',
+                        items: [{
+                                name: 'Transactions',
+                                icon: 'fa fa-desktop',
+                                link: '#',
+                                items: [{
+                                    title: 'Transactions',
+                                    icon: 'fa fa-desktop',
+                                    link: '#',
+                                    items: [{
+                                            name: 'Search Assets',
+                                            icon: 'fa fa-phone',
+                                            link: './app/search-assets/search-asset.html'
+                                        },
+                                        {
+                                            name: 'Search Agreements',
+                                            icon: 'fa fa-phone',
+                                            link: './app/search-agreement/search-agreement.html'
+                                        }
+                                    ]
+                                }]
+                            },
+                            {
+                                name: 'Reports',
+                                icon: 'fa fa-desktop',
+                                link: '#',
+                                items: [{
+                                    title: 'Reports',
+                                    icon: 'fa fa-desktop',
+                                    link: '#',
+                                    items: [{
+                                        name: 'DCB Drill down reports',
+                                        icon: 'fa fa-phone',
+                                        link: './app/reports/DCB-Drill-down-report.html'
+                                    }]
+                                }]
+                            }
+                        ]
+                    }]
+                },
+
+                // {
+                //     name: 'EIS',
+                //     id: 'itemID',
+                //     icon: 'fa fa-laptop',
+                //     link: '#',
+                //     items: [{
+                //         title: 'EIS',
+                //         icon: 'fa fa-laptop',
+                //         items: [{
+                //             name: 'Employee',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Employee',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/hr/employee/create.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Drawing Officer Master',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Drawing Officer Master',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Employee Master',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Employee Master',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                         name: 'Blood Group',
+                //                         icon: 'fa fa-phone',
+                //                         link: './app/search-resources/search-asset.html'
+                //                     },
+                //                     {
+                //                         name: 'Grade Master',
+                //                         icon: 'fa fa-phone',
+                //                         link: './app/search-resources/search-asset.html'
+                //                     },
+                //                     {
+                //                         name: 'Category',
+                //                         icon: 'fa fa-phone',
+                //                         link: './app/search-resources/search-asset.html'
+                //                     },
+                //                     {
+                //                         name: 'Community',
+                //                         icon: 'fa fa-phone',
+                //                         link: './app/search-resources/search-asset.html'
+                //                     }
+                //                 ]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Leave Master',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Leave Master',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Nominee Master',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Nominee Master',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Nominee Certification Needed',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Nominee Certification Needed',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Designation',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Designation',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Attendance',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Attendance',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Leave Application',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Leave Application',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Disciplinary',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Disciplinary',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Training Particulars',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Training Particulars',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Reports',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Reports',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         },
+                //         {
+                //             name: 'Calender Setup',
+                //             icon: 'fa fa-desktop',
+                //             link: '#',
+                //             items: [{
+                //                 title: 'Reports',
+                //                 icon: 'fa fa-desktop',
+                //                 link: '#',
+                //                 items: [{
+                //                     name: 'Create',
+                //                     icon: 'fa fa-phone',
+                //                     link: './app/search-resources/search-asset.html'
+                //                 }]
+                //             }]
+                //         }
+                //       ]
+                //     }]
+                // }
+
+            ]
+        }];
+    </script>
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("loadingMask").style.display = "none";
+        });
+        // $(document).on("keydown", disableRefreshAndBack);
+    </script>
+
+    <script type="text/javascript">
+
+    var response=$.ajax({
+              url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify({}),
+              async: false,
+              contentType: 'application/json',
+              headers:{
+                'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+              }
+          });
+
+          if(response["status"]===200)
+          {
+              localStorage.setItem("auth-token", response.responseJSON["access_token"]);
+            // alert("Successfully added");
+          }
+          else {
+            // alert(response["statusText"]);
+          }
+
+          // console.log(localStorage.getItem("auth-token"));
+
+
+        $('#ast-srch').DataTable({
+            "bFilter": false
+            // "bLengthChange": false
+        });
+        $('.menu-responsive').mouseover(function() {
+            $('.menu-responsive > ul').css('display', 'block')
+        });
+        $('.hidden-xs.menu-responsive').mouseout(function(event) {
+            $('.menu-responsive > ul').css('display', 'none')
+        });
+    </script>
+</body>
+
+</html>

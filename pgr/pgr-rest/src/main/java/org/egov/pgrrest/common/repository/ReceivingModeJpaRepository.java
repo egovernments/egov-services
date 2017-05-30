@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReceivingModeJpaRepository extends JpaRepository<ReceivingMode, Long> {
 
-    ReceivingMode findByCode(String code);
+    ReceivingMode findByCodeAndTenantId(String code, String tenantId);
     
     List<ReceivingMode> findAllByTenantId(String tenantId);
 }

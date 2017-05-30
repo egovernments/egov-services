@@ -1,0 +1,26 @@
+title Dishonor Instrument Process Flow
+
+Client->+DishonorSvc: Dishonor Instrument Request
+note over Client,DishonorSvc
+   municipal employee, CSC center
+   posts a Dishonor Cheque request
+   using admin console
+end note over
+DishonorSvc->DishonorSvc: Validate Input Details and query dishonored instrument
+DishonorSvc->Client : Search Response
+note over DishonorSvc, Client
+Display Cheque and Voucher Details
+end note over
+Client->DishonorSvc: User selects the Cheque to dishonor and input reference number
+DishonorSvc->DishonorSvc: Submit the selected record for further processing
+note over DishonorSvc,Client
+Display Credit And Debit Account Codes and transaction fees if any
+end note over
+DishonorSvc->+KafkaQSvc : Queue for Further Processing
+DishonorSvc->-Client: Display success response after cheque dishonor
+KafkaQSvc->WorkflowSvc: initiate Workflow
+KafkaQSvc->VoucherSvc: Create Reversal Voucher For cheque dishonor
+KafkaQSvc->InstrumentSvc: Update instrument Details
+KafkaQSvc->ReceiptSvc: Update receipt status
+KafkaQSvc->BillingSvc: Update billing system
+KafkaQSvc->ESSvc: push data to Elastic Search Index

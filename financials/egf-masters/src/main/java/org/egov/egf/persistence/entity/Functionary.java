@@ -47,8 +47,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.FunctionaryContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -64,26 +63,33 @@ import lombok.Setter;
 @Table(name = "egf_functionary")
 @SequenceGenerator(name = Functionary.SEQ, sequenceName = Functionary.SEQ, allocationSize = 1)
 public class Functionary extends AbstractAuditable implements java.io.Serializable {
-	   
+
 	private static final long serialVersionUID = 1L;
 	public static final String SEQ = "seq_egf_functionary";
 	@Id
-    @GeneratedValue(generator = Functionary.SEQ, strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = Functionary.SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;
 	@NotNull
-	@Length(max=16,min=1)
+	@Length(max = 16, min = 1)
 	private String code;
 	@NotNull
-	@Length(max=256,min=1)
+	@Length(max = 256, min = 1)
 	private String name;
-	
+
 	@NotNull
 	private Boolean active;
 
-	 @Override
-	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+	
+	public Functionary(FunctionaryContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setActive(contract.getActive());
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

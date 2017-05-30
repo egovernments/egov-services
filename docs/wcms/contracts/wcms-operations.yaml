@@ -1,0 +1,605 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  title: Water Charges Management Service (WCMS) APIs
+  description: |
+    APIs available for WCMS 
+      - Apply for new water connection.
+      - Search water connection details based upon acknowledgement number or legacyConsumerNumber.
+      - Modify water connection details.
+  contact:
+    name: Rishi
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1/egov-wcms/[API endpoint]'
+paths:
+  /connection/_create:
+    post:
+      summary: Creates new water connection
+      description: To create new water connection is based upon various master data configured for your ULB.
+      tags:
+        - Water Connection
+      parameters:
+        - name: connection
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/WaterConnectionReq'
+      responses:
+        '201':
+          description: New water connection request acknowledged sucessfully
+          schema:
+            $ref: "#/definitions/WaterConnectionRes"
+        '400':
+          description: New water connection request failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /connection/_search:
+    post:
+      summary: Retrieve water connection
+      description: Searchs water connection details based upon acknowledgment number, HSC consumer number or legacy consumer number. In case multiple parameterts are passed user will be searched as an AND combination of all the parameters.
+      tags:
+        - Water Connection
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/legacyConsumerNumber"
+        - $ref: "#/parameters/acknowledgmentNumber"
+        - $ref: "#/parameters/consumerNumber"
+        - $ref: "#/parameters/assigneeId"
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/mobileNumber"
+        - $ref: "#/parameters/locality"
+        - $ref: "#/parameters/revenueWard"
+        - $ref: "#/parameters/doorNumber"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortResult"
+      responses:
+        200: 
+          description: Successful response
+          schema:
+            $ref: "#/definitions/WaterConnectionsRes"
+        400:
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+definitions:
+
+  WorkOrder:
+    type: object
+    description: work order information
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a work order object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      remarks:
+        type: string
+        minLength: 0
+        maxLength: 200
+        description: any comment by the user
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+        
+  Material:
+    type: object
+    description: holds material information used to generate estimation charges
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a material object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      name:
+        type: string
+        minLength: 5
+        maxLength: 200
+        description: name of material item used to supply the connection
+      quantity:
+        type: integer
+        description: number of material item required
+        minimum: 1
+        maximum: 50
+      size:
+        type: number
+        description: size value for the material item
+      amount:
+        type: number
+        description: tentative price for the material item
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+
+  EstimationCharge:
+    type: object
+    description: detailed estimation to accomplish the water connection.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique identifier of a material object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      materials:
+        type: array
+        maximum: 50
+        items:
+         $ref: '#/definitions/Material'
+      existingDistributionPipeline:
+        type: string
+        description: existing pipeline from where connection can be initiated
+        minLength: 0
+        maxLength: 200
+      pipelineToHomeDistance:
+        type: number
+        description: tentative amount of pipeline length required in meters
+        maximum: 1000
+      estimationCharges:
+        type: number
+        description: charges required for estimation
+      supervisionCharges:
+        type: number
+        description: charges required for supervision
+      materialCharges:
+        type: number
+        description: sum total of cost required for materials used
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+
+  Timeline:
+    type: object
+    description: history of connection when the connectionStatus is getting updated during the workflow
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of a timeline object
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      remarks:
+        type: string
+        minLength: 0
+        maxLength: 200
+        description: any comment by assigner user 
+      assigner:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+      assignee:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+      workflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+ 
+  Property:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the property.
+      usageType:
+        type: string
+        description: all possible combination of usage type and subusage type.
+      propertyType:
+        type: string
+        description: holds supported pre-defined value of property type. Check master API to look at supported values.
+      address: 
+        type: string
+        description: address of the property.
+        readOnly: true
+  
+  Document:
+    type: object
+    description: documents required under respective water connection operations.
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the document.
+      name: 
+        type: string
+        description: name of the document.
+        readOnly: true
+      description:
+        type: string
+        description: description of the document .
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active Document Names and FALSE for inactive Document Names.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+    required:
+      - id
+      - active
+      - name
+      - description
+      - tenantId
+  
+  DocumentOwner:
+    type: object
+    description: person for which document has been issued. If document name is BPL then name for DocumentOwner become mandatory. 
+    properties:
+      document:
+        $ref: "#/definitions/Document"
+      name:
+        type: string
+        description: name of person as mentioned in the document supplied
+        maxLength: 200
+      fileStoreId:
+        type: string
+        description: this should be file store id where document is uploaded.
+    required:
+      - fileStoreId
+
+  WorkflowDetails:
+    type: object
+    description: workflow details related to connection
+    properties: 
+      department: 
+        type: integer
+        description: ID to define the Department .
+        minLength: 1
+        maxLength: 100
+      designation: 
+        type: integer
+        description: ID to define the Designation.
+        minLength: 1
+        maxLength: 100
+      approver: 
+        type: integer
+        description: ID to define the Approver ID.
+        minLength: 1
+        maxLength: 100
+      comments: 
+        type: string
+        description: Notes that has been added by the clerk or engineer.
+        minLength: 1
+        maxLength: 100
+      status:
+        type: string
+        description: Enumeration of Connection Request statuses.
+        enum:
+          - ACTIVE
+          - INPROGRESS
+          - DISCONNECTED
+          - HOLDING
+          - CLOSED
+          - INACTIVE            
+    required:
+     - department
+     - designation
+     - approver
+  
+  Meter:
+    type: object
+    description: Represents meter hardware used for water connection
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the meter.
+      meterMake:
+        type: string
+        description: company name of the meter.
+      meterReading: 
+        type: string
+        description: intial reading of the meter.
+        readOnly: true
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+
+  MeterReading:
+    type: object
+    description: Captures periodical meter reading of a connection
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the meter.
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
+      reading:
+        type: integer
+        format: long
+        description: meter reading
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant
+    required:
+      - reading
+
+  Connection:
+    type: object
+    description: water connection attributes 
+    properties:
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
+      connectionType:
+        type: string
+        description: possible and supported type of new water connection
+        enum:
+          - TEMPORARY
+          - PERMANENT
+      billingType:
+        type: string
+        description: supported type of billing nature of the water connection.
+        enum:
+          - METERED
+          - NON-METERED
+      categoryType:
+        type: string
+        description: This field holds the pre-defined value of supported category. Check master API to look at supported values for your ULB.
+      hscPipeSizeType:
+        type: string
+        description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.
+      supplyType:
+        type: string
+        description: supported supply type for the water connection
+        enum:
+          - REGULAR
+          - BULK
+          - SEMIBULK
+      sourceType:
+        type: string
+        description: supported source type for the water connection.
+        enum:
+          - GROUNDWATER
+          - SURFACEWATER
+      connectionStatus: 
+        type: string
+        description: water connection status.
+        enum:
+          - ACTIVE
+          - INACTIVE
+      sumpCapacity: 
+        type: number
+        description: Capacity of the sump.
+        minLength: 1
+        maxLength: 100
+      donationCharge: 
+        type: integer
+        description: donation charges of the water connection.
+        minLength: 1
+        maxLength: 100
+      numberOfTaps: 
+        type: integer
+        format: int64
+        description: number of taps required.
+      numberOfPersons: 
+        type: integer
+        description: Defines the number of persons in the household.
+        minLength: 1
+        maxLength: 100
+      parentConnectionId:
+        type: integer
+        description: holds identifier of previous connection if current connection request is for additional water connection.
+      legacyConsumerNumber:
+        type: integer
+        format: int64
+        description: legacy connection consumer number for existing consumer.
+      acknowledgmentNumber:
+        type: string
+        description: the acknowledgement number generated after successful acceptance of request. 
+      consumerNumber:
+        type: string
+        description: HSC consumer number generated after completion of entire workflow.
+      documents:
+        type: array
+        items:
+          $ref: "#/definitions/DocumentOwner"
+      timelines:
+        type: array
+        items:
+          $ref: "#/definitions/Timeline"
+      property:
+        $ref: '#/definitions/Property'
+      meter:
+        $ref: '#/definitions/Meter'
+      estimationCharge:
+        $ref: "#/definitions/EstimationCharge"
+      workOrder:
+        $ref: "#/definitions/WorkOrder"
+      meterReadings:
+        type: array
+        items:
+          $ref: "#/definitions/MeterReading"
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - property
+      - documents
+      - connectionType
+      - billingType
+      - categoryType
+      - hscPipeSizeType
+      - supplyType
+      - sourceType
+  
+  WaterConnectionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Connection:
+        $ref: '#/definitions/Connection'
+    required:
+      - RequestInfo
+      - Connection
+
+  WaterConnectionRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Connection:
+        $ref: '#/definitions/Connection'
+      WorkflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
+  
+  WaterConnectionsRes:
+    type: object
+    properties:
+      ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Connections:
+        type: array
+        maximum: 500
+        items:
+         $ref: '#/definitions/Connection'
+         
+parameters:
+  legacyConsumerNumber:
+    name: legacyConsumerNumber
+    in: query
+    description: legacy consumer number of citizen
+    required: false
+    type: integer
+    format: int64
+
+  acknowledgmentNumber:
+    name: acknowledgmentNumber
+    in: query
+    description: acknowledgment number of the connection
+    required: false
+    type: string
+    minLength: 0
+    maxLength: 64
+    
+  consumerNumber:
+    name: consumerNumber
+    in: query
+    description: HSC consumer number for the water connection
+    required: false
+    type: string
+    minLength: 0
+    maxLength: 64
+    
+  assigneeId:
+    name: assigneeId
+    in: query
+    description: unique identifier of user who is owner in workflow
+    required: false
+    type: integer
+    
+  name:
+    name: name
+    in: query
+    description: name of citizen
+    required: false
+    type: string
+  
+  mobileNumber:
+    name: mobileNumber
+    in: query
+    description: mobile number of citizen
+    required: false
+    type: string
+  
+  locality:
+    name: locality
+    in: query
+    description: locality name
+    required: false
+    type: string
+    
+  revenueWard:
+    name: revenueWard
+    in: query
+    description: revenue ward name
+    required: false
+    type: string
+    
+  doorNumber:
+    name: doorNumber
+    in: query
+    description: door number
+    required: false
+    type: string
+  
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+
+  sortResult:
+    name: sort
+    in: query
+    description: Connections results will be sorted by createdTime ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 4
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
+    default:
+      - +name

@@ -1,7 +1,5 @@
 package org.egov.pgr.employee.enrichment.service;
 
-import java.util.Map;
-
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRestRepository;
 import org.egov.pgr.employee.enrichment.repository.WorkflowRepository;
@@ -33,11 +31,10 @@ public class WorkflowService {
             workflowResponse = workflowRepository.close(request);
         } else {
             ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(request.getTenantId(), request.getCrn());
-            Map<String, String> values = responseFromDB.getValues();
-            String locationId = values.get("locationId");
-            String departmentId = values.get("departmentId");
-            String assigneeId = values.get("assigneeId");
-            String status = values.get("complaintStatus");
+            String locationId = responseFromDB.getDynamicSingleValue("locationId");
+            String departmentId = responseFromDB.getDynamicSingleValue("departmentId");
+            String assigneeId = responseFromDB.getDynamicSingleValue("assignmentId");
+            String status = responseFromDB.getDynamicSingleValue("status");
             boolean isUpdate = false;
             if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
                 || !locationId.equals(request.getValueForKey("boundaryId"))

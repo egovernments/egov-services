@@ -1,6 +1,5 @@
 package org.egov.web.indexer.contract;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +9,7 @@ import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -22,99 +19,58 @@ public class ServiceRequest {
     private static final String SERVICE_STATUS = "status";
     private static final String REGISTERED = "REGISTERED";
 
-
     @JsonProperty("serviceRequestId")
-    private String crn = null;
+    private String crn;
 
     @JsonProperty("status")
-    private Boolean status = null;
+    private Boolean status;
 
     @JsonProperty("statusNotes")
-    private String statusDetails = null;
+    private String statusDetails;
 
     @JsonProperty("serviceName")
-    private String complaintTypeName = null;
+    private String serviceName;
 
     @JsonProperty("serviceCode")
-    private String complaintTypeCode = null;
+    private String serviceCode;
 
     @JsonProperty("description")
-    private String details = null;
+    private String details;
 
     @JsonProperty("requestedDatetime")
-    private String createdDate = null;
+    private String createdDate;
 
     @JsonProperty("expectedDatetime")
-    private String escalationDate = null;
+    private String escalationDate;
+
+    @JsonProperty("updatedDatetime")
+    private String lastModifiedDate;
 
     @JsonProperty("address")
-    private String landmarkDetails = null;
+    private String landmarkDetails;
 
     @JsonProperty("lat")
-    private Double lat = null;
+    private Double lat;
 
     @JsonProperty("lng")
-    private Double lng = null;
+    private Double lng;
 
     @JsonProperty("firstName")
-    private String firstName = null;
+    private String firstName;
 
     @JsonProperty("phone")
-    private String phone = null;
+    private String phone;
 
     @JsonProperty("email")
-    private String email = null;
+    private String email;
 
     @JsonProperty("tenantId")
     private String tenantId;
 
-    @JsonProperty("values")
-    private Map<String, String> values = new HashMap<>();
-
-    //  Short term hack - to support values and attribValues usage
-//  This flag should be set by the consumer for the service to consider attribValues instead of existing values field.
-    @JsonProperty("isAttribValuesPopulated")
-    private boolean attribValuesPopulated;
-
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
     public String getDynamicSingleValue(String key) {
-        if (attribValuesPopulated) {
-            return AttributeValues.getAttributeSingleValue(attribValues, key);
-        } else {
-            return values.get(key);
-        }
+        return AttributeValues.getAttributeSingleValue(attribValues, key);
     }
 
-    @JsonIgnore
-    public boolean isNewServiceRequest() {
-        return getDynamicSingleValue(SERVICE_STATUS).equalsIgnoreCase(REGISTERED);
-    }
-   /* 
-    @JsonProperty("agency_responsible")
-    private String agencyResponsible = null;
-
-    @JsonProperty("service_notice")
-    private String serviceNotice = null;
-    
-    @JsonProperty("address_id")
-    private String crossHierarchyId = null;
-
-    @JsonProperty("zipcode")
-    private Integer zipcode = null;
-    
-    @JsonProperty("media_urls")
-    private String mediaUrl = null;
-    
-    @JsonProperty("device_id")
-    private String deviceId = null;
-
-    @JsonProperty("account_id")
-    private String accountId = null;
-    
-    @JsonProperty("last_name")
-    private String lastName = null;
-    
-    @JsonProperty("updated_datetime")
-    private String lastModifiedDate = null;*/
 }

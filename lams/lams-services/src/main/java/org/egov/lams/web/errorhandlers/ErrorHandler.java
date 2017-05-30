@@ -43,6 +43,9 @@ package org.egov.lams.web.errorhandlers;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
+import org.egov.lams.web.validator.AgreementValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,15 +60,18 @@ public class ErrorHandler {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
+	public static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
 	@ExceptionHandler(value=Exception.class)
 	public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
+		e.printStackTrace();
+		logger.info("unexpected exception from the application is : "+ e);
 		ErrorResponse errorResponse = new ErrorResponse();
 		Error error=new Error();
 		error.setCode(400);
 		error.setMessage(e.getMessage());
 		errorResponse.setError(error);
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(RequestInfo requestInfo) {

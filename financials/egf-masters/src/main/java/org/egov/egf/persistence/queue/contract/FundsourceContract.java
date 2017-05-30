@@ -53,39 +53,40 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","code","name","type","fundSource","llevel","active","isParent"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "code", "name", "type", "fundSource", "llevel", "active", "isParent" })
 public class FundsourceContract extends AuditableContract {
 
-    
-    
-            private Long id;
+	private Long id;
 
-    @Length(min = 1, max = 25)
-    @NotNull
-    private String code;
+	@Length(min = 1, max = 25)
+	@NotNull
+	private String code;
 
-    @Length(min = 1, max = 25)
-    @NotNull
-    private String name;
+	@Length(min = 1, max = 25)
+	@NotNull
+	private String name;
 
-    @Length(min = 1, max = 25)
-    private String type;
-    @JsonProperty(access = Access.WRITE_ONLY)
-            private FundsourceContract fundSource;
+	@Length(min = 1, max = 25)
+	private String type;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private FundsourceContract fundSource;
 
-    private BigDecimal llevel;
-    @NotNull
-    private Boolean active;
-// is this required
-    private Boolean isParent;
+	private BigDecimal llevel;
+	@NotNull
+	private Boolean active;
+	// is this required
+	private Boolean isParent;
 
-        public Long getId()
-    {
-    	return this.id;
-    }
-
-    
+	public Long getId() {
+		return this.id;
+	}
 
 }

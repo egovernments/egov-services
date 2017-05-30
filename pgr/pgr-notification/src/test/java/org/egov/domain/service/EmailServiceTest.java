@@ -1,16 +1,17 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.EmailRequest;
-import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.*;
 import org.egov.persistence.queue.MessageQueueRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trimou.util.ImmutableMap;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -27,37 +28,43 @@ public class EmailServiceTest {
     @Mock
     private SevaRequest sevaRequest;
 
-    @InjectMocks
+    @Mock
+    private EmailMessageStrategy emailMessageStrategy;
+
     private EmailService emailService;
+
+    @Before
+    public void before() {
+        final List<EmailMessageStrategy> emailMessageStrategyList = Collections.singletonList(emailMessageStrategy);
+        emailService = new EmailService(templateService, messageQueueRepository, emailMessageStrategyList);
+    }
 
     @Test
     public void test_should_not_send_email_when_complainant_email_is_absent() {
-        when(sevaRequest.isComplainantEmailAbsent()).thenReturn(true);
+        when(sevaRequest.isRequesterEmailAbsent()).thenReturn(true);
+        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
 
-        emailService.send(sevaRequest);
+        final List<String> keywords = Collections.emptyList();
+        final ServiceType serviceType = new ServiceType("serviceType", keywords);
+        emailService.send(sevaRequest, serviceType, tenant);
 
         verify(messageQueueRepository, times(0)).sendEmail(any(), any());
     }
 
     @Test
     public void test_should_send_email_message_to_topic() {
-        when(sevaRequest.isComplainantEmailAbsent()).thenReturn(false);
+        when(sevaRequest.isRequesterEmailAbsent()).thenReturn(false);
         final String emailAddress = "email@email.com";
         final String crn = "crn";
-        when(sevaRequest.getComplainantEmail()).thenReturn(emailAddress);
+        when(sevaRequest.getRequesterEmail()).thenReturn(emailAddress);
         when(sevaRequest.getCrn()).thenReturn(crn);
-        final String body = "body";
-        final String subject = "subject";
-        final String status ="Status";
-
-        final Map<Object, Object> subjectRequestMap = ImmutableMap.of("crn", crn,"statusLowerCase", "status");
-        when(templateService.loadByName("email_subject_en", subjectRequestMap)).thenReturn(subject);
-
-        ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
+        final String body = "emailBody";
+        final String subject = "emailSubject";
+        final String status = "Status";
         final String complainantName = "name";
-        when(sevaRequest.getComplainantName()).thenReturn(complainantName);
+        when(sevaRequest.getRequesterName()).thenReturn(complainantName);
         final String complaintTypeName = "complaintTypeName";
-        when(sevaRequest.getComplaintTypeName()).thenReturn(complaintTypeName);
+        when(sevaRequest.getServiceTypeName()).thenReturn(complaintTypeName);
         final String locationName = "locationName";
         when(sevaRequest.getLocationName()).thenReturn(locationName);
         final String details = "details";
@@ -65,23 +72,55 @@ public class EmailServiceTest {
         final String formattedDate = "formattedDate";
         when(sevaRequest.getFormattedCreatedDate()).thenReturn(formattedDate);
         when(sevaRequest.getStatusName()).thenReturn(status);
-        builder.put("complainantName", complainantName);
-        builder.put("crn", crn);
-        builder.put("complaintType", complaintTypeName);
-        builder.put("locationName", locationName);
-        builder.put("complaintDetails", details);
-        builder.put("registeredDate", formattedDate);
-        builder.put("statusUpperCase", "Status");
-        builder.put("statusLowerCase", "status");
-        final Map<Object, Object> bodyRequestMap = builder.build();
-        when(templateService.loadByName("email_body_en", bodyRequestMap)).thenReturn(body);
+        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
+        final List<String> keywords = Collections.emptyList();
+        final ServiceType serviceType = new ServiceType("serviceType", keywords);
+        when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(true);
+        final HashMap<Object, Object> bodyTemplateValues = new HashMap<>();
+        final HashMap<Object, Object> subjectTemplateValues = new HashMap<>();
+        final EmailMessageContext emailMessageContext = EmailMessageContext.builder()
+            .bodyTemplateName("bodyTemplateName")
+            .subjectTemplateName("subjectTemplateName")
+            .bodyTemplateValues(bodyTemplateValues)
+            .subjectTemplateValues(subjectTemplateValues)
+            .build();
+        when(emailMessageStrategy.getMessageContext(sevaRequest, serviceType, tenant)).thenReturn(emailMessageContext);
+        when(templateService.loadByName("bodyTemplateName", bodyTemplateValues)).thenReturn(body);
+        when(templateService.loadByName("subjectTemplateName", subjectTemplateValues)).thenReturn(subject);
 
-        emailService.send(sevaRequest);
+        emailService.send(sevaRequest, serviceType, tenant);
 
         final EmailRequest expectedEmailRequest = EmailRequest.builder()
             .body(body)
             .subject(subject)
             .build();
         verify(messageQueueRepository).sendEmail(emailAddress, expectedEmailRequest);
+    }
+
+    @Test(expected = NotImplementedException.class)
+    public void test_should_throw_exception_when_matching_email_message_strategy_not_found() {
+        when(sevaRequest.isRequesterEmailAbsent()).thenReturn(false);
+        final String emailAddress = "email@email.com";
+        final String crn = "crn";
+        when(sevaRequest.getRequesterEmail()).thenReturn(emailAddress);
+        when(sevaRequest.getCrn()).thenReturn(crn);
+        final String status = "Status";
+        final String complainantName = "name";
+        when(sevaRequest.getRequesterName()).thenReturn(complainantName);
+        final String complaintTypeName = "complaintTypeName";
+        when(sevaRequest.getServiceTypeName()).thenReturn(complaintTypeName);
+        final String locationName = "locationName";
+        when(sevaRequest.getLocationName()).thenReturn(locationName);
+        final String details = "details";
+        when(sevaRequest.getDetails()).thenReturn(details);
+        final String formattedDate = "formattedDate";
+        when(sevaRequest.getFormattedCreatedDate()).thenReturn(formattedDate);
+        when(sevaRequest.getStatusName()).thenReturn(status);
+        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
+        final List<String> keywords = Collections.emptyList();
+        final ServiceType serviceType = new ServiceType("serviceType", keywords);
+        when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(false);
+
+        emailService.send(sevaRequest, serviceType, tenant);
     }
 }

@@ -40,18 +40,19 @@
 
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.User;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.UserSearchURLHelper;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.UserGetRequest;
-import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.controller.EmployeeController;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
@@ -76,16 +77,11 @@ public class UserService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
-		String url = userSearchURLHelper.searchURL(ids, tenantId);
-
-		UserGetRequest userGetRequest = new UserGetRequest();
-		userGetRequest.setId(ids);
-		userGetRequest.setPageSize(ids.size());
-		userGetRequest.setRequestInfo(requestInfo);
-		userGetRequest.setTenantId(tenantId);
-
+	public List<User> getUsers(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
+		String url = userSearchURLHelper.searchURL(employeeCriteria.getId(), employeeCriteria.getTenantId());
 		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+
+		UserGetRequest userGetRequest = getUserGetRequest(employeeCriteria, requestInfo);
 		LOGGER.debug("UserGetRequest : " + userGetRequest);
 
 		UserResponse userResponse = null;
@@ -193,4 +189,23 @@ public class UserService {
 		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), Long.toString(id));
 		return path;
 	}
+
+    public UserGetRequest getUserGetRequest(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
+		UserGetRequest userGetRequest = new UserGetRequest();
+
+		userGetRequest.setId(employeeCriteria.getId());
+		userGetRequest.setPageSize(employeeCriteria.getId().size());
+		userGetRequest.setRoleCodes(employeeCriteria.getRoleCodes());
+		userGetRequest.setTenantId(employeeCriteria.getTenantId());
+		userGetRequest.setPageNumber(employeeCriteria.getPageNumber());
+		userGetRequest.setRequestInfo(requestInfo);
+
+		if (!isEmpty(userGetRequest.getRoleCodes())) {
+			userGetRequest.getRoleCodes().add("EMPLOYEE");
+			userGetRequest.setPageSize(500);
+		}
+
+
+		return userGetRequest;
+    }
 }

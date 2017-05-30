@@ -16,7 +16,7 @@ import java.util.Objects;
 public class WorkflowRequest {
 
     public enum Action {
-        CREATE("create"), END("close") ,UPDATE("update");
+        CREATE("create"), END("close"), UPDATE("update");
 
         private String strValue;
 
@@ -32,10 +32,11 @@ public class WorkflowRequest {
             return Action.END.strValue.equalsIgnoreCase(value);
         }
 
-        public static String forComplaintStatus(String complaintStatus) {
-            if (complaintStatus.equalsIgnoreCase("REGISTERED")) {
+        public static String forComplaintStatus(String complaintStatus, boolean isCreate) {
+            if (isCreate) {
                 return CREATE.strValue;
-            } else if (complaintStatus.equalsIgnoreCase("COMPLETED") || complaintStatus.equalsIgnoreCase("REJECTED") || complaintStatus.equalsIgnoreCase("WITHDRAWN")) {
+            } else if (complaintStatus.equalsIgnoreCase("COMPLETED") || complaintStatus.equalsIgnoreCase("REJECTED") || complaintStatus.equalsIgnoreCase("WITHDRAWN")
+                || complaintStatus.equalsIgnoreCase("APPROVED") || complaintStatus.equalsIgnoreCase("REJECTED")) {
                 return END.strValue;
             }
             return UPDATE.strValue;
@@ -78,7 +79,7 @@ public class WorkflowRequest {
 
     @JsonProperty("values")
     private Map<String, Attribute> values;
-    
+
     @JsonProperty("service_request_id")
     private String crn;
 
@@ -89,14 +90,14 @@ public class WorkflowRequest {
             return values.get(key).getValues().get(0).getName();
         return "";
     }
-    
+
     @JsonIgnore
-	public boolean isCreate() {
-		return Action.isCreate(this.getAction());
-	}
-    
+    public boolean isCreate() {
+        return Action.isCreate(this.getAction());
+    }
+
     @JsonIgnore
-	public boolean isClosed() {
-		return Action.isEnd(this.getAction());
-	}
+    public boolean isClosed() {
+        return Action.isEnd(this.getAction());
+    }
 }

@@ -1,0 +1,39 @@
+title Create Voucher Process flow
+
+Client->VoucherSvc: Create Voucher Request
+activate Client
+activate VoucherSvc
+note over Client,VoucherSvc
+            VoucherCreator posts a new create voucher request
+end note
+VoucherSvc->VoucherSvc : validation 
+note over  VoucherSvc
+    A. Request format validations like size of texts,allowed formats etc
+    B. Validate Voucher
+        1. Validated the total amount,subledger total
+        2. Validate glcode active,function,fund etc
+        3. Validate financial year for posting
+end note
+VoucherSvc->+BudgetSvc : Business validation  Budget Check
+note over  VoucherSvc,BudgetSvc
+   Do budget check based on application configuration 
+   return Budget appropriation number or Budget check failure error
+   end note  over
+BudgetSvc->-VoucherSvc : Budget check response is added to the contract
+VoucherSvc->+VoucherNoGenerator:  generate vouchernumber  
+VoucherNoGenerator->-VoucherSvc : VoucherNumber is  added to contract
+alt Validation failed,Budget check failed
+VoucherSvc->Client : throw Validation Error
+else 
+VoucherSvc->+Kafka : Data put on Kafka Q with topic "voucher.validated"
+VoucherSvc->Client :Acknowledge client with transaction number
+deactivate Client
+deactivate VoucherSvc
+end
+
+Kafka->+WorkflowSvc: WorkflowSvc picks and completes workflow
+WorkflowSvc->-Kafka :WorkflowSvc puts back the data to Kafka  with topic "voucher.workflow.completed"
+Kafka->+VoucherSvc : Data persisted on db with vouchernumber
+VoucherSvc->-Kafka : VoucherSvc puts data back with Kafka  with topic "voucher.persisted"
+Kafka->+VoucherIndexer : VoucherIndexer picks and uploads to Elastic search 
+

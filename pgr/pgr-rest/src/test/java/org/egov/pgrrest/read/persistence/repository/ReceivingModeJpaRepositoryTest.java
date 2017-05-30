@@ -37,7 +37,7 @@ public class ReceivingModeJpaRepositoryTest {
 	@Test
     @Sql(scripts = { "/sql/clearReceivingMode.sql", "/sql/InsertReceivingModeData.sql" })
     public void test_should_find_receivingmode_when_code_isProvided(){
-       ReceivingMode receivingmode= receivingModeJpaRepository.findByCode("WEBSITE");
+       ReceivingMode receivingmode= receivingModeJpaRepository.findByCodeAndTenantId("WEBSITE", "ap.public");
         assertEquals("Website",receivingmode.getName());
 }
 }

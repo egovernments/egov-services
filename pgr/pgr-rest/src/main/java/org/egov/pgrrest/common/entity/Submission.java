@@ -10,6 +10,7 @@ import org.egov.pgrrest.read.domain.model.Coordinates;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Table(name = "submission")
 public class Submission extends AbstractAuditable<SubmissionKey> {
+    private static List<String> RESOLVED_STATUES = Arrays.asList("COMPLETED", "APPROVED");
+
     @EmbeddedId
     private SubmissionKey id;
 
@@ -80,7 +83,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .address(landmarkDetails)
             .description(details)
             .requester(getComplainant())
-            .complaintType(getDomainComplaintType())
+            .serviceRequestType(getDomainServiceRequestType())
             .crn(id.getCrn())
             .createdDate(getCreatedDate())
             .lastModifiedDate(getLastModifiedDate())
@@ -88,15 +91,14 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .escalationDate(getEscalationDate())
             .closed(isCompleted())
             .department(getDepartment())
-            .lastAccessedTime(getLastModifiedDate())
             .assignee(getAssignee())
             .tenantId(id.getTenantId())
-            .complaintStatus(status)
+            .serviceRequestStatus(status)
             .attributeEntries(getAttributeEntries())
             .build();
     }
 
-    private ServiceRequestType getDomainComplaintType() {
+    private ServiceRequestType getDomainServiceRequestType() {
         return new ServiceRequestType(this.serviceType.getName(),
             this.serviceType.getCode(),
             this.serviceType.getTenantId());
@@ -112,8 +114,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
     }
 
     private boolean isCompleted() {
-        return org.egov.pgrrest.common.entity.enums.ComplaintStatus
-            .valueOf(getStatus()) == org.egov.pgrrest.common.entity.enums.ComplaintStatus.COMPLETED;
+        return RESOLVED_STATUES.stream().anyMatch(status -> status.equalsIgnoreCase(this.status));
     }
 
     private List<AttributeEntry> getAttributeEntries() {

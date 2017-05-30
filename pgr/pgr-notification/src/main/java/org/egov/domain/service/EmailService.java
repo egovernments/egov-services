@@ -1,60 +1,80 @@
 package org.egov.domain.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.domain.model.EmailRequest;
-import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.*;
 import org.egov.persistence.queue.MessageQueueRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.trimou.util.ImmutableMap;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class EmailService {
 
-    private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_en";
-    private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_en";
     private TemplateService templateService;
     private MessageQueueRepository messageQueueRepository;
+    private List<EmailMessageStrategy> emailMessageStrategyList;
 
     public EmailService(TemplateService templateService,
-                        MessageQueueRepository messageQueueRepository) {
+                        MessageQueueRepository messageQueueRepository,
+                        @Qualifier("emailMessageStrategies") List<EmailMessageStrategy> emailMessageStrategyList) {
         this.templateService = templateService;
         this.messageQueueRepository = messageQueueRepository;
+        this.emailMessageStrategyList = emailMessageStrategyList;
     }
 
-    public void send(SevaRequest sevaRequest) {
-        if (sevaRequest.isComplainantEmailAbsent()) {
+    public void send(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        if (sevaRequest.isRequesterEmailAbsent()) {
             log.info("Skipping email notification for CRN {}", sevaRequest.getCrn());
             return;
         }
-        final EmailRequest emailRequest = getEmailRequest(sevaRequest);
-        messageQueueRepository.sendEmail(sevaRequest.getComplainantEmail(), emailRequest);
+        final List<EmailRequest> emailRequests = getEmailRequests(sevaRequest, serviceType, tenant);
+        emailRequests.forEach(emailRequest ->
+            messageQueueRepository.sendEmail(sevaRequest.getRequesterEmail(), emailRequest));
     }
 
-    private EmailRequest getEmailRequest(SevaRequest sevaRequest) {
+    private List<EmailRequest> getEmailRequests(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+        final List<EmailMessageStrategy> strategyList = getEmailMessageStrategy(sevaRequest, serviceType, tenant);
+        return strategyList.stream()
+            .map(strategy -> getEmailRequest(sevaRequest, serviceType, tenant, strategy))
+            .collect(Collectors.toList());
+    }
+
+    private EmailRequest getEmailRequest(SevaRequest sevaRequest,
+                                         ServiceType serviceType,
+                                         Tenant tenant,
+                                         EmailMessageStrategy strategy) {
+        final EmailMessageContext messageContext = strategy.getMessageContext(sevaRequest, serviceType, tenant);
         return EmailRequest.builder()
-            .subject(getEmailSubject(sevaRequest))
-            .body(getEmailBody(sevaRequest))
-            .build();
+			.subject(getEmailSubject(messageContext))
+			.body(getMailBody(messageContext))
+			.build();
     }
 
-    private String getEmailBody(SevaRequest sevaRequest) {
-        ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
-        builder.put("complainantName", sevaRequest.getComplainantName());
-        builder.put("crn", sevaRequest.getCrn());
-        builder.put("complaintType", sevaRequest.getComplaintTypeName());
-        builder.put("locationName", sevaRequest.getLocationName());
-        builder.put("complaintDetails", sevaRequest.getDetails());
-        builder.put("registeredDate", sevaRequest.getFormattedCreatedDate());
-        builder.put("statusUpperCase", sevaRequest.getStatusName());
-        builder.put("statusLowerCase",sevaRequest.getStatusName().toLowerCase());
-        return templateService.loadByName(EMAIL_BODY_EN_TEMPLATE, builder.build());
+    private String getEmailSubject(EmailMessageContext messageContext) {
+        return templateService
+            .loadByName(messageContext.getSubjectTemplateName(), messageContext.getSubjectTemplateValues());
     }
 
-    private String getEmailSubject(SevaRequest sevaRequest) {
-        Map<Object, Object> map = ImmutableMap.of("crn", sevaRequest.getCrn(),"statusLowerCase",sevaRequest.getStatusName().toLowerCase());
-        return templateService.loadByName(EMAIL_SUBJECT_EN_TEMPLATE, map);
+    private String getMailBody(EmailMessageContext messageContext) {
+        return templateService
+            .loadByName(messageContext.getBodyTemplateName(), messageContext.getBodyTemplateValues());
+    }
+
+    private List<EmailMessageStrategy> getEmailMessageStrategy(SevaRequest sevaRequest,
+                                                               ServiceType serviceType,
+                                                               Tenant tenant) {
+        final List<EmailMessageStrategy> strategyList = emailMessageStrategyList.stream()
+            .filter(strategy -> strategy.matches(sevaRequest, serviceType, tenant))
+            .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(strategyList)) {
+            return Collections.singletonList(new UndefinedEmailMessageStrategy());
+        } else {
+            return strategyList;
+        }
     }
 }

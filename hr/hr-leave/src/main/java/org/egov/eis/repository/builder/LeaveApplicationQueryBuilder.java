@@ -224,4 +224,21 @@ public class LeaveApplicationQueryBuilder {
 				+ " availabledays=?, halfdays=?, firsthalfleave=?, reason=?, status=?, stateid=?,"
 				+ " lastmodifiedby=?, lastmodifieddate=? WHERE id=? and tenantid=?";
 	}
+	
+	public static String getLeaveApplicationForDateRangeQuery() {
+	    return "SELECT la.id AS la_id, la.applicationNumber AS la_applicationNumber,"
+                    + " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
+                    + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
+                    + " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
+                    + " la.reason AS la_reason, la.status AS la_status, la.stateId AS la_stateId, la.createdBy AS la_createdBy,"
+                    + " la.createdDate AS la_createdDate, la.lastModifiedBy AS la_lastModifiedBy,"
+                    + " la.lastModifiedDate AS la_lastModifiedDate, la.tenantId AS la_tenantId,"
+                    + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description, lt.halfdayAllowed AS lt_halfdayAllowed,"
+                    + " lt.payEligible AS lt_payEligible, lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
+                    + " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
+                    + " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
+                    + " FROM egeis_leaveApplication la JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id"
+	            + " where ((fromdate between ? and ?) or (todate between ? and ?)) and la.employeeid = ?"
+	            + " and la.status != ? and la.id != ? and la.tenantid = ?";
+	}
 }

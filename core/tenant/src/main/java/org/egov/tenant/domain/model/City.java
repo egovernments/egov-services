@@ -22,16 +22,21 @@ public class City {
     private Double longitude;
     private Double latitude;
     private String tenantCode;
+    private String ulbGrade;
     private Long createdBy;
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
 
     public boolean isValid() {
-        return !isNameAbsent();
+        return !isNameAbsent() && !isULBGradeAbsent();
     }
 
     public boolean isNameAbsent() {
         return isEmpty(name);
+    }
+
+    public boolean isULBGradeAbsent() {
+        return isEmpty(ulbGrade);
     }
 }

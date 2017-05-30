@@ -11,15 +11,16 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
-import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.FinancialsRepository;
+import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
 import org.egov.lams.util.BillNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
@@ -274,10 +275,8 @@ public class PaymentService {
 
 		// FIXME get the query String from query builder //FIXME do the
 		// jdbctemplate in repository
-		String sql = "select *,agreement.id as agreementid from eglams_agreement agreement "
-				+ "INNER JOIN eglams_demand demand ON agreement.id=demand.agreementid"
-				+ " where agreement.acknowledgementnumber='" + consumerCode + "' OR agreement.agreement_no='"
-				+ consumerCode + "'";
+		String sql = AgreementQueryBuilder.baseSearchQuery + " where agreement.acknowledgementnumber='" 
+					+ consumerCode + "' OR agreement.agreement_no='" + consumerCode + "'";
 
 		LOGGER.info("the sql query for fetching agreement using consumercode ::: " + sql);
 		List<Agreement> agreements = null;
@@ -409,5 +408,4 @@ public class PaymentService {
 		LOGGER.info("the response from boundary ::"+boundaryResponse);
 		return boundaryResponse;
 	}
-
 }

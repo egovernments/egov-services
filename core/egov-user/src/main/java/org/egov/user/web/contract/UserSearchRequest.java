@@ -58,6 +58,9 @@ public class UserSearchRequest {
 	@JsonProperty("userType")
 	private String userType;
 
+	@JsonProperty("roleCodes")
+	private List<String> roleCodes;
+
 	public UserSearchCriteria toDomain() {
 		return UserSearchCriteria.builder()
 				.id(id)
@@ -74,6 +77,7 @@ public class UserSearchRequest {
 				.sort(sort)
 				.type(userType)
 				.tenantId(tenantId)
+				.roleCodes(roleCodes)
 				.build();
 	}
 }

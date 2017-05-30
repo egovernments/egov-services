@@ -4,6 +4,7 @@ import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.TestResourceReader;
 import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
@@ -21,11 +22,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,7 +104,8 @@ public class ServiceRequestControllerTest {
             .serviceRequestLocation(serviceRequestLocation)
             .tenantId(null)
             .description("description")
-            .complaintType(new ServiceRequestType(null, "complaintCode", null))
+            .serviceRequestType(new ServiceRequestType(null, "complaintCode", null))
+            .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
     }
 
@@ -144,7 +149,7 @@ public class ServiceRequestControllerTest {
         ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
-            .complaintType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
+            .serviceRequestType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)
@@ -155,7 +160,7 @@ public class ServiceRequestControllerTest {
             .assignee(assigneeId)
             .receivingCenter(receivingCenter)
             .receivingMode(receivingMode)
-            .complaintStatus("FORWARDED")
+            .serviceRequestStatus("FORWARDED")
             .childLocation("Gadu Veedhi")
             .department(3L)
             .tenantId("tenantId")
@@ -191,30 +196,9 @@ public class ServiceRequestControllerTest {
                 ".com&mobileNumber=74742487428&receivingMode=5&locationId=4&childLocationId=5")
                 .content(resources.getFileContents("requestinfobody.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(content().json(expectedContent));
     }
 
-    @Test
-    public void testGetServiceRequestsFailsWithoutTenantId() throws Exception {
-        mockMvc.perform( post("/seva/_search?service_request_id=serid_123&service_code=serviceCode_123&status" +
-            "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
-            ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
-            .content(resources.getFileContents("requestinfobody.json"))
-            .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    public void testShouldUpdateLastAccessedTime() throws Exception {
-        mockMvc.perform(
-            post("/seva/updateLastAccessedTime")
-                .param("serviceRequestId", "crn")
-                .param("tenantId", "tenantId")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(resources.getFileContents("updateLastAccessTimeRequest.json"))
-        ).andExpect(status().isOk());
-        verify(serviceRequestService).updateLastAccessedTime("crn","tenantId");
-    }
 }

@@ -52,7 +52,11 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationConstants {
 
-	public static final String MSG_LEAVETYPE_PRESENT = "leavetype.present";
+	public static final String MSG_LEAVETYPE_PRESENT = "leaveapplication.leavetype.present";
+	public static final String MSG_LEAVETYPE_NOTPRESENT = "leaveapplication.leavetype.notpresent";
+	public static final String MSG_FROMDATE_TODATE = "leaveapplication.fromdate.todate";
+	public static final String MSG_FROMDATE_CUTOFFDATE = "leaveapplication.fromdate.cutoffdate";
+	public static final String MSG_ALREADY_PRESENT = "leaveapplication.already.present";
 
 	@Autowired
 	private Environment environment;

@@ -1,0 +1,55 @@
+title Create Property Flow
+
+Client->+PropertySvc: create Property Request
+note over Client,PropertySvc
+    municipal employee, CSC center
+    posts a create new property request 
+    using admin console
+end note
+PropertySvc->PropertySvc: validate Request Format
+note over PropertySvc
+    All request format validations like 
+    email, phone, string and number fields
+    validate ref values from all external services
+    Eg. egov-location etc.
+end note
+PropertySvc->PropertySvc: business Validations
+note over PropertySvc
+    Busniess validations e.g. application
+    could not be accepted due to some 
+    business reason
+end note
+alt isNewProperty
+    PropertySvc->IDGenSvc: create acknowledgment Number
+else isLegacyPropertyUpload
+    PropertySvc->IDGenSvc: create assessment Number
+end
+PropertySvc->+KafkaQSvc: Queue for further processing
+PropertySvc->-Client: create Property Response
+alt isNewProperty
+    opt ifUserNotFound
+        note over KafkaQSvc, UserSvc
+            Need to rethink whether we should mandate
+            the user to be present rather than auto 
+            creating user
+        end note over 
+        KafkaQSvc->UserSvc: create New User
+    end
+    KafkaQSvc->TaxCalcSvc: calculatePropertyTax
+    KafkaQSvc->DemandSvc: generateDemand
+    KafkaQSvc->WorkflowSvc: initiateWorkflow
+    KafkaQSvc->PropertySvc: persistProperty
+    KafkaQSvc->ESSvc: createElasticSearchIndex
+    KafkaQSvc->NotificationSvc: sendNotification
+else isLegacyPropertyUpload
+        opt ifUserNotFound
+        note over KafkaQSvc, UserSvc
+            There's no choice but to automatically
+            create user
+        end note over 
+        KafkaQSvc->UserSvc: create New User
+    end
+    KafkaQSvc->PropertySvc: persistProperty
+    KafkaQSvc->ESSvc: createElasticSearchIndex
+end
+

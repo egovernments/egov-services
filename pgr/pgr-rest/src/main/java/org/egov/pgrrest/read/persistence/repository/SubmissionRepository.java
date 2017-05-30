@@ -11,8 +11,10 @@ import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.specification.SubmissionSpecification;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -77,7 +79,7 @@ public class SubmissionRepository {
             getSubmissionAttributes(searchCriteria, submissions);
         submissions.forEach(submission -> {
             final List<SubmissionAttribute> matchingAttributes = submissionAttributes
-                .getOrDefault(submission.getId(), Collections.emptyList());
+                .getOrDefault(submission.getCrn(), Collections.emptyList());
             submission.setAttributeValues(matchingAttributes);
         });
     }
@@ -87,6 +89,9 @@ public class SubmissionRepository {
         final List<String> crnList = submissions.stream()
             .map(Submission::getCrn)
             .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(crnList)) {
+            return new HashMap<>();
+        }
         final List<SubmissionAttribute> submissionAttributes = submissionAttributeJpaRepository
             .findByCrnListAndTenantId(crnList, searchCriteria.getTenantId());
         return submissionAttributes.stream()

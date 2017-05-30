@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="description" content="eGov System" />
+	    <meta name="author" content="eGovernments Foundation" />
+		<meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+	    <title>eGov Urban Portal</title>
+		<link rel="icon" href="../resources/global/images/favicon.png" sizes="32x32">
+	    <link rel="stylesheet" href="../resources/global/css/bootstrap/bootstrap.css">
+		<link rel="stylesheet" href="../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap/typeahead.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap-tour/bootstrap-tour.css">
+		<link rel="stylesheet" href="../resources/global/css/egov/map-autocomplete.css">
+		<link rel="stylesheet" href="../resources/global/css/egov/custom.css">
+		<link rel="stylesheet" href="../resources/app/css/or-spacer.css">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
+		<script src="../resources/global/js/ie8/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+    <body class="page-body" oncontextmenu="return false;">
+        <div class="page-container">
+
+        	<header class="navbar navbar-fixed-top" data-include="header" data-header-title="">
+			</header>
+
+	        <div class="main-content">
+
+				<div class="row">
+					<ol class="breadcrumb hide">
+						<li><a href="javascript:void(0)">Create Service</a></li>
+					</ol>
+					<div class="panel panel-primary acknowledgement hide" data-collapsed="0">
+						<div class="panel-heading">
+							<div class="panel-title" id="firstname">
+							</div>
+						</div>
+						<div class="panel-body">
+							<div class="form-group text-center">
+								<div class="col-md-12">
+									<p data-translate="pgr.msg.servicerequest.underprocess"></p>
+									<p data-translate="pgr.lbl.srn"></p>
+									<p class="view-content history-size" id="crn"></p>
+									<p data-translate="pgr.msg.future.reference"></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="createcrn">
+						<form class="form-horizontal form-groups-bordered">
+							<div class="col-md-12">
+									<div class="panel panel-primary citizenremove" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title" data-translate="Personal Information"></div>
+										</div>
+										<div class="panel-body custom-form">
+											<div class="form-group">
+												<label for="field-1" class="col-sm-3 control-label required" data-translate="Name"></label>
+												<div class="col-sm-6 add-margin">
+													<input id="first_name" name="first_name" data-extra data-pattern="alphabetwithspace" class="form-control patternvalidation" required="required" type="text" value=""/>
+													 
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 col-md-3 control-label required" data-translate="core.lbl.mobilenumber"></label>
+												<div class="col-sm-6 col-md-2 add-margin">
+													<div class="input-group">
+														<span class="input-group-addon">+91</span>
+														  	<input id="phone" name="phone" data-extra class="form-control mobilevalidate patternvalidation" maxlength="10" data-pattern="number" required="required" type="text" value=""/>
+													</div>
+													<label id="phone-error" class="error custom display-hide" for="phone">Required</label>
+												</div>
+												<div class="clearfix visible-sm hidden-md" style="margin:0"></div>
+												<label for="field-1" class="control-label col-sm-3 col-md-1" data-translate="core.lbl.email.compulsory"></label>
+												<div class="col-sm-6 col-md-3">
+													<input id="email" name="email" type="email" class="form-control" value=""/>
+													
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label" data-translate="Aadhaar Number"></label>
+												<div class="col-sm-6">
+													<input type="text" class="form-control patternvalidation" data-pattern="number" name="aadhaarno" maxlength="12">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label" data-translate="core.lbl.address"></label>
+												<div class="col-sm-6">
+													<textarea class="form-control autogrow" id="complainantAddress" maxlength="256"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">Application Details</div>
+										</div>
+										<div class="panel-body custom-form appForm" id="servicesBlock">
+
+										</div>
+									</div>
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">CheckList</div>
+										</div>
+										<div class="panel-body checkForm" id="servicesBlockClist">
+
+										</div>
+									</div>
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">Document Upload</div>
+										</div>
+										<div class="panel-body" id="servicesBlockDocs">
+
+										</div>
+									</div>
+									<div class="panel panel-primary" data-collapsed="0">
+										<div class="panel-heading">
+											<div class="panel-title">Jurisdiction Details</div>
+										</div>
+										<div class="panel-body custom-form" id="moreForm">
+											
+											<div class="form-group">
+												<label class="col-sm-3 control-label required">Location</label>
+												<div class="col-sm-6" style="margin:0;">
+													<div class="input-group"  id="location-tour">
+														<input id="location" name="locationtext" data-extra="" type="text" class="form-control" autocomplete="off" required="required"/>
+														<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
+														<input id="address_id" name="addressId" type="hidden" value=""/>
+										   				<input id="lat" name="lat" type="hidden" value="0.0"/>
+						                   				<input id="lng" name="lng" type="hidden" value="0.0"/>
+													</div>
+													<label id="location-error" class="error display-hide" for="location">Required</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label" data-translate="core.lbl.landmark"></label>
+												<div class="col-sm-6">
+													<textarea id="landmarkDetails" name="address" maxlength="200" class="form-control"></textarea>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-3 control-label required">Description</label>
+												<div class="col-sm-6">
+													<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" data-translate="pgr.msg.complaint.moredetails" required="required"></textarea>
+													<div class="text-left"><small  data-translate="pgr.lbl.minmax.characters"></small></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="text-center">
+											<button type="button" class="btn btn-primary" id="createService" >Create Service</button>
+											<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
+										</div>
+									</div>
+							</div>
+						</form>
+					</div>
+				</div>
+	        </div>
+
+			<footer class="main" data-include="footer">
+			</footer>
+
+        </div>
+
+        <input type="hidden" value="" id="getcitylat">
+        <input type="hidden" value="" id="getcitylng">
+
+
+        <div class="modal fade" id="modal-6">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-primary" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+									<!-- panel head -->
+									<div class="panel-heading">
+										<div class="panel-title" data-translate="pgr.lbl.grievance.location"></div>
+									</div>
+								
+									<!-- panel body -->
+									<div class="panel-body no-padding">
+										<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic&libraries=places"></script>
+										<script type="text/javascript" src="../resources/global/js/geolocation/geolocation-marker.js"></script>
+										<div id="normal" class="img-prop"></div>
+										<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal" data-translate="core.lbl.ok"></button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<script src="../resources/global/js/jquery/jquery.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
+		<script src="../resources/global/js/bootstrap-tour/bootstrap-tour.js"></script>
+		<script src="../resources/global/js/bootstrap/typeahead.bundle.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
+		<script src="../resources/global/js/egov/custom.js"></script>
+		<script src="../resources/global/js/egov/patternvalidation.js"></script>
+		<!-- <script src="../resources/global/js/egov/captcha.js"></script> -->
+		<script>
+			var mode = 'create';
+			var check_lat = 15.82223689, check_lng = 78.02439864;
+		</script>
+		<script src="../resources/app/js/service.js"></script>
+		<script src="../resources/app/js/fileuploadndmaps.js"></script>
+		<script src="../resources/global/js/egov/inbox.js"></script>
+    </body>
+</html>

@@ -59,21 +59,21 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "chartOfAccount", "accountDetailType" })
 public class ChartOfAccountDetailContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @NotNull
-    private ChartOfAccountContract chartOfAccount;
+	@NotNull
+	private ChartOfAccountContract chartOfAccount;
 
-    @NotNull
-    private AccountDetailTypeContract accountDetailType;
+	@NotNull
+	private AccountDetailTypeContract accountDetailType;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public ChartOfAccountDetailContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
+	public ChartOfAccountDetailContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

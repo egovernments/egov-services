@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface AttributeDefinitionJpaRepository extends JpaRepository<AttributeDefinition, AttributeDefinitionKey> {
 
-    @Query("select a from AttributeDefinition a where a.id.serviceCode = :serviceCode and a.id.tenantId = :tenantId")
+    @Query("select a from AttributeDefinition a where a.id.serviceCode = :serviceCode and a.id.tenantId = :tenantId order by a.order asc")
     List<AttributeDefinition> findByServiceCodeAndTenantId(@Param("serviceCode") String serviceCode,
                                                            @Param("tenantId") String tenantId);
 }

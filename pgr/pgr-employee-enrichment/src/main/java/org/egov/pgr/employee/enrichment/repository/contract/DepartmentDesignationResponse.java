@@ -12,5 +12,5 @@ public class DepartmentDesignationResponse {
     private DesignationResponse designation;
 
     @JsonProperty("department")
-    private DepartmentResponse department;
+    private Long department;
 }

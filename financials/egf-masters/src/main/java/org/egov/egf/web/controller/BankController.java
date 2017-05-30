@@ -22,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,20 +38,21 @@ public class BankController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public BankContractResponse create(@RequestBody @Valid BankContractRequest bankContractRequest,
 			BindingResult errors) {
-		ModelMapper modelMapper = new ModelMapper();
 		bankService.validate(bankContractRequest, "create", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankContractRequest.getRequestInfo().setAction("create");
 		bankService.fetchRelatedContracts(bankContractRequest);
 		bankService.push(bankContractRequest);
 		BankContractResponse bankContractResponse = new BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
-		for (BankContract bankContract : bankContractRequest.getBanks()) {
-
-			Bank bankEntity = modelMapper.map(bankContract, Bank.class);
-			BankContract resp = modelMapper.map(bankEntity, BankContract.class);
-			bankContractResponse.getBanks().add(resp);
+		if (bankContractRequest.getBanks() != null && !bankContractRequest.getBanks().isEmpty()) {
+			for (BankContract bankContract : bankContractRequest.getBanks()) {
+				bankContractResponse.getBanks().add(bankContract);
+			}
+		} else if (bankContractRequest.getBank() != null) {
+			bankContractResponse.setBank(bankContractRequest.getBank());
 		}
 
 		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
@@ -64,20 +64,17 @@ public class BankController {
 	@ResponseStatus(HttpStatus.OK)
 	public BankContractResponse update(@RequestBody @Valid BankContractRequest bankContractRequest,
 			BindingResult errors, @PathVariable Long uniqueId) {
-		ModelMapper modelMapper = new ModelMapper();
 		bankService.validate(bankContractRequest, "update", errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankContractRequest.getRequestInfo().setAction("update");
 		bankService.fetchRelatedContracts(bankContractRequest);
 		bankContractRequest.getBank().setId(uniqueId);
 		bankService.push(bankContractRequest);
 		BankContractResponse bankContractResponse = new BankContractResponse();
-		bankContractResponse.setBanks(new ArrayList<BankContract>());
 
-		Bank bankEntity = modelMapper.map(bankContractRequest.getBank(), Bank.class);
-		BankContract resp = modelMapper.map(bankEntity, BankContract.class);
-		bankContractResponse.setBank(resp);
+		bankContractResponse.setBank(bankContractRequest.getBank());
 
 		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
 		bankContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
@@ -93,7 +90,6 @@ public class BankController {
 			throw new CustomBindException(errors);
 		}
 		bankService.fetchRelatedContracts(bankContractRequest);
-		RequestInfo requestInfo = bankContractRequest.getRequestInfo();
 		Bank bankFromDb = bankService.findOne(uniqueId);
 		BankContract bank = bankContractRequest.getBank();
 
@@ -107,7 +103,7 @@ public class BankController {
 		return bankContractResponse;
 	}
 
-	@PutMapping
+	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public BankContractResponse updateAll(@RequestBody @Valid BankContractRequest bankContractRequest,
 			BindingResult errors) {
@@ -115,17 +111,12 @@ public class BankController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankContractRequest.getRequestInfo().setAction("updateAll");
 		bankService.fetchRelatedContracts(bankContractRequest);
-
+		bankService.push(bankContractRequest);
 		BankContractResponse bankContractResponse = new BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
 		for (BankContract bankContract : bankContractRequest.getBanks()) {
-			Bank bankFromDb = bankService.findOne(bankContract.getId());
-
-			ModelMapper model = new ModelMapper();
-			model.map(bankContract, bankFromDb);
-			bankFromDb = bankService.update(bankFromDb);
-			model.map(bankFromDb, bankContract);
 			bankContractResponse.getBanks().add(bankContract);
 		}
 

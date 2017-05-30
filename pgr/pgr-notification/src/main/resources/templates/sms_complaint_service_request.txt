@@ -1,0 +1,1 @@
+Your grievance for {{name}} has been {{status}} , with tracking number ({{number}}). Please use this number for all future references.

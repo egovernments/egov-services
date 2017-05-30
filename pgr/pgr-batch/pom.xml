@@ -39,6 +39,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>pgr-common</artifactId>
+			<version>0.8.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
@@ -149,6 +155,8 @@
 									<excludes>
 										<exclude>org.pgr.batch.PgrBatchApplication</exclude>
 										<exclude>org.pgr.batch.repository.contract.*</exclude>
+										<exclude>org.pgr.batch.service.model.*</exclude>
+										<exclude>org.pgr.batch.factory.DateFactory</exclude>
 									</excludes>
 									<limits>
 										<limit>

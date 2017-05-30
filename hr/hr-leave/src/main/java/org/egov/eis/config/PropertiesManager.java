@@ -83,4 +83,13 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_masters_service.hrstatuses.key}")
     private String hrMastersServiceStatusesKey;
+    
+    @Value("${egov.services.hr_masters_service.hrconfiguration.basepath}")
+    private String hrMastersServiceHRConfigurationBasePath;
+
+    @Value("${egov.services.hr_masters_service.hrconfigurations.searchpath}")
+    private String hrMastersServiceConfigurationsSearchPath;
+
+    @Value("${egov.services.hr_masters_service.hrconfigurations.key}")
+    private String hrMastersServiceConfigurationsKey;
 }

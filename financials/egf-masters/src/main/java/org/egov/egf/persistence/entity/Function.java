@@ -40,22 +40,15 @@
 package org.egov.egf.persistence.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.FunctionContract;
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -68,47 +61,53 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"parentId"},callSuper=false)
+@EqualsAndHashCode(exclude = { "parentId" }, callSuper = false)
 
 @Table(name = "egf_function")
 @SequenceGenerator(name = Function.SEQ, sequenceName = Function.SEQ, allocationSize = 1)
 public class Function extends AbstractAuditable {
 
-    private static final long serialVersionUID = 1L;
-    public static final String SEQ = "seq_egf_function";
+	private static final long serialVersionUID = -810383403515366449L;
 
-    @Id
-    @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	public static final String SEQ = "seq_egf_function";
 
-    @Length(max = 128, min = 2)
-    @NotNull
-    private String name;
+	@Id
+	@GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @Length(max = 16, min = 2)
-    @NotNull
-    private String code;
+	@Length(max = 128, min = 2)
+	@NotNull
+	private String name;
 
-    @NotNull
-    private Integer level;
-    @NotNull
-    private Boolean active;
-    //is this required?
-    @NotNull
-    private Boolean isParent;
+	@Length(max = 16, min = 2)
+	@NotNull
+	private String code;
 
-//    @JsonProperty(access = Access.WRITE_ONLY)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "parentId")
-    private Long parentId;
+	@NotNull
+	private Integer level;
 
-     
-    @Override
-    public Long getId()
-    {
-    	return this.id;
-    }
+	@NotNull
+	private Boolean active;
 
-     
+	// is this required?
+	@NotNull
+	private Boolean isParent;
 
+	private Long parentId;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public Function(FunctionContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setActive(contract.getActive());
+		this.setLevel(contract.getLevel());
+		this.setIsParent(contract.getIsParent());
+		this.setParentId(contract.getParentId() != null ? contract.getParentId().getId() : null);
+		this.setTenantId(contract.getTenantId());
+	}
 }

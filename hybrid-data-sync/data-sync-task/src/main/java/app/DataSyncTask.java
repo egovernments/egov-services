@@ -42,7 +42,7 @@ public class DataSyncTask {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
-    @Scheduled(fixedRateString = "${rateInSeconds}")
+    @Scheduled(fixedRateString = "${rate-in-milliseconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
         LocalDateTime ldt = LocalDateTime.now();
@@ -54,11 +54,11 @@ public class DataSyncTask {
             for (SyncInfo info : syncConfig.getInfo()) {
                 Timestamp convertedEpoch = calculateEpochWithTZ(epoch, info);
                 log.info(String.format("EPOCH: %s, table: %s, TZ: %s", convertedEpoch, info.getSourceTable(), info.getSourceTimeZone()));
-                String query = String.format("SELECT %s from %s.%s WHERE lastmodifieddate >=?",
+                String query = String.format("SELECT %s from %s.%s WHERE lastmodifieddate >=? or createddate >=?",
                         String.join(",", info.getSourceColumnNamesToReadFrom()), sourceSchema, info.getSourceTable());
                 log.info(query);
                 jdbcTemplate.query(
-                        query, new Object[]{convertedEpoch},
+                        query, new Object[]{convertedEpoch,convertedEpoch},
                         (rs, rowNum) -> new CustomResultSet(rs, info.getSourceColumnConfigsToReadFrom())
                 ).forEach(res -> {
                     try {

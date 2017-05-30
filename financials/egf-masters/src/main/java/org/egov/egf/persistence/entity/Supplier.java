@@ -44,14 +44,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import org.egov.egf.persistence.queue.contract.SupplierContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -65,7 +62,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"bank"},callSuper=false)
+@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
 
 @Table(name = "egf_supplier")
 @SequenceGenerator(name = Supplier.SEQ, sequenceName = Supplier.SEQ, allocationSize = 1)
@@ -81,11 +78,11 @@ public class Supplier extends AbstractAuditable {
 
 	@Column(unique = true)
 	@NotNull
-	@Length(max = 50,min=1)
+	@Length(max = 50, min = 1)
 	private String code;
 
 	@NotNull
-	@Length(max = 50,min=1)
+	@Length(max = 50, min = 1)
 	private String name;
 
 	@Length(max = 300)
@@ -96,7 +93,7 @@ public class Supplier extends AbstractAuditable {
 
 	@Length(max = 25)
 	private String email;
-	
+
 	@Length(max = 250)
 	private String description;
 	@NotNull
@@ -117,14 +114,29 @@ public class Supplier extends AbstractAuditable {
 	@Length(max = 12)
 	private String ifscCode;
 
-	@ManyToOne
-	@JoinColumn(name = "bank")
-	private Bank bank;
+	private Long bank;
 
-	 @Override
-	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public Supplier(SupplierContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setAddress(contract.getAddress());
+		this.setMobile(contract.getMobile());
+		this.setEmail(contract.getEmail());
+		this.setDescription(contract.getDescription());
+		this.setActive(contract.getActive());
+		this.setPanNo(contract.getPanNo());
+		this.setTinNo(contract.getTinNo());
+		this.setRegistationNo(contract.getRegistationNo());
+		this.setBankAccount(contract.getBankAccount());
+		this.setIfscCode(contract.getIfscCode());
+		this.setBank(contract.getBank() != null ? contract.getBank().getId() : null);
+		this.setTenantId(contract.getTenantId());
+	}
 
 }

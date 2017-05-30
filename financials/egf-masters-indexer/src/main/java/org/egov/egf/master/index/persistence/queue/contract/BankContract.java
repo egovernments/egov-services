@@ -55,41 +55,40 @@ import lombok.Data;
 
 public class BankContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Long> ids = new ArrayList<Long>();
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<Long> ids = new ArrayList<Long>();
 
-    @NotNull
-    @Length(max = 50, min = 1)
-    private String code;
+	@NotNull
+	@Length(max = 50, min = 1)
+	private String code;
 
-    @NotNull
-    @Length(max = 100, min = 2)
-    private String name;
+	@NotNull
+	@Length(max = 100, min = 2)
+	private String name;
 
-    @Length(max = 250)
-    private String description;
+	@Length(max = 250)
+	private String description;
 
-    @NotNull
-    private Boolean active;
-    // is this required?
+	@NotNull
+	private Boolean active;
+	// is this required?
 
-    @Length(max = 50)
-    private String type;
+	@Length(max = 50)
+	private String type;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public BankContract() {
-        super();
-    }
+	public BankContract() {
+		super();
+	}
 
-    public BankContract(final String id) {
-        super();
-        this.id = Long.valueOf(id);
-    }
- 
+	public BankContract(final String id) {
+		super();
+		this.id = Long.valueOf(id);
+	}
 
 }

@@ -2,13 +2,12 @@ package org.egov.lams.web.validator;
 
 import java.util.Date;
 import java.util.List;
-
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
 import org.egov.lams.repository.RentIncrementRepository;
@@ -23,9 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
 
 @Component
-public class AgreementValidator {
+public class AgreementValidator implements org.springframework.validation.Validator{
 	
 	public static final Logger logger = LoggerFactory.getLogger(AgreementValidator.class);
 
@@ -44,8 +44,23 @@ public class AgreementValidator {
 	@Autowired
 	private LamsConfigurationService lamsConfigurationService;
 	
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return AgreementRequest.class.equals(clazz);
+	}
 
-	public void validateAgreement(AgreementRequest agreementRequest) {
+	@Override
+	public void validate(Object target, Errors errors) {
+		AgreementRequest agreementRequest = null;
+		
+		if(target instanceof AgreementRequest){
+			 agreementRequest = (AgreementRequest)target;
+		}else
+			throw new RuntimeException("invalid datatype for agreement validator");
+		validateAgreement(agreementRequest,errors);
+	}
+
+	public void validateAgreement(AgreementRequest agreementRequest,Errors errors) {
 
 		Agreement agreement = agreementRequest.getAgreement();
 
@@ -56,22 +71,32 @@ public class AgreementValidator {
 
 		// TODO remove hard coded value of rent*3
 		if (securityDeposit<rent * 3)
-			throw new LamsException("security deposit value should be greater than or equal to thrice rent value");
+			errors.rejectValue("Agreement.securityDeposit", "","security deposit value should be greater than or equal to thrice rent value");
 
 		if (solvencyCertificateDate.compareTo(new Date()) >= 0)
-			throw new LamsException("solvency certificate date should be lesser than current date");
+			errors.rejectValue("Agreement.solvencyCertificateDate", "","solvency certificate date should be lesser than current date");
 
 		if (bankGuaranteeDate.compareTo(new Date()) >= 0)
-			throw new LamsException("bank Guarantee Date date should be lesser than current date");
-
+			errors.rejectValue("Agreement.bankGuaranteeDate", "","bank Guarantee Date date should be lesser than current date");
+		if(agreement.getSource().equals(Source.DATA_ENTRY)){
+			
+			if(agreement.getCollectedSecurityDeposit() != null)
+			if((agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
+				errors.rejectValue("Agreement.CollectedSecurotyDeposit","","collectedSecurityDeposit should not be greater than security deposit");
+			
+			if(agreement.getCollectedGoodWillAmount() != null)
+			if((agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
+				errors.rejectValue("Agreement.CollectedGoodWillAmount","","CollectedGoodWillAmount should not be greater than GoodWillAmount");
+			
+		}
 		// FIXME uncomment this part before pushing-->
-		validateAllottee(agreementRequest);
-		validateAsset(agreementRequest);
-		validateRentIncrementType(agreement);
+		validateAsset(agreementRequest,errors);
+		validateAllottee(agreementRequest,errors);
+		validateRentIncrementType(agreement,errors);
 		logger.info("after the validations");
 	}
 
-	public void validateAsset(AgreementRequest agreementRequest) {
+	public void validateAsset(AgreementRequest agreementRequest,Errors errors) {
 
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
 		String queryString = "id=" + assetId + "&tenantId=" + agreementRequest.getAgreement().getTenantId();
@@ -79,14 +104,13 @@ public class AgreementValidator {
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
 		AssetResponse assetResponse = assetService.getAssets(queryString,requestInfoWrapper);
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() == 0) 
-			throw new LamsException("the asset object does not exist");
+			errors.rejectValue("Agreement.securityDeposit", "","the asset given does not exist");
 			
 		if(!assetService.isAssetAvailable(assetId))
-				throw new LamsException("Agreement has been already signed for the particular asset");
-		// FIXME use invalidDataException here
+			errors.rejectValue("Agreement.Asset.id", "","Agreement has been already signed for the given asset");
 	}
 
-	public void validateAllottee(AgreementRequest agreementRequest) {
+	public void validateAllottee(AgreementRequest agreementRequest,Errors errors) {
 
 		Allottee allottee = agreementRequest.getAgreement().getAllottee();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
@@ -100,7 +124,7 @@ public class AgreementValidator {
 			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 	}
 
-	public void validateRentIncrementType(Agreement agreement) {
+	public void validateRentIncrementType(Agreement agreement,Errors errors) {
 
 		RentIncrementType rentIncrement = agreement.getRentIncrementMethod();
 		AssetCategory assetCategory = agreement.getAsset().getCategory();
@@ -119,12 +143,11 @@ public class AgreementValidator {
 					RentIncrementType responseRentIncrement = rentIncrementService
 							.getRentIncrementById(rentIncrementId);
 					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
-						throw new RuntimeException("invalid rentincrement type object");
+						errors.rejectValue("Agreement.rentIncrement.Id", "","invalid rentincrement type object");
 				} else {
-					throw new RuntimeException("please enter a rentincrement type value for given agreement");
+					errors.rejectValue("Agreement.rentIncrement.Id", "","please enter a rentincrement type value for given agreement");
 				}
 			}
 		}
-		logger.info("after the loop , end of method");
 	}
 }

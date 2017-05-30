@@ -1,0 +1,37 @@
+title Create Bill Process flow
+
+Client->BillSvc: Create Bill Request
+activate Client
+activate BillSvc
+note over Client,BillSvc
+            BillCreator posts a new create Bill request
+end note
+BillSvc->BillSvc : validation 
+note over  BillSvc
+    A. Request format validations like size of texts,allowed formats etc
+    B. Validate Bill
+        1. Validated the total amount,subledger total
+        2. Validate glcode active,function,fund etc
+end note
+alt Validation failed
+BillSvc->Client : throw Validation Error
+else
+BillSvc->+Kafka : Data put on Kafka Q with topic "bill.validation.completed"
+BillSvc->Client :Acknowledge client with transaction number
+deactivate Client
+deactivate BillSvc
+end
+Kafka->+BudgetSvc : Business validation  Budget Check
+note over  Kafka,BudgetSvc
+   Do budget check based on application configuration 
+   return Budget appropriation number or Budget check failure error
+   end note  over
+BudgetSvc->-Kafka : Budget check response is pushed to kafka with topic "bill.budgetcheck.completed"
+Kafka->+BillNoGenerator: BillNoGenerator picks "bill.budgetcheck.completed" and generates Billnumber  
+BillNoGenerator->-Kafka : BillNoGenerator puts back the data to Kafka with topic "bill.number.generated"
+Kafka->+WorkflowSvc: WorkflowSvc picks and completes workflow
+WorkflowSvc->-Kafka :WorkflowSvc puts back the data to Kafka  with topic "bill.workflow.completed"
+Kafka->+BillSvc : Data persisted on db with Billnumber
+BillSvc->-Kafka : BillSvc puts data back with Kafka  with topic "bill.persist.completed"
+Kafka->+BillIndexer : BillIndexer picks and uploads to Elastic search 
+

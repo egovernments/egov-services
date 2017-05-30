@@ -9,12 +9,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
+@ToString
 public class DemandReasonCriteria {
 	private Long id;
 	private String moduleName;
@@ -22,9 +24,9 @@ public class DemandReasonCriteria {
 	private String taxReason;
 	private String taxPeriod;
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date fromDate;
+	private String fromDate;
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date toDate;
+	private String toDate;
 	private String tenantId;
 	private String installmentType;
 }

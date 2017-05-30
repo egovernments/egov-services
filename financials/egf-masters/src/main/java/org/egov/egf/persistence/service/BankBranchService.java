@@ -39,8 +39,15 @@ public class BankBranchService {
 
 	private final BankBranchJpaRepository bankBranchJpaRepository;
 	private final BankBranchQueueRepository bankBranchQueueRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private SmartValidator validator;
+
+	@Autowired
+	private BankService bankService;
 
 	@Autowired
 	public BankBranchService(final BankBranchJpaRepository bankBranchJpaRepository,
@@ -48,11 +55,6 @@ public class BankBranchService {
 		this.bankBranchJpaRepository = bankBranchJpaRepository;
 		this.bankBranchQueueRepository = bankBranchQueueRepository;
 	}
-
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private BankService bankService;
 
 	public void push(final BankBranchContractRequest bankBranchContractRequest) {
 		bankBranchQueueRepository.push(bankBranchContractRequest);
@@ -65,11 +67,40 @@ public class BankBranchService {
 		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
 		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
 		ModelMapper modelMapper = new ModelMapper();
-		for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
-			BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
+		if (bankBranchContractRequest.getBankBranches() != null
+				&& !bankBranchContractRequest.getBankBranches().isEmpty()) {
+			for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
+				BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
+				bankBranchJpaRepository.save(bankBranchEntity);
+				BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
+				bankBranchContractResponse.getBankBranches().add(resp);
+			}
+		} else if (bankBranchContractRequest.getBankBranch() != null) {
+			BankBranch bankBranchEntity = new BankBranch(bankBranchContractRequest.getBankBranch());
 			bankBranchJpaRepository.save(bankBranchEntity);
 			BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
-			bankBranchContractResponse.getBankBranches().add(resp);
+			bankBranchContractResponse.setBankBranch(resp);
+		}
+		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
+		return bankBranchContractResponse;
+	}
+
+	@Transactional
+	public BankBranchContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final BankBranchContractRequest bankBranchContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("BankBranchCreate"), BankBranchContractRequest.class);
+		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (bankBranchContractRequest.getBankBranches() != null
+				&& !bankBranchContractRequest.getBankBranches().isEmpty()) {
+			for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
+				BankBranch bankBranchEntity = new BankBranch(bankBranchContract);
+				bankBranchEntity.setVersion(findOne(bankBranchEntity.getId()).getVersion());
+				bankBranchJpaRepository.save(bankBranchEntity);
+				BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
+				bankBranchContractResponse.getBankBranches().add(resp);
+			}
 		}
 		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
 		return bankBranchContractResponse;

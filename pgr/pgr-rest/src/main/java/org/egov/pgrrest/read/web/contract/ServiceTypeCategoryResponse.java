@@ -12,6 +12,6 @@ public class ServiceTypeCategoryResponse {
 
     private ResponseInfo responseInfo;
 
-    private List<ServiceTypeCategory> complaintTypeCategories;
+    private List<ServiceTypeCategory> serviceTypeCategories;
 
 }

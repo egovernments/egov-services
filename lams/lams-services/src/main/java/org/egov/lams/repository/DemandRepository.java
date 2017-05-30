@@ -5,15 +5,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
 import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
-import org.egov.lams.web.contract.DemandReasonCriteria;
 import org.egov.lams.web.contract.DemandReasonResponse;
 import org.egov.lams.web.contract.DemandRequest;
 import org.egov.lams.web.contract.DemandResponse;
@@ -44,15 +43,15 @@ public class DemandRepository {
 	DemandHelper demandHelper;
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
-	
-		//FIXME overriding tenantid as default due to unavailability of ramki 
+
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
 				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
-	
+
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {
-			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),DemandReasonResponse.class);
+			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
+					DemandReasonResponse.class);
 			LOGGER.info(demandReasonResponse);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
@@ -73,8 +72,9 @@ public class DemandRepository {
 				LOGGER.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
-			 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-				LOGGER.error("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
+			// return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
+			LOGGER.error("the exception from user module inside first catch block ::"
+					+ userErrorResponse.getError().toString());
 		} catch (Exception e) {
 			LOGGER.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
@@ -86,18 +86,31 @@ public class DemandRepository {
 
 	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
 
+		Agreement agreement = agreementRequest.getAgreement();
 		List<Demand> demands = new ArrayList<>();
 		List<DemandDetails> demandDetails = new ArrayList<>();
 		Demand demand = new Demand();
-		demand.setTenantId(agreementRequest.getAgreement().getTenantId());
+		demand.setTenantId(agreement.getTenantId());
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
 
+		int goodWill = 0;
+		int advance = 0;
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
+			
 			demandDetail = new DemandDetails();
-			// rent has to be not null
-			demandDetail.setTaxAmount(BigDecimal.valueOf(agreementRequest.getAgreement().getRent()));
+			LOGGER.info("the demand reason object in the loop : "+ demandReason);
+			if ("Rent".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+			} else if ("Goodwill Amount".equalsIgnoreCase(demandReason.getName()) && goodWill == 0) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+				goodWill++;
+
+			} else if ("Advance Tax".equalsIgnoreCase(demandReason.getName()) && advance == 0) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
+				advance++;
+			}
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
@@ -157,7 +170,7 @@ public class DemandRepository {
 		demandRequest.setDemand(demands);
 
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getUpdateDemandBasePath()
-				+ demands.get(0).getId() + propertiesManager.getUpdateDemandService();
+				+ demands.get(0).getId() + "/" + propertiesManager.getUpdateDemandService();
 		LOGGER.info("the url for update demand API call is  ::: " + url);
 
 		DemandResponse demandResponse = null;

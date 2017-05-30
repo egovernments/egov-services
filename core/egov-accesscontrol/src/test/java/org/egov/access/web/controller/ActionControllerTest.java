@@ -3,8 +3,10 @@ package org.egov.access.web.controller;
 
 import org.egov.access.Resources;
 import org.egov.access.TestConfiguration;
+import org.egov.access.domain.criteria.ActionSearchCriteria;
+import org.egov.access.domain.criteria.ValidateActionCriteria;
 import org.egov.access.domain.model.Action;
-import org.egov.access.domain.model.ActionSearchCriteria;
+import org.egov.access.domain.model.ActionValidation;
 import org.egov.access.domain.service.ActionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -51,13 +54,28 @@ public class ActionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(new Resources().getFileContents("actionResponse.json")));
+    }
 
+    @Test
+    public void testActionValidation() throws Exception {
+        ActionValidation actionValidation = ActionValidation.builder().allowed(true).build();
+        ValidateActionCriteria criteria = ValidateActionCriteria.builder().roleNames(Arrays.asList("Citizen", "Employee")).
+                tenantId("ap.public").
+                actionUrl("/pgr/_statuses").build();
+        when(actionService.validate(criteria)).thenReturn(actionValidation);
+
+        mockMvc.perform(post("/v1/actions/_validate")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new Resources().getFileContents("validateActionRequest.json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(new Resources().getFileContents("validateActionResponse.json")));
     }
 
     private List<Action> getActions() {
         List<Action> actions = new ArrayList<Action>();
         Action action1 = Action.builder().id(1L).displayName("Create Complaint").name("Create Complaint").createdBy(1L).lastModifiedBy(1L)
-              .url("/createcomplaint").orderNumber(1).enabled(true).build();
+                .url("/createcomplaint").orderNumber(1).enabled(true).build();
         Action action2 = Action.builder().id(2L).displayName("Update Complaint").name("Update Complaint").createdBy(1L).lastModifiedBy(1L)
                 .url("/updatecomplaint").orderNumber(2).enabled(false).build();
         actions.add(action1);

@@ -28,6 +28,7 @@ public class UserSearchCriteria {
     private List<String> sort;
     private String type;
     private String tenantId;
+    private List<String> roleCodes;
 
     public void validate() {
     	boolean isInvalid = isTenantIdAbsent();

@@ -45,11 +45,9 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,19 +61,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id",  "key", "accountDetailType" })
+@JsonPropertyOrder({ "id", "key", "accountDetailType" })
 public class AccountDetailKeyContract extends AuditableContract {
 
-    private Long id;
+	private Long id;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Long> ids = new ArrayList<Long>();
-    private Long key;
-   
-    @NotNull
-    private AccountDetailTypeContract accountDetailType;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<Long> ids = new ArrayList<Long>();
+	private Long key;
 
-    public Long getId() {
-        return this.id;
-    }
+	@NotNull
+	private AccountDetailTypeContract accountDetailType;
+
+	public Long getId() {
+		return this.id;
+	}
 }

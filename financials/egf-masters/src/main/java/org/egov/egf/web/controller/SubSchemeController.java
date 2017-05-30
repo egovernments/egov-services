@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,152 +32,133 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/subschemes")
 public class SubSchemeController {
-    
-    @Autowired
-    private SubSchemeService subSchemeService;
 
-    @PostMapping("_create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public SubSchemeContractResponse create(@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest,
-            final BindingResult errors) {
-        final ModelMapper modelMapper = new ModelMapper();
-        subSchemeService.validate(subSchemeContractRequest, "create", errors);
-        if (errors.hasErrors())
-            throw new CustomBindException(errors);
-        subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
-        final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
-        subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
-        for (final SubSchemeContract subSchemeContract : subSchemeContractRequest.getSubSchemes()) {
+	@Autowired
+	private SubSchemeService subSchemeService;
 
-            SubScheme subSchemeEntity = modelMapper.map(subSchemeContract, SubScheme.class);
-            subSchemeEntity = subSchemeService.create(subSchemeEntity);
-            final SubSchemeContract resp = modelMapper.map(subSchemeEntity, SubSchemeContract.class);
-            subSchemeContract.setId(subSchemeEntity.getId());
-            subSchemeContractResponse.getSubSchemes().add(resp);
-        }
+	@PostMapping("_create")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SubSchemeContractResponse create(@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest,
+			final BindingResult errors) {
+		subSchemeService.validate(subSchemeContractRequest, "create", errors);
+		if (errors.hasErrors())
+			throw new CustomBindException(errors);
+		subSchemeContractRequest.getRequestInfo().setAction("create");
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
+		subSchemeService.push(subSchemeContractRequest);
+		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
+		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
+		if (subSchemeContractRequest.getSubSchemes() != null && !subSchemeContractRequest.getSubSchemes().isEmpty()) {
+			for (final SubSchemeContract subSchemeContract : subSchemeContractRequest.getSubSchemes()) {
+				subSchemeContractResponse.getSubSchemes().add(subSchemeContract);
+			}
+		} else if (subSchemeContractRequest.getSubScheme() != null) {
+			subSchemeContractResponse.setSubScheme(subSchemeContractRequest.getSubScheme());
+		}
+		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
 
-        subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
+		return subSchemeContractResponse;
+	}
 
-        return subSchemeContractResponse;
-    }
+	@PostMapping(value = "/{uniqueId}/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public SubSchemeContractResponse update(@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest,
+			final BindingResult errors, @PathVariable final Long uniqueId) {
 
-    @PostMapping(value = "/{uniqueId}/_update")
-    @ResponseStatus(HttpStatus.OK)
-    public SubSchemeContractResponse update(@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest,
-            final BindingResult errors,
-            @PathVariable final Long uniqueId) {
+		subSchemeService.validate(subSchemeContractRequest, "update", errors);
 
-        subSchemeService.validate(subSchemeContractRequest, "update", errors);
+		if (errors.hasErrors())
+			throw new CustomBindException(errors);
+		subSchemeContractRequest.getRequestInfo().setAction("update");
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
+		subSchemeContractRequest.getSubScheme().setId(uniqueId);
+		subSchemeService.push(subSchemeContractRequest);
+		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
+		subSchemeContractResponse.setSubScheme(subSchemeContractRequest.getSubScheme());
+		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
+		subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return subSchemeContractResponse;
+	}
 
-        if (errors.hasErrors())
-            throw new CustomBindException(errors);
-        subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
-        SubScheme subSchemeFromDb = subSchemeService.findOne(uniqueId);
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public SubSchemeContractResponse view(@ModelAttribute final SubSchemeContractRequest subSchemeContractRequest,
+			final BindingResult errors, @PathVariable final Long uniqueId) {
+		subSchemeService.validate(subSchemeContractRequest, "view", errors);
+		if (errors.hasErrors())
+			throw new CustomBindException(errors);
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
+		subSchemeContractRequest.getRequestInfo();
+		final SubScheme subSchemeFromDb = subSchemeService.findOne(uniqueId);
+		final SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
 
-        final SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
-        // ignoring internally passed id if the put has id in url
-        subScheme.setId(uniqueId);
-        final ModelMapper model = new ModelMapper();
-        model.map(subScheme, subSchemeFromDb);
-        subSchemeFromDb = subSchemeService.update(subSchemeFromDb);
-        final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
-        subSchemeContractResponse.setSubScheme(subScheme);
-        subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
-        subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return subSchemeContractResponse;
-    }
+		final ModelMapper model = new ModelMapper();
+		model.map(subSchemeFromDb, subScheme);
 
-    @GetMapping(value = "/{uniqueId}")
-    @ResponseStatus(HttpStatus.OK)
-    public SubSchemeContractResponse view(@ModelAttribute final SubSchemeContractRequest subSchemeContractRequest,
-            final BindingResult errors,
-            @PathVariable final Long uniqueId) {
-        subSchemeService.validate(subSchemeContractRequest, "view", errors);
-        if (errors.hasErrors())
-            throw new CustomBindException(errors);
-        subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
-        subSchemeContractRequest.getRequestInfo();
-        final SubScheme subSchemeFromDb = subSchemeService.findOne(uniqueId);
-        final SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
+		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
+		subSchemeContractResponse.setSubScheme(subScheme);
+		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
+		subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+		return subSchemeContractResponse;
+	}
 
-        final ModelMapper model = new ModelMapper();
-        model.map(subSchemeFromDb, subScheme);
+	@PostMapping("/_update")
+	@ResponseStatus(HttpStatus.OK)
+	public SubSchemeContractResponse updateAll(
+			@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest, final BindingResult errors) {
+		subSchemeService.validate(subSchemeContractRequest, "updateAll", errors);
+		if (errors.hasErrors())
+			throw new CustomBindException(errors);
+		subSchemeContractRequest.getRequestInfo().setAction("updateAll");
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
+		subSchemeService.push(subSchemeContractRequest);
+		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
+		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
+		for (final SubSchemeContract subSchemeContract : subSchemeContractRequest.getSubSchemes()) {
+			subSchemeContractResponse.getSubSchemes().add(subSchemeContract);
+		}
 
-        final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
-        subSchemeContractResponse.setSubScheme(subScheme);
-        subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
-        subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-        return subSchemeContractResponse;
-    }
+		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
+		subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public SubSchemeContractResponse updateAll(@RequestBody @Valid final SubSchemeContractRequest subSchemeContractRequest,
-            final BindingResult errors) {
-        subSchemeService.validate(subSchemeContractRequest, "updateAll", errors);
-        if (errors.hasErrors())
-            throw new CustomBindException(errors);
-        subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
+		return subSchemeContractResponse;
+	}
 
-        final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
-        subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
-        for (final SubSchemeContract subSchemeContract : subSchemeContractRequest.getSubSchemes()) {
-            SubScheme subSchemeFromDb = subSchemeService.findOne(subSchemeContract.getId());
+	@PostMapping("_search")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public SubSchemeContractResponse search(@ModelAttribute final SubSchemeContract subSchemeContracts,
+			@RequestBody final RequestInfo requestInfo, final BindingResult errors) {
+		final SubSchemeContractRequest subSchemeContractRequest = new SubSchemeContractRequest();
+		subSchemeContractRequest.setSubScheme(subSchemeContracts);
+		subSchemeContractRequest.setRequestInfo(requestInfo);
+		subSchemeService.validate(subSchemeContractRequest, "search", errors);
+		if (errors.hasErrors())
+			throw new CustomBindException(errors);
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
+		final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
+		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
+		subSchemeContractResponse.setPage(new Pagination());
+		Page<SubScheme> allSubSchemes;
+		final ModelMapper model = new ModelMapper();
 
-            final ModelMapper model = new ModelMapper();
-            model.map(subSchemeContract, subSchemeFromDb);
-            subSchemeFromDb = subSchemeService.update(subSchemeFromDb);
-            model.map(subSchemeFromDb, subSchemeContract);
-            subSchemeContractResponse.getSubSchemes().add(subSchemeContract);
-        }
+		allSubSchemes = subSchemeService.search(subSchemeContractRequest);
+		SubSchemeContract subSchemeContract = null;
+		for (final SubScheme b : allSubSchemes) {
+			subSchemeContract = new SubSchemeContract();
+			model.map(b, subSchemeContract);
+			subSchemeContractResponse.getSubSchemes().add(subSchemeContract);
+		}
+		subSchemeContractResponse.getPage().map(allSubSchemes);
+		subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
+		subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return subSchemeContractResponse;
+	}
 
-        subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
-        subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-
-        return subSchemeContractResponse;
-    }
-
-    @PostMapping("_search")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public SubSchemeContractResponse search(@ModelAttribute final SubSchemeContract subSchemeContracts,
-            @RequestBody final RequestInfo requestInfo, final BindingResult errors) {
-        final SubSchemeContractRequest subSchemeContractRequest = new SubSchemeContractRequest();
-        subSchemeContractRequest.setSubScheme(subSchemeContracts);
-        subSchemeContractRequest.setRequestInfo(requestInfo);
-        subSchemeService.validate(subSchemeContractRequest, "search", errors);
-        if (errors.hasErrors())
-            throw new CustomBindException(errors);
-        subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
-        final SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
-        subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
-        subSchemeContractResponse.setPage(new Pagination());
-        Page<SubScheme> allSubSchemes;
-        final ModelMapper model = new ModelMapper();
-
-        allSubSchemes = subSchemeService.search(subSchemeContractRequest);
-        SubSchemeContract subSchemeContract = null;
-        for (final SubScheme b : allSubSchemes) {
-            subSchemeContract = new SubSchemeContract();
-            model.map(b, subSchemeContract);
-            subSchemeContractResponse.getSubSchemes().add(subSchemeContract);
-        }
-        subSchemeContractResponse.getPage().map(allSubSchemes);
-        subSchemeContractResponse.setResponseInfo(getResponseInfo(subSchemeContractRequest.getRequestInfo()));
-        subSchemeContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-        return subSchemeContractResponse;
-    }
-
-    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
-        new ResponseInfo();
-        return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date())
-                .resMsgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+	private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

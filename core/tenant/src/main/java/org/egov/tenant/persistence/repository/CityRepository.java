@@ -14,8 +14,8 @@ import static org.egov.tenant.persistence.entity.City.*;
 public class CityRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final String INSERT_QUERY = "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
-        "VALUES (nextval('seq_city'), :name, :localname, :districtcode, :districtname, :regionname, :longitude, :latitude, :tenantcode, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate)";
+    private final String INSERT_QUERY = "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, ulbgrade, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
+        "VALUES (nextval('seq_city'), :name, :localname, :districtcode, :districtname, :regionname, :longitude, :latitude, :tenantcode, :ulbgrade, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate)";
     private final String SELECT_QUERY = "SELECT * FROM city WHERE tenantcode = :tenantcode";
 
     public CityRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -31,6 +31,7 @@ public class CityRepository {
             put(REGION_NAME, city.getRegionName());
             put(LONGITUDE, city.getLongitude());
             put(LATITUDE, city.getLatitude());
+            put(ULB_GRADE, city.getUlbGrade());
             put(TENANT_CODE, tenantCode);
             put(CREATED_BY, city.getCreatedBy());
             put(CREATED_DATE, city.getCreatedDate());

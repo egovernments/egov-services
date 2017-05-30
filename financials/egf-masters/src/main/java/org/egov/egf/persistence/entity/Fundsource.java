@@ -50,6 +50,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.queue.contract.FundsourceContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -63,48 +64,56 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"fundSource"},callSuper=false)
+@EqualsAndHashCode(exclude = { "fundSource" }, callSuper = false)
 
 @Table(name = "egf_fundsource")
 @SequenceGenerator(name = Fundsource.SEQ_FUNDSOURCE, sequenceName = Fundsource.SEQ_FUNDSOURCE, allocationSize = 1)
 public class Fundsource extends AbstractAuditable {
 
-    private static final long serialVersionUID = -6601962644148353761L;
+	private static final long serialVersionUID = -6601962644148353761L;
 
-    public static final String SEQ_FUNDSOURCE = "seq_egf_fundsource";
+	public static final String SEQ_FUNDSOURCE = "seq_egf_fundsource";
 
-    @Id
-    @GeneratedValue(generator = SEQ_FUNDSOURCE, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@Id
+	@GeneratedValue(generator = SEQ_FUNDSOURCE, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @Length(min = 1, max = 25)
-    @NotNull
-    private String code;
+	@Length(min = 1, max = 25)
+	@NotNull
+	private String code;
 
-    @Length(min = 1, max = 25)
-    @NotNull
-    private String name;
+	@Length(min = 1, max = 25)
+	@NotNull
+	private String name;
 
-    @Length(min = 1, max = 25)
-    private String type;
+	@Length(min = 1, max = 25)
+	private String type;
 
-//    @JsonProperty(access = Access.WRITE_ONLY)
-//    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "parentid")
-    private Long fundSource;
+	@Column(name = "parentid")
+	private Long fundSource;
 
-    private BigDecimal llevel;
-    @NotNull
-    private Boolean active;
-// is this required
-    private Boolean isParent;
+	private BigDecimal llevel;
 
-    @Override
-    public Long getId()
-    {
-    	return this.id;
-    }
+	@NotNull
+	private Boolean active;
 
-    
+	// is this required
+	private Boolean isParent;
 
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public Fundsource(FundsourceContract contract) {
+		this.setId(contract.getId());
+		this.setName(contract.getName());
+		this.setCode(contract.getCode());
+		this.setType(contract.getType());
+		this.setActive(contract.getActive());
+		this.setLlevel(contract.getLlevel());
+		this.setIsParent(contract.getIsParent());
+		this.setFundSource(contract.getFundSource() != null ? contract.getFundSource().getId() : null);
+		this.setTenantId(contract.getTenantId());
+	}
 }

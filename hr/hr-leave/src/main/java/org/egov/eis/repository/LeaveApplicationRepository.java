@@ -152,4 +152,18 @@ public class LeaveApplicationRepository {
                     .setStatus(hrStatusService.getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(),
                             requestInfo).get(0).getId());
     }
+
+    public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication, final RequestInfo requestInfo) {
+        final String leaveApplicationGetForDateRangeQuery = leaveApplicationQueryBuilder.getLeaveApplicationForDateRangeQuery();
+        final Object[] obj = new Object[] {
+                leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                leaveApplication.getEmployee(), hrStatusService.getHRStatuses(LeaveStatus.CANCELLED.toString(),
+                        leaveApplication.getTenantId(), requestInfo).get(0).getId(),
+                leaveApplication.getId() == null ? -1 : leaveApplication.getId(),
+                leaveApplication.getTenantId() };
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(leaveApplicationGetForDateRangeQuery, obj,
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
 }

@@ -37,13 +37,16 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package  org.egov.egf.master.index.persistence.queue.contract;
+package org.egov.egf.master.index.persistence.queue.contract;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Data; 
+import lombok.Data;
+
 public @Data class AccountEntityContractRequest {
-private RequestInfo requestInfo = new RequestInfo();
-private List<AccountEntityContract> accountEntities =new ArrayList<AccountEntityContract>() ;
-private AccountEntityContract accountEntity =new AccountEntityContract() ;
-private Pagination page=new Pagination();}
+	private RequestInfo requestInfo = new RequestInfo();
+	private List<AccountEntityContract> accountEntities = new ArrayList<AccountEntityContract>();
+	private AccountEntityContract accountEntity = new AccountEntityContract();
+	private Pagination page = new Pagination();
+}

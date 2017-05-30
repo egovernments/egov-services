@@ -1,18 +1,24 @@
 package org.egov.egf.persistence.service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.egov.egf.domain.exception.InvalidDataException;
+import org.egov.egf.json.ObjectMapperFactory;
 import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.entity.ChartOfAccount;
 import org.egov.egf.persistence.queue.contract.ChartOfAccountContract;
 import org.egov.egf.persistence.queue.contract.ChartOfAccountContractRequest;
-import org.egov.egf.persistence.repository.ChartOfAccountRepository;
+import org.egov.egf.persistence.queue.contract.ChartOfAccountContractResponse;
+import org.egov.egf.persistence.queue.contract.RequestInfo;
+import org.egov.egf.persistence.queue.contract.ResponseInfo;
+import org.egov.egf.persistence.repository.ChartOfAccountJpaRepository;
+import org.egov.egf.persistence.repository.ChartOfAccountQueueRepository;
 import org.egov.egf.persistence.specification.ChartOfAccountSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,161 +37,239 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class ChartOfAccountService {
 
-    private final ChartOfAccountRepository chartOfAccountRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
+	private final ChartOfAccountJpaRepository chartOfAccountJpaRepository;
+	private final ChartOfAccountQueueRepository chartOfAccountQueueRepository;
 
-    @Autowired
-    public ChartOfAccountService(final ChartOfAccountRepository chartOfAccountRepository) {
-        this.chartOfAccountRepository = chartOfAccountRepository;
-    }
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    @Autowired
-    private SmartValidator validator;
-    @Autowired
-    private ChartOfAccountService chartOfAccountService;
-    @Autowired
-    private AccountCodePurposeService accountCodePurposeService;
+	@Autowired
+	private SmartValidator validator;
 
-    @Transactional
-    public ChartOfAccount create(final ChartOfAccount chartOfAccount) {
-        setChartOfAccount(chartOfAccount);
-        return chartOfAccountRepository.save(chartOfAccount);
-    }
+	@Autowired
+	private ChartOfAccountService chartOfAccountService;
 
-    private void setChartOfAccount(final ChartOfAccount chartOfAccount) {
-        if (chartOfAccount.getAccountCodePurpose() != null) {
-            final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-                    .findOne(chartOfAccount.getAccountCodePurpose());
-            if (accountCodePurpose == null)
-                throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
-                        " Invalid accountCodePurpose");
-            chartOfAccount.setAccountCodePurpose(accountCodePurpose.getId());
-        }
-        if (chartOfAccount.getParentId() != null) {
-            final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId());
-            if (parentId == null)
-                throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-            chartOfAccount.setParentId(parentId.getId());
-        }
-    }
+	@Autowired
+	private AccountCodePurposeService accountCodePurposeService;
 
-    @Transactional
-    public ChartOfAccount update(final ChartOfAccount chartOfAccount) {
-        setChartOfAccount(chartOfAccount);
-        return chartOfAccountRepository.save(chartOfAccount);
-    }
+	@Autowired
+	public ChartOfAccountService(final ChartOfAccountJpaRepository chartOfAccountJpaRepository,
+			final ChartOfAccountQueueRepository chartOfAccountQueueRepository) {
+		this.chartOfAccountJpaRepository = chartOfAccountJpaRepository;
+		this.chartOfAccountQueueRepository = chartOfAccountQueueRepository;
+	}
 
-    public List<ChartOfAccount> findAll() {
-        return chartOfAccountRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-    }
+	public void push(final ChartOfAccountContractRequest chartOfAccountContractRequest) {
+		chartOfAccountQueueRepository.push(chartOfAccountContractRequest);
+	}
 
-    public ChartOfAccount findByName(final String name) {
-        return chartOfAccountRepository.findByName(name);
-    }
+	@Transactional
+	public ChartOfAccountContractResponse create(HashMap<String, Object> financialContractRequestMap) {
+		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("ChartOfAccountCreate"), ChartOfAccountContractRequest.class);
+		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (chartOfAccountContractRequest.getChartOfAccounts() != null
+				&& !chartOfAccountContractRequest.getChartOfAccounts().isEmpty()) {
+			for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getChartOfAccounts()) {
+				ChartOfAccount chartOfAccountEntity = new ChartOfAccount(chartOfAccountContract);
+				chartOfAccountJpaRepository.save(chartOfAccountEntity);
+				ChartOfAccountContract resp = modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
+				chartOfAccountContractResponse.getChartOfAccounts().add(resp);
+			}
+		} else if (chartOfAccountContractRequest.getChartOfAccount() != null) {
+			ChartOfAccount chartOfAccountEntity = new ChartOfAccount(chartOfAccountContractRequest.getChartOfAccount());
+			chartOfAccountJpaRepository.save(chartOfAccountEntity);
+			ChartOfAccountContract resp = modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
+			chartOfAccountContractResponse.setChartOfAccount(resp);
+		}
+		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+		return chartOfAccountContractResponse;
+	}
 
-    public ChartOfAccount findOne(final Long id) {
-        return chartOfAccountRepository.findOne(id);
-    }
+	@Transactional
+	public ChartOfAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
+		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("ChartOfAccountCreate"), ChartOfAccountContractRequest.class);
+		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		if (chartOfAccountContractRequest.getChartOfAccounts() != null
+				&& !chartOfAccountContractRequest.getChartOfAccounts().isEmpty()) {
+			for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getChartOfAccounts()) {
+				ChartOfAccount chartOfAccountEntity = new ChartOfAccount(chartOfAccountContract);
+				chartOfAccountEntity.setVersion(findOne(chartOfAccountEntity.getId()).getVersion());
+				chartOfAccountJpaRepository.save(chartOfAccountEntity);
+				ChartOfAccountContract resp = modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
+				chartOfAccountContractResponse.getChartOfAccounts().add(resp);
+			}
+		}
+		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+		return chartOfAccountContractResponse;
+	}
 
-    public Page<ChartOfAccount> search(final ChartOfAccountContractRequest chartOfAccountContractRequest) {
-//        ChartOfAccountContract chartOfAccountContract = chartOfAccountContractRequest.getChartOfAccount();
-//        
-//        List<ChartOfAccount> chartOfAccounts = new ArrayList<ChartOfAccount>();
-//        final StringBuilder queryStr = new StringBuilder();
-//        
-//        queryStr.append("select coa.glcode,coa.parentid,coa.tenantid from egf_chartofaccount as coa where coa.tenantid =: tenantId and coa.parentid.tenantid =: tenantId");
-//        
-//        if(chartOfAccountContract.getGlcode() != null)
-//            queryStr.append("and coa.purposeId.id =: glcode and coa.purposeId.tenantid =: tenantId");
-//        
-//        final Query query = entityManager.createQuery(queryStr.toString());
-//        query.setParameter("tenantId", chartOfAccountContract.getTenantId());
-//
-//        if(chartOfAccountContract.getGlcode() != null)
-//            query.setParameter("glcode", chartOfAccountContract.getGlcode());
-//        
-//        chartOfAccounts = query.getResultList();
-        
-        
-        final ChartOfAccountSpecification specification = new ChartOfAccountSpecification(
-                chartOfAccountContractRequest.getChartOfAccount());
-        final Pageable page = new PageRequest(chartOfAccountContractRequest.getPage().getOffSet(),
-                chartOfAccountContractRequest.getPage().getPageSize());
-        return chartOfAccountRepository.findAll(specification, page);
-    }
+	@Transactional
+	public ChartOfAccountContractResponse update(HashMap<String, Object> financialContractRequestMap) {
+		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("ChartOfAccountUpdate"), ChartOfAccountContractRequest.class);
+		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		ChartOfAccount chartOfAccountEntity = new ChartOfAccount(chartOfAccountContractRequest.getChartOfAccount());
+		chartOfAccountEntity.setVersion(chartOfAccountJpaRepository.findOne(chartOfAccountEntity.getId()).getVersion());
+		chartOfAccountJpaRepository.save(chartOfAccountEntity);
+		ChartOfAccountContract resp = modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
+		chartOfAccountContractResponse.setChartOfAccount(resp);
+		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+		return chartOfAccountContractResponse;
+	}
 
-    public BindingResult validate(final ChartOfAccountContractRequest chartOfAccountContractRequest, final String method,
-            final BindingResult errors) {
+	@Transactional
+	public ChartOfAccount create(final ChartOfAccount chartOfAccount) {
+		setChartOfAccount(chartOfAccount);
+		return chartOfAccountJpaRepository.save(chartOfAccount);
+	}
 
-        try {
-            switch (method) {
-            case "update":
-                Assert.notNull(chartOfAccountContractRequest.getChartOfAccount(),
-                        "ChartOfAccount to edit must not be null");
-                validator.validate(chartOfAccountContractRequest.getChartOfAccount(), errors);
-                break;
-            case "view":
-                // validator.validate(chartOfAccountContractRequest.getChartOfAccount(),
-                // errors);
-                break;
-            case "create":
-                Assert.notNull(chartOfAccountContractRequest.getChartOfAccounts(),
-                        "ChartOfAccounts to create must not be null");
-                for (final ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts())
-                    validator.validate(b, errors);
-                break;
-            case "updateAll":
-                Assert.notNull(chartOfAccountContractRequest.getChartOfAccounts(),
-                        "ChartOfAccounts to create must not be null");
-                for (final ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts())
-                    validator.validate(b, errors);
-                break;
-            default:
-                validator.validate(chartOfAccountContractRequest.getRequestInfo(), errors);
-            }
-        } catch (final IllegalArgumentException e) {
-            errors.addError(new ObjectError("Missing data", e.getMessage()));
-        }
-        return errors;
+	private void setChartOfAccount(final ChartOfAccount chartOfAccount) {
+		if (chartOfAccount.getAccountCodePurpose() != null) {
+			final AccountCodePurpose accountCodePurpose = null;// accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose());
+			if (accountCodePurpose == null)
+				throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
+						" Invalid accountCodePurpose");
+			chartOfAccount.setAccountCodePurpose(accountCodePurpose.getId());
+		}
+		if (chartOfAccount.getParentId() != null) {
+			final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId());
+			if (parentId == null)
+				throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+			chartOfAccount.setParentId(parentId.getId());
+		}
+	}
 
-    }
+	@Transactional
+	public ChartOfAccount update(final ChartOfAccount chartOfAccount) {
+		setChartOfAccount(chartOfAccount);
+		return chartOfAccountJpaRepository.save(chartOfAccount);
+	}
 
-    public ChartOfAccountContractRequest fetchRelatedContracts(
-            final ChartOfAccountContractRequest chartOfAccountContractRequest) {
-        final ModelMapper model = new ModelMapper();
-        for (final ChartOfAccountContract chartOfAccount : chartOfAccountContractRequest.getChartOfAccounts()) {
-            if (chartOfAccount.getAccountCodePurpose() != null) {
-                final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-                        .findOne(chartOfAccount.getAccountCodePurpose().getId());
-                if (accountCodePurpose == null)
-                    throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
-                            " Invalid accountCodePurpose");
-                model.map(accountCodePurpose, chartOfAccount.getAccountCodePurpose());
-            }
-            if (chartOfAccount.getParentId() != null) {
-                final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
-                if (parentId == null)
-                    throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-                model.map(parentId, chartOfAccount.getParentId());
-            }
-        }
-        final ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
-        if (chartOfAccount.getAccountCodePurpose() != null) {
-            final AccountCodePurpose accountCodePurpose = accountCodePurposeService
-                    .findOne(chartOfAccount.getAccountCodePurpose().getId());
-            if (accountCodePurpose == null)
-                throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
-                        " Invalid accountCodePurpose");
-            model.map(accountCodePurpose, chartOfAccount.getAccountCodePurpose());
-        }
-        if (chartOfAccount.getParentId() != null) {
-            final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
-            if (parentId == null)
-                throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-            model.map(parentId, chartOfAccount.getParentId());
-        }
-        return chartOfAccountContractRequest;
-    }
+	public List<ChartOfAccount> findAll() {
+		return chartOfAccountJpaRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+	}
 
+	public ChartOfAccount findByName(final String name) {
+		return chartOfAccountJpaRepository.findByName(name);
+	}
+
+	public ChartOfAccount findOne(final Long id) {
+		return chartOfAccountJpaRepository.findOne(id);
+	}
+
+	public Page<ChartOfAccount> search(final ChartOfAccountContractRequest chartOfAccountContractRequest) {
+		// ChartOfAccountContract chartOfAccountContract =
+		// chartOfAccountContractRequest.getChartOfAccount();
+		//
+		// List<ChartOfAccount> chartOfAccounts = new
+		// ArrayList<ChartOfAccount>();
+		// final StringBuilder queryStr = new StringBuilder();
+		//
+		// queryStr.append("select coa.glcode,coa.parentid,coa.tenantid from
+		// egf_chartofaccount as coa where coa.tenantid =: tenantId and
+		// coa.parentid.tenantid =: tenantId");
+		//
+		// if(chartOfAccountContract.getGlcode() != null)
+		// queryStr.append("and coa.purposeId.id =: glcode and
+		// coa.purposeId.tenantid =: tenantId");
+		//
+		// final Query query = entityManager.createQuery(queryStr.toString());
+		// query.setParameter("tenantId", chartOfAccountContract.getTenantId());
+		//
+		// if(chartOfAccountContract.getGlcode() != null)
+		// query.setParameter("glcode", chartOfAccountContract.getGlcode());
+		//
+		// chartOfAccounts = query.getResultList();
+
+		final ChartOfAccountSpecification specification = new ChartOfAccountSpecification(
+				chartOfAccountContractRequest.getChartOfAccount());
+		final Pageable page = new PageRequest(chartOfAccountContractRequest.getPage().getOffSet(),
+				chartOfAccountContractRequest.getPage().getPageSize());
+		return chartOfAccountJpaRepository.findAll(specification, page);
+	}
+
+	public BindingResult validate(final ChartOfAccountContractRequest chartOfAccountContractRequest,
+			final String method, final BindingResult errors) {
+
+		try {
+			switch (method) {
+			case "update":
+				Assert.notNull(chartOfAccountContractRequest.getChartOfAccount(),
+						"ChartOfAccount to edit must not be null");
+				validator.validate(chartOfAccountContractRequest.getChartOfAccount(), errors);
+				break;
+			case "view":
+				// validator.validate(chartOfAccountContractRequest.getChartOfAccount(),
+				// errors);
+				break;
+			case "create":
+				Assert.notNull(chartOfAccountContractRequest.getChartOfAccounts(),
+						"ChartOfAccounts to create must not be null");
+				for (final ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts())
+					validator.validate(b, errors);
+				break;
+			case "updateAll":
+				Assert.notNull(chartOfAccountContractRequest.getChartOfAccounts(),
+						"ChartOfAccounts to create must not be null");
+				for (final ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts())
+					validator.validate(b, errors);
+				break;
+			default:
+				validator.validate(chartOfAccountContractRequest.getRequestInfo(), errors);
+			}
+		} catch (final IllegalArgumentException e) {
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
+		}
+		return errors;
+
+	}
+
+	public ChartOfAccountContractRequest fetchRelatedContracts(
+			final ChartOfAccountContractRequest chartOfAccountContractRequest) {
+		final ModelMapper model = new ModelMapper();
+		for (final ChartOfAccountContract chartOfAccount : chartOfAccountContractRequest.getChartOfAccounts()) {
+			if (chartOfAccount.getAccountCodePurpose() != null) {
+				final AccountCodePurpose accountCodePurpose = null;//accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
+				if (accountCodePurpose == null)
+					throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
+							" Invalid accountCodePurpose");
+				model.map(accountCodePurpose, chartOfAccount.getAccountCodePurpose());
+			}
+			if (chartOfAccount.getParentId() != null) {
+				final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
+				if (parentId == null)
+					throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+				model.map(parentId, chartOfAccount.getParentId());
+			}
+		}
+		final ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
+		if (chartOfAccount.getAccountCodePurpose() != null) {
+			final AccountCodePurpose accountCodePurpose = null;//accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
+			if (accountCodePurpose == null)
+				throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
+						" Invalid accountCodePurpose");
+			model.map(accountCodePurpose, chartOfAccount.getAccountCodePurpose());
+		}
+		if (chartOfAccount.getParentId() != null) {
+			final ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
+			if (parentId == null)
+				throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+			model.map(parentId, chartOfAccount.getParentId());
+		}
+		return chartOfAccountContractRequest;
+	}
+
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 }

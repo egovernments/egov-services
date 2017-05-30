@@ -31,7 +31,7 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any Long of the program
+ *      3) This license does not grant any rights to any user of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
@@ -40,82 +40,50 @@
 
 package org.egov.egf.persistence.entity;
 
-import java.util.Date;
-
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "egeis_egfStatus")
+@SequenceGenerator(name = EgfStatus.SEQ_EGEIS_EGFSTATUS, sequenceName = EgfStatus.SEQ_EGEIS_EGFSTATUS, allocationSize = 1)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
+public class EgfStatus extends AbstractAuditable {
 
-public class EgfStatus implements java.io.Serializable {
+	private static final long serialVersionUID = -8641767461447916679L;
 
-	private static final long serialVersionUID = 1L;
-
-	private Long id;
+	public static final String SEQ_EGEIS_EGFSTATUS = "SEQ_EGEIS_EGFSTATUS";
 	
+	@Id
+	@GeneratedValue(generator = EgfStatus.SEQ_EGEIS_EGFSTATUS, strategy = GenerationType.SEQUENCE)
+	@NotNull
+	private Long id;
 
+	@NotNull
+	@Size(min = 3, max = 50)
 	private String moduleType;
 
+	@NotNull
+	@Size(min = 3, max = 20)
 	private String code;
-	
+
+	@NotNull
+	@Size(min = 3, max = 250)
 	private String description;
 
-	private String orderId;
-	
-	@Override
-	public String toString() {
-		return "EgwStatus [id=" + id + ", moduletype=" + moduleType
-				+ ", description=" + description + ", code=" + code + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result
-				+ ((moduleType == null) ? 0 : moduleType.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EgfStatus other = (EgfStatus) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (moduleType == null) {
-			if (other.moduleType != null)
-				return false;
-		} else if (!moduleType.equals(other.moduleType))
-			return false;
-		return true;
-	}
-
-	
-
-	
 }

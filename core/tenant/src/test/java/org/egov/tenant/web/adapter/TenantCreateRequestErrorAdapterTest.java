@@ -150,4 +150,21 @@ public class TenantCreateRequestErrorAdapterTest {
         assertThat(errorFields.get(0).getField()).isEqualTo("city.name");
         assertThat(errorFields.get(0).getMessage()).isEqualTo("city.name is required");
     }
+
+    @Test
+    public void test_should_set_error_when_ulb_grade_is_absent() {
+        when(tenant.getType()).thenReturn(TenantType.CITY);
+        when(tenant.getCity()).thenReturn(city);
+        when(tenant.isCityAbsent()).thenReturn(false);
+        when(city.isULBGradeAbsent()).thenReturn(true);
+
+        final ErrorResponse errorResponse = errorAdapter.adapt(tenant);
+
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
+
+        assertThat(errorFields.size()).isEqualTo(1);
+        assertThat(errorFields.get(0).getCode()).isEqualTo("core-tenant.TENANT_MISSING_ULB_GRADE");
+        assertThat(errorFields.get(0).getField()).isEqualTo("city.ulbGrade");
+        assertThat(errorFields.get(0).getMessage()).isEqualTo("city.ulbGrade is required");
+    }
 }

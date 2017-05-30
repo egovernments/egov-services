@@ -44,8 +44,8 @@ import lombok.Data;
 @Data
 public class ErrorResponse {
 
-    private ResponseInfo responseInfo;
+	private ResponseInfo responseInfo;
 
-    private Error error;
+	private Error error;
 
 }

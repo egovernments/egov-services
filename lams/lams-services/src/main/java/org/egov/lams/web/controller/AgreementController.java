@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -16,6 +15,7 @@ import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
+import org.egov.lams.web.errorhandlers.LamsException;
 import org.egov.lams.web.validator.AgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,12 +83,18 @@ public class AgreementController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
 
-		if (errors.hasErrors()) {
+		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		agreementValidator.validateAgreement(agreementRequest);
+		agreementValidator.validateAgreement(agreementRequest,errors);
+		
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 		
 		Agreement agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
@@ -174,11 +181,10 @@ public class AgreementController {
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields().put(errs.getField(),errs.getRejectedValue());
+				error.getFields().put(errs.getField(),errs.getDefaultMessage());
 			}
 		}
 		errRes.setError(error);
 		return errRes;
 	}
-
 }

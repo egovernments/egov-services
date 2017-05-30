@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -244,18 +245,22 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUsers.sql"})
+			"/sql/createUsers.sql",
+			"/sql/createRoles.sql",
+			"/sql/createUserRoles.sql"
+	})
 	public void multi_field_matching_user_type_test() {
 		UserSearchCriteria userSearch = UserSearchCriteria.builder()
 				.active(true)
 				.tenantId("ap.public")
 				.type("EMPLOYEE")
+				.roleCodes(Arrays.asList("EMP", "GRO"))
 				.build();
 		MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
 				new MultiFieldsMatchingSpecification(userSearch);
 
 		List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
-		assertThat(userList).hasSize(2);
+		assertThat(userList).hasSize(1);
 	}
 }

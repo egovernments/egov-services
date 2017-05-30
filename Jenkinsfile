@@ -9,7 +9,11 @@ def notifier = "";
 
 try {
     node("slave"){
-        checkout scm
+        checkout([
+            scm: 'GitSCM',
+            branches: [[name: 'origin/master']],
+            sparseCheckoutPaths: [[path:'jenkins'], [path: 'Jenkinsfile'], [path: 'build.sh'], [path: "${path}"]]
+        ])
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
         code_builder = load("jenkins/code_builder.groovy")

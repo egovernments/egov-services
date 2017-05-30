@@ -1,0 +1,1229 @@
+  swagger: '2.0'
+  # eGSP YAML Template Version: 1.0 
+  # This is a version number for the YAML template. This must not be changed.
+  
+  info:
+    version: 1.0.0
+    title: Water Charges Management Service (WCMS) Master APIs
+    description: |
+      APIs available for WCMS Masters and mapping between two masters
+        - Create, Update and Search for CategoryType
+        - Create, Update and Search for PipeSizeType
+        - Create, Update and Search for DonationType (NOT SUPPORTED YET)
+        - Create, Update and Search for DocumentType
+        - Search for SourceType
+        - Search for ConnectionType
+        - Search for ApplicationType
+        - Create, Update and Search for mapping between PropertyType-CategoryType
+        - Create, Update and Search for mapping between PropertyType-PipeSizeType
+        - Create, Update and Search for mapping between PropertyType-UsageType
+        - Create, Update and Search for mapping between DocumentType-ApplicationType
+
+    contact:
+      name: Rishi
+      email: rishi@egovernments.org
+  host: phoenix-qa.egovernments.org
+  schemes:
+    - https
+  basePath: '/v1/egov-wcms-masters/[API endpoint]'
+  
+  paths:
+    /categorytype/_create:
+      post:
+        summary: creates different types of allowed category type
+        description: allowed category type
+        tags:
+          - CategoryType
+        parameters:
+          - name: CategoryType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/CategoryTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/CategoryTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /categorytype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - CategoryType
+        parameters:
+          - name: CategoryType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/CategoryTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/CategoryTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /categorytype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - CategoryType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/CategoryType'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  # PipeSize Type API
+    /pipesizetype/_create:
+      post:
+        summary: creates different types of allowed pipe size type
+        description: allowed pipe size type
+        tags:
+          - PipeSizeType
+        parameters:
+          - name: PipeSizeType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PipeSizeTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PipeSizeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /pipesizetype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - PipeSizeType
+        parameters:
+          - name: PipeSizeType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PipeSizeTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PipeSizeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /pipesizetype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - PipeSizeType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/PipeSizeTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  # Document Type API
+    /documenttype/_create:
+      post:
+        summary: creates different types of allowed document type
+        description: allowed document type
+        tags:
+          - DocumentType
+        parameters:
+          - name: DocumentType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/DocumentTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/DocumentTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /documenttype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - DocumentType
+        parameters:
+          - name: DocumentType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/DocumentTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/DocumentTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /documenttype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - DocumentType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/DocumentTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  # Source Type API
+    /sourcetype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - SourceType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/SourceTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  # Connection Type API
+    /connectiontype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - ConnectionType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/ConnectionTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    # Application Type API
+    /applicationtype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - ApplicationType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/ApplicationTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  # Property Type Category Type API
+    /propertytype-categorytype/_create:
+      post:
+        summary: creates mapping between property type and category type
+        description: allows mapping between two types.
+        tags:
+          - PropertyTypeCategoryType
+        parameters:
+          - name: PropertyTypeCategoryType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PropertyTypeCategoryTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PropertyTypeCategoryTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytype-categorytype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - PropertyTypeCategoryType
+        parameters:
+          - name: PropertyTypeCategoryType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PropertyTypeCategoryTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PropertyTypeCategoryTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytype-categorytype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - PropertyTypeCategoryType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/propertyTypeId"
+          - $ref: "#/parameters/categoryTypeId"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/PropertyTypeCategoryTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  # Property Type PipeSize Type API
+    /propertytype-pipesizetype/_create:
+      post:
+        summary: creates mapping between property type and pipe size type
+        description: allows mapping between two types.
+        tags:
+          - PropertyTypePipeSizeType
+        parameters:
+          - name: PropertyTypePipeSizeType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PropertyTypePipeSizeTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PropertyTypePipeSizeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytype-pipesizetype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - PropertyTypePipeSizeType
+        parameters:
+          - name: PropertyTypePipeSizeType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PropertyTypePipeSizeTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PropertyTypePipeSizeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytype-pipesizetype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - PropertyTypePipeSizeType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/propertyTypeId"
+          - $ref: "#/parameters/pipeSizeTypeId"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/PropertyTypePipeSizeTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  # Property Type Usage Type API
+    /propertytype-usagetype/_create:
+      post:
+        summary: creates mapping between property type and usage type
+        description: allows mapping between two types.
+        tags:
+          - PropertyTypeUsageType
+        parameters:
+          - name: PropertyTypeUsageType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PropertyTypeUsageTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PropertyTypeUsageTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytype-usagetype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - PropertyTypeUsageType
+        parameters:
+          - name: PropertyTypeUsageType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/PropertyTypeUsageTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/PropertyTypeUsageTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytype-usagetype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - PropertyTypeUsageType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/propertyTypeId"
+          - $ref: "#/parameters/usageTypeId"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/PropertyTypeUsageTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  # Document Type Vs Application Type API
+    /documenttype-applicationtype/_create:
+      post:
+        summary: creates mapping between property type and application type
+        description: allows mapping between two types.
+        tags:
+          - DocumentTypeApplicationType
+        parameters:
+          - name: DocumentTypeApplicationType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/DocumentTypeApplicationTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/DocumentTypeApplicationTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /documenttype-applicationtype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - DocumentTypeApplicationType
+        parameters:
+          - name: DocumentTypeApplicationType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/DocumentTypeApplicationTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/DocumentTypeApplicationTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /documenttype-applicationtype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - DocumentTypeApplicationType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/documentTypeId"
+          - $ref: "#/parameters/applicationTypeId"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/DocumentTypeApplicationTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  parameters:
+    id:
+      name: id
+      in: query
+      description: unique identifier of object
+      required: false
+      type: integer
+      format: int64
+
+    code:
+      name: code
+      in: query
+      description: human reabable code
+      required: false
+      type: string
+      minLength: 0
+      maxLength: 64
+      
+    name:
+      name: name
+      in: query
+      description: human reabable name
+      required: false
+      type: string
+      minLength: 0
+      maxLength: 100
+      
+    propertyTypeId:
+      name: propertyTypeId
+      in: query
+      description: unique identifier of property type
+      required: false
+      type: integer
+      format: int64
+      
+    categoryTypeId:
+      name: categoryTypeId
+      in: query
+      description: unique identifier of category type
+      required: false
+      type: integer
+      format: int64
+      
+    pipeSizeTypeId:
+      name: pipeSizeTypeId
+      in: query
+      description: unique identifier of pipe size type
+      required: false
+      type: integer
+      format: int64
+      
+    usageTypeId:
+      name: usageTypeId
+      in: query
+      description: unique identifier of usage type
+      required: false
+      type: integer
+      format: int64
+    
+    documentTypeId:
+      name: documentTypeId
+      in: query
+      description: unique identifier of document type
+      required: false
+      type: integer
+      format: int64
+    
+    applicationTypeId:
+      name: applicationTypeId
+      in: query
+      description: unique identifier of application type
+      required: false
+      type: integer
+      format: int64
+      
+  definitions:
+  
+  # Proprty Type and Category Type mapping definition
+    PropertyTypeCategoryTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        propertyTypeCategoryType:
+          $ref: '#/definitions/PropertyTypeCategoryType'
+      required:
+        - RequestInfo
+        - propertyTypeCategoryType
+    
+    PropertyTypeCategoryTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PropertyTypeCategoryType:
+          $ref: '#/definitions/PropertyTypeCategoryType'
+          
+    PropertyTypeCategoryTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PropertyTypeCategoryTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/PropertyTypeCategoryType'
+    
+    PropertyTypeCategoryType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the entered type, typically defined by system.
+        propertyTypeId:
+          type: integer
+          format: int64
+          description: Unique identifier of property type object
+        categoryTypeId:
+          type: integer
+          format: int64
+          description: unique identifier of category type object
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          
+  # Proprty Type and PipeSize Type mapping definition
+    PropertyTypePipeSizeTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        propertyTypePipeSizeType:
+          $ref: '#/definitions/PropertyTypePipeSizeType'
+      required:
+        - RequestInfo
+        - propertyTypePipeSizeType
+    
+    PropertyTypePipeSizeTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PropertyTypePipeSizeType:
+          $ref: '#/definitions/PropertyTypePipeSizeType'
+          
+    PropertyTypePipeSizeTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PropertyTypeCategoryTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/PropertyTypePipeSizeType'
+    
+    PropertyTypePipeSizeType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the entered type, typically defined by system.
+        propertyTypeId:
+          type: integer
+          format: int64
+          description: Unique identifier of property type object
+        pipeSizeTypeId:
+          type: integer
+          format: int64
+          description: unique identifier of pipe size type object
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          
+          
+  # Proprty Type and Usage Type mapping definition
+    PropertyTypeUsageTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        propertyTypeUsageType:
+          $ref: '#/definitions/PropertyTypeUsageType'
+      required:
+        - RequestInfo
+        - propertyTypeUsageType
+    
+    PropertyTypeUsageTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PropertyTypeUsageType:
+          $ref: '#/definitions/PropertyTypeUsageType'
+          
+    PropertyTypeUsageTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PropertyTypeUsageTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/PropertyTypeUsageType'
+            
+    PropertyTypeUsageType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the entered type, typically defined by system.
+        propertyTypeId:
+          type: integer
+          format: int64
+          description: Unique identifier of property type object
+        usageTypeId:
+          type: integer
+          format: int64
+          description: unique identifier of property usage type object
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+
+  # Document Type and Application Type mapping definition
+    DocumentTypeApplicationTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        documentTypeApplicationType:
+          $ref: '#/definitions/DocumentTypeApplicationType'
+      required:
+        - RequestInfo
+        - documentTypeApplicationType
+    
+    DocumentTypeApplicationTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DocumentTypeApplicationType:
+          $ref: '#/definitions/DocumentTypeApplicationType'
+          
+    DocumentTypeApplicationTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DocumentTypeApplicationTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/DocumentTypeApplicationType'
+
+    DocumentTypeApplicationType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the entered type, typically defined by system.
+        documentTypeId:
+          type: integer
+          format: int64
+          description: Unique identifier of document type object
+        applicationTypeId:
+          type: integer
+          format: int64
+          description: unique identifier of application type object
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+
+  # Application Type definitions
+    ApplicationTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        ApplicationTypes:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/ApplicationType'
+          
+    ApplicationType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          description: unique code this should be assigned by system.
+          maxLength: 64
+          enum:
+            - ADDITION CONNECTION
+            - CHANGE OF USE
+            - CLOSING CONNECTION
+            - HOLDING CONNECTION
+            - NEW CONNECTION
+            - REGULARIZATION CONNECTION
+            - TITTLE TRANSFER
+        name: 
+          type: string
+          description: human readable name should be assigned by system.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+  
+  # WaterConnection Type definitions
+    ConnectionTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        ConnectionTypes:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/ConnectionType'
+    
+    ConnectionType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          description: unique code this should be assigned by system.
+          maxLength: 64
+          enum:
+            - TEMPORARY
+            - PERMANENT
+        name: 
+          type: string
+          description: human readable name should be assigned by system.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+      required:
+        - code
+        - name
+  
+  # Water Source Type definitions
+    SourceTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        SourceTypes:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/SourceType'
+    
+    SourceType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          description: unique code this should be assigned by system.
+          maxLength: 64
+          enum:
+            - SURFACE
+            - GROUND
+        name: 
+          type: string
+          description: human readable name should be assigned by system.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+      required:
+        - code
+        - name
+  
+  # Document Type definitions
+    DocumentTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        document:
+          $ref: '#/definitions/DocumentType'
+      required:
+        - RequestInfo
+        - document
+    
+    DocumentTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DocumentType:
+          $ref: '#/definitions/DocumentType'
+          
+    DocumentTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DocumentTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/DocumentType'
+          
+    DocumentType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          type: string
+          description: unique code this can be assigned by user.
+          maxLength: 64
+        name: 
+          type: string
+          description: human readable name should be assigned by user.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+  
+  # PipeSize Type definitions
+    PipeSizeTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        pipesize:
+          $ref: '#/definitions/PipeSizeType'
+      required:
+        - RequestInfo
+        - pipesize
+  
+    PipeSizeTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PipeSizeType:
+          $ref: '#/definitions/PipeSizeType'
+          
+    PipeSizeTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PipeSizeTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/PipeSizeType'
+  
+    PipeSizeType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          type: string
+          description: unique code this can be assigned by user.
+          maxLength: 64
+        name: 
+          type: string
+          description: human readable name should be assigned by user.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        sizeInMilimeter:
+          type: number
+          description: Unique H.S.C pipe size in milli-meters.
+        sizeInInch:
+          type: number
+          description: H.S.C pipe size in inches.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          
+          
+  # Category Type definitions
+    CategoryTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        category:
+          $ref: '#/definitions/CategoryType'
+      required:
+        - RequestInfo
+        - category
+    
+    CategoryTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        CategoryType:
+          $ref: '#/definitions/CategoryType'
+    
+    CategoryType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          type: string
+          description: unique code this can be assigned by user.
+          maxLength: 64
+        name: 
+          type: string
+          description: human readable name should be assigned by user.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          
+  

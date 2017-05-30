@@ -11,7 +11,7 @@ try {
     node("slave"){
         checkout([
             $class: 'GitSCM',
-            branches: [[name: '*/master']],
+            branches: [[name: 'origin/master']],
             sparseCheckoutPaths: [[path:'jenkins'], [path: 'Jenkinsfile'], [path: 'build.sh'], [path: path]]
         ])
         sh "git rev-parse --short HEAD > .git/commit-id".trim()

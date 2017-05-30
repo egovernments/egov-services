@@ -13,7 +13,7 @@ import org.egov.wcms.repository.builder.PropertyCategoryQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyCategoryRequest;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.controller.PropertyCategoryController;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -115,7 +115,7 @@ public class PropertyCategoryRepositoryTest {
 		
 		Object[] obj = new Object[] {};
         
-        PropertyCategoryRequest propertyCategoryRequest = Mockito.mock(PropertyCategoryRequest.class);
+        PropertyTypeCategoryTypeReq propertyCategoryRequest = Mockito.mock(PropertyTypeCategoryTypeReq.class);
         when(jdbcTemplate.update("query", obj)).thenReturn(1);
                 
 		assertNotNull(propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest));

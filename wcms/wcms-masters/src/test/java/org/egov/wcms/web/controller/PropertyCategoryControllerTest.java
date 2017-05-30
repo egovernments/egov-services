@@ -16,7 +16,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyCategoryResponse;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.controller.PropertyCategoryController;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -64,7 +64,7 @@ public class PropertyCategoryControllerTest {
 	public void test_Should_Search_PropertyCategory() throws Exception{
 		
 		List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
-		PropertyCategoryResponse propertyCategoryResponse = new PropertyCategoryResponse();
+		PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
 		RequestInfo requestInfo = new RequestInfo();
         ResponseInfo responseInfo = new ResponseInfo();
 		PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();

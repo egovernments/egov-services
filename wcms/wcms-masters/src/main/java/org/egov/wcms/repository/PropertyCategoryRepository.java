@@ -48,8 +48,8 @@ import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.builder.PropertyCategoryQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyCategoryRequest;
-import org.egov.wcms.web.contract.PropertyCategoryResponse;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ public class PropertyCategoryRepository {
     @Autowired
     private PropertyCategoryRowMapper propertyCategoryRowMapper;
     
-    public PropertyCategoryRequest persistCreatePropertyCategory(final PropertyCategoryRequest propertyCategoryRequest) {
+    public PropertyTypeCategoryTypeReq persistCreatePropertyCategory(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         LOGGER.info("PropertyCategoryRequest::" + propertyCategoryRequest);
         final String propertyCategoryInsert = propertyCategoryueryBuilder.insertPropertyCategoryQuery();
         
@@ -81,16 +81,18 @@ public class PropertyCategoryRepository {
         String categoryQuery = propertyCategoryueryBuilder.getCategoryId();
         Long categoryId = 0L;
         try{
-        	categoryId = jdbcTemplate.queryForObject(categoryQuery, new Object[] { propertyCategoryRequest.getPropertyCategory().getCategoryTypeName()}, Long.class);
+        	categoryId = jdbcTemplate.queryForObject(categoryQuery, new Object[] { propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName()}, Long.class);
+        	LOGGER.info("Category Id: "+categoryId);
         }catch(EmptyResultDataAccessException e){
             LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
         }
     	if(categoryId == null){
             LOGGER.info("Invalid input.");
         }
-        Object[] obj = new Object[] { 10, categoryId, propertyCategoryRequest.getPropertyCategory().getActive(), propertyCategoryRequest.getPropertyCategory().getTenantId(), new Date(new java.util.Date().getTime()),
-        		propertyCategoryRequest.getPropertyCategory().getAuditDetails().getCreatedBy(), new Date(new java.util.Date().getTime()), 
-        		propertyCategoryRequest.getPropertyCategory().getAuditDetails().getLastModifiedBy()};
+        Object[] obj = new Object[] { 10, categoryId, propertyCategoryRequest.getPropertyTypeCategoryType().getActive(), 
+        		propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId(), new Date(new java.util.Date().getTime()),
+        		propertyCategoryRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), 
+        		propertyCategoryRequest.getRequestInfo().getUserInfo().getId()};
         try{
         jdbcTemplate.update(propertyCategoryInsert, obj);
         }catch(Exception e){
@@ -99,7 +101,7 @@ public class PropertyCategoryRepository {
         return propertyCategoryRequest;
     }
     
-    public PropertyCategoryResponse findForCriteria(PropertyCategoryGetRequest propertyCategoryRequest) {
+    public PropertyTypeCategoryTypesRes findForCriteria(PropertyCategoryGetRequest propertyCategoryRequest) {
         List<Object> preparedStatementValues = new ArrayList<Object>();
         try{
         if(propertyCategoryRequest.getCategoryType() != null){
@@ -120,8 +122,9 @@ public class PropertyCategoryRepository {
         	propertyTypeCategoryType.setCategoryTypeName(jdbcTemplate.queryForObject(categoryNameQuery, 
         			new Object[] {propertyTypeCategoryType.getCategoryTypeId()}, String.class));
         }
-        PropertyCategoryResponse propertyCategoryResponse = new PropertyCategoryResponse();
-        propertyCategoryResponse.setPropertyCategories(propertyCategories);
+        LOGGER.info("PropertyCategoryList: "+propertyCategories.toString());
+        PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
+        propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
         return propertyCategoryResponse;
     }
 

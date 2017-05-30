@@ -40,7 +40,7 @@
 package org.egov.wcms.repository.rowmapper;
 
 import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.web.contract.PropertyCategoryResponse;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

@@ -48,8 +48,8 @@ import org.egov.wcms.producers.PropertyCategoryProducer;
 import org.egov.wcms.repository.PropertyCategoryRepository;
 import org.egov.wcms.web.contract.CategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyCategoryRequest;
-import org.egov.wcms.web.contract.PropertyCategoryResponse;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ public class PropertyCategoryService {
     public static final Logger logger = LoggerFactory.getLogger(PropertyCategoryService.class);
 
     
-	 public PropertyCategoryRequest createPropertyCategory(final String topic, final String key, final PropertyCategoryRequest propertyCategoryRequest) {
+	 public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key, final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 	        
 		 	final ObjectMapper mapper = new ObjectMapper();
 	        String propertyCategoryValue = null;
@@ -90,11 +90,11 @@ public class PropertyCategoryService {
 	        return propertyCategoryRequest;
 	    }
 	 
-	    public PropertyCategoryRequest create(final PropertyCategoryRequest propertyCategoryRequest) {
+	    public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 	        return propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest);
 	    }
 	    
-	    public PropertyCategoryResponse getPropertyCategories(PropertyCategoryGetRequest propertyCategoryGetRequest) {
+	    public PropertyTypeCategoryTypesRes getPropertyCategories(PropertyCategoryGetRequest propertyCategoryGetRequest) {
 	        return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
 
 	    }

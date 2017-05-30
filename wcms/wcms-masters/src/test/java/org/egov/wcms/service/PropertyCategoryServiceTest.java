@@ -14,8 +14,8 @@ import org.egov.wcms.producers.PropertyCategoryProducer;
 import org.egov.wcms.repository.PropertyCategoryRepository;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyCategoryRequest;
-import org.egov.wcms.web.contract.PropertyCategoryResponse;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,7 +52,7 @@ public class PropertyCategoryServiceTest {
 	@Test
 	public void test_Should_Find_PropertyCategory() throws Exception{
         		
-        PropertyCategoryRequest propertyCategoryRequest = new PropertyCategoryRequest();
+        PropertyTypeCategoryTypeReq propertyCategoryRequest = new PropertyTypeCategoryTypeReq();
         doReturn(propertyCategoryRequest).when(propertyCategoryRepository).persistCreatePropertyCategory(propertyCategoryRequest);
                 
 		assertTrue(propertyCategoryRequest.equals(propertyCategoryService.create(propertyCategoryRequest)));
@@ -61,7 +61,7 @@ public class PropertyCategoryServiceTest {
     @Test(expected = Exception.class)
 	public void test_throwException_Find_PropertyCategory() throws Exception{
         		
-        PropertyCategoryRequest propertyCategoryRequest = Mockito.mock(PropertyCategoryRequest.class);
+        PropertyTypeCategoryTypeReq propertyCategoryRequest = Mockito.mock(PropertyTypeCategoryTypeReq.class);
         when(propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest)).thenThrow(Exception.class);
                 
 		assertTrue(propertyCategoryRequest.equals(propertyCategoryService.create(propertyCategoryRequest)));
@@ -71,7 +71,7 @@ public class PropertyCategoryServiceTest {
 	public void test_Should_Get_PropertyCategories() throws Exception{
         
 		PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
-		PropertyCategoryResponse propertyCategoryResponse = new PropertyCategoryResponse();
+		PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
 		propertyCategory.setPropertyTypeName("propertyType");
 		propertyCategory.setCategoryTypeName("categoryType");
 		propertyCategory.setActive(true);

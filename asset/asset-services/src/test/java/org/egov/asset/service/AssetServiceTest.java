@@ -41,10 +41,11 @@ public class AssetServiceTest {
 	public void testSearch() {
 		List<Asset> assets = new ArrayList<>();
 		assets.add(getAsset());
-
+		AssetResponse assetResponse = new AssetResponse();
+		assetResponse.setAssets(assets);
 		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
 
-		assertTrue(assets.equals(assetService.getAssets(any(AssetCriteria.class))));
+		assertTrue(assetResponse.equals(assetService.getAssets(any(AssetCriteria.class))));
 	}
 
 	@Test

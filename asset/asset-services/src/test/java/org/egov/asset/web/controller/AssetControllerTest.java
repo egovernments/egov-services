@@ -20,6 +20,7 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.RevaluationService;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.validator.AssetValidator;
 import org.egov.common.contract.response.ResponseInfo;
@@ -47,6 +48,9 @@ public class AssetControllerTest {
 
 	@MockBean
 	private AssetValidator assetValidator;
+	
+	@MockBean
+	private RevaluationService revaluationService;
 	
 	/*@Test
 	public void test_Should_Search_Asset() throws Exception{

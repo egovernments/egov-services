@@ -100,13 +100,14 @@ public class DemandRepository {
 		for (DemandReason demandReason : demandReasons) {
 			
 			demandDetail = new DemandDetails();
-			if("Rent".equals(demandReason.getName()))
+			LOGGER.info("the demand reason object in the loop : "+ demandReason);
+			if ("Rent".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-			else if ("Goodwill Amount".equals(demandReason.getName()) &&  goodWill == 0){
+			} else if ("Goodwill Amount".equalsIgnoreCase(demandReason.getName()) && goodWill == 0) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
 				goodWill++;
-				
-			}else if("Advance Tax".equals(demandReason.getName()) &&  advance == 0){
+
+			} else if ("Advance Tax".equalsIgnoreCase(demandReason.getName()) && advance == 0) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
 				advance++;
 			}

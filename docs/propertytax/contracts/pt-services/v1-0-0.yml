@@ -205,7 +205,7 @@ definitions:
     
   Property:
     type: object
-    description: A Object holds the one time data for a property
+    description: A Object holds the basic data for a property
     properties:
       id:
         type: integer
@@ -264,14 +264,17 @@ definitions:
       isAuthorised:
         type: boolean
         description: Property can be authorised or not authorised in a ULB depends on different parameters Eg. If there is Building plan approval property is a authorised property otherwise its a not a authorised property. System will capture the info here.
+        default: true
       isUnderWorkflow:
         type: boolean
         description: There are different transactions can be performed on a property and all the transactions goes through the work flow. If one workflow is happening system should not allow other work flow on a same property so, when any work flow starts we flag this field as true and when the same work flow ends we flag this field as false.
+        default: false
       boundary:
         $ref: "#/definitions/PropertyBoundary"
       active:
         type: boolean
         description: True if the property is active and False if the property is inactive.
+        default: true
       channel:
         type: string
         description: Property can be created from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
@@ -288,7 +291,9 @@ definitions:
     - upicNo
     - creationReason
     - address
-    - assessmentDate
+    - owners
+    - boundary
+    - propertyDetail
     - occupancyDate
     - channel
     
@@ -352,7 +357,7 @@ definitions:
         minLength: 1
       status:
         type: string
-        description: status of the Property l
+        description: status of the Property
         maxLength: 8
         minLength: 1
         enum:
@@ -384,12 +389,12 @@ definitions:
         minLength: 1
       category:
         type: string
-        description: category
+        description: category of the property like Residential, Non-Residential, etc.
         maxLength: 16
         minLength: 1
       usage:
         type: string
-        description: usage of the PropertyDetail
+        description: usage of the property
         maxLength: 16
         minLength: 1
       department:
@@ -402,56 +407,57 @@ definitions:
         description: apartment of the PropertyDetail
         maxLength: 16
         minLength: 1
-      length:
+      siteLength:
         type: number
         format: double
-        description: length of the PropertyDetail
-      breadth:
+        description: length of the land
+      siteBreadth:
         type: number
         format: double
-        description: breadth of the PropertyDetail
+        description: breadth of the land
       sitalArea:
         type: number
         format: double
-        description: sital area of the PropertyDetail
+        description: sital area of the land
       totalBuiltupArea:
         type: number
         format: double
-        description: total builtup area of the PropertyDetail
+        description: total builtup area of the property. If building has multiple floors, this is a sum of individual floor builtup area.
       undividedShare:
         type: number
         format: double
-        description: undivided share of the PropertyDetail
+        description: undivided share of the flat. In case of apartment this is valid.
       noOfFloors:
         type: integer
         format: int64
-        description: no of floors of the PropertyDetail
+        description: no of floors in the property
       isSuperStructure:
         type: boolean
-        description: is super structure of the PropertyDetail
+        description: is property a super structure. If Land is ownned by one person and building constructed by one person then its called Super structure
+        default: false
       landOwner:
         type: string
-        description: land owner of the PropertyDetail
+        description: Name of the land owner in case property is Super structure
         maxLength: 128
         minLength: 1
       floorType:
         type: string
-        description: floor type of the PropertyDetail
+        description: type of floor
         maxLength: 16
         minLength: 1
       woodType:
         type: string
-        description: wood type of the PropertyDetail
+        description: type of wood used in the property
         maxLength: 16
         minLength: 1
       roofType:
         type: string
-        description: roof type of the PropertyDetail
+        description: type of roof the property having
         maxLength: 16
         minLength: 1
       wallType:
         type: string
-        description: wall type of the PropertyDetail
+        description: type of walls the property having
         maxLength: 16
         minLength: 1
       vacantLand:
@@ -462,7 +468,7 @@ definitions:
         items:
           $ref: '#/definitions/Floor'
       documents:
-        description: documents
+        description: The documents attached during assessment, modification or any transaction happened on the property.
         type: array
         items:
           $ref: '#/definitions/Document'
@@ -471,12 +477,16 @@ definitions:
         description: Work flow ref id.
       channel:
         type: string
-        description: channel of the PropertyDetail
+        description: Property can be created or modified from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
         maxLength: 16
         minLength: 4
+        enum:
+         - SYSTEM
+         - CFC_COUNTER
+         - CITIZEN
       applicationNo:
         type: string
-        description: Acknowldgement number given to citizen on submitting the application.
+        description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
         maxLength: 64
         minLength: 1
       workFlowDetails:
@@ -486,6 +496,8 @@ definitions:
     required:
     - tenantId
     - channel
+    - sitalArea
+    - propertyType
 
   PropertyBoundary:
     type: object
@@ -502,11 +514,11 @@ definitions:
       longitude:
         type: number
         format: double
-        description: longitude of the PropertyBoundary
+        description: longitude of the Property
       latitude:
         type: number
         format: double
-        description: latitude of the PropertyBoundary
+        description: latitude of the Property
       revenueZone:
         $ref: '#/definitions/Boundary'
       revenueWard:
@@ -523,22 +535,22 @@ definitions:
         $ref: '#/definitions/Boundary'
       northBoundedBy:
         type: string
-        description: north bounded by of the PropertyBoundary
+        description: property bounded by on north side
         maxLength: 256
         minLength: 1
       eastBoundedBy:
         type: string
-        description: east bounded by of the PropertyBoundary
+        description: property bounded by on east side
         maxLength: 256
         minLength: 1
       westBoundedBy:
         type: string
-        description: west bounded by of the PropertyBoundary
+        description: property bounded by on west side
         maxLength: 256
         minLength: 1
       southBoundedBy:
         type: string
-        description: south bounded by of the PropertyBoundary
+        description: property bounded by on south side
         maxLength: 256
         minLength: 1
       auditDetails:
@@ -553,47 +565,48 @@ definitions:
       properties:
         surveyNumber:
           type: string
-          description: survey number of the VacantLandProperty
+          description: survey number of the Land
           maxLength: 64
           minLength: 4
         pattaNumber:
           type: string
-          description: patta number of the VacantLandProperty
+          description: patta number of the Land
           maxLength: 64
           minLength: 4
         marketValue:
           type: number
           format: double
-          description: market value of the VacantLandProperty
+          description: market value of the Land
         capitalValue:
           type: number
           format: double
-          description: capital value of the VacantLandProperty
+          description: capital value of the Land
         layoutApprovedAuth:
           type: string
-          description: layout approved auth of the VacantLandProperty
+          description: layout approved authority of the Land
           maxLength: 64
           minLength: 4
         layoutPermissionNo:
           type: string
-          description: layout permission no of the VacantLandProperty
+          description: layout permission no by approved authority for the Land
           maxLength: 64
           minLength: 4
         layoutPermissionDate:
           type: string
           format: date
-          description: layout permission date of the VacantLandProperty
+          description: layout permission date by approved authority for the Land
         resdPlotArea:
           type: number
           format: double
-          description: resd plot area of the VacantLandProperty
+          description: resd plot area of the land
         nonResdPlotArea:
           type: number
           format: double
-          description: non resd plot area of the VacantLandProperty
+          description: non resd plot area of the land
         
   Floor:
     type: object
+    description: The floor details
     properties:
       id:
         type: integer
@@ -601,22 +614,22 @@ definitions:
         description: Unique Identifier of the Floor
       tenantId:
         type: string
-        description: tenant id of the Floor
+        description: tenant id of the floor
         maxLength: 128
         minLength: 4
       floorNo:
         type: string
-        description: floor no of the Floor
+        description: floor no for the floor
         maxLength: 16
         minLength: 1
       unitNo:
         type: string
-        description: unit no of the Floor
+        description: unit no in a floor. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
         maxLength: 8
         minLength: 1
-      type:
+      unitType:
         type: string
-        description: type of the Floor
+        description: type of the unit in a floor
         maxLength: 16
         minLength: 1
       length:
@@ -634,16 +647,11 @@ definitions:
       assessableArea:
         type: number
         format: double
-        description: assessable area of the Floor
+        description: assessable area for the Floor. Some ULBs have their own logic to consider builtup area for tax calculation.
       bpaBuiltupArea:
         type: number
         format: double
-        description: bpa builtup area of the Floor
-      category:
-        type: string
-        description: category of the Floor
-        maxLength: 16
-        minLength: 1
+        description: builtup area given during the Building plan approval of the Floor
       usage:
         type: string
         description: usage of the Floor
@@ -659,33 +667,34 @@ definitions:
         description: structure of the Floor
         maxLength: 16
         minLength: 1
-      depreciation:
+      age:
         type: string
-        description: depreciation of the Floor
+        description: age of the Floor
         maxLength: 16
         minLength: 1
       occupierName:
         type: string
-        description: occupier name of the Floor
+        description: Name of the occupier in a Floor
         maxLength: 128
         minLength: 1
       firmName:
         type: string
-        description: firm name of the Floor
+        description: Name of the firm in a Floor
         maxLength: 128
         minLength: 1
       rentCollected:
         type: number
         format: double
-        description: rent collected of the Floor
+        description: rent collected for the Floor it its given tenants are living.
       exemptionReason:
         type: string
-        description: exemption reason of the Floor
+        description: exemption reason for the Floor
         maxLength: 32
         minLength: 1
       isStructured:
         type: boolean
-        description: is structured of the Floor
+        description: is floor is structured. Some building may not be in square or rectangle or in a proper shape to calculate a builtup area.
+        default: true
       occupancyDate:
         type: string
         format: date
@@ -693,32 +702,32 @@ definitions:
       constCompletionDate:
         type: string
         format: date
-        description: const completion date of the Floor
+        description: construction completion date of the Floor
       bpaNo:
         type: string
-        description: bpa no of the Floor
+        description: Buidling plan approval no for the Floor
         maxLength: 16
         minLength: 1
       bpaDate:
         type: string
         format: date
-        description: bpa date of the Floor
+        description: Buidling plan approval date for the Floor
       manualArv:
         type: number
         format: double
-        description: manual arv of the Floor
+        description: manual arv for the Floor
       arv:
         type: number
         format: double
-        description: arv of the Floor
+        description: The system calculated arv for the Floor
       electricMeterNo:
         type: string
-        description: electric meter no of the Floor
+        description: electricity meter no for the Floor
         maxLength: 64
         minLength: 1
       waterMeterNo:
         type: string
-        description: water meter no of the Floor
+        description: water meter no for the Floor
         maxLength: 64
         minLength: 1
       auditDetails:

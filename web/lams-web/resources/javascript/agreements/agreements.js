@@ -998,13 +998,13 @@ if (assetDetails && Object.keys(assetDetails).length) {
                 case 'Particulars of Land':
                     $("#particularsOfLand").val(attrs[i].value);
                     break;
-                case 'Resurvey Number':
+                case 'Re-survey Number':
                     $("#resurveyNumber").val(attrs[i].value);
                     break;
                 case 'Land Address':
                     $("#landAddress").val(attrs[i].value);
                     break;
-                case 'Town Survey No':
+                case 'Land Survey Number':
                     $("#townSurveyNo").val(attrs[i].value);
                     break;
                 case 'Usage Reference Number':
@@ -1013,13 +1013,13 @@ if (assetDetails && Object.keys(assetDetails).length) {
                 case 'Shopping Complex Name':
                     $("#shoppingComplexName").val(attrs[i].value);
                     break;
-                case 'Shopping Complex Number':
+                case 'Shopping Complex No.':
                     $("#shoppingComplexNo").val(attrs[i].value);
                     break;
                 case 'Shop No':
                     $("#shoppingComplexShopNo").val(attrs[i].value);
                     break;
-                case 'Floor No':
+                case 'Floor No.':
                     $("#shoppingComplexFloorNo").val(attrs[i].value);
                     break;
                 case 'Shop Area':

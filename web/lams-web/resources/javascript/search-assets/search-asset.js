@@ -29,36 +29,42 @@ class AssetSearch extends React.Component {
     try {
       //call api call
       var list = commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
-      var assetIds = '';
-      for(var i=0; i<list.length; i++) {
-        assetIds += (i == 0 ? '' : ',') + list[i].id;
-      }
-
-      var agreements = commonApiPost("lams-services", "agreements", "_search", {asset: assetIds}).responseJSON["Agreements"];
-
-      list.map(function(val, ind) {
-        for(var i=0; i<agreements.length; i++) {
-          if(val.id == agreements[i].asset.id) {
-            list[ind].hasAgreement = true;
-          }
-        }
-      });
-
-      flag = 1;
-      this.setState({
-        isSearchClicked: true,
-        list,
-        modify: true
-      });
-
-      setTimeout(function() {
-        _this.setState({
-          modify: false
-        })
-      }, 1200);
     } catch(e) {
+      var list = [];
       console.log(e);
     }
+    var assetIds = '';
+    for(var i=0; i<list.length; i++) {
+      assetIds += (i == 0 ? '' : ',') + list[i].id;
+    }
+
+    if(assetIds) {
+      try {
+        var agreements = commonApiPost("lams-services", "agreements", "_search", {asset: assetIds}).responseJSON["Agreements"] || [];
+        list.map(function(val, ind) {
+          for(var i=0; i<agreements.length; i++) {
+            if(val.id == agreements[i].asset.id) {
+              list[ind].hasAgreement = true;
+            }
+          }
+        });
+      } catch(e) {
+        console.log(e);
+      }
+    }
+
+    flag = 1;
+    this.setState({
+      isSearchClicked: true,
+      list,
+      modify: true
+    });
+
+    setTimeout(function() {
+      _this.setState({
+        modify: false
+      })
+    }, 1200);
   }
 
   componentWillMount() {

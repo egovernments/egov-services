@@ -2,7 +2,7 @@ class UploadLeaveType extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state={LeaveType:{
+    this.state={leaveTypeSet:{
         "id": "",
         "my_file_input":"",
         "tenantId": tenantId
@@ -111,9 +111,10 @@ class UploadLeaveType extends React.Component{
               }
           });
         _this.setState({
-            LeaveType:{
-              ..._this.state.LeaveType
-            }, temp : finalObject,
+            leaveTypeSet:{
+              ..._this.state.leaveTypeSet,
+
+              }, temp : finalObject,
                duplicate : duplicateObject
           })
       };
@@ -138,42 +139,46 @@ addOrUpdate(e,mode)
         var duplicateInfo = Object.assign([],this.state.duplicate);
         var errorLeaveOpening=[];
         var exists = false;
+        var _this = this;
 
         duplicateInfo.forEach(function(d){
           errorObject.push(d);
         });
         var leaveArray =[],calendarYearArray=[],employeeArray=[];
         var checkLeave = [],checkCalenderYear= [],checkEmployee=[];
-        this.state._leaveTypes.forEach(function(d) {
+        _this.state._leaveTypes.forEach(function(d) {
           checkLeave.push(d.name);
         });
 
-        this.state._leaveTypes.forEach(function(d) {
+        _this.state._leaveTypes.forEach(function(d) {
           leaveArray.push({"name":d.name,
                             "id":d.id});
         });
 
-        this.state._years.forEach(function(d) {
+        _this.state._years.forEach(function(d) {
           checkCalenderYear.push(d.name.toString());
         });
 
 
-        this.state._years.forEach(function(d) {
+        _this.state._years.forEach(function(d) {
           calendarYearArray.push({"name":d.name.toString(),
                             "id":d.id});
         });
 
 
-        this.state.employees.forEach(function(d) {
+        _this.state.employees.forEach(function(d) {
           checkEmployee.push(d.code);
         });
 
 
-        this.state.employees.forEach(function(d) {
+        _this.state.employees.forEach(function(d) {
           employeeArray.push({"code":d.code,
                             "id":d.id});
         });
 
+        console.log("this.state._leaveTypes",_this.state._leaveTypes);
+        console.log("this.state.employees",_this.state.employees);
+        console.log("this.state._years",_this.state._years);
 
         var post=0,error=0,errorList=[],successList=[];
         var i=0;
@@ -277,6 +282,7 @@ addOrUpdate(e,mode)
           error = 0;
           }
         }
+        console.log("serverObject",serverObject);
         var calenderYearApi = serverObject[0].calendarYear;
 
        commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
@@ -286,6 +292,7 @@ addOrUpdate(e,mode)
         }, function(err,res) {
           if(res) {
             var leaveBal = res["LeaveOpeningBalance"];
+            console.log("leaveBal",leaveBal);
               for(var i=0;i<serverObject.length;i++){
                 var calendarNumber = parseInt(serverObject[i].calendarYear);
                   exists = false;
@@ -324,7 +331,7 @@ addOrUpdate(e,mode)
               var body={
                   "RequestInfo":requestInfo,
                   "LeaveOpeningBalance":finalSuccessObject
-                },_this=this;
+                };
 
                 $.ajax({
 
@@ -338,13 +345,7 @@ addOrUpdate(e,mode)
                       },
                       success: function(res) {
                               showSuccess("File Uploaded successfully.");
-                              _this.setState({
-                                LeaveType:{
-                                  "id": "",
-                                  "my_file_input": "",
-                                  "tenantId": tenantId
-                              }
-                              })
+
 
                               errorList = res.ErrorList;
                               res.SuccessList.forEach(function(d){
@@ -377,6 +378,15 @@ addOrUpdate(e,mode)
                             }
                             ep2.saveAs("error.xlsx");
 
+                            _this.setState({
+                                ..._this.state.leaveTypeSet,
+                              leaveTypeSet:{
+                                "id": "",
+                                "my_file_input": "",
+                                "tenantId": tenantId
+                            }
+                          });
+
 
                       },
                       error: function(err) {
@@ -394,7 +404,7 @@ addOrUpdate(e,mode)
   render()
   {
     let {addOrUpdate,filePicked}=this;
-    let {my_file_input}=this.state.LeaveType;
+    let {my_file_input}=this.state.leaveTypeSet;
     let mode=getUrlVars()["type"];
 
 

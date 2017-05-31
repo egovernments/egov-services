@@ -112,6 +112,13 @@ public class DemandRepository {
 		demand.setTenantId(agreement.getTenantId());
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
+		
+		Date startDate = agreement.getCommencementDate();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(startDate);
+		calendar.add(Calendar.MONTH,1);
+		calendar.add(Calendar.DATE,-1);
+		Date endDate = calendar.getTime();
 
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
@@ -129,12 +136,19 @@ public class DemandRepository {
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
+			demandDetail.setPeriodStartDate(startDate);
+			demandDetail.setPeriodEndDate(endDate);
 
 			demandDetails.add(demandDetail);
+			calendar.add(Calendar.DATE,1);
+			startDate = calendar.getTime();
+			calendar.add(Calendar.MONTH, 1);
+			calendar.add(Calendar.DATE,-1);
+			endDate = calendar.getTime();
 		}
 		demand.setDemandDetails(demandDetails);
 		demands.add(demand);
-		System.err.println(demands);
+		LOGGER.info("the demand object result after adding details : " + demands);
 
 		return demands;
 	}

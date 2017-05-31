@@ -489,7 +489,7 @@ class UploadLeaveApplication extends React.Component{
 
            var body={
              "RequestInfo":requestInfo,
-             "LeaveOpeningBalance":finalValidatedServerObject
+             "LeaveApplication":finalSuccessObject
            },_this=this;
 
            $.ajax({

@@ -42,6 +42,13 @@ var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {
+
+	var imgSrc = (tenantId == "default") ? "../resources/global/images/logo@2x.png"  : "../resources/global/images/panavel.png";
+	var cityName = (tenantId == "default") ? "Kurnool" : "Panvel";
+
+	$('.homepage_logo').attr('src',imgSrc)
+	$('#hp-citizen-title').html(cityName);
+	
 	preventBack();
 
 	var obj = {};
@@ -198,6 +205,9 @@ function loadComplaints(){
 		success : function(response){
 			//$("#grievance-template").html('');
 			for(var i=0;i<response.serviceRequests.length;i++){
+				var obj={};
+				obj['date'] = response.serviceRequests[i]['requestedDatetime'];
+				response.serviceRequests[i]['date'] = (response.serviceRequests[i]['requestedDatetime']).split(' ')[0];
 				JSON.parse(localStorage.getItem('status')).filter(function (el) {
 					for (var item of response.serviceRequests[i].attribValues) {
 						if(item['key'] == 'status'){
@@ -207,7 +217,9 @@ function loadComplaints(){
 					}
 				});
 			}
-			var source   = $("#grievance-template").html();
+			
+			//console.log(JSON.stringify(response.serviceRequests))
+			var source = $("#grievance-template").html();
 			var template = Handlebars.compile(source);
 			var html = template(response.serviceRequests);
 			$('.inboxHeight').remove();

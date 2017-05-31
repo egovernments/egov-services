@@ -41,7 +41,7 @@ $(document).ready(function()
 {
 
 	var imgSrc = (tenantId == "default") ? "resources/global/images/logo@2x.png"  : "resources/global/images/panavel.png";
-	var cityName = (tenantId == "default") ? "Kurnool" : "Panavel";
+	var cityName = (tenantId == "default") ? "Kurnool" : "Panvel";
 	$('[data-include=header]').append('<nav class="navbar navbar-default navbar-custom navbar-fixed-top"> <div class="container-fluid"> <div class="navbar-header col-md-8 col-xs-8"> <a class="navbar-brand" href="javascript:void(0);"> <img src="'+imgSrc+'" height="60"> <div> <span class="title2" data-translate="'+cityName+'"></span> </div> </a> </div> <div class="nav-right-menu col-md-4 col-xs-4"> <ul class="hr-menu text-right"> <li class="ico-menu"> <a href="http://www.egovernments.org" data-strwindname = "egovsite" class="open-popup"> <img src="../resources/global/images/egov_logo_tr_h.png" title="Powered by eGovernments" height="37" alt=""> </a> </li> </ul> </div> </div> </nav>');
 	
 	clearLocalStorage();

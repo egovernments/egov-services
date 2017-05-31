@@ -45,7 +45,7 @@ $(document).ready(function()
 {	
 
 	var imgSrc = (tenantId == "default") ? "../resources/global/images/logo@2x.png"  : "../resources/global/images/panavel.png";
-	var cityName = (tenantId == "default") ? "Kurnool" : "Panavel";
+	var cityName = (tenantId == "default") ? "Kurnool" : "Panvel";
 	
 	$('.homepage_logo').attr('src',imgSrc)
 	$('#hp-citizen-title').html(cityName);

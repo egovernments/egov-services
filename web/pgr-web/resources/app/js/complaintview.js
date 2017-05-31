@@ -305,9 +305,7 @@ function complaintUpdate(obj){
 	for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
 		if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
 			req_obj.serviceRequest.attribValues[i]['name'] = $('#status').val() ? $('#status').val() : AV_status;
-		}
-		else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assigneeId'){
-			req_obj.serviceRequest.attribValues[i]['key'] = 'assignmentId';
+		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assignmentId'){
 			if($("#approvalPosition").val())
 				req_obj.serviceRequest.attribValues[i]['name'] = $("#approvalPosition").val();
 		}

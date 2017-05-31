@@ -982,11 +982,56 @@ if (assetDetails && Object.keys(assetDetails).length) {
 
     $("#locationDetails\\.zone").val(getNameById(revenueZone, assetDetails["locationDetails"]["zone"]));
 
-    $("#locationDetails\\.revenueWards").val(getNameById(revenueWards, assetDetails["locationDetails"]["revenueWards"]));
+    $("#locationDetails\\.revenueWard").val(getNameById(revenueWards, assetDetails["locationDetails"]["revenueWard"]));
 
     $("#locationDetails\\.block").val(getNameById(revenueBlock, assetDetails["locationDetails"]["block"]));
 
     $("#locationDetails\\.electionWard").val(getNameById(electionwards, assetDetails["locationDetails"]["electionWard"]));
+
+    if(assetDetails.assetAttributes) {
+        var attrs = assetDetails.assetAttributes;
+        for(var i=0, len = attrs.length; i<len; i++) {
+            switch (attrs[i].key) {
+                case 'Land Register Number':
+                    $("#landRegisterNumber").val(attrs[i].value);
+                    break;
+                case 'Particulars of Land':
+                    $("#particularsOfLand").val(attrs[i].value);
+                    break;
+                case 'Resurvey Number':
+                    $("#resurveyNumber").val(attrs[i].value);
+                    break;
+                case 'Land Address':
+                    $("#landAddress").val(attrs[i].value);
+                    break;
+                case 'Town Survey No':
+                    $("#townSurveyNo").val(attrs[i].value);
+                    break;
+                case 'Usage Reference Number':
+                    $("#usageReferenceNumber").val(attrs[i].value);
+                    break;
+                case 'Shopping Complex Name':
+                    $("#shoppingComplexName").val(attrs[i].value);
+                    break;
+                case 'Shopping Complex Number':
+                    $("#shoppingComplexNo").val(attrs[i].value);
+                    break;
+                case 'Shop No':
+                    $("#shoppingComplexShopNo").val(attrs[i].value);
+                    break;
+                case 'Floor No':
+                    $("#shoppingComplexFloorNo").val(attrs[i].value);
+                    break;
+                case 'Shop Area':
+                    $("#shopArea").val(attrs[i].value);
+                    break;
+                case 'Shopping Complex Address':
+                    $("#shoppingComplexAddress").val(attrs[i].value);
+                    break;
+
+            } 
+        }
+    }
 }
 
 $('.datepicker').datepicker({

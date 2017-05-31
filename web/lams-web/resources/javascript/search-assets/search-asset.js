@@ -2,28 +2,60 @@ var flag = 1;
 class AssetSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],searchSet:{
-    locality:"",
-    doorNo:"",
-    assetCategory:"",
-    name:"",
-    electionWard:"",
-    code:"",
-    tenantId},isSearchClicked:false,assetCategories:[],locality:[],electionwards:[]}
-    this.handleChange=this.handleChange.bind(this);
-    this.search=this.search.bind(this);
+    this.state = {
+        list: [],
+        searchSet: {
+            locality: "",
+            doorNo: "",
+            assetCategory: "",
+            name: "",
+            electionWard: "",
+            code: "",
+            tenantId
+        },
+        isSearchClicked: false,
+        assetCategories: [],
+        locality: [],
+        electionwards: [],
+        modify: false
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.search = this.search.bind(this);
   }
 
   search(e) {
     e.preventDefault();
+    var _this = this;
     try {
       //call api call
-      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
+      var list = commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
+      var assetIds = '';
+      for(var i=0; i<list.length; i++) {
+        assetIds += (i == 0 ? '' : ',') + list[i].id;
+      }
+
+      var agreements = commonApiPost("lams-services", "agreements", "_search", {asset: assetIds}).responseJSON["Agreements"];
+
+      list.map(function(val, ind) {
+        for(var i=0; i<agreements.length; i++) {
+          if(val.id == agreements[i].asset.id) {
+            list[ind].hasAgreement = true;
+          }
+        }
+      });
+
       flag = 1;
       this.setState({
-        isSearchClicked:true,
-        list
-      })
+        isSearchClicked: true,
+        list,
+        modify: true
+      });
+
+      setTimeout(function() {
+        _this.setState({
+          modify: false
+        })
+      }, 1200);
     } catch(e) {
       console.log(e);
     }
@@ -77,7 +109,7 @@ class AssetSearch extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.list.length!=this.state.list.length) {
+      if (this.state.modify && this.state.list.length) {
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -98,15 +130,12 @@ class AssetSearch extends React.Component {
       })
   }
 
-  handleSelectChange(type,id,category) {
+  handleSelectChange(type, id, category) {
     if (type === "create") {
-      window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
+      window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes");
+    } else if(type === "dataEntry") {
+      window.open("app/dataentry/data-entry.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes");
     }
-    else if(type === "dataEntry") {
-      window.open("app/dataentry/data-entry.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
-    }
-
-    // window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
   }
 
 
@@ -128,8 +157,7 @@ class AssetSearch extends React.Component {
     electionWard,
     code}=this.state.searchSet;
 
-    const renderOption=function(list)
-    {
+    const renderOption = function(list) {
         if(list)
         {
             return list.map((item, ind)=>
@@ -140,10 +168,8 @@ class AssetSearch extends React.Component {
             })
         }
     }
-    const showTable=function()
-    {
-      if(isSearchClicked)
-      {
+    const showTable = function() {
+      if(isSearchClicked) {
           return (
             <table id="agreementTable" className="table table-bordered">
                 <thead>
@@ -163,53 +189,53 @@ class AssetSearch extends React.Component {
                     }
                 </tbody>
             </table>
-
           )
-
-
       }
-
     }
-    const renderBody=function()
-    {
-      if(list.length>0)
-      {
-        return list.map((item,index)=>
-        {
-              return (<tr key={index}>
-                <td>{index+1}</td>
-                                  <td>{item.assetCategory.name}</td>
-                                  <td>{item.name}</td>
-                                  <td>{item.code}</td>
-                                  <td>{item.locationDetails.electionWard}</td>
-                                  <td>
-                                      <div className="styled-select">
-                                          <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value,item.id,item.assetCategory.name)
-                                          }}>
-                                              <option value="">Select Action</option>
-                                              <option value="create">Create</option>
-                                              <option value="dataEntry"> Data Entry </option>
-                                          </select>
-                                      </div>
-                                  </td>
 
-                  </tr>
+    const getCreateOption(hasAgreement) {
+      if(!hasAgreement) {
+        return (<option value="create">Create</option>);
+      } else {
+        return "";
+      }
+    }
+    const renderBody = function() {
+      if(list.length > 0) {
+        return list.map((item,index)=> {
+              return (
+                <tr key={index}>
+                  <td>{index+1}</td>
+                  <td>{item.assetCategory.name}</td>
+                  <td>{item.name}</td>
+                  <td>{item.code}</td>
+                  <td>{item.locationDetails.electionWard}</td>
+                  <td>
+                      <div className="styled-select">
+                          <select id="myOptions" onChange={(e)=>{
+                            handleSelectChange(e.target.value, item.id, item.assetCategory.name)
+                          }}>
+                              <option value="">Select Action</option>
+                              {getCreateOption(item.hasAgreement)}
+                              <option value="dataEntry"> Data Entry </option>
+                          </select>
+                      </div>
+                  </td>
+                </tr>
               );
 
         })
-      }
-      else {
+      } else {
           return (
               <tr>
-                  <td colSpan="6">No records</td>
+                <td colSpan="6">No records</td>
               </tr>
           )
       }
 
 
     }
-    const disbaled=function(type) {
+    const disbaled = function(type) {
         if (type==="view") {
               return "ture";
         } else {

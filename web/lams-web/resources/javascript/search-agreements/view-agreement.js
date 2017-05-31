@@ -78,11 +78,11 @@ $(document).ready(function() {
     function printNotice(noticeData) {
         var commencementDate=new Date(noticeData.commencementDate);
         var expiryDate=new Date(noticeData.expiryDate);
-        var rentPayableDate=new Date(noticeData.rentPayableDate);
+        var rentPayableDate = new Date(noticeData.rentPayableDate);
 
         var commencementDateInFormate=commencementDate.getDate()<10?"0"+commencementDate.getDate():commencementDate.getDate() +"-"+commencementDate.getMonth()<10?"0"+commencementDate.getMonth():commencementDate.getMonth() +"-"+commencementDate.getFullYear();
         var expiryDateInFormate=expiryDate.getDate()<10?"0"+expiryDate.getDate():expiryDate.getDate() +"-"+expiryDate.getMonth()<10?"0"+expiryDate.getMonth():expiryDate.getMonth() +"-"+expiryDate.getFullYear();
-        var rentPayableDateInFormate=rentPayableDate.getDate()<10?"0"+rentPayableDate.getDate():rentPayableDate.getDate() +"-"+rentPayableDate.getMonth()<10?"0"+rentPayableDate.getMonth():rentPayableDate.getMonth() +"-"+rentPayableDate.getFullYear();
+        var rentPayableDateInFormate= rentPayableDate.getDate() < 10 ? "0" + rentPayableDate.getDate() :rentPayableDate.getDate() +"-"+rentPayableDate.getMonth()<10?"0"+rentPayableDate.getMonth():rentPayableDate.getMonth() +"-"+rentPayableDate.getFullYear();
 
         var doc = new jsPDF();
         doc.setFontType("bold");
@@ -91,15 +91,15 @@ $(document).ready(function() {
         doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
         doc.setLineWidth(0.5);
         doc.line(15, 42, 195, 42);
-        doc.text(15, 47, 'Lease details:');
-        doc.text(110, 47, 'Agreement No:' + noticeData.agreementNumber);
-        doc.text(15, 57, 'Lease Name:   ' + noticeData.allotteeName);
-        doc.text(110, 57, 'Asset No:' + noticeData.assetNo);
-        doc.text(15, 67, noticeData.allotteeMobileNumber + "," + noticeData.doorNo + "," + noticeData.allotteeAddress + "," + tenantId.split(".")[1] + ".");
+        doc.text(15, 47, 'Lease details: ');
+        doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
+        doc.text(15, 57, 'Lease Name: ' + noticeData.allotteeName);
+        doc.text(110, 57, 'Asset No: ' + noticeData.assetNo);
+        doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
 
         doc.setFontType("normal");
         doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __' + noticeData.agreementPeriod * 12 + '____ months commencing from _____' + commencementDateInFormate + '_____(dd-mm-yyyy) to ____' + expiryDateInFormate + '__________(dd-mm-yyyy).', (210 - 15 - 15)));
-        doc.text(15, 93, doc.splitTextToSize('2.The property leased is shop No___' + noticeData.assetNo + '_____and shall be leased for a sum of Rs. ____' + noticeData.rent + '____/-DDD (Rupees _____' + noticeData.rentInWord + '______ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
+        doc.text(15, 100, doc.splitTextToSize('2.The property leased is shop No___' + noticeData.assetNo + '_____and shall be leased for a sum of Rs. ____' + noticeData.rent + '____/-DDD (Rupees _____' + noticeData.rentInWord + '______ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
         doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ____' + noticeData.securityDeposit + '____/- (Rupees ____' + noticeData.securityDepositInWord + '____ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
         doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __' + rentPayableDateInFormate + '___ of the succeeding month.', (210 - 15 - 15)));
         doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));

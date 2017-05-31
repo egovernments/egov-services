@@ -160,7 +160,7 @@ function getComplaint(){
 			}
 
 			if(localStorage.getItem('type') == 'EMPLOYEE'){
-				if(AV_status == 'COMPLETED' || AV_status == 'REJECTED')
+				if(AV_status == 'COMPLETED' || AV_status == 'REJECTED' || AV_status == 'DSAPPROVED' || AV_status == 'DSREJECTED' || AV_status == 'WITHDRAWN')
 					$('.action-section').remove();
 			}else if(localStorage.getItem('type') == 'CITIZEN'){
 				if(AV_status == 'WITHDRAWN')

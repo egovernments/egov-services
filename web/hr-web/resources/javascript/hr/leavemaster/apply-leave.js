@@ -333,7 +333,7 @@ addOrUpdate(e, mode) {
                         window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
                       },
                       error: function(err) {
-                        showError(err["statusText"]);
+                        showError("Leave Application already exists for the same date range provided");
                       }
                   });
         })

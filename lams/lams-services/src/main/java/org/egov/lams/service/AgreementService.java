@@ -223,6 +223,7 @@ public class AgreementService {
 			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
 			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 					.getDemands();
+			logger.info("the demand list after getting demandsearch result : " + demands);
 			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest),demands);
 			
 		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {

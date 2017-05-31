@@ -159,7 +159,7 @@ public class DemandRepository {
 		demand.setDemandDetails(demandDetails);
 		if(demandList.isEmpty())
 		demandList.add(demand);
-		LOGGER.info("the demand object result after adding details : " + demands);
+		LOGGER.info("the demand object result after adding details : " + demandList);
 
 		return demands;
 	}

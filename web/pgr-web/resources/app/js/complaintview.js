@@ -599,6 +599,12 @@ function getDesignation(depId){
 
 function getUser(depId, desId){
 	//console.log(depId, desId);
+	if(!desId){
+		$('#approvalPosition').empty();
+		$('#approvalPosition').append($("<option />").val('').text('Select Position'));
+		return;
+	}
+
 	$.ajax({
 		url: "/hr-employee/employees/_search?tenantId="+tenantId+"&departmentId="+depId+"&designationId="+desId,
 		type : 'POST',
@@ -607,6 +613,8 @@ function getUser(depId, desId){
 		contentType: "application/json",
 		data : JSON.stringify(requestInfo),
 	}).done(function(data) {
+		$('#approvalPosition').empty();
+		$('#approvalPosition').append($("<option />").val('').text('Select Position'));
 		$.each(data.Employee,function(i,obj)
 	    {
 			$('#approvalPosition').append($("<option />")

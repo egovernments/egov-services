@@ -55,7 +55,6 @@ public class UsageTypeQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
     private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT usage.id as usage_id, usage.code as usage_code,"

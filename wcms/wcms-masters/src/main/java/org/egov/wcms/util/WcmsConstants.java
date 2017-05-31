@@ -60,6 +60,7 @@ public class WcmsConstants {
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
     public static final String INVALID_PROPERTYUSAGETYPE_REQUEST_MESSAGE = "Property Type or Usage Type is invalid";
+    public static final String INVALID_DOCUMENTTYPE_REQUEST_MESSAGE = "Document Type Request is Invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -112,6 +113,18 @@ public class WcmsConstants {
     public static final String FROMTO_MANDATORY_CODE = "wcms.0012";
     public static final String FROMTO_MANDATORY_FIELD_NAME = "fromDate";
     public static final String FROMTO_MANDATORY_ERROR_MESSAGE = "From and To Date are required";
+    
+    public static final String CODE_MANDATORY_CODE = "wcms.0013";
+    public static final String CODE_MANDATORY_FIELD_NAME = "code";
+    public static final String CODE_MANDATORY_ERROR_MESSAGE = "Code is required";
+    
+    public static final String NAME_MANDATORY_CODE = "wcms.0014";
+    public static final String NAME_MANDATORY_FIELD_NAME = "name";
+    public static final String NAME_MANDATORY_ERROR_MESSAGE = "Name is required";
+    
+    public static final String CODE_TENANT_UNIQUE_CODE = "wcms.0015";
+    public static final String CODE_TENANT_UNQ_FIELD_NAME = "code";
+    public static final String CODE_TENANT_UNQ_ERROR_MESSAGE = "Entered combination of Document Code and Tenant ID already exists. Please check!";
     
     @Autowired
         private Environment environment;

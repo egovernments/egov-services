@@ -45,12 +45,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.service.ConnectionCategoryService;
+import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.web.contract.ConnectionCategoryRequest;
+import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -87,10 +89,13 @@ public class WaterMasterConsumer {
     
     @Autowired
     private PropertyCategoryService propertyCategoryService;
+    
+    @Autowired
+    private DocumentTypeService documentTypeService;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.usagetype.create.name}","${kafka.topics.usagetype.update.name}",
             "${kafka.topics.category.create.name}","${kafka.topics.category.update.name}","${kafka.topics.pipesize.create.name}","${kafka.topics.pipesize.update.name}", 
-            "${kafka.topics.propertyCategory.create.name}","${kafka.topics.propertyusage.create.name}", "${kafka.topics.donation.create.name}" })
+            "${kafka.topics.propertyCategory.create.name}","${kafka.topics.propertyusage.create.name}", "${kafka.topics.donation.create.name}", "${kafka.topics.documenttype.create.name}" })
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -112,7 +117,10 @@ public class WaterMasterConsumer {
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
             	propUsageType.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
-            	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));            	
+            	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
+            else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName())){
+            	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeReq.class));
+            }
         } catch (final IOException e) {
                 e.printStackTrace();
             }

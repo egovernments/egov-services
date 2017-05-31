@@ -361,7 +361,7 @@ addOrUpdate(e, mode) {
 
     }
     const showActionButton=function() {
-      if(mode==="create" ||mode==="update")
+      if(mode==="create" || !(mode))
       {
         return (<button type="submit" className="btn btn-submit">Apply</button>);
       }

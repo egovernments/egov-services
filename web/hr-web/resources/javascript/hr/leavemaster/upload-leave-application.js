@@ -39,7 +39,7 @@ class UploadLeaveApplication extends React.Component{
       checkCountNCall("employees", res ? res.Employee : [])
     });
 
-    commonApiPost("hr-masters", "hrconfigurations", "_search",{tenantId:"default"},function(err, res){
+    commonApiPost("hr-masters", "hrconfigurations", "_search",{tenantId},function(err, res){
       checkCountNCall("hrConfigurations", res || {})
     });
 

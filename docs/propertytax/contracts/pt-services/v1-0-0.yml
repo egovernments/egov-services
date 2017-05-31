@@ -245,7 +245,7 @@ definitions:
         description: Property owners, these will be citizen users in system.
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+          $ref: '#/definitions/OwnerInfo'
       propertyDetail:
         $ref: "#/definitions/PropertyDetail"
       assessmentDate:
@@ -296,6 +296,27 @@ definitions:
     - propertyDetail
     - occupancyDate
     - channel
+    
+  OwnerInfo:
+    allOf: 
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+    - type: object
+      properties:
+        isPrimaryOwner:
+          type: boolean
+          description: The owner is primary or not
+        isSecondaryOwner:
+          type: boolean
+          description: The owner is secondary or not
+        ownerShipPercentage:
+          type: number
+          format: double
+          description: Ownership percentage.
+        ownerType:
+          type: string
+          description: Type of owner, based on this option rebate will be calculated. 
+          maxLength: 32
+          minLength: 4
     
   PropertyRequest:
     description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update

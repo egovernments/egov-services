@@ -201,11 +201,38 @@ class AssetSearch extends React.Component {
 
     const getCreateOption = function(hasAgreement) {
       if(!hasAgreement) {
-        return (<option value="create">Create</option>);
+        return ();
       } else {
         return "";
       }
     }
+
+    const getDataOption = function(hasAgreement) {
+      if(!hasAgreement) {
+        return ();
+      } else {
+        return "";
+      }
+    }
+
+    const showActions = function(item) {
+      if(!item.hasAgreement) {
+        return (
+          <div className="styled-select">
+              <select id="myOptions" onChange={(e)=>{
+                handleSelectChange(e.target.value, item.id, item.assetCategory.name)
+              }}>
+                  <option value="">Select Action</option>
+                  <option value="create">Create</option>
+                  <option value="dataEntry"> Data Entry </option>
+              </select>
+          </div>
+        )
+      } else {
+        return "";
+      }
+    }
+
     const renderBody = function() {
       if(list.length > 0) {
         return list.map((item,index)=> {
@@ -217,15 +244,7 @@ class AssetSearch extends React.Component {
                   <td>{item.code}</td>
                   <td>{item.locationDetails.electionWard}</td>
                   <td>
-                      <div className="styled-select">
-                          <select id="myOptions" onChange={(e)=>{
-                            handleSelectChange(e.target.value, item.id, item.assetCategory.name)
-                          }}>
-                              <option value="">Select Action</option>
-                              {getCreateOption(item.hasAgreement)}
-                              <option value="dataEntry"> Data Entry </option>
-                          </select>
-                      </div>
+                      {showActions(item)}
                   </td>
                 </tr>
               );

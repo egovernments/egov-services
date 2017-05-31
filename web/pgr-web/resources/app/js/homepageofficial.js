@@ -43,6 +43,13 @@ var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {	
+
+	var imgSrc = (tenantId == "default") ? "../resources/global/images/logo@2x.png"  : "../resources/global/images/panavel.png";
+	var cityName = (tenantId == "default") ? "Kurnool" : "Panavel";
+	
+	$('.homepage_logo').attr('src',imgSrc)
+	$('#hp-citizen-title').html(cityName);
+
 	$('#new-pass').popover({ trigger: "focus",placement: "bottom"});
 	
 	$(document).on("keydown", disableRefresh);

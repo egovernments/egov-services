@@ -308,15 +308,10 @@ function complaintUpdate(obj){
 		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assignmentId'){
 			if($("#approvalPosition").val())
 				req_obj.serviceRequest.attribValues[i]['name'] = $("#approvalPosition").val();
+		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'approvalComments'){
+			req_obj.serviceRequest.attribValues[i]['name'] = $('#approvalComment').val();
 		}
 	}
-
-	var finobj = {};
-	finobj = {
-	    key: 'approvalComments',
-	    name: $('#approvalComment').val()
-	};
-	req_obj.serviceRequest.attribValues.push(finobj);
 
 	if($("#approvalDepartment").val()){
 		finobj = {

@@ -401,7 +401,15 @@ addOrUpdate(e,mode)
              }
          });
        } else {
+         var ep2=new ExcelPlus();
+         var b=0;
 
+         ep2.createFile("Error");
+         ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+         for(b=0;b<errorObject.length;b++){
+           ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
+         }
+         ep2.saveAs("error.xlsx");
          showError("No valid Data in the uplaod Sheet")
        }
       }

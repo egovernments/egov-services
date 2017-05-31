@@ -497,7 +497,7 @@ class UploadLeaveApplication extends React.Component{
              ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMessage])
            }
            ep2.saveAs("error.xlsx");
-         errorObject[b]
+  
 
            finalValidatedServerObject.forEach(function(d){
            ////console.log(d);

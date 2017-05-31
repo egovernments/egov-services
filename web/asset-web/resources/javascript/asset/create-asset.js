@@ -1678,7 +1678,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <input type="text" id="dateOfCreation" name="dateOfCreation" value= {dateOfCreation}
-                                onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()} disabled={readonly}/>
+                                onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()} disabled={readonly || getUrlVars()["type"] == "update"}/>
                           </div>
                         </div>
                     </div>

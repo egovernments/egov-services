@@ -156,7 +156,7 @@ public class AgreementService {
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
-			agreement.setDemands(updateDemnad(agreement.getDemands(), agreement.getLegacyDemands(),
+			agreement.setDemands(updateDemand(agreement.getDemands(), agreement.getLegacyDemands(),
 					agreementRequest.getRequestInfo()));
 			logger.info("the id from demand save call :: " + agreement.getDemands());
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
@@ -174,8 +174,10 @@ public class AgreementService {
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-				} else if ("print notice".equalsIgnoreCase(workFlowDetails.getAction())) {
+				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
+					updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
+							agreementRequest.getRequestInfo());
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 				}
 			}
@@ -198,7 +200,7 @@ public class AgreementService {
 		return agreement;
 	}
 
-	private List<String> updateDemnad(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
+	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
 
 		DemandResponse demandResponse = null;
 		if (demands == null)
@@ -210,23 +212,34 @@ public class AgreementService {
 
 	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
 
-		List<Demand> legacyDemands = null;
+		List<Demand> demands = null;
 		Agreement agreement = agreementRequest.getAgreement();
 		List<String> demandIds = agreement.getDemands();
+		
 		if (demandIds == null) {
-
-			List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-			if (demandReasons.isEmpty())
-				throw new RuntimeException("No demand reason found for given criteria");
-			logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons);
-			legacyDemands = demandRepository.getDemandList(agreementRequest, demandReasons);
-		} else {
+			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest),null);
+		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-			legacyDemands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+					.getDemands();
+			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest),demands);
+			
+		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 					.getDemands();
 		}
-		return legacyDemands;
+		return demands;
+	}
+	
+	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest){
+		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		if (demandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
+		return demandReasons;
 	}
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {

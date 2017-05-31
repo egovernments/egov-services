@@ -481,25 +481,7 @@ class UploadLeaveApplication extends React.Component{
          });
      }
           console.log("finalSuccessObject",finalSuccessObject);
-         var ep1=new ExcelPlus();
-         var b=0;
 
-           ep1.createFile("Success");
-           ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
-           for(b=0;b<finalValidatedServerObject.length;b++){
-             ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].fromDate,finalValidatedServerObject[b].toDate,finalValidatedServerObject[b].leaveDays,finalValidatedServerObject[b].reason,finalValidatedServerObject[b].successMessage])
-           }
-           ep1.saveAs("success.xlsx");
-
-         var ep2=new ExcelPlus();
-         var b=0;
-
-           ep2.createFile("Error");
-           ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
-           for(b=0;b<errorObject.length;b++){
-             ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMessage])
-           }
-           ep2.saveAs("error.xlsx");
 
 
 
@@ -522,6 +504,25 @@ class UploadLeaveApplication extends React.Component{
                  },
                  success: function(res) {
                          showSuccess("File Uploaded successfully.");
+                         var ep1=new ExcelPlus();
+                         var b=0;
+
+                           ep1.createFile("Success");
+                           ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
+                           for(b=0;b<finalValidatedServerObject.length;b++){
+                             ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].fromDate,finalValidatedServerObject[b].toDate,finalValidatedServerObject[b].leaveDays,finalValidatedServerObject[b].reason,finalValidatedServerObject[b].successMessage])
+                           }
+                           ep1.saveAs("success.xlsx");
+
+                         var ep2=new ExcelPlus();
+                         var b=0;
+
+                           ep2.createFile("Error");
+                           ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
+                           for(b=0;b<errorObject.length;b++){
+                             ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMessage])
+                           }
+                           ep2.saveAs("error.xlsx");
                          _this.setState({
                            LeaveType:{
                              "id": "",

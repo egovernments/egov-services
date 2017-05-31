@@ -199,22 +199,6 @@ class AssetSearch extends React.Component {
       }
     }
 
-    const getCreateOption = function(hasAgreement) {
-      if(!hasAgreement) {
-        return ();
-      } else {
-        return "";
-      }
-    }
-
-    const getDataOption = function(hasAgreement) {
-      if(!hasAgreement) {
-        return ();
-      } else {
-        return "";
-      }
-    }
-
     const showActions = function(item) {
       if(!item.hasAgreement) {
         return (

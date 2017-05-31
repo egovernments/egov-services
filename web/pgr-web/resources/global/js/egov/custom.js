@@ -633,7 +633,8 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 				this_select_content +='</select>';
 
 				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label><div class="col-sm-3 add-margin">'+this_select_content+'</div><div class="col-sm-1"></div>';
-			}
+			}else
+				this.template = '';
 		}
 		
 	}

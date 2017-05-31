@@ -66,7 +66,7 @@ $(document).ready(function()
 		contentType: "application/json",
 		data : JSON.stringify(obj),
 		success : function(response){
-			$('.profile-text').html(response.user[0].userName);
+			$('.profile-text').html(response.user[0].name);
 		},
 		error : function(){
 			bootbox.alert('User api failed');

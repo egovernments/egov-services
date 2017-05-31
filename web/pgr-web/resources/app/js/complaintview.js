@@ -128,7 +128,7 @@ function getComplaint(){
 			showLoader();
 		},
 		success : function(response){
-			console.log('Get complaint done!'+JSON.stringify(response));
+			//console.log('Get complaint done!'+JSON.stringify(response));
 			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.serviceRequests.length == 0){
@@ -308,9 +308,27 @@ function complaintUpdate(obj){
 		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assignmentId'){
 			if($("#approvalPosition").val())
 				req_obj.serviceRequest.attribValues[i]['name'] = $("#approvalPosition").val();
-		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'approvalComments'){
-			req_obj.serviceRequest.attribValues[i]['name'] = $('#approvalComment').val();
 		}
+	}
+
+	var finobj = {};
+
+	var appCommentsresult = req_obj.serviceRequest.attribValues.filter(function( obj ) {
+	  return obj.key == 'approvalComments';
+	});
+
+	if(appCommentsresult.length > 0){
+		for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
+			if(req_obj.serviceRequest.attribValues[i]['key'] == 'approvalComments'){
+				req_obj.serviceRequest.attribValues[i]['name'] = $('#approvalComment').val();
+			}
+		}
+	}else{
+		finobj = {
+		    key: 'approvalComments',
+		    name: $('#approvalComment').val()
+		};
+		req_obj.serviceRequest.attribValues.push(finobj);
 	}
 
 	if($("#approvalDepartment").val()){
@@ -745,7 +763,7 @@ function callToLoadDefinition(searchResponse){
 
 			$('.checkForm *').filter(':input').each(function(){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
-				console.log($(this).attr('name'), obj)
+				//console.log($(this).attr('name'), obj)
 				if(obj){
 					if(JSON.parse(obj.name))
 				    	$(this).prop('checked', JSON.parse(obj.name)).attr('disabled', "disabled");

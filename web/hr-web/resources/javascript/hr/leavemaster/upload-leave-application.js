@@ -39,7 +39,7 @@ class UploadLeaveApplication extends React.Component{
       checkCountNCall("employees", res ? res.Employee : [])
     });
 
-    commonApiPost("hr-masters", "hrconfigurations", "_search",{tenantId},function(err, res){
+    commonApiPost("hr-masters", "hrconfigurations", "_search",{tenantId:"default"},function(err, res){
       checkCountNCall("hrConfigurations", res || {})
     });
 
@@ -451,9 +451,13 @@ class UploadLeaveApplication extends React.Component{
      });
 
      console.log("Final",finalValidatedServerObject);
+     console.log("finalSuccessObject",finalSuccessObject.length);
+     console.log("length",finalValidatedServerObject.length);
      console.log("Error",errorObject);
-     finalValidatedServerObject.forEach(function(d){
 
+     for(var n=0;n<finalValidatedServerObject.length;n++){
+       console.log(n);
+       var d = finalValidatedServerObject[n];
          finalSuccessObject.push({
            "employee": d.employee,
            "leaveType": {
@@ -475,9 +479,8 @@ class UploadLeaveApplication extends React.Component{
              "status": ""
            }
          });
-
-       });
-           console.log("finalSuccessObject",finalSuccessObject);
+     }
+          console.log("finalSuccessObject",finalSuccessObject);
          var ep1=new ExcelPlus();
          var b=0;
 
@@ -497,24 +500,14 @@ class UploadLeaveApplication extends React.Component{
              ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMessage])
            }
            ep2.saveAs("error.xlsx");
-  
 
-           finalValidatedServerObject.forEach(function(d){
-           ////console.log(d);
-               finalSuccessObject.push({"employee": d.employee,
-                               "calendarYear": d.calendarYear,
-                               "leaveType":  { "id": d.leaveType["id"]},
-                               "noOfDays" : d.noOfDays,
-                               "tenantId": d.tenantId
-                             });
-           });
-         console.log("FINSSL SNJNCJ",finalSuccessObject);
+
 
          if(serverObject.length!==0){
 
            var body={
              "RequestInfo":requestInfo,
-             "LeaveOpeningBalance":finalSuccessObject
+             "LeaveOpeningBalance":finalValidatedServerObject
            },_this=this;
 
            $.ajax({

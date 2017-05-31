@@ -37,34 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.producers;
+package org.egov.wcms.repository.rowmapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@Service
-public class PropertyUsageTypeProducer {
+import org.egov.wcms.model.PropertyPipeSize;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
-    public void sendMessage(final String topic, final String key, final Object message) {
-        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
-            }
-
-            @Override
-            public void onFailure(final Throwable throwable) {
-
-            }
-        });
+@Component
+public class PropertyPipeSizeRowMapper implements RowMapper<PropertyPipeSize> {
+    @Override
+    public PropertyPipeSize mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final PropertyPipeSize propertyPipeSize = new PropertyPipeSize();
+        propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
+        propertyPipeSize.setPipeSizeTypeId((Long) rs.getObject("propertypipesize_pipesizeId"));
+        propertyPipeSize.setPropertyTypeId(rs.getLong("propertypipesize_propertytypeId"));
+        propertyPipeSize.setActive(rs.getBoolean("propertypipesize_active"));
+        propertyPipeSize.setTenantId(rs.getString("propertypipesize_tenantId"));
+        return propertyPipeSize;
     }
-
 
 }

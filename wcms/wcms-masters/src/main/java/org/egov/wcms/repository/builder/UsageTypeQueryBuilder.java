@@ -40,6 +40,8 @@
 
 package org.egov.wcms.repository.builder;
 
+import java.util.List;
+
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.UsageTypeGetRequest;
 import org.slf4j.Logger;
@@ -47,14 +49,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class UsageTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
 
     private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
 
@@ -63,8 +62,8 @@ public class UsageTypeQueryBuilder {
             + " FROM egwtr_usage_type usage ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(UsageTypeGetRequest usageTypeGetRequest, List preparedStatementValues) {
-        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    public String getQuery(final UsageTypeGetRequest usageTypeGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, usageTypeGetRequest);
         addOrderByClause(selectQuery, usageTypeGetRequest);
@@ -75,10 +74,11 @@ public class UsageTypeQueryBuilder {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-                                UsageTypeGetRequest usageTypeGetRequest) {
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final UsageTypeGetRequest usageTypeGetRequest) {
 
-        if (usageTypeGetRequest.getId() == null && usageTypeGetRequest.getName() == null && usageTypeGetRequest.getActive() == null
+        if (usageTypeGetRequest.getId() == null && usageTypeGetRequest.getName() == null
+                && usageTypeGetRequest.getActive() == null
                 && usageTypeGetRequest.getTenantId() == null)
             return;
 
@@ -95,7 +95,6 @@ public class UsageTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" usage.id IN " + getIdQuery(usageTypeGetRequest.getId()));
         }
-
 
         if (usageTypeGetRequest.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -116,23 +115,22 @@ public class UsageTypeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(StringBuilder selectQuery, UsageTypeGetRequest usageTypeGetRequest) {
-        String sortBy = (usageTypeGetRequest.getSortBy() == null ? "usage.code"
-                : "usage." + usageTypeGetRequest.getSortBy());
-        String sortOrder = (usageTypeGetRequest.getSortOrder() == null ? "DESC" : usageTypeGetRequest.getSortOrder());
+    private void addOrderByClause(final StringBuilder selectQuery, final UsageTypeGetRequest usageTypeGetRequest) {
+        final String sortBy = usageTypeGetRequest.getSortBy() == null ? "usage.code"
+                : "usage." + usageTypeGetRequest.getSortBy();
+        final String sortOrder = usageTypeGetRequest.getSortOrder() == null ? "DESC" : usageTypeGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
-
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString
      * @return boolean indicates if the next predicate should append an "AND"
      */
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
 
@@ -140,8 +138,8 @@ public class UsageTypeQueryBuilder {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-                                 UsageTypeGetRequest usageTypeGetRequest) {
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final UsageTypeGetRequest usageTypeGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
@@ -158,17 +156,15 @@ public class UsageTypeQueryBuilder {
         // pageNo * pageSize
     }
 
-    private static String getIdQuery(List<Long> idList) {
-        StringBuilder query = new StringBuilder("(");
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
             query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++) {
+            for (int i = 1; i < idList.size(); i++)
                 query.append(", " + idList.get(i));
-            }
         }
         return query.append(")").toString();
     }
-
 
     public static String insertUsageTypeQuery() {
         return "INSERT INTO egwtr_usage_type(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
@@ -179,15 +175,13 @@ public class UsageTypeQueryBuilder {
         return "UPDATE egwtr_usage_type SET name = ?,description = ?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
     }
+
     public static String selectUsageTypeByNameAndCodeQuery() {
         return " select code FROM egwtr_usage_type where name = ? and tenantId = ?";
     }
-
 
     public static String selectUsageTypeByNameAndCodeNotInQuery() {
         return " select code from egwtr_usage_type where name = ? and tenantId = ? and code != ? ";
     }
 
 }
-
-

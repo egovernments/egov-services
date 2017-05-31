@@ -40,7 +40,9 @@
 
 package org.egov.wcms.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.model.ConnectionCategory;
-import org.egov.wcms.producers.ConnectionCategoryProducer;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.ConnectionCategoryRepository;
 import org.egov.wcms.web.contract.CategoryGetRequest;
 import org.junit.Test;
@@ -57,55 +59,54 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectionCategoryServiceTest {
-	
-	@Mock
-	private ConnectionCategoryRepository categoryRepository;
 
     @Mock
-    private ConnectionCategoryProducer categoryProducer;
+    private ConnectionCategoryRepository categoryRepository;
+
+    @Mock
+    private WaterMasterProducer waterMasterProducer;
 
     @Mock
     private CodeGeneratorService codeGeneratorService;
-    
+
     @InjectMocks
     private ConnectionCategoryService connectionCategoryService;
-    
+
     @Test
-    public void test_Search_For_Categories(){
-    	List<ConnectionCategory> categoryList = new ArrayList<>();
-    	ConnectionCategory conCategory = Mockito.mock(ConnectionCategory.class);
-    	categoryList.add(conCategory);
-    
-    	when(categoryRepository.findForCriteria(any(CategoryGetRequest.class))).thenReturn(categoryList);
-    	assertTrue(categoryList.equals(categoryRepository.findForCriteria(any(CategoryGetRequest.class))));
+    public void test_Search_For_Categories() {
+        final List<ConnectionCategory> categoryList = new ArrayList<>();
+        final ConnectionCategory conCategory = Mockito.mock(ConnectionCategory.class);
+        categoryList.add(conCategory);
+
+        when(categoryRepository.findForCriteria(any(CategoryGetRequest.class))).thenReturn(categoryList);
+        assertTrue(categoryList.equals(categoryRepository.findForCriteria(any(CategoryGetRequest.class))));
     }
-    
+
     @Test
-    public void test_Search_For_Categories_Notnull(){
-    	List<ConnectionCategory> categoryList = new ArrayList<>();
-    	ConnectionCategory conCategory = Mockito.mock(ConnectionCategory.class);
-    	categoryList.add(conCategory);
-    
-    	when(categoryRepository.findForCriteria(any(CategoryGetRequest.class))).thenReturn(categoryList);
-    	assertNotNull(categoryRepository.findForCriteria(any(CategoryGetRequest.class)));
+    public void test_Search_For_Categories_Notnull() {
+        final List<ConnectionCategory> categoryList = new ArrayList<>();
+        final ConnectionCategory conCategory = Mockito.mock(ConnectionCategory.class);
+        categoryList.add(conCategory);
+
+        when(categoryRepository.findForCriteria(any(CategoryGetRequest.class))).thenReturn(categoryList);
+        assertNotNull(categoryRepository.findForCriteria(any(CategoryGetRequest.class)));
     }
-    
+
     @Test
-    public void test_Search_For_Categories_Null(){
-    	List<ConnectionCategory> categoryList = new ArrayList<>();
-    	ConnectionCategory conCategory = Mockito.mock(ConnectionCategory.class);
-    	categoryList.add(conCategory);
-    
-    	when(categoryRepository.findForCriteria(any(CategoryGetRequest.class))).thenReturn(null);
-    	assertNull(categoryRepository.findForCriteria(any(CategoryGetRequest.class)));
+    public void test_Search_For_Categories_Null() {
+        final List<ConnectionCategory> categoryList = new ArrayList<>();
+        final ConnectionCategory conCategory = Mockito.mock(ConnectionCategory.class);
+        categoryList.add(conCategory);
+
+        when(categoryRepository.findForCriteria(any(CategoryGetRequest.class))).thenReturn(null);
+        assertNull(categoryRepository.findForCriteria(any(CategoryGetRequest.class)));
     }
-    
-    public List<ConnectionCategory> getCategories(CategoryGetRequest categoryGetRequest) {
+
+    public List<ConnectionCategory> getCategories(final CategoryGetRequest categoryGetRequest) {
         return categoryRepository.findForCriteria(categoryGetRequest);
     }
-    
-
 
 }

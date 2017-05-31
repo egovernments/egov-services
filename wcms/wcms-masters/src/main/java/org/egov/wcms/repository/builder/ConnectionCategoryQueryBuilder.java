@@ -39,14 +39,14 @@
  */
 package org.egov.wcms.repository.builder;
 
+import java.util.List;
+
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.CategoryGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ConnectionCategoryQueryBuilder {
@@ -61,8 +61,8 @@ public class ConnectionCategoryQueryBuilder {
             + " FROM egwtr_category category ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(CategoryGetRequest categoryGetRequest, List preparedStatementValues) {
-        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    public String getQuery(final CategoryGetRequest categoryGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
         addOrderByClause(selectQuery, categoryGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, categoryGetRequest);
@@ -71,8 +71,8 @@ public class ConnectionCategoryQueryBuilder {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-                                CategoryGetRequest categoryGetRequest) {
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final CategoryGetRequest categoryGetRequest) {
 
         if (categoryGetRequest.getId() == null && categoryGetRequest.getName() == null && categoryGetRequest.getActive() == null
                 && categoryGetRequest.getTenantId() == null)
@@ -91,7 +91,6 @@ public class ConnectionCategoryQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" category.id IN " + getIdQuery(categoryGetRequest.getId()));
         }
-
 
         if (categoryGetRequest.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -112,16 +111,16 @@ public class ConnectionCategoryQueryBuilder {
         }
     }
 
-    private void addOrderByClause(StringBuilder selectQuery, CategoryGetRequest categoryGetRequest) {
-        String sortBy = (categoryGetRequest.getSortBy() == null ? "category.code"
-                : "category." + categoryGetRequest.getSortBy());
-        String sortOrder = (categoryGetRequest.getSortOrder() == null ? "DESC" : categoryGetRequest.getSortOrder());
+    private void addOrderByClause(final StringBuilder selectQuery, final CategoryGetRequest categoryGetRequest) {
+        final String sortBy = categoryGetRequest.getSortBy() == null ? "category.code"
+                : "category." + categoryGetRequest.getSortBy();
+        final String sortOrder = categoryGetRequest.getSortOrder() == null ? "DESC" : categoryGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-                                 CategoryGetRequest categoryGetRequest) {
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final CategoryGetRequest categoryGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
@@ -138,33 +137,30 @@ public class ConnectionCategoryQueryBuilder {
         // pageNo * pageSize
     }
 
-
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString
      * @return boolean indicates if the next predicate should append an "AND"
      */
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
 
         return true;
     }
-    private static String getIdQuery(List<Long> idList) {
-        StringBuilder query = new StringBuilder("(");
+
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
             query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++) {
+            for (int i = 1; i < idList.size(); i++)
                 query.append(", " + idList.get(i));
-            }
         }
         return query.append(")").toString();
     }
-
-
 
     public static String insertCategoryQuery() {
         return "INSERT INTO egwtr_category(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
@@ -175,14 +171,13 @@ public class ConnectionCategoryQueryBuilder {
         return "UPDATE egwtr_category SET name = ?,description = ?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
     }
+
     public static String selectCategoryByNameAndCodeQuery() {
         return " select code FROM egwtr_category where name = ? and tenantId = ?";
     }
 
-
     public static String selectCategoryByNameAndCodeNotInQuery() {
         return " select code from egwtr_category where name = ? and tenantId = ? and code != ? ";
     }
-
 
 }

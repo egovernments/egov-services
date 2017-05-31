@@ -37,35 +37,52 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.producers;
+package org.egov.wcms.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import javax.validation.constraints.NotNull;
 
-@Service
-public class UsageTypeProducer {
+import org.hibernate.validator.constraints.Length;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-    public void sendMessage(final String topic, final String key, final Object message) {
-        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-            }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class PropertyPipeSize {
 
-            @Override
-            public void onFailure(final Throwable throwable) {
+    public static final String SEQ_PROPERTY_PIPESIZE = "SEQ_EGWTR_PROPERTY_PIPESIZE";
 
-            }
-        });
-    }
+    @NotNull
+    private Long id;
+    @NotNull
+    private Long pipeSizeTypeId;
+    @NotNull
+    @JsonIgnore
+    private Double pipeSizeType;
+    @NotNull
+    private Long propertyTypeId;
+    @NotNull
+    @JsonIgnore
+    private String propertyTypeName;
 
+    private Boolean active;
 
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
+
+    @JsonIgnore
+    private AuditDetails auditDeatils;
 }

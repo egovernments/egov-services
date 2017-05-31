@@ -37,16 +37,11 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.wcms.web.contract;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.UsageType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -55,18 +50,31 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class UsageTypeResponse {
+@EqualsAndHashCode
+public class PropertyPipeSizeGetRequest {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+    private List<Long> id;
 
-    @JsonProperty("UsageType")
-    private List<UsageType> usageType = new ArrayList<UsageType>();
+    private String propertyType;
+
+    private Double pipeSize;
+    
+    private Long propertyTypeId;
+    
+    private Long pipeSizeTypeId;
+
+    private Boolean active;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
 
 }

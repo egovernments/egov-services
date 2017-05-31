@@ -37,14 +37,13 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.wcms.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.UsageType;
+import org.egov.wcms.model.PropertyPipeSize;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,12 +60,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class UsageTypeResponse {
+public class PropertyPipeSizeResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("UsageType")
-    private List<UsageType> usageType = new ArrayList<UsageType>();
+    @JsonProperty("PropertyPipeSize")
+    private List<PropertyPipeSize> propertyPipeSizes = new ArrayList<>();
 
 }

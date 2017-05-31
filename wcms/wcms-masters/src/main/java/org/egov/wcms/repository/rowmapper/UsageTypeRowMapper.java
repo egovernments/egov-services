@@ -39,26 +39,20 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.egov.wcms.model.UsageType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Component
-public class UsageTypeRowMapper implements RowMapper<UsageType>  {
+public class UsageTypeRowMapper implements RowMapper<UsageType> {
 
     @Override
-    public UsageType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    public UsageType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-        UsageType usageType = new UsageType();
+        final UsageType usageType = new UsageType();
         usageType.setId(rs.getLong("usage_id"));
         usageType.setCode(rs.getString("usage_code"));
         usageType.setName(rs.getString("usage_name"));
@@ -68,6 +62,5 @@ public class UsageTypeRowMapper implements RowMapper<UsageType>  {
 
         return usageType;
     }
-
 
 }

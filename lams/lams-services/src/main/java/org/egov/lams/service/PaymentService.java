@@ -189,8 +189,8 @@ public class PaymentService {
 			System.out.print("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-				if (demandDetail.getTaxReason().equals(propertiesManager.getTaxReasonAdvanceTax())
-						|| demandDetail.getTaxReason().equals(propertiesManager.getTaxReasonGoodWillAmount())
+				if (demandDetail.getTaxReason().equals("Advance Tax")
+						|| demandDetail.getTaxReason().equals("Goodwill Amount")
 						|| (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
 					orderNo++;
 					totalAmount = totalAmount

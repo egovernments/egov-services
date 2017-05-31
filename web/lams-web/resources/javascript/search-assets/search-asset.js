@@ -193,7 +193,7 @@ class AssetSearch extends React.Component {
       }
     }
 
-    const getCreateOption(hasAgreement) {
+    const getCreateOption = function(hasAgreement) {
       if(!hasAgreement) {
         return (<option value="create">Create</option>);
       } else {

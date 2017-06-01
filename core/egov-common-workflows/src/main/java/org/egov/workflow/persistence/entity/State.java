@@ -273,6 +273,7 @@ public class State extends AbstractAuditable {
 				.details(this.extraInfo == null ? "" : this.extraInfo)
 				.senderName(this.senderName == null ? "" : this.senderName)
 				.action(this.nextAction == null ? "" : this.nextAction).attributes(new HashMap<String, Attribute>())
+				.url(this.myLinkId)
 				.build();
 		return t;
 	}

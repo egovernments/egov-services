@@ -248,6 +248,8 @@ definitions:
           $ref: '#/definitions/OwnerInfo'
       propertyDetail:
         $ref: "#/definitions/PropertyDetail"
+      vacantLand:
+        $ref: "#/definitions/VacantLandDetail"
       assessmentDate:
         type: string
         format: date
@@ -270,7 +272,7 @@ definitions:
         description: There are different transactions can be performed on a property and all the transactions goes through the work flow. If one workflow is happening system should not allow other work flow on a same property so, when any work flow starts we flag this field as true and when the same work flow ends we flag this field as false.
         default: false
       boundary:
-        $ref: "#/definitions/PropertyBoundary"
+        $ref: "#/definitions/PropertyLocation"
       active:
         type: boolean
         description: True if the property is active and False if the property is inactive.
@@ -349,11 +351,6 @@ definitions:
         type: integer
         format: int64
         description: Unique Identifier of the PropertyDetail
-      tenantId:
-        type: string
-        description: tenant id of the PropertyDetail
-        maxLength: 128
-        minLength: 4
       source:
         type: string
         description: Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
@@ -481,8 +478,6 @@ definitions:
         description: type of walls the property having
         maxLength: 16
         minLength: 1
-      vacantLand:
-        $ref: "#/definitions/VacantLandProperty"
       floors:
         description: Floors
         type: array
@@ -496,15 +491,6 @@ definitions:
       stateId:
         type: string
         description: Work flow ref id.
-      channel:
-        type: string
-        description: Property can be created or modified from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
-        maxLength: 16
-        minLength: 4
-        enum:
-         - SYSTEM
-         - CFC_COUNTER
-         - CITIZEN
       applicationNo:
         type: string
         description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
@@ -515,44 +501,18 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - tenantId
-    - channel
     - sitalArea
     - propertyType
 
-  PropertyBoundary:
+  PropertyLocation:
     type: object
+    description: Boundary details for a property. 'revenueBoundary' is granular level Revenue heirarchy boundary, 'locationBoundary' is granular level Location heirarchy boundary, 'adminBoundary' is granular level Administration heirarchy boundary.
     properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the PropertyBoundary
-      tenantId:
-        type: string
-        description: tenant id of the PropertyBoundary
-        maxLength: 128
-        minLength: 4
-      longitude:
-        type: number
-        format: double
-        description: longitude of the Property
-      latitude:
-        type: number
-        format: double
-        description: latitude of the Property
-      revenueZone:
+      revenueBoundary:
         $ref: '#/definitions/Boundary'
-      revenueWard:
+      locationBoundary:
         $ref: '#/definitions/Boundary'
-      revenueBlock:
-        $ref: '#/definitions/Boundary'
-      area:
-        $ref: '#/definitions/Boundary'
-      locality:
-        $ref: '#/definitions/Boundary'
-      street:
-        $ref: '#/definitions/Boundary'
-      adminWard:
+      adminBoundary:
         $ref: '#/definitions/Boundary'
       northBoundedBy:
         type: string
@@ -574,70 +534,55 @@ definitions:
         description: property bounded by on south side
         maxLength: 256
         minLength: 1
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-    - tenantId
 
-  VacantLandProperty:
-    allOf: 
-    - $ref: '#/definitions/Property'
-    - type: object
-      properties:
-        surveyNumber:
-          type: string
-          description: survey number of the Land
-          maxLength: 64
-          minLength: 4
-        pattaNumber:
-          type: string
-          description: patta number of the Land
-          maxLength: 64
-          minLength: 4
-        marketValue:
-          type: number
-          format: double
-          description: market value of the Land
-        capitalValue:
-          type: number
-          format: double
-          description: capital value of the Land
-        layoutApprovedAuth:
-          type: string
-          description: layout approved authority of the Land
-          maxLength: 64
-          minLength: 4
-        layoutPermissionNo:
-          type: string
-          description: layout permission no by approved authority for the Land
-          maxLength: 64
-          minLength: 4
-        layoutPermissionDate:
-          type: string
-          format: date
-          description: layout permission date by approved authority for the Land
-        resdPlotArea:
-          type: number
-          format: double
-          description: resd plot area of the land
-        nonResdPlotArea:
-          type: number
-          format: double
-          description: non resd plot area of the land
+  VacantLandDetail:
+    type: object
+    properties:
+      surveyNumber:
+        type: string
+        description: survey number of the Land
+        maxLength: 64
+        minLength: 4
+      pattaNumber:
+        type: string
+        description: patta number of the Land
+        maxLength: 64
+        minLength: 4
+      marketValue:
+        type: number
+        format: double
+        description: market value of the Land
+      capitalValue:
+        type: number
+        format: double
+        description: capital value of the Land
+      layoutApprovedAuth:
+        type: string
+        description: layout approved authority of the Land
+        maxLength: 64
+        minLength: 4
+      layoutPermissionNo:
+        type: string
+        description: layout permission no by approved authority for the Land
+        maxLength: 64
+        minLength: 4
+      layoutPermissionDate:
+        type: string
+        format: date
+        description: layout permission date by approved authority for the Land
+      resdPlotArea:
+        type: number
+        format: double
+        description: resd plot area of the land
+      nonResdPlotArea:
+        type: number
+        format: double
+        description: non resd plot area of the land
         
   Floor:
     type: object
     description: The floor details
     properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the Floor
-      tenantId:
-        type: string
-        description: tenant id of the floor
-        maxLength: 128
-        minLength: 4
       floorNo:
         type: string
         description: floor no for the floor
@@ -754,13 +699,23 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - id
-    - tenantId
     - floorNo
     - builtupArea
     - usage
     - occupancy
     - structure
+    
+  Unit:
+    type: object
+    description: An apartment or logical group of rooms on a floor
+    properties:
+      unitNumber:
+        type: integer
+        format: int32
+        description: Number of the logical unit
+      subUnits:
+        $ref: '#/definitions/Unit'
+        
 
   WorkFlowDetails:
     type: object

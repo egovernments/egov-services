@@ -526,7 +526,7 @@ class UploadLeaveApplication extends React.Component{
 
                    for(var t=0;t<errorList.length;t++){
                      for(var q=0;q<finalValidatedServerObject.length;q++){
-                        if(errorList[t].employee===finalValidatedServerObject[q].employee){
+                        if(errorList[t].employee===finalValidatedServerObject[q].employee && errorList[t].fromDate===finalValidatedServerObject[q].fromDate && errorList[t].toDate===finalValidatedServerObject[q].toDate){
                            finalValidatedServerObject[q].errorMsg = errorList[t].errorMsg;
                            errorObject.push(finalValidatedServerObject[q]);
                            console.log("g--->",finalValidatedServerObject[q]);

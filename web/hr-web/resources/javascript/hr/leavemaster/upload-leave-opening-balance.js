@@ -327,6 +327,7 @@ addOrUpdate(e,mode)
                                      "tenantId": d.tenantId
                                    });
                  });
+                 console.log("finalValidatedServerObject",finalValidatedServerObject);
                  console.log("finalSuccessObject",finalSuccessObject);
                  if(finalSuccessObject.length!==0) {
                  var body={
@@ -347,7 +348,8 @@ addOrUpdate(e,mode)
                          success: function(res) {
                                  showSuccess("File Uploaded successfully.");
 
-
+                                 console.log("res.ErrorList",res.ErrorList);
+                                 console.log("errorObject",errorObject);
                                  errorList = res.ErrorList;
                                  if(res.SuccessList.length!==0){
                                  res.SuccessList.forEach(function(d){
@@ -370,6 +372,7 @@ addOrUpdate(e,mode)
                                      errorObject.push(d);
                                  });
                                }
+                              console.log("errorObject",errorObject);
                                var ep2=new ExcelPlus();
                                var b=0;
 

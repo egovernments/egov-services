@@ -535,6 +535,7 @@ class UploadLeaveApplication extends React.Component{
                  }
                  var ep2=new ExcelPlus();
                  var b=0;
+                 console.log("errorObject",errorObject);
                  console.log("errorList",errorList);
                  ep2.createFile("Error");
                  ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });

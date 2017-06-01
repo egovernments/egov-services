@@ -235,11 +235,14 @@ public class LeaveApplicationService {
     private ResponseEntity<?> getSuccessResponseForCreate(final List<LeaveApplication> leaveApplicationsList,
             final RequestInfo requestInfo) {
         final LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        if (!leaveApplicationsList.get(0).getErrorMsg().isEmpty())
+            httpStatus = HttpStatus.BAD_REQUEST;
         leaveApplicationRes.setLeaveApplication(leaveApplicationsList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+        responseInfo.setStatus(httpStatus.toString());
         leaveApplicationRes.setResponseInfo(responseInfo);
-        return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, HttpStatus.OK);
+        return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, httpStatus);
     }
 
     private ResponseEntity<?> getSuccessResponseForUpload(final List<LeaveApplication> successLeaveApplicationsList,

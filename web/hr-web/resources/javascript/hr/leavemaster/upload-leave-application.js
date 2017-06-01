@@ -523,9 +523,15 @@ class UploadLeaveApplication extends React.Component{
                        ep1.saveAs("success.xlsx");
 
                  if(errorList.length!==0){
-                   errorList.forEach(function(d){
-                       errorObject.push(d);
-                   });
+
+                   for(var t=0;t<errorList.length;t++){
+                     for(var q=0;q<finalValidatedServerObject.length;q++){
+                        if(errorList[t].employee===finalValidatedServerObject[q].employee){
+                           errorObject.push(finalValidatedServerObject[q]);
+                        }
+                     }
+                   }
+
                  }
                  var ep2=new ExcelPlus();
                  var b=0;

@@ -228,7 +228,7 @@ public class PaymentService {
 			billdetail.setCreditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 			billdetail.setDebitAmount(BigDecimal.ZERO);
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
-			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(), demandDetail.getTenantId(), requestInfo));
+			billdetail.setGlCode(demandDetail.getGlCode());
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
 			billdetail.setPeriod(demandDetail.getTaxPeriod());

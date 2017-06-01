@@ -307,10 +307,10 @@ addOrUpdate(e, mode) {
         delete tempInfo.code;
         commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId}, function(err, res) {
             if(res && res["Employee"] && res["Employee"][0]){
-              employee = res["Employee"][0]
+              employee = res["Employee"][0];
             }
             else{
-              employee={};
+              return  (showError("HOD does not exists for given date range Please assign the HOD."))
             }
             var hodname = employee.name;
             tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";

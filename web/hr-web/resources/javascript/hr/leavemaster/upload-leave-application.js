@@ -528,6 +528,7 @@ class UploadLeaveApplication extends React.Component{
                      for(var q=0;q<finalValidatedServerObject.length;q++){
                         if(errorList[t].employee===finalValidatedServerObject[q].employee){
                            errorObject.push(finalValidatedServerObject[q]);
+                           console.log("g--->",finalValidatedServerObject[q]);
                         }
                      }
                    }

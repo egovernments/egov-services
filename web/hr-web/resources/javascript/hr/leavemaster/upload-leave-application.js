@@ -505,11 +505,12 @@ class UploadLeaveApplication extends React.Component{
                  success: function(res) {
                    console.log("res",res);
                    errorList = res.ErrorList;
+                   if(res.SuccessList.length!==0){
                    res.SuccessList.forEach(function(d){
                      d.successMessage = "Employee leaves created successfully";
                        successList.push(d);
                    });
-
+                 }
                      var ep1=new ExcelPlus();
                      var b=0;
 

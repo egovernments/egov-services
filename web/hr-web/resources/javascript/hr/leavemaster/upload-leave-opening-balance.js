@@ -349,11 +349,12 @@ addOrUpdate(e,mode)
 
 
                                  errorList = res.ErrorList;
+                                 if(res.SuccessList.length!==0){
                                  res.SuccessList.forEach(function(d){
                                    d.successMessage = "Leave Opening balance created successfully";
                                      successList.push(d);
                                  });
-
+                               }
                                    var ep1=new ExcelPlus();
                                    var b=0;
 

@@ -40,21 +40,33 @@
 
 package org.egov.eis.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.broker.LeaveApplicationProducer;
 import org.egov.eis.model.LeaveApplication;
+import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.LeaveApplicationRepository;
+import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationRequest;
+import org.egov.eis.web.contract.LeaveApplicationResponse;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
+import org.egov.eis.web.contract.LeaveApplicationUploadResponse;
+import org.egov.eis.web.contract.LeaveTypeGetRequest;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -87,6 +99,18 @@ public class LeaveApplicationService {
     private HRStatusService hrStatusService;
 
     @Autowired
+    private LeaveTypeService leaveTypeService;
+
+    @Autowired
+    private ApplicationConstants applicationConstants;
+
+    @Autowired
+    private HRConfigurationService hrConfigurationService;
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
+    @Autowired
     private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
 
     public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
@@ -94,9 +118,18 @@ public class LeaveApplicationService {
         return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
     }
 
-    public List<LeaveApplication> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
+    public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         final Boolean isExcelUpload = leaveApplicationRequest.getLeaveApplication().size() > 1 ? true : false;
-        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+        final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
+        final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
+        final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();
+        for (final LeaveApplication leaveApplication : leaveApplicationsList)
+            if (leaveApplication.getErrorMsg().isEmpty())
+                successLeaveApplicationsList.add(leaveApplication);
+            else
+                errorLeaveApplicationsList.add(leaveApplication);
+        leaveApplicationRequest.setLeaveApplication(successLeaveApplicationsList);
+        for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             if (isExcelUpload)
                 leaveApplication.setStatus(hrStatusService.getHRStatuses("APPROVED", leaveApplication.getTenantId(),
                         leaveApplicationRequest.getRequestInfo()).get(0).getId());
@@ -120,7 +153,42 @@ public class LeaveApplicationService {
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
+        if (isExcelUpload)
+            return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
+                    leaveApplicationRequest.getRequestInfo());
+        else
+            return getSuccessResponseForCreate(leaveApplicationsList, leaveApplicationRequest.getRequestInfo());
+    }
 
+    private List<LeaveApplication> validate(final LeaveApplicationRequest leaveApplicationRequest, final Boolean isExcelUpload) {
+        String errorMsg = "";
+        for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            errorMsg = "";
+            final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
+            leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
+            final List<LeaveType> leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
+            final List<LeaveApplication> applications = getLeaveApplicationForDateRange(leaveApplication,
+                    leaveApplicationRequest.getRequestInfo());
+            if (leaveTypes.isEmpty())
+                errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT) + " ";
+            if (leaveApplication.getFromDate().after(leaveApplication.getToDate()))
+                errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE) + " ";
+            if (isExcelUpload) {
+                Date cutOffDate = null;
+                try {
+                    cutOffDate = hrConfigurationService.getCuttOffDate(leaveApplication.getTenantId(),
+                            leaveApplicationRequest.getRequestInfo());
+                } catch (final ParseException e) {
+                    errorMsg = errorMsg + e.getMessage() + " ";
+                }
+                if (cutOffDate == null || leaveApplication.getFromDate().after(cutOffDate))
+                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE)
+                            + " ";
+            }
+            if (!applications.isEmpty())
+                errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
+            leaveApplication.setErrorMsg(errorMsg);
+        }
         return leaveApplicationRequest.getLeaveApplication();
     }
 
@@ -128,33 +196,62 @@ public class LeaveApplicationService {
         return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
     }
 
-    public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-        final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
-        final List<Long> ids = new ArrayList<>();
-        ids.add(leaveApplication.getId());
-        leaveApplicationGetRequest.setId(ids);
-        final List<LeaveApplication> leaveApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest,
-                leaveApplicationRequest.getRequestInfo());
-        leaveApplication.setStatus(leaveApplications.get(0).getStatus());
-        leaveApplication.setStateId(leaveApplications.get(0).getStateId());
-        String leaveApplicationRequestJson = null;
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            leaveApplicationRequestJson = mapper.writeValueAsString(leaveApplicationRequest);
-            LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
-        } catch (final JsonProcessingException e) {
-            LOGGER.error("Error while converting Leave Application to JSON", e);
-            e.printStackTrace();
+    public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final LeaveApplicationRequest applicationRequest = new LeaveApplicationRequest();
+        List<LeaveApplication> leaveApplications = new ArrayList<>();
+        leaveApplications.add(leaveApplicationRequest.getLeaveApplication());
+        applicationRequest.setLeaveApplication(leaveApplications);
+        applicationRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
+        leaveApplications = validate(applicationRequest, false);
+        if (leaveApplications.get(0).getErrorMsg().isEmpty()) {
+            final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
+            final List<Long> ids = new ArrayList<>();
+            ids.add(leaveApplications.get(0).getId());
+            leaveApplicationGetRequest.setId(ids);
+            final List<LeaveApplication> oldApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest,
+                    leaveApplicationRequest.getRequestInfo());
+            leaveApplications.get(0).setStatus(oldApplications.get(0).getStatus());
+            leaveApplications.get(0).setStateId(oldApplications.get(0).getStateId());
+            String leaveApplicationRequestJson = null;
+            try {
+                final ObjectMapper mapper = new ObjectMapper();
+                leaveApplicationRequestJson = mapper.writeValueAsString(leaveApplicationRequest);
+                LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
+            } catch (final JsonProcessingException e) {
+                LOGGER.error("Error while converting Leave Application to JSON", e);
+                e.printStackTrace();
+            }
+            try {
+                leaveApplicationProducer.sendMessage(leaveApplicationUpdateTopic, leaveApplicationUpdateKey,
+                        leaveApplicationRequestJson);
+            } catch (final Exception ex) {
+                ex.printStackTrace();
+            }
+            leaveApplicationStatusChange(leaveApplications.get(0), leaveApplicationRequest.getRequestInfo());
         }
-        try {
-            leaveApplicationProducer.sendMessage(leaveApplicationUpdateTopic, leaveApplicationUpdateKey,
-                    leaveApplicationRequestJson);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-        }
-        leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
-        return leaveApplication;
+        return getSuccessResponseForCreate(leaveApplications, leaveApplicationRequest.getRequestInfo());
+    }
+
+    private ResponseEntity<?> getSuccessResponseForCreate(final List<LeaveApplication> leaveApplicationsList,
+            final RequestInfo requestInfo) {
+        final LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
+        leaveApplicationRes.setLeaveApplication(leaveApplicationsList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        leaveApplicationRes.setResponseInfo(responseInfo);
+        return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> getSuccessResponseForUpload(final List<LeaveApplication> successLeaveApplicationsList,
+            final List<LeaveApplication> errorLeaveApplicationsList, final RequestInfo requestInfo) {
+        final LeaveApplicationUploadResponse leaveApplicationUploadResponse = new LeaveApplicationUploadResponse();
+        leaveApplicationUploadResponse.getSuccessList().addAll(successLeaveApplicationsList);
+        leaveApplicationUploadResponse.getErrorList().addAll(errorLeaveApplicationsList);
+
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        leaveApplicationUploadResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<LeaveApplicationUploadResponse>(leaveApplicationUploadResponse, HttpStatus.OK);
     }
 
     private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
@@ -181,7 +278,8 @@ public class LeaveApplicationService {
         return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
     }
 
-    public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication, final RequestInfo requestInfo) {
+    public List<LeaveApplication> getLeaveApplicationForDateRange(final LeaveApplication leaveApplication,
+            final RequestInfo requestInfo) {
         return leaveApplicationRepository.getLeaveApplicationForDateRange(leaveApplication, requestInfo);
     }
 

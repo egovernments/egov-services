@@ -123,14 +123,12 @@ public class DemandRepository {
 		List<Demand> demandList = new ArrayList<>();
 		List<DemandDetails> demandDetails = new ArrayList<>();
 		demand.setTenantId(agreement.getTenantId());
-
-		if (agreement.getDemands() != null) {
+		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
+		demand.setModuleName("Leases And Agreements");
+		
+		if (agreement.getDemands() != null) 
 			demand.setId(agreement.getDemands().get(0));
-		} else {
-			demand.setInstallment(demandReasons.get(0).getTaxPeriod());
-			demand.setModuleName("Leases And Agreements");
-		}
-
+		
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
 

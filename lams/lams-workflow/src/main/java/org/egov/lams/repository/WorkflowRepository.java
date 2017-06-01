@@ -179,7 +179,7 @@ public class WorkflowRepository {
 
 			LOGGER.info("process instance responce ::: from search ::: " + processInstanceResponse);
 			ProcessInstance processInstance = processInstanceResponse.getProcessInstance();
-			List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
+			//List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
 			task.setAction(ACTION);
 			task.setStatus(processInstance.getStatus());
 			assignee = processInstance.getOwner();

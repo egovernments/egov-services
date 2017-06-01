@@ -199,50 +199,7 @@ public class AgreementService {
 		}
 		return agreement;
 	}
-
-	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
-
-		DemandResponse demandResponse = null;
-		if (demands == null)
-			demandResponse = demandRepository.createDemand(legacydemands, requestInfo);
-		else
-			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
-		return demandResponse.getDemands().stream().map(demand -> demand.getId()).collect(Collectors.toList());
-	}
-
-	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
-
-		List<Demand> demands = null;
-		Agreement agreement = agreementRequest.getAgreement();
-		List<String> demandIds = agreement.getDemands();
-		
-		if (demandIds == null) {
-			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest),null);
-		} else if (agreement.getSource().equals(Source.SYSTEM)) {
-			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-					.getDemands();
-			logger.info("the demand list after getting demandsearch result : " + demands);
-			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest),demands);
-			
-		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-					.getDemands();
-		}
-		return demands;
-	}
 	
-	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest){
-		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-		if (demandReasons.isEmpty())
-			throw new RuntimeException("No demand reason found for given criteria");
-		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
-		return demandReasons;
-	}
-
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 		/*
 		 * three boolean variables isAgreementNull,isAssetNull and
@@ -294,6 +251,49 @@ public class AgreementService {
 			logger.info("agreementRepository.findByAgreement : all values null");
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		}
+	}
+
+	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
+
+		DemandResponse demandResponse = null;
+		if (demands == null)
+			demandResponse = demandRepository.createDemand(legacydemands, requestInfo);
+		else
+			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
+		return demandResponse.getDemands().stream().map(demand -> demand.getId()).collect(Collectors.toList());
+	}
+
+	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
+
+		List<Demand> demands = null;
+		Agreement agreement = agreementRequest.getAgreement();
+		List<String> demandIds = agreement.getDemands();
+
+		if (demandIds == null) {
+			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest));
+		} else if (agreement.getSource().equals(Source.SYSTEM)) {
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+					.getDemands();
+			logger.info("the demand list after getting demandsearch result : " + demands);
+			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest));
+
+		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+					.getDemands();
+		}
+		return demands;
+	}
+	
+	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest){
+		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		if (demandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
+		return demandReasons;
 	}
 
 	private void setInitiatorPosition(AgreementRequest agreementRequest) {

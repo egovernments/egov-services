@@ -116,22 +116,16 @@ public class DemandRepository {
 		return demandReasonResponse.getDemandReasons();
 	}
 
-	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons,
-			List<Demand> existingDemands) {
+	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
 
 		Agreement agreement = agreementRequest.getAgreement();
-		Demand demand = null;
-		List<Demand> demandList = null;
-		List<DemandDetails> demandDetails = null;
+		Demand demand = new Demand();
+		List<Demand> demandList = new ArrayList<>();
+		List<DemandDetails> demandDetails = new ArrayList<>();
 
 		if (agreement.getDemands() != null) {
-			demandList = existingDemands;
-			demand = demandList.get(0);
-			demandDetails = demand.getDemandDetails();
+			demand.setId(agreement.getDemands().get(0));
 		} else {
-			demandList = new ArrayList<>();
-			demandDetails = new ArrayList<>();
-			demand = new Demand();
 			demand.setTenantId(agreement.getTenantId());
 			demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 			demand.setModuleName("Leases And Agreements");
@@ -157,8 +151,7 @@ public class DemandRepository {
 		}
 
 		demand.setDemandDetails(demandDetails);
-		if (demandList.isEmpty())
-			demandList.add(demand);
+		demandList.add(demand);
 		LOGGER.info("the demand object result after adding details : " + demandList);
 
 		return demandList;

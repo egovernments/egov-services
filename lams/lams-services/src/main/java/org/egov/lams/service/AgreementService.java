@@ -94,8 +94,8 @@ public class AgreementService {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-			calendar.add(Calendar.YEAR, 1);
-			calendar.add(Calendar.DATE, -1);
+		calendar.add(Calendar.YEAR, 1);
+		calendar.add(Calendar.DATE, -1);
 		Date expiryDate = calendar.getTime();
 		agreement.setExpiryDate(expiryDate);
 		logger.info("The closeDate calculated is " + expiryDate + "from commencementDate of "
@@ -170,15 +170,15 @@ public class AgreementService {
 					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 					logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
 					agreement.setAgreementDate(new Date());
+					updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
+							agreementRequest.getRequestInfo());
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
-					updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
-							agreementRequest.getRequestInfo());
-					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+					logger.info("createAgreement service status after notice print::" + agreement.getStatus());
 				}
 			}
 		}
@@ -199,7 +199,7 @@ public class AgreementService {
 		}
 		return agreement;
 	}
-	
+
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 		/*
 		 * three boolean variables isAgreementNull,isAssetNull and
@@ -287,8 +287,8 @@ public class AgreementService {
 		}
 		return demands;
 	}
-	
-	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest){
+
+	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest) {
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if (demandReasons.isEmpty())
 			throw new RuntimeException("No demand reason found for given criteria");

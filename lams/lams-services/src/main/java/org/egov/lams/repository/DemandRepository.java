@@ -122,11 +122,11 @@ public class DemandRepository {
 		Demand demand = new Demand();
 		List<Demand> demandList = new ArrayList<>();
 		List<DemandDetails> demandDetails = new ArrayList<>();
+		demand.setTenantId(agreement.getTenantId());
 
 		if (agreement.getDemands() != null) {
 			demand.setId(agreement.getDemands().get(0));
 		} else {
-			demand.setTenantId(agreement.getTenantId());
 			demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 			demand.setModuleName("Leases And Agreements");
 		}

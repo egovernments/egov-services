@@ -1,7 +1,4 @@
 package org.egov.models;
-
-import org.egov.models.RequestInfo;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

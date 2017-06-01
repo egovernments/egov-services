@@ -1,8 +1,6 @@
 package org.egov.models;
 
 
-import org.egov.models.ResponseInfo;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

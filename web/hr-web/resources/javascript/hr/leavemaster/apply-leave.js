@@ -155,7 +155,7 @@ class ApplyLeave extends React.Component {
                    try{
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
-                      var employeeid = getUrlVars()["id"];
+                      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
                       commonApiPost("hr-leave","eligibleleaves","_search",{
                         leaveType,tenantId,asOnDate,employeeid
                       }, function(err, res) {
@@ -333,7 +333,11 @@ addOrUpdate(e, mode) {
                         window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
                       },
                       error: function(err) {
-                        showError("Leave Application already exists for the same date range provided");
+                        if (err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message) {
+                          showError(err.responseJSON.Error.message);
+                        } else {
+                          showError("Leave Application already exists for the same date range provided.");
+                        }
                       }
                   });
         })

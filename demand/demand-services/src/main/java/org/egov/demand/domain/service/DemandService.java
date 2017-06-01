@@ -103,6 +103,8 @@ public class DemandService {
 				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
 						BigDecimal.ZERO);
 				egDemand.addEgDemandDetails(egDemandDetails);
+				egDemandDetails.setTenantId(demand.getTenantId());
+				egDemandDetails.setEgDemand(egDemand);
 			}
 		}
 		egDemand.addCollected(demand.getCollectionAmount());

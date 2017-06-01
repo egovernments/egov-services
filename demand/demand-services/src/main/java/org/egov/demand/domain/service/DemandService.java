@@ -100,6 +100,7 @@ public class DemandService {
 			if (!isDemandDetailExists) {
 				demandReason = demandReasonService.findByCodeInstModule(demandDetails.getTaxReason(),
 						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
+				
 				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
 						BigDecimal.ZERO);
 				egDemand.addEgDemandDetails(egDemandDetails);

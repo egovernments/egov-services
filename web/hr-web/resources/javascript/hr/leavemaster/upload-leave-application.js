@@ -121,7 +121,7 @@ class UploadLeaveApplication extends React.Component{
           }
           scannedObject.forEach(function(d){
               if(d.duplicate === "true"){
-                d.errorMessage = "Duplicate row in the excel scanned";
+                d.errorMsg = "Duplicate row in the excel scanned";
                 duplicateObject.push(d);
               }else {
                 finalObject.push(d);
@@ -196,7 +196,7 @@ class UploadLeaveApplication extends React.Component{
          });
 
 
-         var post=0,error=0,numberOfLeave;
+         var post=0,error=0,numberOfLeave,errorList=[],successList=[];
          var i=0;
          var leaveName,calendarYearName,employeeName,calenderName,noOfDays;
          var searchName;
@@ -206,7 +206,7 @@ class UploadLeaveApplication extends React.Component{
            var d = tempInfo[k];
            ////console.log("from",d.fromDate);
            ////console.log("to",d.toDate);
-             d.errorMessage="";
+             d.errorMsg="";
              var _from = d.fromDate;
              var _to = d.toDate;
              if(_from && _to) {
@@ -259,7 +259,7 @@ class UploadLeaveApplication extends React.Component{
                }
              }
              if(_days===0){
-               d.errorMessage = "Leave applied on a Holiday";
+               d.errorMsg = "Leave applied on a Holiday";
                error=1;
                post=1;
              }
@@ -278,16 +278,16 @@ class UploadLeaveApplication extends React.Component{
 
 
            if(noOfDays<0){
-             d.errorMessage = "Number of days is negative "+noOfDays;
+             d.errorMsg = "Number of days is negative "+noOfDays;
              error=1;
              post=1;
            }
 
            if(leaveValidate<0){
-             if(d.errorMessage===""){
-                 d.errorMessage = " Leave type "+leaveName +" is not exist in system";
+             if(d.errorMsg===""){
+                 d.errorMsg = " Leave type "+leaveName +" is not exist in system";
              }else{
-                 d.errorMessage = d.errorMessage+" Leave type "+leaveName +" is not exist in system";
+                 d.errorMsg = d.errorMsg+" Leave type "+leaveName +" is not exist in system";
              }
              post =1;
              error=1;
@@ -304,10 +304,10 @@ class UploadLeaveApplication extends React.Component{
              }
 
              if(employeeValidate<0){
-               if(d.errorMessage===""){
-                   d.errorMessage = " Employee Code "+employeeName +" is not exist in system";
+               if(d.errorMsg===""){
+                   d.errorMsg = " Employee Code "+employeeName +" is not exist in system";
                }else{
-                   d.errorMessage = d.errorMessage+" Employee Code "+employeeName +" is not exist in system";
+                   d.errorMsg = d.errorMsg+" Employee Code "+employeeName +" is not exist in system";
                }
                error=1;
                post =1;
@@ -441,8 +441,8 @@ class UploadLeaveApplication extends React.Component{
    console.log("FINALDKK  KJHKU",serverObject);
      serverObject.forEach(function(d){
          if(d.duplicate === "true"){
-           d.errorMessage = "Leave days already present in the scanned Excel";
-           d.errorMessage = "Leave days already present in the scanned Excel";
+           d.errorMsg = "Leave days already present in the scanned Excel";
+           d.errorMsg = "Leave days already present in the scanned Excel";
            errorObject.push(d);
          }else {
            d.successMessage = "Employee leaves created successfully";
@@ -503,26 +503,38 @@ class UploadLeaveApplication extends React.Component{
                    'auth-token': authToken
                  },
                  success: function(res) {
-                         showSuccess("File Uploaded successfully.");
-                         var ep1=new ExcelPlus();
-                         var b=0;
+                   console.log("res",res);
+                   errorList = res.ErrorList;
+                   res.SuccessList.forEach(function(d){
+                     d.successMessage = "Employee leaves created successfully";
+                       successList.push(d);
+                   });
 
-                           ep1.createFile("Success");
-                           ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
-                           for(b=0;b<finalValidatedServerObject.length;b++){
-                             ep1.writeNextRow([finalValidatedServerObject[b].employeeCode,finalValidatedServerObject[b].employeeName,finalValidatedServerObject[b].department,finalValidatedServerObject[b].leaveTypeName,finalValidatedServerObject[b].fromDate,finalValidatedServerObject[b].toDate,finalValidatedServerObject[b].leaveDays,finalValidatedServerObject[b].reason,finalValidatedServerObject[b].successMessage])
-                           }
-                           ep1.saveAs("success.xlsx");
+                     var ep1=new ExcelPlus();
+                     var b=0;
 
-                         var ep2=new ExcelPlus();
-                         var b=0;
+                       ep1.createFile("Success");
+                       ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
+                       for(b=0;b<successList.length;b++){
+                         ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].department,successList[b].leaveTypeName,successList[b].fromDate,successList[b].toDate,successList[b].leaveDays,successList[b].reason,successList[b].successMessage])
+                       }
+                       ep1.saveAs("success.xlsx");
 
-                           ep2.createFile("Error");
-                           ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
-                           for(b=0;b<errorObject.length;b++){
-                             ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMessage])
-                           }
-                           ep2.saveAs("error.xlsx");
+                 if(errorList.length!==0){
+                   errorList.forEach(function(d){
+                       errorObject.push(d);
+                   });
+                 }
+                 var ep2=new ExcelPlus();
+                 var b=0;
+
+                 ep2.createFile("Error");
+                 ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
+                 for(b=0;b<errorObject.length;b++){
+                   ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMsg])
+                 }
+                 ep2.saveAs("error.xlsx");
+
                          _this.setState({
                            LeaveType:{
                              "id": "",
@@ -538,6 +550,15 @@ class UploadLeaveApplication extends React.Component{
                  }
              });
            }else{
+             var ep2=new ExcelPlus();
+             var b=0;
+
+             ep2.createFile("Error");
+             ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
+             for(b=0;b<errorObject.length;b++){
+               ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMsg])
+             }
+             ep2.saveAs("error.xlsx");
              showError("No vaild data in the Uploaded Excel");
            }
 

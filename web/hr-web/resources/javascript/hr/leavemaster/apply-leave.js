@@ -333,8 +333,8 @@ addOrUpdate(e, mode) {
                         window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
                       },
                       error: function(err) {
-                        if (err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message) {
-                          showError(err.responseJSON.Error.message);
+                        if (err.LeaveApplication && err.LeaveApplication[0] && err.LeaveApplication[0].errorMsg) {
+                          showError(err.LeaveApplication[0].errorMsg);
                         } else {
                           showError("Leave Application already exists for the same date range provided.");
                         }

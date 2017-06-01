@@ -39,17 +39,13 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+
 import org.egov.wcms.model.UsageType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class UsageTypeRowMapper implements RowMapper<UsageType>  {

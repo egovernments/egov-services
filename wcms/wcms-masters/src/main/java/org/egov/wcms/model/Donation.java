@@ -35,21 +35,31 @@ public class Donation {
     @Length(min = 1, max = 100)
     private String propertyType;
     
+    private long propertyTypeId;
+    
     @NotNull
     @Length(min = 1, max = 100)
     private String category;
+    
+    private long categoryTypeId;
     
     @NotNull
     @Length(min = 1, max = 100)
     private String usageType;
     
+    private long usageTypeId;
+    
     @NotNull
     @Length(min = 1, max = 100)
     private String maxHSCPipeSize;
     
+    private long maxHSCPipeSizeId;
+    
     @NotNull
     @Length(min = 1, max = 100)
     private String minHSCPipeSize;
+    
+    private long minHSCPipeSizeId;
 
     @NotNull
     @Length(min = 1, max = 100)

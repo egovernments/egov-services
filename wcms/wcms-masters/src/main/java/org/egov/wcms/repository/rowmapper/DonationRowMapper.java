@@ -37,34 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.repository.rowmapper;
 
-import javax.validation.constraints.NotNull;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.model.Donation;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+@Component
+public class DonationRowMapper implements RowMapper<Donation>  {
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+    @Override
+    public Donation mapRow(ResultSet rs, int rowNum) throws SQLException {
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class DonationRequest {
+        Donation donation = new Donation();
+        donation.setPropertyTypeId(rs.getLong("property_type"));
+        donation.setUsageTypeId(rs.getLong("usage_type"));
+        donation.setCategoryTypeId(rs.getLong("category"));
+        donation.setMaxHSCPipeSizeId(rs.getLong("hsc_pipesize_max"));
+        donation.setMinHSCPipeSizeId(rs.getLong("hsc_pipesize_max"));
+        donation.setFromDate(rs.getDate("from_date"));
+        donation.setToDate(rs.getDate("to_date"));
+        donation.setActive(rs.getBoolean("active"));
+        donation.setDonationAmount(rs.getString("donation_amount"));
+        return donation;
+    }
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
 
-    @JsonProperty("Donation")
-    private Donation donation ;
 }

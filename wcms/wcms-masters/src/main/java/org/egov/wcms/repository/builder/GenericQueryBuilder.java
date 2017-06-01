@@ -37,34 +37,23 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.NotNull;
+package org.egov.wcms.repository.builder;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.model.Donation;
+import org.egov.wcms.config.ApplicationProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+@Component
+public class GenericQueryBuilder {
+	
+	@Autowired
+    private ApplicationProperties applicationProperties;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class DonationRequest {
-
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-
-    @JsonProperty("Donation")
-    private Donation donation ;
+	private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
+	
+	
+	
 }

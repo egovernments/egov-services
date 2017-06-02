@@ -7,8 +7,11 @@ class EmployeeSearch extends React.Component {
     departmentId:"",
     designationId:"",
     employeeType:"",
-    asOnDate:"",
-    name:"",mobileNumber:"",pan:"",aadhaarNumber:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
+    name:"",
+    employeeTypeCode:"",
+    employeeStatus:""},
+    isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[],employeeTypeList:[],employeeStatusList:[],
+    modified: false}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
@@ -26,13 +29,14 @@ class EmployeeSearch extends React.Component {
     departmentId,
     designationId,
     employeeType,
-    asOnDate}=this.state.searchSet;
+    employeeTypeCode,
+    employeeStatus}=this.state.searchSet;
     var _this = this;
     e.preventDefault();
     //call api call
     var employees = [];
     commonApiPost("hr-employee","employees","_search", {
-        tenantId, code, departmentId, designationId, name, pageSize:500
+        tenantId, code, departmentId, designationId, name,employeeStatus, pageSize:500
       }, function(err, res) {
         if(res) {
           employees = res.Employee;
@@ -40,8 +44,16 @@ class EmployeeSearch extends React.Component {
         flag = 1;
         _this.setState({
           isSearchClicked: true,
-          employees
+          employees,
+          modified: true
         });
+
+        setTimeout(function() {
+          _this.setState({
+            modified: false
+          })
+        }, 1200);
+
       });
   }
   handleBlur(e) {
@@ -83,7 +95,7 @@ class EmployeeSearch extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.employees.length!=this.state.employees.length) {
+        if (this.state.modified && this.state.employees.length) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -106,8 +118,9 @@ class EmployeeSearch extends React.Component {
        }
     }
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
-
-    var count = 3, _state = {}, _this = this;
+    var type = getUrlVars()["type"];
+    var id = getUrlVars()["id"];
+    var count = 5, _state = {}, _this = this;
 
     const checkCountAndCall = function(key, res) {
       _state[key] = res;
@@ -117,31 +130,21 @@ class EmployeeSearch extends React.Component {
     }
 
     getDropdown("assignments_designation", function(res) {
-      checkCountAndCall("departmentList", res);
+      checkCountAndCall("designationList", res);
     });
     getDropdown("assignments_department", function(res) {
-      checkCountAndCall("designationList", res);
+      checkCountAndCall("departmentList", res);
     });
     getDropdown("assignments_position", function(res) {
       checkCountAndCall("assignments_position", res);
     });
-
-    var type = getUrlVars()["type"];
-    var id = getUrlVars()["id"];
-    $('#asOnDate').datepicker({
-        format: 'DD/MM/YYYY',
-        defaultDate: ""
+    getDropdown("employeeStatus", function(res) {
+      checkCountAndCall("employeeStatusList", res);
+    });
+    getDropdown("employeeType", function(res) {
+      checkCountAndCall("employeeTypeList", res);
     });
 
-    $('#asOnDate').val("");
-    $('#asOnDate').on("change", function(e) {
-          _this.setState({
-                searchSet: {
-                    ..._this.state.searchSet,
-                    "asOnDate":$("#asOnDate").val()
-                }
-          })
-      });
   }
 
   handleChange(e,name) {
@@ -161,33 +164,24 @@ class EmployeeSearch extends React.Component {
   render() {
 
     let {handleChange,search,handleBlur}=this;
-    let {isSearchClicked,employees, designationList, departmentList ,assignments_position}=this.state;
+    let {isSearchClicked,employees, designationList, departmentList ,assignments_position,employeeTypeList,employeeStatusList}=this.state;
     let {
     code,
     departmentId,
     designationId,
-    asOnDate,name,mobileNumber,pan,aadhaarNumber}=this.state.searchSet;
-    const renderOption = function(list,listName="") {
+    employeeTypeCode,employeeStatus,name}=this.state.searchSet;
+    const renderOption=function(list) {
         if(list)
         {
-            if (listName==="year") {
-              return list.map((item)=>
-              {
-                  return (<option key={item.id} value={item.name}>
-                          {item.name}
-                    </option>)
-              })
-            }
-            else {
-              return list.map((item)=>
-              {
-                  return (<option key={item.id} value={item.id}>
-                          {item.name}
-                    </option>)
-              })
-            }
+            return list.map((item, ind)=>
+            {
+                return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                        {typeof item == "object" ? (item.name ? item.name :item.code ) : item}
+                  </option>)
+            })
         }
     }
+
     const showTable = function() {
       if(isSearchClicked)
       {
@@ -200,7 +194,6 @@ class EmployeeSearch extends React.Component {
                         <th>Employee Designation</th>
                         <th>Employee Department</th>
                         <th>Employee Position</th>
-                        <th>Date-Range</th>
                         <th>Action</th>
 
                     </tr>
@@ -287,7 +280,6 @@ class EmployeeSearch extends React.Component {
                     <td data-label="designation">{getNameById(designationList,item.assignments[ind].designation)}</td>
                     <td data-label="department">{getNameById(departmentList,item.assignments[ind].department)}</td>
                     <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
-                    <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],getUrlVars()["value"],item.id)}
                     </td>
@@ -371,56 +363,41 @@ class EmployeeSearch extends React.Component {
                   </div>
                 </div>}
           </div>
-        {/*<div className="row">
+        <div className="row">
             <div className="col-sm-6">
-                      <div className="row">
-                        <div className="col-sm-6 label-text">
-                            <label for="description">As On Date</label>
-                        </div>
-                        <div className="col-sm-6">
-                            <input type="text" id="asOnDate" name="asOnDate" value= {asOnDate}
-                              onChange={(e)=>{handleChange(e,"asOnDate")}} />
-                        </div>
-                      </div>
-                  </div>
-            <div className="col-sm-6">
-                      <div className="row">
-                        <div className="col-sm-6 label-text">
-                            <label for="description">Mobile Number</label>
-                        </div>
-                        <div className="col-sm-6">
-                            <input type="number" id="mobileNumber" name="mobileNumber" value= {mobileNumber}
-                              onChange={(e)=>{handleChange(e,"mobileNumber")}}/>
-                        </div>
-                      </div>
-                  </div>
-        </div>
-    <div>
-        <div className="col-sm-6">
-            <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label for="">Pan  </label>
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">Type  </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select id="employeeTypeCode" name="employeeTypeCode" value={employeeTypeCode} onChange={(e)=>{
+                            handleChange(e,"employeeTypeCode")}}>
+                        <option>Select Type</option>
+                        {renderOption(this.state.employeeTypeList)}
+                       </select>
+                    </div>
+                    </div>
                 </div>
-                <div className="col-sm-6">
-                    <input type="text" name="pan" id="pan" onChange={(e)=>{
-                        handleChange(e,"pan")
-                    }} />
-                </div>
-            </div>
-          </div>
-          <div className="col-sm-6">
-              <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="">Aadhar Code  </label>
-                  </div>
-                  <div className="col-sm-6">
-                      <input type="text" name="aadhaarNumber" id="aadhaarNumber" onChange={(e)=>{
-                          handleChange(e,"aadhaarNumber")
-                      }} />
-                  </div>
               </div>
-            </div>
-        </div>*/}
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label for=""> Status</label>
+                      </div>
+                      <div className="col-sm-6">
+                      <div className="styled-select">
+                          <select id="employeeStatus" name="employeeStatus" value={employeeStatus}
+                            onChange={(e)=>{ handleChange(e,"employeeStatus") }}>
+
+                              <option value="">Select Status</option>
+                              {renderOption(this.state.employeeStatusList)}
+                         </select>
+                      </div>
+                      </div>
+                  </div>
+                </div>
+          </div>
             <div className="text-center">
               <button id="sub" type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

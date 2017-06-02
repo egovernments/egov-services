@@ -266,6 +266,7 @@ function loadServiceDefinition(code){
 
 			patternvalidation();
 			initDatePicker();
+			fileConstraint();
 			translate();
 		},
 		error: function(){

@@ -51,7 +51,7 @@ import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.validator.NewConnectionValidator;
+import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.DonationResponse;
@@ -94,7 +94,7 @@ public class DonationController {
     private ApplicationProperties applicationProperties;
     
     @Autowired
-    private NewConnectionValidator newConnectionValidator;
+    private NewWaterConnectionValidator newConnectionValidator;
 
     @PostMapping(value = "/_create")
     @ResponseBody
@@ -135,7 +135,7 @@ public class DonationController {
 
         // Call service
         List<Donation> donationList = null;
-        logger.info("+++===Validation Response is something like this +++=== : " + newConnectionValidator.validateNewConnectionBusinessRules());
+      //  logger.info("+++===Validation Response is something like this +++=== : " + newConnectionValidator.validateNewConnectionBusinessRules());
         try {
             donationList = donationService.getDonationList(donationGetRequest);
         } catch (Exception exception) {

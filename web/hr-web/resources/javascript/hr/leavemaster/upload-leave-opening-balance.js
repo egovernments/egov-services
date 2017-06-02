@@ -2,7 +2,7 @@ class UploadLeaveType extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state={LeaveType:{
+    this.state={leaveTypeSet:{
         "id": "",
         "my_file_input":"",
         "tenantId": tenantId
@@ -111,9 +111,10 @@ class UploadLeaveType extends React.Component{
               }
           });
         _this.setState({
-            LeaveType:{
-              ..._this.state.LeaveType
-            }, temp : finalObject,
+            leaveTypeSet:{
+              ..._this.state.leaveTypeSet,
+
+              }, temp : finalObject,
                duplicate : duplicateObject
           })
       };
@@ -138,42 +139,46 @@ addOrUpdate(e,mode)
         var duplicateInfo = Object.assign([],this.state.duplicate);
         var errorLeaveOpening=[];
         var exists = false;
+        var _this = this;
 
         duplicateInfo.forEach(function(d){
           errorObject.push(d);
         });
         var leaveArray =[],calendarYearArray=[],employeeArray=[];
         var checkLeave = [],checkCalenderYear= [],checkEmployee=[];
-        this.state._leaveTypes.forEach(function(d) {
+        _this.state._leaveTypes.forEach(function(d) {
           checkLeave.push(d.name);
         });
 
-        this.state._leaveTypes.forEach(function(d) {
+        _this.state._leaveTypes.forEach(function(d) {
           leaveArray.push({"name":d.name,
                             "id":d.id});
         });
 
-        this.state._years.forEach(function(d) {
+        _this.state._years.forEach(function(d) {
           checkCalenderYear.push(d.name.toString());
         });
 
 
-        this.state._years.forEach(function(d) {
+        _this.state._years.forEach(function(d) {
           calendarYearArray.push({"name":d.name.toString(),
                             "id":d.id});
         });
 
 
-        this.state.employees.forEach(function(d) {
+        _this.state.employees.forEach(function(d) {
           checkEmployee.push(d.code);
         });
 
 
-        this.state.employees.forEach(function(d) {
+        _this.state.employees.forEach(function(d) {
           employeeArray.push({"code":d.code,
                             "id":d.id});
         });
 
+        console.log("this.state._leaveTypes",_this.state._leaveTypes);
+        console.log("this.state.employees",_this.state.employees);
+        console.log("this.state._years",_this.state._years);
 
         var post=0,error=0,errorList=[],successList=[];
         var i=0;
@@ -277,124 +282,159 @@ addOrUpdate(e,mode)
           error = 0;
           }
         }
-        var calenderYearApi = serverObject[0].calendarYear;
+        console.log("serverObject",serverObject);
+        if(serverObject.length>0){
+          var calenderYearApi = serverObject[0].calendarYear;
+          commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
+             tenantId,
+             pageSize: 500,
+             year : calenderYearApi
+           }, function(err,res) {
+             if(res) {
+               var leaveBal = res["LeaveOpeningBalance"];
+               console.log("leaveBal",leaveBal);
+                 for(var i=0;i<serverObject.length;i++){
+                   var calendarNumber = parseInt(serverObject[i].calendarYear);
+                     exists = false;
+                     for(var j=0;j<leaveBal.length;j++){
+                       if(calendarNumber===leaveBal[j].calendarYear){
+                          if(serverObject[i].employee===leaveBal[j].employee){
+                              if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
+                                      exists=true;
+                                      serverObject[i].errorMsg = "Leave opening balance already present in the system for this Employee";
+                                      errorLeaveOpening.push(serverObject[i]);
+                                      break;
+                                 }
+                           }
+                         }
+                       }
 
-       commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
-          tenantId,
-          pageSize: 500,
-          year : calenderYearApi
-        }, function(err,res) {
-          if(res) {
-            var leaveBal = res["LeaveOpeningBalance"];
-              for(var i=0;i<serverObject.length;i++){
-                var calendarNumber = parseInt(serverObject[i].calendarYear);
-                  exists = false;
-                  for(var j=0;j<leaveBal.length;j++){
-                    if(calendarNumber===leaveBal[j].calendarYear){
-                       if(serverObject[i].employee===leaveBal[j].employee){
-                           if(serverObject[i].leaveType["id"]===leaveBal[j].leaveType["id"]){
-                                   exists=true;
-                                   serverObject[i].errorMsg = "Leave opening balance already present in the system for this Employee";
-                                   errorLeaveOpening.push(serverObject[i]);
-                                   break;
-                              }
-                        }
-                      }
-                    }
+                       if(exists===false){
+                         serverObject[i].successMessage = "Employee leaves created successfully";
+                         finalValidatedServerObject.push(serverObject[i]);
+                       }
+               }
+               errorLeaveOpening.forEach(function(d){
+                 errorObject.push(d);
+               });
 
-                    if(exists===false){
-                      serverObject[i].successMessage = "Employee leaves created successfully";
-                      finalValidatedServerObject.push(serverObject[i]);
-                    }
-            }
-            errorLeaveOpening.forEach(function(d){
-              errorObject.push(d);
-            });
+               finalValidatedServerObject.forEach(function(d){
+                     finalSuccessObject.push({"employee": d.employee,
+                                     "calendarYear": d.calendarYear,
+                                     "leaveType":  { "id": d.leaveType["id"]},
+                                     "noOfDays" : d.noOfDays,
+                                     "departmentName" : d.department,
+                                     "tenantId": d.tenantId
+                                   });
+                 });
+                 console.log("finalValidatedServerObject",finalValidatedServerObject);
+                 console.log("finalSuccessObject",finalSuccessObject);
+                 if(finalSuccessObject.length!==0) {
+                 var body={
+                     "RequestInfo":requestInfo,
+                     "LeaveOpeningBalance":finalSuccessObject
+                   };
 
-            finalValidatedServerObject.forEach(function(d){
-                  finalSuccessObject.push({"employee": d.employee,
-                                  "calendarYear": d.calendarYear,
-                                  "leaveType":  { "id": d.leaveType["id"]},
-                                  "noOfDays" : d.noOfDays,
-                                  "departmentName" : d.department,
-                                  "tenantId": d.tenantId
-                                });
-              });
-              if(finalSuccessObject.length!==0) {
-              var body={
-                  "RequestInfo":requestInfo,
-                  "LeaveOpeningBalance":finalSuccessObject
-                },_this=this;
+                   $.ajax({
 
-                $.ajax({
+                         url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId +"&type=upload",
+                         type: 'POST',
+                         dataType: 'json',
+                         data:JSON.stringify(body),
+                         contentType: 'application/json',
+                         headers:{
+                           'auth-token': authToken
+                         },
+                         success: function(res) {
+                                 showSuccess("File Uploaded successfully.");
 
-                      url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId +"&type=upload",
-                      type: 'POST',
-                      dataType: 'json',
-                      data:JSON.stringify(body),
-                      contentType: 'application/json',
-                      headers:{
-                        'auth-token': authToken
-                      },
-                      success: function(res) {
-                              showSuccess("File Uploaded successfully.");
-                              _this.setState({
-                                LeaveType:{
-                                  "id": "",
-                                  "my_file_input": "",
-                                  "tenantId": tenantId
-                              }
-                              })
+                                 console.log("res.ErrorList",res.ErrorList);
+                                 console.log("errorObject",errorObject);
+                                 errorList = res.ErrorList;
+                                 if(res.SuccessList.length!==0){
+                                 res.SuccessList.forEach(function(d){
+                                   d.successMessage = "Leave Opening balance created successfully";
+                                     successList.push(d);
+                                 });
+                               }
+                                   var ep1=new ExcelPlus();
+                                   var b=0;
 
-                              errorList = res.ErrorList;
-                              res.SuccessList.forEach(function(d){
-                                d.successMessage = "Leave Opening balance created successfully";
-                                  successList.push(d);
-                              });
+                                     ep1.createFile("Success");
+                                     ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
+                                     for(b=0;b<successList.length;b++){
+                                       ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].departmentName,successList[b].leaveType["name"],successList[b].calendarYear,successList[b].noOfDays,successList[b].successMessage])
+                                     }
+                                     ep1.saveAs("success.xlsx");
 
-                                var ep1=new ExcelPlus();
-                                var b=0;
+                                     if(errorList.length!==0){
 
-                                  ep1.createFile("Success");
-                                  ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
-                                  for(b=0;b<successList.length;b++){
-                                    ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].departmentName,successList[b].leaveType["name"],successList[b].calendarYear,successList[b].noOfDays,successList[b].successMessage])
-                                  }
-                                  ep1.saveAs("success.xlsx");
+                                       for(var t=0;t<errorList.length;t++){
+                                         for(var q=0;q<finalValidatedServerObject.length;q++){
+                                            if(errorList[t].employee===finalValidatedServerObject[q].employee){
+                                               finalValidatedServerObject[q].errorMsg = errorList[t].errorMsg;
+                                               errorObject.push(finalValidatedServerObject[q]);
+                                               console.log("g--->",finalValidatedServerObject[q]);
+                                               break;
+                                            }
+                                         }
+                                       }
+                                     }
 
-                            if(errorList.length!==0){
-                              errorList.forEach(function(d){
-                                  errorObject.push(d);
-                              });
-                            }
-                            var ep2=new ExcelPlus();
-                            var b=0;
+                              console.log("errorObject",errorObject);
+                               var ep2=new ExcelPlus();
+                               var b=0;
 
-                            ep2.createFile("Error");
-                            ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
-                            for(b=0;b<errorObject.length;b++){
-                              ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
-                            }
-                            ep2.saveAs("error.xlsx");
+                               ep2.createFile("Error");
+                               ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+                               for(b=0;b<errorObject.length;b++){
+                                 ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
+                               }
+                               ep2.saveAs("error.xlsx");
+
+                               _this.setState({
+                                   ..._this.state.leaveTypeSet,
+                                 leaveTypeSet:{
+                                   "id": "",
+                                   "my_file_input": "",
+                                   "tenantId": tenantId
+                               }
+                             });
 
 
-                      },
-                      error: function(err) {
-                          showError("Only excel file can Upload");
+                         },
+                         error: function(err) {
+                             showError("Only excel file can be upload");
 
-                      }
-                  });
-                }else{
-                  showError("No vaild data in the Uploaded Excel");
-                }
-          }
-      });
-  }
+                         }
+                     });
+                   }else{
+                     showError("No vaild data in the Uploaded Excel");
+                   }
+             }
+         });
+       } else {
+         var ep2=new ExcelPlus();
+         var b=0;
+
+         ep2.createFile("Error");
+         ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+         for(b=0;b<errorObject.length;b++){
+           ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
+         }
+         ep2.saveAs("error.xlsx");
+         showError("No valid Data in the uplaod Sheet")
+       }
+      }
+
+
+
+
 
   render()
   {
     let {addOrUpdate,filePicked}=this;
-    let {my_file_input}=this.state.LeaveType;
+    let {my_file_input}=this.state.leaveTypeSet;
     let mode=getUrlVars()["type"];
 
 

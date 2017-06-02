@@ -1,0 +1,2 @@
+ALTER TABLE submission_attribute ALTER COLUMN code TYPE VARCHAR(100);
+ALTER TABLE submission_attribute ALTER COLUMN key TYPE VARCHAR(100);

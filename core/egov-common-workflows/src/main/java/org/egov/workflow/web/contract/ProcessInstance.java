@@ -52,16 +52,16 @@ public class ProcessInstance {
 	@Length(max = 128, min = 1)
 	private String type = null;
 	/**
-	 * assignee is the position of the user to be set while creating a
-	 * instantiating of Process. For Automatic work flow this comes from the
-	 * process definition for manual work flow it is the position selected from
+	 * assignee is the position of the user to be set while creating or
+	 * Initiation of Process. For Automatic work flow this comes from the
+	 * process definition, for manual work flow it is the position selected from
 	 * the UI.
 	 */
 	@NotNull
 	private Position assignee = null;
 
 	/**
-	 * comments is the comment provided by the user while he is initiating a
+	 * comments is the comment provided by the user while he is initiating/updating  a
 	 * process
 	 */
 	@Length(max = 1024, min = 1)

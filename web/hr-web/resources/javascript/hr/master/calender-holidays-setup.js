@@ -26,15 +26,13 @@ setInitialState(initState) {
   this.setState(initState);
 }
 
-handleChange(e,name) {
-
+handleChange(e,name){
     this.setState({
-        Holiday:{
-            ...this.state.Holiday,
-            [name]:e.target.value
-        }
+      Holiday:{
+        ...this.state.Holiday,
+        [name]:e.target.value
+      }
     })
-
 }
 
 componentDidMount() {
@@ -284,19 +282,6 @@ render(){
                     </div>
                 </div>
             </div>
-            {/*<div className="col-sm-6">
-              <div className="row">
-                <div className="col-sm-6 label-text">
-                    <label for="">Active</label>
-                </div>
-                    <div className="col-sm-6">
-                          <label className="radioUi">
-                            <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
-                                handleChange(e,"active")}} required/>
-                          </label>
-                    </div>
-                </div>
-              </div>*/}
           </div>
 
 

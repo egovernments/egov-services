@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.domain.service;
 import java.util.List;
 
 import org.egov.pgrrest.common.entity.ServiceTypeCategory;
-import org.egov.pgrrest.read.persistence.repository.ComplaintTypeCategoryRepository;
+import org.egov.pgrrest.read.persistence.repository.ServiceTypeCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,27 +12,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ServiceTypeCategoryService {
 
-    private final ComplaintTypeCategoryRepository complaintTypeCategoryRepository;
+    private final ServiceTypeCategoryRepository serviceTypeCategoryRepository;
 
     @Autowired
-    public ServiceTypeCategoryService(final ComplaintTypeCategoryRepository complaintTypeCategoryRepository) {
-        this.complaintTypeCategoryRepository = complaintTypeCategoryRepository;
+    public ServiceTypeCategoryService(final ServiceTypeCategoryRepository serviceTypeCategoryRepository) {
+        this.serviceTypeCategoryRepository = serviceTypeCategoryRepository;
     }
 
     public ServiceTypeCategory findById(final Long categoryId) {
-        return complaintTypeCategoryRepository.findOne(categoryId);
+        return serviceTypeCategoryRepository.findOne(categoryId);
     }
 
     @Transactional
     public ServiceTypeCategory createComplaintTypeCategory(final ServiceTypeCategory complaintTypeCategory) {
-        return complaintTypeCategoryRepository.save(complaintTypeCategory);
+        return serviceTypeCategoryRepository.save(complaintTypeCategory);
     }
 
     public List<ServiceTypeCategory> getAll(final String tenantId) {
-        return complaintTypeCategoryRepository.findAllByTenantIdOrderByNameAsc(tenantId);
+        return serviceTypeCategoryRepository.findAllByTenantIdOrderByNameAsc(tenantId);
     }
 
     public ServiceTypeCategory findByName(final String categoryName) {
-        return complaintTypeCategoryRepository.findByName(categoryName);
+        return serviceTypeCategoryRepository.findByName(categoryName);
     }
 }

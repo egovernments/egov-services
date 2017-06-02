@@ -14,22 +14,22 @@ import java.util.stream.Collectors;
 public class ReceivingCenterRepository {
 
 
-ReceivingCenterJpaRepository receivingCenterJpaRepository;
+    ReceivingCenterJpaRepository receivingCenterJpaRepository;
 
     @Autowired
     public ReceivingCenterRepository(ReceivingCenterJpaRepository receivingCenterJpaRepository) {
         this.receivingCenterJpaRepository = receivingCenterJpaRepository;
     }
 
-    public ReceivingCenter findReceivingCenterByIdAndTenantId(Long id, String tenantId)
-    {
-            org.egov.pgrrest.common.entity.ReceivingCenter receivingCenter= receivingCenterJpaRepository.findByIdAndTenantId(id,tenantId);
-                return receivingCenter.toDomain();
+    public ReceivingCenter findReceivingCenterByIdAndTenantId(Long id, String tenantId) {
+        org.egov.pgrrest.common.entity.ReceivingCenter receivingCenter = receivingCenterJpaRepository
+            .findByIdAndTenantId(id, tenantId);
+        return receivingCenter.toDomain();
     }
 
 
- public List<ReceivingCenter> findAllReceivingCentersByTenantId(String tenantId)
-    {
-       return receivingCenterJpaRepository.findAllByTenantId(tenantId).stream().map(org.egov.pgrrest.common.entity.ReceivingCenter::toDomain).collect(Collectors.toList());
+    public List<ReceivingCenter> findAllReceivingCentersByTenantId(String tenantId) {
+        return receivingCenterJpaRepository.findAllByTenantId(tenantId).stream().map(org.egov.pgrrest.common.entity
+            .ReceivingCenter::toDomain).collect(Collectors.toList());
     }
 }

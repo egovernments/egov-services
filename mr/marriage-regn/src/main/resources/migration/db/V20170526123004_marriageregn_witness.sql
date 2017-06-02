@@ -1,11 +1,11 @@
 create table egmr_marriageregn_witness(
-       applicationnumber CHARACTER VARYING(250),  
-       tenantid CHARACTER VARYING(250), 
-       name CHARACTER VARYING(250), 
-       relation CHARACTER VARYING(250), 
-       age INTEGER, 
-       address CHARACTER VARYING(250), 
-       realtionship CHARACTER VARYING(250), 
+       applicationnumber CHARACTER VARYING(250) NOT NULL,  
+       tenantid CHARACTER VARYING(250) NOT NULL, 
+       name CHARACTER VARYING(250) NOT NULL, 
+       relation CHARACTER VARYING(250) NOT NULL, 
+       age INTEGER NOT NULL, 
+       address CHARACTER VARYING(250) NOT NULL, 
+       relationship CHARACTER VARYING(250) NOT NULL, 
        occupation CHARACTER VARYING(250), 
        aadhaar CHARACTER VARYING(250)
 )  

@@ -21,7 +21,7 @@ public class Employee {
 	@JsonProperty("code")
 	private String code;
 	
-	@JsonProperty("username")
+	@JsonProperty("userName")
 	private String username;
 	
 	@JsonProperty("assignments")

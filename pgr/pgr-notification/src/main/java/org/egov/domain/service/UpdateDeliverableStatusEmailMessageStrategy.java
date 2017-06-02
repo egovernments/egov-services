@@ -23,17 +23,17 @@ public class UpdateDeliverableStatusEmailMessageStrategy implements EmailMessage
     public EmailMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
         return EmailMessageContext.builder()
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
-            .bodyTemplateValues(getBodyTemplate(sevaRequest, tenant))
+            .bodyTemplateValues(getBodyTemplate(sevaRequest, tenant, serviceType))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
             .subjectTemplateValues(getSubjectTemplateValues(sevaRequest))
             .build();
     }
 
-    private Map<Object, Object> getBodyTemplate(SevaRequest sevaRequest, Tenant tenant) {
+    private Map<Object, Object> getBodyTemplate(SevaRequest sevaRequest, Tenant tenant, ServiceType serviceType) {
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
         builder.put("citizenName", sevaRequest.getRequesterName());
         builder.put("crn", sevaRequest.getCrn());
-        builder.put("serviceName", sevaRequest.getServiceTypeName());
+        builder.put("serviceName", serviceType.getName());
         builder.put("ULBName", tenant.getName());
         return builder.build();
     }

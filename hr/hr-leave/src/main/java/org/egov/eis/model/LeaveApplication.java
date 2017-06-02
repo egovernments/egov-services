@@ -45,8 +45,6 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.eis.model.enums.LeaveStatus;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -114,5 +112,7 @@ public class LeaveApplication {
     private String tenantId;
 
     private WorkFlowDetails workflowDetails;
+
+    private String errorMsg;
 
 }

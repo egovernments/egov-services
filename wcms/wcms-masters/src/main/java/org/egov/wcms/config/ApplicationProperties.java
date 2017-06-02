@@ -52,92 +52,99 @@ import org.springframework.core.env.Environment;
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
-	private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
-	public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
-	public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
 
-	@Value("${kafka.topics.usagetype.create.name}")
-	private String createUsageTypeTopicName;
+    private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
+    public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
+    public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
 
-	@Value("${kafka.topics.usagetype.update.name}")
-	private String updateUsageTypeTopicName;
+    @Value("${kafka.topics.usagetype.create.name}")
+    private String createUsageTypeTopicName;
 
-	@Value("${kafka.topics.category.create.name}")
-	private String createCategoryTopicName;
+    @Value("${kafka.topics.usagetype.update.name}")
+    private String updateUsageTypeTopicName;
 
-	@Value("${kafka.topics.category.update.name}")
-	private String updateCategoryTopicName;
+    @Value("${kafka.topics.category.create.name}")
+    private String createCategoryTopicName;
 
-	@Value("${kafka.topics.pipesize.create.name}")
-	private String createPipeSizeTopicName;
+    @Value("${kafka.topics.category.update.name}")
+    private String updateCategoryTopicName;
 
-	@Value("${kafka.topics.pipesize.update.name}")
-	private String updatePipeSizeTopicName;
-	
-	@Value("${kafka.topics.propertyCategory.create.name}")
-	private String createPropertyCategoryTopicName;
+    @Value("${kafka.topics.pipesize.create.name}")
+    private String createPipeSizeTopicName;
 
-	@Value("${kafka.topics.propertyusage.create.name}")
-	private String createPropertyUsageTopicName;
-	
-	@Value("${kafka.topics.donation.create.name}")
-	private String createDonationTopicName;
-	
+    @Value("${kafka.topics.pipesize.update.name}")
+    private String updatePipeSizeTopicName;
+
+    @Value("${kafka.topics.propertyCategory.create.name}")
+    private String createPropertyCategoryTopicName;
+
+    @Value("${kafka.topics.propertyusage.create.name}")
+    private String createPropertyUsageTopicName;
+
+    @Value("${kafka.topics.donation.create.name}")
+    private String createDonationTopicName;
+
+    @Value("${kafka.topics.propertypipesize.create.name}")
+    private String createPropertyPipeSizeTopicName;
+    
 	@Value("${kafka.topics.documenttype.create.name}")
 	private String createDocumentTypeTopicName;
 
+    @Autowired
+    private Environment environment;
 
-	@Autowired
-	private Environment environment;
+    public String wcmsSearchPageSizeDefault() {
+        return environment.getProperty(WCMS_SEARCH_PAGESIZE_DEFAULT);
+    }
 
-	public String wcmsSearchPageSizeDefault() {
-		return this.environment.getProperty(WCMS_SEARCH_PAGESIZE_DEFAULT);
-	}
+    public String wcmsSearchPageNumberMax() {
+        return environment.getProperty(WCMS_SEARCH_PAGENO_MAX);
+    }
 
-	public String wcmsSearchPageNumberMax() {
-		return this.environment.getProperty(WCMS_SEARCH_PAGENO_MAX);
-	}
+    public String wcmsSearchPageSizeMax() {
+        return environment.getProperty(WCMS_SEARCH_PAGESIZE_MAX);
+    }
 
-	public String wcmsSearchPageSizeMax() {
-		return this.environment.getProperty(WCMS_SEARCH_PAGESIZE_MAX);
-	}
+    public String getCreateUsageTypeTopicName() {
+        return createUsageTypeTopicName;
+    }
 
+    public String getUpdateUsageTypeTopicName() {
+        return updateUsageTypeTopicName;
+    }
 
-	public String getCreateUsageTypeTopicName() {
-		return createUsageTypeTopicName;
-	}
+    public String getCreateCategoryTopicName() {
+        return createCategoryTopicName;
+    }
 
-	public String getUpdateUsageTypeTopicName() {
-		return updateUsageTypeTopicName;
-	}
+    public String getUpdateCategoryTopicName() {
+        return updateCategoryTopicName;
+    }
 
-	public String getCreateCategoryTopicName(){
-		return createCategoryTopicName;
-	}
+    public String getCreatePipeSizetopicName() {
+        return createPipeSizeTopicName;
+    }
 
-	public String getUpdateCategoryTopicName(){
-		return updateCategoryTopicName;
-	}
+    public String getUpdatePipeSizeTopicName() {
+        return updatePipeSizeTopicName;
+    }
 
-	public String getCreatePipeSizetopicName(){
-		return createPipeSizeTopicName;
-	}
+    public String getCreatePropertyCategoryTopicName() {
+        return createPropertyCategoryTopicName;
+    }
 
-	public String getUpdatePipeSizeTopicName(){
-		return updatePipeSizeTopicName;
-	}
-	
-	public String getCreatePropertyCategoryTopicName(){
-		return createPropertyCategoryTopicName;
-	}
-	public String getCreatePropertyUsageTopicName(){
-		return createPropertyUsageTopicName;
-	}
-	
-	public String getCreateDonationTopicName(){
-		return createDonationTopicName;
-	}
-	
+    public String getCreatePropertyUsageTopicName() {
+        return createPropertyUsageTopicName;
+    }
+
+    public String getCreateDonationTopicName() {
+        return createDonationTopicName;
+    }
+
+    public String getCreatePropertyPipeSizeTopicName() {
+        return createPropertyPipeSizeTopicName;
+    }
+    
 	public String getCreateDocumentTypeTopicName(){
 		return createDocumentTypeTopicName;
 	}

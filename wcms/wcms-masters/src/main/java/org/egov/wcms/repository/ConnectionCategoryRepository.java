@@ -39,6 +39,10 @@
  */
 package org.egov.wcms.repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.wcms.model.ConnectionCategory;
 import org.egov.wcms.repository.builder.ConnectionCategoryQueryBuilder;
@@ -50,11 +54,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class ConnectionCategoryRepository {
@@ -72,37 +71,41 @@ public class ConnectionCategoryRepository {
 
     public ConnectionCategoryRequest persistCreateCategory(final ConnectionCategoryRequest categoryRequest) {
         LOGGER.info("ConnectionCategoryRequest::" + categoryRequest);
-        final String categoryInsert = categoryQueryBuilder.insertCategoryQuery();
+        final String categoryInsert = ConnectionCategoryQueryBuilder.insertCategoryQuery();
         final ConnectionCategory category = categoryRequest.getCategory();
-        Object[] obj = new Object[] {Long.valueOf(category.getCode()),category.getCode(),category.getName(),category.getDescription(),category.getActive(),Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),category.getTenantId() };
+        final Object[] obj = new Object[] { Long.valueOf(category.getCode()), category.getCode(), category.getName(),
+                category.getDescription(), category.getActive(),
+                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                category.getTenantId() };
         jdbcTemplate.update(categoryInsert, obj);
         return categoryRequest;
     }
 
-
-   public ConnectionCategoryRequest persistModifyCategory(final ConnectionCategoryRequest categoryRequest) {
+    public ConnectionCategoryRequest persistModifyCategory(final ConnectionCategoryRequest categoryRequest) {
         LOGGER.info("ConnectionCategoryRequest::" + categoryRequest);
-        final String categoryUpdate = categoryQueryBuilder.updateCategoryQuery();
+        final String categoryUpdate = ConnectionCategoryQueryBuilder.updateCategoryQuery();
         final ConnectionCategory category = categoryRequest.getCategory();
-        Object[] obj = new Object[] {category.getName(),category.getDescription(),category.getActive(),
-                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), category.getCode() };
+        final Object[] obj = new Object[] { category.getName(), category.getDescription(), category.getActive(),
+                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), category.getCode() };
         jdbcTemplate.update(categoryUpdate, obj);
         return categoryRequest;
 
     }
 
-    public boolean checkCategoryByNameAndCode(final String code,final String name,final String tenantId) {
+    public boolean checkCategoryByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(name);
         // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)
-            query = categoryQueryBuilder.selectCategoryByNameAndCodeQuery();
+            query = ConnectionCategoryQueryBuilder.selectCategoryByNameAndCodeQuery();
         else {
             preparedStatementValues.add(code);
-            query = categoryQueryBuilder.selectCategoryByNameAndCodeNotInQuery();
+            query = ConnectionCategoryQueryBuilder.selectCategoryByNameAndCodeNotInQuery();
         }
         final List<Map<String, Object>> categories = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
@@ -112,10 +115,11 @@ public class ConnectionCategoryRepository {
         return true;
     }
 
-    public List<ConnectionCategory> findForCriteria(CategoryGetRequest categoryGetRequest) {
-        List<Object> preparedStatementValues = new ArrayList<Object>();
-        String queryStr = categoryQueryBuilder.getQuery(categoryGetRequest, preparedStatementValues);
-        List<ConnectionCategory> categories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), categoryRowMapper);
+    public List<ConnectionCategory> findForCriteria(final CategoryGetRequest categoryGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = categoryQueryBuilder.getQuery(categoryGetRequest, preparedStatementValues);
+        final List<ConnectionCategory> categories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                categoryRowMapper);
         return categories;
     }
 

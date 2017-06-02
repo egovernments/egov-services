@@ -40,6 +40,9 @@
 
 package org.egov.wcms.consumers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,14 +55,9 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 @Configuration
 @EnableKafka
 public class WaterMasterConsumerConfig {
-
 
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
@@ -114,6 +112,5 @@ public class WaterMasterConsumerConfig {
     public WaterMasterConsumer listener() {
         return new WaterMasterConsumer();
     }
-
 
 }

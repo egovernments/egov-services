@@ -39,23 +39,23 @@
  */
 package org.egov.wcms.service;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+
 import org.egov.wcms.repository.CodeSequenceNumberGenerator;
 import org.egov.wcms.repository.DBCodeSequenceGenerator;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-
 @Service
 public class CodeGeneratorService {
 
-    private CodeSequenceNumberGenerator codeSequenceNumberGenerator;
-    private DBCodeSequenceGenerator dbCodeSequenceGenerator;
+    private final CodeSequenceNumberGenerator codeSequenceNumberGenerator;
+    private final DBCodeSequenceGenerator dbCodeSequenceGenerator;
 
-    public CodeGeneratorService(CodeSequenceNumberGenerator codeSequenceNumberGenerator,
-                                DBCodeSequenceGenerator dbCodeSequenceGenerator) {
+    public CodeGeneratorService(final CodeSequenceNumberGenerator codeSequenceNumberGenerator,
+            final DBCodeSequenceGenerator dbCodeSequenceGenerator) {
         this.codeSequenceNumberGenerator = codeSequenceNumberGenerator;
         this.dbCodeSequenceGenerator = dbCodeSequenceGenerator;
     }

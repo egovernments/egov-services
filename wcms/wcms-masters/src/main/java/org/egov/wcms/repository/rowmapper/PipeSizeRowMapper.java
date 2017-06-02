@@ -39,22 +39,19 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
-
-import org.egov.wcms.model.PipeSize;
-import org.egov.wcms.model.UsageType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+
+import org.egov.wcms.model.PipeSize;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PipeSizeRowMapper implements RowMapper<PipeSize> {
 
     @Override
-    public PipeSize mapRow(ResultSet rs, int rowNum) throws SQLException {
-        PipeSize pipeSize = new PipeSize();
+    public PipeSize mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setId(rs.getLong("pipesize_id"));
         pipeSize.setCode(rs.getString("pipesize_code"));
         pipeSize.setSizeInMilimeter(rs.getDouble("pipesize_sizeinmilimeter"));
@@ -65,4 +62,3 @@ public class PipeSizeRowMapper implements RowMapper<PipeSize> {
     }
 
 }
-

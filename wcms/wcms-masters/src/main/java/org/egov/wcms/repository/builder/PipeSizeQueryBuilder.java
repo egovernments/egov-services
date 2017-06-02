@@ -40,7 +40,6 @@
 package org.egov.wcms.repository.builder;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.web.contract.CategoryGetRequest;
 import org.egov.wcms.web.contract.PipeSizeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,6 +175,7 @@ public class PipeSizeQueryBuilder {
         return "UPDATE egwtr_pipesize SET sizeinmilimeter = ?,sizeininch = ?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
     }
+    
     public static String selectPipeSizeInmmAndCodeQuery() {
         return " select code FROM egwtr_pipesize where sizeinmilimeter = ? and tenantId = ?";
     }
@@ -183,6 +183,10 @@ public class PipeSizeQueryBuilder {
 
     public static String selectPipeSizeInmmAndCodeNotInQuery() {
         return " select code from egwtr_pipesize where sizeinmilimeter = ? and tenantId = ? and code != ? ";
+    }
+    
+    public static String selectPipeSizeIdQuery() {
+        return " select * FROM egwtr_pipesize where id = ?";
     }
 
 

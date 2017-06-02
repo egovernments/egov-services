@@ -719,6 +719,13 @@ definitions:
         uniqueItems: true
         items:
           $ref: '#/definitions/DepartmentalTest'
+      APRDetails:
+        type: array
+        description: List of Asset and property return details of the employee.
+        maxItems: 25
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/APRDetails'    
       tenantId:
         type: string
         description: >-
@@ -1139,6 +1146,55 @@ definitions:
     required:
       - test
       - yearOfPassing
+  APRDetails:
+    type: object
+    description: This will give the details about the assets and property returns of the employee.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the APR details.
+      yearOfSubmission:
+        type: integer
+        format: int32
+        description: The year in which the employee has submitted the APR details.
+      detailsSubmitted:
+       type: boolean
+       description: True if the asset and property details are submitted for the year and False if it is not submitted.
+      dateOfSubmission:
+        type: string
+        format: date
+        description: The date on which the yearly asset and property details were submitted.
+      remarks:
+        type: string
+        description: Any general remarks.
+      documents:
+        type: array
+        description: List of all the documents associated with APR.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - yearOfSubmission
+      - detailsSubmitted    
+      
   EmployeeReq:
     type: object
     properties:
@@ -1430,6 +1486,11 @@ definitions:
         description: List of departmental tests qualified by the employee.
         items:
           $ref: '#/definitions/DepartmentalTest'
+      APRDetails:
+        type: array
+        description: List of Asset and property return details of the employee.
+        items:
+          $ref: '#/definitions/APRDetails'
       tenantId:
         type: string
         description: >-

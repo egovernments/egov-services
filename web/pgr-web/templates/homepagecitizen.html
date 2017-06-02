@@ -36,6 +36,7 @@
 			.page-container .main-content .citizen-screens section div.msg, .page-container .main-content .citizen-screens section div.msg {
 			    /* margin-top: 10px; */
 			    margin-bottom: 15px;
+			    padding: 15px;
 			}
 			.page-container .main-content .citizen-screens .msg header .msg-info {
 			    padding-left: 0;
@@ -90,11 +91,11 @@
 						<div class="navbar-header col-lg-4 col-md-6 col-sm-2 col-xs-3">
 							<a class="navbar-brand" href="javascript:void(0);">
 								
-									<img src="../resources/global/images/logo@2x.png" height="60">
+									<img class="homepage_logo" src="" height="60">
 								
 								<div>
 									<span class="title2 hidden-sm hidden-xs citizen-title" data-translate="core.title.citizenportal"></span>
-									<span style="color:#fff">Kurnool</span>
+									<span style="color:#fff" id="hp-citizen-title"></span>
 								</div>
 							</a>
 						</div>
@@ -122,7 +123,7 @@
 										<i class="fa fa-user"></i> <span class="profile-text"></span>
 									</a>
 									<ul class="right-arrow dropdown-menu" role="menu">
-										<li><a href="javascript:void(0)" data-href="edit_profile.html" data-name="profile" class="open-popup"><i class="fa fa-user"></i><span data-translate="core.lbl.edit.profile"></span></a></li>
+										<li><a href="edit_profile.html" data-name="profile" class="open-popup"><i class="fa fa-user"></i><span data-translate="core.lbl.edit.profile"></span></a></li>
 										<li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i><span data-translate="core.lbl.pass.change"></span></a></li>
 										<li><a href="javascript:void(0)" class="signout"><i class="fa fa-sign-out"></i><span data-translate="core.lbl.signout"></span></a></li>
 									</ul>
@@ -173,18 +174,10 @@
 								<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 inboxHeight reloadtemplate">
 									<div class="msg" data-toggle="collapse" data-target="#4275" aria-expanded="true">
 										<header>
-											<div class="row">
+											<div class="">
 												<h3>
-												<i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i>
-												{{#each attribValues}}
-												    {{#if (contains this.key "keyword")}}
-														{{#if (contains this.name "Complaint")}}
-															Grievance
-														{{else}}
-															Service
-														{{/if}}
-												    {{/if}}
-												{{/each}}
+												<!-- <i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i> -->
+												    {{serviceName}} 
 													<span class="msg-status">
 														{{#each attribValues}}
 														    {{#if (contains this.key "status")}}
@@ -195,9 +188,7 @@
 												</h3> 
 											</div>
 											<div class="msg-info">
-												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> 
-												
-												<span class="msg-date">{{requestedDatetime}}</span>
+												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> <span class="msg-date">{{date}}</span>
 											</div>
 										</header>
 										<div class="msg-content collapse in">
@@ -249,19 +240,12 @@
 					<form action="">
 						<div class="form-group row complaint-item" id="complaint_list">
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services">
-								<div data-href="create-complaint.html" class="open-popup" data-name="complintcreate">
+								<div href="create-complaint.html" class="open-popup" data-name="complintcreate">
 									<a href="javascript:void(0)">
 										<div class="content a">Create Grievance</div>
 									</a>
 								</div>
 							</div>
-							<!-- <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 services">
-								<div data-href="search-complaint.html" class="open-popup" data-name="complaintsearch">
-									<a href="javascript:void(0)">
-										<div class="content a">Search Grievance</div>
-									</a>
-								</div>
-							</div> -->
 			            </div>
 					</form>
 				</div>

@@ -40,6 +40,9 @@
 
 package org.egov.wcms.web.errorhandlers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
@@ -50,97 +53,87 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 @Component
 public class ErrorHandler {
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(BindingResult bindingResult,
-                                                                                     RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(400);
-		error.setMessage("Missing RequestBody Fields");
-		error.setDescription("Error While Binding RequestBody");
-		if (bindingResult.hasFieldErrors()) {
-			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-			}
-		}
+    public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(final BindingResult bindingResult,
+            final RequestInfo requestInfo) {
+        final Error error = new Error();
+        error.setCode(400);
+        error.setMessage("Missing RequestBody Fields");
+        error.setDescription("Error While Binding RequestBody");
+        if (bindingResult.hasFieldErrors())
+            for (final FieldError fieldError : bindingResult.getFieldErrors())
+                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
+        final ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setResponseInfo(responseInfo);
+        errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingParameters(BindingResult bindingResult,
-                                                                                    RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(400);
-		error.setMessage("Missing Required Query Parameter");
-		error.setDescription("Error While Binding ModelAttribute");
-		if (bindingResult.hasFieldErrors()) {
-			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-			}
-		}
+    public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingParameters(final BindingResult bindingResult,
+            final RequestInfo requestInfo) {
+        final Error error = new Error();
+        error.setCode(400);
+        error.setMessage("Missing Required Query Parameter");
+        error.setDescription("Error While Binding ModelAttribute");
+        if (bindingResult.hasFieldErrors())
+            for (final FieldError fieldError : bindingResult.getFieldErrors())
+                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
+        final ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setResponseInfo(responseInfo);
+        errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
-	public ResponseEntity<ErrorResponse> getResponseEntityForUnexpectedErrors(RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(500);
-		error.setMessage("Internal Server Error");
-		error.setDescription("Unexpected Error Occurred");
+    public ResponseEntity<ErrorResponse> getResponseEntityForUnexpectedErrors(final RequestInfo requestInfo) {
+        final Error error = new Error();
+        error.setCode(500);
+        error.setMessage("Internal Server Error");
+        error.setDescription("Unexpected Error Occurred");
 
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
+        final ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setResponseInfo(responseInfo);
+        errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(BindingResult bindingResult,
-                                                                                RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(400);
-		error.setMessage("Binding Error");
-		error.setDescription("Error while binding request object");
+    public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(final BindingResult bindingResult,
+            final RequestInfo requestInfo) {
+        final Error error = new Error();
+        error.setCode(400);
+        error.setMessage("Binding Error");
+        error.setDescription("Error while binding request object");
 
-		if (bindingResult.hasFieldErrors()) {
-			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				if (fieldError.getField().contains("Date")) {
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					String errorDate = dateFormat.format(fieldError.getRejectedValue());
-					error.getFields().put(fieldError.getField(), errorDate);
-				} else {
-					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-				}
-			}
-		}
+        if (bindingResult.hasFieldErrors())
+            for (final FieldError fieldError : bindingResult.getFieldErrors())
+                if (fieldError.getField().contains("Date")) {
+                    final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    final String errorDate = dateFormat.format(fieldError.getRejectedValue());
+                    error.getFields().put(fieldError.getField(), errorDate);
+                } else
+                    error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
+        final ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setResponseInfo(responseInfo);
+        errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

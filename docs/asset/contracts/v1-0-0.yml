@@ -30,13 +30,9 @@ paths:
           description: Request header for the service request details.
           required: true
           schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: id
           in: query
           description: Pass List of Unique Asset id then the API will returns list of asset. Maximum length of the input list is 100.
@@ -127,7 +123,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         
   /assets/_create:
     post:
@@ -150,7 +146,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
   /assets/_update/{code}:
     post:
@@ -181,7 +177,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /assetCategories/_create:
     post:
@@ -210,7 +206,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
   /assetCategories/_search:
      post:
@@ -223,13 +219,9 @@ paths:
           description: Request information send into the body of the request service request details.
           required: true
           schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+       
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: id
           in: query
           description: Pass List of Unique AssetsCategory id then the API will returns list of AssetsCategory. Maximum length of the input list is 100.
@@ -269,7 +261,136 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /assets/reevaluate/_search:
+    post:
+      summary: Get list of Asset based on below parameter.
+      description: >
+        Provides a list of asset for given different input params.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Request header for the service request details.
+          required: true
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: id
+          in: query
+          description: Pass List of Unique Revaluation id then the API will returns list of Revaluated asset. Maximum length of the input list is 100.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 100
+        - name: assetId
+          in: query
+          description: Pass List of Unique Asset id then the API will returns list of Revaluated asset. Maximum length of the input list is 100.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 100
+      tags:
+        - Revaluation
+      responses:
+        '200':
+          description: Successful response, returns list Revaluation Details of Revaluated Asset.
+          schema:
+            $ref: '#/definitions/RevaluationResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+        
+  /assets/reevaluate/_create:
+    post:
+      summary: Reevaluate the asset.
+      description: Reevaluate the asset, after revaluation asset value will be change, it can be increase or decrease. Revaluation is applicable if the asset status is Capitalized.
+      parameters:
+        - name: Revaluation
+          in: body
+          description: Details of Revaluation.
+          required: true
+          schema:
+            $ref: '#/definitions/RevaluationRequest'
+      tags:
+        - Revaluation
+      responses:
+        '201':
+          description: Asset is Reevaluated.
+          schema:
+            $ref: '#/definitions/RevaluationResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /assets/reevaluate/{id}/_update:
+    post:
+      summary: Update existing Reevaluated Asset.
+      description: Update existing Reevaluated Asset.
+      parameters:
+        
+        - name: id
+          in: path
+          required: true
+          description: The unique revaluation id.
+          type: integer
+          format: int64
+          
+        - name: Revaluation
+          in: body
+          description: Details for update existing asset Revaluation.
+          required: true
+          schema:
+            $ref: '#/definitions/RevaluationRequest'
+      tags:
+        - Revaluation
+      responses:
+        '201':
+          description: Asset is Reevaluated.
+          schema:
+            $ref: '#/definitions/RevaluationResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /assets/dispose/_create:
+    post:
+      summary: Asset Sale/Disposal.
+      description: |
+       1. Prior to disposal of an asset, asset will be depreciated.
+       2. On save and the amount should be calculated on a pro-rated basis (actual depreciation for the year).
+       3. Assets in Capitalized status can only be sold or disposed. 
+       4. Once an Asset disposal/sale is completed [Approved], system will mark the asset status as ‘Disposed’.
+      parameters:
+        - name: Disposal
+          in: body
+          description: Details of Disposal/Sale.
+          required: true
+          schema:
+            $ref: '#/definitions/DisposalRequest'
+      tags:
+        - Disposal
+      responses:
+        '201':
+          description: Asset is Reevaluated.
+          schema:
+            $ref: '#/definitions/DisposalResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
 definitions:
   Asset:
@@ -517,6 +638,136 @@ definitions:
         format: int32
         description: pin code of the location.
   
+  Revaluation:
+    description: Hold the asset Revaluation information.
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: Unique id for ulb.
+      id:
+        description: Unique id for the Revaluation.  This will be auto generated.
+        type: integer
+        format: int64
+      assetId:
+        description: Unique id of asset.
+        type: integer
+        format: int64
+      currentCapitalizedValue:
+        type: integer
+        format: double
+        description: Current gross value of the asset.
+      typeOfChange:      
+        type: string
+        description: Revaluation value amount INCREASED or DECREASED.
+        enum:
+          - INCREASED
+          - DECREASED
+      revaluationAmount:
+        type: integer
+        format: double
+        description: The amount by which the value is increased/decreased.
+      valueAfterRevaluation:
+        type: integer
+        format: double
+        description: After revaluation value of the asset.  
+      revaluationDate:
+        type: integer
+        format: int64
+        description: Date of revaluation. ( past or current date).
+      revaluatedBy:
+        type: string
+        description: Comments, if any.
+      reasonForRevaluation:      
+        type: string
+        description: Remarks.
+      fixedAssetsWrittenOffAccountCode:
+        type: integer
+        format: int64
+        description: Options are based on account codes for the specified purpose id.
+      function:
+        type: integer
+        format: int64
+        description: Option based on the master.
+      fund:
+        type: integer
+        format: int64
+        description: Option based on the master-Defaulted to Capital Fund.
+      scheme:
+        type: integer
+        format: int64
+        description: Option based on the selected fund from the master.
+      subScheme:
+        type: integer
+        format: int64
+        description: Option based on the selected  scheme from master.
+      comments:
+        type: string
+        description: Comments, if any.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      status:
+        type: string
+        description: enumartion.
+        enum:
+          - Active  
+    required:
+      - tenantId
+      - assetId
+      - typeOfChange
+      - revaluationAmount
+      - function
+      - fund
+          
+  Disposal:
+    description: Asset sale /Disposal.
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: Unique id for ulb.
+      id:
+        description: Unique id for the Disposal/Sale.  This will be auto generated.
+        type: integer
+        format: int64
+      assetId:
+        description: Unique id of asset.
+        type: integer
+        format: int64
+      disposalPartyName:
+        type: string
+        description: Enter the disposal/Sale party Name.
+      disposalPartyAddress:
+        type: string
+        description: Enter the disposal/Sale party address.
+      disposalReason:
+        type: string
+        description: Enter the disposal/Sale reason.
+      disposalDate:
+        type: integer
+        format: int64
+        description: Default the current date and do not allow the user to modify.
+      panCardNumber:
+        type: string
+        description: Applicable If the value selected is sale.
+      aadharCardNumber:
+        type: string
+        description: Applicable If the value selected is sale.
+      currentValueOfTheAsset:
+        type: integer
+        format: double
+        description: calculate the current value of the asset as gross value - accumulated depreciation +or- reevaulation value and allow the user to modify this value.
+      saleValue:
+        type: integer
+        format: double
+        description: Enter the sale value of the Asset.
+      assetSaleAccountCode:
+        type: integer
+        format: int64
+        description: Select the Asset Sale account code- populate it based on purpose code from financials detailed code master.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          
   AttributeDefination:
     description: Hold the Asset dynamic fields details as list of json object.
     type: object
@@ -544,7 +795,7 @@ definitions:
         description: .
       url:      
         type: string
-        description: configure if field type are ('singlevaluelist','multivaluelist','checkbox') and @values is null.
+        description: configure if field type are ('singlevaluelist','multivaluelist') and @values is null.
       order:
         type: string
         description: order of the table column.
@@ -555,7 +806,7 @@ definitions:
   AssetRequest:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Assets:
           $ref: '#/definitions/Asset'
     type: object      
@@ -563,7 +814,7 @@ definitions:
   AssetResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Assets:
         type: array
         items:
@@ -574,7 +825,7 @@ definitions:
   AssetCategoryRequest:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       AssetCategory:
           $ref: '#/definitions/AssetCategory'
     type: object 
@@ -582,102 +833,47 @@ definitions:
   AssetCategoryResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       AssetCategory:
         type: array
         items:
           $ref: '#/definitions/AssetCategory'
     type: object
-        
     
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts
-  
-  ResponseInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
-      
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      filelds:
-        type: object
-    required:
-      - code
-      - message
-      
-  ErrorRes:
+  RevaluationRequest:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Revaluation:
+          $ref: '#/definitions/Revaluation'
+    type: object      
+ 
+  RevaluationResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Revaluations:
+        type: array
+        items:
+          $ref: '#/definitions/Revaluation'
     type: object
-
-
+    
+  DisposalRequest:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Revaluation:
+          $ref: '#/definitions/Disposal'
+    type: object      
+ 
+  DisposalResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Revaluations:
+        type: array
+        items:
+          $ref: '#/definitions/Disposal'
+    type: object
+    
+  

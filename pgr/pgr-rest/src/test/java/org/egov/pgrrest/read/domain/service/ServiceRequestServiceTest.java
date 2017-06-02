@@ -6,7 +6,6 @@ import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.common.repository.ComplaintJpaRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
@@ -20,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

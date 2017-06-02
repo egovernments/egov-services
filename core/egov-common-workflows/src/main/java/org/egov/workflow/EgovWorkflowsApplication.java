@@ -51,7 +51,7 @@ public class EgovWorkflowsApplication {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm a"));
+		mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a"));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

@@ -1,9 +1,6 @@
 package org.egov.models;
 
 import java.util.List;
-
-import org.egov.models.Role;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

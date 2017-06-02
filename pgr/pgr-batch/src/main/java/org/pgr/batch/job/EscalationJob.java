@@ -16,6 +16,6 @@ public class EscalationJob {
 
     @Scheduled(fixedDelayString = "${escalation.interval}")
     public void escalate() {
-        escalationService.escalateComplaint();
+        escalationService.escalateComplaintForAllTenants();
     }
 }

@@ -11,11 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.pgr.batch.repository.ComplaintMessageQueueRepository;
 import org.pgr.batch.repository.ComplaintRestRepository;
+import org.pgr.batch.repository.TenantRepository;
+import org.pgr.batch.repository.contract.SearchTenantResponse;
 import org.pgr.batch.repository.contract.ServiceRequest;
 import org.pgr.batch.repository.contract.ServiceResponse;
+import org.pgr.batch.repository.contract.Tenant;
 import org.pgr.batch.service.model.Position;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -47,6 +52,9 @@ public class EscalationServiceTest {
     @Mock
     private ComplaintMessageQueueRepository complaintMessageQueueRepository;
 
+    @Mock
+    private TenantRepository tenantRepository;
+
     @InjectMocks
     private  EscalationService escalationService;
 
@@ -57,10 +65,11 @@ public class EscalationServiceTest {
     public void test_should_check_that_complaint_gets_escalated() throws Exception {
         List<ServiceRequest> serviceRequestList = asList(getServiceRequest(), getServiceRequest());
         ServiceResponse serviceResponse = new ServiceResponse(null,serviceRequestList);
+        when(tenantRepository.getAllTenants()).thenReturn(getTenantDetails());
         when(complaintRestRepository.getComplaintsEligibleForEscalation("default")).thenReturn(serviceResponse);
         when(userService.getUserByUserName("system","default")).thenReturn(User.builder().id(1L).build());
 
-        escalationService.escalateComplaint();
+        escalationService.escalateComplaintForAllTenants();
 
         verify(workflowService).enrichWorkflowForEscalation(eq(serviceRequestList.get(0)), requestInfoArgumentCaptor.capture());
         verify(workflowService).enrichWorkflowForEscalation(eq(serviceRequestList.get(1)), requestInfoArgumentCaptor.capture());
@@ -69,9 +78,24 @@ public class EscalationServiceTest {
     }
 
     private ServiceRequest getServiceRequest(){
+
+        List<AttributeEntry> values = new ArrayList<>();
+        values.add(new AttributeEntry("keyword","Complaint"));
+        values.add(new AttributeEntry("assignmentId","1L"));
+
         return ServiceRequest.builder()
-                .attribValues(asList(new AttributeEntry("keyword","Complaint"),
-                        new AttributeEntry("assignmentId","1L")))
+                .crn("1234")
+                .tenantId("default")
+                .attribValues(values)
                 .build();
+    }
+
+    private SearchTenantResponse getTenantDetails(){
+        Tenant tenant = Tenant.builder()
+                .code("default")
+                .description("default")
+                .build();
+
+        return new SearchTenantResponse(null, Collections.singletonList(tenant));
     }
 }

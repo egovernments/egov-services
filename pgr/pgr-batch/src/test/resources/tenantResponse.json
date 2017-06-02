@@ -1,0 +1,48 @@
+{
+  "responseInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": null
+  },
+  "tenant": [
+    {
+      "code": "default",
+      "description": "default",
+      "logoId": "",
+      "imageId": "",
+      "domainUrl": null,
+      "type": "CITY",
+      "city": {
+        "name": "kurnool",
+        "localName": null,
+        "districtCode": "KC",
+        "districtName": "KC1",
+        "regionName": "KC-Region",
+        "ulbGrade": "foo",
+        "longitude": 0,
+        "latitude": 0
+      }
+    },
+    {
+      "code": "panavel",
+      "description": "panavel",
+      "logoId": "",
+      "imageId": "",
+      "domainUrl": null,
+      "type": "CITY",
+      "city": {
+        "name": "panavel",
+        "localName": null,
+        "districtCode": "PN",
+        "districtName": "PN1",
+        "regionName": "PN-Region",
+        "ulbGrade": "Corporation",
+        "longitude": 0,
+        "latitude": 0
+      }
+    }
+  ]
+}

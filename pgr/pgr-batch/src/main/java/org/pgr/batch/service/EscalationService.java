@@ -4,19 +4,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.pgr.batch.repository.ComplaintMessageQueueRepository;
 import org.pgr.batch.repository.ComplaintRestRepository;
+import org.pgr.batch.repository.TenantRepository;
 import org.pgr.batch.repository.contract.ServiceRequest;
+import org.pgr.batch.repository.contract.Tenant;
 import org.pgr.batch.service.model.SevaRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @Slf4j
 public class EscalationService {
 
+    public static final String VALUES_ASSIGNEE_ID = "assignmentId";
+    public static final String VALUES_KEYWORD = "keyword";
+
     private ComplaintRestRepository complaintRestRepository;
 
     private ComplaintMessageQueueRepository complaintMessageQueueRepository;
+
+    private TenantRepository tenantRepository;
 
     private WorkflowService workflowService;
 
@@ -30,26 +39,39 @@ public class EscalationService {
                               WorkflowService workflowService,
                               UserService userService,PositionService positionService,
                               EscalationDateService escalationDateService,
-                              ComplaintMessageQueueRepository complaintMessageQueueRepository){
+                              ComplaintMessageQueueRepository complaintMessageQueueRepository,
+                              TenantRepository tenantRepository){
         this.complaintRestRepository = complaintRestRepository;
         this.workflowService = workflowService;
         this.userService = userService;
         this.positionService = positionService;
         this.escalationDateService = escalationDateService;
         this.complaintMessageQueueRepository = complaintMessageQueueRepository;
+        this.tenantRepository = tenantRepository;
     }
 
-    public void escalateComplaint(){
-        List<ServiceRequest> serviceRequests = complaintRestRepository.getComplaintsEligibleForEscalation("default").getServiceRequests();
+    //This method will fetch all tenant information from tenant service and escalate
+    // all eligible complaints per tenant
+    public void escalateComplaintForAllTenants(){
+        List<Tenant> tenantList = tenantRepository.getAllTenants().getTenant();
+        if(!CollectionUtils.isEmpty(tenantList))
+            tenantList.forEach(tenant -> escalateComplaintForTenant(tenant.getCode()));
+    }
+
+    //Method to fetch all eligible complaints in one tenant
+    private void escalateComplaintForTenant(String tenantId){
+        List<ServiceRequest> serviceRequests = complaintRestRepository.getComplaintsEligibleForEscalation(tenantId).getServiceRequests();
         serviceRequests.stream()
                 .filter(ServiceRequest::isComplaint)
                 .forEach(this::escalate);
     }
 
+    //method to escalate complaint
     private void escalate(ServiceRequest serviceRequest){
         try{
-//            serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
-            serviceRequest =  workflowService.enrichWorkflowForEscalation(serviceRequest,getRequestInfo());
+            validateAndLog(serviceRequest);
+            serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
+            workflowService.enrichWorkflowForEscalation(serviceRequest,getRequestInfo());
             positionService.enrichRequestWithPosition(serviceRequest);
             SevaRequest enrichedSevaRequest = new SevaRequest(getRequestInfo(), serviceRequest);
             escalationDateService.enrichRequestWithEscalationDate(enrichedSevaRequest);
@@ -60,11 +82,21 @@ public class EscalationService {
         catch (Exception exception){
             log.error("For CRN " + serviceRequest.getCrn() + " and TenantId "+ serviceRequest.getTenantId(),exception);
         }
+    }
 
+    private void validateAndLog(ServiceRequest serviceRequest){
+        if(!serviceRequest.isExists(VALUES_ASSIGNEE_ID))
+            log.warn("FOR CRN" + serviceRequest.getCrn() + "and Tenant" + serviceRequest.getTenantId()
+            + VALUES_ASSIGNEE_ID + "Is Not Present");
+        if(!serviceRequest.isExists(VALUES_KEYWORD))
+            log.warn("FOR CRN" + serviceRequest.getCrn() + "and Tenant" + serviceRequest.getTenantId()
+                    + VALUES_KEYWORD + "Is Not Present");
+        if(null == serviceRequest.getEscalationDate())
+            log.warn("FOR CRN" + serviceRequest.getCrn() + "and Tenant" + serviceRequest.getTenantId()
+                    + "Escalation Date Is Not Present");
     }
 
     private RequestInfo getRequestInfo(){
-
         return RequestInfo.builder()
                 .action("PUT")
                 .userInfo(userService.getUserByUserName("system","default"))

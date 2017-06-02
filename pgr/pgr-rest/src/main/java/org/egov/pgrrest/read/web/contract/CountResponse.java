@@ -3,15 +3,11 @@ package org.egov.pgrrest.read.web.contract;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.common.contract.ServiceRequest;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ServiceResponse {
+public class CountResponse {
 
     private ResponseInfo responseInfo;
-    private List<ServiceRequest> serviceRequests;
+    private Long count;
 }
-

@@ -9,6 +9,7 @@ import org.egov.pgrrest.common.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.specification.SubmissionSpecification;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SubmissionRepository {
+    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
     private ServiceRequestTypeJpaRepository serviceTypeJpaRepository;
@@ -40,6 +42,11 @@ public class SubmissionRepository {
         return submissions.stream()
             .map(Submission::toDomain)
             .collect(Collectors.toList());
+    }
+
+    public Long count(ServiceRequestSearchCriteria searchCriteria) {
+        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
+        return this.submissionJpaRepository.count(specification);
     }
 
     private void enrichSubmissionsWithServiceTypes(ServiceRequestSearchCriteria searchCriteria,
@@ -68,9 +75,26 @@ public class SubmissionRepository {
     }
 
     private List<Submission> getSubmissions(ServiceRequestSearchCriteria searchCriteria) {
+        if (searchCriteria.isPaginationCriteriaPresent()) {
+            return getPagedSubmissions(searchCriteria);
+        }
+        return getNonPagedSubmissions(searchCriteria);
+    }
+
+    private List<Submission> getNonPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
         final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
-        final Sort sort = new Sort(Sort.Direction.DESC, "lastModifiedDate");
-        return this.submissionJpaRepository.findAll(specification, sort);
+        return this.submissionJpaRepository.findAll(specification, getDefaultSort());
+    }
+
+    private List<Submission> getPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
+        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
+        final PageRequest pageRequest =
+            new PageRequest(searchCriteria.getPageNumber(), searchCriteria.getPageSize(), getDefaultSort());
+        return this.submissionJpaRepository.findAll(specification, pageRequest).getContent();
+    }
+
+    private Sort getDefaultSort() {
+        return new Sort(Sort.Direction.DESC, DEFAULT_SORT_FIELD);
     }
 
     private void enrichSubmissionsWithAttributeEntries(ServiceRequestSearchCriteria searchCriteria,

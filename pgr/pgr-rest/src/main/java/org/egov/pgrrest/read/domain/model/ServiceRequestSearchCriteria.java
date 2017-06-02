@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-
 public class ServiceRequestSearchCriteria {
 	private String serviceRequestId;
 	private String serviceCode;
@@ -29,5 +28,10 @@ public class ServiceRequestSearchCriteria {
 	private Long locationId;
 	private Long childLocationId;
 	private String tenantId;
-    private boolean useNewSchema;
+    private Integer pageNumber;
+    private Integer pageSize;
+
+    public boolean isPaginationCriteriaPresent() {
+        return pageNumber != null && pageSize != null;
+    }
 }

@@ -33,7 +33,11 @@ public class ServiceRequestService {
         return serviceRequestRepository.findAll(serviceRequestSearchCriteria);
     }
 
-	public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
+    public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return serviceRequestRepository.getCount(serviceRequestSearchCriteria);
+    }
+
+    public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
 		complaint.validate();
 		final String crn = sevaNumberGeneratorService.generate();
 		complaint.setCrn(crn);

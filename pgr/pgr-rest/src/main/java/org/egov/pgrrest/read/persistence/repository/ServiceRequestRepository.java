@@ -32,11 +32,11 @@ public class ServiceRequestRepository {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return findInSubmissionTable(serviceRequestSearchCriteria);
+        return submissionRepository.find(serviceRequestSearchCriteria);
     }
 
-    private List<ServiceRequest> findInSubmissionTable(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return submissionRepository.find(serviceRequestSearchCriteria);
+    public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return submissionRepository.count(serviceRequestSearchCriteria);
     }
 
     public void update(SevaRequest sevaRequest) {

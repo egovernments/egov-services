@@ -2,7 +2,6 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.TestResourceReader;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
@@ -55,7 +54,8 @@ public class ServiceRequestControllerTest {
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
         ServiceRequest invalidComplaint = getComplaintWithNoTenantId();
-        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(ServiceRequest.class),
+        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(ServiceRequest
+                .class),
             any(SevaRequest.class));
 
         mockMvc.perform(post("/seva/_create")
@@ -90,38 +90,11 @@ public class ServiceRequestControllerTest {
             .andExpect(content().json(resources.getFileContents("updateComplaintResponse.json")));
     }
 
-    public ServiceRequest getComplaintWithNoTenantId() {
-        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(11.22d, 12.22d)).build();
-        final Requester complainant = Requester.builder()
-            .userId("userId")
-            .firstName("first name")
-            .mobile("mobile number")
-            .build();
-        return ServiceRequest.builder()
-            .requester(complainant)
-            .authenticatedUser(getCitizen())
-            .serviceRequestLocation(serviceRequestLocation)
-            .tenantId(null)
-            .description("description")
-            .serviceRequestType(new ServiceRequestType(null, "complaintCode", null))
-            .attributeEntries(new ArrayList<AttributeEntry>())
-            .build();
-    }
-
-    public AuthenticatedUser getCitizen() {
-        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).build();
-    }
-
     @Test
-    public void testGetServiceRequests() throws Exception {
+    public void test_should_return_service_requests_for_given_search_criteria() throws Exception {
         String crn = "1234";
-        String complaintType = "abc";
-        String complainant = "kumar";
         String receivingMode = "MANUAL";
         String receivingCenter = "Commissioner Office";
-        String location = "Election Ward No 1";
-        String childLocation = "Gadu Veedhi";
         String stateId = "1";
         Long assigneeId = 2L;
         String address = null;
@@ -144,8 +117,11 @@ public class ServiceRequestControllerTest {
             .type(UserType.CITIZEN)
             .tenantId("tenantId")
             .build();
-        final Requester domainComplainant = new Requester("kumar", null, null, "mico layout", "user");
-        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(new Coordinates(0.0, 0.0), null, "34");
+        final Requester domainComplainant =
+            new Requester("kumar", null, null, "mico layout", "user");
+        final Coordinates coordinates = new Coordinates(0.0, 0.0);
+        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(coordinates,
+            null, "34");
         ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
@@ -186,19 +162,93 @@ public class ServiceRequestControllerTest {
         List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
         when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
 
-        String content = new TestResourceReader().readResource("getServiceRequests.json");
-        String expectedContent = String.format(content, crn, complaintType, complainant, receivingMode, receivingCenter,
-            location, childLocation);
-
         mockMvc.perform(
-            post("/seva/_search?tenantId=tenantId&serviceRequestId=serid_123&serviceCode=serviceCode_123&status" +
-                "=REGISTERED,FORWARDED&assignmentId=10&userId=10&name=kumar&emailId=abc@gmail" +
-                ".com&mobileNumber=74742487428&receivingMode=5&locationId=4&childLocationId=5")
+            post("/seva/_search")
+                .param("tenantId", "tenantId")
+                .param("serviceRequestId", "serid_123")
+                .param("serviceCode", "serviceCode_123")
+                .param("status", "REGISTERED")
+                .param("status", "FORWARDED")
+                .param("assignmentId", "10")
+                .param("userId", "10")
+                .param("name", "kumar")
+                .param("emailId", "abc@gmail.com")
+                .param("mobileNumber", "74742487428")
+                .param("receivingMode", "5")
+                .param("locationId", "4")
+                .param("childLocationId", "5")
                 .content(resources.getFileContents("requestinfobody.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(content().json(expectedContent));
+            .andExpect(content().json(resources.getFileContents("getServiceRequests.json")));
+    }
+
+    @Test
+    public void test_should_return_count_of_matching_service_requests_for_given_search_criteria() throws Exception {
+        ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
+            .assignmentId(10L)
+            .endDate(null)
+            .escalationDate(null)
+            .lastModifiedDatetime(null)
+            .serviceCode("serviceCode_123")
+            .serviceRequestId("serid_123").startDate(null)
+            .status(Arrays.asList("REGISTERED", "FORWARDED"))
+            .userId(10L)
+            .emailId("abc@gmail.com")
+            .mobileNumber("74742487428")
+            .name("kumar")
+            .locationId(4L)
+            .childLocationId(5L)
+            .receivingMode(5L)
+            .tenantId("tenantId")
+            .build();
+
+        when(serviceRequestService.getCount(criteria)).thenReturn(30L);
+
+        mockMvc.perform(
+            post("/seva/_count")
+                .param("tenantId", "tenantId")
+                .param("serviceRequestId", "serid_123")
+                .param("serviceCode", "serviceCode_123")
+                .param("status", "REGISTERED")
+                .param("status", "FORWARDED")
+                .param("assignmentId", "10")
+                .param("userId", "10")
+                .param("name", "kumar")
+                .param("emailId", "abc@gmail.com")
+                .param("mobileNumber", "74742487428")
+                .param("receivingMode", "5")
+                .param("locationId", "4")
+                .param("childLocationId", "5")
+                .content(resources.getFileContents("requestinfobody.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(resources.getFileContents("getServiceRequestCount.json")));
+    }
+
+    private ServiceRequest getComplaintWithNoTenantId() {
+        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
+            .coordinates(new Coordinates(11.22d, 12.22d)).build();
+        final Requester complainant = Requester.builder()
+            .userId("userId")
+            .firstName("first name")
+            .mobile("mobile number")
+            .build();
+        return ServiceRequest.builder()
+            .requester(complainant)
+            .authenticatedUser(getCitizen())
+            .serviceRequestLocation(serviceRequestLocation)
+            .tenantId(null)
+            .description("description")
+            .serviceRequestType(new ServiceRequestType(null, "complaintCode", null))
+            .attributeEntries(new ArrayList<>())
+            .build();
+    }
+
+    private AuthenticatedUser getCitizen() {
+        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).build();
     }
 
 }

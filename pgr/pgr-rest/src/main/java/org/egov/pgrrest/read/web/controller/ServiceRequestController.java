@@ -6,6 +6,7 @@ import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
+import org.egov.pgrrest.read.web.contract.CountResponse;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,10 @@ public class ServiceRequestController {
                                               @RequestParam(value = "receivingMode", required = false) Long
                                                   receivingMode,
                                               @RequestParam(value = "locationId", required = false) Long locationId,
+                                              @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                               @RequestParam(value = "childLocationId", required = false) Long
                                                   childLocationId,
-                                              @RequestParam(value = "useNewSchema", required = false) boolean
-                                                  isNewSchemaEnabled,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
@@ -96,15 +97,69 @@ public class ServiceRequestController {
             .locationId(locationId)
             .childLocationId(childLocationId)
             .tenantId(tenantId)
-            .useNewSchema(isNewSchemaEnabled)
+            .pageNumber(pageNumber)
+            .pageSize(pageSize)
             .build();
-        final List<ServiceRequest> complaints = serviceRequestService.findAll(serviceRequestSearchCriteria);
-        return createResponse(complaints);
+        final List<ServiceRequest> submissions = serviceRequestService.findAll(serviceRequestSearchCriteria);
+        return createResponse(submissions);
     }
 
-    private ServiceResponse createResponse(List<ServiceRequest> complaints) {
-        final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = complaints.stream().map(org
-            .egov.pgrrest.common.contract.ServiceRequest::new)
+    @PostMapping(value = "/_count")
+    public CountResponse getServiceRequestCount(@RequestParam(value = "tenantId") String tenantId,
+                                                @RequestParam(value = "serviceRequestId", required = false)
+                                                    String serviceRequestId,
+                                                @RequestParam(value = "serviceCode", required = false)
+                                                    String serviceCode,
+                                                @RequestParam(value = "startDate", required = false)
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                @RequestParam(value = "endDate", required = false)
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
+                                                @RequestParam(value = "escalationDate", required = false)
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+                                                    Date escalationDate,
+                                                @RequestParam(value = "status", required = false) List<String> status,
+                                                @RequestParam(value = "lastModifiedDatetime", required = false)
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                                @RequestParam(value = "assignmentId", required = false) Long
+                                                    assignmentId,
+                                                @RequestParam(value = "userId", required = false) Long userId,
+                                                @RequestParam(value = "name", required = false) String name,
+                                                @RequestParam(value = "mobileNumber", required = false) String
+                                                    mobileNumber,
+                                                @RequestParam(value = "emailId", required = false) String emailId,
+                                                @RequestParam(value = "receivingMode", required = false) Long
+                                                    receivingMode,
+                                                @RequestParam(value = "locationId", required = false) Long locationId,
+                                                @RequestParam(value = "childLocationId", required = false)
+                                                    Long childLocationId,
+                                                @RequestBody RequestInfoBody requestInfoBody) {
+
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
+            .assignmentId(assignmentId)
+            .endDate(endDate)
+            .lastModifiedDatetime(lastModifiedDate)
+            .serviceCode(serviceCode)
+            .serviceRequestId(serviceRequestId)
+            .startDate(startDate)
+            .escalationDate(escalationDate)
+            .status(status)
+            .userId(userId)
+            .name(name)
+            .mobileNumber(mobileNumber)
+            .emailId(emailId)
+            .receivingMode(receivingMode)
+            .locationId(locationId)
+            .childLocationId(childLocationId)
+            .tenantId(tenantId)
+            .build();
+        final Long count = serviceRequestService.getCount(serviceRequestSearchCriteria);
+        return new CountResponse(null, count);
+    }
+
+
+    private ServiceResponse createResponse(List<ServiceRequest> submissions) {
+        final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = submissions.stream()
+            .map(org.egov.pgrrest.common.contract.ServiceRequest::new)
             .collect(Collectors.toList());
         return new ServiceResponse(null, serviceRequests);
     }

@@ -196,7 +196,7 @@ class UploadLeaveApplication extends React.Component{
          });
 
 
-         var post=0,error=0,numberOfLeave,errorList=[],successList=[];
+         var post=0,error=0,numberOfLeave,errorList=[],successList=[],serverSuccessList=[];
          var i=0;
          var leaveName,calendarYearName,employeeName,calenderName,noOfDays;
          var searchName;
@@ -505,23 +505,21 @@ class UploadLeaveApplication extends React.Component{
                  success: function(res) {
                    console.log("res",res);
                    errorList = res.ErrorList;
-                    successList =  res.SuccessList;
-                   if(successList.length!==0){
-
-                     for(var t=0;t<successList.length;t++){
+                    serverSuccessList =  res.SuccessList;
+                   if(serverSuccessList.length!==0){
+                     console.log("serverSuccessList",serverSuccessList);
+                     for(var t=0;t<serverSuccessList.length;t++){
                        for(var q=0;q<finalValidatedServerObject.length;q++){
-                          if(errorList[t].employee===finalValidatedServerObject[q].employee && errorList[t].fromDate===finalValidatedServerObject[q].fromDate && errorList[t].toDate===finalValidatedServerObject[q].toDate){
-                             finalValidatedServerObject[q].successMessage = errorList[t].successMessage;
+                          if(serverSuccessList[t].employee===finalValidatedServerObject[q].employee && serverSuccessList[t].fromDate===finalValidatedServerObject[q].fromDate && serverSuccessList[t].toDate===finalValidatedServerObject[q].toDate){
                              successList.push(finalValidatedServerObject[q]);
                              console.log("g--->",finalValidatedServerObject[q]);
                              break;
                           }
                        }
                      }
-
                    }
-                  
-                 console.log("successList",successList);
+
+                 console.log("successListlast",successList);
                      var ep1=new ExcelPlus();
                      var b=0;
 

@@ -1881,7 +1881,7 @@ label.error.custom {
   color: #f2851f;
 }
 .panel-primary .panel-body.custom-form {
-  padding: 0;
+  padding-bottom: 0;
 }
 .table thead:first-child > tr:first-child th {
   border-bottom: none;

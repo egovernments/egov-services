@@ -299,7 +299,7 @@ handleProcess(e) {
                     type = getUrlVars()["type"];
                 delete tempInfo.name;
                 delete tempInfo.code;
-                commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, es2) {
+                commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, res2) {
                     if (res2) {
                         var employee = res2["Employee"][0];
                         if (!tempInfo.workflowDetails) {

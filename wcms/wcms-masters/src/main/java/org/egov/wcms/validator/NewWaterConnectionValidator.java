@@ -44,9 +44,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
+import org.egov.wcms.model.DocumentOwner;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.DonationRepository;
+import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyUsageTypeService;
@@ -75,6 +77,9 @@ public class NewWaterConnectionValidator {
 	
 	@Autowired
 	private PropertyCategoryService propertyCategoryService;
+	
+	@Autowired
+	private DocumentTypeApplicationTypeService documentTypeApplicationTypeService;
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
 	
@@ -208,6 +213,12 @@ public class NewWaterConnectionValidator {
 			return isRequestValid;
 		}
 		
+		isRequestValid = validateDocumentApplicationType(waterConnectionRequest);
+		if(!isRequestValid){
+			LOGGER.info("FIle upload has FAILED for documents. Please re-upload.");
+			return isRequestValid;
+		}
+		
 		
 		isRequestValid =  validateDonationAmount(waterConnectionRequest);
 		
@@ -249,6 +260,19 @@ public class NewWaterConnectionValidator {
 				waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
 		
 	}
+	
+	private boolean validateDocumentApplicationType(WaterConnectionReq waterConnectionRequest){
+		boolean isDocumentValid = true;
+		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
+			if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
+				LOGGER.info("File Upload FAILED for the document: "+documentOwner.getDocument().getName());
+				isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
+				return isDocumentValid;
+			}			
+		}
+		return isDocumentValid;
+	}
+		
 	
 	private DonationGetRequest prepareDonationGetRequest(WaterConnectionReq waterConnectionRequest){
 		// Receive new connection request as a parameter for this method

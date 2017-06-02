@@ -111,6 +111,9 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.documenttype.update.name}")
 	private String updateDocumentTypeTopicName;
+	
+	@Value("${kafka.topics.donation.update.name}")
+	private String updateDonationTopicName;
 
     @Autowired
     private Environment environment;
@@ -198,6 +201,10 @@ public class ApplicationProperties {
 
     public String getCreateDonationTopicName() {
         return createDonationTopicName;
+    }
+    
+    public String getUpdateDonationTopicName() {
+        return updateDonationTopicName;
     }
    
 }

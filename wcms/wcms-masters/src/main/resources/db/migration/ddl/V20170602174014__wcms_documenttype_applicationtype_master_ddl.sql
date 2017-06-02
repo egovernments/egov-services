@@ -1,6 +1,6 @@
-CREATE TABLE public.egwtr_documenttype_applicationtype
+CREATE TABLE egwtr_documenttype_applicationtype
 (
-  id integer NOT NULL DEFAULT nextval('egwtr_documenttype_applicationtype_id_seq'::regclass),
+  id SERIAL,
   documenttypeid bigint NOT NULL,
   applicationtype character varying(100) NOT NULL,
   mandatory boolean NOT NULL,
@@ -18,3 +18,5 @@ CREATE TABLE public.egwtr_documenttype_applicationtype
   CONSTRAINT unq_document_application_type UNIQUE (applicationtype, documenttypeid, tenantid)
 );
 
+
+CREATE SEQUENCE seq_egwtr_documenttype_applicationtyp;

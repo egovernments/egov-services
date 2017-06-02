@@ -109,7 +109,7 @@ public class WaterMasterConsumer {
             "${kafka.topics.pipesize.create.name}", "${kafka.topics.pipesize.update.name}",
 
             "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyusage.create.name}",
-            "${kafka.topics.donation.create.name}",
+            "${kafka.topics.donation.create.name}","${kafka.topics.donation.update.name}",
             "${kafka.topics.propertypipesize.create.name}",
 
             "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyCategory.update.name}",
@@ -139,6 +139,8 @@ public class WaterMasterConsumer {
             	propUsageType.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
             	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
+            else if(record.topic().equals(applicationProperties.getUpdateDonationTopicName()))
+            	donationService.update(objectMapper.readValue(record.value(), DonationRequest.class));
             else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
             	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreateDonationTopicName()))

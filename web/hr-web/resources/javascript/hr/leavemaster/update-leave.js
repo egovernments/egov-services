@@ -311,7 +311,6 @@ handleProcess(e) {
                           tempInfo.workflowDetails.action = ID,
                           tempInfo.workflowDetailsassignee= employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
                           }
-                        }
                         var body = {
                             "RequestInfo": requestInfo,
                             "LeaveApplication": tempInfo

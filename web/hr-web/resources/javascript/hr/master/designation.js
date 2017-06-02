@@ -105,6 +105,7 @@ addOrUpdate(e) {
             },
             success: function(res) {
                 showSuccess("Designation Created successfully.");
+                localStorage.removeItem("assignments_designation");
                 _this.setState({designationSet:{
                 name:"",
                 code:"",

@@ -114,10 +114,6 @@ $(document).ready(function()
 			$('input[name="PROCESSINGFEE"]').removeAttr('required');
 	});
 
-	$(document).on('click','.delete-file',function(){
-		$(this).parent('.input-group').find('input[type=file]').val('');
-	});
-
 	$(document).on('click','#add-file',function(){
 		var temp = ($('input[name=file]').length + tempDocsLength);
 		if(temp < empFileLimit){

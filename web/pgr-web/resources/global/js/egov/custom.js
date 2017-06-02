@@ -447,6 +447,10 @@ function fileConstraint(){
 		}
 	});
 
+	$(document).on('click','.delete-file',function(){
+		$(this).parent('.input-group').find('input[type=file]').val('');
+	});
+
 }
 
 var RI = function(auth){
@@ -616,9 +620,9 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 		var this_documents = '<div class="form-group">';
 		for(var i=0; i < this.attribValues.length; i++){
 			if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'EMPLOYEE')
-				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control attribFile"></div></div>'
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><div class="input-group"><input type="file" name="'+this.attribValues[i].key+'" class="form-control attribFile"><span class="input-group-addon delete-file"><i class="glyphicon glyphicon-trash specific"></i></span></div></div></div>'
 			else if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'CITIZEN')
-				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control attribFile"></div></div>'
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><div class="input-group"><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control attribFile"><span class="input-group-addon delete-file"><i class="glyphicon glyphicon-trash specific"></i></span></div></div></div>'
 		}
 		this_documents += '</div>';
 		this.template = this_documents;

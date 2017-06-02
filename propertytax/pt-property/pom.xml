@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>propertyutil</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 
@@ -98,7 +98,7 @@
         <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>
-            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+            <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 

@@ -38,7 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var srn = getUrlParameter('srn');
-var lat, lng, myCenter, AV_status, serviceCode, keyword,  serviceDefinition= [];
+var lat, lng, myCenter, AV_status, serviceCode, keyword,  serviceDefinition= [], employeeDocs = [], tempDocsLength, empFileLimit = 3;
 var updateResponse = {};
 var loadDD = new $.loadDD();
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
@@ -112,6 +112,19 @@ $(document).ready(function()
 			$('input[name="PROCESSINGFEE"]').attr('required','required');
 		else
 			$('input[name="PROCESSINGFEE"]').removeAttr('required');
+	});
+
+	$(document).on('click','.delete-file',function(){
+		$(this).parent('.input-group').find('input[type=file]').val('');
+	});
+
+	$(document).on('click','#add-file',function(){
+		var temp = ($('input[name=file]').length + tempDocsLength);
+		if(temp < empFileLimit){
+			$(this).parent('div').before('<div class="col-md-3 add-margin"> <div class="input-group"> <input type="file" name="file" class="form-control" /> <span class="input-group-addon delete-file"><i class="glyphicon glyphicon-trash specific"></i></span> </div> </div>');
+			if(temp == (empFileLimit-1))
+				$('.addfile-section').hide();
+		}
 	});
 
 });
@@ -256,6 +269,35 @@ function getComplaint(){
 									nextStatus(loadDD);
 							}
 
+							//Employee reference files
+							for (var item of response.serviceRequests[0].attribValues) {
+								if(item['key'].indexOf('employeeDocs') !== -1){
+									var file = {};
+									file = {
+										fileName : item['key'].split(/_(.+)/)[1],
+										fileStoreId : '/filestore/v1/files/id?fileStoreId='+item['name']+'&tenantId='+tenantId
+									};
+									employeeDocs.push(file);
+								}
+							}
+
+							var empD_response = {};
+							empD_response['employeeDocs'] = employeeDocs;
+
+							//console.log('employeeDocs', employeeDocs.length);
+							tempDocsLength = employeeDocs.length;
+							if(tempDocsLength == empFileLimit)
+								$('.file-section').remove();
+							else if(tempDocsLength == (empFileLimit-1))
+								$('.addfile-section').remove();
+
+							if(employeeDocs.length > 0){
+								var empD_source   = $("#empDocs-script").html();
+								var empD_template = Handlebars.compile(empD_source);
+								$('.employeeDocs').append(empD_template(empD_response));
+							}else
+								$('#referenceFileBlock').hide();
+
 							//console.log(JSON.stringify(response.serviceRequests[0]))
 
 						},
@@ -376,7 +418,7 @@ function complaintUpdate(obj){
 		});
 
 		//upload files
-		$('input[type=file]').each(function(){
+		$('input[type=file].attribFile').each(function(){
 			var formData=new FormData();
 			formData.append('tenantId', tenantId);
 			formData.append('module', 'SERVICES');
@@ -400,7 +442,25 @@ function complaintUpdate(obj){
 		});
 	}
 
-	//console.log(JSON.stringify(req_obj))
+	$('input[name=file]').each(function(i){
+		var file = $(this)[0].files[0];
+		if(file){
+			var obj = {};
+			var formData=new FormData();
+			formData.append('tenantId', tenantId);
+			formData.append('module', 'SERVICES');
+			formData.append('file', file);
+			var resp = fileUpload(formData);
+			//console.log(file['name'], resp.files[0].fileStoreId);
+			obj = {
+				key: 'employeeDocs_'+file['name'],
+				name: resp.files[0].fileStoreId
+			}
+			req_obj.serviceRequest.attribValues.push(obj);
+		}
+	});
+
+	//console.log(JSON.stringify(req_obj));
 	
 	$.ajax({
 		url: "/pgr/seva/_update",
@@ -414,46 +474,10 @@ function complaintUpdate(obj){
 		data : JSON.stringify(req_obj),
 		success : function(response){
 
-			var filefilledlength = Object.keys(filefilled).length;
-			
-			if(filefilledlength > 0){
-				
-				var formData=new FormData();
-				formData.append('tenantId', tenantId);
-				formData.append('module', 'PGR');
-				formData.append('tag', srn);
-				// Main magic with files here
+			bootbox.alert('Grievance / Service updated successfully', function(){ 
+				window.location.reload();
+			});
 
-				$('input[name=file]').each(function(){
-					var file = $(this)[0].files[0];
-					formData.append('file', file); 
-				});
-
-				$.ajax({
-					url: "/filestore/v1/files",
-					type : 'POST',
-					async : false,
-					// THIS MUST BE DONE FOR FILE UPLOADING
-					contentType: false,
-					processData : false,
-					data : formData,
-					success: function(fileresponse){
-						//console.log('file upload success');
-						bootbox.alert(translate('pgr.msg.success.grievanceupdated'), function(){ 
-							window.location.reload();
-						});
-					},
-					error: function(){
-						bootbox.alert('Media file failed!');
-						obj.removeAttr("disabled");
-						hideLoader();
-					}
-				});
-			}else{
-				bootbox.alert('Grievance / Service updated successfully', function(){ 
-					window.location.reload();
-				});
-			}
 		},
 		error : function(){
 			bootbox.alert('Error while update!');
@@ -784,7 +808,7 @@ function callToLoadDefinition(searchResponse){
 				var obj  = getObjFromArray(serviceDefinition, $(this).attr('name'));
 				//console.log($(this).attr('name'), obj ? obj.name : 'nothing')
 				if(obj){
-					$(this).parent('div').html('<a href="/filestore/v1/files/id?fileStoreId='+obj.name+'&tenantId='+tenantId+'" download>Download</a>')
+					$(this).parent('div').html('<a href="/filestore/v1/files/id?fileStoreId='+obj.name+'&tenantId='+tenantId+'" download class="btn btn-danger"><span class="glyphicon glyphicon-download-alt"> Download</a>')
 					$(this).remove();
 				}
 			});

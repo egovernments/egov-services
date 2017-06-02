@@ -142,7 +142,7 @@
 								</div>
 					{{/serviceRequests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-sm-6 col-xs-6 add-margin" data-translate="Reference Files Uploaded"></div>
+									<div class="col-md-3 col-sm-6 col-xs-6 add-margin" data-translate="core.lbl.grievance.photo/video"></div>
 									<div id="links" class="col-md-9 col-sm-6 col-xs-12 view-content">
 									{{#each files}}
 										<a href="{{url}}" type="{{contentType}}" class="col-md-4 col-sm-4 col-xs-12 add-margin down-file view-content" data-gallery> 
@@ -205,12 +205,35 @@
 				</div>
 
 				<div class="row">
+					<div class="col-md-12">
+						<div class="panel panel-primary" id="referenceFileBlock" data-collapsed="0">
+							<div class="panel-heading">
+								<div class="panel-title">Document Reference Files</div>
+							</div>
+							<div class="panel-body">
+								<div class="form-group employeeDocs">
+									<script id="empDocs-script" type="text/x-handlebars-template">
+										{{#employeeDocs}}
+										<div class="col-sm-4">
+											<a href="{{fileStoreId}}" class="btn btn-danger" download>
+												<span class="glyphicon glyphicon-download-alt"></span> {{fileName}}
+											</a>
+										</div>
+										{{/employeeDocs}}
+									</script>
+								</div>
+							</div>	
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
 						<div class="col-md-12">
 							<div class="panel panel-primary hide" data-collapsed="0">
 								<div class="panel-heading">
 									<div class="panel-title">Application Details</div>
 								</div>
-								<div class="panel-body custom-form appForm" id="servicesBlock">
+								<div class="panel-body appForm" id="servicesBlock">
 				
 								</div>
 							</div>
@@ -354,14 +377,16 @@
 										
 								</div>
 							</div>  
-							<div class="form-group employee-action">
-								<div class="col-sm-3 col-xs-12">
-									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="Document reference for approval"></button>
-									<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn hide"/>
-									<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn hide"/>
-									<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn hide"/>
+							<div class="form-group employee-action file-section">
+								<label class="col-md-3 add-margin required" data-translate="Document reference for approval (Max: 3 Files)"></label>
+								<div class="col-md-3 add-margin">
+									<div class="input-group">
+									    <input type="file" name="file" class="form-control" />
+									    <span class="input-group-addon delete-file"><i class="glyphicon glyphicon-trash specific"></i></span>
+									</div>
 								</div>
-								<div class="col-sm-6 col-xs-12 fileblock">
+								<div class="col-md-3 add-margin addfile-section">
+									<button type="button" class="btn btn-primary" id="add-file">Add File</button>
 								</div>
 							</div>
 				
@@ -376,13 +401,19 @@
 				
 							<div class="form-group">
 								<div class="text-center">
-						        	<button type="button" id="update-complaint" class="btn btn-primary" data-translate="core.lbl.submit"></button>
-									<button type="button" class="btn btn-default" data-translate="core.lbl.close" onclick="window.close();"></button>   
+						        	<button type="button" id="update-complaint" class="btn btn-primary" data-translate="Update"></button>
 								</div>
 							</div>
 						
 					</div>
 				</div>
+
+				<div class="form-group">
+					<div class="text-center">
+						<button type="button" class="btn btn-default" data-translate="core.lbl.close" onclick="window.close();"></button>   
+					</div>
+				</div>
+
 				</form>
 				<!-- Modal 6 (Long Modal)-->
 				<div class="modal fade" id="complaint-locate">

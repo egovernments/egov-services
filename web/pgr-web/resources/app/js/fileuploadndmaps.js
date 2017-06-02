@@ -99,7 +99,8 @@ $(document).ready(function(){
 				}
 			}else{
 				bootbox.alert(ext+' '+translate('core.error.fileformat.notallowed'));
-			return;
+				$( this ).val('');	
+				return;
 		}
 		
 		if(e.target.files.length>0)

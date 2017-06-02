@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.egov.propertyutil</groupId>
 			<artifactId>propertyutil</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 
 
@@ -93,6 +93,14 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 	</dependencies>
+
+    <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
 	<build>
 		<plugins>

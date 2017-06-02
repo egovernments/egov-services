@@ -37,15 +37,16 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.wcms.model.DocumentType;
+import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.DocumentTypeRepository;
-import org.egov.wcms.web.contract.DocumentTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.repository.DocumentTypeApplicationTypeRepository;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,55 +56,56 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class DocumentTypeService {
+public class DocumentTypeApplicationTypeService {
 
-    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeService.class);
-
-    @Autowired
-    private DocumentTypeRepository documentTypeRepository;
+    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeService.class);
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
-
+    private DocumentTypeApplicationTypeRepository docTypeApplTypeRepository;
+    
     @Autowired
-    private CodeGeneratorService codeGeneratorService;
+    private WaterMasterProducer mastertProducer;
 
-
-   public DocumentTypeRequest create(final DocumentTypeRequest documentTypeRequest) {
-       return documentTypeRepository.persistCreateDocumentType(documentTypeRequest);
+   public DocumentTypeApplicationTypeRequest create(final DocumentTypeApplicationTypeRequest docNameRequest) {
+       return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
    }
 
-    public DocumentTypeRequest update(final DocumentTypeRequest documentTypeRequest) {
-        return documentTypeRepository.persistModifyDocumentType(documentTypeRequest);
-    }
-
-
-    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeRequest documentTypeRequest) {
-       documentTypeRequest.getDocumentType().setCode(codeGeneratorService.generate(documentTypeRequest.getDocumentType().SEQ_DOCUMENTTYPE));
+    public DocumentTypeApplicationType sendMessage(final String topic,final String key,final DocumentTypeApplicationTypeRequest docNameRequest) {
+    	//docNameRequest.getDocumentName().setCode(codeGeneratorService.generate(usageTypeRequest.getUsageType().SEQ_USAGETYPE));
         final ObjectMapper mapper = new ObjectMapper();
-        String documentTypeValue = null;
+        String docTypeApplTypeValue = null;
         try {
-            logger.info("createDocumentType service::" + documentTypeRequest);
-            documentTypeValue = mapper.writeValueAsString(documentTypeRequest);
-            logger.info("documentTypeValue::" + documentTypeValue);
+            logger.info("createDocumentTypeApplicationType service::" + docNameRequest);
+            docTypeApplTypeValue = mapper.writeValueAsString(docNameRequest);
+            logger.info("DocumentTypeApplicationTypeValue::" + docTypeApplTypeValue);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
         try {
-        	waterMasterProducer.sendMessage(topic,key,documentTypeValue);
+        	mastertProducer.sendMessage(topic,key,docTypeApplTypeValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return documentTypeRequest.getDocumentType();
+        return docNameRequest.getDocumentApplicationType();
     }
-
-    public boolean getDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
-        return documentTypeRepository.checkDocumentTypeByNameAndCode(code,name,tenantId);
+    
+  
+    public DocumentTypeApplicationTypeRequest update(final DocumentTypeApplicationTypeRequest documentTypeRequest) {
+        return docTypeApplTypeRepository.persistModifyDocTypeApplicationType(documentTypeRequest);
     }
+    
+    
+    public List<DocumentTypeApplicationType> getDocumentAndApplicationTypes(DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
+        return docTypeApplTypeRepository.findForCriteria(docNameGetRequest);
 
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetRequest documentTypeGetRequest) {
-       return documentTypeRepository.findForCriteria(documentTypeGetRequest);
-
-   }
-
+    }
+    
+    public boolean checkDocumentTypeApplicationTypeExist(String applicationType,long documentType,String tenantid){
+    	
+    	 return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(documentType,applicationType,tenantid);
+    }
+    
+    
+    
+    
 }

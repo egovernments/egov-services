@@ -37,15 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.wcms.service;
 
-import java.util.List;
-
-import org.egov.wcms.model.DocumentType;
-import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.DocumentTypeRepository;
-import org.egov.wcms.web.contract.DocumentTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.model.MeterCost;
+import org.egov.wcms.producers.MeterCostProducer;
+import org.egov.wcms.repository.MeterCostRepository;
+import org.egov.wcms.web.contract.MeterCostRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,56 +52,44 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 @Service
-public class DocumentTypeService {
+public class MeterCostService {
 
-    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeService.class);
-
-    @Autowired
-    private DocumentTypeRepository documentTypeRepository;
+    public static final Logger logger = LoggerFactory.getLogger(MeterCostService.class);
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private MeterCostRepository meterCostRepository;
 
     @Autowired
-    private CodeGeneratorService codeGeneratorService;
+    private MeterCostProducer meterCostProducer;
 
-
-   public DocumentTypeRequest create(final DocumentTypeRequest documentTypeRequest) {
-       return documentTypeRepository.persistCreateDocumentType(documentTypeRequest);
-   }
-
-    public DocumentTypeRequest update(final DocumentTypeRequest documentTypeRequest) {
-        return documentTypeRepository.persistModifyDocumentType(documentTypeRequest);
+    
+    
+    public MeterCostRequest create(final MeterCostRequest meterCostRequest) {
+        return meterCostRepository.persistCreateMeterCost(meterCostRequest);
     }
-
-
-    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeRequest documentTypeRequest) {
-       documentTypeRequest.getDocumentType().setCode(codeGeneratorService.generate(documentTypeRequest.getDocumentType().SEQ_DOCUMENTTYPE));
+    
+    
+    public MeterCost createMeterCost(final String topic,final String key,final MeterCostRequest meterCostRequest) {
+    //	meterCostRequest.getMeterCost().setCode(codeGeneratorService.generate(meterCostRequest.getMeterCost().SEQ_METERCOST));
         final ObjectMapper mapper = new ObjectMapper();
-        String documentTypeValue = null;
+        
+        
+        String meterCostValue = null;
         try {
-            logger.info("createDocumentType service::" + documentTypeRequest);
-            documentTypeValue = mapper.writeValueAsString(documentTypeRequest);
-            logger.info("documentTypeValue::" + documentTypeValue);
+            logger.info("createMeterCost service::" + meterCostRequest);
+            meterCostValue = mapper.writeValueAsString(meterCostRequest);
+            logger.info("meterCostValue::" + meterCostValue);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
         try {
-        	waterMasterProducer.sendMessage(topic,key,documentTypeValue);
+        	meterCostProducer.sendMessage(topic,key,meterCostValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return documentTypeRequest.getDocumentType();
+        return meterCostRequest.getMeterCost();
     }
-
-    public boolean getDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
-        return documentTypeRepository.checkDocumentTypeByNameAndCode(code,name,tenantId);
-    }
-
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetRequest documentTypeGetRequest) {
-       return documentTypeRepository.findForCriteria(documentTypeGetRequest);
-
-   }
 
 }

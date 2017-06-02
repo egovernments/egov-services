@@ -37,33 +37,44 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+package org.egov.wcms.repository;
 
-import org.egov.wcms.model.DocumentType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import java.sql.Date;
 
-@Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+import org.egov.wcms.model.MeterCost;
+import org.egov.wcms.repository.builder.MeterCostQueryBuilder;
+import org.egov.wcms.repository.rowmapper.MeterCostRowMapper;
+import org.egov.wcms.web.contract.MeterCostRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-    @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+@Repository
+public class MeterCostRepository {
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
+    public static final Logger LOGGER = LoggerFactory.getLogger(MeterCostRepository.class);
 
-        return documentType;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private MeterCostQueryBuilder meterCostQueryBuilder;
+
+    @Autowired
+    private MeterCostRowMapper meterCostRowMapper;
+
+    public MeterCostRequest persistCreateMeterCost(final MeterCostRequest meterCostRequest) {
+        LOGGER.info("MeterCostRequest::" + meterCostRequest);
+        final String meterCostInsert = meterCostQueryBuilder.insertMeterCostQuery();
+        final MeterCost meterCost = meterCostRequest.getMeterCost();
+        Object[] obj = new Object[] {meterCost.getPipeSize(),meterCost.getMeterMake(),meterCost.getAmount(),meterCost.getActive(),Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()),meterCost.getTenantId() };
+
+        jdbcTemplate.update(meterCostInsert, obj);
+        return meterCostRequest;
     }
-
-
+    
 }

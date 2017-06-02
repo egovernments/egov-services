@@ -37,33 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+package org.egov.wcms.web.contract;
 
-import org.egov.wcms.model.DocumentType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.NotNull;
 
-@Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.MeterCost;
 
-    @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-        return documentType;
-    }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class MeterCostRequest {
 
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	@JsonProperty("MeterCost")
+	private MeterCost meterCost;
 
 }

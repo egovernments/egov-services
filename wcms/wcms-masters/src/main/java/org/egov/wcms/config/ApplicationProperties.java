@@ -87,8 +87,20 @@ public class ApplicationProperties {
     @Value("${kafka.topics.propertypipesize.create.name}")
     private String createPropertyPipeSizeTopicName;
     
+	@Value("${kafka.topics.metercost.create.name}")
+	private String createMeterCostTopicName;
+	
+	@Value("${kafka.topics.documenttype.applicationtype.create.name}")
+	private String createDocTypeAppTypeTopicName;
+	
 	@Value("${kafka.topics.documenttype.create.name}")
 	private String createDocumentTypeTopicName;
+	
+	@Value("${kafka.topics.documenttype.update.name}")
+	private String updateDocumentTypeTopicName;
+
+    @Value("${kafka.topics.documenttype.applicationtype.update.name}")
+    private String updateDocTypeAppTypeTopicName;
 
     @Autowired
     private Environment environment;
@@ -148,4 +160,22 @@ public class ApplicationProperties {
 	public String getCreateDocumentTypeTopicName(){
 		return createDocumentTypeTopicName;
 	}
+	
+    public String getUpdateDocumentTypeTopicName(){
+    	
+    	return updateDocumentTypeTopicName;
+    	
+    }
+    
+    public String getUpdateDocumentTypeApplicationTypeTopicName(){
+    	return updateDocTypeAppTypeTopicName;
+    }
+    
+    public String  getCreateMeterCostTopicName(){
+    	
+    	return createMeterCostTopicName;
+    }
+    public String getCreateDocumentTypeApplicationTypeTopicName(){
+    	return createDocTypeAppTypeTopicName;
+    }
 }

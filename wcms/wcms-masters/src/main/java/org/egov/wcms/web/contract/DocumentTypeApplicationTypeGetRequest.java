@@ -37,33 +37,47 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+package org.egov.wcms.web.contract;
 
-import org.egov.wcms.model.DocumentType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
 
-    @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class DocumentTypeApplicationTypeGetRequest {
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
+    private List<Long> id;
 
-        return documentType;
-    }
+    @Length(min=3, max=100)
+    private String documentType;
+
+    @Length(min=3, max=20)
+    private String applicationType;
+
+    private Boolean active;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 
 }

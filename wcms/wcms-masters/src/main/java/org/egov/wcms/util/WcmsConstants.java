@@ -51,13 +51,14 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class WcmsConstants {
 
-    public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
+	public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
     public static final String INVALID_PROPERTYUSAGETYPE_REQUEST_MESSAGE = "Property Type or Usage Type is invalid";
     public static final String INVALID_DOCUMENTTYPE_REQUEST_MESSAGE = "Document Type Request is Invalid";
     public static final String INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE = "PropertyPipeSize is invalid";
+    public static final String INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE = "DocumentTypeApplicationType is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -142,6 +143,7 @@ public class WcmsConstants {
     public static final String APPLICATION_TYPE_INVALID_CODE = "wcms.0020";
     public static final String APPLICATION_TYPE_INVALID_FIELD_NAME = "applicationType";
     public static final String APPLICATION_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";
+
     
     public static final String BILLING_TYPE_INVALID_CODE = "wcms.0021";
     public static final String BILLING_TYPE_INVALID_FIELD_NAME = "billingType";
@@ -170,6 +172,32 @@ public class WcmsConstants {
     public static final String SUPPLY_TYPE_INVALID_CODE = "wcms.0027";
     public static final String SUPPLY_TYPE_INVALID_FIELD_NAME = "supplyType";
     public static final String SUPPLY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Supply Type";
+    
+    public static final String DOCTYPE_MANDATORY_CODE = "wcms.0028";
+    public static final String DOCTYPE_MANADATORY_FIELD_NAME = "documentType";
+    public static final String DOCTYPE_MANADATORY_ERROR_MESSAGE = "documentType is required";
+    
+    public static final String VALID_APPLICATION_TYPE_MANDATORY_CODE ="wcms.0029";
+    public static final String VALID_APPLICATION_TYPE_MANADATORY_FIELD_NAME ="applicationType";
+    public static final String VALID_APPLICATION_TYPE_ERROR_MESSAGE ="Application type should valid ";
+    
+    
+    public static final String APPLICATION_TYPE_MANDATORY_CODE = "wcms.0030";
+    public static final String APPLICATION_TYPE_MANADATORY_FIELD_NAME = "applicationType";
+    public static final String APPLICATION_TYPE_ERROR_MESSAGE = "applicationType is required";
+    
+    public static final String DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE = "wcms.0031";
+    public static final String DOCTYPE_APPLICATIONTYPE_UNQ_FIELD_NAME = "documentType and applicationType";
+    public static final String DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE = "Entered DocumentType and ApplicationType Combination already exist.";
+    
+    public static final String DOCUMENTTYPE_NAME_MANDATORY_CODE = "wcms.0032";
+    public static final String DOCUMENTTYPE_NAME_MANADATORY_FIELD_NAME = "name";
+    public static final String DOCUMENTTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Document Type is required";
+    
+    public static final String DOCUMENTTYPE_NAME_UNIQUE_CODE = "wcms.0033";
+    public static final String DOCUMENTTYPE_NAME_UNQ_FIELD_NAME = "name";
+    public static final String DOCUMENTTYPE_UNQ_ERROR_MESSAGE = "Entered Document Type already exist";
+ 
 
     @Autowired
     private Environment environment;

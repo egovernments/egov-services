@@ -37,33 +37,38 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 
-import org.egov.wcms.model.DocumentType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+package org.egov.wcms.web.contract;
 
-@Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+import java.util.ArrayList;
+import java.util.List;
 
-    @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.DocumentTypeApplicationType;
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-        return documentType;
-    }
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@ToString
+@Setter
+public class DocumentTypeApplicationTypeResponse {
+
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+
+	@JsonProperty("DocumentTypeApplicationType")
+	private List<DocumentTypeApplicationType> documentApplicationType = new ArrayList<DocumentTypeApplicationType>();
 
 }

@@ -37,32 +37,34 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
+
 package org.egov.wcms.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
-import org.egov.wcms.model.DocumentType;
+import org.egov.wcms.model.UsageType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+public class MeterCostRowMapper implements RowMapper<UsageType>  {
 
     @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public UsageType mapRow(ResultSet rs, int rowNum) throws SQLException {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
+        UsageType usageType = new UsageType();
+        usageType.setId(rs.getLong("usage_id"));
+        usageType.setCode(rs.getString("usage_code"));
+        usageType.setName(rs.getString("usage_name"));
+        usageType.setDescription(rs.getString("usage_description"));
+        usageType.setActive(rs.getBoolean("usage_active"));
+        usageType.setTenantId(rs.getString("usage_tenantId"));
 
-        return documentType;
+        return usageType;
     }
 
 

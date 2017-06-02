@@ -37,33 +37,53 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
+package org.egov.wcms.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
-import org.egov.wcms.model.DocumentType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-@Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+import org.hibernate.validator.constraints.Length;
 
-    @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class DocumentTypeGetRequest {
 
-        return documentType;
-    }
+    private List<Long> id;
+
+    @Length(min=3, max=100)
+    private String name;
+
+    @Length(min=3, max=20)
+    private String code;
+
+    private Boolean active;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 
 }

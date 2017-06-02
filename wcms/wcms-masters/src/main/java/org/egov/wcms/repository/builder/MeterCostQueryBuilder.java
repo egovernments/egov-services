@@ -37,33 +37,28 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+package org.egov.wcms.repository.builder;
 
-import org.egov.wcms.model.DocumentType;
-import org.springframework.jdbc.core.RowMapper;
+import org.egov.wcms.config.ApplicationProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+public class MeterCostQueryBuilder {
 
-    @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-        DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("document_id"));
-        documentType.setCode(rs.getString("document_code"));
-        documentType.setName(rs.getString("document_name"));
-        documentType.setDescription(rs.getString("document_description"));
-        documentType.setActive(rs.getBoolean("document_active"));
-        documentType.setTenantId(rs.getString("document_tenantId"));
 
-        return documentType;
+    private static final Logger logger = LoggerFactory.getLogger(MeterCostQueryBuilder.class);
+
+    public static String insertMeterCostQuery() {
+        return "INSERT INTO egwtr_metercost(id,pipesize,metermake,amount,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+                + "(nextval('seq_egwtr_meter_cost'),?,?,?,?,?,?,?,?,?)";
     }
-
-
 }
+
+

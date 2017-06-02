@@ -519,7 +519,7 @@ $(document).ready(function() {
                 contentType: 'application/json'
             });
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approver_name").val() ? getNameById(employees, $("#approver_name").val()) : "") + "&ackNo=" + (data.action == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approver_name").val() ? getNameById(employees, $("#approver_name").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }

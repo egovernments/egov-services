@@ -120,5 +120,24 @@ public class PropertyTypeCategoryTypeRepositoryTest {
                 
 		assertNotNull(propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest));
 	}
+	
+	    @Test(expected = Exception.class)
+	    public void test_Should_Update_PropertyCategory() throws Exception {
+	        final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
+	        final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
+	        propertyCategory.setActive(true);
+	        propertyCategory.setCategoryTypeName("category");
+	        propertyCategory.setPropertyTypeName("property");
+	        propertyCategory.setTenantId("1");
+
+	        propertyCategories.add(propertyCategory);
+
+	        final Object[] obj = new Object[] {};
+
+	        final PropertyTypeCategoryTypeReq propertyCategoryRequest = Mockito.mock(PropertyTypeCategoryTypeReq.class);
+	        when(jdbcTemplate.update("query", obj)).thenReturn(1);
+
+	        assertNotNull(propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest));
+	    }
 
 }

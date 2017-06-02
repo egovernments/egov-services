@@ -37,26 +37,34 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
+package org.egov.wcms.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.CategoryType;
 
-@Component
-public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSizeType> {
-    @Override
-    public PropertyTypePipeSizeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
-        propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
-        propertyPipeSize.setPipeSizeId((Long) rs.getObject("propertypipesize_pipesizeId"));
-        propertyPipeSize.setPropertyTypeId(rs.getLong("propertypipesize_propertytypeId"));
-        propertyPipeSize.setActive(rs.getBoolean("propertypipesize_active"));
-        propertyPipeSize.setTenantId(rs.getString("propertypipesize_tenantId"));
-        return propertyPipeSize;
-    }
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class CategoryTypeResponse {
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("Category")
+    private List<CategoryType> categories = new ArrayList<>();
 }

@@ -110,6 +110,22 @@ public class PropertyUsageTypeServiceTest {
 
     }
 
+    @Test
+    public void test_Should_Update() {
+        final PropertyTypeUsageType propUsageType = getPropertyUsageType();
+        final List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
+        propertyUsageTypes.add(propUsageType);
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
+        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        final PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
+        propUsageTypeResponse.setResponseInfo(null);
+        propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
+
+        when(propUsageTypeService.update(any(PropertyTypeUsageTypeReq.class))).thenReturn(propUsageTypeRequest);
+        assertTrue(propUsageTypeRequest.equals(propUsageTypeService.update(propUsageTypeRequest)));
+
+    }
+
     private PropertyTypeUsageType getPropertyUsageType() {
 
         final PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();

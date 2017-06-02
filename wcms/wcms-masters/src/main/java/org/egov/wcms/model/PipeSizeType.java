@@ -37,26 +37,53 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
+package org.egov.wcms.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.hibernate.validator.constraints.Length;
 
-@Component
-public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSizeType> {
-    @Override
-    public PropertyTypePipeSizeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
-        propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
-        propertyPipeSize.setPipeSizeId((Long) rs.getObject("propertypipesize_pipesizeId"));
-        propertyPipeSize.setPropertyTypeId(rs.getLong("propertypipesize_propertytypeId"));
-        propertyPipeSize.setActive(rs.getBoolean("propertypipesize_active"));
-        propertyPipeSize.setTenantId(rs.getString("propertypipesize_tenantId"));
-        return propertyPipeSize;
-    }
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class PipeSizeType {
+
+    public static final String SEQ_PIPESIZE = "SEQ_EGWTR_PIPESIZE";
+
+    private Long id;
+
+    @NotNull
+    @Length(min = 3, max = 20)
+    private String code;
+
+    @NotNull
+    private double sizeInInch;
+
+    @NotNull
+    private double sizeInMilimeter;
+
+    @Length(max = 250)
+    private String description;
+
+    @NotNull
+    private Boolean active;
+
+    private AuditDetails auditDeatils;
+
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
 
 }

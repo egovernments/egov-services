@@ -71,6 +71,10 @@ public class PropertyUsageTypeService {
     public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
     }
+    
+    public PropertyTypeUsageTypeReq update(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+        return propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest);
+    }
 
     public PropertyTypeUsageType createPropertyUsageType(final String topic, final String key,
             final PropertyTypeUsageTypeReq propUsageTypeRequest) {
@@ -79,7 +83,7 @@ public class PropertyUsageTypeService {
         try {
             logger.info("createPropertyUsageType service::" + propUsageTypeRequest);
             propUsageTypeValue = mapper.writeValueAsString(getIdForRequestCodes(propUsageTypeRequest));
-            logger.info("usageTypeValue::" + propUsageTypeValue);
+            logger.info("propUsageTypeValue::" + propUsageTypeValue);
         } catch (final JsonProcessingException e) {
             logger.error(e.getMessage());
         }

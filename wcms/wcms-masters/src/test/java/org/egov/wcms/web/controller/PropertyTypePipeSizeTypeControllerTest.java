@@ -51,11 +51,10 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.service.PropertyCategoryService;
+import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.util.FileUtils;
-import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -67,22 +66,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PropertyCategoryController.class)
-@WebAppConfiguration
-public class PropertyCategoryControllerTest {
+@WebMvcTest(PopertyTypePipeSizeTypeController.class)
+public class PropertyTypePipeSizeTypeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ApplicationProperties applicationProperties;
-
-    @MockBean
-    private PropertyCategoryService propertyCategoryService;
+    private PropertyTypePipeSizeTypeService propertyPipeSizeService;
 
     @MockBean
     private ErrorHandler errHandler;
@@ -90,36 +84,38 @@ public class PropertyCategoryControllerTest {
     @MockBean
     private ResponseInfoFactory responseInfoFactory;
 
+    @MockBean
+    private ApplicationProperties applicationProperties;
+
     @InjectMocks
-    private PropertyCategoryController propertyCategoryController;
+    private PopertyTypePipeSizeTypeController popertyPipeSizeController;
 
     @Test(expected = Exception.class)
-    public void test_Should_Search_PropertyCategory() throws Exception {
+    public void test_Should_Search_PropertyPipeSize() throws Exception {
 
-        final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
-        final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
+        final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
         final RequestInfo requestInfo = new RequestInfo();
         final ResponseInfo responseInfo = new ResponseInfo();
-        final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
-        propertyCategory.setActive(true);
-        propertyCategory.setCategoryTypeName("category");
-        propertyCategory.setPropertyTypeName("property");
-        propertyCategory.setTenantId("1");
+        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
+        propertyPipeSize.setActive(true);
+        propertyPipeSize.setPipeSizeType(2d);
+        propertyPipeSize.setPropertyTypeName("property");
+        propertyPipeSize.setTenantId("default");
 
-        propertyCategories.add(propertyCategory);
+        propertyPipeSizes.add(propertyPipeSize);
 
-        final PropertyCategoryGetRequest propertyCategoryGetRequest = Mockito.mock(PropertyCategoryGetRequest.class);
+        final PropertyTypePipeSizeTypeGetRequest propertyCategoryGetRequest = Mockito.mock(PropertyTypePipeSizeTypeGetRequest.class);
 
-        when(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)).thenReturn(propertyCategoryResponse);
+        when(propertyPipeSizeService.getPropertyPipeSizes(propertyCategoryGetRequest)).thenReturn(propertyPipeSizes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/property/category/_search")
+        mockMvc.perform(post("/propertytype-pipesizetype/_search")
                 .param("tenantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(getFileContents("propertycategoryresponse.json")));
+                .andExpect(content().json(getFileContents("propertypipesizeresponse.json")));
     }
 
     private String getFileContents(final String fileName) throws IOException {

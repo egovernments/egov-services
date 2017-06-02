@@ -620,30 +620,30 @@ definitions:
       unitNo:
         type: integer
         format: int32
-        description: unit no in a floor. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
+        description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
         maxLength: 8
         minLength: 1
       unitType:
         type: string
-        description: type of the unit in a floor
+        description: type of the unit
         maxLength: 16
         minLength: 1
       length:
         type: number
         format: double
-        description: length of the Floor
+        description: length of the Unit
       width:
         type: number
         format: double
-        description: width of the Floor
+        description: width of the Unit
       builtupArea:
         type: number
         format: double
-        description: builtup area of the Floor
+        description: builtup area of the Unit
       assessableArea:
         type: number
         format: double
-        description: assessable area for the Floor. Some ULBs have their own logic to consider builtup area for tax calculation.
+        description: assessable area for the Unit. Some ULBs have their own logic to consider builtup area for tax calculation.
       bpaBuiltupArea:
         type: number
         format: double
@@ -659,71 +659,71 @@ definitions:
         description: Buidling plan approval date for the Floor
       usage:
         type: string
-        description: usage of the Floor
+        description: usage of the Unit
         maxLength: 16
         minLength: 1
       occupancy:
         type: string
-        description: occupancy of the Floor
+        description: occupancy of the Unit
         maxLength: 16
         minLength: 1
       occupierName:
         type: string
-        description: Name of the occupier in a Floor
+        description: Name of the occupier in a Unit
         maxLength: 128
         minLength: 1
       firmName:
         type: string
-        description: Name of the firm in a Floor
+        description: Name of the firm in a Unit
         maxLength: 128
         minLength: 1
       rentCollected:
         type: number
         format: double
-        description: rent collected for the Floor it its given tenants are living.
+        description: rent collected for the Unit it its given tenants are living.
       structure:
         type: string
-        description: structure of the Floor
+        description: structure of the Unit
         maxLength: 16
         minLength: 1
       age:
         type: string
-        description: age of the Floor
+        description: age of the Unit
         maxLength: 16
         minLength: 1
       exemptionReason:
         type: string
-        description: exemption reason for the Floor
+        description: exemption reason for the Unit
         maxLength: 32
         minLength: 1
       isStructured:
         type: boolean
-        description: is floor is structured. Some building may not be in square or rectangle or in a proper shape to calculate a builtup area.
+        description: is Unit is structured. Some building may not be in square or rectangle or in a proper shape to calculate a builtup area.
         default: true
       occupancyDate:
         type: string
         format: date
-        description: occupancy date of the Floor
+        description: occupancy date of the Unit
       constCompletionDate:
         type: string
         format: date
-        description: construction completion date of the Floor
+        description: construction completion date of the Unit
       manualArv:
         type: number
         format: double
-        description: manual arv for the Floor
+        description: manual arv for the Unit
       arv:
         type: number
         format: double
-        description: The system calculated arv for the Floor
+        description: The system calculated arv for the Unit
       electricMeterNo:
         type: string
-        description: electricity meter no for the Floor
+        description: electricity meter no for the Unit
         maxLength: 64
         minLength: 1
       waterMeterNo:
         type: string
-        description: water meter no for the Floor
+        description: water meter no for the Unit
         maxLength: 64
         minLength: 1
       auditDetails:

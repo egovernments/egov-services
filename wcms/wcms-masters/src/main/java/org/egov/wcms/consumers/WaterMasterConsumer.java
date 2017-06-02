@@ -53,13 +53,8 @@ import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.UsageTypeService;
-<<<<<<< HEAD
-import org.egov.wcms.web.contract.ConnectionCategoryRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
-=======
 import org.egov.wcms.web.contract.CategoryTypeRequest;
-import org.egov.wcms.web.contract.DocumentTypeReq;
->>>>>>> c57cc768590b65353d2cf5aea953c65c51ebff47
+import org.egov.wcms.web.contract.DocumentTypeRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -100,6 +95,10 @@ public class WaterMasterConsumer {
 
     @Autowired
     private DocumentTypeService documentTypeService;
+    
+    @Autowired
+    private PropertyUsageTypeService propUsageType;
+    
 
     @Autowired
     private PropertyTypePipeSizeTypeService propertyPipeSizeService;
@@ -133,8 +132,7 @@ public class WaterMasterConsumer {
             else if (record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))
                 pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
-<<<<<<< HEAD
-                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeRequest.class));
+                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
             	propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
@@ -143,13 +141,10 @@ public class WaterMasterConsumer {
             	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
             else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
             	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
-=======
-                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreateDonationTopicName()))
                 donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
             else if (record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
-                documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeReq.class));
->>>>>>> c57cc768590b65353d2cf5aea953c65c51ebff47
+                documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
                 propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
             else if (record.topic().equals(applicationProperties.getUpdatePropertyCategoryTopicName()))

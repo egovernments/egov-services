@@ -112,8 +112,13 @@ public class DonationService {
     public DonationRequest create(final DonationRequest donationRequest) {
         return donationRepository.persistDonationDetails(donationRequest);
     }
+    
+    public DonationRequest update(final DonationRequest donationRequest) {
+        return donationRepository.persistModifyDonationDetails(donationRequest);
+    }
+    
 
-    public Donation createPropertyUsageType(final String topic, final String key, final DonationRequest donationRequest) {
+    public Donation sendMessage(final String topic, final String key, final DonationRequest donationRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String donationRequestValue = null;
         try {

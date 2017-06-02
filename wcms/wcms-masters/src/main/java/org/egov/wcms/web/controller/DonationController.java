@@ -104,17 +104,39 @@ public class DonationController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Donation Request::" + donationRequest);
+        logger.info("Donation Create Request::" + donationRequest);
 
         final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final Donation donation= donationService.createPropertyUsageType(applicationProperties.getCreateDonationTopicName(),"donation-create", donationRequest);
+        final Donation donation= donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),"donation-create", donationRequest);
         List<Donation> donationList = new ArrayList<>();
         donationList.add(donation);
         return getSuccessResponse(donationList, donationRequest.getRequestInfo());
     }
+    
+    
+    @PostMapping(value = "/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid  final DonationRequest donationRequest,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = populateErrors(errors);
+            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Donation Update Request::" + donationRequest);
+
+        final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
+        final Donation donation= donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),"donation-update", donationRequest);
+        List<Donation> donationList = new ArrayList<>();
+        donationList.add(donation);
+        return getSuccessResponse(donationList, donationRequest.getRequestInfo());
+    }
+    
     
     @PostMapping("_search")
     @ResponseBody

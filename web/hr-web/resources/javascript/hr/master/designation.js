@@ -55,7 +55,7 @@ componentDidMount() {
       $("input,select,textarea").prop("disabled", true);
     }
   if(type==="view"||type==="update") {
-    getCommonMasterById("hr-masters","designations",{id},function(err, res) {
+    getCommonMasterById("hr-masters","designations",id,function(err, res) {
       if(res) {
            var designationSet = res["Designation"][0];
           _this.setState({

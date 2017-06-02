@@ -1,13 +1,6 @@
 package org.egov.mr.web.contract;
 
-import java.time.LocalDate;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,33 +14,23 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RequestInfo {
 
-	@JsonProperty("action")
-	private String action = null;
+	private String action;
 
-	@JsonProperty("did")
-	private String did = null;
+	private String did;
 
-	@JsonProperty("msgId")
-	private String msgId = null;
+	private String msgId;
 
-	@JsonProperty("requesterId")
-	private String requesterId = null;
+	private String requesterId;
 
-	@JsonProperty("authToken")
-	private String authToken = null;
+	private String authToken;
 
-	@JsonProperty("apiId")
-	private String apiId = null;
+	private String apiId;
 
-	@JsonProperty("ver")
-	private String ver = null;
+	private String ver;
 
-	@JsonProperty("ts")
-	private String ts = null;
+	private String ts;
 
-	@JsonProperty("key")
-	private String key = null;
+	private String key;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+	private String tenantId;
 }

@@ -1,10 +1,6 @@
 package org.egov.mr.web.contract;
 
-import java.time.LocalDate;
-
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,24 +13,17 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class ResponseInfo {
-	@JsonProperty("resMsgId")
-	private String resMsgId = null;
+	private String resMsgId;
 
-	@JsonProperty("status")
-	private String status = null;
+	private String status;
 
-	@JsonProperty("apiId")
-	private String apiId = null;
+	private String apiId;
 
-	@JsonProperty("ver")
-	private String ver = null;
+	private String ver;
 
-	@JsonProperty("ts")
-	private String ts = null;
+	private String ts;
 
-	@JsonProperty("key")
-	private String key = null;
+	private String key;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+	private String tenantId;
 }

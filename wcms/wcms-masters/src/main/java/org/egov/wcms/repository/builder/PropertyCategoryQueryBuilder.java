@@ -187,4 +187,9 @@ public class PropertyCategoryQueryBuilder {
 	  	public static String getCategoryTypeName(){
 	  		return "SELECT name FROM egwtr_category WHERE id = ?";
 	  	}
+	  	
+	  	public static String getCheckQuery(){
+	  		return "SELECT id from egwtr_property_category_type where property_type_Id = ? AND category_type_Id = ?"
+	  				+ "AND tenantId = ?";
+	  	}
 }

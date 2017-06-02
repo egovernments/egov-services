@@ -98,6 +98,10 @@ public class PropertyCategoryService {
 	        return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
 
 	    }
+	    
+	    public boolean checkIfMappingExists(String propertyType, String categoryType, String tenantId){
+	    	return propertyCategoryRepository.checkIfMappingExists(propertyType, categoryType, tenantId);
+	    }
 	
 	
 }

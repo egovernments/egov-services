@@ -127,5 +127,29 @@ public class PropertyCategoryRepository {
         propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
         return propertyCategoryResponse;
     }
+    
+    public boolean checkIfMappingExists(String propertyType, String categoryType, String tenantId){
+    	boolean isMappingPresent = false;
+    	Long result = 0L;
+    	
+    	//hit property tax api to obtain property id for the given property name.
+    	long propertyId = 10;
+    	
+    	long categoryId = jdbcTemplate.queryForObject(propertyCategoryueryBuilder.getCategoryId(), 
+        		new Object[] {categoryType}, Long.class);
+    	String query = propertyCategoryueryBuilder.getCheckQuery();
+    	try{
+    		result = jdbcTemplate.queryForObject(query, new Object[] {propertyId, categoryId, tenantId}, Long.class);
+    	}catch(Exception e){
+    		return isMappingPresent;
+    	}
+    	if(result <= 0){
+    		return isMappingPresent;
+    	}
+    	
+    	isMappingPresent = true;
+
+    	return isMappingPresent;
+    }
 
 }

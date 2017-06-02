@@ -39,14 +39,21 @@
  */
 package org.egov.wcms.model;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -74,17 +81,13 @@ public class PipeSize {
     @NotNull
     private Boolean active;
 
-    @JsonIgnore
     private Long createdBy;
 
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdDate;
 
-    @JsonIgnore
     private Long lastModifiedBy;
 
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
 

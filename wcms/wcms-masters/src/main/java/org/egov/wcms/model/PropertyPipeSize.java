@@ -37,58 +37,52 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.validator;
+package org.egov.wcms.model;
 
-import java.util.Iterator;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.model.Donation;
-import org.egov.wcms.repository.DonationRepository;
-import org.egov.wcms.service.DonationService;
-import org.egov.wcms.web.contract.DonationGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.hibernate.validator.constraints.Length;
 
-@Service
-public class NewConnectionValidator {
-	
-	@Autowired
-	private DonationService donationService; 
-	
-	public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
-	
-	
-	public boolean validateNewConnectionBusinessRules(){
-		return validateDonationAmount(); 
-	}
-	
-	@SuppressWarnings("rawtypes")
-	private boolean validateDonationAmount(){
-		String donationCharges = "1000";   // Receive this from Connection Request
-		List<Donation> donationList = donationService.getDonationList(prepareDonationGetRequest());
-		Iterator itr = donationList.iterator();
-		while(itr.hasNext()){
-			Donation donation = (Donation) itr.next();
-			if(donationCharges.equals(donation.getDonationAmount())){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private DonationGetRequest prepareDonationGetRequest(){
-		// Receive new connection request as a parameter for this method
-		// Then using the values in the New Connection Request, prepare a Donation Get Request Object
-		// Pass this Object to Get Method of Donation Service
-		DonationGetRequest donationGetRequest = new DonationGetRequest();
-		donationGetRequest.setPropertyType("RES");
-		donationGetRequest.setUsageType("COM");
-		donationGetRequest.setCategoryType("BPL");
-		donationGetRequest.setMaxHSCPipeSize("12/2");
-		donationGetRequest.setMinHSCPipeSize("5/3");
-		donationGetRequest.setTenantId("DEFAULT");
-		return donationGetRequest; 
-	}
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class PropertyPipeSize {
+
+    public static final String SEQ_PROPERTY_PIPESIZE = "SEQ_EGWTR_PROPERTY_PIPESIZE";
+
+    @NotNull
+    private Long id;
+    @NotNull
+    private Long pipeSizeTypeId;
+    @NotNull
+    @JsonIgnore
+    private Double pipeSizeType;
+    @NotNull
+    private Long propertyTypeId;
+    @NotNull
+    @JsonIgnore
+    private String propertyTypeName;
+
+    private Boolean active;
+
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
+
+    @JsonIgnore
+    private AuditDetails auditDeatils;
 }

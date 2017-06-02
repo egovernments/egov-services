@@ -47,7 +47,7 @@ import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.producers.DonationProducer;
 import org.egov.wcms.repository.DonationRepository;
-import org.egov.wcms.validator.NewConnectionValidator;
+import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;

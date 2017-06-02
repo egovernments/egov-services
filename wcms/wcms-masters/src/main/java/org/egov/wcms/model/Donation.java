@@ -67,13 +67,13 @@ public class Donation {
     
     @NotNull
     @JsonIgnore
-	@JsonFormat(pattern="dd/MM/yyyy")
-	private Date fromDate;
+ @JsonFormat(pattern="dd/MM/yyyy")
+ private Date fromDate;
     
     @NotNull
     @JsonIgnore
-	@JsonFormat(pattern="dd/MM/yyyy")
-	private Date toDate;
+ @JsonFormat(pattern="dd/MM/yyyy")
+ private Date toDate;
     
     @Length(max = 250)
     @NotNull

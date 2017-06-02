@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComplaintTypeCategoryRepository extends JpaRepository<ServiceTypeCategory, Long> {
+public interface ServiceTypeCategoryRepository extends JpaRepository<ServiceTypeCategory, Long> {
 
     ServiceTypeCategory findByName(String name);
     

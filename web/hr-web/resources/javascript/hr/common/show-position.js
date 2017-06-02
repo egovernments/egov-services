@@ -1,11 +1,7 @@
 class ShowPosition extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],positionSet:{
-    department:"",
-    designation:"",
-    name:"",
-    isPostOutsourced:"",active:""}
+    this.state={list:[]
     }
     this.setInitialState = this.setInitialState.bind(this);
   }
@@ -56,7 +52,6 @@ class ShowPosition extends React.Component {
 
   render() {
     let {list,assignments_department}=this.state;
-    let {department,designation,name,isPostOutsourced,active}=this.state.positionSet;
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){

@@ -1,11 +1,8 @@
 class ShowCategory extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],categorySet:{
-      name:"",
-      description:"",
-      active:""
-    }
+    this.state={
+      list:[]
   }
 }
 
@@ -17,7 +14,7 @@ class ShowCategory extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-     
+
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Category");
     var _this = this;
     getDropdown("category", function(res) {
@@ -49,7 +46,6 @@ class ShowCategory extends React.Component {
 
   render() {
     let {list}=this.state;
-    let {name,description,active}=this.state.categorySet;
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){

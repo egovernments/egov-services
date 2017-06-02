@@ -2,18 +2,8 @@ class ShowLeaveMapping extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      leaveTypeList:[],leave:{
-        "id": "",
-        "designation": "",
-        "leaveType": {
-          "name": "",
-        },
-        "noOfDays": "",
-        "tenantId": tenantId
-      }
+      leaveTypeList:[]
     }
-    this.handleChange=this.handleChange.bind(this);
-
   }
 
 
@@ -48,19 +38,6 @@ class ShowLeaveMapping extends React.Component {
       }
   }
 
-
-  handleChange(e,name) {
-
-      this.setState({
-          leave:{
-              ...this.state.leave,
-              [name]:e.target.value
-          }
-      })
-
-  }
-
-
   close(){
       // widow.close();
       open(location, '_self').close();
@@ -68,10 +45,7 @@ class ShowLeaveMapping extends React.Component {
 
 
   render() {
-    let {handleChange}=this;
     let {leaveTypeList}=this.state;
-    let {designation,leaveType,noOfDay}=this.state.leave;
-
 
     const renderAction=function(type,id){
       if (type==="update") {
@@ -80,16 +54,15 @@ class ShowLeaveMapping extends React.Component {
                       <a href={`app/hr/leavemaster/leave-mapping.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
-    }else {
-            return (
-                    <a href={`app/hr/leavemaster/leave-mapping.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
-            );
-        }
-}
+        }else {
+                return (
+                        <a href={`app/hr/leavemaster/leave-mapping.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                );
+            }
+    }
 
 
-    const renderBody=function()
-    {
+    const renderBody=function() {
       return leaveTypeList.map((item,index)=>
       {
             return (<tr key={index}>

@@ -1,10 +1,8 @@
 class ShowCommunity extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],communitySet:{
-        name:"",
-      description:"",
-        active:""}
+    this.state={
+      list:[]
       }
   }
 
@@ -44,7 +42,6 @@ class ShowCommunity extends React.Component {
 
   render() {
     let {list}=this.state;
-    let {name,description,active}=this.state.communitySet;
     var mode = getUrlVars()["type"];
 
 

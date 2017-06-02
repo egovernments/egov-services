@@ -49,73 +49,74 @@ import org.springframework.stereotype.Component;
 @Component
 public class PropertyUsageTypeQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyUsageTypeQueryBuilder.class);
     private static final String BASE_QUERY = "SELECT * FROM egwtr_property_usage_type proUseType";
-    
-    public String getPersistQuery(){
-    	return "INSERT into egwtr_property_usage_type (property_type, usage_type, active, tenantid, createddate, createdby) values (?,?,?,?,?,?) ";
+
+    public String getPersistQuery() {
+        return "INSERT into egwtr_property_usage_type (property_type, usage_type, active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) values (?,?,?,?,?,?,?,?) ";
+    }
+
+    public static String updatePropertyUsageQuery() {
+        return "UPDATE egwtr_property_usage_type SET property_type = ?,usage_type = ?,"
+                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
     }
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(PropertyTypeUsageTypeGetReq propUsageTypeGetRequest, List preparedStatementValues) {
-        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    public String getQuery(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, propUsageTypeGetRequest);
 
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
 
-		if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getTenantId() == null )
-			return;
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
-		if (propUsageTypeGetRequest.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" proUseType.tenantid = ?");
-			preparedStatementValues.add(propUsageTypeGetRequest.getTenantId());
-		}
-		if (propUsageTypeGetRequest.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" proUseType.id IN " + getIdQuery(propUsageTypeGetRequest.getId()));
-		}
-	}
-    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
+
+        if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getTenantId() == null)
+            return;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
+        if (propUsageTypeGetRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" proUseType.tenantid = ?");
+            preparedStatementValues.add(propUsageTypeGetRequest.getTenantId());
+        }
+        if (propUsageTypeGetRequest.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" proUseType.id IN " + getIdQuery(propUsageTypeGetRequest.getId()));
+        }
+    }
+
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString
      * @return boolean indicates if the next predicate should append an "AND"
      */
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
 
         return true;
     }
-    
-    private static String getIdQuery(List<Long> idList) {
-        StringBuilder query = new StringBuilder("(");
+
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
             query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++) {
+            for (int i = 1; i < idList.size(); i++)
                 query.append(", " + idList.get(i));
-            }
         }
         return query.append(")").toString();
     }
-    
-    public String checkPropertyUsageTypeExistsQuery(){
-    	return "SELECT * FROM egwtr_property_usage_type WHERE property_type = ? AND usage_type = ? AND tenantid = ? "; 
+
+    public String checkPropertyUsageTypeExistsQuery() {
+        return "SELECT * FROM egwtr_property_usage_type WHERE property_type = ? AND usage_type = ? AND tenantid = ? ";
     }
-    
-    
-    
-    
+
 }

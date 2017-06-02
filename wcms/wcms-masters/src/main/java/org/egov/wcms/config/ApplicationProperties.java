@@ -78,17 +78,26 @@ public class ApplicationProperties {
     @Value("${kafka.topics.propertyCategory.create.name}")
     private String createPropertyCategoryTopicName;
 
+    @Value("${kafka.topics.propertyCategory.update.name}")
+    private String updatePropertyCategoryTopicName;
+
     @Value("${kafka.topics.propertyusage.create.name}")
     private String createPropertyUsageTopicName;
+
+    @Value("${kafka.topics.propertyusage.update.name}")
+    private String updatePropertyUsageTopicName;
+
+    @Value("${kafka.topics.propertypipesize.create.name}")
+    private String createPropertyPipeSizeTopicName;
+
+    @Value("${kafka.topics.propertypipesize.update.name}")
+    private String updatePropertyPipeSizeTopicName;
 
     @Value("${kafka.topics.donation.create.name}")
     private String createDonationTopicName;
 
-    @Value("${kafka.topics.propertypipesize.create.name}")
-    private String createPropertyPipeSizeTopicName;
-    
-	@Value("${kafka.topics.documenttype.create.name}")
-	private String createDocumentTypeTopicName;
+    @Value("${kafka.topics.documenttype.create.name}")
+    private String createDocumentTypeTopicName;
 
     @Autowired
     private Environment environment;
@@ -133,19 +142,32 @@ public class ApplicationProperties {
         return createPropertyCategoryTopicName;
     }
 
+    public String getUpdatePropertyCategoryTopicName() {
+        return updatePropertyCategoryTopicName;
+    }
+
     public String getCreatePropertyUsageTopicName() {
         return createPropertyUsageTopicName;
     }
 
-    public String getCreateDonationTopicName() {
-        return createDonationTopicName;
+    public String getUpdatePropertyUsageTopicName() {
+        return updatePropertyUsageTopicName;
     }
 
     public String getCreatePropertyPipeSizeTopicName() {
         return createPropertyPipeSizeTopicName;
     }
     
-	public String getCreateDocumentTypeTopicName(){
-		return createDocumentTypeTopicName;
-	}
+    public String getUpdatePropertyPipeSizeTopicName() {
+        return updatePropertyPipeSizeTopicName;
+    }
+
+    public String getCreateDocumentTypeTopicName() {
+        return createDocumentTypeTopicName;
+    }
+
+    public String getCreateDonationTopicName() {
+        return createDonationTopicName;
+    }
+   
 }

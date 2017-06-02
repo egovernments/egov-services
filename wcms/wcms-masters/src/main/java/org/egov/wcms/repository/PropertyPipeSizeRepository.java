@@ -44,12 +44,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
-import org.egov.wcms.model.PropertyPipeSize;
+import org.egov.wcms.model.PropertyTypePipeSizeType;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyPipeSizeRowMapper;
-import org.egov.wcms.web.contract.PropertyPipeSizeGetRequest;
-import org.egov.wcms.web.contract.PropertyPipeSizeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,37 +72,67 @@ public class PropertyPipeSizeRepository {
     @Autowired
     private PropertyPipeSizeQueryBuilder propertyPipeSizeQueryBuilder;
 
-    public PropertyPipeSizeRequest persistCreatePropertyPipeSize(
-            final PropertyPipeSizeRequest propertyPipeSizeRequest) {
+    public PropertyTypePipeSizeTypeRequest persistCreatePropertyPipeSize(
+            final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
         LOGGER.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
-        final String PropertyPipeSizeInsert = PropertyPipeSizeQueryBuilder.insertPropertyPipeSizeQuery();
-        final PropertyPipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
-       /* String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        final String propertyPipeSizeInsert = PropertyPipeSizeQueryBuilder.insertPropertyPipeSizeQuery();
+        final PropertyTypePipeSizeType propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
-        try{
-            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType()}, Long.class);
-        }catch(EmptyResultDataAccessException e){
+        try {
+            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType() },
+                    Long.class);
+        } catch (final EmptyResultDataAccessException e) {
             LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
         }
-        if(pipesizeId == null){
+        if (pipesizeId == null)
             LOGGER.info("Invalid input.");
-        }*/
-       
-        final Object[] obj = new Object[] { propertyPipeSize.getPipeSizeTypeId(), propertyPipeSize.getPropertyTypeId(),
+        // Once APIs are available, remove random number function.
+        // Hit a PT API to get property id based on the input property type name.
+        final int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        propertyPipeSize.setPropertyTypeId(Long.valueOf(randomNum));
+        final Object[] obj = new Object[] { pipesizeId, propertyPipeSize.getPropertyTypeId(),
                 propertyPipeSize.getActive(),
                 Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
                 propertyPipeSize.getTenantId() };
-        jdbcTemplate.update(PropertyPipeSizeInsert, obj);
+        jdbcTemplate.update(propertyPipeSizeInsert, obj);
         return propertyPipeSizeRequest;
     }
 
-    public boolean checkPropertyByPipeSize(final Long id, final Long propertyType, final Long pipeSize,
+    public PropertyTypePipeSizeTypeRequest persistUpdatePropertyPipeSize(
+            final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
+        LOGGER.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
+        final String propertyPipeSizeUpdate = PropertyPipeSizeQueryBuilder.updatePropertyPipeSizeQuery();
+        final PropertyTypePipeSizeType propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        Long pipesizeId = 0L;
+        try {
+            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType() },
+                    Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            LOGGER.info("EmptyResultDataAccessException: Query returned empty result set while update");
+        }
+        if (pipesizeId == null)
+            LOGGER.info("Invalid input.");
+        // Once APIs are available, remove random number function.
+        // Hit a PT API to get property id based on the input property type name.
+        final int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        propertyPipeSize.setPropertyTypeId(Long.valueOf(randomNum));
+        final Object[] obj = new Object[] { pipesizeId, propertyPipeSize.getPropertyTypeId(),
+                propertyPipeSize.getActive(),
+                Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), propertyPipeSize.getId() };
+        jdbcTemplate.update(propertyPipeSizeUpdate, obj);
+        return propertyPipeSizeRequest;
+    }
+
+    public boolean checkPropertyByPipeSize(final Long id, final Long propertyTypeId, final Long pipeSizeId,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
-        preparedStatementValues.add(propertyType);
-        preparedStatementValues.add(pipeSize);
+        preparedStatementValues.add(propertyTypeId);
+        preparedStatementValues.add(pipeSizeId);
         preparedStatementValues.add(tenantId);
         final String query;
         if (id == null)
@@ -118,13 +149,13 @@ public class PropertyPipeSizeRepository {
         return true;
     }
 
-    public List<PropertyPipeSize> findForCriteria(final PropertyPipeSizeGetRequest propertyPipeSizeGetRequest) {
+    public List<PropertyTypePipeSizeType> findForCriteria(final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         try {
-            if (propertyPipeSizeGetRequest.getPipeSize() != null)
+            if (propertyPipeSizeGetRequest.getPipeSizeType() != null)
                 propertyPipeSizeGetRequest
-                        .setPipeSizeTypeId(jdbcTemplate.queryForObject(PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery(),
-                                new Object[] { propertyPipeSizeGetRequest.getPipeSize() }, Long.class));
+                        .setPipeSizeId(jdbcTemplate.queryForObject(PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery(),
+                                new Object[] { propertyPipeSizeGetRequest.getPipeSizeType() }, Long.class));
         } catch (final EmptyResultDataAccessException e) {
             LOGGER.error("EmptyResultDataAccessException: Query returned empty RS.");
 
@@ -132,11 +163,24 @@ public class PropertyPipeSizeRepository {
 
         final String queryStr = propertyPipeSizeQueryBuilder.getQuery(propertyPipeSizeGetRequest, preparedStatementValues);
         final String pipeSizeInmmQuery = PropertyPipeSizeQueryBuilder.getPipeSizeInmm();
-        final List<PropertyPipeSize> propertyPipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+        final List<PropertyTypePipeSizeType> propertyPipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 propertyPipeSizeRowMapper);
-        for (final PropertyPipeSize propertyPipeSize : propertyPipeSizes)
+        for (final PropertyTypePipeSizeType propertyPipeSize : propertyPipeSizes)
             propertyPipeSize.setPipeSizeType(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
-                    new Object[] { propertyPipeSize.getPipeSizeTypeId() }, Double.class));
+                    new Object[] { propertyPipeSize.getPipeSizeId() }, Double.class));
         return propertyPipeSizes;
+    }
+
+    public boolean checkPipeSizeExists(final Double pipeSizeType, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(pipeSizeType);
+        preparedStatementValues.add(tenantId);
+        final String query = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        final List<Map<String, Object>> pipeSizes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!pipeSizes.isEmpty())
+            return false;
+
+        return true;
     }
 }

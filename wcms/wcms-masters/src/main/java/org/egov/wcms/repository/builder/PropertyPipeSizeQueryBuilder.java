@@ -41,7 +41,7 @@ package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
-import org.egov.wcms.web.contract.PropertyPipeSizeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -56,7 +56,7 @@ public class PropertyPipeSizeQueryBuilder {
             + "propertypipesize.tenantId as propertypipesize_tenantId "
             + "FROM egwtr_property_pipe_size propertypipesize ";
 
-    public String getQuery(final PropertyPipeSizeGetRequest propertyPipeSizeGetRequest, final List preparedStatementValues) {
+    public String getQuery(final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, propertyPipeSizeGetRequest);
         addOrderByClause(selectQuery, propertyPipeSizeGetRequest);
@@ -64,11 +64,12 @@ public class PropertyPipeSizeQueryBuilder {
         return selectQuery.toString();
     }
 
+    @SuppressWarnings("unchecked")
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final PropertyPipeSizeGetRequest propertyPipeSizeGetRequest) {
+            final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
 
         if (propertyPipeSizeGetRequest.getId() == null && propertyPipeSizeGetRequest.getPropertyType() == null &&
-                propertyPipeSizeGetRequest.getPipeSize() == null && propertyPipeSizeGetRequest.getActive() == null
+                propertyPipeSizeGetRequest.getPipeSizeType() == null && propertyPipeSizeGetRequest.getActive() == null
                 && propertyPipeSizeGetRequest.getTenantId() == null)
             return;
 
@@ -86,10 +87,10 @@ public class PropertyPipeSizeQueryBuilder {
             selectQuery.append(" propertypipesize.id IN " + getIdQuery(propertyPipeSizeGetRequest.getId()));
         }
 
-        if (propertyPipeSizeGetRequest.getPipeSize() != null) {
+        if (propertyPipeSizeGetRequest.getPipeSizeType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" propertypipesize.pipesizeid = ?");
-            preparedStatementValues.add(propertyPipeSizeGetRequest.getPipeSize());
+            preparedStatementValues.add(propertyPipeSizeGetRequest.getPipeSizeType());
         }
 
         if (propertyPipeSizeGetRequest.getPropertyType() != null) {
@@ -105,7 +106,7 @@ public class PropertyPipeSizeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(final StringBuilder selectQuery, final PropertyPipeSizeGetRequest propertyPipeSizeGetRequest) {
+    private void addOrderByClause(final StringBuilder selectQuery, final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
         final String sortBy = propertyPipeSizeGetRequest.getSortBy() == null ? "propertypipesize.id"
                 : "propertypipesize." + propertyPipeSizeGetRequest.getSortBy();
         final String sortOrder = propertyPipeSizeGetRequest.getSortOrder() == null ? "DESC"
@@ -134,6 +135,11 @@ public class PropertyPipeSizeQueryBuilder {
         return "INSERT INTO egwtr_property_pipe_size(id,pipesizeid,propertytypeid,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
                 + "(nextval('SEQ_EGWTR_PROPERTY_PIPESIZE'),?,?,?,?,?,?,?,?)";
     }
+    
+    public static String updatePropertyPipeSizeQuery() {
+        return "UPDATE egwtr_property_pipe_size SET pipesizeid = ?,propertytypeid = ?,"
+                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+    }
 
     public static String selectPropertyByPipeSizeQuery() {
         return " select id FROM egwtr_property_pipe_size where propertytypeid = ? and pipesizeid = ? and tenantId = ?";
@@ -144,7 +150,7 @@ public class PropertyPipeSizeQueryBuilder {
     }
 
     public static String getPipeSizeIdQuery() {
-        return " select id FROM egwtr_pipesize where  sizeinmilimeter= ? and tenantId = ? ";
+        return " select id FROM egwtr_pipesize where  sizeinmilimeter= ?  ";
     }
 
     public static String getPipeSizeInmm() {

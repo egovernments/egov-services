@@ -494,7 +494,7 @@ class UploadLeaveApplication extends React.Component{
 
            $.ajax({
 
-                 url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId+"&type=bulkUpload",
+                 url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId+"&type=upload",
                  type: 'POST',
                  dataType: 'json',
                  data:JSON.stringify(body),
@@ -517,18 +517,20 @@ class UploadLeaveApplication extends React.Component{
                           }
                        }
                      }
+                     console.log("successListlast",successList);
+                         var ep1=new ExcelPlus();
+                         var b=0;
+
+                           ep1.createFile("Success");
+                           ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
+                           for(b=0;b<successList.length;b++){
+                             ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].department,successList[b].leaveTypeName,successList[b].fromDate,successList[b].toDate,successList[b].leaveDays,successList[b].reason,successList[b].successMessage])
+                           }
+                           ep1.saveAs("success.xlsx");
+
                    }
 
-                 console.log("successListlast",successList);
-                     var ep1=new ExcelPlus();
-                     var b=0;
 
-                       ep1.createFile("Success");
-                       ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Success Message"] ] });
-                       for(b=0;b<successList.length;b++){
-                         ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].department,successList[b].leaveTypeName,successList[b].fromDate,successList[b].toDate,successList[b].leaveDays,successList[b].reason,successList[b].successMessage])
-                       }
-                       ep1.saveAs("success.xlsx");
 
                  if(errorList.length!==0){
 
@@ -543,17 +545,19 @@ class UploadLeaveApplication extends React.Component{
                      }
                    }
 
+                   var ep2=new ExcelPlus();
+                   var b=0;
+                   console.log("errorObject",errorObject);
+                   console.log("errorList",errorList);
+                   ep2.createFile("Error");
+                   ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
+                   for(b=0;b<errorObject.length;b++){
+                     ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMsg])
+                   }
+                   ep2.saveAs("error.xlsx");
+
                  }
-                 var ep2=new ExcelPlus();
-                 var b=0;
-                 console.log("errorObject",errorObject);
-                 console.log("errorList",errorList);
-                 ep2.createFile("Error");
-                 ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Leave from date (dd/mm/yyyy)","Leave to date (dd/mm/yyyy)","No of days","Reason","Error Message"] ] });
-                 for(b=0;b<errorObject.length;b++){
-                   ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].fromDate,errorObject[b].toDate,errorObject[b].leaveDays,errorObject[b].reason,errorObject[b].errorMsg])
-                 }
-                 ep2.saveAs("error.xlsx");
+
 
                          _this.setState({
                            LeaveType:{
@@ -565,7 +569,7 @@ class UploadLeaveApplication extends React.Component{
 
                  },
                  error: function(err) {
-                     showError("Only excel file can Upload");
+                     showError("File could not be uploaded !! Please try again later");
 
                  }
              });

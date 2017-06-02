@@ -581,15 +581,45 @@ definitions:
         
   Floor:
     type: object
-    description: The floor details
+    description: The floor details. The Floor contains either Flats in case of apartment or Rooms in case of group or individual house.
     properties:
       floorNo:
         type: string
         description: floor no for the floor
         maxLength: 16
         minLength: 1
+      flats:
+        description: Flat(s) information on a floor.
+        type: array
+        items:
+          $ref: "#/definitions/Flat"
+      rooms:
+        description: Room(s) information on a floor.
+        type: array
+        items:
+          $ref: "#/definitions/Unit"
+    required:
+      - floorNo
+  
+    
+  Flat:
+    allOf:
+    - $ref: "/definitions/Unit"
+    - type: object
+    description: A flat information.
+    properties:
+      flatNo:
+        type: integer
+        format: int32
+        description: Flat no on the floor.
+    
+  Unit:
+    type: object
+    description: A logical group of rooms on a floor
+    properties:
       unitNo:
-        type: string
+        type: integer
+        format: int32
         description: unit no in a floor. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
         maxLength: 8
         minLength: 1
@@ -618,6 +648,15 @@ definitions:
         type: number
         format: double
         description: builtup area given during the Building plan approval of the Floor
+      bpaNo:
+        type: string
+        description: Buidling plan approval no for the Floor
+        maxLength: 16
+        minLength: 1
+      bpaDate:
+        type: string
+        format: date
+        description: Buidling plan approval date for the Floor
       usage:
         type: string
         description: usage of the Floor
@@ -626,16 +665,6 @@ definitions:
       occupancy:
         type: string
         description: occupancy of the Floor
-        maxLength: 16
-        minLength: 1
-      structure:
-        type: string
-        description: structure of the Floor
-        maxLength: 16
-        minLength: 1
-      age:
-        type: string
-        description: age of the Floor
         maxLength: 16
         minLength: 1
       occupierName:
@@ -652,6 +681,16 @@ definitions:
         type: number
         format: double
         description: rent collected for the Floor it its given tenants are living.
+      structure:
+        type: string
+        description: structure of the Floor
+        maxLength: 16
+        minLength: 1
+      age:
+        type: string
+        description: age of the Floor
+        maxLength: 16
+        minLength: 1
       exemptionReason:
         type: string
         description: exemption reason for the Floor
@@ -669,15 +708,6 @@ definitions:
         type: string
         format: date
         description: construction completion date of the Floor
-      bpaNo:
-        type: string
-        description: Buidling plan approval no for the Floor
-        maxLength: 16
-        minLength: 1
-      bpaDate:
-        type: string
-        format: date
-        description: Buidling plan approval date for the Floor
       manualArv:
         type: number
         format: double
@@ -699,24 +729,12 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - floorNo
+    - unitNo
     - builtupArea
     - usage
     - occupancy
     - structure
     
-  Unit:
-    type: object
-    description: An apartment or logical group of rooms on a floor
-    properties:
-      unitNumber:
-        type: integer
-        format: int32
-        description: Number of the logical unit
-      subUnits:
-        $ref: '#/definitions/Unit'
-        
-
   WorkFlowDetails:
     type: object
     description: This object holds info about the assignee and other workflow related info

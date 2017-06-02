@@ -367,11 +367,20 @@ addOrUpdate(e,mode)
                                      }
                                      ep1.saveAs("success.xlsx");
 
-                               if(errorList.length!==0){
-                                 errorList.forEach(function(d){
-                                     errorObject.push(d);
-                                 });
-                               }
+                                     if(errorList.length!==0){
+
+                                       for(var t=0;t<errorList.length;t++){
+                                         for(var q=0;q<finalValidatedServerObject.length;q++){
+                                            if(errorList[t].employee===finalValidatedServerObject[q].employee){
+                                               finalValidatedServerObject[q].errorMsg = errorList[t].errorMsg;
+                                               errorObject.push(finalValidatedServerObject[q]);
+                                               console.log("g--->",finalValidatedServerObject[q]);
+                                               break;
+                                            }
+                                         }
+                                       }
+                                     }
+
                               console.log("errorObject",errorObject);
                                var ep2=new ExcelPlus();
                                var b=0;

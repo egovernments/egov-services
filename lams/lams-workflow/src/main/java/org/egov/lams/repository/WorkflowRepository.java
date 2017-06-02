@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class WorkflowRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(WorkflowRepository.class);
+	
+	public static final String ACTION = "Forward";
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -177,8 +179,8 @@ public class WorkflowRepository {
 
 			LOGGER.info("process instance responce ::: from search ::: " + processInstanceResponse);
 			ProcessInstance processInstance = processInstanceResponse.getProcessInstance();
-			List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
-			task.setAction(attributes.get(0).getValues().get(0).getKey());
+			//List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
+			task.setAction(ACTION);
 			task.setStatus(processInstance.getStatus());
 			assignee = processInstance.getOwner();
 			LOGGER.info("the owner object from response is ::: " + processInstance.getOwner());

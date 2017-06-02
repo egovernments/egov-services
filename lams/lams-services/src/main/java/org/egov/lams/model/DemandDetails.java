@@ -17,7 +17,7 @@ public class DemandDetails {
 	private BigDecimal rebateAmount;
 	private String taxReason;
 	private String taxPeriod;
-	private Long glCode;
+	private String glCode;
 	private Integer isActualDemand;
 	private String tenantId;
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "IST")

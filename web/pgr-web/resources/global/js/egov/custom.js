@@ -65,6 +65,8 @@ $(document).ready(function()
 		}catch(e){
 		//console.warn("No Date Picker");
 	}
+
+	fileConstraint();
 	
 	try { 
 		$('[data-toggle="tooltip"]').tooltip({
@@ -425,6 +427,28 @@ function initDatePicker(){
 	}); 
 }
 
+function fileConstraint(){
+
+	$('input[type=file]').on('change.bs.fileinput',function(e){
+		var fileformats = ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'];
+		var fileSize = 5e+6;
+		var file = $(this)[0].files[0];
+		var ext = file['name'].split('.').pop().toLowerCase();
+		if($.inArray(ext, fileformats) > -1){
+			//do something  
+			if(this.files[0].size > fileSize){
+				bootbox.alert(translate('core.error.file.exceed'));
+				$( this ).val('');	
+				return;
+			}
+		}else{
+			bootbox.alert(ext+' '+translate('core.error.fileformat.notallowed'));
+			$( this ).val('');
+		}
+	});
+
+}
+
 var RI = function(auth){
 	this.apiId = 'org.egov.pgr';
     this.ver = '1.0';
@@ -592,9 +616,9 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 		var this_documents = '<div class="form-group">';
 		for(var i=0; i < this.attribValues.length; i++){
 			if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'EMPLOYEE')
-				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control"></div></div>'
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control attribFile"></div></div>'
 			else if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'CITIZEN')
-				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control"></div></div>'
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control attribFile"></div></div>'
 		}
 		this_documents += '</div>';
 		this.template = this_documents;
@@ -633,7 +657,8 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 				this_select_content +='</select>';
 
 				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label><div class="col-sm-3 add-margin">'+this_select_content+'</div><div class="col-sm-1"></div>';
-			}
+			}else
+				this.template = '';
 		}
 		
 	}

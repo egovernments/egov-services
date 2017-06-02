@@ -119,7 +119,7 @@ componentWillUpdate() {
         defaultDate: ""
     });
     $('#effective').val("");
-    $('#effective').on("dp.change", function(e) {
+    $('#effective').on("change", function(e) {
           _this.setState({
                 transferSet: {
                     ..._this.state.transferSet,
@@ -274,7 +274,7 @@ componentWillUpdate() {
                       <div className="col-sm-6">
                         <div className="styled-select">
                           <select id="tranferType" name="tranferType" value={tranferType}
-                          onChange={(e)=>{handleChange(e,"tranferType")}}>
+                          onChange={(e)=>{handleChange(e,"tranferType")}}required>
                             <option value="">Select Transfer Type</option>
                             {renderOption(this.state.transferList)}
                          </select>
@@ -290,7 +290,7 @@ componentWillUpdate() {
                         <div className="col-sm-6">
                           <div className="styled-select">
                               <select id="reason" name="reason" value={reason}
-                                onChange={(e)=>{  handleChange(e,"reason")}}>
+                                onChange={(e)=>{  handleChange(e,"reason")}}requiredrequiredrequired>
                               <option value="">Select Reason</option>
                               {renderOption(this.state.reasonList)}
                              </select>
@@ -308,7 +308,7 @@ componentWillUpdate() {
                           <div className="col-sm-6">
                             <div className="styled-select">
                               <select id="district" name="district" value={district}
-                                onChange={(e)=>{  handleChange(e,"district") }}>
+                                onChange={(e)=>{  handleChange(e,"district") }}required>
                                 <option value="">Select District-ULB</option>
                                 {renderOption(this.state.districtList)}
                              </select>
@@ -324,7 +324,7 @@ componentWillUpdate() {
                             <div className="col-sm-6">
                               <div className="styled-select">
                                   <select id="positionId" name="positionId" value={positionId}
-                                    onChange={(e)=>{  handleChange(e,"positionId")}}>
+                                    onChange={(e)=>{  handleChange(e,"positionId")}}required>
                                   <option value="">Select Position</option>
                                   {renderOption(this.state.positionList)}
                                  </select>
@@ -343,7 +343,7 @@ componentWillUpdate() {
                         <div className="col-sm-6">
                           <div className="styled-select">
                             <select id="department" name="departmentId" value={departmentId}
-                              onChange={(e)=>{  handleChange(e,"departmentId")}}>
+                              onChange={(e)=>{  handleChange(e,"departmentId")}}required>
                               <option value="">Select department</option>
                               {renderOption(this.state.departmentList)}
                            </select>
@@ -359,7 +359,7 @@ componentWillUpdate() {
                           <div className="col-sm-6">
                             <div className="styled-select">
                                 <select id="designation" name="designationId" value={designationId}
-                                    onChange={(e)=>{handleChange(e,"designationId")}}>
+                                    onChange={(e)=>{handleChange(e,"designationId")}}required>
                                 <option value="">Select Designation</option>
                                 {renderOption(this.state.designationList)}
                                </select>
@@ -438,7 +438,7 @@ componentWillUpdate() {
                           </div>
                           <div className="col-sm-6">
                               <div className="styled-file">
-                              <input id="documents" name="documents" type="file" multiple/>
+                              <input id="documents" name="documents" type="file" required multiple/>
                              </div>
                           </div>
                       </div>

@@ -5,7 +5,6 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.enums.Source;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.slf4j.Logger;
@@ -37,13 +36,8 @@ public class DemandHelper {
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
 		urlParams.append("&tenantId=" + agreement.getTenantId());
-		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-			urlParams.append("&taxReason=" + propertiesManager.getTaxReasonRent());
-			urlParams.append("&toDate=" + DateFormatUtils.format(agreement.getExpiryDate(), "dd/MM/yyyy"));
-		} else {
-			urlParams.append("&taxReason=" + taxReason);
-			urlParams.append("&toDate=" + DateFormatUtils.format(date, "dd/MM/yyyy"));
-		}
+		urlParams.append("&taxReason=" + taxReason);
+		urlParams.append("&toDate=" + DateFormatUtils.format(date, "dd/MM/yyyy"));
 		return urlParams.toString();
 	}
 }

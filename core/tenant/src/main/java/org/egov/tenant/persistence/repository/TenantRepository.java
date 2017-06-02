@@ -8,11 +8,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.egov.tenant.persistence.entity.Tenant.*;
@@ -20,6 +18,7 @@ import static org.egov.tenant.persistence.entity.Tenant.*;
 @Repository
 public class TenantRepository {
     private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant WHERE code in (:code) ORDER BY ID";
+    private static final String ALL_TENANT_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant ORDER BY ID";
 
     private static final String INSERT_QUERY = "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
         "VALUES (nextval('seq_tenant'), :code, :description, :domainurl, :logoid, :imageid, :type, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate)";
@@ -36,16 +35,27 @@ public class TenantRepository {
 
 
     public List<org.egov.tenant.domain.model.Tenant> find(TenantSearchCriteria tenantSearchCriteria) {
-        final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
-            put("code", tenantSearchCriteria.getTenantCodes());
-        }};
-
-        final List<Tenant> tenants = namedParameterJdbcTemplate.query(TENANT_BASE_QUERY, parametersMap, new TenantRowMapper());
+        List<Tenant> tenants = Collections.emptyList();
+        if(CollectionUtils.isEmpty(tenantSearchCriteria.getTenantCodes()))
+            tenants = getAllTenants();
+        else
+            tenants = getTenantsForGivenCodes(tenantSearchCriteria);
 
         return tenants.stream()
             .map(Tenant::toDomain)
             .map(this::getCityForTenant)
             .collect(Collectors.toList());
+    }
+
+    private List<Tenant> getAllTenants(){
+        return namedParameterJdbcTemplate.query(ALL_TENANT_QUERY, new TenantRowMapper());
+    }
+
+    private List<Tenant> getTenantsForGivenCodes(TenantSearchCriteria tenantSearchCriteria){
+        final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put("code", tenantSearchCriteria.getTenantCodes());
+        }};
+        return namedParameterJdbcTemplate.query(TENANT_BASE_QUERY, parametersMap, new TenantRowMapper());
     }
 
     private org.egov.tenant.domain.model.Tenant getCityForTenant(org.egov.tenant.domain.model.Tenant tenant) {

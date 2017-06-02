@@ -152,7 +152,7 @@ class EmployeeSearch extends React.Component {
         format: 'DD/MM/YYYY',
         defaultDate: ""
     });
-    
+
     $('#asOnDate').val("");
     $('#asOnDate').on("change", function(e) {
           _this.setState({

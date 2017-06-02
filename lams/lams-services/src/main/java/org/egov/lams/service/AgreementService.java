@@ -94,8 +94,8 @@ public class AgreementService {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-			calendar.add(Calendar.YEAR, 1);
-			calendar.add(Calendar.DATE, -1);
+		calendar.add(Calendar.YEAR, 1);
+		calendar.add(Calendar.DATE, -1);
 		Date expiryDate = calendar.getTime();
 		agreement.setExpiryDate(expiryDate);
 		logger.info("The closeDate calculated is " + expiryDate + "from commencementDate of "
@@ -156,7 +156,7 @@ public class AgreementService {
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			logger.info("updateagreementservice Source.DATA_ENTRY");
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
-			agreement.setDemands(updateDemnad(agreement.getDemands(), agreement.getLegacyDemands(),
+			agreement.setDemands(updateDemand(agreement.getDemands(), agreement.getLegacyDemands(),
 					agreementRequest.getRequestInfo()));
 			logger.info("the id from demand save call :: " + agreement.getDemands());
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
@@ -170,13 +170,15 @@ public class AgreementService {
 					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 					logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
 					agreement.setAgreementDate(new Date());
+					updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
+							agreementRequest.getRequestInfo());
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-				} else if ("print notice".equalsIgnoreCase(workFlowDetails.getAction())) {
+				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
-					logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
+					logger.info("createAgreement service status after notice print::" + agreement.getStatus());
 				}
 			}
 		}
@@ -196,37 +198,6 @@ public class AgreementService {
 			throw exception;
 		}
 		return agreement;
-	}
-
-	private List<String> updateDemnad(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
-
-		DemandResponse demandResponse = null;
-		if (demands == null)
-			demandResponse = demandRepository.createDemand(legacydemands, requestInfo);
-		else
-			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
-		return demandResponse.getDemands().stream().map(demand -> demand.getId()).collect(Collectors.toList());
-	}
-
-	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
-
-		List<Demand> legacyDemands = null;
-		Agreement agreement = agreementRequest.getAgreement();
-		List<String> demandIds = agreement.getDemands();
-		if (demandIds == null) {
-
-			List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-			if (demandReasons.isEmpty())
-				throw new RuntimeException("No demand reason found for given criteria");
-			logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons);
-			legacyDemands = demandRepository.getDemandList(agreementRequest, demandReasons);
-		} else {
-			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-			legacyDemands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-					.getDemands();
-		}
-		return legacyDemands;
 	}
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
@@ -280,6 +251,49 @@ public class AgreementService {
 			logger.info("agreementRepository.findByAgreement : all values null");
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		}
+	}
+
+	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
+
+		DemandResponse demandResponse = null;
+		if (demands == null)
+			demandResponse = demandRepository.createDemand(legacydemands, requestInfo);
+		else
+			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
+		return demandResponse.getDemands().stream().map(demand -> demand.getId()).collect(Collectors.toList());
+	}
+
+	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
+
+		List<Demand> demands = null;
+		Agreement agreement = agreementRequest.getAgreement();
+		List<String> demandIds = agreement.getDemands();
+
+		if (demandIds == null) {
+			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest));
+		} else if (agreement.getSource().equals(Source.SYSTEM)) {
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+					.getDemands();
+			logger.info("the demand list after getting demandsearch result : " + demands);
+			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest));
+
+		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
+			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+					.getDemands();
+		}
+		return demands;
+	}
+
+	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest) {
+		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		if (demandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
+		return demandReasons;
 	}
 
 	private void setInitiatorPosition(AgreementRequest agreementRequest) {

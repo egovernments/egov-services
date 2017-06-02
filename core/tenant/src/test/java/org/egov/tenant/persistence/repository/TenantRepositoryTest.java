@@ -78,6 +78,33 @@ public class TenantRepositoryTest {
 
     @Test
     @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    public void test_should_return_all_tenants() throws Exception {
+        TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
+            .tenantCodes(null)
+            .build();
+        City kurnoolCity = City.builder().id(2L).build();
+        City guntoorCity = City.builder().id(1L).build();
+        when(cityRepository.find("AP.GUNTOOR")).thenReturn(guntoorCity);
+        when(cityRepository.find("AP.KURNOOL")).thenReturn(kurnoolCity);
+
+        List<Tenant> tenants = tenantRepository.find(tenantSearchCriteria);
+
+        assertThat(tenants.size()).isEqualTo(2);
+        Tenant tenant = tenants.get(0);
+        assertThat(tenant.getId()).isEqualTo(1L);
+        assertThat(tenant.getCode()).isEqualTo("AP.KURNOOL");
+        assertThat(tenant.getDescription()).isEqualTo("description");
+        assertThat(tenant.getDomainUrl()).isEqualTo("http://egov.ap.gov.in/kurnool");
+        assertThat(tenant.getLogoId()).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
+        assertThat(tenant.getImageId()).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
+        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
+        assertThat(tenant.getCity()).isEqualTo(kurnoolCity);
+        assertThat(tenants.get(1).getCode()).isEqualTo("AP.GUNTOOR");
+        assertThat(tenants.get(1).getCity()).isEqualTo(guntoorCity);
+    }
+
+    @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
     public void test_should_return_count_of_tenants_with_given_tenantCode_matching() throws Exception {
 
         Long count = tenantRepository.isTenantPresent("AP.KURNOOL");

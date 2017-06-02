@@ -549,7 +549,7 @@ class CreateAsset extends React.Component {
               {
 
                   return (<option key={item.id} value={item.id}>
-                    {typeof(item.name)=="undefined"?item.uom:item.name}
+                    {!item.name ? item.description : item.name}
 
                     </option>)
               })

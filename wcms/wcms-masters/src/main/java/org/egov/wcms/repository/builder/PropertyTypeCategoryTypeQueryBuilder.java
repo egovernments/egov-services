@@ -52,7 +52,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class PropertyCategoryQueryBuilder {
+public class PropertyTypeCategoryTypeQueryBuilder {
 	
     private static final Logger logger = LoggerFactory.getLogger(ConnectionCategoryQueryBuilder.class);
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.repository.builder.PropertyCategoryQueryBuilder;
+import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @WebMvcTest(PropertyCategoryController.class)
 @WebAppConfiguration
-public class PropertyCategoryRepositoryTest {
+public class PropertyTypeCategoryTypeRepositoryTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -42,7 +42,7 @@ public class PropertyCategoryRepositoryTest {
 	private JdbcTemplate jdbcTemplate;
 
 	@Mock
-	private PropertyCategoryQueryBuilder propertyCategoryueryBuilder;
+	private PropertyTypeCategoryTypeQueryBuilder propertyCategoryueryBuilder;
 	
 	@Mock
     private PropertyCategoryRowMapper propertyCategoryRowMapper;
@@ -60,7 +60,7 @@ public class PropertyCategoryRepositoryTest {
     private ResponseInfoFactory responseInfoFactory;
 	    
 	@InjectMocks
-	private PropertyCategoryRepository propertyCategoryRepository;
+	private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
 
 	
 	

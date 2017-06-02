@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.PropertyCategoryRepository;
+import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
@@ -32,7 +32,7 @@ public class PropertyCategoryServiceTest {
     private ApplicationProperties applicationProperties;
 
     @Mock
-    private PropertyCategoryRepository propertyCategoryRepository;
+    private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
 
     @Mock
     private WaterMasterProducer waterMasterProducer;

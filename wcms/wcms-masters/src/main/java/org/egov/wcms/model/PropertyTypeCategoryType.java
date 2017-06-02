@@ -53,7 +53,7 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 public class PropertyTypeCategoryType {
 
-    public static final String SEQ_CATEGORY = "SEQ_EGWTR_CATEGORY";
+    public static final String SEQ_PROPERTY_CATEGORY = "SEQ_EGWTR_PROPERTY_CATEGORY";
     
     @NotNull
     private Long id;

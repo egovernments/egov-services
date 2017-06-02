@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.repository.builder.PropertyCategoryQueryBuilder;
+import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -58,15 +58,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PropertyCategoryRepository {
+public class PropertyTypeCategoryTypeRepository {
 	
-    public static final Logger LOGGER = LoggerFactory.getLogger(PropertyCategoryRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(PropertyTypeCategoryTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private PropertyCategoryQueryBuilder propertyCategoryueryBuilder;
+    private PropertyTypeCategoryTypeQueryBuilder propertyCategoryueryBuilder;
     
     @Autowired
     private PropertyCategoryRowMapper propertyCategoryRowMapper;

@@ -41,7 +41,7 @@
 package org.egov.wcms.service;
 
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.PropertyCategoryRepository;
+import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
@@ -57,7 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PropertyCategoryService {
 
     @Autowired
-    private PropertyCategoryRepository propertyCategoryRepository;
+    private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
 
     @Autowired
     private WaterMasterProducer waterMasterProducer;

@@ -125,6 +125,39 @@ public class WcmsConstants {
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_CODE = "wcms.0017";
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME = "sizeInMilimeter";
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_ERROR_MESSAGE = "Please provide valid H.S.C Pipe Size(mm)";
+    
+    public static final String APPLICATION_TYPE_INVALID_CODE = "wcms.0018";
+    public static final String APPLICATION_TYPE_INVALID_FIELD_NAME = "applicationType";
+    public static final String APPLICATION_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";
+    
+    public static final String BILLING_TYPE_INVALID_CODE = "wcms.0019";
+    public static final String BILLING_TYPE_INVALID_FIELD_NAME = "billingType";
+    public static final String BILLING_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Billing Type";
+    
+    public static final String CONNECTION_TYPE_INVALID_CODE = "wcms.0020";
+    public static final String CONNECTION_TYPE_INVALID_FIELD_NAME = "connectionType";
+    public static final String CONNECTION_INVALID_ERROR_MESSAGE = "Please provide valid Connection Type";
+    
+    public static final String DOCUMENTS_INVALID_CODE = "wcms.0021";
+    public static final String DOCUMENTS_INVALID_FIELD_NAME = "documents";
+    public static final String DOCUMENTS_INVALID_ERROR_MESSAGE = "Please provide valid Documents";
+
+    public static final String NO_OF_TAPS_INVALID_CODE = "wcms.0022";
+    public static final String NO_OF_TAPS_INVALID_FIELD_NAME = "numberOfTaps";
+    public static final String NO_OF_TAPS_INVALID_ERROR_MESSAGE = "Please provide valid info for Number of Taps";
+    
+    public static final String SOURCE_TYPE_INVALID_CODE = "wcms.0023";
+    public static final String SOURCE_TYPE_INVALID_FIELD_NAME = "sourceType";
+    public static final String SOURCE_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Source Type";
+    
+    public static final String SUMP_CAPACITY_INVALID_CODE = "wcms.0024";
+    public static final String SUMP_CAPACITY_INVALID_FIELD_NAME = "sumpCapacity";
+    public static final String SUMP_CAPACITY_INVALID_ERROR_MESSAGE = "Please provide valid Sump Capacity";
+    
+    public static final String SUPPLY_TYPE_INVALID_CODE = "wcms.0025";
+    public static final String SUPPLY_TYPE_INVALID_FIELD_NAME = "supplyType";
+    public static final String SUPPLY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Supply Type";
+
 
     @Autowired
     private Environment environment;

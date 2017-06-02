@@ -91,7 +91,7 @@ public class LeaveApplicationRepository {
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
-        if (leaveApplicationRequest.getLeaveApplication().size() == 1)
+        if (leaveApplicationRequest.getType() != null && "upload".equalsIgnoreCase(leaveApplicationRequest.getType()))
             processInstance = workFlowService.start(leaveApplicationRequest);
         if (processInstance.getId() != null)
             stateId = Long.valueOf(processInstance.getId());
@@ -153,7 +153,8 @@ public class LeaveApplicationRepository {
                             requestInfo).get(0).getId());
     }
 
-    public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication, final RequestInfo requestInfo) {
+    public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication,
+            final RequestInfo requestInfo) {
         final String leaveApplicationGetForDateRangeQuery = leaveApplicationQueryBuilder.getLeaveApplicationForDateRangeQuery();
         final Object[] obj = new Object[] {
                 leaveApplication.getFromDate(), leaveApplication.getToDate(),

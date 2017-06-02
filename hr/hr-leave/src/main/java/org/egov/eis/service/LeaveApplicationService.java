@@ -123,6 +123,7 @@ public class LeaveApplicationService {
         final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
         final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
         final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();
+        leaveApplicationRequest.setType(type);
         for (final LeaveApplication leaveApplication : leaveApplicationsList)
             if (leaveApplication.getErrorMsg().isEmpty())
                 successLeaveApplicationsList.add(leaveApplication);

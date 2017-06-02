@@ -72,4 +72,5 @@ public class LeaveApplicationRequest {
 	@JsonProperty("LeaveApplication")
 	private List<LeaveApplication> leaveApplication = new ArrayList<LeaveApplication>();
 
+	private String type;
 }

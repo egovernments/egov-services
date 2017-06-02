@@ -52,7 +52,7 @@ public class DemandReasonService {
 			queryStr.append(" and dr.egInstallmentMaster.fromDate>=:fromDate");
 		}
 		if (demandReasonCriteria.getToDate() != null) {
-			queryStr.append(" and dr.egInstallmentMaster.toDate<=:toDate");
+			queryStr.append(" and dr.egInstallmentMaster.fromDate<=:toDate");
 		}
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());

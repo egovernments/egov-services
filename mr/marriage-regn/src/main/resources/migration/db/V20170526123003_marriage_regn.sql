@@ -2,14 +2,14 @@ CREATE SEQUENCE marriageregn_application_number;
 
 CREATE TABLE egmr_marriage_regn(
         regnunitid INTEGER,
-		marriageDate BIGINT,
-		venue CHARACTER VARYING(250),
-		street CHARACTER VARYING(250),
+		marriageDate BIGINT NOT NULL,
+		venue CHARACTER VARYING(250) NOT NULL,
+		street CHARACTER VARYING(250) NOT NULL,
 		placeOfMarriage CHARACTER VARYING(250),
-		locality CHARACTER VARYING(250),
-		city CHARACTER VARYING(250),
-		marriagePhoto CHARACTER VARYING(250),
-		fee INTEGER, 
+		locality CHARACTER VARYING(250) NOT NULL,
+		city CHARACTER VARYING(250) NOT NULL,
+		marriagePhoto CHARACTER VARYING(250) NOT NULL,
+		fee INTEGER NOT NULL, 
         bridegroomid BIGINT,
         brideid BIGINT,
         priestname CHARACTER VARYING(250),
@@ -28,6 +28,6 @@ CREATE TABLE egmr_marriage_regn(
         approvalaction CHARACTER VARYING(250),
 		approvalstatus CHARACTER VARYING(250),
         aprovalcomments CHARACTER VARYING(250),
-		tenantId CHARACTER VARYING(250)
+		tenantId CHARACTER VARYING(250) NOT NULL
 )
 

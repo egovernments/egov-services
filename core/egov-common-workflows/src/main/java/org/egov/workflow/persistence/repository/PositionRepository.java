@@ -11,6 +11,14 @@ import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import org.apache.log4j.Logger;
 
 @Service
 public class PositionRepository {
@@ -19,6 +27,11 @@ public class PositionRepository {
 	private final String positionsByIdUrl;
 	private final String positionsForEmployeeCodeUrl;
 	private final String primaryPositionsForEmployeeIdUrl;
+
+private static final Logger LOGGER = Logger.getLogger(PositionRepository.class);
+
+
+
 
 	public PositionRepository(final RestTemplate restTemplate,
 			@Value("${egov.services.hr-employee.host}") final String hrEmployeeServiceHostname,
@@ -85,12 +98,23 @@ public class PositionRepository {
 		String tenantId = "";
 		if (requestInfo != null) {
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			tenantId = requestInfo.getTenantId();
+			tenantId = requestInfo.getUserInfo().getTenantId();
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
+	PositionResponse positionResponse=null;
+try{
 
-		PositionResponse positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl+"?tenantId={tenantId}", requestInfoWrapper,
+	positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl+"?tenantId={tenantId}", requestInfoWrapper,
 				PositionResponse.class, id, tenantId);
+  } catch (HttpClientErrorException e) {
+            String errorResponseBody = e.getResponseBodyAsString();
+            LOGGER.info("Following exception occurred: " + e.getResponseBodyAsString());
+            e.printStackTrace();
+           
+        } catch (Exception e) {
+            LOGGER.error("Exception Occurred While Calling Position service Service : " + e.getMessage());
+            throw e;
+        }
 
 		return positionResponse.getPosition();
 	}

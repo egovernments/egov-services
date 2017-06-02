@@ -23,7 +23,7 @@ public class TenantController {
     }
 
     @PostMapping(value="_search")
-    public SearchTenantResponse search(@RequestParam("code") List<String> code,
+    public SearchTenantResponse search(@RequestParam(value = "code", required = false) List<String> code,
                                        @RequestBody SearchTenantRequest searchTenantRequest) {
         TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(code);
         List<Tenant> tenants =  tenantService.find(tenantSearchCriteria).stream()

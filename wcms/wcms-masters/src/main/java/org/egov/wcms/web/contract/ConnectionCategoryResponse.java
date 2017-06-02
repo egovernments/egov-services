@@ -39,14 +39,20 @@
  */
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.model.ConnectionCategory;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -60,5 +66,5 @@ public class ConnectionCategoryResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("Category")
-    private List<ConnectionCategory> categories = new ArrayList<ConnectionCategory>();
+    private List<ConnectionCategory> categories = new ArrayList<>();
 }

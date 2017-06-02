@@ -40,32 +40,22 @@
 
 package org.egov.eis.web.controller;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.eis.model.LeaveApplication;
-import org.egov.eis.model.LeaveType;
-import org.egov.eis.service.HRConfigurationService;
 import org.egov.eis.service.LeaveApplicationService;
-import org.egov.eis.service.LeaveTypeService;
-import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationResponse;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
-import org.egov.eis.web.contract.LeaveTypeGetRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
-import org.egov.eis.web.errorhandlers.Error;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
-import org.egov.eis.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +67,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -94,15 +85,6 @@ public class LeaveApplicationController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-
-    @Autowired
-    private LeaveTypeService leaveTypeService;
-
-    @Autowired
-    private ApplicationConstants applicationConstants;
-
-    @Autowired
-    private HRConfigurationService hrConfigurationService;
 
     @PostMapping("_search")
     @ResponseBody
@@ -142,15 +124,14 @@ public class LeaveApplicationController {
     @PostMapping("_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody final LeaveApplicationRequest leaveApplicationRequest,
-            final BindingResult bindingResult) {
+            final BindingResult bindingResult, @RequestParam(name = "type",required=false) final String type) {
 
         final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequests(leaveApplicationRequest,
                 bindingResult);
         if (errorResponseEntity != null)
             return errorResponseEntity;
 
-        final List<LeaveApplication> applications = leaveApplicationService.createLeaveApplication(leaveApplicationRequest);
-        return getSuccessResponse(applications, leaveApplicationRequest.getRequestInfo());
+        return leaveApplicationService.createLeaveApplication(leaveApplicationRequest, type);
     }
 
     @PostMapping("/{leaveApplicationId}/_update")
@@ -158,18 +139,18 @@ public class LeaveApplicationController {
     public ResponseEntity<?> update(@RequestBody final LeaveApplicationSingleRequest leaveApplicationRequest,
             @PathVariable(required = true, name = "leaveApplicationId") final Long leaveApplicationId,
             final BindingResult bindingResult) {
-
-        final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequest(leaveApplicationRequest,
+        final LeaveApplicationRequest applicationRequest = new LeaveApplicationRequest();
+        final List<LeaveApplication> leaveApplications = new ArrayList<>();
+        leaveApplications.add(leaveApplicationRequest.getLeaveApplication());
+        applicationRequest.setLeaveApplication(leaveApplications);
+        final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequests(applicationRequest,
                 bindingResult);
         if (errorResponseEntity != null)
             return errorResponseEntity;
 
         leaveApplicationRequest.getLeaveApplication().setId(leaveApplicationId);
 
-        final LeaveApplication leaveApplication = leaveApplicationService.updateLeaveApplication(leaveApplicationRequest);
-        final List<LeaveApplication> applications = new ArrayList<>();
-        applications.add(leaveApplication);
-        return getSuccessResponse(applications, leaveApplicationRequest.getRequestInfo());
+        return leaveApplicationService.updateLeaveApplication(leaveApplicationRequest);
     }
 
     /**
@@ -190,79 +171,6 @@ public class LeaveApplicationController {
     }
 
     /**
-     * Validate LeaveApplicationSingleRequest object & returns ErrorResponseEntity if there are any errors or else returns null
-     *
-     * @param LeaveApplicationSingleRequest
-     * @param bindingResult
-     * @return ResponseEntity<?>
-     */
-    private ResponseEntity<?> validateLeaveApplicationRequest(final LeaveApplicationSingleRequest leaveApplicationRequest,
-            final BindingResult bindingResult) {
-        // validate input params that can be handled by annotations
-        if (bindingResult.hasErrors())
-            return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult,
-                    leaveApplicationRequest.getRequestInfo());
-        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-        final List<ErrorResponse> errorResponses = validateLeaveApplication(leaveApplication,
-                leaveApplicationRequest.getRequestInfo(), false);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-        return null;
-    }
-
-    private List<ErrorResponse> validateLeaveApplication(LeaveApplication leaveApplication, final RequestInfo requestInfo,
-            final Boolean isExcelUpload) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
-        leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
-        final List<LeaveType> leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
-        final List<LeaveApplication> applications = leaveApplicationService.getLeaveApplicationForDateRange(leaveApplication,
-                requestInfo);
-        if (leaveTypes.isEmpty()) {
-            final ErrorResponse errorResponse = new ErrorResponse();
-            final Error error = new Error();
-            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT));
-            errorResponse.setError(error);
-            errorResponses.add(errorResponse);
-        }
-        if (leaveApplication.getFromDate().after(leaveApplication.getToDate())) {
-            final ErrorResponse errorResponse = new ErrorResponse();
-            final Error error = new Error();
-            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE));
-            errorResponse.setError(error);
-            errorResponses.add(errorResponse);
-        }
-        if (isExcelUpload) {
-            Date cutOffDate = null;
-            try {
-                cutOffDate = hrConfigurationService.getCuttOffDate(leaveApplication.getTenantId(),
-                        requestInfo);
-            } catch (ParseException e) {
-                final ErrorResponse errorResponse = new ErrorResponse();
-                final Error error = new Error();
-                error.setDescription(e.getMessage());
-                errorResponse.setError(error);
-                errorResponses.add(errorResponse);
-            }
-            if (cutOffDate == null || leaveApplication.getFromDate().after(cutOffDate)) {
-                final ErrorResponse errorResponse = new ErrorResponse();
-                final Error error = new Error();
-                error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE));
-                errorResponse.setError(error);
-                errorResponses.add(errorResponse);
-            }
-        }
-        if (!applications.isEmpty()) {
-            final ErrorResponse errorResponse = new ErrorResponse();
-            final Error error = new Error();
-            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT));
-            errorResponse.setError(error);
-            errorResponses.add(errorResponse);
-        }
-        return errorResponses;
-    }
-
-    /**
      * Validate LeaveApplicationRequests object & returns ErrorResponseEntity if there are any errors or else returns null
      *
      * @param LeaveApplicationRequest
@@ -272,16 +180,9 @@ public class LeaveApplicationController {
     private ResponseEntity<?> validateLeaveApplicationRequests(final LeaveApplicationRequest leaveApplicationRequest,
             final BindingResult bindingResult) {
         // validate input params that can be handled by annotations
-        final Boolean isExcelUpload = leaveApplicationRequest.getLeaveApplication().size() > 1 ? true : false;
         if (bindingResult.hasErrors())
             return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult,
                     leaveApplicationRequest.getRequestInfo());
-        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
-            final List<ErrorResponse> errorResponses = validateLeaveApplication(leaveApplication,
-                    leaveApplicationRequest.getRequestInfo(), isExcelUpload);
-            if (!errorResponses.isEmpty())
-                return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-        }
         return null;
     }
 

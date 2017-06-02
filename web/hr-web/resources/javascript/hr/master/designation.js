@@ -55,7 +55,7 @@ componentDidMount() {
       $("input,select,textarea").prop("disabled", true);
     }
   if(type==="view"||type==="update") {
-    getCommonMasterById("hr-masters","designations",{id},function(err, res) {
+    getCommonMasterById("hr-masters","designations",id,function(err, res) {
       if(res) {
            var designationSet = res["Designation"][0];
           _this.setState({
@@ -87,6 +87,7 @@ addOrUpdate(e) {
             success: function(res) {
                   showSuccess("Designation Modified successfully.");
                   window.location.href = 'app/hr/common/show-designation.html?type=update';
+                  localStorage.removeItem("assignments_designation");
             },
             error: function(err) {
                 showError("Duplicate Designation are not allowed");

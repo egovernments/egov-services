@@ -39,11 +39,10 @@
  */
 package org.egov.wcms.service;
 
+import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.wcms.model.ConnectionCategory;
-import org.egov.wcms.producers.ConnectionCategoryProducer;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.ConnectionCategoryRepository;
 import org.egov.wcms.web.contract.CategoryGetRequest;
 import org.egov.wcms.web.contract.ConnectionCategoryRequest;
@@ -52,7 +51,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ConnectionCategoryService {
@@ -63,11 +63,10 @@ public class ConnectionCategoryService {
     private ConnectionCategoryRepository categoryRepository;
 
     @Autowired
-    private ConnectionCategoryProducer categoryProducer;
+    private WaterMasterProducer waterMasterProducer;
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
-
 
     public ConnectionCategoryRequest create(final ConnectionCategoryRequest categoryRequest) {
         return categoryRepository.persistCreateCategory(categoryRequest);
@@ -77,9 +76,10 @@ public class ConnectionCategoryService {
         return categoryRepository.persistModifyCategory(categoryRequest);
     }
 
-
-    public ConnectionCategory createCategory(final String topic, final String key, final ConnectionCategoryRequest categoryRequest) {
-        categoryRequest.getCategory().setCode(codeGeneratorService.generate(categoryRequest.getCategory().SEQ_CATEGORY));
+    public ConnectionCategory createCategory(final String topic, final String key,
+            final ConnectionCategoryRequest categoryRequest) {
+        categoryRequest.getCategory();
+        categoryRequest.getCategory().setCode(codeGeneratorService.generate(ConnectionCategory.SEQ_CATEGORY));
         final ObjectMapper mapper = new ObjectMapper();
         String categoryValue = null;
         try {
@@ -90,37 +90,37 @@ public class ConnectionCategoryService {
             e.printStackTrace();
         }
         try {
-            categoryProducer.sendMessage(topic,key,categoryValue);
+            waterMasterProducer.sendMessage(topic, key, categoryValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return categoryRequest.getCategory();
     }
 
-    public ConnectionCategory updateCategory(final String topic,final String key,final ConnectionCategoryRequest categoryRequest) {
+    public ConnectionCategory updateCategory(final String topic, final String key,
+            final ConnectionCategoryRequest categoryRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String categoryValue = null;
         try {
             logger.info("updateCategory service::" + categoryRequest);
-           categoryValue = mapper.writeValueAsString(categoryRequest);
+            categoryValue = mapper.writeValueAsString(categoryRequest);
             logger.info("categoryValue::" + categoryValue);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
         try {
-            categoryProducer.sendMessage(topic,key,categoryValue);
+            waterMasterProducer.sendMessage(topic, key, categoryValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return categoryRequest.getCategory();
     }
 
-
-    public boolean getCategoryByNameAndCode(final String code,final String name,final String tenantId) {
-        return categoryRepository.checkCategoryByNameAndCode(code,name,tenantId);
+    public boolean getCategoryByNameAndCode(final String code, final String name, final String tenantId) {
+        return categoryRepository.checkCategoryByNameAndCode(code, name, tenantId);
     }
 
-    public List<ConnectionCategory> getCategories(CategoryGetRequest categoryGetRequest) {
+    public List<ConnectionCategory> getCategories(final CategoryGetRequest categoryGetRequest) {
         return categoryRepository.findForCriteria(categoryGetRequest);
 
     }

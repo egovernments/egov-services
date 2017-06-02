@@ -39,22 +39,18 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
-import org.egov.wcms.model.ConnectionCategory;
-import org.egov.wcms.model.UsageType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+
+import org.egov.wcms.model.ConnectionCategory;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ConnectionCategoryRowMapper implements RowMapper<ConnectionCategory> {
     @Override
-    public ConnectionCategory mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-        ConnectionCategory category = new ConnectionCategory();
+    public ConnectionCategory mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final ConnectionCategory category = new ConnectionCategory();
         category.setId(rs.getLong("category_id"));
         category.setCode(rs.getString("category_code"));
         category.setName(rs.getString("category_name"));

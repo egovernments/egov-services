@@ -40,14 +40,22 @@
 
 package org.egov.wcms.web.controller;
 
-import org.egov.common.contract.request.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.ConnectionCategory;
 import org.egov.wcms.service.ConnectionCategoryService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.*;
+import org.egov.wcms.web.contract.CategoryGetRequest;
+import org.egov.wcms.web.contract.ConnectionCategoryRequest;
+import org.egov.wcms.web.contract.ConnectionCategoryResponse;
+import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -59,12 +67,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/category")
@@ -72,7 +81,7 @@ public class ConnectionCategoryController {
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectionCategoryController.class);
 
-   @Autowired
+    @Autowired
     private ConnectionCategoryService categoryService;
 
     @Autowired
@@ -84,11 +93,10 @@ public class ConnectionCategoryController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
-   @PostMapping(value = "/_create")
+    @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final ConnectionCategoryRequest categoryRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final ConnectionCategoryRequest categoryRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -99,8 +107,9 @@ public class ConnectionCategoryController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ConnectionCategory category = categoryService.createCategory(applicationProperties.getCreateCategoryTopicName(),"category-create", categoryRequest);
-        List<ConnectionCategory> categories = new ArrayList<>();
+        final ConnectionCategory category = categoryService.createCategory(applicationProperties.getCreateCategoryTopicName(),
+                "category-create", categoryRequest);
+        final List<ConnectionCategory> categories = new ArrayList<>();
         categories.add(category);
         return getSuccessResponse(categories, categoryRequest.getRequestInfo());
 
@@ -108,7 +117,8 @@ public class ConnectionCategoryController {
 
     @PostMapping(value = "/_update/{code}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final ConnectionCategoryRequest categoryRequest, final BindingResult errors, @PathVariable("code") String code) {
+    public ResponseEntity<?> update(@RequestBody @Valid final ConnectionCategoryRequest categoryRequest,
+            final BindingResult errors, @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -120,35 +130,33 @@ public class ConnectionCategoryController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ConnectionCategory category = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),"category-update",categoryRequest);
-        List<ConnectionCategory> categories = new ArrayList<>();
+        final ConnectionCategory category = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),
+                "category-update", categoryRequest);
+        final List<ConnectionCategory> categories = new ArrayList<>();
         categories.add(category);
         return getSuccessResponse(categories, categoryRequest.getRequestInfo());
     }
 
-
-   @PostMapping("_search")
+    @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid CategoryGetRequest categoryGetRequest,
-                                    BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-                                    BindingResult requestBodyBindingResult) {
-        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    public ResponseEntity<?> search(@ModelAttribute @Valid final CategoryGetRequest categoryGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate input params
-        if (modelAttributeBindingResult.hasErrors()) {
+        if (modelAttributeBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-        }
 
         // validate input params
-        if (requestBodyBindingResult.hasErrors()) {
+        if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-        }
 
         // Call service
         List<ConnectionCategory> categoryList = null;
         try {
             categoryList = categoryService.getCategories(categoryGetRequest);
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             logger.error("Error while processing request " + categoryGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
@@ -157,20 +165,19 @@ public class ConnectionCategoryController {
 
     }
 
-   private List<ErrorResponse> validateCategoryRequest(final ConnectionCategoryRequest categoryRequest) {
+    private List<ErrorResponse> validateCategoryRequest(final ConnectionCategoryRequest categoryRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(categoryRequest);
         errorResponse.setError(error);
-        if(!errorResponse.getErrorFields().isEmpty())
+        if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
 
-
-   private Error getError(final ConnectionCategoryRequest categoryRequest) {
-        ConnectionCategory category = categoryRequest.getCategory();
-        List<ErrorField> errorFields = getErrorFields(categoryRequest);
+    private Error getError(final ConnectionCategoryRequest categoryRequest) {
+        categoryRequest.getCategory();
+        final List<ErrorField> errorFields = getErrorFields(categoryRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE)
                 .errorFields(errorFields)
@@ -178,15 +185,16 @@ public class ConnectionCategoryController {
     }
 
     private List<ErrorField> getErrorFields(final ConnectionCategoryRequest categoryRequest) {
-        List<ErrorField> errorFields = new ArrayList<>();
+        final List<ErrorField> errorFields = new ArrayList<>();
         addCategoryNameValidationErrors(categoryRequest, errorFields);
-        addTeanantIdValidationErrors(categoryRequest,errorFields);
-        addActiveValidationErrors(categoryRequest,errorFields);
+        addTeanantIdValidationErrors(categoryRequest, errorFields);
+        addActiveValidationErrors(categoryRequest, errorFields);
         return errorFields;
     }
 
-    private void addCategoryNameValidationErrors(ConnectionCategoryRequest categoryRequest, List<ErrorField> errorFields) {
-        ConnectionCategory category=categoryRequest.getCategory();
+    private void addCategoryNameValidationErrors(final ConnectionCategoryRequest categoryRequest,
+            final List<ErrorField> errorFields) {
+        final ConnectionCategory category = categoryRequest.getCategory();
         if (category.getName() == null || category.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
@@ -194,38 +202,42 @@ public class ConnectionCategoryController {
                     .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if (!categoryService.getCategoryByNameAndCode(category.getCode(),category.getName(),category.getTenantId())) {
+        } else if (!categoryService.getCategoryByNameAndCode(category.getCode(), category.getName(), category.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.CATEGORY_NAME_UNIQUE_CODE)
                     .message(WcmsConstants.CATEGORY_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.CATEGORY_NAME_UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
-    private void addTeanantIdValidationErrors(ConnectionCategoryRequest categoryRequest, List<ErrorField> errorFields){
-        ConnectionCategory category=categoryRequest.getCategory();
-        if(category.getTenantId()==null || category.getTenantId().isEmpty()){
+    private void addTeanantIdValidationErrors(final ConnectionCategoryRequest categoryRequest,
+            final List<ErrorField> errorFields) {
+        final ConnectionCategory category = categoryRequest.getCategory();
+        if (category.getTenantId() == null || category.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
-    private void addActiveValidationErrors(ConnectionCategoryRequest categoryRequest, List<ErrorField> errorFields){
-        ConnectionCategory category=categoryRequest.getCategory();
-        if(category.getActive()==null){
+    private void addActiveValidationErrors(final ConnectionCategoryRequest categoryRequest, final List<ErrorField> errorFields) {
+        final ConnectionCategory category = categoryRequest.getCategory();
+        if (category.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
@@ -235,22 +247,20 @@ public class ConnectionCategoryController {
         error.setCode(1);
         error.setDescription("Error while binding request");
         if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors()) {
+            for (final FieldError fieldError : errors.getFieldErrors())
                 error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            }
         errRes.setError(error);
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(List<ConnectionCategory> categoryList, RequestInfo requestInfo) {
-        ConnectionCategoryResponse categoryResponse = new ConnectionCategoryResponse();
+    private ResponseEntity<?> getSuccessResponse(final List<ConnectionCategory> categoryList, final RequestInfo requestInfo) {
+        final ConnectionCategoryResponse categoryResponse = new ConnectionCategoryResponse();
         categoryResponse.setCategories(categoryList);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         categoryResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<ConnectionCategoryResponse>(categoryResponse, HttpStatus.OK);
 
     }
-
 
 }

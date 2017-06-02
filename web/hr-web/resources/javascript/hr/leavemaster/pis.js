@@ -153,7 +153,7 @@ class PersonalInform extends React.Component {
       for (var i = 0; i < _emps.length; i++) {
           _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
           for(var j = 0; j < leaveBal.length; j++) {
-              if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == _this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
+              if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == _this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == _this.state.searchSet.leaveType) {
                   _noDays = leaveBal[j].noOfDays;
                   _leaveId = leaveBal[j].id;
                   _createdDate = leaveBal[j].createdDate
@@ -215,17 +215,17 @@ class PersonalInform extends React.Component {
     var tempEmpsCreate = [], tempEmpsUpdate = [], _this = this;
 
     for(var i=0; i<this.state.employees.length; i++) {
-        if(this.state.employees[i].noOfDays && this.state.employees[i].noOfDays != this.state.employees[i].oldNoOfDays) {
+        if(_this.state.employees[i].noOfDays && _this.state.employees[i].noOfDays != _this.state.employees[i].oldNoOfDays) {
             var tmp = {
-                "id": this.state.employees[i].leaveId || null,
-                "employee": this.state.employees[i].employee,
-                "calendarYear": this.state.searchSet.calendarYear,
+                "id": _this.state.employees[i].leaveId || null,
+                "employee": _this.state.employees[i].employee,
+                "calendarYear": _this.state.searchSet.calendarYear,
                 "leaveType": {
-                    "id": this.state.searchSet.leaveType
+                    "id": _this.state.searchSet.leaveType
                 },
-                "noOfDays": this.state.employees[i].noOfDays,
-                "createdDate": this.state.employees[i].createdDate,
-                "lastModifiedDate": this.state.employees[i].lastModifiedDate,
+                "noOfDays": _this.state.employees[i].noOfDays,
+                "createdDate": _this.state.employees[i].createdDate,
+                "lastModifiedDate": _this.state.employees[i].lastModifiedDate,
                 tenantId
             };
 

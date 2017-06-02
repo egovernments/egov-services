@@ -37,6 +37,11 @@ paths:
           in: query
           required: false
           type: string
+        - name: typeOfCredit
+          description: Value of type of credit will be set where search needs to be done for a specific type alone.
+          in: query
+          required: false
+          type: string
         - name: accumulative
           description: >-
             Value will be set to TRUE if leave types of accumulative nature are
@@ -572,6 +577,13 @@ definitions:
           If this leave type needs to be shown for selection in leave
           application, it needs to be set to TRUE, else it will be FALSE.
         default: true
+      typeOfCredit:
+        type: string
+        description: This will define what is the tenure in which leave for this type will be credit to an employee.
+        enum:
+          - YEARLY
+          - FULL TENURE
+          - EVENT OCCURRANCE
       createdBy:
         type: string
         description: Id of the user who created the record.
@@ -599,6 +611,7 @@ definitions:
       - accumulative
       - encashable
       - tenantId
+      - typeOfCredit
   LeaveTypeRes:
     type: object
     properties:

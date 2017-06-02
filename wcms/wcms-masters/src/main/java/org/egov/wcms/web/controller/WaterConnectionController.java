@@ -39,18 +39,14 @@
  */
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -59,7 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,14 +88,13 @@ public class WaterConnectionController {
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        
         final List<ErrorResponse> errorResponses = newWaterConnectionValidator.validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty()){
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
         }
         
         //Call to service.
-     
+
         
         return null;
         

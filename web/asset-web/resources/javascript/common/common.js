@@ -230,290 +230,346 @@ function showError(message) {
 function getDropdown(name, cb, params) {
     switch (name) {
         case 'assetCategories':
-            if(!localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined") {
-                var queryString = {tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined") {
+                var queryString = { tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("asset-services", "assetCategories", "_search", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("assetCategories", JSON.stringify(res["AssetCategory"]));
-                    cb(res["AssetCategory"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("assetCategories", JSON.stringify(res["AssetCategory"]));
+                        cb(res["AssetCategory"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("assetCategories")));
-              }
+            }
             break;
         case 'locality':
-            if(!localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined") {
-                var queryString = {boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined") {
+                var queryString = { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("locality", JSON.stringify(res["Boundary"]));
-                    cb(res["Boundary"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("locality", JSON.stringify(res["Boundary"]));
+                        cb(res["Boundary"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("locality")));
-              }
+            }
             break;
         case 'electionwards':
-            if(!localStorage.getItem("electionwards") || localStorage.getItem("electionwards") == "undefined") {
-                var queryString = {boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("electionwards") || localStorage.getItem("electionwards") == "undefined") {
+                var queryString = { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION", tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("electionwards", JSON.stringify(res["Boundary"]));
-                    cb(res["Boundary"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("electionwards", JSON.stringify(res["Boundary"]));
+                        cb(res["Boundary"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("electionwards")));
-              }
+            }
             break;
         case 'assignments_department':
-            if(!localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined") {
+            if (!localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined") {
                 getCommonMaster("egov-common-masters", "departments", function(err, res) {
-                  if(res) {
-                    localStorage.setItem("assignments_department", JSON.stringify(res["Department"]));
-                    cb(res["Department"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("assignments_department", JSON.stringify(res["Department"]));
+                        cb(res["Department"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("assignments_department")));
-              }
+            }
             break;
         case 'acquisitionList':
-            if(!localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined") {
-                var queryString = {tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined") {
+                var queryString = { tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("acquisitionList", JSON.stringify(res));
-                    cb(res);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("acquisitionList", JSON.stringify(res));
+                        cb(res);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("acquisitionList")));
-              }
+            }
             break;
         case 'revenueZone':
-            if(!localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined") {
-                var queryString = {boundaryTypeName: "ZONE", hierarchyTypeName: "ADMINISTRATION" ,tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined") {
+                var queryString = { boundaryTypeName: "ZONE", hierarchyTypeName: "ADMINISTRATION", tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("revenueZone", JSON.stringify(res["Boundary"]));
-                    cb(res["Boundary"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("revenueZone", JSON.stringify(res["Boundary"]));
+                        cb(res["Boundary"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("revenueZone")));
-              }
+            }
             break;
         case 'street':
-            if(!localStorage.getItem("street") || localStorage.getItem("street") == "undefined") {
-                var queryString = { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("street") || localStorage.getItem("street") == "undefined") {
+                var queryString = { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION", tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("street", JSON.stringify(res["Boundary"]));
-                    cb(res["Boundary"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("street", JSON.stringify(res["Boundary"]));
+                        cb(res["Boundary"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("street")));
-              }
+            }
             break;
         case 'revenueWard':
-            if(!localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined") {
-                var queryString = { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined") {
+                var queryString = { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("revenueWard", JSON.stringify(res["Boundary"]));
-                    cb(res["Boundary"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("revenueWard", JSON.stringify(res["Boundary"]));
+                        cb(res["Boundary"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("revenueWard")));
-              }
+            }
             break;
         case 'revenueBlock':
-            if(!localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined") {
-                var queryString = { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined") {
+                var queryString = { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE", tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("revenueBlock", JSON.stringify(res["Boundary"]));
-                    cb(res["Boundary"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("revenueBlock", JSON.stringify(res["Boundary"]));
+                        cb(res["Boundary"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("revenueBlock")));
-              }
+            }
             break;
         case 'statusList':
-            if(!localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined") {
-                var queryString = {tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined") {
+                var queryString = { tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiGet("asset-services", "", "GET_STATUS", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("statusList", JSON.stringify(res));
-                    cb(res);
-                  } else {
-                    cb({});
-                  }
+                    if (res) {
+                        localStorage.setItem("statusList", JSON.stringify(res));
+                        cb(res);
+                    } else {
+                        cb({});
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("statusList")));
-              }
+            }
             break;
         case 'asset_category_type':
-            if(!localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined") {
-                var queryString = {tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined") {
+                var queryString = { tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("asset_category_type", JSON.stringify(res));
-                    cb(res);
-                  } else {
-                    cb({});
-                  }
+                    if (res) {
+                        localStorage.setItem("asset_category_type", JSON.stringify(res));
+                        cb(res);
+                    } else {
+                        cb({});
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("asset_category_type")));
-              }
+            }
             break;
         case 'assignments_unitOfMeasurement':
-            if(!localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined") {
-                var queryString = {tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined") {
+                var queryString = { tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egov-common-masters", "uoms", "_search", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(res["uoms"]));
-                    cb(res["uoms"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(res["UOM"]));
+                        cb(res["UOM"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")));
-              }
+            }
             break;
         case 'depreciationMethod':
-            if(!localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined") {
-                var queryString = {tenantId};
-                if(params && typeof params == "object")
+            if (!localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined") {
+                var queryString = { tenantId };
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("depreciationMethod", JSON.stringify(res));
-                    cb(res);
-                  } else {
-                    cb({});
-                  }
+                    if (res) {
+                        localStorage.setItem("depreciationMethod", JSON.stringify(res));
+                        cb(res);
+                    } else {
+                        cb({});
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("depreciationMethod")));
-              }
+            }
             break;
         case 'assetAccount':
-            if(!localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined") {
+            if (!localStorage.getItem("assetAccount") || localStorage.getItem("assetAccount") == "undefined") {
                 var queryString = { tenantId, classification: 4 };
-                if(params && typeof params == "object")
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("assetAccount", JSON.stringify(res["chartOfAccounts"]));
-                    cb(res["chartOfAccounts"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("assetAccount", JSON.stringify(res["chartOfAccounts"]));
+                        cb(res["chartOfAccounts"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("assetAccount")));
-              }
+            }
             break;
         case 'accumulatedDepreciationAccount':
-            if(!localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined") {
+            if (!localStorage.getItem("accumulatedDepreciationAccount") || localStorage.getItem("accumulatedDepreciationAccount") == "undefined") {
                 var queryString = { tenantId, classification: 4 };
-                if(params && typeof params == "object")
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(res["chartOfAccounts"]));
-                    cb(res["chartOfAccounts"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("accumulatedDepreciationAccount", JSON.stringify(res["chartOfAccounts"]));
+                        cb(res["chartOfAccounts"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("accumulatedDepreciationAccount")));
-              }
+            }
             break;
         case 'revaluationReserveAccount':
-            if(!localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined") {
+            if (!localStorage.getItem("revaluationReserveAccount") || localStorage.getItem("revaluationReserveAccount") == "undefined") {
                 var queryString = { tenantId, classification: 4 };
-                if(params && typeof params == "object")
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("revaluationReserveAccount", JSON.stringify(res["chartOfAccounts"]));
-                    cb(res["chartOfAccounts"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("revaluationReserveAccount", JSON.stringify(res["chartOfAccounts"]));
+                        cb(res["chartOfAccounts"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("revaluationReserveAccount")));
-              }
+            }
             break;
         case 'depreciationExpenseAccount':
-            if(!localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined") {
+            if (!localStorage.getItem("depreciationExpenseAccount") || localStorage.getItem("depreciationExpenseAccount") == "undefined") {
                 var queryString = { tenantId, classification: 4 };
-                if(params && typeof params == "object")
+                if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
-                  if(res) {
-                    localStorage.setItem("depreciationExpenseAccount", JSON.stringify(res["chartOfAccounts"]));
-                    cb(res["chartOfAccounts"]);
-                  } else {
-                    cb([]);
-                  }
+                    if (res) {
+                        localStorage.setItem("depreciationExpenseAccount", JSON.stringify(res["chartOfAccounts"]));
+                        cb(res["chartOfAccounts"]);
+                    } else {
+                        cb([]);
+                    }
                 })
-              } else {
+            } else {
                 cb(JSON.parse(localStorage.getItem("depreciationExpenseAccount")));
-              }
+            }
+            break;
+        case 'assignments_fund':
+            if (!localStorage.getItem("assignments_fund") || localStorage.getItem("assignments_fund") == "undefined") {
+                getCommonMaster("egf-masters", "funds", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_fund", JSON.stringify(res["funds"]));
+                        cb(res["funds"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_fund")));
+            }
+            break;
+        case 'assignments_functionary':
+            if (!localStorage.getItem("assignments_functionary") || localStorage.getItem("assignments_functionary") == "undefined") {
+                getCommonMaster("egf-masters", "functionaries", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_functionary", JSON.stringify(res["functionaries"]));
+                        cb(res["functionaries"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_functionary")));
+            }
+            break;
+        case 'assignments_function':
+            if (!localStorage.getItem("assignments_function") || localStorage.getItem("assignments_function") == "undefined") {
+                getCommonMaster("egf-masters", "functions", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("assignments_function", JSON.stringify(res["functions"]));
+                        cb(res["functions"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("assignments_function")));
+            }
+            break;
+        case 'schemes':
+            if (!localStorage.getItem("schemes") || localStorage.getItem("schemes") == "undefined") {
+                getCommonMaster("egf-masters", "schemes", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("schemes", JSON.stringify(res["schemes"]));
+                        cb(res["schemes"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("schemes")));
+            }
             break;
     }
 }

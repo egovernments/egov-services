@@ -404,7 +404,7 @@ addOrUpdate(e,mode)
 
                          },
                          error: function(err) {
-                             showError("Only excel file can Upload");
+                             showError("Only excel file can be upload");
 
                          }
                      });

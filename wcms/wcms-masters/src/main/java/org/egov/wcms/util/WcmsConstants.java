@@ -115,7 +115,7 @@ public class WcmsConstants {
     public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_FIELD_NAME = "PropertyType is required";
 
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANDATORY_CODE = "wcms.0015";
-    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_FIELD_NAME = "sizeInMilimeter";
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_FIELD_NAME = "pipeSizeType";
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_ERROR_MESSAGE = "H.S.C Pipe Size(mm) is required";
 
     public static final String PROPERTY_PIPESIZE_SIZEINMM_UNIQUE_CODE = "wcms.0016";
@@ -123,7 +123,7 @@ public class WcmsConstants {
     public static final String PROPERTY_PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE = "Selected Property Type and PipeSize already exists.";
 
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_CODE = "wcms.0017";
-    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME = "sizeInMilimeter";
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME = "pipeSize";
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_ERROR_MESSAGE = "Please provide valid H.S.C Pipe Size(mm)";
 
     @Autowired

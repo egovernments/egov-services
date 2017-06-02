@@ -42,21 +42,21 @@ package org.egov.wcms.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.CategoryType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSizeType> {
+public class CategoryTypeRowMapper implements RowMapper<CategoryType> {
     @Override
-    public PropertyTypePipeSizeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
-        propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
-        propertyPipeSize.setPipeSizeId((Long) rs.getObject("propertypipesize_pipesizeId"));
-        propertyPipeSize.setPropertyTypeId(rs.getLong("propertypipesize_propertytypeId"));
-        propertyPipeSize.setActive(rs.getBoolean("propertypipesize_active"));
-        propertyPipeSize.setTenantId(rs.getString("propertypipesize_tenantId"));
-        return propertyPipeSize;
+    public CategoryType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final CategoryType category = new CategoryType();
+        category.setId(rs.getLong("category_id"));
+        category.setCode(rs.getString("category_code"));
+        category.setName(rs.getString("category_name"));
+        category.setDescription(rs.getString("category_description"));
+        category.setActive(rs.getBoolean("category_active"));
+        category.setTenantId(rs.getString("category_tenantId"));
+        return category;
     }
-
 }

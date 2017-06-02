@@ -59,7 +59,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PropertyCategoryRepository {
-	
+
     public static final Logger LOGGER = LoggerFactory.getLogger(PropertyCategoryRepository.class);
 
     @Autowired
@@ -67,62 +67,95 @@ public class PropertyCategoryRepository {
 
     @Autowired
     private PropertyCategoryQueryBuilder propertyCategoryueryBuilder;
-    
+
     @Autowired
     private PropertyCategoryRowMapper propertyCategoryRowMapper;
-    
+
     public PropertyTypeCategoryTypeReq persistCreatePropertyCategory(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         LOGGER.info("PropertyCategoryRequest::" + propertyCategoryRequest);
         final String propertyCategoryInsert = propertyCategoryueryBuilder.insertPropertyCategoryQuery();
-        
-        //hit an API of Property Tax alongwith propertyType to fetch propertyId.
-        //right now for functionality sake it has been hard coded to value 10.
-        
+
+        // hit an API of Property Tax alongwith propertyType to fetch propertyId.
+        // right now for functionality sake it has been hard coded to value 10.
+
         String categoryQuery = propertyCategoryueryBuilder.getCategoryId();
         Long categoryId = 0L;
-        try{
-        	categoryId = jdbcTemplate.queryForObject(categoryQuery, new Object[] { propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName()}, Long.class);
-        	LOGGER.info("Category Id: "+categoryId);
-        }catch(EmptyResultDataAccessException e){
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() }, Long.class);
+            LOGGER.info("Category Id: " + categoryId);
+        } catch (EmptyResultDataAccessException e) {
             LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
         }
-    	if(categoryId == null){
+        if (categoryId == null) {
             LOGGER.info("Invalid input.");
         }
-        Object[] obj = new Object[] { 10, categoryId, propertyCategoryRequest.getPropertyTypeCategoryType().getActive(), 
-        		propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId(), new Date(new java.util.Date().getTime()),
-        		propertyCategoryRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), 
-        		propertyCategoryRequest.getRequestInfo().getUserInfo().getId()};
-        try{
-        jdbcTemplate.update(propertyCategoryInsert, obj);
-        }catch(Exception e){
+        Object[] obj = new Object[] { 10, categoryId, propertyCategoryRequest.getPropertyTypeCategoryType().getActive(),
+                propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId(), new Date(new java.util.Date().getTime()),
+                propertyCategoryRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                propertyCategoryRequest.getRequestInfo().getUserInfo().getId() };
+        try {
+            jdbcTemplate.update(propertyCategoryInsert, obj);
+        } catch (Exception e) {
             LOGGER.info("PSQLException: Foreign key constraint voilated.");
         }
         return propertyCategoryRequest;
     }
-    
+
+    public PropertyTypeCategoryTypeReq persistUpdatePropertyCategory(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+        LOGGER.info("PropertyCategoryRequest::" + propertyCategoryRequest);
+        final String propertyCategoryUpdate = propertyCategoryueryBuilder.updatePropertyCategoryQuery();
+
+        // hit an API of Property Tax alongwith propertyType to fetch propertyId.
+        // right now for functionality sake it has been hard coded to value 10.
+
+        String categoryQuery = propertyCategoryueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() }, Long.class);
+            LOGGER.info("Category Id: " + categoryId);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null) {
+            LOGGER.info("Invalid input.");
+        }
+        Object[] obj = new Object[] { 10, categoryId, propertyCategoryRequest.getPropertyTypeCategoryType().getActive(),
+
+                propertyCategoryRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                propertyCategoryRequest.getPropertyTypeCategoryType().getId() };
+        try {
+            jdbcTemplate.update(propertyCategoryUpdate, obj);
+        } catch (Exception e) {
+            LOGGER.info("PSQLException: Foreign key constraint voilated.");
+        }
+        return propertyCategoryRequest;
+    }
+
     public PropertyTypeCategoryTypesRes findForCriteria(PropertyCategoryGetRequest propertyCategoryRequest) {
         List<Object> preparedStatementValues = new ArrayList<Object>();
-        try{
-        if(propertyCategoryRequest.getCategoryType() != null){
-        propertyCategoryRequest.setCategoryTypeId(jdbcTemplate.queryForObject(propertyCategoryueryBuilder.getCategoryId(), 
-        		new Object[] {propertyCategoryRequest.getCategoryType()}, Long.class));
+        try {
+            if (propertyCategoryRequest.getCategoryType() != null) {
+                propertyCategoryRequest.setCategoryTypeId(jdbcTemplate.queryForObject(propertyCategoryueryBuilder.getCategoryId(),
+                        new Object[] { propertyCategoryRequest.getCategoryType() }, Long.class));
+            }
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("EmptyResultDataAccessException: Query returned empty RS.");
+
         }
-        }catch(EmptyResultDataAccessException e){
-        	LOGGER.info("EmptyResultDataAccessException: Query returned empty RS.");
-        	
-        }
-        
-        //Similar api call for fetching property id to enable search based on property name.
-        
+
+        // Similar api call for fetching property id to enable search based on property name.
+
         String queryStr = propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues);
         String categoryNameQuery = propertyCategoryueryBuilder.getCategoryTypeName();
-        List<PropertyTypeCategoryType> propertyCategories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), propertyCategoryRowMapper);
-        for(PropertyTypeCategoryType propertyTypeCategoryType : propertyCategories){
-        	propertyTypeCategoryType.setCategoryTypeName(jdbcTemplate.queryForObject(categoryNameQuery, 
-        			new Object[] {propertyTypeCategoryType.getCategoryTypeId()}, String.class));
+        List<PropertyTypeCategoryType> propertyCategories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                propertyCategoryRowMapper);
+        for (PropertyTypeCategoryType propertyTypeCategoryType : propertyCategories) {
+            propertyTypeCategoryType.setCategoryTypeName(jdbcTemplate.queryForObject(categoryNameQuery,
+                    new Object[] { propertyTypeCategoryType.getCategoryTypeId() }, String.class));
         }
-        LOGGER.info("PropertyCategoryList: "+propertyCategories.toString());
+        LOGGER.info("PropertyCategoryList: " + propertyCategories.toString());
         PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
         propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
         return propertyCategoryResponse;

@@ -49,6 +49,7 @@ public class PropertyCategoryServiceTest {
         assertTrue(propertyCategoryRequest.equals(propertyCategoryService.create(propertyCategoryRequest)));
     }
 
+    @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
     public void test_throwException_Find_PropertyCategory() throws Exception {
 
@@ -77,6 +78,7 @@ public class PropertyCategoryServiceTest {
         assertNotNull(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest));
     }
 
+    @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
     public void test_throwException_Get_PropertyCategories() throws Exception {
 
@@ -93,6 +95,16 @@ public class PropertyCategoryServiceTest {
         when(propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest)).thenThrow(Exception.class);
 
         assertTrue(propertyCategories.equals(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)));
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
+    public void test_throwException_Update_PropertyCategory() throws Exception {
+
+        final PropertyTypeCategoryTypeReq propertyCategoryRequest = Mockito.mock(PropertyTypeCategoryTypeReq.class);
+        when(propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest)).thenThrow(Exception.class);
+
+        assertTrue(propertyCategoryRequest.equals(propertyCategoryService.update(propertyCategoryRequest)));
     }
 
     /*

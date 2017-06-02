@@ -37,26 +37,52 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
+package org.egov.wcms.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-@Component
-public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSizeType> {
-    @Override
-    public PropertyTypePipeSizeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
-        propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
-        propertyPipeSize.setPipeSizeId((Long) rs.getObject("propertypipesize_pipesizeId"));
-        propertyPipeSize.setPropertyTypeId(rs.getLong("propertypipesize_propertytypeId"));
-        propertyPipeSize.setActive(rs.getBoolean("propertypipesize_active"));
-        propertyPipeSize.setTenantId(rs.getString("propertypipesize_tenantId"));
-        return propertyPipeSize;
-    }
+import org.hibernate.validator.constraints.Length;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class CategoryTypeGetRequest {
+
+    private List<Long> id;
+
+    @Length(min = 3, max = 100)
+    private String name;
+
+    @Length(min = 3, max = 20)
+    private String code;
+
+    private Boolean active;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

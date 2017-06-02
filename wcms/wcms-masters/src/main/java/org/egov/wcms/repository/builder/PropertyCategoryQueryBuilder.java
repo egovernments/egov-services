@@ -43,7 +43,7 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.web.contract.CategoryGetRequest;
+import org.egov.wcms.web.contract.CategoryTypeGetRequest;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PropertyCategoryQueryBuilder {
 	
-    private static final Logger logger = LoggerFactory.getLogger(ConnectionCategoryQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
 
 	
 	  @Autowired
@@ -179,6 +179,12 @@ public class PropertyCategoryQueryBuilder {
 	        		+ "createddate, createdby, lastmodifieddate, lastmodifiedby) "
 	        		+ "values (?,?,?,?,?,?,?,?)";
 	    }
+	  	
+	  	 public static String updatePropertyCategoryQuery() {
+	  	        return "UPDATE egwtr_property_category_type SET property_type_Id = ?,category_type_Id = ?,"
+	  	                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+	  	    }
+
 	  	
 	  	public static String getCategoryId(){
 	  		return "SELECT id FROM egwtr_category WHERE name = ?";

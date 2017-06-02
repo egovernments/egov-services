@@ -3,16 +3,22 @@ package org.egov.mr.model.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum RegnStatus {
+public enum ApplicationStatus {
 	CREATED("CREATED"),
 
 	REGISTERED("REGISTERED"),
+	
+	APPROVED("APPROVED"),
+	
+	REJECTED("REJECTED"),
+	
+	DIGITALSIGNED("DIGITALSIGNED"),
 
 	CANCELLED("CANCELLED");
 
 	private String value;
 
-	RegnStatus(String value) {
+	ApplicationStatus(String value) {
 		this.value = value;
 	}
 
@@ -23,8 +29,8 @@ public enum RegnStatus {
 	}
 
 	@JsonCreator
-	public static RegnStatus fromValue(String text) {
-		for (RegnStatus b : RegnStatus.values()) {
+	public static ApplicationStatus fromValue(String text) {
+		for (ApplicationStatus b : ApplicationStatus.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

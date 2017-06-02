@@ -46,13 +46,17 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
 @Builder
+@Setter
+@Getter
 public class PropertiesManager {
 
 	@Value("${kafka.topics.create.registrationunit}")
@@ -74,5 +78,11 @@ public class PropertiesManager {
 	// kafka key access
 	@Value("${kafka.key.marriageregn}")
 	private String marriageRegnKey;
+
+	@Value("${egov.mr.services.certnumber_sequence}")
+	private String certNumberSequence;
+	
+	@Value("${egov.mr.services.regnnumber_sequence}")
+	private String regnNumberSequence;
 	
 }

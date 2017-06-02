@@ -9,33 +9,36 @@ import org.springframework.stereotype.Repository;
 public class WitnessRepository {	
 
 	public static final String INSERT_WITNESS_QUERY = "INSERT INTO egmr_marriageregn_witness("
-	       +" applicationnumber, tenantid, name, relation, age, address, realtionship, occupation, aadhaar)"
-	       +" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	       +" applicationnumber, tenantid, witnessno, name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
+	       +" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?);";
 	
 	public static final String UPDATE_WITNESS_QUERY = "UPDATE egmr_marriageregn_witness"
-			+" SET(name, relation, age, address, realtionship, occupation, aadhaar)"
-			+" = (?, ?, ?, ?, ?, ?, ?)"
-			+" WHERE applicationnumber = ? AND tenantid = ?";
+			+" SET(name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
+			+" = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+			+" WHERE witnessno = ? AND applicationnumber = ? AND tenantid = ?";
 	
 	public static final String DELETE_WITNESS_QUERY = "DELETE FROM egmr_marriageregn_witness"
-			+" WHERE applicationnumber = ? AND tenantid = ?";	
+			+" WHERE witnessno = ? AND applicationnumber = ? AND tenantid = ?";	
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	public void save(String applicationNumber, String tenantId, Witness witness) {
 		Object[] obj = new Object[]{
-				applicationNumber, tenantId, witness.getName(), witness.getRelationForIdentification(), witness.getAge(),
-				witness.getAddress(), witness.getRelationship(), witness.getOccupation(), witness.getAadhaar()
+				applicationNumber, tenantId, witness.getWitnessNo(), witness.getName(), witness.getRelationForIdentification(), 
+				witness.getRelatedTo().toString(), witness.getAge(),
+				witness.getAddress(), witness.getRelationship(), witness.getOccupation(), witness.getAadhaar(), 
+				witness.getMobileNo(), witness.getEmail()
 		};
 		jdbcTemplate.update(INSERT_WITNESS_QUERY, obj);
 	}
 
 	public void update(String applicationNumber, String tenantId, Witness witness) {
 		Object[] obj = new Object[]{
-				witness.getName(), witness.getRelationForIdentification(), witness.getAge(),
-				witness.getAddress(), witness.getRelationship(), witness.getOccupation(), witness.getAadhaar(),
-				applicationNumber, tenantId
+				witness.getName(), witness.getRelationForIdentification(), witness.getRelatedTo().toString(),
+				witness.getAge(), witness.getAddress(), witness.getRelationship(),
+				witness.getOccupation(), witness.getAadhaar(),
+				witness.getMobileNo(), witness.getEmail(), witness.getWitnessNo(), applicationNumber, tenantId
 		};
 		jdbcTemplate.update(UPDATE_WITNESS_QUERY, obj);
 	}

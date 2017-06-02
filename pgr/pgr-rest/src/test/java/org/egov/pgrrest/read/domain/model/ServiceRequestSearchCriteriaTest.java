@@ -11,7 +11,7 @@ public class ServiceRequestSearchCriteriaTest {
     public void test_should_return_true_when_pagination_criteria_is_present() {
         final ServiceRequestSearchCriteria searchCriteria = ServiceRequestSearchCriteria.builder()
             .pageSize(10)
-            .pageNumber(2)
+            .fromIndex(2)
             .build();
 
         assertTrue(searchCriteria.isPaginationCriteriaPresent());
@@ -21,7 +21,7 @@ public class ServiceRequestSearchCriteriaTest {
     public void test_should_return_false_when_page_size_is_not_present() {
         final ServiceRequestSearchCriteria searchCriteria = ServiceRequestSearchCriteria.builder()
             .pageSize(null)
-            .pageNumber(2)
+            .fromIndex(2)
             .build();
 
         assertFalse(searchCriteria.isPaginationCriteriaPresent());
@@ -31,7 +31,7 @@ public class ServiceRequestSearchCriteriaTest {
     public void test_should_return_false_when_page_number_is_not_present() {
         final ServiceRequestSearchCriteria searchCriteria = ServiceRequestSearchCriteria.builder()
             .pageSize(1)
-            .pageNumber(null)
+            .fromIndex(null)
             .build();
 
         assertFalse(searchCriteria.isPaginationCriteriaPresent());

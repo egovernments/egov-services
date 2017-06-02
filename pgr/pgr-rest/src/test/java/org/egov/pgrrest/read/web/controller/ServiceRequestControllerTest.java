@@ -157,6 +157,8 @@ public class ServiceRequestControllerTest {
             .childLocationId(5L)
             .receivingMode(5L)
             .tenantId("tenantId")
+            .pageSize(20)
+            .fromIndex(2)
             .build();
 
         List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
@@ -177,6 +179,8 @@ public class ServiceRequestControllerTest {
                 .param("receivingMode", "5")
                 .param("locationId", "4")
                 .param("childLocationId", "5")
+                .param("fromIndex", "2")
+                .param("sizePerPage", "20")
                 .content(resources.getFileContents("requestinfobody.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())

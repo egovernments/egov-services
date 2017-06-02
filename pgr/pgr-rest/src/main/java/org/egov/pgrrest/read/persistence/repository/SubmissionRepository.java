@@ -89,7 +89,7 @@ public class SubmissionRepository {
     private List<Submission> getPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
         final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
         final PageRequest pageRequest =
-            new PageRequest(searchCriteria.getPageNumber(), searchCriteria.getPageSize(), getDefaultSort());
+            new PageRequest(searchCriteria.getFromIndex(), searchCriteria.getPageSize(), getDefaultSort());
         return this.submissionJpaRepository.findAll(specification, pageRequest).getContent();
     }
 

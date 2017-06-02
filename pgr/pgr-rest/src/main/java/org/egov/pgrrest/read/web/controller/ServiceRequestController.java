@@ -74,8 +74,8 @@ public class ServiceRequestController {
                                               @RequestParam(value = "receivingMode", required = false) Long
                                                   receivingMode,
                                               @RequestParam(value = "locationId", required = false) Long locationId,
-                                              @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-                                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                              @RequestParam(value = "fromIndex", required = false) Integer fromIndex,
+                                              @RequestParam(value = "sizePerPage", required = false) Integer pageSize,
                                               @RequestParam(value = "childLocationId", required = false) Long
                                                   childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
@@ -97,7 +97,7 @@ public class ServiceRequestController {
             .locationId(locationId)
             .childLocationId(childLocationId)
             .tenantId(tenantId)
-            .pageNumber(pageNumber)
+            .fromIndex(fromIndex)
             .pageSize(pageSize)
             .build();
         final List<ServiceRequest> submissions = serviceRequestService.findAll(serviceRequestSearchCriteria);

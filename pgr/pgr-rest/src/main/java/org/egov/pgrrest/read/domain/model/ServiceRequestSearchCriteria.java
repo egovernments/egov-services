@@ -28,10 +28,10 @@ public class ServiceRequestSearchCriteria {
 	private Long locationId;
 	private Long childLocationId;
 	private String tenantId;
-    private Integer pageNumber;
+    private Integer fromIndex;
     private Integer pageSize;
 
     public boolean isPaginationCriteriaPresent() {
-        return pageNumber != null && pageSize != null;
+        return fromIndex != null && pageSize != null;
     }
 }

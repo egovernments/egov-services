@@ -67,6 +67,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -123,14 +124,14 @@ public class LeaveApplicationController {
     @PostMapping("_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody final LeaveApplicationRequest leaveApplicationRequest,
-            final BindingResult bindingResult) {
+            final BindingResult bindingResult, @RequestParam(name = "type",required=false) final String type) {
 
         final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequests(leaveApplicationRequest,
                 bindingResult);
         if (errorResponseEntity != null)
             return errorResponseEntity;
 
-        return leaveApplicationService.createLeaveApplication(leaveApplicationRequest);
+        return leaveApplicationService.createLeaveApplication(leaveApplicationRequest, type);
     }
 
     @PostMapping("/{leaveApplicationId}/_update")

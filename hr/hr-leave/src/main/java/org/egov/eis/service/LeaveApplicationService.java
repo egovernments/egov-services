@@ -118,8 +118,8 @@ public class LeaveApplicationService {
         return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
     }
 
-    public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
-        final Boolean isExcelUpload = leaveApplicationRequest.getLeaveApplication().size() > 1 ? true : false;
+    public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest, final String type) {
+        final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
         final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
         final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
         final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();

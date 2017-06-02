@@ -309,7 +309,7 @@ paths:
           maxLength: 50
         - name: billInfo
           in: body
-          description: Receipt Creation Details passed as base64 encoded xml along with common request info.
+          description: Receipt Creation Details passed as bill info along with common request info.
           required: true
           schema:
             $ref: '#/definitions/CreateReceiptReq'
@@ -326,7 +326,7 @@ paths:
 definitions:
   PendingReceiptReq:
     type: object
-    description: Base64 encoded Bill XML with Request Info.
+    description: Pending Receipt Request with Request Info.
     properties:
       tenantId:
         type: string
@@ -346,7 +346,7 @@ definitions:
   
   CreateReceiptReq:
     type: object
-    description: Base64 encoded Bill XML.
+    description: Create Receipt Request.
     properties:
       tenantId:
         type: string
@@ -650,7 +650,7 @@ definitions:
     properties:
       billNumber: 
         type: string
-        description: This is the Bill Number sent to Collection system in billInfoXML.
+        description: This is the Bill Number sent to Collection system in billInfo.
       event: 
         type: string
         description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
@@ -663,10 +663,10 @@ definitions:
         description: Receipt Date.
       payeeName:
         type: string
-        description: Consumer name sent in billInfoXML.
+        description: Consumer name sent in billInfo.
       payeeAddress:
         type: string
-        description: Consumer address sent in billInfoXML.
+        description: Consumer address sent in billInfo.
       businessName:
         type: string
         description: Name of the billing service.
@@ -675,7 +675,7 @@ definitions:
         description: Name of the payee at the counter/online.
       billDescription: 
         type: string
-        description: Description sent in billInfoXML.
+        description: Description sent in billInfo.
       accountDetails:
         type: array
         items:
@@ -690,13 +690,13 @@ definitions:
     properties:
       glCode: 
         type: string
-        description: GLCode sent in billInfoXML.
+        description: GLCode sent in billInfo.
       accountDescrtion:
         type: string
-        description: Description of GlCode sent in billInfoXML.
+        description: Description of GlCode sent in billInfo.
       functionCode:
         type: string
-        description: Function Code sent in billInfoXML.
+        description: Function Code sent in billInfo.
       debitAmount:
         type: number
         format: double

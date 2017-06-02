@@ -87,6 +87,7 @@ addOrUpdate(e) {
             success: function(res) {
                   showSuccess("Designation Modified successfully.");
                   window.location.href = 'app/hr/common/show-designation.html?type=update';
+                  localStorage.removeItem("assignments_designation");
             },
             error: function(err) {
                 showError("Duplicate Designation are not allowed");

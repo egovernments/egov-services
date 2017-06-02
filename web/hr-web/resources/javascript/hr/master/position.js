@@ -149,6 +149,7 @@ addOrUpdate(e){
             success: function(res) {
                     showSuccess("Position Modified successfully.");
                     window.location.href = 'app/hr/common/show-position.html?type=update';
+                    localStorage.removeItem("assignments_position");
 
 
             },

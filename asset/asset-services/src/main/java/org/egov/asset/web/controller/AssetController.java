@@ -40,9 +40,12 @@
 
 package org.egov.asset.web.controller;
 
+import java.security.KeyStore.TrustedCertificateEntry;
+
 import javax.validation.Valid;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
@@ -52,6 +55,7 @@ import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
@@ -59,6 +63,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -68,6 +73,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,6 +94,9 @@ public class AssetController {
 	
 	@Autowired
 	private RevaluationService revaluationService;
+	
+	@Autowired
+	private AssetCurrentAmountService  assetCurrentAmountService;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -169,7 +178,25 @@ public class AssetController {
 		
 		RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
 		
-		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+		return new ResponseEntity<>(revaluationResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping("currentvalue/_search")
+	@ResponseBody
+	public ResponseEntity<?> getAssetCurrentValue(@RequestParam(name = "assetId",required = true) Long assetId,
+			@RequestParam(name = "tenantId", required = true) String tenantId,
+			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
+		
+		logger.info("getAssetCurrentValue assetId:" + assetId +",tenantId:"+tenantId);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		
+		AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentAmount(assetId, tenantId);
+
+		logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+		return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
 	}
 		
 	private ErrorResponse populateErrors(BindingResult errors) {

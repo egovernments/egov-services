@@ -31,6 +31,10 @@ public class ServiceRequestSearchCriteria {
     private Integer fromIndex;
     private Integer pageSize;
 
+    public Date getEndDate() {
+        return endDate == null ? new Date() : endDate;
+    }
+
     public boolean isPaginationCriteriaPresent() {
         return fromIndex != null && pageSize != null;
     }

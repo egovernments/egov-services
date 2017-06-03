@@ -775,6 +775,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     alert("Agreement is not applicable for selected category");
+    window.close();
 }
 
 try {
@@ -1172,7 +1173,7 @@ $("#createAgreementForm").validate({
                           _key.shift();
                           _key = _key.join(".");
                         }
-                        err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
+                        err += (err ? "\n " : "") + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
                       }
                       showError(err);
                     } else {

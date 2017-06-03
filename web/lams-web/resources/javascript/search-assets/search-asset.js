@@ -234,12 +234,6 @@ class AssetSearch extends React.Component {
               );
 
         })
-      } else {
-          return (
-              <tr>
-                <td colSpan="6">No records</td>
-              </tr>
-          )
       }
 
 

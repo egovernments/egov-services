@@ -8,6 +8,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,6 +45,13 @@ public class ServiceRequestESRepository {
     public List<String> getMatchingServiceRequestIds(ServiceRequestSearchCriteria criteria) {
         final SearchRequestBuilder searchRequestBuilder = getSearchRequest(criteria);
         final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+        return mapToServiceRequestIdList(searchResponse);
+    }
+
+    private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {
+        if(searchResponse.getHits() == null || searchResponse.getHits().getHits() == null) {
+            return Collections.emptyList();
+        }
         return Stream.of(searchResponse.getHits().getHits())
             .map(hit -> (String) hit.getField(SERVICE_REQUEST_ID_FIELD_NAME).getValue())
             .collect(Collectors.toList());

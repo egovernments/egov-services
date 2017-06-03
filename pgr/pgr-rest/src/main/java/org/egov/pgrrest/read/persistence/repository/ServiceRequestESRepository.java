@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -53,7 +54,8 @@ public class ServiceRequestESRepository {
     }
 
     private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {
-        if(searchResponse.getHits() == null || searchResponse.getHits().getHits() == null) {
+        if(searchResponse.getHits() == null || ArrayUtils.isEmpty(searchResponse.getHits().getHits())) {
+            log.info("No matches found.");
             return Collections.emptyList();
         }
         return Stream.of(searchResponse.getHits().getHits())
@@ -62,7 +64,7 @@ public class ServiceRequestESRepository {
     }
 
     private String getFieldValue(SearchHit hit) {
-        log.info("Source: " + hit.getSourceAsString());
+        log.info("Source: " + hit.getFields().keySet());
         final SearchHitField field = hit.getField(SERVICE_REQUEST_ID_FIELD_NAME);
         return field != null ? field.getValue() : null;
     }

@@ -115,14 +115,17 @@ class AssetSearch extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-      if (this.state.modify && this.state.list.length) {
+      if (this.state.modify) {
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              ordering: false,
-             bDestroy: true
+             bDestroy: true,
+             language: {
+                "emptyTable": "No Records"
+             }
           });
       }
   }

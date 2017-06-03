@@ -1,5 +1,6 @@
 package org.egov.pgrrest.read.persistence.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class ServiceRequestESRepository {
     private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
     private TransportClient esClient;
@@ -60,6 +62,7 @@ public class ServiceRequestESRepository {
     }
 
     private String getFieldValue(SearchHit hit) {
+        log.info("Source: " + hit.getSourceAsString());
         final SearchHitField field = hit.getField(SERVICE_REQUEST_ID_FIELD_NAME);
         return field != null ? field.getValue() : null;
     }

@@ -76,9 +76,12 @@ public class ServiceRequestESRepository {
 
     private SearchRequestBuilder getSearchRequest(ServiceRequestSearchCriteria criteria) {
         final BoolQueryBuilder boolQueryBuilder = queryFactory.create(criteria);
+        final SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+            .fetchSource(true)
+            .fetchSource(SERVICE_REQUEST_ID_FIELD_NAME, null);
         final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
             .setTypes(documentType)
-            .setSource(new SearchSourceBuilder().fetchSource(SERVICE_REQUEST_ID_FIELD_NAME, null))
+            .setSource(sourceBuilder)
             .addSort(DEFAULT_SORT_FIELD, SortOrder.DESC)
             .setQuery(boolQueryBuilder);
         setResponseCount(criteria, searchRequestBuilder);

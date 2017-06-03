@@ -133,18 +133,22 @@ public class DemandRepository {
 		for (DemandReason demandReason : demandReasons) {
 
 			demandDetail = new DemandDetails();
-			LOGGER.info("the demand reason object in the loop : " + demandReason);
-			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
-			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
-			}
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
+			
+			LOGGER.info("the demand reason object in the loop : " + demandReason);
+			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
+				if(agreement .getGoodWillAmount()!=null)
+					demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
+			}
+			if(demandDetail.getTaxAmount()!=null)
 			demandDetails.add(demandDetail);
 		}
 

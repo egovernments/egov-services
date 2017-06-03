@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 public class ServiceRequestESRepository {
     private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
     public static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
+    public static final String EXCLUDE_LIST = "*";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
@@ -78,8 +79,7 @@ public class ServiceRequestESRepository {
         final BoolQueryBuilder boolQueryBuilder = queryFactory.create(criteria);
         final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
             .setTypes(documentType)
-            .addStoredField(SERVICE_REQUEST_ID_FIELD_NAME)
-            .setSource(new SearchSourceBuilder().storedField(SERVICE_REQUEST_ID_FIELD_NAME))
+            .setSource(new SearchSourceBuilder().fetchSource(SERVICE_REQUEST_ID_FIELD_NAME, EXCLUDE_LIST))
             .addSort(DEFAULT_SORT_FIELD, SortOrder.DESC)
             .setQuery(boolQueryBuilder);
         setResponseCount(criteria, searchRequestBuilder);

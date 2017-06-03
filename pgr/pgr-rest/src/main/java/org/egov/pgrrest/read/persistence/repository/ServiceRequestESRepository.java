@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -9,6 +9,8 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class ServiceRequestESRepository {
     private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
+    public static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
@@ -54,12 +57,14 @@ public class ServiceRequestESRepository {
     }
 
     private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {
-        if(searchResponse.getHits() == null || ArrayUtils.isEmpty(searchResponse.getHits().getHits())) {
+        log.info("Total hits: " + searchResponse.getHits().getTotalHits());
+        if(searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
             log.info("No matches found.");
             return Collections.emptyList();
         }
         return Stream.of(searchResponse.getHits().getHits())
             .map(this::getFieldValue)
+            .filter(StringUtils::isNotEmpty)
             .collect(Collectors.toList());
     }
 
@@ -74,6 +79,8 @@ public class ServiceRequestESRepository {
         final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
             .setTypes(documentType)
             .addStoredField(SERVICE_REQUEST_ID_FIELD_NAME)
+            .setSource(new SearchSourceBuilder().storedField(SERVICE_REQUEST_ID_FIELD_NAME))
+            .addSort(DEFAULT_SORT_FIELD, SortOrder.DESC)
             .setQuery(boolQueryBuilder);
         setResponseCount(criteria, searchRequestBuilder);
         return searchRequestBuilder;

@@ -8,7 +8,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,9 +68,8 @@ public class ServiceRequestESRepository {
     }
 
     private String getFieldValue(SearchHit hit) {
-        log.info("Source: " + hit.getFields().keySet());
-        final SearchHitField field = hit.getField(SERVICE_REQUEST_ID_FIELD_NAME);
-        return field != null ? field.getValue() : null;
+        log.info("Source: " + hit.getSource().get(SERVICE_REQUEST_ID_FIELD_NAME));
+        return (String) hit.getSource().get(SERVICE_REQUEST_ID_FIELD_NAME);
     }
 
     private SearchRequestBuilder getSearchRequest(ServiceRequestSearchCriteria criteria) {

@@ -5,6 +5,8 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +55,13 @@ public class ServiceRequestESRepository {
             return Collections.emptyList();
         }
         return Stream.of(searchResponse.getHits().getHits())
-            .map(hit -> (String) hit.getField(SERVICE_REQUEST_ID_FIELD_NAME).getValue())
+            .map(this::getFieldValue)
             .collect(Collectors.toList());
+    }
+
+    private String getFieldValue(SearchHit hit) {
+        final SearchHitField field = hit.getField(SERVICE_REQUEST_ID_FIELD_NAME);
+        return field != null ? field.getValue() : null;
     }
 
     private SearchRequestBuilder getSearchRequest(ServiceRequestSearchCriteria criteria) {

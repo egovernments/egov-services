@@ -144,7 +144,6 @@ public class DemandRepository {
 			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
 				if(agreement .getGoodWillAmount()!=null)
 					demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
 			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
 			}

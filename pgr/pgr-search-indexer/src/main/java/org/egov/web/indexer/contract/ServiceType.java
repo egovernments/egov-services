@@ -12,6 +12,8 @@ public class ServiceType {
     public static final String DELIVERABLE_KEYWORD = "Deliverable_service";
     private List<String> keywords;
     private Integer slaHours;
+    private Long groupId;
+    private String groups;
 
     public boolean isComplaintType() {
         return keywords.stream().anyMatch(COMPLAINT_KEYWORD::equalsIgnoreCase);

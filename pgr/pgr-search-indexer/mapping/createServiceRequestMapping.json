@@ -8,6 +8,9 @@
                 "assigneeId": {
                     "type": "long"
                 },
+                "requesterId": {
+                    "type": "long"
+                },
                 "assigneeName": {
                     "type": "keyword"
                 },
@@ -73,6 +76,9 @@
                     "type": "long"
                 },
                 "serviceStatusName": {
+                    "type": "keyword"
+                },
+                "serviceStatusCode": {
                     "type": "keyword"
                 },
                 "serviceTypeCode": {

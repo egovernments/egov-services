@@ -30,7 +30,7 @@ public class ServiceRequestService {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return serviceRequestRepository.findAll(serviceRequestSearchCriteria);
+        return serviceRequestRepository.find(serviceRequestSearchCriteria);
     }
 
     public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {

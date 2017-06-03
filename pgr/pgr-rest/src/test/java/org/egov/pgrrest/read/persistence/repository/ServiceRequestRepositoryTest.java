@@ -23,6 +23,8 @@ public class ServiceRequestRepositoryTest {
     @Mock
     private SubmissionRepository submissionRepository;
 
+    private ServiceRequestESRepository serviceRequestESRepository;
+
     @Captor
     private ArgumentCaptor<SevaRequest> sevaRequestArgumentCaptor;
 
@@ -31,7 +33,8 @@ public class ServiceRequestRepositoryTest {
     @Before
     public void setUp() throws Exception {
         complaintRepository =
-            new ServiceRequestRepository(serviceRequestMessageQueueRepository, submissionRepository);
+            new ServiceRequestRepository(serviceRequestMessageQueueRepository, submissionRepository,
+                serviceRequestESRepository);
     }
 
     @Test

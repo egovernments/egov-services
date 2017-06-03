@@ -28,6 +28,8 @@ public class ServiceRequestSearchCriteria {
 	private Long locationId;
 	private Long childLocationId;
 	private String tenantId;
+	private String keyword;
+	private String serviceCategory;
     private Integer fromIndex;
     private Integer pageSize;
 

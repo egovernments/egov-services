@@ -1,14 +1,20 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Service
 public class ServiceRequestESRepository {
+    private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
@@ -33,6 +39,32 @@ public class ServiceRequestESRepository {
             .execute()
             .actionGet();
         return searchResponse.getHits().getTotalHits();
+    }
+
+    public List<String> getMatchingServiceRequestIds(ServiceRequestSearchCriteria criteria) {
+        final SearchRequestBuilder searchRequestBuilder = getSearchRequest(criteria);
+        final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+        return Stream.of(searchResponse.getHits().getHits())
+            .map(hit -> (String) hit.getField(SERVICE_REQUEST_ID_FIELD_NAME).getValue())
+            .collect(Collectors.toList());
+    }
+
+    private SearchRequestBuilder getSearchRequest(ServiceRequestSearchCriteria criteria) {
+        final BoolQueryBuilder boolQueryBuilder = queryFactory.create(criteria);
+        final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
+            .setTypes(documentType)
+            .addStoredField(SERVICE_REQUEST_ID_FIELD_NAME)
+            .setQuery(boolQueryBuilder);
+        setResponseCount(criteria, searchRequestBuilder);
+        return searchRequestBuilder;
+    }
+
+    private void setResponseCount(ServiceRequestSearchCriteria criteria, SearchRequestBuilder searchRequestBuilder) {
+        if (criteria.isPaginationCriteriaPresent()) {
+            searchRequestBuilder.setFrom(criteria.getFromIndex()).setSize(criteria.getPageSize());
+        } else {
+            searchRequestBuilder.setSize(Long.valueOf(getCount(criteria)).intValue());
+        }
     }
 }
 

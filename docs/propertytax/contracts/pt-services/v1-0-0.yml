@@ -48,7 +48,7 @@ paths:
           type: boolean
           format: varchar
           allowEmptyValue: true
-        - name: upicNo
+        - name: upicNumber
           in: query
           required: false
           description: The unique reference number for a property.

@@ -85,7 +85,7 @@ paths:
         - name: houseNoBldgApt
           in: query
           required: false
-          description: The house no for a building of a property.
+          description: The house no for a building/land of a property.
           type: string
           minLength: 0
           maxLength: 32
@@ -216,17 +216,17 @@ definitions:
         description: tenant id of the Property
         maxLength: 128
         minLength: 4
-      upicNo:
+      upicNumber:
         type: string
-        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system
+        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
         maxLength: 128
         minLength: 6
-      oldUpicNo:
+      oldUpicNumber:
         type: string
         description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
         maxLength: 128
         minLength: 4
-      vltUpicNo:
+      vltUpicNumber:
         type: string
         description: Vacant lands also be assessed in system. If building constructed in the same vacant land. The Vacant land upicno will be captured here for a the new building.
         maxLength: 128
@@ -290,7 +290,6 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
-    - upicNo
     - creationReason
     - address
     - owners
@@ -498,8 +497,6 @@ definitions:
         minLength: 1
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - sitalArea
     - propertyType
@@ -588,30 +585,13 @@ definitions:
         description: floor no for the floor
         maxLength: 16
         minLength: 1
-      flats:
-        description: Flat(s) information on a floor.
-        type: array
-        items:
-          $ref: "#/definitions/Flat"
-      rooms:
-        description: Room(s) information on a floor.
+      units:
+        description: Flat(s) or Room(s) information on a floor or in a Flat respectively.
         type: array
         items:
           $ref: "#/definitions/Unit"
     required:
       - floorNo
-  
-    
-  Flat:
-    allOf:
-    - $ref: "/definitions/Unit"
-    - type: object
-    description: A flat information.
-    properties:
-      flatNo:
-        type: integer
-        format: int32
-        description: Flat no on the floor.
     
   Unit:
     type: object
@@ -628,6 +608,14 @@ definitions:
         description: type of the unit
         maxLength: 16
         minLength: 1
+        enum:
+          - FLAT
+          - ROOM
+      units:
+        description: Flat(s) or Room(s) information. When unit is there inside a unit is a room.
+        type: array
+        items:
+          $ref: "#/definitions/Unit"
       length:
         type: number
         format: double

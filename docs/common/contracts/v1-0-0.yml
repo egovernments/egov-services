@@ -49,9 +49,11 @@ definitions:
       apiId:
         type: string
         description: unique API ID
+        maxLength: 128
       ver:
         type: string
         description: API version - for HTTP based request this will be same as used in path
+        maxLength: 32
       ts:
         type: integer
         format: int64
@@ -59,18 +61,23 @@ definitions:
       action:
         type: string
         description: API action to be performed like _create, _update, _search (denoting POST, PUT, GET) or _oauth etc
+        maxLength: 32
       did:
         type: string
         description: Device ID from which the API is called
+        maxLength: 1024
       key:
         type: string
         description: API key (API key provided to the caller in case of server to server communication)
+        maxLength: 256
       msgId:
         type: string
         description: Unique request message id from the caller
+        maxLength: 256
       requesterId:
         type: string
         description: UserId of the user calling
+        maxLength: 256
       authToken:
         type: string
         description: //session/jwt/saml token/oauth token - the usual value that would go into HTTP bearer token
@@ -130,6 +137,7 @@ definitions:
       name: 
         type: string
         description: Unique name of the role
+        maxLength: 64
       description:
         type: string
         description: brief description of the role
@@ -154,14 +162,17 @@ definitions:
       
   ResponseInfo:
     type: object
+    readOnly: true
     description: ResponseInfo should be used to carry metadata information about the response from the server. apiId, ver and msgId in ResponseInfo should always correspond to the same values in respective request's RequestInfo.
     properties:
       apiId:
         type: string
         description: unique API ID
+        maxLength: 128
       ver:
         type: string
         description: API version
+        maxLength: 32
       ts:
         type: integer
         format: int64
@@ -169,9 +180,11 @@ definitions:
       resMsgId:
         type: string
         description: unique response message id (UUID) - will usually be the correlation id from the server
+        maxLength: 256
       msgId:
         type: string
         description: message id of the request
+        maxLength: 256
       status:
         type: string
         description: status of request processing - to be enhanced in futuer to include INPROGRESS
@@ -223,11 +236,12 @@ definitions:
       
   Address:
     type: object
-    description: Representation of a address. Indiavidual APIs may choose to extend from this using allOf if more details needed to be added in their case.
+    description: |
+      Representation of a address. Indiavidual APIs may choose to extend from this using allOf if more details needed to be added in their case.
     properties:
-      tenantid: 
+      tenantId:
         type: string
-        description: city/ULB/tenant code of the address
+        description: Unique Identifier of the tenant to which user primarily belongs
       latitude:
         type: number
         format: double
@@ -238,18 +252,34 @@ definitions:
         description: longitude of the address
       addressId:
         type: string
-        description: any system generated id for the address
+        description: System generated id for the address
+        readOnly: true
+      addressNumber:
+        description: House, Door, Building number in the address
+        type: string
+      addressLine1:
+        description: Apartment, Block, Street of the address
+        type: string
+      addressLine2:
+        description: Locality, Area, Zone, Ward of the address
+        type: string
+      landmark:
+        description: additional landmark to help locate the address
+        type: string
+      city:
+        description: City of the address. Can be represented by the tenantid itself
+        type: string
       pincode:
         type: string
         description: PIN code of the address. Indian pincodes will usually be all numbers.
       detail:
         type: string
-        description: |
-          complete address detail including house/building number, Street address, Landmark, area, zone etc.
+        description: more address detail as may be needed
           
   AuditDetails:
     type: object
     description: Collection of audit related fields used by most models
+    readOnly: true
     properties:
       createdBy: 
         type: string

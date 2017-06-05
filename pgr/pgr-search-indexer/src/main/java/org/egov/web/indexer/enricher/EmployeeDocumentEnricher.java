@@ -1,5 +1,6 @@
 package org.egov.web.indexer.enricher;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.web.indexer.contract.*;
 import org.egov.web.indexer.repository.DepartmentRepository;
 import org.egov.web.indexer.repository.EmployeeRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 @Service
+@Slf4j
 public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher {
 
     private static final String ASSIGNMENT_ID = "assignmentId";
@@ -30,6 +32,7 @@ public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher 
     public void enrich(ServiceType serviceType, SevaRequest sevaRequest, ServiceRequestDocument document) {
         final ServiceRequest serviceRequest = sevaRequest.getServiceRequest();
         final String positionId = getPosition(serviceRequest);
+        log.info("Retrieved position:" + positionId);
         if (positionId == null) {
             return;
         }

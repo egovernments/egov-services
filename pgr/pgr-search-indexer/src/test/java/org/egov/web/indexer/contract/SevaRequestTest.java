@@ -25,5 +25,6 @@ public class SevaRequestTest {
 
         assertThat(requestInfo).isNotNull();
         assertThat(serviceRequest).isNotNull();
+        assertThat(serviceRequest.getDynamicSingleValue("assignmentId")).isEqualTo("2");
     }
 }

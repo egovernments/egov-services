@@ -276,17 +276,17 @@ paths:
   
   /receipt/_create:
     post:
-      summary: Validate and persist receipt without receipt number.
-      description: This API generates a receipt number and persists the receipt with status as "PENDING" and pushes the receipt information to elasticsearch. The receipt details passed, in the bill, will be apportioned by the billing system based on the amount citizen is likely to pay.
+      summary: Validate and persist receipt with receipt number.
+      description: This API generates a receipt number and persists the receipt. The receipt information is then pushed to queue for further processing.
       parameters:
         - name: billInfo
           in: body
-          description: Receipt Creation Details passed as bill info along with common request info. 
+          description: Receipt Creation Details passed as bill info along with common request info.
           required: true
           schema:
             $ref: '#/definitions/PendingReceiptReq'
       tags:
-        - Receipt  
+        - Receipt
       responses:
         '201':
           description: Receipt created sucessfully.
@@ -548,20 +548,6 @@ definitions:
         items:
           $ref: '#/definitions/BillDetails'
       
-  BillPayeeDetails:
-    type: object
-    properties:
-      payeeName:
-        type: string
-        description: Consumer name defined in bill.
-      payeeAddress:
-        type: string
-        description: Consumer address defined in bill.
-      payeeEmail:
-        type: string
-        description: Consumer email defined in bill.
-      
-  
   BillDetails:
     type: object
     properties:

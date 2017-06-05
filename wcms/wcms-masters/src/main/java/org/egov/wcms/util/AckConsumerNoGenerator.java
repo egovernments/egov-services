@@ -3,8 +3,10 @@ package org.egov.wcms.util;
 import java.util.Calendar;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Service
 public class AckConsumerNoGenerator {
 	
 	public String getAckNo(){

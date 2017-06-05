@@ -54,7 +54,7 @@ import org.springframework.kafka.core.ProducerFactory;
 
 @Configuration
 @EnableKafka
-public class WaterMasterProducerConfig {
+public class WaterTransactionProducerConfig {
 
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
@@ -95,9 +95,9 @@ public class WaterMasterProducerConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-  /*  @Bean
-    public WaterMasterProducer sender() {
-        return new WaterMasterProducer();
+ /*   @Bean
+    public WaterTransactionProducer sender() {
+        return new WaterTransactionProducer();
     } */
 
 }

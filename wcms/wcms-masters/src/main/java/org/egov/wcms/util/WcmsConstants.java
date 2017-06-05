@@ -51,6 +51,7 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class WcmsConstants {
 
+	public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
 	public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";

@@ -196,7 +196,7 @@ public class NewWaterConnectionValidator {
         }
        
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE)
+                .message(WcmsConstants.INVALID_REQUEST_MESSAGE)
                 .errorFields(errorFields)
                 .build();
     }
@@ -223,6 +223,12 @@ public class NewWaterConnectionValidator {
 			return isRequestValid;
 		}
 		
+		isRequestValid = validateStaticFields(waterConnectionRequest);
+		if(!isRequestValid){
+			LOGGER.info("Enum values failed validations. Please re enter.");
+			return isRequestValid;
+		}
+		
 		if(waterConnectionRequest.getConnection().getCategoryType().equals("BPL")){
 			if(waterConnectionRequest.getConnection().getBplCardHolderName() == null ||
 					waterConnectionRequest.getConnection().getBplCardHolderName().isEmpty()){
@@ -230,6 +236,7 @@ public class NewWaterConnectionValidator {
 				return isRequestValid;
 			}
 		}
+	
 		
 		isRequestValid =  validateDonationAmount(waterConnectionRequest);
 		
@@ -282,6 +289,34 @@ public class NewWaterConnectionValidator {
 			}			
 		}
 		return isDocumentValid;
+	}
+	
+	private boolean validateStaticFields(WaterConnectionReq waterConnectionRequest){
+		boolean isRequestValid = false;
+		
+		if(!waterConnectionRequest.getConnection().getConnectionType().equals("TEMPORARY") || 
+				!waterConnectionRequest.getConnection().getConnectionType().equals("PERMANENT")){
+			LOGGER.info("ConnectionType is invalid");
+			return isRequestValid;
+		}else if(!waterConnectionRequest.getConnection().getBillingType().equals("METERED") || 
+				!waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED")){
+			LOGGER.info("BillingType is invalid");
+			return isRequestValid;
+		}else if(!waterConnectionRequest.getConnection().getSupplyType().equals("REGULAR") || 
+				!waterConnectionRequest.getConnection().getSupplyType().equals("BULK") || 
+				!waterConnectionRequest.getConnection().getSupplyType().equals("SEMIBULK")){
+			LOGGER.info("SupplyType is invalid");
+			return isRequestValid;
+		}else if(!waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") || 
+				!waterConnectionRequest.getConnection().getSourceType().equals("SURFACEWATER")){
+			LOGGER.info("SupplyType is invalid");
+			return isRequestValid;
+		}
+		
+		isRequestValid = true;
+		return isRequestValid;
+		
+		//Refactoring needed to reduce the if-else ladder and other optimization.
 	}
 	
 		

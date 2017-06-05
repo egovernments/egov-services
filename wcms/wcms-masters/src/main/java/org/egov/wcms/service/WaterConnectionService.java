@@ -37,32 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.producers;
+package org.egov.wcms.service;
 
+import org.egov.wcms.model.Connection;
+import org.egov.wcms.producers.WaterTransactionProducer;
+import org.egov.wcms.util.AckConsumerNoGenerator;
+import org.egov.wcms.web.contract.WaterConnectionReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class DocumentTypeProducer {
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
-
-	public void sendMessage(final String topic, final String key, final Object message) {
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
-			}
-
-			@Override
-			public void onFailure(final Throwable throwable) {
-
-			}
-		});
-	}
+public class WaterConnectionService {
+	
+    public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
+    
+    @Autowired
+    private WaterTransactionProducer waterTransactionProducer;
+    
+    @Autowired
+    private AckConsumerNoGenerator ackConsumerNoGenerator;
+    
+    public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
+        final ObjectMapper mapper = new ObjectMapper();
+        String waterConnectionValue = null;
+        try {
+            logger.info("WaterConnectionService request::" + waterConnectionRequest);
+            waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
+            logger.info("waterConnectionValue::" + waterConnectionValue);
+        } catch (final JsonProcessingException e) {
+        	logger.error("Exception while stringifying water coonection object", e);
+        }
+        try {
+        	waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
+        } catch (final Exception e) {
+            logger.error("Producer failed to post request to kafka queue", e);
+            waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
+        }
+        waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
+        
+        return waterConnectionRequest.getConnection();
+    }
 
 }

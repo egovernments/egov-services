@@ -103,34 +103,7 @@ $(document).ready(function()
 	
 	try{
 
-		$('form').validate({
-			showErrors: function (errorMap, errorList) {
-			  if (typeof errorList[0] != "undefined") {
-			      var position = $(errorList[0].element).offset().top-($('.navbar-header').height()+40);
-			      $('html, body').animate({
-			          scrollTop: position
-			      }, 300);
-			  }
-			  this.defaultShowErrors();
-			}
-		});
-
-		jQuery.extend(jQuery.validator.messages, {
-			required: translate('core.error.required')
-		});
-
-		$.validator.addMethod("mobilevalidate",function(value){
-		    return /^\d{10}$/.test(value);
-		},translate('core.lbl.enter.mobilenumber'));
-
-		$.validator.addMethod("emailvalidate",function(value){
-		    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
-		},translate('core.error.valid.email'));
-
-	    jQuery.validator.addClassRules({
-			mobilevalidate: { mobilevalidate : true },
-			emailvalidate: { emailvalidate : true }  
-		});
+		formValidation();
 
 	}catch(e){
 		//console.warn("No validation involved");
@@ -241,6 +214,47 @@ function pageScrollTop()
     body.stop().animate({scrollTop:0}, '500', 'swing', function() { 
        //bootbox.alert("Finished animating");
     });
+}
+
+function formValidation(){
+	$('form').validate({
+		showErrors: function (errorMap, errorList) {
+		  if (typeof errorList[0] != "undefined") {
+		      var position = $(errorList[0].element).offset().top-($('.navbar-header').height()+40);
+		      $('html, body').animate({
+		          scrollTop: position
+		      }, 300);
+		  }
+		  this.defaultShowErrors();
+		}
+	});
+
+	jQuery.extend(jQuery.validator.messages, {
+		required: translate('core.error.required')
+	});
+
+	$.validator.addMethod("mobilevalidate",function(value){
+	    return /^\d{10}$/.test(value);
+	},translate('core.lbl.enter.mobilenumber'));
+
+	$.validator.addMethod("emailvalidate",function(value){
+	    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
+	},translate('core.error.valid.email'));
+
+	$.validator.addMethod("numbervalidate",function(value){
+	    return  /^[+-]?\d+(\.\d+)?$/.test(value);
+	},'Enter valid number');
+
+	$.validator.addMethod("datevalidate",function(value){
+	    return  /^(\d{1,2})-(\d{1,2})-(\d{4})$/.test(value);
+	},'Enter valid date format (dd-mm-yyyy)');
+
+    jQuery.validator.addClassRules({
+		mobilevalidate: { mobilevalidate : true },
+		emailvalidate: { emailvalidate : true } ,
+		numbervalidate: { numbervalidate : true } ,
+		datevalidate: { datevalidate : true }  
+	});
 }
 
 //Typeahead event handling
@@ -423,7 +437,7 @@ function clearLocalStorage(){
 function initDatePicker(){
 	$(".datepicker").datepicker({
 		format: "dd-mm-yyyy",
-		autoclose: true 
+		autoclose: true
 	}); 
 }
 
@@ -630,19 +644,20 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 		if(!this.variable){
 			this.template = '<label class="col-sm-2 control-label"></label><div class="col-sm-3 add-margin success-msg" data-translate="'+this.description+'"></div><div class="col-sm-1"></div>';
 		}else{
-			this.pattern = this.dataType == 'number' ? 'number' : this.dataType == 'string' ? 'alphabetwithspace' : value; 
+			this.pattern = this.dataType == 'number' ? 'numbervalidate' : this.dataType == 'date' ? 'datevalidate' : ''; 
 			if(this.dataType == 'number' || this.dataType == 'string'){
 				if(this.name == 'PROCESSINGFEE' && this.mode == '')
 					this.template = '';
 				else if(localStorage.getItem('type') == 'EMPLOYEE' && this.name == 'PROCESSINGFEE' && this.mode == 'disabled')
-					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' /> </div><div class="col-sm-1"></div>';	
+					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control" '+this.required+' /> </div><div class="col-sm-1"></div>';	
 				else
-					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control patternvalidation" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
-
-			}else if(this.dataType == 'datetime' || this.dataType == 'date')
-				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control datepicker" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
+					this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control '+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
+			}else if(this.dataType == 'date')
+				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control datepicker '+this.pattern+'" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
+			else if(this.dataType == 'datetime')
+				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label> <div class="col-sm-3 add-margin"> <input type="text" name="'+this.name+'" class="form-control" '+this.required+' '+this.mode+' /> </div><div class="col-sm-1"></div>';	
 			else if(this.dataType == 'text')
-				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-3 add-margin"> <textarea class="form-control patternvalidation" name="'+this.name+'" data-pattern="'+this.pattern+'" '+this.required+' '+this.mode+' ></textarea> </div><div class="col-sm-1"></div>';
+				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate"'+this.description+'></label> <div class="col-sm-3 add-margin"> <textarea class="form-control" name="'+this.name+'" data-regexp="'+this.pattern+'" '+this.required+' '+this.mode+' ></textarea> </div><div class="col-sm-1"></div>';
 			else if(this.dataType == 'singlevaluelist' || this.dataType == 'multivaluelist'){
 				var this_select_content;
 

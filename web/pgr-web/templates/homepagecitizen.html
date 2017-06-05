@@ -16,34 +16,6 @@
         <link rel="stylesheet" href="../resources/global/css/egov/custom.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>
-        	.page-container .main-content .citizen-screens .content-wrap {
-			    position: relative;
-			    margin-top: 20px;
-			}
-			.page-container .main-content .citizen-screens .msg header i {
-			    font-size: 18px;
-		    	padding: 2px 5px;
-			}
-			.page-container .main-content .citizen-screens .msg header h3, .page-container .main-content .citizen-screens .msg header a {
-			    font-size: 18px;
-		        margin: 5px 0;
-			}
-			.page-container .main-content .citizen-screens .msg header span.msg-status {
-			    margin: 0 5px;
-			    position: relative;
-			    top: -3px;
-			}
-			.page-container .main-content .citizen-screens section div.msg, .page-container .main-content .citizen-screens section div.msg {
-			    /* margin-top: 10px; */
-			    margin-bottom: 15px;
-			    padding: 15px;
-			}
-			.page-container .main-content .citizen-screens .msg header .msg-info {
-			    padding-left: 0;
-			}
-			.page-container .main-content .citizen-screens .msg .msg-content > p {
-			    margin: 15px 0 0 0;
-			}
         	[class*='col-'].services .content{
         		padding: 10px;
 				box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
@@ -175,7 +147,6 @@
 									<div class="msg" data-toggle="collapse" data-target="#4275" aria-expanded="true">
 										<header>
 											<div class="">
-												<h3>
 												<!-- <i class="user-msg fa fa-user col-sm-1 col-xs-2 read-msg"></i> -->
 												    {{serviceName}} 
 													<span class="msg-status">
@@ -185,7 +156,6 @@
 														    {{/if}}
 														{{/each}}
 													</span> 
-												</h3> 
 											</div>
 											<div class="msg-info">
 												<a href="javascript:void(0)" class="open_popup" data-srn={{serviceRequestId}}><u>{{serviceRequestId}}</u></a> <span class="dot">•</span> <span class="msg-date">{{date}}</span>

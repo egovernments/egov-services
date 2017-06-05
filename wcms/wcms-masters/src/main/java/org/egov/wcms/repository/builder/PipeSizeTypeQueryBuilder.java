@@ -172,7 +172,7 @@ public class PipeSizeTypeQueryBuilder {
     }
 
     public static String updatePipeSizeQuery() {
-        return "UPDATE egwtr_pipesize SET sizeinmilimeter = ?,sizeininch = ?,description = ? "
+        return "UPDATE egwtr_pipesize SET sizeinmilimeter = ?,sizeininch = ?,description = ? ,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
     }
     

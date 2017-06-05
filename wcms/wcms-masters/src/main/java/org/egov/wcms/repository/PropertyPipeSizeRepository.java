@@ -80,7 +80,7 @@ public class PropertyPipeSizeRepository {
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {
-            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType() },
+            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType(),propertyPipeSize.getTenantId() },
                     Long.class);
         } catch (final EmptyResultDataAccessException e) {
             LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
@@ -109,7 +109,7 @@ public class PropertyPipeSizeRepository {
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {
-            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType() },
+            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery, new Object[] { propertyPipeSize.getPipeSizeType() ,propertyPipeSize.getTenantId()},
                     Long.class);
         } catch (final EmptyResultDataAccessException e) {
             LOGGER.info("EmptyResultDataAccessException: Query returned empty result set while update");
@@ -155,7 +155,7 @@ public class PropertyPipeSizeRepository {
             if (propertyPipeSizeGetRequest.getPipeSizeType() != null)
                 propertyPipeSizeGetRequest
                         .setPipeSizeId(jdbcTemplate.queryForObject(PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery(),
-                                new Object[] { propertyPipeSizeGetRequest.getPipeSizeType() }, Long.class));
+                                new Object[] { propertyPipeSizeGetRequest.getPipeSizeType() ,propertyPipeSizeGetRequest.getTenantId()}, Long.class));
         } catch (final EmptyResultDataAccessException e) {
             LOGGER.error("EmptyResultDataAccessException: Query returned empty RS.");
 
@@ -167,7 +167,7 @@ public class PropertyPipeSizeRepository {
                 propertyPipeSizeRowMapper);
         for (final PropertyTypePipeSizeType propertyPipeSize : propertyPipeSizes)
             propertyPipeSize.setPipeSizeType(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
-                    new Object[] { propertyPipeSize.getPipeSizeId() }, Double.class));
+                    new Object[] { propertyPipeSize.getPipeSizeId(),propertyPipeSize.getTenantId() }, Double.class));
         return propertyPipeSizes;
     }
 

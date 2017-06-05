@@ -206,7 +206,7 @@ public class PipeSizeTypeController {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PIPESIZE_SIZEINMM_UNIQUE_CODE)
                     .message(WcmsConstants.PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE)
-                    .field(WcmsConstants.PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_SIZEINMM__UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         } else

@@ -90,13 +90,13 @@ public class PropertyPipeSizeQueryBuilder {
         if (propertyPipeSizeGetRequest.getPipeSizeType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" propertypipesize.pipesizeid = ?");
-            preparedStatementValues.add(propertyPipeSizeGetRequest.getPipeSizeType());
+            preparedStatementValues.add(propertyPipeSizeGetRequest.getPipeSizeId());
         }
 
         if (propertyPipeSizeGetRequest.getPropertyType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" propertypipesize.propertytypeid = ?");
-            preparedStatementValues.add(propertyPipeSizeGetRequest.getPropertyType());
+            preparedStatementValues.add(propertyPipeSizeGetRequest.getPropertyTypeId());
         }
 
         if (propertyPipeSizeGetRequest.getActive() != null) {
@@ -150,11 +150,11 @@ public class PropertyPipeSizeQueryBuilder {
     }
 
     public static String getPipeSizeIdQuery() {
-        return " select id FROM egwtr_pipesize where  sizeinmilimeter= ?  ";
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
     }
 
     public static String getPipeSizeInmm() {
-        return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ?";
+        return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
     }
 
 }

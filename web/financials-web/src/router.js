@@ -1,7 +1,6 @@
 import React from 'react';
 import {Switch, Route} from 'react-router-dom';
-import PropertyTaxSearch from './components/contents/PropertyTaxSearch';
-import Test from './components/contents/Test';
+
 
 
 import CreateNewFunction from './components/contents/CreateNewFunction';

@@ -49,6 +49,7 @@ module.exports = {
     body["RequestInfo"] = requestInfo;
     console.log(body);
     return instance.post(url, body).then(function(response) {
+      console.log("response",response);
       return response.data;
     }).catch(function(response) {
       throw new Error(response.data.message);

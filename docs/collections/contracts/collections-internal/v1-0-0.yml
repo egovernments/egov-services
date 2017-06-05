@@ -1029,5 +1029,4 @@ parameters:
     in: query
     description: Page number
     type: integer
-    default: 1  
-
+    default: 1

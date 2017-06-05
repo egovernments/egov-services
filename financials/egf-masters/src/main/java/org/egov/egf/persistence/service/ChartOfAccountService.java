@@ -91,7 +91,7 @@ public class ChartOfAccountService {
 	@Transactional
 	public ChartOfAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
-				financialContractRequestMap.get("ChartOfAccountCreate"), ChartOfAccountContractRequest.class);
+				financialContractRequestMap.get("ChartOfAccountUpdateAll"), ChartOfAccountContractRequest.class);
 		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
 		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
 		ModelMapper modelMapper = new ModelMapper();

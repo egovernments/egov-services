@@ -104,7 +104,7 @@ public class BankAccountService {
 	@Transactional
 	public BankAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final BankAccountContractRequest bankAccountContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("BankAccountCreate"), BankAccountContractRequest.class);
+				.convertValue(financialContractRequestMap.get("BankAccountUpdateAll"), BankAccountContractRequest.class);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		ModelMapper modelMapper = new ModelMapper();

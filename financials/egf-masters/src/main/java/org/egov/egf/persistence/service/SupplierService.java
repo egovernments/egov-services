@@ -88,7 +88,7 @@ public class SupplierService {
 	@Transactional
 	public SupplierContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final SupplierContractRequest supplierContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("SupplierCreate"), SupplierContractRequest.class);
+				.convertValue(financialContractRequestMap.get("SupplierUpdateAll"), SupplierContractRequest.class);
 		SupplierContractResponse supplierContractResponse = new SupplierContractResponse();
 		supplierContractResponse.setSuppliers(new ArrayList<SupplierContract>());
 		ModelMapper modelMapper = new ModelMapper();

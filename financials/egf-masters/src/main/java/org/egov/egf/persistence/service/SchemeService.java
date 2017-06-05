@@ -87,7 +87,7 @@ public class SchemeService {
 	@Transactional
 	public SchemeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final SchemeContractRequest schemeContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("SchemeCreate"), SchemeContractRequest.class);
+				.convertValue(financialContractRequestMap.get("SchemeUpdateAll"), SchemeContractRequest.class);
 		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
 		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
 		ModelMapper modelMapper = new ModelMapper();

@@ -83,7 +83,7 @@ public class FinancialYearService {
 	@Transactional
 	public FinancialYearContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final FinancialYearContractRequest financialYearContractRequest = ObjectMapperFactory.create().convertValue(
-				financialContractRequestMap.get("FinancialYearCreate"), FinancialYearContractRequest.class);
+				financialContractRequestMap.get("FinancialYearUpdateAll"), FinancialYearContractRequest.class);
 		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
 		ModelMapper modelMapper = new ModelMapper();

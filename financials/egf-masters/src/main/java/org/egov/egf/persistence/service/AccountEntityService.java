@@ -89,7 +89,7 @@ public class AccountEntityService {
 	@Transactional
 	public AccountEntityContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final AccountEntityContractRequest accountEntityContractRequest = ObjectMapperFactory.create().convertValue(
-				financialContractRequestMap.get("AccountEntityCreate"), AccountEntityContractRequest.class);
+				financialContractRequestMap.get("AccountEntityUpdateAll"), AccountEntityContractRequest.class);
 		AccountEntityContractResponse accountEntityContractResponse = new AccountEntityContractResponse();
 		accountEntityContractResponse.setAccountEntities(new ArrayList<AccountEntityContract>());
 		ModelMapper modelMapper = new ModelMapper();

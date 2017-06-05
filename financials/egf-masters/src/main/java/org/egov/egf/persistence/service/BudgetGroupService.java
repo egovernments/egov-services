@@ -95,7 +95,7 @@ public class BudgetGroupService {
 	@Transactional
 	public BudgetGroupContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final BudgetGroupContractRequest budgetGroupContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("BudgetGroupCreate"), BudgetGroupContractRequest.class);
+				.convertValue(financialContractRequestMap.get("BudgetGroupUpdateAll"), BudgetGroupContractRequest.class);
 		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
 		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
 		ModelMapper modelMapper = new ModelMapper();

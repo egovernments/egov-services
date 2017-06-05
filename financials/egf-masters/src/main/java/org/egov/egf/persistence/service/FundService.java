@@ -86,7 +86,7 @@ public class FundService {
 	@Transactional
 	public FundContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final FundContractRequest fundContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("FundCreate"), FundContractRequest.class);
+				.convertValue(financialContractRequestMap.get("FundUpdateAll"), FundContractRequest.class);
 		FundContractResponse fundContractResponse = new FundContractResponse();
 		fundContractResponse.setFunds(new ArrayList<FundContract>());
 		ModelMapper modelMapper = new ModelMapper();

@@ -16,7 +16,6 @@ import org.egov.egf.persistence.queue.contract.Pagination;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountCodePurposeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/accountcodepurposes")
 public class AccountCodePurposeController {
-	
+
 	@Autowired
 	private AccountCodePurposeService accountCodePurposeService;
 
@@ -138,12 +137,8 @@ public class AccountCodePurposeController {
 		List<AccountCodePurpose> accountCodePurposesList = null;
 		accountCodePurposesList = accountCodePurposeService.getAccountCodePurposes(accountCodePurposeGetRequest);
 
-		ModelMapper model = new ModelMapper();
-		AccountCodePurposeContract accountCodePurposeContract = null;
 		for (AccountCodePurpose b : accountCodePurposesList) {
-			accountCodePurposeContract = new AccountCodePurposeContract();
-			model.map(b, accountCodePurposeContract);
-			accountCodePurposeContractResponse.getAccountCodePurposes().add(accountCodePurposeContract);
+			accountCodePurposeContractResponse.getAccountCodePurposes().add(new AccountCodePurposeContract(b));
 		}
 		accountCodePurposeContractResponse.getPage().map(new PageImpl<AccountCodePurpose>(accountCodePurposesList));
 		accountCodePurposeContractResponse

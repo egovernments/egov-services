@@ -15,11 +15,12 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
+import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.validator.AssetValidator;
@@ -51,6 +52,12 @@ public class AssetControllerTest {
 	
 	@MockBean
 	private RevaluationService revaluationService;
+	
+	@MockBean
+	private AssetCurrentAmountService  assetCurrentAmountService;
+	
+	@MockBean
+	private DisposalService disposalService;
 	
 	/*@Test
 	public void test_Should_Search_Asset() throws Exception{

@@ -49,8 +49,8 @@ public class Disposal {
   @JsonProperty("aadharCardNumber")
   private String aadharCardNumber = null;
 
-  @JsonProperty("currentValueOfTheAsset")
-  private Double currentValueOfTheAsset = null;
+  @JsonProperty("assetCurrentValue")
+  private Double assetCurrentValue = null;
 
   @JsonProperty("saleValue")
   private Double saleValue = null;

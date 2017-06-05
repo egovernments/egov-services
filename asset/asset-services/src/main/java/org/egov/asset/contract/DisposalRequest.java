@@ -21,12 +21,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class DisposalRequest   {
+	
   @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
-  @JsonProperty("disposal")
+  @JsonProperty("Disposal")
   private Disposal disposal = null;
 
-  
 }
 

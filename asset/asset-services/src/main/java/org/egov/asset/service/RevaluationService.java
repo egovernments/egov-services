@@ -35,9 +35,8 @@ public class RevaluationService {
 	public RevaluationResponse createAsync(RevaluationRequest revaluationRequest) {
 		
 		logger.info("RevaluationService createAsync revaluationRequest:"+revaluationRequest);
-		Revaluation revaluation= revaluationRequest.getRevaluation();
-		revaluation.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
-		revaluationRequest.setRevaluation(revaluation);
+		
+		revaluationRequest.getRevaluation().setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
 		
 		ObjectMapper objectMapper = new ObjectMapper(); 
 		String json = null;
@@ -57,7 +56,7 @@ public class RevaluationService {
 		}
 		
 		List<Revaluation> revaluations = new ArrayList<Revaluation>();
-		revaluations.add(revaluation);
+		revaluations.add(revaluationRequest.getRevaluation());
 		return getRevaluationResponse(revaluations);
 	}
 	

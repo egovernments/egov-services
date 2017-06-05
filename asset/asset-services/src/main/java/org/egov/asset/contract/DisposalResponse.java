@@ -28,8 +28,7 @@ public class DisposalResponse   {
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("Disposals")
-  private List<Disposal> Disposal = new ArrayList<Disposal>();
+  private List<Disposal> disposals = new ArrayList<Disposal>();
 
-  
 }
 

@@ -60,7 +60,7 @@ public class AssetIndex {
 	private String totalArea;
 	private String assetAttributes;
 
-	public void setAssetData(Asset asset, AssetIndex assetIndex) {
+	public void setAssetData(Asset asset) {
 		this.tenantId = asset.getTenantId();
 		this.assetId = asset.getId();
 		this.assetName = asset.getName();
@@ -100,6 +100,7 @@ public class AssetIndex {
 			throw new RuntimeException(e);
 		}
 		this.assetAttributes = property;
+		setAssetDepartment(asset.getDepartment());
 	}
 
 	public void setAssetDepartment(Department department) {

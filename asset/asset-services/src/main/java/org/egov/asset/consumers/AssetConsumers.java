@@ -5,9 +5,11 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetRequest;
+import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +33,15 @@ public class AssetConsumers {
 	
 	@Autowired
 	private RevaluationService revaluationService;
+	
+	@Autowired
+	private DisposalService disposalService;
 
 	@KafkaListener(containerFactory="kafkaListenerContainerFactory",
 					topics = {"${kafka.topics.save.assetcategory}","${kafka.topics.update.assetcategory}",
 							  "${kafka.topics.save.asset}","${kafka.topics.update.asset}",
-							  "${kafka.topics.save.revaluation}","${kafka.topics.update.revaluation}"})
+							  "${kafka.topics.save.revaluation}","${kafka.topics.update.revaluation}",
+							  "${kafka.topics.save.disposal}","${kafka.topics.update.disposal}"})
 	public void listen(ConsumerRecord<String, String> record) {
 		
 		LOGGER.info("topic:"+ record.topic() +":"+ "value:" +record.value()+"thread:"+Thread.currentThread());
@@ -52,10 +58,13 @@ public class AssetConsumers {
 					assetCategoryService.update(objectMapper.readValue(record.value(),AssetCategoryRequest.class));
 				else if (record.topic().equals(applicationProperties.getCreateAssetRevaluationTopicName()))
 					revaluationService.create(objectMapper.readValue(record.value(),RevaluationRequest.class));	
-				//else if(record.topic().equals(applicationProperties.getUpdateAssetTopicName()))
-					//revaluationService.update(revaluationRequest);
+				/*else if(record.topic().equals(applicationProperties.getUpdateAssetTopicName()))
+					revaluationService.update(record.value(),RevaluationRequest.class);*/
+				else if (record.topic().equals(applicationProperties.getCreateAssetDisposalTopicName()))
+					disposalService.create(objectMapper.readValue(record.value(),DisposalRequest.class));	
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.info("AssetConsumers ",e);
+				throw new RuntimeException(e);
 			}
 			
 			

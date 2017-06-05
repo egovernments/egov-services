@@ -92,7 +92,6 @@ public class AgreementService {
 		String kafkaTopic = null;
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
-		List<DemandDetails> demandDetails = new ArrayList<>();
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
@@ -164,13 +163,18 @@ public class AgreementService {
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 			if (workFlowDetails != null) {
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
-					agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
-					agreement.setAgreementDate(new Date());
-					updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),agreementRequest.getRequestInfo());
+					agreement.setStatus(Status.ACTIVE);
+					if (agreement.getAgreementNumber() == null) {
+						agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+						agreement.setAgreementDate(new Date());
+					}
+					if (agreement.getCancellation() == null)
+						updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
+								agreementRequest.getRequestInfo());
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
-					agreement.setStatus(Status.ACTIVE);
+					//no action for print notice
 				}
 			}
 		}

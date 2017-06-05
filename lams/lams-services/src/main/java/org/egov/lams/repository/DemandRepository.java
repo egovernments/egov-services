@@ -13,6 +13,7 @@ import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandReasonResponse;
@@ -56,15 +57,13 @@ public class DemandRepository {
 		String taxReason = null;
 		LOGGER.info("month plus start date is : " + date);
 		for (int i = 0; i < 3; i++) {
-
-			if (i == 0 && agreement.getSource().equals(Source.SYSTEM) && agreement.getAgreementNumber() == null) {
+			if (i == 0 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
 				taxReason = propertiesManager.getTaxReasonAdvanceTax();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
-			}
-			else if (i == 1 && agreement.getSource().equals(Source.SYSTEM) && agreement.getAgreementNumber() == null) {
+			} else if (i == 1 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
 				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
-			} else if (i == 2 && agreement.getAgreementNumber()!= null ) {
+			} else if (i == 2 && agreement.getStatus().equals(Status.ACTIVE)) {
 				taxReason = propertiesManager.getTaxReasonRent();
 				date = agreementRequest.getAgreement().getExpiryDate();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));

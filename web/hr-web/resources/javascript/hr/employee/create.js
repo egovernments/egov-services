@@ -1648,7 +1648,7 @@ function printValue(object = "", values) {
     if (object != "") {
 
     } else {
-        for (var key in values) {
+        for (let key in values) {
             if (key == "documents") continue;
             if (typeof values[key] === "object" && key == "user") {
                 for (ckey in values[key]) {

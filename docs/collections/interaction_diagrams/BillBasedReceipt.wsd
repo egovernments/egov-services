@@ -3,17 +3,27 @@ title Bill Based Collection
 Client->+ReceiptSvc: Search Due Request
 note over Client,ReceiptSvc
     Search request to get the demand for 
-    multiple bills/across services.
+    multiple bills/acr
+    oss services.
 end note
 ReceiptSvc->ReceiptSvc: Validate search request
 ReceiptSvc->DemandSvc: Query demand system
 DemandSvc->DemandSvc: Validate MIS info and prepare Bill
 DemandSvc->ReceiptSvc: Returns Multiple bills/across services 
 note over ReceiptSvc,DemandSvc
-    Search demand system based on consumer code, 
-    name of the billing system and user information.
+    Search demand system based on consumer code & 
+    billing system/owner information.
 end note
 ReceiptSvc->-Client: Demand Response and bank list
+
+Client->+ReceiptSvc: Apportion Amount Paid
+ReceiptSvc->DemandBillSvc: Apportion Amount Paid
+note over Client,DemandBillSvc
+    Apportion the amount paid by the citizen
+    for the service. DemandBillSvc in turn invokes
+    individual billing service to apportion the amount.
+end note
+ReceiptSvc->-Client: Response apportioned receipt details list.
 
 Client->+ReceiptSvc: Submit payment request
 ReceiptSvc->ReceiptSvc: Validate payment request
@@ -24,6 +34,6 @@ ReceiptSvc->-Client: Create receipt response
 
 KafkaQSvc->WorkflowSvc: Initiate workflow
 KafkaQSvc->VoucherSvc: Post voucher in financials
-KafkaQSvc->BillingSvc: Update demand system based on receipt date.
+KafkaQSvc->DemandBillSvc: Update demand system based on receipt date.
 KafkaQSvc->ESSvc: Push to elastic search
 KafkaQSvc->NotificationSvc: Send email/sms

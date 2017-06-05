@@ -65,6 +65,8 @@ $(document).ready(function()
 		}catch(e){
 		//console.warn("No Date Picker");
 	}
+
+	fileConstraint();
 	
 	try { 
 		$('[data-toggle="tooltip"]').tooltip({
@@ -169,11 +171,12 @@ $(document).ready(function()
 
 	$(document).on('click','.open-popup', function(e){
 		e.preventDefault();
-		openPopUp($(this).data('href'),$(this).data('name'));
+		openPopUp($(this).attr('href'),$(this).data('name'));
 	});
 
 	//Header
-	$('[data-include=header]').append('<nav class="navbar navbar-default navbar-custom navbar-fixed-top"> <div class="container-fluid"> <div class="navbar-header col-md-8 col-xs-8"> <a class="navbar-brand" href="javascript:void(0);"> <img src="../resources/global/images/logo@2x.png" height="60"> <div> <span class="title2" data-translate="'+$('header').data('header-title')+'"></span> </div> </a> </div> <div class="nav-right-menu col-md-4 col-xs-4"> <ul class="hr-menu text-right"> <li class="ico-menu"> <a href="http://www.egovernments.org" data-strwindname = "egovsite" class="open-popup"> <img src="../resources/global/images/egov_logo_tr_h.png" title="Powered by eGovernments" height="37" alt=""> </a> </li> </ul> </div> </div> </nav>');
+	var imgSrc = (tenantId == "default") ? "../resources/global/images/logo@2x.png"  : "../resources/global/images/panavel.png";
+	$('[data-include=header]').append('<nav class="navbar navbar-default navbar-custom navbar-fixed-top"> <div class="container-fluid"> <div class="navbar-header col-md-8 col-xs-8"> <a class="navbar-brand" href="javascript:void(0);"> <img src="'+imgSrc+'" height="60"> <div> <span class="title2" data-translate="'+$('header').data('header-title')+'"></span> </div> </a> </div> <div class="nav-right-menu col-md-4 col-xs-4"> <ul class="hr-menu text-right"> <li class="ico-menu"> <a href="http://www.egovernments.org" data-strwindname = "egovsite" class="open-popup"> <img src="../resources/global/images/egov_logo_tr_h.png" title="Powered by eGovernments" height="37" alt=""> </a> </li> </ul> </div> </div> </nav>');
 
 	//footer
 	$('[data-include=footer]').append('<a href="http://eGovernments.org" target="_blank"><span data-translate="core.lbl.page.footer"></span></a>')
@@ -402,7 +405,8 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 function openPopUp(url,name){
-	var windowObjectReference = window.open(url,name,'width=900, height=700, top=300, left=260,scrollbars=yes');
+	//console.log(url, name)
+	var windowObjectReference = window.open(url,name,'width=1000, height=700, top=300, left=260,scrollbars=yes');
 	openedWindows.push(windowObjectReference);
 	windowObjectReference.focus();
 	return false;
@@ -421,6 +425,28 @@ function initDatePicker(){
 		format: "dd-mm-yyyy",
 		autoclose: true 
 	}); 
+}
+
+function fileConstraint(){
+
+	$('input[type=file]').on('change.bs.fileinput',function(e){
+		var fileformats = ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'];
+		var fileSize = 5e+6;
+		var file = $(this)[0].files[0];
+		var ext = file['name'].split('.').pop().toLowerCase();
+		if($.inArray(ext, fileformats) > -1){
+			//do something  
+			if(this.files[0].size > fileSize){
+				bootbox.alert(translate('core.error.file.exceed'));
+				$( this ).val('');	
+				return;
+			}
+		}else{
+			bootbox.alert(ext+' '+translate('core.error.fileformat.notallowed'));
+			$( this ).val('');
+		}
+	});
+
 }
 
 var RI = function(auth){
@@ -590,9 +616,9 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 		var this_documents = '<div class="form-group">';
 		for(var i=0; i < this.attribValues.length; i++){
 			if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'EMPLOYEE')
-				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control"></div></div>'
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" class="form-control attribFile"></div></div>'
 			else if(this.attribValues[i]["isActive"] && localStorage.getItem('type') == 'CITIZEN')
-				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control"></div></div>'
+				this_documents += '<div class="col-sm-4"><div data-translate="'+this.attribValues[i].name+'"></div><div><input type="file" name="'+this.attribValues[i].key+'" '+this.mode+' class="form-control attribFile"></div></div>'
 		}
 		this_documents += '</div>';
 		this.template = this_documents;
@@ -631,7 +657,8 @@ renderFields.prototype.renderTemplate =function(obj, mode)
 				this_select_content +='</select>';
 
 				this.template = '<label class="col-sm-2 control-label '+this.required+'" data-translate="'+this.description+'"></label><div class="col-sm-3 add-margin">'+this_select_content+'</div><div class="col-sm-1"></div>';
-			}
+			}else
+				this.template = '';
 		}
 		
 	}

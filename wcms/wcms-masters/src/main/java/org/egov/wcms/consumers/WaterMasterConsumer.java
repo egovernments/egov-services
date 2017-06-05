@@ -41,21 +41,24 @@
 
 package org.egov.wcms.consumers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.service.ConnectionCategoryService;
+import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
-import org.egov.wcms.service.PipeSizeService;
+import org.egov.wcms.service.PipeSizeTypeService;
 import org.egov.wcms.service.PropertyCategoryService;
+import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.UsageTypeService;
-import org.egov.wcms.web.contract.ConnectionCategoryRequest;
-import org.egov.wcms.web.contract.DocumentTypeReq;
+import org.egov.wcms.web.contract.CategoryTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeRequest;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.egov.wcms.web.contract.PipeSizeRequest;
+import org.egov.wcms.web.contract.PipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.UsageTypeRequest;
 import org.slf4j.Logger;
@@ -63,7 +66,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class WaterMasterConsumer {
 
@@ -76,53 +79,88 @@ public class WaterMasterConsumer {
     private UsageTypeService usageTypeService;
 
     @Autowired
-    private ConnectionCategoryService categoryService;
-    
+    private CategoryTypeService categoryService;
+
     @Autowired
-    private PropertyUsageTypeService propUsageType;
-    
+    private PropertyUsageTypeService propUsageTypeService;
+
     @Autowired
     private DonationService donationService;
 
     @Autowired
-    private PipeSizeService pipeSizeService;
-    
+    private PipeSizeTypeService pipeSizeService;
+
     @Autowired
     private PropertyCategoryService propertyCategoryService;
-    
+
     @Autowired
     private DocumentTypeService documentTypeService;
+    
+    @Autowired
+    private PropertyUsageTypeService propUsageType;
+    
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.usagetype.create.name}","${kafka.topics.usagetype.update.name}",
-            "${kafka.topics.category.create.name}","${kafka.topics.category.update.name}","${kafka.topics.pipesize.create.name}","${kafka.topics.pipesize.update.name}", 
-            "${kafka.topics.propertyCategory.create.name}","${kafka.topics.propertyusage.create.name}", "${kafka.topics.donation.create.name}", "${kafka.topics.documenttype.create.name}" })
+    @Autowired
+    private PropertyTypePipeSizeTypeService propertyPipeSizeService;
+
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.usagetype.create.name}",
+            "${kafka.topics.usagetype.update.name}",
+            "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
+            "${kafka.topics.pipesize.create.name}", "${kafka.topics.pipesize.update.name}",
+
+            "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyusage.create.name}",
+            "${kafka.topics.donation.create.name}","${kafka.topics.donation.update.name}",
+            "${kafka.topics.propertypipesize.create.name}",
+
+            "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyCategory.update.name}",
+            "${kafka.topics.propertyusage.create.name}",
+            "${kafka.topics.propertyusage.update.name}", "${kafka.topics.donation.create.name}",
+            "${kafka.topics.propertypipesize.create.name}", "${kafka.topics.propertypipesize.update.name}" })
+
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
         final ObjectMapper objectMapper = new ObjectMapper();
         try {
             if (record.topic().equals(applicationProperties.getCreateUsageTypeTopicName()))
                 usageTypeService.create(objectMapper.readValue(record.value(), UsageTypeRequest.class));
-            else if(record.topic().equals(applicationProperties.getUpdateUsageTypeTopicName()))
+            else if (record.topic().equals(applicationProperties.getUpdateUsageTypeTopicName()))
                 usageTypeService.update(objectMapper.readValue(record.value(), UsageTypeRequest.class));
-            else if(record.topic().equals(applicationProperties.getCreateCategoryTopicName()))
-                categoryService.create(objectMapper.readValue(record.value(), ConnectionCategoryRequest.class));
-            else if(record.topic().equals(applicationProperties.getUpdateCategoryTopicName()))
-                categoryService.update(objectMapper.readValue(record.value(), ConnectionCategoryRequest.class));
-            else if(record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))
-                pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeRequest.class));
-            else if(record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
-                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreateCategoryTopicName()))
+                categoryService.create(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getUpdateCategoryTopicName()))
+                categoryService.update(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))
+                pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
+                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
             	propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
             	propUsageType.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
             	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
-            else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName())){
-            	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeReq.class));
-            }
+            else if(record.topic().equals(applicationProperties.getUpdateDonationTopicName()))
+            	donationService.update(objectMapper.readValue(record.value(), DonationRequest.class));
+            else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
+            	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreateDonationTopicName()))
+                donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
+                documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
+                propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
+            else if (record.topic().equals(applicationProperties.getUpdatePropertyCategoryTopicName()))
+                propertyCategoryService.update(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
+            else if (record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
+                propUsageTypeService.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
+            else if (record.topic().equals(applicationProperties.getUpdatePropertyUsageTopicName()))
+                propUsageTypeService.update(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
+            else if (record.topic().equals(applicationProperties.getCreatePropertyPipeSizeTopicName()))
+                propertyPipeSizeService.create(objectMapper.readValue(record.value(), PropertyTypePipeSizeTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getUpdatePropertyPipeSizeTopicName()))
+                propertyPipeSizeService.update(objectMapper.readValue(record.value(), PropertyTypePipeSizeTypeRequest.class));
         } catch (final IOException e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
+}

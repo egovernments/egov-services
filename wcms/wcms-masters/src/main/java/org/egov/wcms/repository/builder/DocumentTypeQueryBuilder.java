@@ -37,13 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.web.contract.DocumentTypeGetReq;
-import org.egov.wcms.web.contract.UsageTypeGetRequest;
+import org.egov.wcms.web.contract.DocumentTypeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,30 +51,24 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DocumentTypeQueryBuilder {
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
-    private static final String BASE_QUERY = "SELECT * FROM egwtr_document_type docType";
-    
-    public String getPersistQuery(){
-    	return "INSERT into egwtr_document_type (name, code, description, active, tenantid, createddate, createdby) values (?,?,?,?,?,?,?) ";
-    }
-    
-    public String getQuery(){
-    	return "SELECT * FROM egwtr_document_type WHERE tenantid = ? " ;
-    }
-    
-    public String getQueryForCodeTenant(){
-    	return "SELECT * FROM egwtr_document_type WHERE tenantid = ? AND code = ?  "; 
-    }
-    
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+
+    private static final Logger logger = LoggerFactory.getLogger(DocumentTypeQueryBuilder.class);
+
+    private static final String BASE_QUERY = "SELECT document.id as document_id, document.code as document_code,"
+            + " document.name as document_name, document.description as document_description,document.active as document_active, document.tenantId as document_tenantId "
+            + " FROM egwtr_document_type document ";
+
     @SuppressWarnings("rawtypes")
-    public String getQuery(DocumentTypeGetReq documentTypeGetRequest, List preparedStatementValues) {
+    public String getQuery(DocumentTypeGetRequest documentTypeGetRequest, List preparedStatementValues) {
         StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, documentTypeGetRequest);
+        addOrderByClause(selectQuery, documentTypeGetRequest);
+        addPagingClause(selectQuery, preparedStatementValues, documentTypeGetRequest);
 
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();
@@ -82,9 +76,9 @@ public class DocumentTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-    		DocumentTypeGetReq documentTypeGetRequest) {
+                                DocumentTypeGetRequest documentTypeGetRequest) {
 
-        if (documentTypeGetRequest.getId() == null && documentTypeGetRequest.getName() == null 
+        if (documentTypeGetRequest.getId() == null && documentTypeGetRequest.getName() == null && documentTypeGetRequest.getActive() == null
                 && documentTypeGetRequest.getTenantId() == null)
             return;
 
@@ -93,29 +87,42 @@ public class DocumentTypeQueryBuilder {
 
         if (documentTypeGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
-            selectQuery.append(" docType.tenantId = ?");
+            selectQuery.append(" document.tenantId = ?");
             preparedStatementValues.add(documentTypeGetRequest.getTenantId());
         }
 
         if (documentTypeGetRequest.getId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" docType.id IN " + getIdQuery(documentTypeGetRequest.getId()));
+            selectQuery.append(" document.id IN " + getIdQuery(documentTypeGetRequest.getId()));
         }
 
 
         if (documentTypeGetRequest.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" docType.name = ?");
+            selectQuery.append(" document.name = ?");
             preparedStatementValues.add(documentTypeGetRequest.getName());
         }
 
         if (documentTypeGetRequest.getCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" docType.code = ?");
+            selectQuery.append(" document.code = ?");
             preparedStatementValues.add(documentTypeGetRequest.getCode());
         }
 
+        if (documentTypeGetRequest.getActive() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" document.active = ?");
+            preparedStatementValues.add(documentTypeGetRequest.getActive());
+        }
     }
+
+    private void addOrderByClause(StringBuilder selectQuery, DocumentTypeGetRequest documentTypeGetRequest) {
+        String sortBy = (documentTypeGetRequest.getSortBy() == null ? "document.id"
+                : "document." + documentTypeGetRequest.getSortBy());
+        String sortOrder = (documentTypeGetRequest.getSortOrder() == null ? "DESC" : documentTypeGetRequest.getSortOrder());
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
+
 
     /**
      * This method is always called at the beginning of the method so that and
@@ -132,6 +139,25 @@ public class DocumentTypeQueryBuilder {
         return true;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
+                                 DocumentTypeGetRequest documentTypeGetRequest) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
+        if (documentTypeGetRequest.getPageSize() != null)
+            pageSize = documentTypeGetRequest.getPageSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
+
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (documentTypeGetRequest.getPageNumber() != null)
+            pageNumber = documentTypeGetRequest.getPageNumber() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        // pageNo * pageSize
+    }
+
     private static String getIdQuery(List<Long> idList) {
         StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
@@ -142,8 +168,26 @@ public class DocumentTypeQueryBuilder {
         }
         return query.append(")").toString();
     }
-    
-    
 
+
+    public static String insertDocumentTypeQuery() {
+        return "INSERT INTO egwtr_document_type(code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+                + "(?,?,?,?,?,?,?,?,?)";
+    }
+
+    public static String updateDocumentTypeQuery() {
+        return "UPDATE egwtr_document_type SET name = ?,description = ?,"
+                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+    }
+    public static String selectDocumentTypeByNameAndCodeQuery() {
+        return " select code FROM egwtr_document_type where name = ? and tenantId = ?";
+    }
+
+
+    public static String selectDocumentTypeByNameAndCodeNotInQuery() {
+        return " select code from egwtr_document_type where name = ? and tenantId = ? and code != ? ";
+    }
 
 }
+
+

@@ -161,7 +161,7 @@
 										<div class="form-group">
 											<label class="col-sm-3 control-label required" data-translate="pgr.lbl.grievancedetails"></label>
 											<div class="col-sm-6">
-												<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" data-translate="pgr.msg.complaint.moredetails" required="required"></textarea>
+												<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500"></textarea>
 												<div class="text-left"><small  data-translate="pgr.lbl.minmax.characters"></small></div>
 											</div>
 										</div>
@@ -181,7 +181,7 @@
 											<label class="col-sm-3 control-label required" data-translate="pgr.lbl.grievance.location"></label>
 											<div class="col-sm-6" style="margin:0;">
 												<div class="input-group"  id="location-tour">
-													<input id="location" name="locationtext" data-extra="" type="text" class="form-control" data-translate="pgr.lbl.grievance.location.icon" autocomplete="off" required="required"/>
+													<input id="location" name="locationtext" data-extra="" type="text" class="form-control" placeholder="Start typing your location or select it from location icon" autocomplete="off" required="required"/>
 													<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
 													<input id="address_id" name="addressId" type="hidden" value=""/>
 									   				<input id="lat" name="lat" type="hidden" value="0.0"/>

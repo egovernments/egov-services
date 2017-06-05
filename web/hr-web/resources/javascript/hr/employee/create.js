@@ -1375,7 +1375,7 @@ function updateTable(tableName, modalName, object) {
             $(tableName).append(`<td data-label=${"remarks"}>
                                     ${employee[object][i]["remarks"] || ""}
                                 </td>`)
-            $(tableName).append(`<td data-label=${"documents"}>                                                                                                                                     
+            $(tableName).append(`<td data-label=${"documents"}>
                                     ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
                                 </td>`)
             closeTR(tableName, modalName, object, i);
@@ -2002,8 +2002,8 @@ function loadUI() {
                         var dateParts2 = _to.split("/");
                         var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
                         var date2 = new Date(newDateStr);
-                        if (date1 > date2) {
-                            showError("Joining Date must be before Appointment Date.");
+                        if (date1 < date2) {
+                            showError("Joining Date must be After Appointment Date.");
                             $('#' + _triggerId).val("");
                         }
                     }
@@ -2532,7 +2532,7 @@ function loadUI() {
                 addMandatoryStart(technical, "technical");
 
                 addMandatoryStart(user, "user");
-            
+
 }
 
 $(document).ready(function() {

@@ -71,74 +71,59 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(PropertyTypeUsageTypeControllerTest.class)
 public class PropertyTypeUsageTypeControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-	
-	@MockBean
-	private ApplicationProperties applicationProperties;
-	
-	@MockBean
-	private PropertyUsageTypeService propertyUsageTypeService;
-	
-	@MockBean
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ApplicationProperties applicationProperties;
+
+    @MockBean
+    private PropertyUsageTypeService propertyUsageTypeService;
+
+    @MockBean
     private ErrorHandler errHandler;
-	
+
     @MockBean
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @Test(expected = java.lang.AssertionError.class)
-	public void test_Should_Search_PropertyUsageType() throws Exception{
-		/*MockitoAnnotations.initMocks(this);
-		List<PropertyUsageType> propertyUsageTypes = new ArrayList<>();
-		PropertyUsageType propUsageType = getPropertyUsageType();
-		propertyUsageTypes.add(propUsageType);
-		when(propertyUsageTypeService.getPropertyUsageTypes(any(PropertyUsageTypeRequest.class))).thenReturn(propertyUsageTypes);
-		
-		mockMvc.perform(post("/propertyUsageType/_search")
-        		.param("tenantId", "DEFAULT")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("requestinfowrapper.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(getFileContents("propertyusagetyperesponse.json")));
-		*/
-		
-		List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
-		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        PropertyTypeUsageType propertyUsageType = new PropertyTypeUsageType();
+    public void test_Should_Search_PropertyUsageType() throws Exception {
+        /*
+         * MockitoAnnotations.initMocks(this); List<PropertyUsageType> propertyUsageTypes = new ArrayList<>(); PropertyUsageType
+         * propUsageType = getPropertyUsageType(); propertyUsageTypes.add(propUsageType);
+         * when(propertyUsageTypeService.getPropertyUsageTypes(any(PropertyUsageTypeRequest.class))).thenReturn(propertyUsageTypes
+         * ); mockMvc.perform(post("/propertyUsageType/_search") .param("tenantId", "DEFAULT")
+         * .contentType(MediaType.APPLICATION_JSON) .content(getFileContents("requestinfowrapper.json")))
+         * .andExpect(status().isOk()) .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+         * .andExpect(content().json(getFileContents("propertyusagetyperesponse.json")));
+         */
+
+        final List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
+        final RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final PropertyTypeUsageType propertyUsageType = new PropertyTypeUsageType();
         propertyUsageType.setActive(true);
         propertyUsageType.setUsageType("USG");
         propertyUsageType.setPropertyType("PRO");
         propertyUsageType.setTenantId("DEFAULT");
         propertyUsageType.setId(2L);
         propertyUsageTypes.add(propertyUsageType);
-		
-        PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
-		
-		when(propertyUsageTypeService.getPropertyUsageTypes(propUsageTypeGetRequest)).thenReturn(propertyUsageTypes); 
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
-		
-		mockMvc.perform(post("/propertyUsageType/_search")
-	        		.param("tenantId", "DEFAULT")
-	                .contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("requestinfowrapper.json")))
-	                .andExpect(status().isOk())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("propertyusagetyperesponse.json")));
-	}
-	
-	private PropertyTypeUsageType getPropertyUsageType() {
-		PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
-		propUsageType.setActive(true);
-		propUsageType.setId(2L);
-		propUsageType.setPropertyType("RES");
-		propUsageType.setTenantId("DEFAULT");
-		propUsageType.setUsageType("COM");
-		return propUsageType;
-	}
 
-	private String getFileContents(String fileName) throws IOException {
-		return new FileUtils().getFileContents(fileName);
-	}
+        final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
+
+        when(propertyUsageTypeService.getPropertyUsageTypes(propUsageTypeGetRequest)).thenReturn(propertyUsageTypes);
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
+
+        mockMvc.perform(post("/propertyUsageType/_search")
+                .param("tenantId", "DEFAULT")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("propertyusagetyperesponse.json")));
+    }
+
+    private String getFileContents(final String fileName) throws IOException {
+        return new FileUtils().getFileContents(fileName);
+    }
 }

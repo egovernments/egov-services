@@ -42,13 +42,10 @@ package org.egov.wcms.service;
 import java.util.List;
 
 import org.egov.wcms.model.DocumentType;
-import org.egov.wcms.model.UsageType;
-import org.egov.wcms.producers.DocumentTypeProducer;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeRepository;
-import org.egov.wcms.web.contract.DocumentTypeGetReq;
-import org.egov.wcms.web.contract.DocumentTypeReq;
-import org.egov.wcms.web.contract.UsageTypeGetRequest;
-import org.egov.wcms.web.contract.UsageTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeGetRequest;
+import org.egov.wcms.web.contract.DocumentTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,41 +56,54 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DocumentTypeService {
-	public static final Logger logger = LoggerFactory.getLogger(UsageTypeService.class);
-	
-	@Autowired
-    private DocumentTypeRepository documentTypeRepository;
-    
+
+    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeService.class);
+
     @Autowired
-    private DocumentTypeProducer documentTypeProducer;
-    
-    public void create(final DocumentTypeReq documentTypeRequest) {
-        documentTypeRepository.persistCreateDocumentType(documentTypeRequest);
+    private DocumentTypeRepository documentTypeRepository;
+
+    @Autowired
+    private WaterMasterProducer waterMasterProducer;
+
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
+
+   public DocumentTypeRequest create(final DocumentTypeRequest documentTypeRequest) {
+       return documentTypeRepository.persistCreateDocumentType(documentTypeRequest);
+   }
+
+    public DocumentTypeRequest update(final DocumentTypeRequest documentTypeRequest) {
+        return documentTypeRepository.persistModifyDocumentType(documentTypeRequest);
     }
-    
-    public DocumentType createDocumentType(final String topic,final String key,final DocumentTypeReq documentTypeRequest) {
+
+
+    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeRequest documentTypeRequest) {
+       documentTypeRequest.getDocumentType().setCode(codeGeneratorService.generate(documentTypeRequest.getDocumentType().SEQ_DOCUMENTTYPE));
         final ObjectMapper mapper = new ObjectMapper();
         String documentTypeValue = null;
         try {
-            logger.info("documentUsageType service::" + documentTypeRequest);
+            logger.info("createDocumentType service::" + documentTypeRequest);
             documentTypeValue = mapper.writeValueAsString(documentTypeRequest);
             logger.info("documentTypeValue::" + documentTypeValue);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
         try {
-            documentTypeProducer.sendMessage(topic,key,documentTypeValue);
+        	waterMasterProducer.sendMessage(topic,key,documentTypeValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return documentTypeRequest.getDocumentType();
     }
-    
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetReq documentTypeGetRequest) {
-        return documentTypeRepository.findForCriteria(documentTypeGetRequest);
+
+    public boolean getDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
+        return documentTypeRepository.checkDocumentTypeByNameAndCode(code,name,tenantId);
     }
-    
-    public boolean checkCodeAndTenantExists(DocumentTypeReq documentTypeRequest) {
-    	return documentTypeRepository.checkCodeAndTenantExists(documentTypeRequest);
-    }
+
+    public List<DocumentType> getDocumentTypes(DocumentTypeGetRequest documentTypeGetRequest) {
+       return documentTypeRepository.findForCriteria(documentTypeGetRequest);
+
+   }
+
 }

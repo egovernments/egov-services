@@ -1,0 +1,1882 @@
+swagger: '2.0'
+
+info:
+  version: 1.0.0
+  title: Marriage Registration APIs
+  description: APIs for Marriage registration for citizens are listed here.
+  contact:
+    name: Swaminathan Sahiram
+    email: swaminathan.s@riflexions.com
+schemes:
+  - http
+basePath: /marriage-regn
+paths:
+  /marriageRegns/appl/_search:
+    post:
+      summary: Get the list of marriage registrations stored in the system based on given criteria.
+      description: |
+        Get the list of marriage registrations based on the input parameters. Response will give      all captured data related to the marriage registrations satisfying the search criteria. The actions displayed in the search results are based on the user’s designation and role. At least one search criteria must be entered in order for the search to provide results.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request information.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: applicationNo
+          in: query
+          description: List of marriage registration application numbers.
+          required: false
+          type: array
+          items:
+            type: string
+        - name: regnNo
+          in: query
+          description: marriage registration number.
+          required: false
+          type: string
+          minLength: 1
+          maxLength: 256
+        - name: marriageDate
+          in: query
+          description: date of marriage.
+          required: false
+          type: integer
+          format: int64
+        - name: husbandName
+          in: query
+          description: Name of husband.
+          required: false
+          type: string
+          minLength: 1
+          maxLength: 256
+        - name: wifeName
+          in: query
+          description: Name of wife.
+          required: false
+          type: string
+          minLength: 1
+          maxLength: 256
+        - name: fromDate
+          in: query
+          description: date of marriage shall be from this date.
+          required: false
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          description: date of marriage shall be until this date.
+          required: false
+          type: integer
+          format: int64
+        - name: regnUnit
+          in: query
+          description: Registration Unit id where the marriage is registered.
+          required: false
+          type: integer
+          format: int64
+        - name: pageSize
+          type: integer
+          format: int32
+          in: query
+          description: Number of records in a per page in  the Search Results, Default value is 20
+        - name: pageNo
+          type: integer
+          format: int32
+          in: query
+          description: page number of the Search Results, Default value is 0
+        - $ref: "#/parameters/tenantId"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/MarriageRegnResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      tags:
+        - Marriage Registration
+  /marriageRegns/appl/_create:
+    post:
+      summary: Create a new marriage registration in the system along with related information and mandatory proof documents. 
+      description: The system allows the ULB user to enter New Marriage Registration details in the system. The application goes through an approval workflow before a marriage registration certificate is generated. At the end of the approval process, the following actions are performed by the system a) A unique registration number is generated in the system b) Marriage Registration Certificate is generated
+      parameters:
+        - name: marriageRegnRequest
+          in: body
+          description: Details for the new Marriage Registration.
+          required: true
+          schema:
+            $ref: '#/definitions/MarriageRegnRequest'
+      tags:
+        - Marriage Registration
+      responses:
+        '201':
+          description: Marriage Registration created
+          schema:
+            $ref: '#/definitions/MarriageRegnResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /marriageRegns/appl/_update:
+    post:
+      summary: Update existing Marriage Registration
+      description: This API allows the user to modify certain details in a marriage registration at any stage, even after issuing the marriage certificate, if he finds that the details were entered wrongly. This facility is provided to the approver, in his jurisdiction.
+      parameters:
+        - name: marriageRegnRequest
+          in: body
+          description: Details for the marriage registration with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/MarriageRegnRequest'
+      tags:
+        - Marriage Registration
+      responses:
+        '200':
+          description: Marriage Registration updated
+          schema:
+            $ref: '#/definitions/MarriageRegnResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  
+  /marriageRegns/certs/reissueAppl/_search:
+    post:
+      summary: Search applications for reissue of marriage certificate
+      description: This search API helps view and update reissue applications for marriage certificate.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request information.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: applicationNo
+          in: query
+          description: reissue application number.
+          required: false
+          type: string
+        - name: regnNo
+          in: query
+          description: marriage registration number.
+          required: false
+          type: string
+        - name: pageSize
+          type: integer
+          format: int32
+          in: query
+          description: Number of records in a per page in  the Search Results, Default value is 20
+        - name: pageNo
+          type: integer
+          format: int32
+          in: query
+          description: page number of the Search Results, Default value is 0
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Marriage Certificate
+      responses:
+        '200':
+          description: Marriage certificate
+          schema:
+            $ref: '#/definitions/ReissueCertResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'            
+  /marriageRegns/certs/reissueAppl/_create:
+    post:
+      summary: Create an application for reissue of marriage certificate.
+      description: In case applicant needs already Registered Marriage Certificate (on account of loss, damage), the system provides for issuing that on payment of a fee as specified by the ULB. The ULB staff verifies the details in the system, accepts payment and reprints the Marriage Registration Certificate. Citizen can take certificate from any registration unit.
+      parameters:
+        - name: reissueCertRequest
+          in: body
+          description: Details for the applying for re-issue of marriage certificate with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/ReissueCertRequest'
+      tags:
+        - Marriage Certificate
+      responses:
+        '200':
+          description: Marriage certificate reissue application updated
+          schema:
+            $ref: '#/definitions/ReissueCertResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /marriageRegns/certs/reissueAppl/_update:
+    post:
+      summary: Update an application for reissue of marriage certificate.
+      description: In case applicant needs already Registered Marriage Certificate (on account of loss, damage), the system provides for issuing that on payment of a fee as specified by the ULB. The ULB staff verifies the details in the system, accepts payment and reprints the Marriage Registration Certificate. Citizen can take certificate from any registration unit.
+      parameters:
+        - name: reissueCertRequest
+          in: body
+          description: Details for the applying for re-issue of marriage certificate.
+          required: true
+          schema:
+            $ref: '#/definitions/ReissueCertRequest'
+      tags:
+        - Marriage Certificate
+      responses:
+        '200':
+          description: Marriage certificate reissue application received
+          schema:
+            $ref: '#/definitions/ReissueCertResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'          
+
+  /marriageRegns/bill/_create:
+    post:
+      summary: Get a bill generated for a marriage registration or reissue of certificate. 
+      description: A bill is generated for marriage registration or reissue of certificate through this API.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request information.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: applicationNo
+          in: query
+          description: application number of the registration or reissue application.
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 256
+        - name: applicationType
+          in: query
+          description: Identifies if the application is about a registration or a reissue.
+          required: true
+          type: string
+          enum:
+            - REGISTRATION
+            - REISSUE
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Payment
+      responses:
+        '201':
+          description: Bill generated.
+          schema:
+            $ref: '#/definitions/BillCreationResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /marriageRegns/bill/_update:
+    post:
+      summary: Back update to a bill after payment is done for a marriage registration or reissue of certificate. 
+      description: Back update to a bill after payment is done for marriage registration or reissue of certificate.
+      parameters:
+        - name: billReceiptInfoRequest
+          in: body
+          description: Details for the payment.
+          required: true
+          schema:
+            $ref: '#/definitions/BillReceiptInfoRequest'
+      tags:
+        - Payment
+      responses:
+        '201':
+          description: Payment associated with bill.
+          schema:
+            $ref: '#/definitions/BillReceiptInfoResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /regnUnits/_search:
+    post:
+      summary: Get the list of registration units stored in the system based on given criteria.
+      description: |
+        Get the list of registration units based on the input parameters. Response will give all captured data related to the registration units satisfying the search criteria.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting registration unit.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: id
+          in: query
+          description: registration unit id
+          required: false
+          type: integer
+          format: int64
+          minLength: 1
+          maxLength: 256
+        - name: name
+          in: query
+          description: Name of the registration unit.
+          required: false
+          type: string
+        - name: locality
+          in: query
+          description: Locality of the registration unit.
+          required: false
+          type: integer
+          format: int64
+        - name: zone
+          in: query
+          description: Zone of the registration unit.
+          required: false
+          type: integer
+          format: int64
+        - name: isActive
+          in: query
+          description: Whether active or not. Default is true. Can be made null/blank to fetch both active and inactive registration units.
+          required: false
+          type: boolean
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Registration Unit
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/RegnUnitResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /regnUnits/_create:
+    post:
+      summary: Create a new registration unit in the system.
+      description: ULBs can view sub-offices a.k.a. registration units under their jurisdiction
+      parameters:
+        - name: regnUnit
+          in: body
+          description: Details for the new Registration Unit.
+          required: true
+          schema:
+            $ref: '#/definitions/RegnUnitRequest'
+      tags:
+        - Registration Unit
+      responses:
+        '201':
+          description: Registration Unit created
+          schema:
+            $ref: '#/definitions/RegnUnitResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /regnUnits/_update:
+    post:
+      summary: Update existing Registration Unit
+      description: This API allows the user to update an existing registration unit.
+      parameters:
+        - name: regnUnit
+          in: body
+          description: Details for the registration unit with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/RegnUnitRequest'
+      tags:
+        - Registration Unit
+      responses:
+        '200':
+          description: Registration Unit updated
+          schema:
+            $ref: '#/definitions/RegnUnitResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+            
+  /marriageRegns/documents/_search:
+    post:
+      summary: Get the list of marriage documents required at the time of Registration of Marriage.
+      description: |
+        ULBs can view the configured mandatory documents required at the time of Registration of Marriage. This API gives the list of marriage document types based on the input parameters.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: applicationType
+          in: query
+          description: application Type.
+          enum:
+            - REGISTRATION
+            - REISSUE
+          required: false
+          type: string
+        - name: isActive
+          in: query
+          description: Whether active or not. Default is true. Can be made null/blank to fetch both active and inactive marriage document types.
+          required: false
+          type: boolean
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Marriage Document Type
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/MarriageDocTypeResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        
+  /marriageRegns/documents/_create:
+    post:
+      summary: Create a new marriage document type in the system.
+      description: ULBs can configure mandatory documents required at the time of Registration of Marriage.
+      parameters:
+        - name: marriageDocTypes
+          in: body
+          description: Details for the new marriage document type.
+          required: true
+          schema:
+            $ref: '#/definitions/MarriageDocTypeRequest'
+      tags:
+        - Marriage Document Type
+      responses:
+        '201':
+          description: Marriage Document type created
+          schema:
+            $ref: '#/definitions/MarriageDocTypeResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /marriageRegns/documents/_update:
+    post:
+      summary: Update existing Marriage Document type
+      description: ULBs can modify the configuration of mandatory documents that are required at the time of Registration of Marriage.
+      parameters:
+        - name: marriageDocTypes
+          in: body
+          description: Complete list of marriage document types with new set of values. Any document types already defined in the system but not in the new list will be marked as inactive because they can be referenced by old marriage registration records.
+          required: true
+          schema:
+            $ref: '#/definitions/MarriageDocTypeRequest'
+      tags:
+        - Marriage Document Type
+      responses:
+        '200':
+          description: Marriage Document type updated
+          schema:
+            $ref: '#/definitions/MarriageDocTypeResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /serviceConfigurations/_search:
+    post:
+      summary: Get the list of configuration paramaters along with the values defined in the system for this service.
+      description: |
+        Get the configuration key data and the list of  values for each key. To get a particular configuration key values one can pass the key name. Date also needs to be passed along to get the appropriate values.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting configuration key.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: List of Key Name for which configuration values are required.
+          required: false
+          type: array
+          items:
+            type: string
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of configuration.
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: effectiveFrom
+          in: query
+          description: The date for which the configuration value is applicable.
+          required: false
+          type: integer
+          format: int64 
+        - name: sort
+          in: query
+          description: Configuration Key search results will be sorted by key name ascending and effectiveFrom descending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 3
+          items:
+             type: string
+          pattern: '[-+](keyname,values,effectiveFrom)'
+          default:
+            - +keyname 
+            - -effectiveFrom
+      responses:
+        200:
+          description: Successful response.
+          schema:
+            $ref: "#/definitions/ServiceConfigResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags: 
+       - Service Configuration  
+
+  /marriageRegns/report/regns/_search:
+    post:
+      summary: Search Marriage registrations for criteria.
+      description: |
+         Get the list of marriage registrations for given criteria.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - name: husbandReligion
+          in: query
+          description: Religion of husband.
+          required: true
+          type: string
+        - name: wifeReligion
+          in: query
+          description: Religion of wife.
+          required: true
+          type: string
+        - name: regnStatus
+          in: query
+          description: Status of the marriage registration application. If not specified, all statuses will be considered for query.
+          required: false
+          type: string
+        - name: husbandHandicapped
+          in: query
+          description: Was the husband handicapped at the time of marriage?
+          required: false
+          type: boolean
+        - name: wifeHandicapped
+          in: query
+          description: Was the wife handicapped at the time of marriage?
+          required: false
+          type: boolean
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByReligion/_search:
+    post:
+      summary: Religion-wise count of marriage registrations for a date-range.
+      description: |
+         Get the count of marriage registrations grouped by religion for a given date-range. The husband's religion is considered here. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByRegnUnit/_search:
+    post:
+      summary: RegistrationUnit-wise count of marriage registrations for a date-range.
+      description: |
+         Get the count of marriage registrations and reissues grouped by registration unit for a given date-range. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByAge/_search:
+    post:
+      summary: Age-wise count of marriage registrations for a date-range.
+      description: |
+         Get the count of marriage registrations grouped by age ranges for a given date-range. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/regnCountByApprovalDays/_search:
+    post:
+      summary: Count of marriage registrations by time taken for approval in a date-range.
+      description: |
+         Get the count of marriage registration applications grouped by ranges of days taken for approval for a given date-range. The tenant id can be given at higher level - in that case, all tenants under the given hierarchy will be considered for query.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /marriageRegns/report/fundCollection/_search:
+    post:
+      summary: Fund collected for marriage regns or reissue broken down by month for a given month-range.
+      description: |
+         Get the total of fund collected for marriage registrations or reissue of certificates, broken down by month for a given month-range.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromMonth
+          in: query
+          description: From this month of registration. Accepts in MM/YYYY format.
+          required: true
+          type: string
+        - name: toMonth
+          in: query
+          description: Till this month of registration. Accepts in MM/YYYY format.
+          required: true
+          type: string
+        - name: regnUnit
+          in: query
+          description: Registration unit code.
+          required: false
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /marriageRegns/report/maritalStatus/_search:
+    post:
+      summary: Count of marriage registrations by marital status of husband and wife.
+      description: |
+         Get the count of marriage registrations grouped by marital status of husband and wife.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting marriage document.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: fromDate
+          in: query
+          description: From this date of registration.
+          required: true
+          type: string
+        - name: toDate
+          in: query
+          description: Till this date of registration.
+          required: true
+          type: string
+        - name: regnUnit
+          in: query
+          description: Registration unit code.
+          required: false
+          type: string
+        - $ref: "#/parameters/tenantId"
+      tags:
+          - Report
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ReportResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+definitions:
+  RegistrationUnit:
+    title: Registration Unit
+    description: A sub-office under the respective ULB's jurisdiction
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description : Unique identifier of the registration unit.
+      code:
+        type: string
+        description: Registration Unit code. Unique identifier of the registration unit. This is a required field during update of Registration unit.
+        minLength: 1
+        maxLength: 20
+      name:
+        type: string
+        description: Registration Unit name
+      address:
+        $ref: '#/definitions/Location'
+      isActive:
+        type: boolean
+        description: Whether active or not.
+      tenantId:
+        type: string
+        description: Tenant Id
+      auditDetails:
+        $ref: "#/definitions/AuditDetails"
+    required:
+      - code
+      - name
+      - address
+      - tenantId
+
+  Location:
+    description: Hold the location specific information.
+    type: object
+    properties:
+      locality:
+        type: integer
+        format: int64
+        description: Boundary location id.
+      zone:
+        type: integer
+        format: int64
+        description: Boundary zone id.
+      revenueWard:      
+        type: integer
+        format: int64
+        description: Boundary revenueward id.
+      block:
+        type: integer
+        format: int64
+        description: Boundary block id.
+      street:
+        type: integer
+        format: int64
+        description: Boundary street id.
+      electionWard:      
+        type: integer
+        format: int64
+        description: Boundary election ward id.
+      doorNo:
+        type: string
+        description: Boundary door number.
+      pinCode:      
+        type: integer
+        format: int32
+        description: pin code of the location.
+  MarriageRegn:
+    title: Marriage Registration details.
+    description: All details of marriage registration stored in the system.
+    type: object
+    properties:
+      regnUnit:
+        $ref: '#/definitions/RegistrationUnit'
+      marriageDate:
+        type: integer
+        format: int64
+        description: Date of marriage as milliseconds since epoch. This number should be arrived at by having only the date information and keeping the time information as zero.
+      venue:
+        description: Marriage venue.
+        enum:
+          - RESIDENCE
+          - FUNCTION_HALL
+          - WORSHIP_PLACE
+          - OTHERS
+        type: string
+      street:
+        description: Line no./ Street Name, etc of the marriage venue.
+        type: string
+      placeOfMarriage:
+        description: Place of marriage. Mandatory if venue is residence.
+        type: string
+      locality:
+        type: string
+        description: Locality where the marriage took place.
+      city:
+        type: string
+        description: City where the marriage took place.
+      marriagePhoto:
+        type: string
+        description: Url where marriage photo is stored in the system.
+      fee:
+        type: number
+        format: double
+        description: Registration fee.
+      bridegroom:
+        $ref: '#/definitions/MarryingPerson'
+      bride:
+        $ref: '#/definitions/MarryingPerson'
+      witnesses:
+        type: array
+        description: List of all the witnesses associated with a marriage registration.
+        maxItems: 4
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/Witness'
+      priest:
+        $ref: '#/definitions/PriestInfo'
+      documents:
+        type: array
+        description: List of all the documents associated with a marriage registration.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/MarriageDocument"
+      serialNo:
+        description: Serial Number is updated during approval process.
+        type: string
+      volumeNo:
+        description: Volume Number is updated during approval process.
+        type: string
+      applicationNumber:
+        type: string
+        description: Application number given to applicant on submitting the application. This is a required field during update of a marriage registration application.
+      regnNumber:
+        type: string
+        description: Registration number, a unique number generated after all approvals for the application.
+      regnDate:
+        type: integer
+        format: int64
+      applicationStatus:
+        type: string
+        description: enumeration of statuses.
+        enum:
+          - CREATED
+          - APPROVED
+          - REJECTED
+          - REGISTERED
+          - CANCELLED
+          - DIGITALSIGNED
+      source:
+        type: string
+        description: source from which registration is being persisted.
+        enum:
+          - SYSTEM
+          - DATA_ENTRY
+      stateId:
+        type: string
+        description: Work flow ref id.
+      approvalDetails:
+        $ref: '#/definitions/ApprovalDetails'
+      demands:
+        type: array
+        description: List of all the demand Ids associated with a marriage registration.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: integer
+          format: int64
+          description: DemandId.
+      actions:
+        type: array
+        description: List of actions that can be taken on the marriage registration by the logged-in user. This field is relevant only when response is given from the system to the user.
+        enum:
+          - PRINT
+          - REISSUE
+          - MODIFY
+          - CANCEL
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
+          description: Action that can be taken.
+      certificates:
+        type: array
+        items:
+          $ref: '#/definitions/MarriageCertificate'
+      rejectionReason:
+        type: string
+        description: Rejection reason
+      remarks:
+        type: string
+        description: Remarks
+      tenantId:
+        type: string
+        description: Tenant Id
+      isActive:
+        type: boolean
+      auditDetails:
+        $ref: "#/definitions/AuditDetails"
+    required:
+      - regnUnit
+      - marriageDate
+      - venue
+      - street
+      - marriagePhoto
+      - locality
+      - fee
+      - city 
+      - bridegroom
+      - witnesses
+      - bride
+      - approvalDetails
+      - documents
+      - tenantId
+      
+  MarryingPerson:
+    title: Marrying Person (bride or the bridegroom) details.
+    description: All details of marrying Person (bride or the bridegroom) stored in the system.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description : User id for the citizen in the system.
+      name:
+        description: Name of the marrying Person (bride or the bridegroom).
+        type: string
+      parentName:
+        description: Father’s/Mother’s Name.
+        type: string
+      street:
+        description: Line no./ Street Name, etc.,.
+        type: string
+      locality:
+        description: Name of the Locality.
+        type: string
+      city:
+        description: Name of the City / Town.
+        type: string
+      dob:
+        description: Date of birth.
+        type: integer
+        format: int64
+      maritalStatusAtMarriage:
+        type: string
+        description: Status of marrying Person (bride or the bridegroom) at the time of Marriage.
+        enum:
+          - UNMARRIED
+          - WIDOWED
+          - DIVORCED
+      aadhaar:
+        description: Aadhaar Number.
+        type: string
+      mobileNo:
+        description: Mobile number.
+        type: string
+      email:
+        description: eMail ID
+        type: string
+      religion:
+        description: Id of the religion from master
+        type: integer
+        format: int64
+      religionPractice:
+        type: string
+        description: Religion practiced by birth or adoption.
+        enum:
+          - BIRTH
+          - ADOPTION
+      education:
+        description: One of the following values in Illiterate; Literate; SSC; Intermediate; Graduate; Post Graduate; Doctorate
+        type: string
+      occupation:
+        description: Occupation of the marrying Person (bride or the bridegroom)
+        type: string
+      handicapped:
+        description: Handicap information
+        type: string
+      residenceAddress:
+        description: Residence address
+        type: string
+      photo:
+        description: Photo of the marrying Person (bride or the bridegroom)
+        type: string
+      nationality:
+        description: Nationality of the marrying Person (bride or the bridegroom)
+        type: string
+    required:
+      - id
+      - name
+      - parentName
+      - street
+      - locality
+      - dob
+      - city
+      - maritalStatusAtMarriage
+      - mobileNo
+      - religion
+      - education
+      - residenceAddress
+      - photo
+      - nationality
+      
+  Witness:
+    title: Witness details for bridegroom or bride.
+    description: Details of witness for bridegroom or bride stored in the system.
+    type: object
+    properties:
+      witnessNo:
+        description: Takes value 1,2,3 or 4 meaning it is witness 1,2,3 or 4.
+        type: integer
+      name:
+        description: Name of the Witness
+        type: string
+      relationForIdentification:
+        description: S/o W/o D/o.
+        type: string
+      age: 
+        description: Age of Witness
+        type: integer
+        format: int32
+      address:
+        description: Usual place of residence. Has residence address in Detail.
+        type: string
+      relatedTo:
+        description: Identifies if the witness is from the bride's or the bridegroom's side.
+        type: string
+        enum:
+          - BRIDE
+          - BRIDEGROOM
+      relationship:
+        description: Relationship with Bridegroom/Bride
+        type: string
+      occupation:
+        description: Occupation detail
+        type: string
+      aadhaar:
+        description: Aadhaar number
+        type: string
+      mobileNo:
+        description: Mobile number.
+        type: string
+      email:
+        description: eMail ID
+        type: string
+    required:
+      - witnessNo
+      - name
+      - relationForIdentification
+      - age
+      - address
+      - relatedTo
+      - relationship
+  
+  PriestInfo:
+    title: Priest Information.
+    description: Information about the priest who conducted the marriage.
+    type: object
+    properties:
+      name:
+        description: Name of the priest.
+        type: string
+      religion:
+        description: Id of the religion from master
+        type: integer
+        format: int64
+      address:
+        description: Usual place of residence. Has residence address in detail.
+        type: string
+      aadhaar:
+        description: Aadhaar number
+        type: string
+      mobileNo:
+        description: Mobile number.
+        type: string
+      email:
+        description: eMail ID
+        type: string
+    required:
+      - name
+      - religion
+      - address
+      
+  MarriageDocument:
+    title: Document for marriage registration or reissue of marriage certificate
+    description: One of the documents to be submitted for marriage registration or reissue of marriage certificate. Documents can be for memorandum Of Marriage, marriage Photo, passport size photos of bride and the groom, proof of age for bride and the groom, address proof, wedding invitation card, Aadhar card for bride and the groom etc.
+    type: object
+    properties:
+      documentTypeCode:
+        description: Document type code that uniquely identies a document type defined in MarriageDocumentType.
+        type: string
+        format: int64
+      location:
+        description: filestore uuid of the document.
+        type: string
+    required:
+      - documentTypeCode
+      - location
+
+  ApprovalDetails:
+    title: Approval details.
+    description: Approval details.
+    type: object
+    properties:
+      department:
+        description: To choose one from list of departments in master.
+        type: integer
+        format: int64
+      designation:
+        description: To choose one from list of designations from master based on workflow configuration.
+        type: integer
+        format: int64
+      assignee:
+        description: To choose one from List of users based on the selected department and designation.
+        type: integer
+        format: int64
+      action:
+        description: Workflow action chosen.
+        type: string
+      status:
+        description: Current status.
+        type: string
+      comments:
+        description: Remarks or comments for the approval or rejection of the application.
+        type: string
+    required:
+      - department
+      - designation
+      - assignee
+      - comments
+      
+  MarriageDocumentType:
+    title: Document Types for marriage registration/reissue
+    description: ULBs can create/view/modify mandatory documents required at the time of Registration of Marriage. Documents can be for memorandum Of Marriage, marriage Photo, passport size photos of bride and the groom, proof of age for bride and the groom, address proof, wedding invitation card, Aadhar card for bride and the groom.
+    type: object
+    properties:
+      id:
+        description: The id which uniquely identies a document type.
+        type: integer
+        format: int64
+      name:
+        description: Name of the document.
+        type: string
+      code:
+        description: Code to identify a document type.
+        type: string
+      documentProof:
+        description: proof type that a document is used for.
+        enum:
+          - COMMON
+          - AGE
+          - ADDRESS
+        type: string
+      applicationType:
+        description: Type of transaction
+        enum:
+          - REGISTRATION
+          - REISSUE
+        type: string 
+      isActive:
+        description: Whether active or not.
+        type: boolean
+      isIndividual:
+        description: Whether the proof is common or individual in nature.
+        type: boolean
+      isRequired:
+        description: Whether the document is mandatory or not.
+        type: boolean
+      tenantId:
+        description: Tenant Id.
+        type: string      
+      auditDetails:
+        $ref: "#/definitions/AuditDetails"
+    required:
+      - name
+      - code
+      - documentProof
+      - applicationType
+      - isActive
+      - isIndividual
+      - isRequired
+      - tenantId
+      
+  MarriageCertificate:
+    title: Marriage Certificate data.
+    description: Data related to Marriage Certificate at the time of generation is stored here. This data is returned only during search results of marriage and reissue applications. In case of re-issue, only the certificate related to the application number in the reissue application is returned whereas on search of marriage registration application, all certificates associated with the registration number are returned.
+    type: object
+    properties:
+      certificateNo:
+        description: A unique number identifying a marriage certificate.
+        type: string
+      certificateDate:
+        description: Date on which the certificate is generated.
+        type: integer
+        format: int64
+      certificateType:
+        description: Type of certificate. Can be one of Registration/Reissue/Rejection.
+        enum:
+          - REGISTRATION
+          - REISSUE
+          - REJECTION
+        type: string
+      regnNumber:
+        type: string
+        description: Unique identifier of the marriage registration.
+      bridegroomPhoto:
+        description: Url of passport photo of bridegroom.
+        type: string
+      bridePhoto:
+        description: Url of passport photo of bride.
+        type: string
+      husbandName:
+        description: Name of husband
+        type: string
+      husbandAddress:
+        description: Full address of the bridegroom at the time of marriage.
+        type: string
+      wifeName:
+        description: Name of wife
+        type: string
+      wifeAddress:
+        description: Full address of the bride at the time of marriage.
+        type: string
+      marriageDate:
+        description: Date of marriage
+        type: integer
+        format: int64
+      marriageVenueAddress:
+        description: full address of the place where marriage was conducted.
+        type: string
+      regnDate:
+        description: marriage registration date specified as milliseconds since epoch.
+        type: integer
+        format: int64
+      regnSerialNo:
+        description: Serial number.
+        type: string
+      regnVolumeNo:
+        description: Volume number.
+        type: string
+      certificatePlace:
+        description: Place identifying a city/town where registration is done.
+        type: string
+      templateVersion:
+        description: Version of the template internally maintained in the system to generate a certificate.
+        type: string
+      applicationNumber:
+        type: string
+        description: Application number given to applicant on submitting the application.
+      tenantId:
+        description: Tenant Id.
+        type: string
+      auditDetails:
+        $ref: "#/definitions/AuditDetails"
+      
+  ReissueApplicantInfo:
+    title: Applicant information for Reissue of Certificate.
+    description: Applicant information for Reissue of Certificate.
+    type: object
+    properties:
+      name:
+        description: Name of the Applicant.
+        type: string
+      address:
+        description: Residence Address of the Applicant.
+        type: string
+      mobileNo:
+        description: Mobile number of the Applicant.
+        type: string
+      email:
+        description: eMail ID of the Applicant.
+        type: string
+      fee:
+        description: reissue Fee.
+        type: number
+        format: double
+      aadhaar:
+        description: Aadhar Number of the Applicant.
+        type: string
+    required:
+      - name
+      - address
+      - mobileNo
+      - fee
+      
+  ReissueCertAppl:
+    title: Data for reissue of certificate.
+    description: All information for reissue of marraige certificate.
+    type: object
+    properties:
+      regnNo:
+        type: string
+        description: Marriage Registration number for which certificate is to be re-issued.
+      applicantInfo:
+        $ref: '#/definitions/ReissueApplicantInfo'
+      documents:
+        type: array
+        description: List of all the documents associated with reissue of marriage certificate.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/MarriageDocument"
+      applicationNumber:
+        type: string
+        description: Application number given to applicant in response on submitting the reissue application. This is a required field during update of an application for resissue of marriage certificate.
+      reissueApplStatus:
+        type: string
+        description: enumeration of statuses.
+        enum:
+          - CREATED
+          - APPROVED
+          - REJECTED
+          - REISSUED
+          - CANCELLED
+          - DIGITALSIGNED
+      stateId:
+        type: string
+        description: Work flow ref id.
+      approvalDetails:
+        $ref: '#/definitions/ApprovalDetails'
+      demands:
+        type: array
+        description: List of all the demand Ids associated with a marriage reissue.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: integer
+          format: int64
+          description: DemandId.
+      tenantId:
+        description: Tenant Id.
+        type: string
+      certificates:
+        type: array
+        items:
+          $ref: '#/definitions/MarriageCertificate'
+      rejectionReason:
+        type: string
+        description: Rejection reason
+      remarks:
+        type: string
+        description: Remarks
+      isActive:
+        type: boolean
+      auditDetails:
+        $ref: "#/definitions/AuditDetails"
+    required:
+      - regnNo
+      - applicantInfo
+      - documents
+      - tenantId
+      
+  ReceiptAccountDetail:
+    title: Receipt Account Details.
+    description: Account Details pf receipt.
+    type: object
+    properties:
+      glCode:
+        type: string
+        description: General Ledger Code.
+      function:
+        type: string
+        description: function
+      functionName:
+        type: string
+        description: functionName
+      drAmount:
+        type: number
+        format: double
+        description: drAmount
+      crAmount:
+        type: number
+        format: double
+        description: crAmount
+      orderNo:
+        type: string
+        description: orderNo
+      isRevenueAccount:
+        type: boolean
+        description: isRevenueAccount
+      accountDescription:
+        type: string
+        description: accountDescription
+      purpose:
+        type: string
+        description: purpose
+      accountName:
+        type: string
+        description: accountName
+      financialYear:
+        type: string
+        description: financialYear
+      creditAmountToBePaid:
+        type: number
+        format: double
+        description: creditAmountToBePaid
+  BillReceiptInfo:
+    title: Receipt info for bill.
+    description: The receipt info for a bill after a payment is done against the bill. In marriage registration or reissue, there are no partial payments.
+    type: object
+    properties:
+      billReferenceNo:
+        type: string
+        description: Reference number of the bill for which the receipt is associated with.
+      event:
+        type: string
+        description: event
+      receiptNo:
+        type: string
+        description: Receipt number.
+      receiptDate:
+        type: integer
+        format: int64
+        description: Receipt date
+      payeeName:
+        type: string
+        description: Name of payee.
+      payeeAddress:
+        type: string
+        description: Address of payee.
+      accountDetails:
+        type: array
+        items:
+          $ref: "#/definitions/ReceiptAccountDetail"
+      serviceName:
+        type: string
+        description: service name
+      paidBy:
+        type: string
+        description: paidBy
+      receiptDescription:
+        type: string
+        description: receiptDescription
+      totalAmount:
+        type: integer
+        format: int64
+        description: totalAmount
+      receiptURL:
+        type: string
+        description: receiptURL
+      collectionType:
+        type: string
+        description: collectionType
+      isLegacy:
+        type: boolean
+        description: isLegacy
+      additionalInfo:
+        type: string
+        description: additionalInfo
+      source:
+        type: string
+        description: source
+      receiptInstrumentType:
+        type: string
+        description: receiptInstrumentType
+      receiptStatus:
+        type: string
+        description: receiptStatus
+      tenantId:
+        type: string
+        description: Tenant Id
+  ServiceConfigKeyValues:   
+    type: object
+    description: This object will depict how the response object of configuration looks like. There will be a map of key value pairs where values will be a list. One key can have multiple values.
+    properties:
+      configValues: 
+        type: array
+        items:
+          type: object
+          properties:
+            key:
+              type: string
+            values:
+              type: array
+              items:
+                type: string
+         
+  Page:
+    type: object
+    properties:
+      totalResults:
+        type: integer
+        format: int32
+        description: total results inside the current page
+      totalPages:
+        type: integer
+        format: int32
+        description: total pages of results for given search criteria
+      pageSize:
+        type: integer
+        format: int32
+        description: Number of records per page in the Pagination, Default value is 20. This property is used in both request and response.
+      currentPage:
+        type: integer
+        format: int32
+        description: current page of the Pagination given in response
+      offSet:
+        type: integer
+        format: int32
+        description: page number input given during request, Default value is 0. In response, this parameter needs to be ignored.
+  ReportQuery:
+    type: object
+    properties:
+      location:
+        type: string
+        description: The URL for Elastic Search with query parameters to be used by the client of the API to access and get the results
+      body:
+        type: string
+        description: The content to put in HTTP Body for searching ES. Note that ES search API accepts query in body part in a HTTP GET request.
+  MarriageRegnRequest:
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      marriageRegn:
+        $ref: '#/definitions/MarriageRegn'
+    type: object      
+  
+  MarriageRegnResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      marriageRegns:
+        type: array
+        items:
+          $ref: '#/definitions/MarriageRegn'
+      page:
+        $ref: '#/definitions/Page'
+    type: object
+  
+  ReissueCertRequest:
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      reissueApplication:
+        $ref: '#/definitions/ReissueCertAppl'
+    type: object 
+
+  ReissueCertResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      reissueApplications:
+        type: array
+        items:
+          $ref: '#/definitions/ReissueCertAppl'
+      page:
+        $ref: '#/definitions/Page'
+    type: object
+    
+  BillCreationResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      billXml:
+        type: string
+    type: object
+  
+  BillReceiptInfoRequest:
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      billReceiptInfo:
+        $ref: '#/definitions/BillReceiptInfo'
+    type: object
+  
+  BillReceiptInfoResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      billReceiptInfo:
+        $ref: '#/definitions/BillReceiptInfo'
+    type: object
+    
+  RegnUnitRequest:
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      regnUnit:
+        $ref: '#/definitions/RegistrationUnit'
+    type: object      
+ 
+  RegnUnitResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      regnUnits:
+        type: array
+        items:
+          $ref: '#/definitions/RegistrationUnit'
+    type: object
+    
+  MarriageDocTypeRequest:
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      marriageDocTypes:
+        type: array
+        description: Complete list of marriage document types.
+        items:
+          $ref: '#/definitions/MarriageDocumentType'
+    type: object      
+ 
+  MarriageDocTypeResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      marriageDocTypes:
+        type: array
+        items:
+          $ref: '#/definitions/MarriageDocumentType'
+    type: object
+  
+  ServiceConfigResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      serviceConfiguration:
+        type: array
+        items: 
+         $ref: '#/definitions/ServiceConfigKeyValues'
+     
+  ReportResponse:
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      reportQuery:
+        $ref: '#/definitions/ReportQuery'
+    type: object
+  ResponseInfo:
+    type: object
+    properties:
+      resMsgId:
+        type: string
+        description: res msg id of the ResponseInfo
+      status:
+        type: string
+        description: status of the ResponseInfo
+      apiId:
+        type: string
+        description: api id of the ResponseInfo
+      ver:
+        type: string
+        description: ver of the ResponseInfo
+      ts:
+        type: string
+        format: date
+        description: ts of the ResponseInfo
+      key:
+        type: string
+        description: key of the ResponseInfo
+      tenantId:
+        type: string
+        description: tenant id of the ResponseInfo
+  
+  RequestInfo:
+    type: object
+    properties:
+      action:
+        type: string
+        description: action of the RequestInfo
+      did:
+        type: string
+        description: did of the RequestInfo
+      msgId:
+        type: string
+        description: msg id of the RequestInfo
+      requesterId:
+        type: string
+        description: requester id of the RequestInfo
+      authToken:
+        type: string
+        description: auth token of the RequestInfo
+      apiId:
+        type: string
+        description: api id of the RequestInfo
+      ver:
+        type: string
+        description: ver of the RequestInfo
+      ts:
+        type: string
+        format: date
+        description: ts of the RequestInfo
+      key:
+        type: string
+        description: key of the RequestInfo
+      tenantId:
+        type: string
+        description: tenant id of the RequestInfo
+  
+  ErrorResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: "#/definitions/ResponseInfo"
+      error:
+        $ref: "#/definitions/Error"
+  
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: Code of the Error
+      message:
+        type: string
+        description: Message of the Error
+      description:
+        type: string
+        description: Description of the Error
+      fields:
+        type: array
+        description: Filelds of the Error
+        items:
+          $ref: "#/definitions/FieldError"
+  
+  FieldError:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Code of the FieldError
+      description:
+        type: string
+        description: Description of the FieldError
+  
+  AuditDetails:
+    type: object
+    description: Collection of audit related fields
+    properties:
+      createdBy: 
+        type: string
+        description: username (preferred) or userid of the user that created the object
+      lastModifiedBy: 
+        type: string
+        description: username (preferred) or userid of the user that last modified the object
+      createdTime:
+        type: number
+        format: long
+        description: epoch of the time object is created
+      lastModifiedTime:
+        type: number
+        format: long
+        description: epoch of the time object is last modified  
+        
+parameters:
+
+  tenantId:
+    name: tenantId
+    in: query
+    description: Unique id for a tenant.
+    required: true
+    type: string
+    format: varchar
+
+tags:
+  - name: Marriage Registration
+    description: Everything you need to handle Marriage Registration.   
+  - name: Marriage Certificate
+    description: Marriage Certificate.    
+  - name: Payment
+    description: Payment for marriage registration or re-issue of marriage certificate.   
+  - name: Registration Unit
+    description: Everything you need to handle Registration Unit Master data. 
+  - name: Marriage Document Type
+    description: Everything you need to handle Marriage Document Type Master data. 
+  - name: Service Configuration
+    description: Search Configuration parameters and values for the service.
+  - name: Report
+    description: Reports for the service.

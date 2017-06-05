@@ -45,22 +45,20 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.StringUtils.upperCase;
-
 @Configuration
 @PropertySource(value = { "classpath:messages/messages.properties",
-            "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+        "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class WcmsConstants {
 
-
-    public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
+	public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
     public static final String INVALID_PROPERTYUSAGETYPE_REQUEST_MESSAGE = "Property Type or Usage Type is invalid";
     public static final String INVALID_DOCUMENTTYPE_REQUEST_MESSAGE = "Document Type Request is Invalid";
+    public static final String INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE = "PropertyPipeSize is invalid";
+    public static final String INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE = "DocumentTypeApplicationType is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -85,7 +83,7 @@ public class WcmsConstants {
     public static final String CATEGORY_NAME_MANDATORY_CODE = "wcms.0006";
     public static final String CATEGORY_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String CATEGORY_NAME_MANADATORY_ERROR_MESSAGE = "Category Type is required";
-    
+
     public static final String PIPESIZE_SIZEINMM_MANDATORY_CODE = "wcms.0007";
     public static final String PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME = "sizeInMilimeter";
     public static final String PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE = "H.S.C Pipe Size(mm) is required";
@@ -93,24 +91,24 @@ public class WcmsConstants {
     public static final String PIPESIZE_SIZEINMM_UNIQUE_CODE = "wcms.0008";
     public static final String PIPESIZE_SIZEINMM__UNQ_FIELD_NAME = "sizeInMilimeter";
     public static final String PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE = "Entered H.S.C Pipe Size(mm) already exist.";
-    
+
     public static final String PROPERTY_TYPE_MANDATORY_CODE = "wcms.0009";
     public static final String PROPERTY_TYPE_MANDATORY_FIELD_NAME = "name";
     public static final String PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE = "Property Type is required";
 
-    public static final String PROPERTYTYPE_MANDATORY_CODE = "wcms.0009";
+    public static final String PROPERTYTYPE_MANDATORY_CODE = "wcms.0010";
     public static final String PROPERTYTYPE_MANDATORY_FIELD_NAME = "propertyType";
     public static final String PROPERTYTYPE_MANDATORY_ERROR_MESSAGE = "Property Type is Required";
-    
-    public static final String PROPERTYTYPE_USAGETYPE_UNIQUE_CODE = "wcms.0010";
+
+    public static final String PROPERTYTYPE_USAGETYPE_UNIQUE_CODE = "wcms.0011";
     public static final String PROPERTYTYPE_USAGETYPE_UNQ_FIELD_NAME = "propertyType";
     public static final String PROPERTYTYPE_USAGETYPE_UNQ_ERROR_MESSAGE = "Entered combination of Property Type and Usage Type has already been mapped";
-    
-    public static final String DONATION_MANDATORY_CODE = "wcms.0011";
+
+    public static final String DONATION_MANDATORY_CODE = "wcms.0012";
     public static final String DONATION_MANDATORY_FIELD_NAME = "donationAmount";
     public static final String DONATION_MANDATORY_ERROR_MESSAGE = "Donation Amount is required";
-    
-    public static final String FROMTO_MANDATORY_CODE = "wcms.0012";
+
+    public static final String FROMTO_MANDATORY_CODE = "wcms.0013";
     public static final String FROMTO_MANDATORY_FIELD_NAME = "fromDate";
     public static final String FROMTO_MANDATORY_ERROR_MESSAGE = "From and To Date are required";
     
@@ -126,12 +124,86 @@ public class WcmsConstants {
     public static final String CODE_TENANT_UNQ_FIELD_NAME = "code";
     public static final String CODE_TENANT_UNQ_ERROR_MESSAGE = "Entered combination of Document Code and Tenant ID already exists. Please check!";
     
+    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE = "wcms.0016";
+    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_ERROR_MESSAGE = "propertyType";
+    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_FIELD_NAME = "PropertyType is required";
+
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANDATORY_CODE = "wcms.0017";
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_FIELD_NAME = "sizeInMilimeter";
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_ERROR_MESSAGE = "H.S.C Pipe Size(mm) is required";
+
+    public static final String PROPERTY_PIPESIZE_SIZEINMM_UNIQUE_CODE = "wcms.0018";
+    public static final String PROPERTY_PIPESIZE_SIZEINMM_UNQ_FIELD_NAME = "pipeSize,propertyType";
+    public static final String PROPERTY_PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE = "Selected Property Type and PipeSize already exists.";
+
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_CODE = "wcms.0019";
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME = "sizeInMilimeter";
+    public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_ERROR_MESSAGE = "Please provide valid H.S.C Pipe Size(mm)";
+    
+    public static final String APPLICATION_TYPE_INVALID_CODE = "wcms.0020";
+    public static final String APPLICATION_TYPE_INVALID_FIELD_NAME = "applicationType";
+    public static final String APPLICATION_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";
+
+    
+    public static final String BILLING_TYPE_INVALID_CODE = "wcms.0021";
+    public static final String BILLING_TYPE_INVALID_FIELD_NAME = "billingType";
+    public static final String BILLING_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Billing Type";
+    
+    public static final String CONNECTION_TYPE_INVALID_CODE = "wcms.0022";
+    public static final String CONNECTION_TYPE_INVALID_FIELD_NAME = "connectionType";
+    public static final String CONNECTION_INVALID_ERROR_MESSAGE = "Please provide valid Connection Type";
+    
+    public static final String DOCUMENTS_INVALID_CODE = "wcms.0023";
+    public static final String DOCUMENTS_INVALID_FIELD_NAME = "documents";
+    public static final String DOCUMENTS_INVALID_ERROR_MESSAGE = "Please provide valid Documents";
+
+    public static final String NO_OF_TAPS_INVALID_CODE = "wcms.0024";
+    public static final String NO_OF_TAPS_INVALID_FIELD_NAME = "numberOfTaps";
+    public static final String NO_OF_TAPS_INVALID_ERROR_MESSAGE = "Please provide valid info for Number of Taps";
+    
+    public static final String SOURCE_TYPE_INVALID_CODE = "wcms.0025";
+    public static final String SOURCE_TYPE_INVALID_FIELD_NAME = "sourceType";
+    public static final String SOURCE_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Source Type";
+    
+    public static final String SUMP_CAPACITY_INVALID_CODE = "wcms.0026";
+    public static final String SUMP_CAPACITY_INVALID_FIELD_NAME = "sumpCapacity";
+    public static final String SUMP_CAPACITY_INVALID_ERROR_MESSAGE = "Please provide valid Sump Capacity";
+    
+    public static final String SUPPLY_TYPE_INVALID_CODE = "wcms.0027";
+    public static final String SUPPLY_TYPE_INVALID_FIELD_NAME = "supplyType";
+    public static final String SUPPLY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Supply Type";
+    
+    public static final String DOCTYPE_MANDATORY_CODE = "wcms.0028";
+    public static final String DOCTYPE_MANADATORY_FIELD_NAME = "documentType";
+    public static final String DOCTYPE_MANADATORY_ERROR_MESSAGE = "documentType is required";
+    
+    public static final String VALID_APPLICATION_TYPE_MANDATORY_CODE ="wcms.0029";
+    public static final String VALID_APPLICATION_TYPE_MANADATORY_FIELD_NAME ="applicationType";
+    public static final String VALID_APPLICATION_TYPE_ERROR_MESSAGE ="Application type should valid ";
+    
+    
+    public static final String APPLICATION_TYPE_MANDATORY_CODE = "wcms.0030";
+    public static final String APPLICATION_TYPE_MANADATORY_FIELD_NAME = "applicationType";
+    public static final String APPLICATION_TYPE_ERROR_MESSAGE = "applicationType is required";
+    
+    public static final String DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE = "wcms.0031";
+    public static final String DOCTYPE_APPLICATIONTYPE_UNQ_FIELD_NAME = "documentType and applicationType";
+    public static final String DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE = "Entered DocumentType and ApplicationType Combination already exist.";
+    
+    public static final String DOCUMENTTYPE_NAME_MANDATORY_CODE = "wcms.0032";
+    public static final String DOCUMENTTYPE_NAME_MANADATORY_FIELD_NAME = "name";
+    public static final String DOCUMENTTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Document Type is required";
+    
+    public static final String DOCUMENTTYPE_NAME_UNIQUE_CODE = "wcms.0033";
+    public static final String DOCUMENTTYPE_NAME_UNQ_FIELD_NAME = "name";
+    public static final String DOCUMENTTYPE_UNQ_ERROR_MESSAGE = "Entered Document Type already exist";
+ 
+
     @Autowired
-        private Environment environment;
+    private Environment environment;
 
-        public String getErrorMessage(final String property) {
-            return environment.getProperty(property);
-        }
-
+    public String getErrorMessage(final String property) {
+        return environment.getProperty(property);
+    }
 
 }

@@ -13,4 +13,5 @@ public class WorkflowDetails {
   private String action;
   private String status;
   private Long initiatorPosition;
+  private String comments;
 }

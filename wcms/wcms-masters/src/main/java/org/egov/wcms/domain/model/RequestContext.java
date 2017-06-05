@@ -49,7 +49,7 @@ public class RequestContext {
         return id.get();
     }
 
-    public static void setId(String correlationId) {
+    public static void setId(final String correlationId) {
         id.set(correlationId);
     }
 }

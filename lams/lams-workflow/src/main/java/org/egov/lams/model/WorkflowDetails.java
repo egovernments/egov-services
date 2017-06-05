@@ -18,4 +18,6 @@ public class WorkflowDetails {
   private String status;
   
   private Long initiatorPosition;
+  
+  private String comments;
 }

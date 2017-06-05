@@ -535,7 +535,6 @@ definitions:
         type: string
         description: To be used by third party applications, to send the source name.
       collectionType:
-        type: array
         description: Type of collection.
         items:
           type: string
@@ -616,7 +615,6 @@ definitions:
         type: boolean
         description: True for tax/charges/penalty. False for advances(if any).
       purpose:
-        type: array
         description: Purpose of Account head.
         items:
           type: string

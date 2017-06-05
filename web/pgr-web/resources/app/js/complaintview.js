@@ -780,7 +780,8 @@ function callToLoadDefinition(searchResponse){
 			else
 				$('#servicesBlockDocs').parents('.panel-primary').hide();
 
-			patternvalidation();
+			formValidation();
+			fileConstraint();
 			translate();
 
 			$('.appForm *').filter(':input').each(function(){

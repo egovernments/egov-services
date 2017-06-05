@@ -264,9 +264,9 @@ function loadServiceDefinition(code){
 			else
 				$('#servicesBlockDocs').parents('.panel-primary').hide();
 
-			patternvalidation();
 			initDatePicker();
 			fileConstraint();
+			formValidation();
 			translate();
 		},
 		error: function(){

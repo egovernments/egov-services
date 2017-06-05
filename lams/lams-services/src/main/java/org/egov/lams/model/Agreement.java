@@ -112,4 +112,6 @@ public class Agreement {
 	@NotNull
 	private Source source;
 	private List<Demand> legacyDemands;
+	private Cancellation cancellation;
+	private Renewal renewal;
 }

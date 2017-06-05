@@ -224,7 +224,7 @@ public class AgreementRepository {
 
 		logger.info("AgreementDao agreement::" + agreement);
 		
-		String agreementinsert = AgreementQueryBuilder.insertAgreementQuery();
+		String agreementinsert = AgreementQueryBuilder.INSERT_AGREEMENT_QUERY;
 		
 		Long rentIncrement = null;
 		if(agreement.getRentIncrementMethod() !=null)

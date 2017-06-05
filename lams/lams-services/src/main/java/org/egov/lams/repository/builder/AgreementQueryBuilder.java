@@ -19,12 +19,8 @@ public class AgreementQueryBuilder {
 	public static final String baseSearchQuery =  "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
 			+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid";
 	
-	public static String insertAgreementQuery() {
-		// FIXME explicitly mention columns
-		return "INSERT INTO eglams_agreement values "
+	public static final String INSERT_AGREEMENT_QUERY = "INSERT INTO eglams_agreement values "
 				+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-	}
 
 	public static String updateAgreementQuery() {
 

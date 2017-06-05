@@ -1,47 +1,44 @@
 package org.egov.lams.notification.models;
 
 import java.util.Date;
+import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
 import org.egov.lams.notification.model.enums.NatureOfAllotment;
 import org.egov.lams.notification.model.enums.PaymentCycle;
+import org.egov.lams.notification.model.enums.Source;
 import org.egov.lams.notification.model.enums.Status;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class Agreement {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
 	private String tenantId;
-
-	@NotNull
 	private String agreementNumber;
 	private String acknowledgementNumber;
-	private String StateId;
+	private String stateId;
 
-	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
+
+	@NotNull
+	@Max(5)
+	@Min(1)
+	private Long timePeriod;
+	
+	@NotNull
 	private Allottee allottee;
+	
+	@NotNull
 	private Asset asset;
+	
 	private String tenderNumber;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
@@ -50,20 +47,27 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date councilDate;
+
+	@Min(0)
 	private Double bankGuaranteeAmount;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date bankGuaranteeDate;
+
+	@NotNull
+	@Min(0)
 	private Double securityDeposit;
+
+	@Min(0)
+	private Double collectedSecurityDeposit;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date securityDepositDate;
-
-	@NotNull
 	private Status status;
 
 	@NotNull
 	private NatureOfAllotment natureOfAllotment;
+	@Min(0)
 	private Double registrationFee;
 	private String caseNo;
 
@@ -76,6 +80,7 @@ public class Agreement {
 	private String orderDetails;
 
 	@NotNull
+	@Min(0)
 	private Double rent;
 	private String tradelicenseNumber;
 
@@ -93,4 +98,18 @@ public class Agreement {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date solvencyCertificateDate;
 	private String tinNumber;
+
+	//private List<Document> documents;
+	private List<String> demands;
+	
+	@Min(0)
+	private Double goodWillAmount;
+
+	@Min(0)
+	private Double collectedGoodWillAmount;
+
+	@NotNull
+	private Source source;
+	private Cancellation cancellation;
+	private Renewal renewal;
 }

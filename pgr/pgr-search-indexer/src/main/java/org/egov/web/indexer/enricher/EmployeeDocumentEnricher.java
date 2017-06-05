@@ -25,14 +25,13 @@ public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher 
 
     @Override
     public boolean matches(ServiceType serviceType, SevaRequest sevaRequest) {
-        return false;
+        return true;
     }
 
     @Override
     public void enrich(ServiceType serviceType, SevaRequest sevaRequest, ServiceRequestDocument document) {
         final ServiceRequest serviceRequest = sevaRequest.getServiceRequest();
         final String positionId = getPosition(serviceRequest);
-        log.info("Retrieved position:" + positionId);
         if (positionId == null) {
             return;
         }

@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceType {
     public static final String COMPLAINT_KEYWORD = "COMPLAINT";
-    public static final String DELIVERABLE_KEYWORD = "Deliverable_service";
+    public static final String DELIVERABLE_KEYWORD = "DELIVERABLE";
     private List<String> keywords;
     private Integer slaHours;
     private Long groupId;
@@ -20,6 +20,6 @@ public class ServiceType {
     }
 
     public boolean isDeliverableServiceType() {
-        return keywords.stream().anyMatch(COMPLAINT_KEYWORD::equalsIgnoreCase);
+        return keywords.stream().anyMatch(DELIVERABLE_KEYWORD::equalsIgnoreCase);
     }
 }

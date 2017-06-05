@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class ServiceRequestESRepository {
     private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
-    public static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
+    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
@@ -68,7 +68,7 @@ public class ServiceRequestESRepository {
     }
 
     private String getFieldValue(SearchHit hit) {
-        log.info("Source: " + hit.getSource().get(SERVICE_REQUEST_ID_FIELD_NAME));
+        log.info("Source: " + hit.getSourceAsString());
         return (String) hit.getSource().get(SERVICE_REQUEST_ID_FIELD_NAME);
     }
 

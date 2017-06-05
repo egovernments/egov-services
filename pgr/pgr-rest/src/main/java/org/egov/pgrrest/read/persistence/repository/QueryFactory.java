@@ -26,6 +26,7 @@ public class QueryFactory {
         boolQueryBuilder = addReceivingModeFilter(criteria, boolQueryBuilder);
         boolQueryBuilder = addLocationIdFilter(criteria, boolQueryBuilder);
         boolQueryBuilder = addChildLocationFilter(criteria, boolQueryBuilder);
+        boolQueryBuilder = addKeywordFilter(criteria, boolQueryBuilder);
         return boolQueryBuilder;
     }
 
@@ -34,6 +35,14 @@ public class QueryFactory {
         if (criteria.getChildLocationId() != null) {
             final String childLocationId = criteria.getChildLocationId().toString();
             boolQueryBuilder = boolQueryBuilder.filter(termQuery("localityNo", childLocationId));
+        }
+        return boolQueryBuilder;
+    }
+
+    private BoolQueryBuilder addKeywordFilter(ServiceRequestSearchCriteria criteria, BoolQueryBuilder
+        boolQueryBuilder) {
+        if (isNotEmpty(criteria.getKeyword())) {
+            boolQueryBuilder = boolQueryBuilder.filter(termQuery("keyword", criteria.getKeyword()));
         }
         return boolQueryBuilder;
     }

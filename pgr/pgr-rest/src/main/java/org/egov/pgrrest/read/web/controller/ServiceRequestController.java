@@ -71,6 +71,7 @@ public class ServiceRequestController {
                                               @RequestParam(value = "mobileNumber", required = false) String
                                                   mobileNumber,
                                               @RequestParam(value = "emailId", required = false) String emailId,
+                                              @RequestParam(value = "keyword", required = false) String keyword,
                                               @RequestParam(value = "receivingMode", required = false) Long
                                                   receivingMode,
                                               @RequestParam(value = "locationId", required = false) Long locationId,
@@ -97,6 +98,7 @@ public class ServiceRequestController {
             .locationId(locationId)
             .childLocationId(childLocationId)
             .tenantId(tenantId)
+            .keyword(keyword)
             .fromIndex(fromIndex)
             .pageSize(pageSize)
             .build();
@@ -127,6 +129,7 @@ public class ServiceRequestController {
                                                 @RequestParam(value = "mobileNumber", required = false) String
                                                     mobileNumber,
                                                 @RequestParam(value = "emailId", required = false) String emailId,
+                                                @RequestParam(value = "keyword", required = false) String keyword,
                                                 @RequestParam(value = "receivingMode", required = false) Long
                                                     receivingMode,
                                                 @RequestParam(value = "locationId", required = false) Long locationId,
@@ -151,6 +154,7 @@ public class ServiceRequestController {
             .locationId(locationId)
             .childLocationId(childLocationId)
             .tenantId(tenantId)
+            .keyword(keyword)
             .build();
         final Long count = serviceRequestService.getCount(serviceRequestSearchCriteria);
         return new CountResponse(null, count);

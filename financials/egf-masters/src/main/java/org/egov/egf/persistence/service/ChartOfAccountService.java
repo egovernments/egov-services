@@ -193,7 +193,10 @@ public class ChartOfAccountService {
 			}
 
 		}
-		return new PageImpl<ChartOfAccount>(new ArrayList(chartOfAccountSet));
+		if (chartOfAccountSet.isEmpty())
+			return chartOfAccounts;
+		else
+			return new PageImpl<ChartOfAccount>(new ArrayList(chartOfAccountSet));
 	}
 
 	public BindingResult validate(final ChartOfAccountContractRequest chartOfAccountContractRequest,

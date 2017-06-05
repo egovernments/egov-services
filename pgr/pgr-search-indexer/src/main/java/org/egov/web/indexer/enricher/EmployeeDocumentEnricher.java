@@ -8,8 +8,6 @@ import org.joda.time.LocalDate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
-
 @Service
 public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher {
 
@@ -31,20 +29,16 @@ public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher 
     @Override
     public void enrich(ServiceType serviceType, SevaRequest sevaRequest, ServiceRequestDocument document) {
         final ServiceRequest serviceRequest = sevaRequest.getServiceRequest();
-        final Long positionId = getPosition(serviceRequest);
+        final String positionId = getPosition(serviceRequest);
         if (positionId == null) {
             return;
         }
-        document.setAssigneeId(positionId);
-        setEmployee(document, serviceRequest, positionId);
+        document.setAssigneeId(Long.valueOf(positionId));
+        setEmployee(document, serviceRequest, Long.valueOf(positionId));
     }
 
-    private Long getPosition(ServiceRequest serviceRequest) {
-        final String assignmentId = serviceRequest.getDynamicSingleValue(ASSIGNMENT_ID);
-        if (isEmpty(assignmentId)) {
-            return null;
-        }
-        return Long.valueOf(assignmentId);
+    private String getPosition(ServiceRequest serviceRequest) {
+        return serviceRequest.getDynamicSingleValue(ASSIGNMENT_ID);
     }
 
     private void setEmployee(ServiceRequestDocument document, ServiceRequest serviceRequest, Long positionId) {

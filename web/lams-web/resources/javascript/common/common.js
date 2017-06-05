@@ -214,9 +214,9 @@ function getNameById(object, id, property = "") {
     return "";
 }
 
-function getDesignations(status, cb) {
+function getDesignations(status, cb, businessKey) {
     $.ajax({
-        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=Agreement&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&additionalRule=&pendingAction=&designation=&amountRule=",
+        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + (businessKey || "Agreement") + "&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&additionalRule=&pendingAction=&designation=&amountRule=",
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),

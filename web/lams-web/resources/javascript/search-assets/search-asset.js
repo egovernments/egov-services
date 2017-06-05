@@ -208,7 +208,7 @@ class AssetSearch extends React.Component {
           <div className="styled-select">
               <select id="myOptions" onChange={(e)=>{
                 handleSelectChange(e.target.value, item.id, item.assetCategory.name)
-              }}>
+              }} defaultValue="", value="">
                   <option value="">Select Action</option>
                   <option value="create">Create</option>
                   <option value="dataEntry"> Data Entry </option>

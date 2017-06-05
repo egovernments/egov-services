@@ -62,7 +62,7 @@ public class EscalationServiceTest {
     ArgumentCaptor<RequestInfo> requestInfoArgumentCaptor;
 
     @Test
-    public void test_should_check_that_complaint_gets_escalated() throws Exception {
+    public void test_should_check_that_complaint_gets_escalated() {
         List<ServiceRequest> serviceRequestList = asList(getServiceRequest(), getServiceRequest());
         ServiceResponse serviceResponse = new ServiceResponse(null,serviceRequestList);
         when(tenantRepository.getAllTenants()).thenReturn(getTenantDetails());
@@ -76,6 +76,21 @@ public class EscalationServiceTest {
 
         List<RequestInfo> requestInfoList = requestInfoArgumentCaptor.getAllValues();
     }
+
+	@Test
+	public void test_should_continue_escalating_remaining_complaints_when_failure_of_a_single_complaint_happens() {
+		List<ServiceRequest> serviceRequestList = asList(getServiceRequest(), getServiceRequest());
+		ServiceResponse serviceResponse = new ServiceResponse(null,serviceRequestList);
+		when(tenantRepository.getAllTenants()).thenReturn(getTenantDetails());
+		when(complaintRestRepository.getComplaintsEligibleForEscalation("default")).thenReturn(serviceResponse);
+		when(userService.getUserByUserName("system","default")).thenReturn(User.builder().id(1L).build());
+		when(workflowService.enrichWorkflowForEscalation(eq(serviceRequestList.get(0)), any())).thenThrow(new RuntimeException());
+
+		escalationService.escalateComplaintForAllTenants();
+
+		verify(workflowService).enrichWorkflowForEscalation(eq(serviceRequestList.get(0)), any());
+		verify(workflowService).enrichWorkflowForEscalation(eq(serviceRequestList.get(1)), any());
+	}
 
     private ServiceRequest getServiceRequest(){
 

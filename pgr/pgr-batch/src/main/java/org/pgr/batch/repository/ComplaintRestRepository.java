@@ -24,21 +24,21 @@ public class ComplaintRestRepository {
 	private final String url;
 
 	public ComplaintRestRepository(final RestTemplate restTemplate,
-                                   @Value("${egov.services.pgr.host}") final String pgrRestHost,
-                                   @Value("${egov.services.pgr.escalation_complaints}") final String url) {
+								   @Value("${egov.services.pgr.host}") final String pgrRestHost,
+								   @Value("${egov.services.pgr.escalation_complaints}") final String url) {
 		this.restTemplate = restTemplate;
 		this.url = pgrRestHost + url;
 	}
 
-    public ServiceResponse getComplaintsEligibleForEscalation(String tenantId) {
+	public ServiceResponse getComplaintsEligibleForEscalation(String tenantId) {
 
-        String status = String.join(",", Arrays.asList("FORWARDED","REGISTERED","INPROGRESS","REOPENED"));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String escalationDate = simpleDateFormat.format(new Date());
+		String status = String.join(",", Arrays.asList("FORWARDED", "REGISTERED", "INPROGRESS", "REOPENED"));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		String escalationDate = simpleDateFormat.format(new Date());
 
-        final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
+		final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
 
-        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
-        return restTemplate.postForObject(url, request, ServiceResponse.class, tenantId, status,escalationDate);
-    }
+		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+		return restTemplate.postForObject(url, request, ServiceResponse.class, tenantId, status, escalationDate);
+	}
 }

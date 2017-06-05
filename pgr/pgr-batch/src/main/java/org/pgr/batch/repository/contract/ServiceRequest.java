@@ -197,11 +197,7 @@ public class ServiceRequest {
             return AttributeValues.getAttributeSingleValue(attribValues, key);
     }
 
-    public boolean isComplaint(){
-        return "Complaint".equalsIgnoreCase(AttributeValues.getAttributeSingleValue(attribValues, "keyword"));
-    }
-
     public boolean isExists(String key){
-        return (null == AttributeValues.getAttributeSingleValue(attribValues,key)) ? false : true;
+        return getDynamicSingleValue(key) != null;
     }
 }

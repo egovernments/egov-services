@@ -51,6 +51,7 @@ import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PropertyCategoryService;
+import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DonationGetRequest;
@@ -80,6 +81,9 @@ public class NewWaterConnectionValidator {
 	
 	@Autowired
 	private DocumentTypeApplicationTypeService documentTypeApplicationTypeService;
+	
+	@Autowired
+	private PropertyTypePipeSizeTypeService propertyPipeSizeService;
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
 	
@@ -215,10 +219,17 @@ public class NewWaterConnectionValidator {
 		
 		isRequestValid = validateDocumentApplicationType(waterConnectionRequest);
 		if(!isRequestValid){
-			LOGGER.info("FIle upload has FAILED for documents. Please re-upload.");
+			LOGGER.info("File upload has FAILED for documents. Please re-upload.");
 			return isRequestValid;
 		}
 		
+		if(waterConnectionRequest.getConnection().getCategoryType().equals("BPL")){
+			if(waterConnectionRequest.getConnection().getBplCardHolderName() == null ||
+					waterConnectionRequest.getConnection().getBplCardHolderName().isEmpty()){
+				LOGGER.info("BPL Card Holder Name not provided!");
+				return isRequestValid;
+			}
+		}
 		
 		isRequestValid =  validateDonationAmount(waterConnectionRequest);
 		
@@ -272,6 +283,7 @@ public class NewWaterConnectionValidator {
 		}
 		return isDocumentValid;
 	}
+	
 		
 	
 	private DonationGetRequest prepareDonationGetRequest(WaterConnectionReq waterConnectionRequest){

@@ -61,6 +61,9 @@ public class Connection {
 	private String consumerNumber;
 	
 	@NotNull
+	private String bplCardHolderName;
+	
+	@NotNull
 	private List<DocumentOwner> documents;
 	
 	@NotNull

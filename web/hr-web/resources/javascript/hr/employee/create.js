@@ -1688,7 +1688,7 @@ function printValue(object = "", values) {
                             $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
                         }
                         $("[name='" + key + "']").val(values[key] ? values[key] : "");
-                        if(values["bankBranch"]) (`#bankBranch`).val(values["bankBranch"]);
+                        if(values["bankBranch"]) $("#bankBranch").val(values["bankBranch"]);
                     }
                 })
             } else if (values[key]) {

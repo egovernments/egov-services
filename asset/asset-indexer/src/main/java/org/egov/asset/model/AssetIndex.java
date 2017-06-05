@@ -3,6 +3,10 @@ package org.egov.asset.model;
 import java.util.Date;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -54,7 +58,7 @@ public class AssetIndex {
 	private String length;
 	private String width;
 	private String totalArea;
-	private String properties;
+	private String assetAttributes;
 
 	public void setAssetData(Asset asset, AssetIndex assetIndex) {
 		this.tenantId = asset.getTenantId();
@@ -85,15 +89,17 @@ public class AssetIndex {
 		this.length = asset.getLength();
 		this.width = asset.getWidth();
 		this.totalArea = asset.getTotalArea();
-
-		// FIXME property is removed
-		/*
-		 * String property = null; try { ObjectMapper objectMapper = new
-		 * ObjectMapper(); property =
-		 * objectMapper.writeValueAsString(asset.getProperties()); } catch
-		 * (JsonProcessingException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } this.properties = property;
-		 */
+		String property = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			Asset asset2 = new Asset();
+			asset2.setAssetAttributes(asset.getAssetAttributes());
+			property = objectMapper.writeValueAsString(asset2);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+		this.assetAttributes = property;
 	}
 
 	public void setAssetDepartment(Department department) {

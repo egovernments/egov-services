@@ -109,6 +109,7 @@ public class NewWaterConnectionValidator {
         errorResponse.setError(error);
         if(!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
+        
         return errorResponses;
     }
     
@@ -195,6 +196,9 @@ public class NewWaterConnectionValidator {
             errorFields.add(errorField);
         }
        
+        List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
+        errorFields.addAll(errorFieldList);
+
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_REQUEST_MESSAGE)
                 .errorFields(errorFields)
@@ -202,46 +206,74 @@ public class NewWaterConnectionValidator {
     }
 	
 	
-	public boolean validateNewConnectionBusinessRules(WaterConnectionReq waterConnectionRequest){
+	public List<ErrorField> validateNewConnectionBusinessRules(WaterConnectionReq waterConnectionRequest){
 		boolean isRequestValid = false;
-		
+        List<ErrorField> errorFields = new ArrayList<>();
+
 		isRequestValid = validatePropertyUsageMapping(waterConnectionRequest);
-		if(!isRequestValid){
-			LOGGER.info("Property - Usage Mapping is invalid, Enter correct values.");
-			return isRequestValid;
+		if(!isRequestValid){			
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.PROPERTY_USAGE_INVALID_CODE)
+                    .message(WcmsConstants.PROPERTY_USAGE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_USAGE_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
 		}
 		
 		isRequestValid = validatePropertyCategoryMapping(waterConnectionRequest);
 		if(!isRequestValid){
-			LOGGER.info("Property - Category Mapping is invalid, Enter correct values.");
-			return isRequestValid;
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.PROPERTY_CATEGORY_INVALID_CODE)
+                    .message(WcmsConstants.PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_CATEGORY_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
 		}
 		
 		isRequestValid = validateDocumentApplicationType(waterConnectionRequest);
 		if(!isRequestValid){
-			LOGGER.info("File upload has FAILED for documents. Please re-upload.");
-			return isRequestValid;
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.DOCUMENT_APPLICATION_INVALID_CODE)
+                    .message(WcmsConstants.DOCUMENT_APPLICATION_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.DOCUMENT_APPLICATION_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
 		}
 		
 		isRequestValid = validateStaticFields(waterConnectionRequest);
 		if(!isRequestValid){
-			LOGGER.info("Enum values failed validations. Please re enter.");
-			return isRequestValid;
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.STATIC_INVALID_CODE)
+                    .message(WcmsConstants.STATIC_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.STATIC_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
 		}
 		
 		if(waterConnectionRequest.getConnection().getCategoryType().equals("BPL")){
 			if(waterConnectionRequest.getConnection().getBplCardHolderName() == null ||
 					waterConnectionRequest.getConnection().getBplCardHolderName().isEmpty()){
-				LOGGER.info("BPL Card Holder Name not provided!");
-				return isRequestValid;
+	            final ErrorField errorField = ErrorField.builder()
+	                    .code(WcmsConstants.BPL_INVALID_CODE)
+	                    .message(WcmsConstants.BPL_INVALID_ERROR_MESSAGE)
+	                    .field(WcmsConstants.BPL_INVALID_FIELD_NAME)
+	                    .build();
+	            errorFields.add(errorField);
 			}
 		}
 	
-		
 		isRequestValid =  validateDonationAmount(waterConnectionRequest);
+		if(!isRequestValid){
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.DONATION_INVALID_CODE)
+                    .message(WcmsConstants.DONATION_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.DONATION_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+		}
 		
 		
-		return isRequestValid;
+		return errorFields;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -259,6 +291,8 @@ public class NewWaterConnectionValidator {
 	}
 	
 	private boolean validatePropertyUsageMapping(WaterConnectionReq waterConnectionRequest){
+		LOGGER.info("Validating Property - Usage Mapping");
+
 		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
 		PropertyTypeUsageType propertyTypeUsageType = new PropertyTypeUsageType();
 		
@@ -268,22 +302,30 @@ public class NewWaterConnectionValidator {
 		
 		propUsageTypeRequest.setPropertyTypeUsageType(propertyTypeUsageType);
 		
-		
 		return propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest);
 		
 	}
 	
-	private boolean validatePropertyCategoryMapping(WaterConnectionReq waterConnectionRequest){		
-		return propertyCategoryService.checkIfMappingExists(waterConnectionRequest.getConnection().getProperty().getPropertyType(),
+	private boolean validatePropertyCategoryMapping(WaterConnectionReq waterConnectionRequest){
+		LOGGER.info("Validating Property - Category Mapping");
+		boolean result = false;
+		try{
+			result =  propertyCategoryService.checkIfMappingExists(waterConnectionRequest.getConnection().getProperty().getPropertyType(),
 				waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
+		}catch(Exception e){
+			LOGGER.info("Validating Property - Category Mapping FAILED!");
+		}
+		return result;
 		
 	}
 	
 	private boolean validateDocumentApplicationType(WaterConnectionReq waterConnectionRequest){
+		LOGGER.info("Validating Document - Application Mapping");
+		
 		boolean isDocumentValid = true;
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
 			if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
-				LOGGER.info("File Upload FAILED for the document: "+documentOwner.getDocument().getName());
+				LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
 				isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
 				return isDocumentValid;
 			}			
@@ -292,24 +334,26 @@ public class NewWaterConnectionValidator {
 	}
 	
 	private boolean validateStaticFields(WaterConnectionReq waterConnectionRequest){
+		LOGGER.info("Validating ConnectionType, BillingType, SupplyType, SourceType");
+
 		boolean isRequestValid = false;
 		
-		if(!waterConnectionRequest.getConnection().getConnectionType().equals("TEMPORARY") || 
-				!waterConnectionRequest.getConnection().getConnectionType().equals("PERMANENT")){
+		if(!(waterConnectionRequest.getConnection().getConnectionType().equals("TEMPORARY") || 
+				waterConnectionRequest.getConnection().getConnectionType().equals("PERMANENT"))){
 			LOGGER.info("ConnectionType is invalid");
 			return isRequestValid;
-		}else if(!waterConnectionRequest.getConnection().getBillingType().equals("METERED") || 
-				!waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED")){
+		}else if(!(waterConnectionRequest.getConnection().getBillingType().equals("METERED") || 
+				waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED"))){
 			LOGGER.info("BillingType is invalid");
 			return isRequestValid;
-		}else if(!waterConnectionRequest.getConnection().getSupplyType().equals("REGULAR") || 
-				!waterConnectionRequest.getConnection().getSupplyType().equals("BULK") || 
-				!waterConnectionRequest.getConnection().getSupplyType().equals("SEMIBULK")){
+		}else if(!(waterConnectionRequest.getConnection().getSupplyType().equals("REGULAR") || 
+				waterConnectionRequest.getConnection().getSupplyType().equals("BULK") || 
+				waterConnectionRequest.getConnection().getSupplyType().equals("SEMIBULK"))){
 			LOGGER.info("SupplyType is invalid");
 			return isRequestValid;
-		}else if(!waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") || 
-				!waterConnectionRequest.getConnection().getSourceType().equals("SURFACEWATER")){
-			LOGGER.info("SupplyType is invalid");
+		}else if(!(waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") || 
+				waterConnectionRequest.getConnection().getSourceType().equals("SURFACEWATER"))){
+			LOGGER.info("SourceType is invalid");
 			return isRequestValid;
 		}
 		

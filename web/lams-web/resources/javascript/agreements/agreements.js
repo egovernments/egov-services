@@ -67,6 +67,10 @@ $(document).ready(function(){
 });
 
 $(".disabled").attr("disabled", true);
+$("textarea").on("keyup", function() {
+    fillValueToObject(this);
+});
+
 //Getting data for user input
 $("input").on("keyup", function() {
     fillValueToObject(this);
@@ -1111,10 +1115,12 @@ $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
-        // form.submit();
-        // form.preventDefault();
         agreement["workflowDetails"] = {};
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
+        if(agreement.wFremarks) {
+            agreement["workflowDetails"]["remarks"] = agreement.wFremarks;
+            delete agreement.wFremarks;
+        }
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
         agreement["asset"]["name"] = assetDetails["name"];

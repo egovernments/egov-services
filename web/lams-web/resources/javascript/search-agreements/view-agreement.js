@@ -229,6 +229,10 @@ $(document).ready(function() {
         renewAgreement[this.id] = this.value;
     });
 
+    $("textarea").on("keyup", function() {
+        fillValueToObject(this);
+    });
+    
     //Getting data for user input
     $("select").on("change", function() {
         // console.log(this.value);
@@ -504,6 +508,15 @@ $(document).ready(function() {
         };
 
         if (data.action && data.action != "Print Notice") {
+            if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
+                return showError("Comments is mandatory in case of 'Reject'");
+            }
+
+            if(_agrmntDet.wFremarks) {
+                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
+                delete _agrmntDet.wFremarks;
+            }
+
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',

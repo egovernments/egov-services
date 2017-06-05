@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.Bank;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -90,16 +91,12 @@ public class BankContract extends AuditableContract {
 		this.id = Long.valueOf(id);
 	}
 
-	/*
-	 * public void map(BankContractContract bank) { if(bank!=null) {
-	 * if(bank.getActive()!=null) this.setActive(bank.getActive());
-	 * if(bank.getName()!=null) this.setName(bank.getName());
-	 * if(bank.getCode()!=null) this.setCode(bank.getCode());
-	 * if(bank.getDescription()!=null)
-	 * this.setDescription(bank.getDescription()); } } public
-	 * BankContractContract mapContract(BankContractContract bank) {
-	 * bank.setId(id); bank.setCode(code); bank.setName(name);
-	 * bank.setActive(active); bank.setDescription(description); return bank; }
-	 */
+	public BankContract(Bank bean) {
+		this.setId(bean.getId());
+		this.setCode(bean.getCode());
+		this.setName(bean.getName());
+		this.setActive(bean.getActive());
+		this.setDescription(bean.getDescription());
+	}
 
 }

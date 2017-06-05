@@ -42,6 +42,7 @@ package org.egov.egf.persistence.queue.contract;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.egov.egf.persistence.entity.BankBranch;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -117,6 +118,26 @@ public class BankBranchContract extends AuditableContract {
 	public BankBranchContract(final String id) {
 		super();
 		this.id = Long.valueOf(id);
+	}
+
+	public BankBranchContract(BankBranch bean) {
+		this.setId(bean.getId());
+		this.setBank(new BankContract());
+		this.getBank().setId(bean.getBank());
+		this.setName(bean.getName());
+		this.setActive(bean.getActive());
+		this.setAddress(bean.getAddress());
+		this.setAddress2(bean.getAddress2());
+		this.setCode(bean.getCode());
+		this.setCity(bean.getCity());
+		this.setContactPerson(bean.getContactPerson());
+		this.setDescription(bean.getDescription());
+		this.setFax(bean.getFax());
+		this.setMicr(bean.getMicr());
+		this.setPhone(bean.getPhone());
+		this.setPincode(bean.getPincode());
+		this.setState(bean.getState());
+		this.setTenantId(bean.getTenantId());
 	}
 
 }

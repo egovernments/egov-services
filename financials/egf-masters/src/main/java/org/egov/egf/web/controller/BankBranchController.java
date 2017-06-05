@@ -6,14 +6,17 @@ import java.util.Date;
 import javax.validation.Valid;
 
 import org.egov.egf.domain.exception.CustomBindException;
+import org.egov.egf.persistence.entity.Bank;
 import org.egov.egf.persistence.entity.BankBranch;
 import org.egov.egf.persistence.queue.contract.BankBranchContract;
 import org.egov.egf.persistence.queue.contract.BankBranchContractRequest;
 import org.egov.egf.persistence.queue.contract.BankBranchContractResponse;
+import org.egov.egf.persistence.queue.contract.BankContract;
 import org.egov.egf.persistence.queue.contract.Pagination;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.BankBranchService;
+import org.egov.egf.persistence.service.BankService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,8 +35,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/bankbranches")
 public class BankBranchController {
+
 	@Autowired
 	private BankBranchService bankBranchService;
+
+	@Autowired
+	private BankService bankService;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -125,13 +132,15 @@ public class BankBranchController {
 		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
 		bankBranchContractResponse.setPage(new Pagination());
 		Page<BankBranch> allBankBranches;
-		ModelMapper model = new ModelMapper();
 
 		allBankBranches = bankBranchService.search(bankBranchContractRequest);
 		BankBranchContract bankBranchContract = null;
 		for (BankBranch b : allBankBranches) {
-			bankBranchContract = new BankBranchContract();
-			model.map(b, bankBranchContract);
+			bankBranchContract = new BankBranchContract(b);
+			if (b.getBank() != null) {
+				Bank bank = bankService.findOne(b.getBank());
+				bankBranchContract.setBank(new BankContract(bank));
+			}
 			bankBranchContractResponse.getBankBranches().add(bankBranchContract);
 		}
 		bankBranchContractResponse.getPage().map(allBankBranches);

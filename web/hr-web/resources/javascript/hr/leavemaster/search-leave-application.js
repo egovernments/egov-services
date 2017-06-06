@@ -109,11 +109,10 @@ class SearchLeaveApplication extends React.Component {
               var code = e.target.value;
                commonApiPost("hr-employee", "employees", "_search", { code, tenantId },function(err,res){
                  if(res){
-                   var obj = res["Employee"][0];
                    _this.setState({
                        searchSet: {
-                           ..._this.state.searchSet,
-                           name: obj.name
+                         ..._this.state.searchSet,
+                          name: res.Employee && res.Employee[0] ? res.Employee[0].name : ""
                        }
                    })
                  }

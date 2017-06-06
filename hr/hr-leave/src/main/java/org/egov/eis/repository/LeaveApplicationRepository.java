@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
@@ -91,7 +92,7 @@ public class LeaveApplicationRepository {
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
-        if (leaveApplicationRequest.getType() != null && "upload".equalsIgnoreCase(leaveApplicationRequest.getType()))
+        if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
             processInstance = workFlowService.start(leaveApplicationRequest);
         if (processInstance.getId() != null)
             stateId = Long.valueOf(processInstance.getId());

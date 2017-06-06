@@ -12,6 +12,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.helper.DemandHelper;
@@ -51,7 +52,15 @@ public class DemandRepository {
 		Agreement agreement = agreementRequest.getAgreement();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		calendar.add(Calendar.MONTH, 1);
+		
+		if (agreement.getPaymentCycle().equals(PaymentCycle.MONTH))
+			calendar.add(Calendar.MONTH, 1);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER))
+			calendar.add(Calendar.MONTH, 3);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR))
+			calendar.add(Calendar.MONTH, 6);
+		else
+			calendar.add(Calendar.YEAR, 1);
 		calendar.add(Calendar.DATE, -1);
 		Date date = calendar.getTime();
 		String taxReason = null;

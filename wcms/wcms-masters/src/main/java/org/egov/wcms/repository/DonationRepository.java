@@ -72,7 +72,7 @@ public class DonationRepository {
 				donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
 				donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(), donationRequest.getDonation().getToDate(),
 				donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
-				donationRequest.getDonation().getTenantId(), new Date(new java.util.Date().getTime()), 1L };
+				donationRequest.getDonation().getTenantId(), new Date(new java.util.Date().getTime()), donationRequest.getRequestInfo().getUserInfo().getId() };
 		jdbcTemplate.update(donationInsert, obj);
 		return donationRequest;
 	}
@@ -86,7 +86,7 @@ public class DonationRepository {
 				donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
 				donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(), donationRequest.getDonation().getToDate(),
 				donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
-				1L,new Date(new java.util.Date().getTime()),donationRequest.getDonation().getId() };
+				donationRequest.getRequestInfo().getUserInfo().getId(),new Date(new java.util.Date().getTime()),donationRequest.getDonation().getId() };
 		jdbcTemplate.update(donationInsert, obj);
 		return donationRequest;
 	}

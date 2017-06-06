@@ -37,32 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.producers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+package org.egov.wcms.web.contract;
 
-@Service
-public class DocumentTypeProducer {
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+import javax.validation.constraints.NotNull;
 
-	public void sendMessage(final String topic, final String key, final Object message) {
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
-			}
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.DocumentTypeApplicationType;
 
-			@Override
-			public void onFailure(final Throwable throwable) {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-			}
-		});
-	}
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class DocumentTypeApplicationTypeReq {
+
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	@JsonProperty("DocumentTypeApplicationType")
+	private DocumentTypeApplicationType documentTypeApplicationType ;
 
 }

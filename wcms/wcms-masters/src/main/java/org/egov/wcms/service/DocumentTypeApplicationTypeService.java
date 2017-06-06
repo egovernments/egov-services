@@ -46,7 +46,7 @@ import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeApplicationTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,11 +66,11 @@ public class DocumentTypeApplicationTypeService {
     @Autowired
     private WaterMasterProducer mastertProducer;
 
-   public DocumentTypeApplicationTypeRequest create(final DocumentTypeApplicationTypeRequest docNameRequest) {
+   public DocumentTypeApplicationTypeReq create(final DocumentTypeApplicationTypeReq docNameRequest) {
        return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
    }
 
-    public DocumentTypeApplicationType sendMessage(final String topic,final String key,final DocumentTypeApplicationTypeRequest docNameRequest) {
+    public DocumentTypeApplicationType sendMessage(final String topic,final String key,final DocumentTypeApplicationTypeReq docNameRequest) {
     	//docNameRequest.getDocumentName().setCode(codeGeneratorService.generate(usageTypeRequest.getUsageType().SEQ_USAGETYPE));
         final ObjectMapper mapper = new ObjectMapper();
         String docTypeApplTypeValue = null;
@@ -86,11 +86,11 @@ public class DocumentTypeApplicationTypeService {
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return docNameRequest.getDocumentApplicationType();
+        return docNameRequest.getDocumentTypeApplicationType();
     }
     
   
-    public DocumentTypeApplicationTypeRequest update(final DocumentTypeApplicationTypeRequest documentTypeRequest) {
+    public DocumentTypeApplicationTypeReq update(final DocumentTypeApplicationTypeReq documentTypeRequest) {
         return docTypeApplTypeRepository.persistModifyDocTypeApplicationType(documentTypeRequest);
     }
     

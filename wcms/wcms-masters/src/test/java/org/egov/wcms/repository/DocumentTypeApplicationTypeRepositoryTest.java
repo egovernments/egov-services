@@ -15,7 +15,7 @@ import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.repository.builder.DocumentTypeApplicationTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeApplicationTypeMapper;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -47,14 +47,14 @@ public class DocumentTypeApplicationTypeRepositoryTest {
 	
 	@Test
 	public void test_Should_Create_ApplicationTypeDocType() {
-		DocumentTypeApplicationTypeRequest docNameRequest = new DocumentTypeApplicationTypeRequest();
+		DocumentTypeApplicationTypeReq docNameRequest = new DocumentTypeApplicationTypeReq();
 		RequestInfo requestInfo = new RequestInfo();
 		User user = new User();
 		user.setId(2L);
 		requestInfo.setUserInfo(user);
 		docNameRequest.setRequestInfo(requestInfo);
 		DocumentTypeApplicationType applicationTypDoce = Mockito.mock(DocumentTypeApplicationType.class);
-		docNameRequest.setDocumentApplicationType(applicationTypDoce);
+		docNameRequest.setDocumentTypeApplicationType(applicationTypDoce);
 
 		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 		assertTrue(docNameRequest.equals(docTypeAppTypeRepository.persistCreateDocTypeApplicationType(docNameRequest)));
@@ -63,15 +63,15 @@ public class DocumentTypeApplicationTypeRepositoryTest {
 	@Test
 	public void test_Should_Create_ApplicationTypeDocType_NotNullCheck() {
 		
-		DocumentTypeApplicationTypeRequest applicationTypeDocReq = getApplicationTypeDoc();
-		Object[] obj = new Object[] {applicationTypeDocReq.getDocumentApplicationType().getId(), applicationTypeDocReq.getDocumentApplicationType().getApplicationType(), applicationTypeDocReq.getDocumentApplicationType().getDocumentType(), applicationTypeDocReq.getDocumentApplicationType().getActive(),
-				applicationTypeDocReq.getDocumentApplicationType().getTenantId(), new Date(new java.util.Date().getTime()), applicationTypeDocReq.getRequestInfo().getUserInfo().getId() };
+		DocumentTypeApplicationTypeReq applicationTypeDocReq = getApplicationTypeDoc();
+		Object[] obj = new Object[] {applicationTypeDocReq.getDocumentTypeApplicationType().getId(), applicationTypeDocReq.getDocumentTypeApplicationType().getApplicationType(), applicationTypeDocReq.getDocumentTypeApplicationType().getDocumentType(), applicationTypeDocReq.getDocumentTypeApplicationType().getActive(),
+				applicationTypeDocReq.getDocumentTypeApplicationType().getTenantId(), new Date(new java.util.Date().getTime()), applicationTypeDocReq.getRequestInfo().getUserInfo().getId() };
 	    when(jdbcTemplate.update("query", obj)).thenReturn(1);
 		assertNotNull(docTypeAppTypeRepository.persistCreateDocTypeApplicationType(applicationTypeDocReq));
 	}
 	
-	private DocumentTypeApplicationTypeRequest getApplicationTypeDoc() {
-		DocumentTypeApplicationTypeRequest docAppliTypeRequest = new DocumentTypeApplicationTypeRequest();
+	private DocumentTypeApplicationTypeReq getApplicationTypeDoc() {
+		DocumentTypeApplicationTypeReq docAppliTypeRequest = new DocumentTypeApplicationTypeReq();
 		DocumentTypeApplicationType applicationDocType = new DocumentTypeApplicationType();
 		applicationDocType.setActive(true);
 		applicationDocType.setId(2L);
@@ -82,7 +82,7 @@ public class DocumentTypeApplicationTypeRepositoryTest {
 		user.setId(2L);
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setUserInfo(user);
-		docAppliTypeRequest.setDocumentApplicationType(applicationDocType);
+		docAppliTypeRequest.setDocumentTypeApplicationType(applicationDocType);
 		docAppliTypeRequest.setRequestInfo(requestInfo);
 		return docAppliTypeRequest;
 	}
@@ -115,14 +115,14 @@ public class DocumentTypeApplicationTypeRepositoryTest {
 	@Test
 	   public void test_Should_Update_ApplicationTypeDocumentType() {
 
-	       final DocumentTypeApplicationTypeRequest applicationDocumentRequest = new DocumentTypeApplicationTypeRequest();
+	       final DocumentTypeApplicationTypeReq applicationDocumentRequest = new DocumentTypeApplicationTypeReq();
 	       final RequestInfo requestInfo = new RequestInfo();
 	       final User user = new User();
 	       user.setId(1l);
 	       requestInfo.setUserInfo(user);
 	       applicationDocumentRequest.setRequestInfo(requestInfo);
 	       final DocumentTypeApplicationType documentApplication = new DocumentTypeApplicationType();
-	       applicationDocumentRequest.setDocumentApplicationType(documentApplication);
+	       applicationDocumentRequest.setDocumentTypeApplicationType(documentApplication);
 
 	       when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 	       assertTrue(applicationDocumentRequest

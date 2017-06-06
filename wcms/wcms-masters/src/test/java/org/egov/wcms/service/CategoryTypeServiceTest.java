@@ -73,7 +73,7 @@ public class CategoryTypeServiceTest {
     private CodeGeneratorService codeGeneratorService;
 
     @InjectMocks
-    private CategoryTypeService connectionCategoryService;
+    private CategoryTypeService categoryTypeService;
 
     @Test
     public void test_Search_For_Categories() {
@@ -82,7 +82,7 @@ public class CategoryTypeServiceTest {
         categoryList.add(conCategory);
 
         when(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class))).thenReturn(categoryList);
-        assertTrue(categoryList.equals(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class))));
+        assertTrue(categoryList.equals(categoryTypeService.getCategories(any(CategoryTypeGetRequest.class))));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CategoryTypeServiceTest {
         categoryList.add(conCategory);
 
         when(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class))).thenReturn(categoryList);
-        assertNotNull(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class)));
+        assertNotNull(categoryTypeService.getCategories(any(CategoryTypeGetRequest.class)));
     }
 
     @Test
@@ -102,11 +102,7 @@ public class CategoryTypeServiceTest {
         categoryList.add(conCategory);
 
         when(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class))).thenReturn(null);
-        assertNull(categoryRepository.findForCriteria(any(CategoryTypeGetRequest.class)));
-    }
-
-    public List<CategoryType> getCategories(final CategoryTypeGetRequest categoryGetRequest) {
-        return categoryRepository.findForCriteria(categoryGetRequest);
+        assertNull(categoryTypeService.getCategories(any(CategoryTypeGetRequest.class)));
     }
 
 }

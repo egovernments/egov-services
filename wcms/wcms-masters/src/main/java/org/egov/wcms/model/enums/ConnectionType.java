@@ -38,35 +38,36 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.wcms.producers;
+package org.egov.wcms.model.enums;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.apache.commons.lang3.StringUtils;
 
-@Service
-public class MeterCostProducer {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+public enum ConnectionType {
+PERMANENT("PERMANENT"), TEMPORARY("TEMPORARY");
 
-    public void sendMessage(final String topic, final String key, final Object message) {
-        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+private String value;
 
-            }
-
-            @Override
-            public void onFailure(final Throwable throwable) {
-
-            }
-        });
-    }
-
-
+ConnectionType(String value) {
+this.value = value;
 }
+
+@Override
+@JsonValue
+public String toString() {
+return StringUtils.capitalize(name());
+}
+
+@JsonCreator
+public static ConnectionType fromValue(String passedValue) {
+for (ConnectionType obj : ConnectionType.values()) {
+if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+return obj;
+}
+}
+return null;
+}
+}
+

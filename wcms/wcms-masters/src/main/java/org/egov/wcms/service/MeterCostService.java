@@ -41,7 +41,7 @@
 package org.egov.wcms.service;
 
 import org.egov.wcms.model.MeterCost;
-import org.egov.wcms.producers.MeterCostProducer;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.MeterCostRepository;
 import org.egov.wcms.web.contract.MeterCostRequest;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class MeterCostService {
     private MeterCostRepository meterCostRepository;
 
     @Autowired
-    private MeterCostProducer meterCostProducer;
+    private WaterMasterProducer waterMasterProducer;
 
     
     
@@ -85,7 +85,7 @@ public class MeterCostService {
             e.printStackTrace();
         }
         try {
-        	meterCostProducer.sendMessage(topic,key,meterCostValue);
+        	waterMasterProducer.sendMessage(topic,key,meterCostValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }

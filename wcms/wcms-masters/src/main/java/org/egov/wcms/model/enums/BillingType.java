@@ -37,53 +37,38 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
 
-import java.util.List;
+package org.egov.wcms.model.enums;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class DocumentTypeGetRequest {
-
-    private List<Long> id;
-
-    @Length(min=3, max=100)
-    private String name;
-
-    @Length(min=3, max=20)
-    private String code;
-
-    private Boolean active;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
+public enum BillingType {
+ METERED("METERED"), NONMETERED("NON-METERED");
 
 
+private String value;
+
+BillingType(String value) {
+this.value = value;
 }
+
+@Override
+@JsonValue
+public String toString() {
+return StringUtils.capitalize(name());
+}
+
+@JsonCreator
+public static BillingType fromValue(String passedValue) {
+for (BillingType obj : BillingType.values()) {
+if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+return obj;
+}
+}
+return null;
+}
+}
+

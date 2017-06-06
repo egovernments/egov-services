@@ -45,7 +45,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +54,8 @@ import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.repository.builder.DocumentTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeRowMapper;
-import org.egov.wcms.web.contract.DocumentTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeGetReq;
+import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -82,20 +81,15 @@ public class DocumentTypeRepositoryTest {
     
     @Test
     public void test_Should_Create_DocumentType_Valid() {
-    	DocumentTypeRequest docTypeRequest = getDocumentTypeRequest();
-        DocumentType docType = docTypeRequest.getDocumentType();
-        Object[] obj = new Object[] {Long.valueOf(docType.getCode()),docType.getCode(),docType.getName(),docType.getDescription(),docType.getActive(),Long.valueOf(docTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(docTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),docType.getTenantId() };
+    	DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(docTypeRequest.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
     }
     
     @Test
     public void test_Should_Create_DocumentType_Invalid() {
-    	DocumentTypeRequest docTypeRequest = getDocumentTypeRequest();
+    	DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
         DocumentType docType = docTypeRequest.getDocumentType();
-        Object[] obj = new Object[] {Long.valueOf(docType.getCode()),docType.getCode(),docType.getName(),docType.getDescription(),docType.getActive(),Long.valueOf(docTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(docTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),docType.getTenantId() };
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(!docType.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
     }
@@ -103,7 +97,7 @@ public class DocumentTypeRepositoryTest {
     @Test
 	public void test_Should_Find_DocumentType_Valid() {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		DocumentTypeGetRequest docTypeGetRequest = Mockito.mock(DocumentTypeGetRequest.class);
+		DocumentTypeGetReq docTypeGetRequest = Mockito.mock(DocumentTypeGetReq.class);
 		String queryString = "MyQuery" ;
 		when(docTypeQueryBuilder.getQuery(docTypeGetRequest, preparedStatementValues)).thenReturn(queryString);
 		List<DocumentType> docTypes = new ArrayList<>();
@@ -114,12 +108,12 @@ public class DocumentTypeRepositoryTest {
 				docTypes.equals(docTypeRepository.findForCriteria(docTypeGetRequest)));
 	}
 
-    private DocumentTypeRequest getDocumentTypeRequest(){
-    	DocumentTypeRequest docTypeRequest = new DocumentTypeRequest();
+    private DocumentTypeReq getDocumentTypeRequest(){
+    	DocumentTypeReq docTypeRequest = new DocumentTypeReq();
     	DocumentType docType = new DocumentType();
     	docType.setCode("23");
-    	docType.setName("New Category");
-    	docType.setDescription("New Category of Connection");
+    	docType.setName("New Document Name");
+    	docType.setDescription("Document Name Description");
     	docType.setActive(true);
     	RequestInfo requestInfo = new RequestInfo();
     	User newUser = new User();
@@ -133,7 +127,7 @@ public class DocumentTypeRepositoryTest {
 	@Test(expected = Exception.class)
 	public void test_throwException__FindforCriteria() throws Exception{
         List<Object> preparedStatementValues = new ArrayList<Object>();
-        DocumentTypeGetRequest docTypeGetRequest = new DocumentTypeGetRequest();
+        DocumentTypeGetReq docTypeGetRequest = new DocumentTypeGetReq();
         when(docTypeQueryBuilder.getQuery(docTypeGetRequest, preparedStatementValues)).thenThrow(Exception.class);
         List<DocumentType> docTypes = docTypeRepository.findForCriteria(docTypeGetRequest);
         
@@ -143,7 +137,7 @@ public class DocumentTypeRepositoryTest {
 	
 	@Test
 	public void test_Should_Modify_DocumentType() throws Exception{
-        DocumentTypeRequest docTypeRequest = new DocumentTypeRequest();
+        DocumentTypeReq docTypeRequest = new DocumentTypeReq();
         
         RequestInfo requestInfo = new RequestInfo();
         User user = new User();
@@ -160,15 +154,13 @@ public class DocumentTypeRepositoryTest {
         docTypeRequest.setRequestInfo(requestInfo);
         docTypeRequest.setDocumentType(docType);
         
-        
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
-        
         
 	}
 	
 	@Test(expected = Exception.class)
 	public void test_throwException_Modify_DocumentType() throws Exception{
-        DocumentTypeRequest docTypeRequest = new DocumentTypeRequest();
+        DocumentTypeReq docTypeRequest = new DocumentTypeReq();
         RequestInfo requestInfo = new RequestInfo();
         DocumentType docType = new DocumentType();
         docType.setCode("10");

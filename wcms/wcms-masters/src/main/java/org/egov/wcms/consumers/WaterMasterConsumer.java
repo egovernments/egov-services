@@ -54,7 +54,7 @@ import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -142,11 +142,11 @@ public class WaterMasterConsumer {
             else if(record.topic().equals(applicationProperties.getUpdateDonationTopicName()))
             	donationService.update(objectMapper.readValue(record.value(), DonationRequest.class));
             else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
-            	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
+            	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeReq.class));
             else if (record.topic().equals(applicationProperties.getCreateDonationTopicName()))
                 donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
             else if (record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
-                documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeRequest.class));
+                documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeReq.class));
             else if (record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
                 propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
             else if (record.topic().equals(applicationProperties.getUpdatePropertyCategoryTopicName()))

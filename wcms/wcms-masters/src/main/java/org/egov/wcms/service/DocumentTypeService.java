@@ -37,6 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.wcms.service;
 
 import java.util.List;
@@ -44,8 +45,8 @@ import java.util.List;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeRepository;
-import org.egov.wcms.web.contract.DocumentTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeGetReq;
+import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,22 +70,22 @@ public class DocumentTypeService {
     private CodeGeneratorService codeGeneratorService;
 
 
-   public DocumentTypeRequest create(final DocumentTypeRequest documentTypeRequest) {
-       return documentTypeRepository.persistCreateDocumentType(documentTypeRequest);
+   public DocumentTypeReq create(final DocumentTypeReq documentTypeReq) {
+       return documentTypeRepository.persistCreateDocumentType(documentTypeReq);
    }
 
-    public DocumentTypeRequest update(final DocumentTypeRequest documentTypeRequest) {
-        return documentTypeRepository.persistModifyDocumentType(documentTypeRequest);
+    public DocumentTypeReq update(final DocumentTypeReq documentTypeReq) {
+        return documentTypeRepository.persistModifyDocumentType(documentTypeReq);
     }
 
 
-    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeRequest documentTypeRequest) {
-       documentTypeRequest.getDocumentType().setCode(codeGeneratorService.generate(documentTypeRequest.getDocumentType().SEQ_DOCUMENTTYPE));
+    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeReq documentTypeReq ){
+       documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(documentTypeReq.getDocumentType().SEQ_DOCUMENTTYPE));
         final ObjectMapper mapper = new ObjectMapper();
         String documentTypeValue = null;
         try {
-            logger.info("createDocumentType service::" + documentTypeRequest);
-            documentTypeValue = mapper.writeValueAsString(documentTypeRequest);
+            logger.info("createDocumentType service::" + documentTypeReq);
+            documentTypeValue = mapper.writeValueAsString(documentTypeReq);
             logger.info("documentTypeValue::" + documentTypeValue);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
@@ -94,14 +95,14 @@ public class DocumentTypeService {
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return documentTypeRequest.getDocumentType();
+        return documentTypeReq.getDocumentType();
     }
 
     public boolean getDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
         return documentTypeRepository.checkDocumentTypeByNameAndCode(code,name,tenantId);
     }
 
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetRequest documentTypeGetRequest) {
+    public List<DocumentType> getDocumentTypes(DocumentTypeGetReq documentTypeGetRequest) {
        return documentTypeRepository.findForCriteria(documentTypeGetRequest);
 
    }

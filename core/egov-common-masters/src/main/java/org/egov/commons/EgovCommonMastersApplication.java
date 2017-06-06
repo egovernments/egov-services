@@ -41,6 +41,7 @@
 package org.egov.commons;
 
 import org.egov.commons.web.interceptor.CorrelationIdAwareRestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -50,8 +51,19 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class EgovCommonMastersApplication {
+
+	@Value("${app.timezone}")
+	private String timeZone;
+
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
 
 	@Bean
 	public RestTemplate getRestTemplate() {

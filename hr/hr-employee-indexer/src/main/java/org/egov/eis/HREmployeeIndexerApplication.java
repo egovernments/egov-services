@@ -1,6 +1,11 @@
 package org.egov.eis;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.eis.indexer.http.CorrelationIdAwareRestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +17,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 public class HREmployeeIndexerApplication {
+    
+    @Value("${app.timezone}")
+    private String timeZone;
+    
+    @PostConstruct
+    public void initialize() {
+            TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+    }
 
     @Bean
     public ObjectMapper getObjectMapper() {

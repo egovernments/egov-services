@@ -232,7 +232,7 @@ $(document).ready(function() {
     $("textarea").on("keyup", function() {
         fillValueToObject(this);
     });
-    
+
     //Getting data for user input
     $("select").on("change", function() {
         // console.log(this.value);
@@ -374,7 +374,7 @@ $(document).ready(function() {
 
                     $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
                 }
-            });
+            },process.businessKey);
         }
     } else if (getUrlVars()["view"] == "renew") {
         $("#cancel,#evict").remove();
@@ -501,7 +501,7 @@ $(document).ready(function() {
         var _agrmntDet = Object.assign({}, agreementDetail);
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
-            "type": "Agreement",
+            "type": process.businessKey,
             "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action

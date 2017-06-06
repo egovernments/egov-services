@@ -70,12 +70,17 @@ public class EscalationService {
 			validateAndLog(serviceRequest);
 			serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
 			workflowService.enrichWorkflowForEscalation(serviceRequest, getRequestInfo());
+
+			if(serviceRequest.isNewAssigneeSameAsPreviousAssignee()) {
+				log.info("Skipping escalation for CRN {} since new assignee {} is the same",
+						serviceRequest.getCrn(), serviceRequest.getAssigneeId());
+				return;
+			}
+
 			positionService.enrichRequestWithPosition(serviceRequest);
 			SevaRequest enrichedSevaRequest = new SevaRequest(getRequestInfo(), serviceRequest);
 			escalationDateService.enrichRequestWithEscalationDate(enrichedSevaRequest);
 			complaintMessageQueueRepository.save(enrichedSevaRequest);
-
-			//Escalation should not be done if next assignee is same.
 		} catch (Exception exception) {
 			final String message = String
 					.format("For CRN %s and TenantId %s", serviceRequest.getCrn(), serviceRequest.getTenantId());
@@ -84,10 +89,10 @@ public class EscalationService {
 	}
 
 	private void validateAndLog(ServiceRequest serviceRequest) {
-		if (!serviceRequest.isExists(VALUES_ASSIGNEE_ID))
+		if (!serviceRequest.isAttributeEntryPresent(VALUES_ASSIGNEE_ID))
 			log.warn("FOR CRN" + serviceRequest.getCrn() + "and Tenant" + serviceRequest.getTenantId()
 					+ VALUES_ASSIGNEE_ID + "Is Not Present");
-		if (!serviceRequest.isExists(VALUES_KEYWORD))
+		if (!serviceRequest.isAttributeEntryPresent(VALUES_KEYWORD))
 			log.warn("FOR CRN" + serviceRequest.getCrn() + "and Tenant" + serviceRequest.getTenantId()
 					+ VALUES_KEYWORD + "Is Not Present");
 		if (null == serviceRequest.getEscalationDate())

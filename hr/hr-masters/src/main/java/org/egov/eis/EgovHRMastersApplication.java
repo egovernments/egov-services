@@ -73,6 +73,7 @@ public class EgovHRMastersApplication {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         //mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+        mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
         converter.setObjectMapper(mapper);
         return converter;
     }

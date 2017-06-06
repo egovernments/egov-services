@@ -89,16 +89,15 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.propertypipesize.create.name}")
     private String createPropertyPipeSizeTopicName;
-    
+
     @Value("${kafka.topics.propertypipesize.update.name}")
     private String updatePropertyPipeSizeTopicName;
-    
-	@Value("${kafka.topics.metercost.create.name}")
-	private String createMeterCostTopicName;
-	
-	@Value("${kafka.topics.documenttype.applicationtype.create.name}")
-	private String createDocTypeAppTypeTopicName;
-	
+
+    @Value("${kafka.topics.metercost.create.name}")
+    private String createMeterCostTopicName;
+
+    @Value("${kafka.topics.documenttype.applicationtype.create.name}")
+    private String createDocTypeAppTypeTopicName;
 
     @Value("${kafka.topics.documenttype.applicationtype.update.name}")
     private String updateDocTypeAppTypeTopicName;
@@ -108,16 +107,22 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.documenttype.create.name}")
     private String createDocumentTypeTopicName;
+
+    @Value("${kafka.topics.documenttype.update.name}")
+    private String updateDocumentTypeTopicName;
+
+    @Value("${kafka.topics.donation.update.name}")
+    private String updateDonationTopicName;
     
-	@Value("${kafka.topics.documenttype.update.name}")
-	private String updateDocumentTypeTopicName;
-	
-	@Value("${kafka.topics.donation.update.name}")
-	private String updateDonationTopicName;
-	
-	//topic for water-transaction use case
-	@Value("${kafka.topics.newconnection.create.name}")
-	private String createNewConnectionTopicName;
+    @Value("${kafka.topics.watersourcetype.create.name}")
+    private String createWaterSourceTypeTopicName;
+
+    @Value("${kafka.topics.watersourcetype.update.name}")
+    private String updateWaterSourceTypeTopicName;
+
+    // topic for water-transaction use case
+    @Value("${kafka.topics.newconnection.create.name}")
+    private String createNewConnectionTopicName;
 
     @Autowired
     private Environment environment;
@@ -177,28 +182,30 @@ public class ApplicationProperties {
     public String getCreatePropertyPipeSizeTopicName() {
         return createPropertyPipeSizeTopicName;
     }
-    
-	public String getCreateDocumentTypeTopicName(){
-		return createDocumentTypeTopicName;
-	}
-	
-    public String getUpdateDocumentTypeTopicName(){
-    	
-    	return updateDocumentTypeTopicName;
-    	
+
+    public String getCreateDocumentTypeTopicName() {
+        return createDocumentTypeTopicName;
     }
-    
-    public String getUpdateDocumentTypeApplicationTypeTopicName(){
-    	return updateDocTypeAppTypeTopicName;
+
+    public String getUpdateDocumentTypeTopicName() {
+
+        return updateDocumentTypeTopicName;
+
     }
-    
-    public String  getCreateMeterCostTopicName(){
-    	
-    	return createMeterCostTopicName;
+
+    public String getUpdateDocumentTypeApplicationTypeTopicName() {
+        return updateDocTypeAppTypeTopicName;
     }
-    public String getCreateDocumentTypeApplicationTypeTopicName(){
-    	return createDocTypeAppTypeTopicName;
+
+    public String getCreateMeterCostTopicName() {
+
+        return createMeterCostTopicName;
     }
+
+    public String getCreateDocumentTypeApplicationTypeTopicName() {
+        return createDocTypeAppTypeTopicName;
+    }
+
     public String getUpdatePropertyPipeSizeTopicName() {
         return updatePropertyPipeSizeTopicName;
     }
@@ -206,13 +213,21 @@ public class ApplicationProperties {
     public String getCreateDonationTopicName() {
         return createDonationTopicName;
     }
-    
+
     public String getUpdateDonationTopicName() {
         return updateDonationTopicName;
     }
+    
+    public String getCreateWaterSourceTypeTopicName() {
+        return createWaterSourceTypeTopicName;
+    }
 
-	public String getCreateNewConnectionTopicName() {
-		return createNewConnectionTopicName;
-	}  
-   
+    public String getUpdateWaterSourceTypeTopicName() {
+        return updateWaterSourceTypeTopicName;
+    }
+
+    public String getCreateNewConnectionTopicName() {
+        return createNewConnectionTopicName;
+    }
+
 }

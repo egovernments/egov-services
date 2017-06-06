@@ -45,7 +45,7 @@ public class SevaRequest {
             .requesterMobileNumber(this.getServiceRequest().getPhone())
             .requesterEmail(this.getServiceRequest().getEmail())
             .requesterAddress(this.getServiceRequest().getDynamicSingleValue(VALUES_COMPLAINANT_ADDRESS))
-            .complainantUserId(getUserId())
+            .loggedInRequesterUserId(getUserId())
             .receivingMode(this.getServiceRequest().getDynamicSingleValue(VALUES_RECEIVING_MODE))
             .receivingCenter(getReceivingCenter())
             .serviceRequestTypeCode(this.getServiceRequest().getComplaintTypeCode())

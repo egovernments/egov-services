@@ -9,6 +9,7 @@ import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,10 @@ public class ServiceRequest {
     private String state;
     private String citizenFeedback;
     private List<AttributeEntry> attributeEntries;
+
+    public List<AttributeEntry> getAttributeEntries() {
+        return attributeEntries == null ? Collections.emptyList() : attributeEntries;
+    }
 
     public boolean isRequesterAbsent() {
         return requester.isAbsent();

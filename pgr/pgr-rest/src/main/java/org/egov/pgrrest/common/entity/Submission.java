@@ -110,6 +110,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .mobile(mobile)
             .email(email)
             .address(requesterAddress)
+            .userId(loggedInRequester != null ? loggedInRequester.toString() : null)
             .build();
     }
 

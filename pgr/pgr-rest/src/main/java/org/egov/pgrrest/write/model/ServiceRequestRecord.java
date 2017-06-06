@@ -26,7 +26,7 @@ public class ServiceRequestRecord {
     private String requesterMobileNumber;
     private String requesterEmail;
     private String requesterAddress;
-    private Long complainantUserId;
+    private Long loggedInRequesterUserId;
     private String receivingMode;
     private Long receivingCenter;
     private String serviceRequestTypeCode;

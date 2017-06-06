@@ -60,14 +60,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class CategoryTypeGetRequest {
+public class WaterSourceTypeGetRequest {
 
     private List<Long> id;
 
+    private String code;
+
     @Length(min = 3, max = 100)
     private String name;
-
-    private String code;
 
     private Boolean active;
 

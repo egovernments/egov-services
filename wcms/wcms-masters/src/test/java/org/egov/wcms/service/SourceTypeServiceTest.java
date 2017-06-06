@@ -47,11 +47,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.WaterSourceType;
+import org.egov.wcms.model.SourceType;
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.WaterSourceTypeRepository;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeRequest;
+import org.egov.wcms.repository.SourceTypeRepository;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -62,11 +62,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(WaterSourceTypeService.class)
+@WebMvcTest(SourceTypeService.class)
 @WebAppConfiguration
-public class WaterSourceTypeServiceTest {
+public class SourceTypeServiceTest {
     @Mock
-    private WaterSourceTypeRepository waterSourceTypeRepository;
+    private SourceTypeRepository waterSourceTypeRepository;
 
     @Mock
     private WaterMasterProducer waterMasterProducer;
@@ -75,23 +75,23 @@ public class WaterSourceTypeServiceTest {
     private ApplicationProperties applicationProperties;
 
     @InjectMocks
-    private WaterSourceTypeService waterSourceTypeService;
+    private SourceTypeService waterSourceTypeService;
     @Mock
     private CodeGeneratorService codeGeneratorService;
 
     @Test
     public void test_Should_Search_WaterSource() {
-        final List<WaterSourceType> waterSourceTypes = new ArrayList<>();
+        final List<SourceType> waterSourceTypes = new ArrayList<>();
         waterSourceTypes.add(getWaterSourceType());
-        when(waterSourceTypeRepository.findForCriteria(any(WaterSourceTypeGetRequest.class))).thenReturn(waterSourceTypes);
-        assertTrue(waterSourceTypes.equals(waterSourceTypeService.getWaterSourceTypes(any(WaterSourceTypeGetRequest.class))));
+        when(waterSourceTypeRepository.findForCriteria(any(SourceTypeGetRequest.class))).thenReturn(waterSourceTypes);
+        assertTrue(waterSourceTypes.equals(waterSourceTypeService.getWaterSourceTypes(any(SourceTypeGetRequest.class))));
     }
 
     @Test
     public void test_throwException_Push_To_Producer_WaterSource() {
 
-        final WaterSourceType waterSource = getWaterSourceType();
-        final WaterSourceTypeRequest waterSourceRequest = new WaterSourceTypeRequest();
+        final SourceType waterSource = getWaterSourceType();
+        final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
         waterSourceRequest.setWaterSourceType(waterSource);
         assertTrue(waterSource.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
     }
@@ -99,10 +99,10 @@ public class WaterSourceTypeServiceTest {
     @Test
     public void test_throwException_Create_WaterSource() {
 
-        final WaterSourceType waterSourceType = getWaterSourceType();
-        final WaterSourceTypeRequest waterSourceRequest = new WaterSourceTypeRequest();
+        final SourceType waterSourceType = getWaterSourceType();
+        final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
         waterSourceRequest.setWaterSourceType(waterSourceType);
-        when(waterSourceTypeRepository.persistCreateWaterSourceType(any(WaterSourceTypeRequest.class)))
+        when(waterSourceTypeRepository.persistCreateWaterSourceType(any(SourceTypeRequest.class)))
                 .thenReturn(waterSourceRequest);
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.create(waterSourceRequest)));
     }
@@ -111,14 +111,14 @@ public class WaterSourceTypeServiceTest {
     @Test(expected = Exception.class)
     public void test_throwException_Update_WaterSource() throws Exception {
 
-        final WaterSourceTypeRequest waterSourceRequest = Mockito.mock(WaterSourceTypeRequest.class);
+        final SourceTypeRequest waterSourceRequest = Mockito.mock(SourceTypeRequest.class);
         when(waterSourceTypeRepository.persistModifyWaterSourceType(waterSourceRequest)).thenThrow(Exception.class);
 
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.update(waterSourceRequest)));
     }
 
-    private WaterSourceType getWaterSourceType() {
-        final WaterSourceType waterSource = new WaterSourceType();
+    private SourceType getWaterSourceType() {
+        final SourceType waterSource = new SourceType();
         waterSource.setTenantId("default");
         waterSource.setCode("2");
         waterSource.setName("water source");

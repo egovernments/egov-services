@@ -39,51 +39,39 @@
  */
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import org.hibernate.validator.constraints.Length;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-@EqualsAndHashCode
-public class DocumentTypeGetReq {
-
-    private List<Long> id;
-
-    @Length(min=3, max=100)
-    private String name;
-
-    @Length(min=3, max=20)
-    private String code;
-
-    private Boolean active;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
-
-
-}
+public class ProcessInstance   {
+	
+	private String id = null;
+	private String businessKey = null;
+	private String type = null;
+	private Position assignee = null;
+	private String comments = null;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate = null;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastupdatedSince = null;
+	private Position owner = null;
+	private String state = null;
+	private String status = null;
+	private String senderName;
+	private String details;
+	List<Task> tasks = new ArrayList<Task>();
+	private String tenantId;
+	private Long initiatorPosition;
+	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
+  }

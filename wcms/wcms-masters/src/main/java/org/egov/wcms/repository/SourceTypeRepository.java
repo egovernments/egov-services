@@ -44,11 +44,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.wcms.model.WaterSourceType;
-import org.egov.wcms.repository.builder.WaterSourceTypeQueryBuilder;
-import org.egov.wcms.repository.rowmapper.WaterSourceTypeRowMapper;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeRequest;
+import org.egov.wcms.model.SourceType;
+import org.egov.wcms.repository.builder.SourceTypeQueryBuilder;
+import org.egov.wcms.repository.rowmapper.SourceTypeRowMapper;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,22 +56,22 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WaterSourceTypeRepository {
-    public static final Logger LOGGER = LoggerFactory.getLogger(WaterSourceTypeRepository.class);
+public class SourceTypeRepository {
+    public static final Logger LOGGER = LoggerFactory.getLogger(SourceTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private WaterSourceTypeQueryBuilder waterSourceTypeQueryBuilder;
+    private SourceTypeQueryBuilder waterSourceTypeQueryBuilder;
 
     @Autowired
-    private WaterSourceTypeRowMapper waterSourceTypeRowMapper;
+    private SourceTypeRowMapper waterSourceTypeRowMapper;
 
-    public WaterSourceTypeRequest persistCreateWaterSourceType(final WaterSourceTypeRequest waterSourceTypeRequest) {
+    public SourceTypeRequest persistCreateWaterSourceType(final SourceTypeRequest waterSourceTypeRequest) {
         LOGGER.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
-        final String waterSourceInsert = WaterSourceTypeQueryBuilder.insertWaterSourceTypeQuery();
-        final WaterSourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final String waterSourceInsert = SourceTypeQueryBuilder.insertWaterSourceTypeQuery();
+        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
         final Object[] obj = new Object[] { Long.valueOf(waterSource.getCode()), waterSource.getCode(), waterSource.getName(),
                 waterSource.getDescription(), waterSource.getActive(),
                 Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
@@ -82,10 +82,10 @@ public class WaterSourceTypeRepository {
         return waterSourceTypeRequest;
     }
 
-    public WaterSourceTypeRequest persistModifyWaterSourceType(final WaterSourceTypeRequest waterSourceTypeRequest) {
+    public SourceTypeRequest persistModifyWaterSourceType(final SourceTypeRequest waterSourceTypeRequest) {
         LOGGER.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
-        final String waterSourceUpdate = WaterSourceTypeQueryBuilder.updateWaterSourceTypeQuery();
-        final WaterSourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final String waterSourceUpdate = SourceTypeQueryBuilder.updateWaterSourceTypeQuery();
+        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
         final Object[] obj = new Object[] { waterSource.getName(), waterSource.getDescription(), waterSource.getActive(),
                 Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), waterSource.getCode() };
@@ -100,10 +100,10 @@ public class WaterSourceTypeRepository {
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)
-            query = WaterSourceTypeQueryBuilder.selectWaterSourceByNameAndCodeQuery();
+            query = SourceTypeQueryBuilder.selectWaterSourceByNameAndCodeQuery();
         else {
             preparedStatementValues.add(code);
-            query = WaterSourceTypeQueryBuilder.selectWaterSourceByNameAndCodeNotInQuery();
+            query = SourceTypeQueryBuilder.selectWaterSourceByNameAndCodeNotInQuery();
         }
         final List<Map<String, Object>> waterSourceTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
@@ -113,10 +113,10 @@ public class WaterSourceTypeRepository {
         return true;
     }
 
-    public List<WaterSourceType> findForCriteria(final WaterSourceTypeGetRequest waterSourceGetRequest) {
+    public List<SourceType> findForCriteria(final SourceTypeGetRequest waterSourceGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = waterSourceTypeQueryBuilder.getQuery(waterSourceGetRequest, preparedStatementValues);
-        final List<WaterSourceType> waterSourceTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+        final List<SourceType> waterSourceTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 waterSourceTypeRowMapper);
         return waterSourceTypes;
     }

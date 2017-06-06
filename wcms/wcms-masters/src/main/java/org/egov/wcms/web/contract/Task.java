@@ -37,50 +37,39 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
+@Getter
 @ToString
-@Builder
-public class WaterSourceType {
+public class Task   {
 
-    public static final String SEQ_WATERSOURCE = "SEQ_EGWTR_WATER_SOURCE_TYPE";
-
-    @NotNull
-    private Long id;
-
-    @NotNull
-    @Length(min = 3, max = 20)
-    private String code;
-
-    @NotNull
-    @Length(min = 3, max = 100)
-    private String name;
-
-    @Length(max = 250)
-    private String description;
-
-    private Boolean active;
-
-    private AuditDetails auditDeatils;
-
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
+	private String id;
+	private String businessKey;
+	private String type;
+	private Position assignee;
+	private String comments;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastupdatedSince;
+	private Position owner;
+	private String state;
+	private String status;
+	private String url;
+	private String action;
+	private String senderName;
+	private String details;
+	private String natureOfTask;
+	private String entity;
+	private String tenantId;
 }
+

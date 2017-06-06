@@ -2,11 +2,11 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.wcms.model.WaterSourceType;
+import org.egov.wcms.model.SourceType;
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.WaterSourceTypeRepository;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeRequest;
+import org.egov.wcms.repository.SourceTypeRepository;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class WaterSourceTypeService {
-    public static final Logger logger = LoggerFactory.getLogger(WaterSourceTypeService.class);
+public class SourceTypeService {
+    public static final Logger logger = LoggerFactory.getLogger(SourceTypeService.class);
 
     @Autowired
-    private WaterSourceTypeRepository waterSourceTypeRepository;
+    private SourceTypeRepository waterSourceTypeRepository;
 
     @Autowired
     private WaterMasterProducer waterMasterProducer;
@@ -28,17 +28,17 @@ public class WaterSourceTypeService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    public WaterSourceTypeRequest create(final WaterSourceTypeRequest waterSourceRequest) {
+    public SourceTypeRequest create(final SourceTypeRequest waterSourceRequest) {
         return waterSourceTypeRepository.persistCreateWaterSourceType(waterSourceRequest);
     }
 
-    public WaterSourceTypeRequest update(final WaterSourceTypeRequest waterSourceRequest) {
+    public SourceTypeRequest update(final SourceTypeRequest waterSourceRequest) {
         return waterSourceTypeRepository.persistModifyWaterSourceType(waterSourceRequest);
     }
 
-    public WaterSourceType createWaterSource(final String topic, final String key,
-            final WaterSourceTypeRequest waterSourceRequest) {
-        waterSourceRequest.getWaterSourceType().setCode(codeGeneratorService.generate(WaterSourceType.SEQ_WATERSOURCE));
+    public SourceType createWaterSource(final String topic, final String key,
+            final SourceTypeRequest waterSourceRequest) {
+        waterSourceRequest.getWaterSourceType().setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
         final ObjectMapper mapper = new ObjectMapper();
         String waterSourceValue = null;
         try {
@@ -56,8 +56,8 @@ public class WaterSourceTypeService {
         return waterSourceRequest.getWaterSourceType();
     }
 
-    public WaterSourceType updateWaterSource(final String topic, final String key,
-            final WaterSourceTypeRequest waterSourceRequest) {
+    public SourceType updateWaterSource(final String topic, final String key,
+            final SourceTypeRequest waterSourceRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String waterSourceValue = null;
         try {
@@ -79,7 +79,7 @@ public class WaterSourceTypeService {
         return waterSourceTypeRepository.checkWaterSourceTypeByNameAndCode(code, name, tenantId);
     }
 
-    public List<WaterSourceType> getWaterSourceTypes(final WaterSourceTypeGetRequest waterSourceTypeGetRequest) {
+    public List<SourceType> getWaterSourceTypes(final SourceTypeGetRequest waterSourceTypeGetRequest) {
         return waterSourceTypeRepository.findForCriteria(waterSourceTypeGetRequest);
 
     }

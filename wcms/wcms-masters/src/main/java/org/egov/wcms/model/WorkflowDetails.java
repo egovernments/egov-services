@@ -25,6 +25,10 @@ public class WorkflowDetails {
 	@NotNull
 	private String comments;
 	
+	private Long initiatorPosition;
+	private Long assignee;
+	private String action;
+	
 	@NotNull
 	private String status;
 	

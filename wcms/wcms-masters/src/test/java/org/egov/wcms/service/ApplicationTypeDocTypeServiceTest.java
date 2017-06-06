@@ -54,7 +54,7 @@ import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeApplicationTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -90,8 +90,8 @@ public class ApplicationTypeDocTypeServiceTest {
     public void testCreate() {
 
        final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
-       final DocumentTypeApplicationTypeRequest propertyPipeSizeRequest = new DocumentTypeApplicationTypeRequest();
-        propertyPipeSizeRequest.setDocumentApplicationType(applicationTypeDoc);
+       final DocumentTypeApplicationTypeReq propertyPipeSizeRequest = new DocumentTypeApplicationTypeReq();
+        propertyPipeSizeRequest.setDocumentTypeApplicationType(applicationTypeDoc);
         assertTrue(applicationTypeDoc.equals(docTypeAppTypeService.sendMessage("","",propertyPipeSizeRequest)));
     }
 
@@ -99,9 +99,9 @@ public class ApplicationTypeDocTypeServiceTest {
 	public void testPersist() {
 
 		final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
-		final DocumentTypeApplicationTypeRequest propertyPipeSizeRequest = new DocumentTypeApplicationTypeRequest();
-		propertyPipeSizeRequest.setDocumentApplicationType(applicationTypeDoc);
-        when(propertyPipeSizeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeRequest.class))).thenReturn(propertyPipeSizeRequest);
+		final DocumentTypeApplicationTypeReq propertyPipeSizeRequest = new DocumentTypeApplicationTypeReq();
+		propertyPipeSizeRequest.setDocumentTypeApplicationType(applicationTypeDoc);
+        when(propertyPipeSizeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeReq.class))).thenReturn(propertyPipeSizeRequest);
         assertTrue(propertyPipeSizeRequest.equals(docTypeAppTypeService.create(propertyPipeSizeRequest)));
 	}
 
@@ -119,7 +119,7 @@ public class ApplicationTypeDocTypeServiceTest {
     @Test(expected = Exception.class)
     public void test_throwException_Update_ApplicationTypeDocumentType() throws Exception {
 
-        final DocumentTypeApplicationTypeRequest applicationDocumentTypeRequest = Mockito.mock(DocumentTypeApplicationTypeRequest.class);
+        final DocumentTypeApplicationTypeReq applicationDocumentTypeRequest = Mockito.mock(DocumentTypeApplicationTypeReq.class);
         when(propertyPipeSizeRepository.persistModifyDocTypeApplicationType(applicationDocumentTypeRequest)).thenThrow(Exception.class);
 
         assertTrue(applicationDocumentTypeRequest.equals(docTypeAppTypeService.update(applicationDocumentTypeRequest)));

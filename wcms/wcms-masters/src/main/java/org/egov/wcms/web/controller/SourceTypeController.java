@@ -48,13 +48,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.WaterSourceType;
-import org.egov.wcms.service.WaterSourceTypeService;
+import org.egov.wcms.model.SourceType;
+import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeResponse;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeRequest;
+import org.egov.wcms.web.contract.SourceTypeResponse;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -75,13 +75,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/watersourcetype")
-public class WaterSourceTypeController {
+@RequestMapping("/sourcetype")
+public class SourceTypeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WaterSourceTypeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SourceTypeController.class);
 
     @Autowired
-    private WaterSourceTypeService waterSourceTypeService;
+    private SourceTypeService waterSourceTypeService;
 
     @Autowired
     private ErrorHandler errHandler;
@@ -94,7 +94,7 @@ public class WaterSourceTypeController {
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final WaterSourceTypeRequest waterSourceRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid final SourceTypeRequest waterSourceRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -106,10 +106,10 @@ public class WaterSourceTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final WaterSourceType waterSource = waterSourceTypeService.createWaterSource(
-                applicationProperties.getCreateWaterSourceTypeTopicName(),
-                "watersourcetype-create", waterSourceRequest);
-        final List<WaterSourceType> waterSourceTypes = new ArrayList<>();
+        final SourceType waterSource = waterSourceTypeService.createWaterSource(
+                applicationProperties.getCreateSourceTypeTopicName(),
+                "sourcetype-create", waterSourceRequest);
+        final List<SourceType> waterSourceTypes = new ArrayList<>();
         waterSourceTypes.add(waterSource);
         return getSuccessResponse(waterSourceTypes, waterSourceRequest.getRequestInfo());
 
@@ -117,7 +117,7 @@ public class WaterSourceTypeController {
 
     @PostMapping(value = "/_update/{code}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final WaterSourceTypeRequest waterSourceRequest,
+    public ResponseEntity<?> update(@RequestBody @Valid final SourceTypeRequest waterSourceRequest,
             final BindingResult errors, @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -130,17 +130,17 @@ public class WaterSourceTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final WaterSourceType waterSource = waterSourceTypeService.updateWaterSource(
-                applicationProperties.getUpdateWaterSourceTypeTopicName(),
-                "watersourcetype-update", waterSourceRequest);
-        final List<WaterSourceType> waterSourceTypes = new ArrayList<>();
+        final SourceType waterSource = waterSourceTypeService.updateWaterSource(
+                applicationProperties.getUpdateSourceTypeTopicName(),
+                "sourcetype-update", waterSourceRequest);
+        final List<SourceType> waterSourceTypes = new ArrayList<>();
         waterSourceTypes.add(waterSource);
         return getSuccessResponse(waterSourceTypes, waterSourceRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final WaterSourceTypeGetRequest waterSourceTypeGetRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid final SourceTypeGetRequest waterSourceTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -154,7 +154,7 @@ public class WaterSourceTypeController {
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         // Call service
-        List<WaterSourceType> waterSourceList = null;
+        List<SourceType> waterSourceList = null;
         try {
             waterSourceList = waterSourceTypeService.getWaterSourceTypes(waterSourceTypeGetRequest);
         } catch (final Exception exception) {
@@ -166,7 +166,7 @@ public class WaterSourceTypeController {
 
     }
 
-    private List<ErrorResponse> validateWaterSourceRequest(final WaterSourceTypeRequest waterSourceTypeRequest) {
+    private List<ErrorResponse> validateWaterSourceRequest(final SourceTypeRequest waterSourceTypeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(waterSourceTypeRequest);
@@ -176,7 +176,7 @@ public class WaterSourceTypeController {
         return errorResponses;
     }
 
-    private Error getError(final WaterSourceTypeRequest waterSourceTypeRequest) {
+    private Error getError(final SourceTypeRequest waterSourceTypeRequest) {
         final List<ErrorField> errorFields = getErrorFields(waterSourceTypeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_WATERSOURCETYPE_REQUEST_MESSAGE)
@@ -184,7 +184,7 @@ public class WaterSourceTypeController {
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(final WaterSourceTypeRequest waterSourceTypeRequest) {
+    private List<ErrorField> getErrorFields(final SourceTypeRequest waterSourceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addCategoryNameValidationErrors(waterSourceTypeRequest, errorFields);
         addTeanantIdValidationErrors(waterSourceTypeRequest, errorFields);
@@ -192,9 +192,9 @@ public class WaterSourceTypeController {
         return errorFields;
     }
 
-    private void addCategoryNameValidationErrors(final WaterSourceTypeRequest waterSourceTypeRequest,
+    private void addCategoryNameValidationErrors(final SourceTypeRequest waterSourceTypeRequest,
             final List<ErrorField> errorFields) {
-        final WaterSourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
         if (waterSource.getName() == null || waterSource.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.WATERSOURCETYPE_NAME_MANDATORY_CODE)
@@ -214,9 +214,9 @@ public class WaterSourceTypeController {
             return;
     }
 
-    private void addTeanantIdValidationErrors(final WaterSourceTypeRequest waterSourceTypeRequest,
+    private void addTeanantIdValidationErrors(final SourceTypeRequest waterSourceTypeRequest,
             final List<ErrorField> errorFields) {
-        final WaterSourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
         if (waterSource.getTenantId() == null || waterSource.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
@@ -228,9 +228,9 @@ public class WaterSourceTypeController {
             return;
     }
 
-    private void addActiveValidationErrors(final WaterSourceTypeRequest waterSourceTypeRequest,
+    private void addActiveValidationErrors(final SourceTypeRequest waterSourceTypeRequest,
             final List<ErrorField> errorFields) {
-        final WaterSourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
         if (waterSource.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
@@ -255,13 +255,13 @@ public class WaterSourceTypeController {
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(final List<WaterSourceType> waterSourceList, final RequestInfo requestInfo) {
-        final WaterSourceTypeResponse waterSourceResponse = new WaterSourceTypeResponse();
+    private ResponseEntity<?> getSuccessResponse(final List<SourceType> waterSourceList, final RequestInfo requestInfo) {
+        final SourceTypeResponse waterSourceResponse = new SourceTypeResponse();
         waterSourceResponse.setWaterSourceTypes(waterSourceList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         waterSourceResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<WaterSourceTypeResponse>(waterSourceResponse, HttpStatus.OK);
+        return new ResponseEntity<SourceTypeResponse>(waterSourceResponse, HttpStatus.OK);
 
     }
 

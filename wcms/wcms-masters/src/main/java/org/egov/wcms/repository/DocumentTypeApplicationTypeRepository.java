@@ -45,14 +45,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.repository.builder.DocumentTypeApplicationTypeQueryBuilder;
-import org.egov.wcms.repository.builder.DocumentTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeApplicationTypeMapper;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +70,10 @@ public class DocumentTypeApplicationTypeRepository {
     @Autowired
     private DocumentTypeApplicationTypeMapper documentTypeApplicationTypeRowMapper;
 
-    public DocumentTypeApplicationTypeRequest persistCreateDocTypeApplicationType(final DocumentTypeApplicationTypeRequest docTypeAppliTypeRequest) {
+    public DocumentTypeApplicationTypeReq persistCreateDocTypeApplicationType(final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
         LOGGER.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
         final String docNameInsert = DocumentTypeApplicationTypeQueryBuilder.insertDocNameQuery();
-        final DocumentTypeApplicationType docName = docTypeAppliTypeRequest.getDocumentApplicationType();
+        final DocumentTypeApplicationType docName = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
         Object[] obj = new Object[] {docName.getApplicationType(),docName.getDocumentTypeId(),docName.getMandatory(),docName.getActive(),Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
                 new Date(new java.util.Date().getTime()),docName.getTenantId() };
 
@@ -91,10 +88,10 @@ public class DocumentTypeApplicationTypeRepository {
         return docTypeAppliTypes;
     }
    
-    public DocumentTypeApplicationTypeRequest persistModifyDocTypeApplicationType(final DocumentTypeApplicationTypeRequest docTypeAppliTypeRequest) {
+    public DocumentTypeApplicationTypeReq persistModifyDocTypeApplicationType(final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
         LOGGER.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
         final String documentTypeApplicationTypeUpdate = documentTypeApplicationTypeQueryBuilder.updateDocumentTypeApplicationTypeQuery();
-        final DocumentTypeApplicationType docTypeAppliType= docTypeAppliTypeRequest.getDocumentApplicationType();
+        final DocumentTypeApplicationType docTypeAppliType= docTypeAppliTypeRequest.getDocumentTypeApplicationType();
         Object[] obj = new Object[] {docTypeAppliType.getApplicationType(),docTypeAppliType.getDocumentTypeId(),docTypeAppliType.getMandatory(),docTypeAppliType.getActive(),
                 Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), docTypeAppliType.getId() };
         jdbcTemplate.update(documentTypeApplicationTypeUpdate, obj);

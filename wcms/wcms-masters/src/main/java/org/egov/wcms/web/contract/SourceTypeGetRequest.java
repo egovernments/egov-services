@@ -60,15 +60,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class DocumentTypeGetReq {
+public class SourceTypeGetRequest {
 
     private List<Long> id;
 
-    @Length(min=3, max=100)
-    private String name;
-
-    @Length(min=3, max=20)
     private String code;
+
+    @Length(min = 3, max = 100)
+    private String name;
 
     private Boolean active;
 
@@ -84,6 +83,5 @@ public class DocumentTypeGetReq {
     private Short pageSize;
 
     private Short pageNumber;
-
 
 }

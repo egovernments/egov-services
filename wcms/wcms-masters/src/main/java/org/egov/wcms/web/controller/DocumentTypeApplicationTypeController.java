@@ -53,11 +53,13 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.model.enums.ApplicationType;
+import org.egov.wcms.model.enums.BillingType;
+import org.egov.wcms.model.enums.ConnectionType;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRequest;
-import org.egov.wcms.web.contract.DocumentTypeApplicationTypeResponse;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
+import org.egov.wcms.web.contract.DocumentTypeApplicationTypeRes;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
@@ -81,7 +83,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/documenttype/applicationtype")
+@RequestMapping("/documenttype-applicationtype")
 public class DocumentTypeApplicationTypeController {
 
     private static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeController.class);
@@ -101,7 +103,7 @@ public class DocumentTypeApplicationTypeController {
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final DocumentTypeApplicationTypeRequest documentNameRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid  final DocumentTypeApplicationTypeReq documentNameRequest,
                                     final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -122,22 +124,22 @@ public class DocumentTypeApplicationTypeController {
     
     @PostMapping(value = "/_update/{docTypeAppliTypeId}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeApplicationTypeRequest documentTypeApplicationTypeRequest, final BindingResult errors, @PathVariable("docTypeAppliTypeId") Long docTypeAppliTypeId) {
+    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeApplicationTypeReq documentTypeApplicationTypeReq, final BindingResult errors, @PathVariable("docTypeAppliTypeId") Long docTypeAppliTypeId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("documentTypeApplicationTypeRequest::" + documentTypeApplicationTypeRequest);
-        documentTypeApplicationTypeRequest.getDocumentApplicationType().setId(docTypeAppliTypeId);
+        logger.info("documentTypeApplicationTypeRequest::" + documentTypeApplicationTypeReq);
+        documentTypeApplicationTypeReq.getDocumentTypeApplicationType().setId(docTypeAppliTypeId);
 
-        final List<ErrorResponse> errorResponses = validateDocumentNameRequest(documentTypeApplicationTypeRequest);
+        final List<ErrorResponse> errorResponses = validateDocumentNameRequest(documentTypeApplicationTypeReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentTypeApplicationType documentTypeAppliType = docTypeAppTypeService.sendMessage(applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(),"documenttypeapplicationtype-update",documentTypeApplicationTypeRequest);
+        final DocumentTypeApplicationType documentTypeAppliType = docTypeAppTypeService.sendMessage(applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(),"documenttypeapplicationtype-update",documentTypeApplicationTypeReq);
         List<DocumentTypeApplicationType> documentTypeApplicaTypes = new ArrayList<>();
         documentTypeApplicaTypes.add(documentTypeAppliType);
-        return getSuccessResponse(documentTypeApplicaTypes, documentTypeApplicationTypeRequest.getRequestInfo());
+        return getSuccessResponse(documentTypeApplicaTypes, documentTypeApplicationTypeReq.getRequestInfo());
     }
    
     
@@ -173,12 +175,12 @@ public class DocumentTypeApplicationTypeController {
     
     
     private ResponseEntity<?> getSuccessResponse(List<DocumentTypeApplicationType> docTypeAppTypeList, RequestInfo requestInfo) {
-        DocumentTypeApplicationTypeResponse docNameResponse = new DocumentTypeApplicationTypeResponse();
-        docNameResponse.setDocumentApplicationType(docTypeAppTypeList);
+        DocumentTypeApplicationTypeRes docNameResponse = new DocumentTypeApplicationTypeRes();
+        docNameResponse.setDocumentTypeApplicationTypes(docTypeAppTypeList);
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         docNameResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<DocumentTypeApplicationTypeResponse>(docNameResponse, HttpStatus.OK);
+        return new ResponseEntity<DocumentTypeApplicationTypeRes>(docNameResponse, HttpStatus.OK);
 
     }
     
@@ -197,7 +199,7 @@ public class DocumentTypeApplicationTypeController {
         return errRes;
     }
     
-    private List<ErrorResponse> validateDocumentNameRequest(final DocumentTypeApplicationTypeRequest documentNameRequest) {
+    private List<ErrorResponse> validateDocumentNameRequest(final DocumentTypeApplicationTypeReq documentNameRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(documentNameRequest);
@@ -208,7 +210,7 @@ public class DocumentTypeApplicationTypeController {
         return errorResponses;
     }
     
-    private Error getError(final DocumentTypeApplicationTypeRequest documentNameRequest) {
+    private Error getError(final DocumentTypeApplicationTypeReq documentNameRequest) {
         List<ErrorField> errorFields = getErrorFields(documentNameRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE)
@@ -216,9 +218,9 @@ public class DocumentTypeApplicationTypeController {
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(final DocumentTypeApplicationTypeRequest documentNameRequest) {
+    private List<ErrorField> getErrorFields(final DocumentTypeApplicationTypeReq documentNameRequest) {
         List<ErrorField> errorFields = new ArrayList<>();
-        DocumentTypeApplicationType docTypeAppType=documentNameRequest.getDocumentApplicationType();
+        DocumentTypeApplicationType docTypeAppType=documentNameRequest.getDocumentTypeApplicationType();
         addDocumentTypeValidationErrors(docTypeAppType, errorFields);
         addTeanantIdValidationErrors(docTypeAppType,errorFields);
         addActiveValidationErrors(docTypeAppType,errorFields);
@@ -308,6 +310,25 @@ public class DocumentTypeApplicationTypeController {
 		}
 		return applicationType;
 	}
+	
+	@RequestMapping(value = "/getconnectiontypes")
+	public Map<String, ConnectionType> getConnectionTypeEnum() {
+		Map<String, ConnectionType> connectionType = new HashMap<>();
+		for (ConnectionType key : ConnectionType.values()) {
+			connectionType.put(key.name(),key);
+		}
+		return connectionType;
+	}
+	
+	@RequestMapping(value = "/getbillingtypes")
+	public Map<String, BillingType> getBillingTypeEnum() {
+		Map<String, BillingType> billingType = new HashMap<>();
+		for (BillingType key : BillingType.values()) {
+			billingType.put(key.name(),key);
+		}
+		return billingType;
+	}
+	
 }
     
     

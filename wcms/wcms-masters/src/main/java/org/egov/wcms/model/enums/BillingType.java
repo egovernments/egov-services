@@ -37,26 +37,38 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+package org.egov.wcms.model.enums;
 
-import org.egov.wcms.model.WaterSourceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.StringUtils;
 
-@Component
-public class WaterSourceTypeRowMapper implements RowMapper<WaterSourceType> {
-    @Override
-    public WaterSourceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final WaterSourceType waterSourceType = new WaterSourceType();
-        waterSourceType.setId(rs.getLong("watersource_id"));
-        waterSourceType.setCode(rs.getString("watersource_code"));
-        waterSourceType.setName(rs.getString("watersource_name"));
-        waterSourceType.setDescription(rs.getString("watersource_description"));
-        waterSourceType.setActive(rs.getBoolean("watersource_active"));
-        waterSourceType.setTenantId(rs.getString("watersource_tenantId"));
-        return waterSourceType;
-    }
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public enum BillingType {
+ METERED("METERED"), NONMETERED("NON-METERED");
+
+
+private String value;
+
+BillingType(String value) {
+this.value = value;
 }
+
+@Override
+@JsonValue
+public String toString() {
+return StringUtils.capitalize(name());
+}
+
+@JsonCreator
+public static BillingType fromValue(String passedValue) {
+for (BillingType obj : BillingType.values()) {
+if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+return obj;
+}
+}
+return null;
+}
+}
+

@@ -39,13 +39,13 @@
  */
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.SourceType;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,36 +54,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class DocumentTypeGetReq {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class SourceTypeResponse {
+    
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    private List<Long> id;
-
-    @Length(min=3, max=100)
-    private String name;
-
-    @Length(min=3, max=20)
-    private String code;
-
-    private Boolean active;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
-
+    @JsonProperty("waterSourceType")
+    private List<SourceType> waterSourceTypes = new ArrayList<>();
 
 }

@@ -37,16 +37,15 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.wcms.service;
 
-import java.util.List;
-
-import org.egov.wcms.model.DocumentType;
-import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.DocumentTypeRepository;
-import org.egov.wcms.web.contract.DocumentTypeGetReq;
-import org.egov.wcms.web.contract.DocumentTypeReq;
+import org.egov.wcms.model.Connection;
+import org.egov.wcms.producers.WaterTransactionProducer;
+import org.egov.wcms.repository.WorkflowRepository;
+import org.egov.wcms.util.AckConsumerNoGenerator;
+import org.egov.wcms.web.contract.ProcessInstance;
+import org.egov.wcms.web.contract.TaskResponse;
+import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,59 +55,47 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class DocumentTypeService {
+public class WorkflowService {
 
-    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeService.class);
-
+public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
+    
     @Autowired
-    private DocumentTypeRepository documentTypeRepository;
-
+    private WaterTransactionProducer waterTransactionProducer;
+    
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
-
+    private AckConsumerNoGenerator ackConsumerNoGenerator;
+    
     @Autowired
-    private CodeGeneratorService codeGeneratorService;
-
-
-   public DocumentTypeReq create(final DocumentTypeReq documentTypeReq) {
-       return documentTypeRepository.persistCreateDocumentType(documentTypeReq);
-   }
-
-    public DocumentTypeReq update(final DocumentTypeReq documentTypeReq) {
-        return documentTypeRepository.persistModifyDocumentType(documentTypeReq);
-    }
-
-
-    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeReq documentTypeReq ){
-    	
-    if(key.equalsIgnoreCase("documenttype-create")){
-    	 documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(documentTypeReq.getDocumentType().SEQ_DOCUMENTTYPE));
-    }
-      
+    private WorkflowRepository workflowRepository;
+    
+    public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
         final ObjectMapper mapper = new ObjectMapper();
-        String documentTypeValue = null;
+        String waterConnectionValue = null;
         try {
-            logger.info("createDocumentType service::" + documentTypeReq);
-            documentTypeValue = mapper.writeValueAsString(documentTypeReq);
-            logger.info("documentTypeValue::" + documentTypeValue);
+            logger.info("WaterConnectionService request::" + waterConnectionRequest);
+            waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
+            logger.info("waterConnectionValue::" + waterConnectionValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+        	logger.error("Exception while stringifying water coonection object", e);
         }
         try {
-        	waterMasterProducer.sendMessage(topic,key,documentTypeValue);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
+        	waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
+        } catch (final Exception e) {
+            logger.error("Producer failed to post request to kafka queue", e);
+            waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
         }
-        return documentTypeReq.getDocumentType();
+        waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
+        
+        return waterConnectionRequest.getConnection();
     }
-
-    public boolean getDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
-        return documentTypeRepository.checkDocumentTypeByNameAndCode(code,name,tenantId);
+    
+    public void startWorkflow(WaterConnectionReq waterConnectionRequest){
+    	ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(waterConnectionRequest);
+    	logger.info("Process Instance Reponse Received from Start Workflow : " + processInstanceResponse);
     }
-
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetReq documentTypeGetRequest) {
-       return documentTypeRepository.findForCriteria(documentTypeGetRequest);
-
-   }
-
+    
+    public void updateWorkflow(WaterConnectionReq waterConnectionRequest){
+    	TaskResponse taskResponse = workflowRepository.updateWorkflow(waterConnectionRequest);
+    	logger.info("Task Response Received from Update Workflow : " + taskResponse);
+    }
 }

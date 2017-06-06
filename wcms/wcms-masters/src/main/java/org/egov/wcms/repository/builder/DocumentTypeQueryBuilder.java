@@ -43,7 +43,7 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.web.contract.DocumentTypeGetRequest;
+import org.egov.wcms.web.contract.DocumentTypeGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class DocumentTypeQueryBuilder {
             + " FROM egwtr_document_type document ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(DocumentTypeGetRequest documentTypeGetRequest, List preparedStatementValues) {
+    public String getQuery(DocumentTypeGetReq documentTypeGetRequest, List preparedStatementValues) {
         StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, documentTypeGetRequest);
@@ -76,7 +76,7 @@ public class DocumentTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-                                DocumentTypeGetRequest documentTypeGetRequest) {
+                                DocumentTypeGetReq documentTypeGetRequest) {
 
         if (documentTypeGetRequest.getId() == null && documentTypeGetRequest.getName() == null && documentTypeGetRequest.getActive() == null
                 && documentTypeGetRequest.getTenantId() == null)
@@ -116,7 +116,7 @@ public class DocumentTypeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(StringBuilder selectQuery, DocumentTypeGetRequest documentTypeGetRequest) {
+    private void addOrderByClause(StringBuilder selectQuery, DocumentTypeGetReq documentTypeGetRequest) {
         String sortBy = (documentTypeGetRequest.getSortBy() == null ? "document.id"
                 : "document." + documentTypeGetRequest.getSortBy());
         String sortOrder = (documentTypeGetRequest.getSortOrder() == null ? "DESC" : documentTypeGetRequest.getSortOrder());
@@ -141,7 +141,7 @@ public class DocumentTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-                                 DocumentTypeGetRequest documentTypeGetRequest) {
+                                 DocumentTypeGetReq documentTypeGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());

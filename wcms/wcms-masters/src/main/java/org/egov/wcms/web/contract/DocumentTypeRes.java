@@ -40,6 +40,7 @@
 
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
@@ -65,6 +66,6 @@ public class DocumentTypeRes {
     public ResponseInfo responseInfo;
 	    
     @JsonProperty("documentTypes")
-    public List<DocumentType> documentTypes; 
+    public List<DocumentType> documentTypes = new ArrayList<DocumentType>(); 
     
 }

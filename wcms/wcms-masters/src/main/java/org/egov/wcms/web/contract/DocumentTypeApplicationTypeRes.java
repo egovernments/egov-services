@@ -37,15 +37,17 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
+
 package org.egov.wcms.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.DocumentTypeApplicationType;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,36 +56,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
+
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class DocumentTypeGetRequest {
+@Getter
+@NoArgsConstructor
+@ToString
+@Setter
+public class DocumentTypeApplicationTypeRes {
 
-    private List<Long> id;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-    @Length(min=3, max=100)
-    private String name;
-
-    @Length(min=3, max=20)
-    private String code;
-
-    private Boolean active;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
-
+	@JsonProperty("DocumentTypeApplicationType")
+	private List<DocumentTypeApplicationType> documentTypeApplicationTypes = new ArrayList<DocumentTypeApplicationType>();
 
 }

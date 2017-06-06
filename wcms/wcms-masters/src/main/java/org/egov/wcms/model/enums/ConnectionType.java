@@ -38,37 +38,36 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
+package org.egov.wcms.model.enums;
 
-package org.egov.wcms.web.contract;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.DocumentTypeApplicationType;
+public enum ConnectionType {
+PERMANENT("PERMANENT"), TEMPORARY("TEMPORARY");
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+private String value;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@ToString
-@Setter
-public class DocumentTypeApplicationTypeResponse {
-
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-
-	@JsonProperty("DocumentTypeApplicationType")
-	private List<DocumentTypeApplicationType> documentApplicationType = new ArrayList<DocumentTypeApplicationType>();
-
+ConnectionType(String value) {
+this.value = value;
 }
+
+@Override
+@JsonValue
+public String toString() {
+return StringUtils.capitalize(name());
+}
+
+@JsonCreator
+public static ConnectionType fromValue(String passedValue) {
+for (ConnectionType obj : ConnectionType.values()) {
+if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+return obj;
+}
+}
+return null;
+}
+}
+

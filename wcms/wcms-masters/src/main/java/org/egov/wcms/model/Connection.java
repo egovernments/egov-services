@@ -90,4 +90,7 @@ public class Connection {
 	@NotNull
 	private String tenantId;
 	
+	private WorkflowDetails workflowDetails;
+	
+	
 }

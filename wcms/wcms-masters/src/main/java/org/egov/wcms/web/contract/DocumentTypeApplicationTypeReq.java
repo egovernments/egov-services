@@ -37,13 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.wcms.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.WaterSourceType;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.DocumentTypeApplicationType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -60,12 +60,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class WaterSourceTypeResponse {
-    
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+public class DocumentTypeApplicationTypeReq {
 
-    @JsonProperty("waterSourceType")
-    private List<WaterSourceType> waterSourceTypes = new ArrayList<>();
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	@JsonProperty("DocumentTypeApplicationType")
+	private DocumentTypeApplicationType documentTypeApplicationType ;
 
 }

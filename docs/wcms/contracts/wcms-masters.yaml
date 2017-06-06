@@ -11,7 +11,7 @@
         - Create, Update and Search for PipeSizeType
         - Create, Update and Search for DonationType (NOT SUPPORTED YET)
         - Create, Update and Search for DocumentType
-        - Search for SourceType
+        - Create, Update and Search for SourceType
         - Search for ConnectionType
         - Search for ApplicationType
         - Create, Update and Search for mapping between PropertyType-CategoryType
@@ -278,6 +278,61 @@
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcetype/_create:
+      post:
+        summary: creates different types of allowed Source Type
+        description: allowed water source type
+        tags:
+          - SourceType
+        parameters:
+          - name: SourceType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/SourceTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/SourceTypesRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcetype/_update:
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - SourceType
+        parameters:
+          - name: SourceType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/SourceTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/SourceTypesRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
   
   # Connection Type API
     /connectiontype/_search:
@@ -615,8 +670,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/documentTypeCode"
-          - $ref: "#/parameters/applicationTypeCode"
+          - $ref: "#/parameters/documentType"
+          - $ref: "#/parameters/applicationType"
         responses:
           200: 
             description: Successful response
@@ -694,15 +749,15 @@
       required: false
       type: string
     
-    documentTypeCode:
-      name: documentTypeCode
+    documentType:
+      name: documentType
       in: query
       description: unique code of document type
       required: false
       type: string
 
-    applicationTypeCode:
-      name: applicationTypeCode
+    applicationType:
+      name: applicationType
       in: query
       description: unique identifier of application type
       required: false
@@ -888,17 +943,22 @@
           type: integer
           format: int64
           description: Unique identifier of document type object
-        applicationTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of application type object
-        fileStoreId:
-          type: integer
-          format: int64
-          description: unique identifier of uploaded file object
-        filePath:
+        applicationType:
           type: string
-          description: absolute path of uploaded file object
+          format: varchar
+          description: unique identifier of application type object
+        documentType:
+          type: string
+          format: varchar
+          description: Unique identifier of document type object
+        mandatory:
+          type: boolean
+          format: varchar
+          description: TRUE for active Document Names and FALSE for inactive Document Names.
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active Document Names and FALSE for inactive Document Names    
         tenantId:
           type: string
           description: Unique Identifier of the tenant   
@@ -906,7 +966,8 @@
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - documentTypeId
-        - applicationTypeId
+        - applicationType
+        - mandatory
         - tenantId
 
   # Application Type definitions
@@ -999,6 +1060,17 @@
           maximum: 10
           items:
             $ref: '#/definitions/SourceType'
+            
+    SourceTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        SourceType:
+          $ref: '#/definitions/SourceType'
+      required:
+        - RequestInfo
+        - SourceType
     
     SourceType:
       type: object
@@ -1008,11 +1080,9 @@
          format: int64
          description : Unique identifier of the entered type, typically defined by system.
         code:
+          type: string
           description: unique code this should be assigned by system.
           maxLength: 64
-          enum:
-            - SURFACE
-            - GROUND
         name: 
           type: string
           description: human readable name should be assigned by system.
@@ -1021,21 +1091,31 @@
           type: string
           description: human readable description should be assigned by user.
           maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
         - name
-  
+        - tenantId    
+    
   # Document Type definitions
     DocumentTypeReq:
       type: object
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        document:
+        documentType:
           $ref: '#/definitions/DocumentType'
       required:
         - RequestInfo
-        - document
+        - documentType
     
     DocumentTypesRes:
       type: object
@@ -1198,5 +1278,3 @@
         - code
         - name
         - tenantId
-          
-  

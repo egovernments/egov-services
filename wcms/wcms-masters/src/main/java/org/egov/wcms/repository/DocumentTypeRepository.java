@@ -47,8 +47,8 @@ import java.util.Map;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.repository.builder.DocumentTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeRowMapper;
-import org.egov.wcms.web.contract.DocumentTypeGetRequest;
-import org.egov.wcms.web.contract.DocumentTypeRequest;
+import org.egov.wcms.web.contract.DocumentTypeGetReq;
+import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,26 +69,26 @@ public class DocumentTypeRepository {
     @Autowired
     private DocumentTypeRowMapper documentTypeRowMapper;
 
-    public DocumentTypeRequest persistCreateDocumentType(final DocumentTypeRequest documentTypeRequest) {
-        LOGGER.info("DocumentTypeRequest::" + documentTypeRequest);
+    public DocumentTypeReq persistCreateDocumentType(final DocumentTypeReq documentTypeReq) {
+        LOGGER.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
-        final DocumentType documentType = documentTypeRequest.getDocumentType();
-        Object[] obj = new Object[] {documentType.getCode(),documentType.getName(),documentType.getDescription(),documentType.getActive(),Long.valueOf(documentTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(documentTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+        final DocumentType documentType = documentTypeReq.getDocumentType();
+        Object[] obj = new Object[] {documentType.getCode(),documentType.getName(),documentType.getDescription(),documentType.getActive(),Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
                 new Date(new java.util.Date().getTime()),documentType.getTenantId() };
 
         jdbcTemplate.update(documentTypeInsert, obj);
-        return documentTypeRequest;
+        return documentTypeReq;
     }
 
 
-    public DocumentTypeRequest persistModifyDocumentType(final DocumentTypeRequest documentTypeRequest) {
-        LOGGER.info("DocumentTypeRequest::" + documentTypeRequest);
+    public DocumentTypeReq persistModifyDocumentType(final DocumentTypeReq documentTypeReq) {
+        LOGGER.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
-        final DocumentType documentType = documentTypeRequest.getDocumentType();
+        final DocumentType documentType = documentTypeReq.getDocumentType();
         Object[] obj = new Object[] {documentType.getName(),documentType.getDescription(),documentType.getActive(),
-                Long.valueOf(documentTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), documentType.getCode() };
+                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), documentType.getCode() };
         jdbcTemplate.update(documentTypeUpdate, obj);
-        return documentTypeRequest;
+        return documentTypeReq;
 
     }
 
@@ -112,7 +112,7 @@ public class DocumentTypeRepository {
         return true;
     }
 
-    public List<DocumentType> findForCriteria(DocumentTypeGetRequest documentTypeGetRequest) {
+    public List<DocumentType> findForCriteria(DocumentTypeGetReq documentTypeGetRequest) {
         List<Object> preparedStatementValues = new ArrayList<Object>();
         String queryStr = documentTypeQueryBuilder.getQuery(documentTypeGetRequest, preparedStatementValues);
         List<DocumentType> documentTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), documentTypeRowMapper);

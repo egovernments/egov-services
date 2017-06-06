@@ -74,6 +74,34 @@ paths:
           description: Invalid input
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+            
+  /legacy/_create:
+      post:
+        summary: creates entry for legacy connection details
+        description: allows legacy connection details.
+        tags:
+          - Legacy Connection
+        parameters:
+          - name: LegacyConnectionType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/LegacyConnectionTypeReq'
+        responses:
+          '201':
+            description: Request sucessfully
+            schema:
+              $ref: "#/definitions/LegacyConnectionTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'                    
 
 definitions:
 
@@ -225,6 +253,43 @@ definitions:
         type: string
         description: address of the property.
         readOnly: true
+      assessmentNumber:
+        type: string
+        description: tax Assessment number which will come from propertyTax
+      nameOfApplicant:
+        type: string
+        description: Name Of the Applicant
+      mobileNumber:
+        type: string
+        description: Applicant MobileNumber
+      email:
+        type: string
+        description: Applicant Email
+      adharNumber:
+        type: string
+        description: Applicany AdharNumber.
+      locality:
+        type: string
+        description: Applicant Locality.
+      zone/word/block:
+        type: string
+        description: Zone or Word of the Applicant.
+      
+  
+  LegacyConnectionTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Connection:
+          $ref: '#/definitions/Connection'
+        
+      required:
+        - RequestInfo
+        - Connection
+       
+  
+  
   
   Document:
     type: object
@@ -325,6 +390,10 @@ definitions:
       meterMake:
         type: string
         description: company name of the meter.
+      meterCost:
+        type: integer
+        format : int64
+        description: company name of the meter.  
       meterReading: 
         type: string
         description: intial reading of the meter.
@@ -348,6 +417,11 @@ definitions:
         type: integer
         format: int64
         description: unique identifier of connection object
+      meterSlNo:
+        type: integer
+        format: int64
+        description: Meter SerialNumber.
+        
       reading:
         type: integer
         format: long
@@ -500,6 +574,14 @@ definitions:
         maximum: 500
         items:
          $ref: '#/definitions/Connection'
+         
+  LegacyConnectionTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Connection:
+          $ref: '#/definitions/Connection'
          
 parameters:
   legacyConsumerNumber:

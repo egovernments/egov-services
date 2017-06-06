@@ -46,7 +46,7 @@ public class FinancialsApplication {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		// mapper.setDateFormat(std);
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

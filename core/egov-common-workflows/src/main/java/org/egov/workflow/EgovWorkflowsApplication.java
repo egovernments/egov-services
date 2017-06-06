@@ -64,6 +64,7 @@ public class EgovWorkflowsApplication {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a"));
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

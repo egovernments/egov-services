@@ -39,13 +39,19 @@
  */
 package org.egov.wcms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-
 import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -55,18 +61,16 @@ import javax.validation.constraints.NotNull;
 @ToString
 @Builder
 public class AuditDetails {
-	
-	@NotNull
+
+    @NotNull
     private Long createdBy;
 
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdDate;
 
-	@NotNull
+    @NotNull
     private Long lastModifiedBy;
 
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
 

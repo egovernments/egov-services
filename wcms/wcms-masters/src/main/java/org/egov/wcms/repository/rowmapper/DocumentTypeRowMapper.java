@@ -41,6 +41,7 @@ package org.egov.wcms.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 import org.egov.wcms.model.DocumentType;
 import org.springframework.jdbc.core.RowMapper;
@@ -48,17 +49,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
-	
-	@Override
+
+    @Override
     public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         DocumentType documentType = new DocumentType();
-        documentType.setId(rs.getLong("id"));
-        documentType.setCode(rs.getString("code"));
-        documentType.setName(rs.getString("name"));
-        documentType.setDescription(rs.getString("description"));
-        documentType.setActive(rs.getBoolean("active"));
-        documentType.setTenantId(rs.getString("tenantid"));
+        documentType.setId(rs.getLong("document_id"));
+        documentType.setCode(rs.getString("document_code"));
+        documentType.setName(rs.getString("document_name"));
+        documentType.setDescription(rs.getString("document_description"));
+        documentType.setActive(rs.getBoolean("document_active"));
+        documentType.setTenantId(rs.getString("document_tenantId"));
+
         return documentType;
     }
+
+
 }

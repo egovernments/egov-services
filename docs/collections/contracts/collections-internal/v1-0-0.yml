@@ -281,49 +281,7 @@ paths:
       parameters:
         - name: billInfo
           in: body
-          description: Receipt Creation Details passed as base64 encoded xml for example 
-            <serviceCode>PT</serviceCode>
-            <fundCode>01</fundCode>
-            <functionaryCode>1</functionaryCode>
-            <fundSourceCode>01</fundSourceCode>
-            <departmentCode>REV</departmentCode>
-            <displayMessage>Property Tax Collection</displayMessage>
-            <paidBy>Nazeer Ahmed</paidBy>
-            <partPaymentAllowed>1</partPaymentAllowed>
-            <callbackForApportioning>1</callbackForApportioning>
-            <overrideAccountHeadsAllowed>0</overrideAccountHeadsAllowed>
-            <collectionType>F</collectionType>
-            <collectionModeNotAllowed></collectionModeNotAllowed>
-            <payees>
-              <payee>
-                <payeeName>Nazeer Ahmed</payeeName>
-                <payeeAddress>61/8, chidambara rao veedhi, Kurnool, </payeeAddress>
-                <payeeEmail></payeeEmail>
-                <bills>
-                    <bill refNo="694080" billDate="13/03/2017" consumerCode="1016029268">
-                      <description>Property Tax Assessment Number 1016029268</description>
-                      <consumerType>Private</consumerType>
-                      <boundaryNum>9999</boundaryNum>
-                      <boundaryType>Ward</boundaryType>
-                      <totalAmount>10275</totalAmount>
-                      <minimumAmount>0</minimumAmount>
-                      <accounts>
-                        <account glCode="1402002" order="55" description="Penalty Fines-2014-2015-1" isActualDemand="1" purpose="ARREAR_LATEPAYMENT_CHARGES">
-                        <crAmount>226</crAmount>
-                        <drAmount>0</drAmount>
-                        <functionCode>9100</functionCode>
-                      </account>
-                      <account glCode="1100101" order="68" description="General Tax-2016-2017-1" isActualDemand="1" purpose="CURRENT_AMOUNT">
-                        <crAmount>381</crAmount>
-                        <drAmount>0</drAmount>
-                        <functionCode>9100</functionCode>
-                      </account>
-                    </accounts>
-                  </bill>
-                </bills>
-              </payee>
-            </payees>
-            along with common request info. 
+          description: Receipt Creation Details passed as bill info along with common request info. 
           required: true
           schema:
             $ref: '#/definitions/PendingReceiptReq'
@@ -351,7 +309,7 @@ paths:
           maxLength: 50
         - name: billInfo
           in: body
-          description: Receipt Creation Details passed as base64 encoded xml along with common request info.
+          description: Receipt Creation Details passed as bill info along with common request info.
           required: true
           schema:
             $ref: '#/definitions/CreateReceiptReq'
@@ -368,7 +326,7 @@ paths:
 definitions:
   PendingReceiptReq:
     type: object
-    description: Base64 encoded Bill XML with Request Info.
+    description: Pending Receipt Request with Request Info.
     properties:
       tenantId:
         type: string
@@ -388,7 +346,7 @@ definitions:
   
   CreateReceiptReq:
     type: object
-    description: Base64 encoded Bill XML.
+    description: Create Receipt Request.
     properties:
       tenantId:
         type: string
@@ -558,47 +516,24 @@ definitions:
   BillInfo:
     type: object
     properties:
-      businessDetailsCode:
+      payeeName:
         type: string
-        description: BusinessDetails code.
-      fund:
+        description: Consumer name defined in bill.
+      payeeAddress:
         type: string
-        description: Fund code.
-      functionary:
+        description: Consumer address defined in bill.
+      payeeEmail:
         type: string
-        description: Functionary code.
-      fundSource:
-        type: string
-        description: Fund source code.
-      department:
-        type: string
-        description: Department code.
+        description: Consumer email defined in bill.
       displayMessage:
         type: string
         description: Remarks to be displayed on receipt.
       paidBy:
         type: string
         description: Paid by person name.
-      partPaymentAllowed:
-        type: boolean
-        description: Part payment is allowed if the value is True, otherwise part payment is not allowed.
-      callbackForApportioning:
-        type: boolean
-        description: Callback billing system if the value is True, else use default apportioning logic provided by collections.
-      overrideAccountHeadsAllowed:
-        type: boolean
-        description: Override account heads is allowed if the value is True, not allowed otherwise.
-      transactionReferenceNumber:
-        type: string
-        description: To be used by third party applications to send the transaction id generated at their end.
       source:
         type: string
         description: To be used by third party applications, to send the source name.
-      collectionModesNotAllowed:
-        type: array
-        items: 
-          type: string
-        description: List of collection modes not allowed.
       collectionType:
         type: array
         description: Type of collection.
@@ -608,11 +543,11 @@ definitions:
            - COUNTER
            - FIELD
            - ONLINE
-      payees:
+      billDetails:
         type: array
         items:
-          $ref: '#/definitions/BillPayeeDetails'
-  
+          $ref: '#/definitions/BillDetails'
+      
   BillPayeeDetails:
     type: object
     properties:
@@ -625,14 +560,14 @@ definitions:
       payeeEmail:
         type: string
         description: Consumer email defined in bill.
-      billDetails:
-        type: array
-        items:
-          $ref: '#/definitions/BillDetails'
+      
   
   BillDetails:
     type: object
     properties:
+      businessDetailsCode:
+        type: string
+        description: BusinessDetails code.
       refNo:
         type: string
         description: Bill number.
@@ -646,12 +581,6 @@ definitions:
       consumerType:
         type: string
         description: Consumer type defined in bill.
-      boundaryNumber:
-        type: string
-        description: Boundary code of the consumer defined in bill.
-      boundaryType:
-        type: string
-        description: Boundary type of the consumer defined in bill.
       billDescription:
         type: string
         description: Summarized bill description.
@@ -663,6 +592,11 @@ definitions:
         type: number
         format: double
         description: Total bill amount to be paid.
+      collectionModesNotAllowed:
+        type: array
+        items: 
+          type: string
+        description: List of collection modes not allowed.
       billAccountDetails:
         type: array
         items:
@@ -716,7 +650,7 @@ definitions:
     properties:
       billNumber: 
         type: string
-        description: This is the Bill Number sent to Collection system in billInfoXML.
+        description: This is the Bill Number sent to Collection system in billInfo.
       event: 
         type: string
         description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
@@ -729,10 +663,10 @@ definitions:
         description: Receipt Date.
       payeeName:
         type: string
-        description: Consumer name sent in billInfoXML.
+        description: Consumer name sent in billInfo.
       payeeAddress:
         type: string
-        description: Consumer address sent in billInfoXML.
+        description: Consumer address sent in billInfo.
       businessName:
         type: string
         description: Name of the billing service.
@@ -741,7 +675,7 @@ definitions:
         description: Name of the payee at the counter/online.
       billDescription: 
         type: string
-        description: Description sent in billInfoXML.
+        description: Description sent in billInfo.
       accountDetails:
         type: array
         items:
@@ -756,13 +690,13 @@ definitions:
     properties:
       glCode: 
         type: string
-        description: GLCode sent in billInfoXML.
+        description: GLCode sent in billInfo.
       accountDescrtion:
         type: string
-        description: Description of GlCode sent in billInfoXML.
+        description: Description of GlCode sent in billInfo.
       functionCode:
         type: string
-        description: Function Code sent in billInfoXML.
+        description: Function Code sent in billInfo.
       debitAmount:
         type: number
         format: double
@@ -1110,3 +1044,4 @@ parameters:
     description: Page number
     type: integer
     default: 1  
+

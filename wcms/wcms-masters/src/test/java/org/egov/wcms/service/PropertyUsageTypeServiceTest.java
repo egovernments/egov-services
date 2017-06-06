@@ -40,7 +40,7 @@
 
 package org.egov.wcms.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +49,7 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
-import org.egov.wcms.producers.PropertyUsageTypeProducer;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
@@ -61,66 +61,80 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class PropertyUsageTypeServiceTest {
 
-	@Mock
-	private PropertyUsageTypeRepository propUsageTypeRepository;
+    @Mock
+    private PropertyUsageTypeRepository propUsageTypeRepository;
 
-	@Mock
-	private PropertyUsageTypeProducer propUsageTypeProducer;
+    @Mock
+    private WaterMasterProducer waterMasterProducer;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@InjectMocks
-	private PropertyUsageTypeService propUsageTypeService;
+    @InjectMocks
+    private PropertyUsageTypeService propUsageTypeService;
 
-	@Test
-	public void test_Should_Find_Search_Valid() {
-		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
-		propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
-		
-		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyTypeUsageTypeGetReq.class))).thenReturn(propUsageTypes);
-		assertTrue(propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyTypeUsageTypeGetReq.class))));
-	}
-	
-	@Test
-	public void test_Should_Find_Search_Invalid() {
-		List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
-		propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
-		
-		when(propUsageTypeRepository.getPropertyUsageType(any(PropertyTypeUsageTypeGetReq.class))).thenReturn(null);
-		assertTrue(!propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyTypeUsageTypeGetReq.class))));
-	}
-	
-	@Test
-	public void test_Should_Create() {
-		PropertyTypeUsageType propUsageType = getPropertyUsageType();
-		List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
-		propertyUsageTypes.add(propUsageType);
-		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
-		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
-		PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
-		propUsageTypeResponse.setResponseInfo(null);
-		propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
-		
-		when(propUsageTypeService.create(any(PropertyTypeUsageTypeReq.class))).thenReturn(propUsageTypeRequest);
-		assertTrue(propUsageTypeRequest.equals(propUsageTypeService.create(propUsageTypeRequest)));
-		
-		
-	}
+    @Test
+    public void test_Should_Find_Search_Valid() {
+        final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
+        propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
 
-	private PropertyTypeUsageType getPropertyUsageType() {
+        when(propUsageTypeRepository.getPropertyUsageType(any(PropertyTypeUsageTypeGetReq.class))).thenReturn(propUsageTypes);
+        assertTrue(propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyTypeUsageTypeGetReq.class))));
+    }
 
-		PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
-		propUsageType.setActive(true);
-		propUsageType.setId(2L);
-		propUsageType.setPropertyType("RES");
-		propUsageType.setTenantId("DEFAULT");
-		propUsageType.setUsageType("COM");
-		return propUsageType;
-	}
+    @Test
+    public void test_Should_Find_Search_Invalid() {
+        final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
+        propUsageTypes.add(Mockito.mock(PropertyTypeUsageType.class));
+
+        when(propUsageTypeRepository.getPropertyUsageType(any(PropertyTypeUsageTypeGetReq.class))).thenReturn(null);
+        assertTrue(!propUsageTypes.equals(propUsageTypeService.getPropertyUsageTypes(any(PropertyTypeUsageTypeGetReq.class))));
+    }
+
+    @Test
+    public void test_Should_Create() {
+        final PropertyTypeUsageType propUsageType = getPropertyUsageType();
+        final List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
+        propertyUsageTypes.add(propUsageType);
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
+        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        final PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
+        propUsageTypeResponse.setResponseInfo(null);
+        propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
+
+        when(propUsageTypeService.create(any(PropertyTypeUsageTypeReq.class))).thenReturn(propUsageTypeRequest);
+        assertTrue(propUsageTypeRequest.equals(propUsageTypeService.create(propUsageTypeRequest)));
+
+    }
+
+    @Test
+    public void test_Should_Update() {
+        final PropertyTypeUsageType propUsageType = getPropertyUsageType();
+        final List<PropertyTypeUsageType> propertyUsageTypes = new ArrayList<>();
+        propertyUsageTypes.add(propUsageType);
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
+        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        final PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
+        propUsageTypeResponse.setResponseInfo(null);
+        propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
+
+        when(propUsageTypeService.update(any(PropertyTypeUsageTypeReq.class))).thenReturn(propUsageTypeRequest);
+        assertTrue(propUsageTypeRequest.equals(propUsageTypeService.update(propUsageTypeRequest)));
+
+    }
+
+    private PropertyTypeUsageType getPropertyUsageType() {
+
+        final PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
+        propUsageType.setActive(true);
+        propUsageType.setId(2L);
+        propUsageType.setPropertyType("RES");
+        propUsageType.setTenantId("DEFAULT");
+        propUsageType.setUsageType("COM");
+        return propUsageType;
+    }
 
 }

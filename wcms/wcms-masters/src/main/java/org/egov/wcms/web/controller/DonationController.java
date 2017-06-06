@@ -51,7 +51,7 @@ import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.validator.NewConnectionValidator;
+import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.DonationResponse;
@@ -94,7 +94,7 @@ public class DonationController {
     private ApplicationProperties applicationProperties;
     
     @Autowired
-    private NewConnectionValidator newConnectionValidator;
+    private NewWaterConnectionValidator newConnectionValidator;
 
     @PostMapping(value = "/_create")
     @ResponseBody
@@ -104,17 +104,39 @@ public class DonationController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Donation Request::" + donationRequest);
+        logger.info("Donation Create Request::" + donationRequest);
 
         final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final Donation donation= donationService.createPropertyUsageType(applicationProperties.getCreateDonationTopicName(),"donation-create", donationRequest);
+        final Donation donation= donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),"donation-create", donationRequest);
         List<Donation> donationList = new ArrayList<>();
         donationList.add(donation);
         return getSuccessResponse(donationList, donationRequest.getRequestInfo());
     }
+    
+    
+    @PostMapping(value = "/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid  final DonationRequest donationRequest,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = populateErrors(errors);
+            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Donation Update Request::" + donationRequest);
+
+        final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
+        final Donation donation= donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),"donation-update", donationRequest);
+        List<Donation> donationList = new ArrayList<>();
+        donationList.add(donation);
+        return getSuccessResponse(donationList, donationRequest.getRequestInfo());
+    }
+    
     
     @PostMapping("_search")
     @ResponseBody
@@ -135,7 +157,7 @@ public class DonationController {
 
         // Call service
         List<Donation> donationList = null;
-        logger.info("+++===Validation Response is something like this +++=== : " + newConnectionValidator.validateNewConnectionBusinessRules());
+      //  logger.info("+++===Validation Response is something like this +++=== : " + newConnectionValidator.validateNewConnectionBusinessRules());
         try {
             donationList = donationService.getDonationList(donationGetRequest);
         } catch (Exception exception) {

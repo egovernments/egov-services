@@ -42,12 +42,13 @@ package org.egov.wcms.repository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.repository.builder.DocumentTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeRowMapper;
-import org.egov.wcms.web.contract.DocumentTypeGetReq;
-import org.egov.wcms.web.contract.DocumentTypeReq;
+import org.egov.wcms.web.contract.DocumentTypeGetRequest;
+import org.egov.wcms.web.contract.DocumentTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,42 +57,66 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class DocumentTypeRepository {
-	public static final Logger LOGGER = LoggerFactory.getLogger(UsageTypeRepository.class);
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(DocumentTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    private DocumentTypeRowMapper documentTypeMapper;
-    
+
     @Autowired
     private DocumentTypeQueryBuilder documentTypeQueryBuilder;
-    
-    public void persistCreateDocumentType(final DocumentTypeReq documentTypeRequest) {
-        LOGGER.info("Document Type Request::" + documentTypeRequest);
-        final String documentTypeInsert = documentTypeQueryBuilder.getPersistQuery(); 
-        Object[] obj = new Object[] {documentTypeRequest.getDocumentType().getName(), documentTypeRequest.getDocumentType().getCode(),
-        		documentTypeRequest.getDocumentType().getDescription(), documentTypeRequest.getDocumentType().getActive(), documentTypeRequest.getDocumentType().getTenantId(), 
-        		new Date(new java.util.Date().getTime()), documentTypeRequest.getRequestInfo().getUserInfo().getId() };
+
+    @Autowired
+    private DocumentTypeRowMapper documentTypeRowMapper;
+
+    public DocumentTypeRequest persistCreateDocumentType(final DocumentTypeRequest documentTypeRequest) {
+        LOGGER.info("DocumentTypeRequest::" + documentTypeRequest);
+        final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
+        final DocumentType documentType = documentTypeRequest.getDocumentType();
+        Object[] obj = new Object[] {documentType.getCode(),documentType.getName(),documentType.getDescription(),documentType.getActive(),Long.valueOf(documentTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(documentTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()),documentType.getTenantId() };
+
         jdbcTemplate.update(documentTypeInsert, obj);
+        return documentTypeRequest;
     }
-    
-    public List<DocumentType> findForCriteria(DocumentTypeGetReq documentTypeGetRequest) {
+
+
+    public DocumentTypeRequest persistModifyDocumentType(final DocumentTypeRequest documentTypeRequest) {
+        LOGGER.info("DocumentTypeRequest::" + documentTypeRequest);
+        final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
+        final DocumentType documentType = documentTypeRequest.getDocumentType();
+        Object[] obj = new Object[] {documentType.getName(),documentType.getDescription(),documentType.getActive(),
+                Long.valueOf(documentTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), documentType.getCode() };
+        jdbcTemplate.update(documentTypeUpdate, obj);
+        return documentTypeRequest;
+
+    }
+
+    public boolean checkDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(name);
+       // preparedStatementValues.add(id);
+        preparedStatementValues.add(tenantId);
+        final String query;
+        if (code == null)
+            query = DocumentTypeQueryBuilder.selectDocumentTypeByNameAndCodeQuery();
+        else {
+            preparedStatementValues.add(code);
+            query = DocumentTypeQueryBuilder.selectDocumentTypeByNameAndCodeNotInQuery();
+        }
+        final List<Map<String, Object>> documentTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!documentTypes.isEmpty())
+            return false;
+
+        return true;
+    }
+
+    public List<DocumentType> findForCriteria(DocumentTypeGetRequest documentTypeGetRequest) {
         List<Object> preparedStatementValues = new ArrayList<Object>();
         String queryStr = documentTypeQueryBuilder.getQuery(documentTypeGetRequest, preparedStatementValues);
-        List<DocumentType> documentTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), documentTypeMapper);
+        List<DocumentType> documentTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), documentTypeRowMapper);
         return documentTypes;
-    }
-    
-    public boolean checkCodeAndTenantExists(DocumentTypeReq documentTypeRequest){
-    	List<Object> preparedStatementValues = new ArrayList<Object>();
-        preparedStatementValues.add(documentTypeRequest.getDocumentType().getTenantId());
-        preparedStatementValues.add(documentTypeRequest.getDocumentType().getCode());
-    	List<DocumentType> documentTypes = jdbcTemplate.query(documentTypeQueryBuilder.getQueryForCodeTenant(), preparedStatementValues.toArray(), documentTypeMapper);
-    	if(documentTypes.size()>0){
-    		return true;
-    	}
-    	return false; 
     }
 
 

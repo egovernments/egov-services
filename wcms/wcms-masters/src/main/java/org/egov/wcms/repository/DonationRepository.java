@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
-import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +76,21 @@ public class DonationRepository {
 		jdbcTemplate.update(donationInsert, obj);
 		return donationRequest;
 	}
+	
+	public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
+		LOGGER.info("Donation update Request::" + donationRequest);
+		final String donationInsert = "update egwtr_donation set property_type=?,usage_type=?,category=?, hsc_pipesize_max=?, hsc_pipesize_min=?,"
+				+ " from_date=?, to_date=?, donation_amount=?, active=?,lastmodifiedby=?, lastmodifieddate=? where id=?) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		Object[] obj = new Object[] {
+				donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
+				donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
+				donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(), donationRequest.getDonation().getToDate(),
+				donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
+				1L,new Date(new java.util.Date().getTime()),donationRequest.getDonation().getId() };
+		jdbcTemplate.update(donationInsert, obj);
+		return donationRequest;
+	}
+
 	
 	public List<Donation> getDonationList(Donation donation) {
         List<Object> preparedStatementValues = new ArrayList<Object>();

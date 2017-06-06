@@ -49,7 +49,7 @@ class UpdateLeave extends React.Component {
     var process = [], employee;
     var  _leaveSet = {};
     var  hrConfigurations = [], allHolidayList = [];
-    
+
     commonApiPost("hr-masters", "hrconfigurations", "_search", {
           tenantId
     }, function(err, res) {
@@ -280,6 +280,7 @@ handleProcess(e) {
     var ID = e.target.id,
         _this = this;
     var owner;
+
     //Make your server calls here for these actions/buttons
     //Please test it, I have only wrote the code, not tested - Sourabh
     commonApiPost("hr-employee", "employees", "_search", {
@@ -298,7 +299,7 @@ handleProcess(e) {
                     type = getUrlVars()["type"];
                 delete tempInfo.name;
                 delete tempInfo.code;
-                commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, es2) {
+                commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, res2) {
                     if (res2) {
                         var employee = res2["Employee"][0];
                         if (!tempInfo.workflowDetails) {
@@ -306,7 +307,10 @@ handleProcess(e) {
                                 action: ID,
                                 assignee: employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
                             };
-                        }
+                        } else {
+                          tempInfo.workflowDetails.action = ID,
+                          tempInfo.workflowDetailsassignee= employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
+                          }
                         var body = {
                             "RequestInfo": requestInfo,
                             "LeaveApplication": tempInfo
@@ -345,6 +349,8 @@ handleProcess(e) {
                 if (!tempInfo.workflowDetails) {
 
                     tempInfo.workflowDetails = { action: ID };
+                } else {
+                    tempInfo.workflowDetails.action = ID;
                 }
                 var body = {
                     "RequestInfo": requestInfo,

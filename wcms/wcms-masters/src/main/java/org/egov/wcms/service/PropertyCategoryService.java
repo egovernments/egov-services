@@ -40,13 +40,8 @@
 
 package org.egov.wcms.service;
 
-import java.util.List;
-
-import org.egov.wcms.model.ConnectionCategory;
-import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.producers.PropertyCategoryProducer;
-import org.egov.wcms.repository.PropertyCategoryRepository;
-import org.egov.wcms.web.contract.CategoryGetRequest;
+import org.egov.wcms.producers.WaterMasterProducer;
+import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
@@ -58,46 +53,52 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @Service
 public class PropertyCategoryService {
-	
+
     @Autowired
-    private PropertyCategoryRepository propertyCategoryRepository;
-    
+    private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
+
     @Autowired
-    PropertyCategoryProducer propertyCategoryProducer;
-	
+    private WaterMasterProducer waterMasterProducer;
+
     public static final Logger logger = LoggerFactory.getLogger(PropertyCategoryService.class);
 
-    
-	 public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key, final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-	        
-		 	final ObjectMapper mapper = new ObjectMapper();
-	        String propertyCategoryValue = null;
-	        try {
-	            logger.info("createPropertyCategory service::" + propertyCategoryRequest);
-	            propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
-	            logger.info("propertyCategoryValue::" + propertyCategoryValue);
-	        } catch (final JsonProcessingException e) {
-	            e.printStackTrace();
-	        }
-	        try {
-	            propertyCategoryProducer.sendMessage(topic,key,propertyCategoryValue);
-	        } catch (final Exception ex) {
-	            ex.printStackTrace();
-	        }
-	        return propertyCategoryRequest;
-	    }
-	 
-	    public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-	        return propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest);
-	    }
-	    
-	    public PropertyTypeCategoryTypesRes getPropertyCategories(PropertyCategoryGetRequest propertyCategoryGetRequest) {
-	        return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
+    public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
+            final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 
+        final ObjectMapper mapper = new ObjectMapper();
+        String propertyCategoryValue = null;
+        try {
+            logger.info("createPropertyCategory service::" + propertyCategoryRequest);
+            propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
+            logger.info("propertyCategoryValue::" + propertyCategoryValue);
+        } catch (final JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        try {
+            waterMasterProducer.sendMessage(topic, key, propertyCategoryValue);
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+        return propertyCategoryRequest;
+    }
+
+    public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+        return propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest);
+    }
+    
+    public PropertyTypeCategoryTypeReq update(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+        return propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest);
+    }
+
+    public PropertyTypeCategoryTypesRes getPropertyCategories(final PropertyCategoryGetRequest propertyCategoryGetRequest) {
+        return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
+
+    }
+	    
+	public boolean checkIfMappingExists(String propertyType, String categoryType, String tenantId){
+	    	return propertyCategoryRepository.checkIfMappingExists(propertyType, categoryType, tenantId);
 	    }
-	
-	
+
 }

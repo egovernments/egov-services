@@ -80,7 +80,7 @@ public class DonationServiceTest {
     @InjectMocks
     private DonationService donationService;
     
-    @Test(expected = Exception.class) //Please revisit this test case
+    @Test 
     public void test_Should_Donation_Create() {
 		final Donation donation = getDonation();
 		final List<Donation> donations = new ArrayList<>();
@@ -102,7 +102,6 @@ public class DonationServiceTest {
 		AuditDetails auditDetails = new AuditDetails();
 
 		donation.setActive(true);
-		donation.getAuditDetails().setCreatedBy(1L);
 		donation.setCategoryTypeId(12);
 		donation.setPropertyTypeId(23);
 		donation.setUsageTypeId(13);
@@ -111,6 +110,7 @@ public class DonationServiceTest {
 		donation.setMaxHSCPipeSizeId(123);
 		donation.setMinHSCPipeSizeId(234);
 		donation.setAuditDetails(auditDetails);
+		donation.getAuditDetails().setCreatedBy(1L);
 
 		return donation;
     }

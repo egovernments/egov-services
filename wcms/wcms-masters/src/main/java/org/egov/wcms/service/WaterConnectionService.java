@@ -41,6 +41,7 @@ package org.egov.wcms.service;
 
 import org.egov.wcms.model.Connection;
 import org.egov.wcms.producers.WaterTransactionProducer;
+import org.egov.wcms.repository.WaterConnectionRepository;
 import org.egov.wcms.util.AckConsumerNoGenerator;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -62,6 +63,9 @@ public class WaterConnectionService {
     @Autowired
     private AckConsumerNoGenerator ackConsumerNoGenerator;
     
+    @Autowired
+    private WaterConnectionRepository waterConnectionRepository;
+    
     public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
@@ -73,7 +77,7 @@ public class WaterConnectionService {
         	logger.error("Exception while stringifying water coonection object", e);
         }
         try {
-        	waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
+        	waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
         } catch (final Exception e) {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
@@ -82,6 +86,16 @@ public class WaterConnectionService {
         waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
         
         return waterConnectionRequest.getConnection();
+    }
+    
+    public Connection create(WaterConnectionReq waterConnectionRequest){
+    	logger.info("Service API entry for create New Connection");
+    	try{
+    	waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
+    	}catch(Exception e){
+    		logger.error("Persisting failed due to db exception", e);
+    	}
+    	return waterConnectionRequest.getConnection();
     }
 
 }

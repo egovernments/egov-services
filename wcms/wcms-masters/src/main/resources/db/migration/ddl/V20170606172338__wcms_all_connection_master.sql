@@ -7,15 +7,15 @@ CREATE TABLE "egwtr_waterconnection" (
 	"hscpipesizetype" bigint NOT NULL,
 	"supplytype" varchar NOT NULL,
 	"sourcetype" bigint NOT NULL,
-	"connectionstatus" varchar NOT NULL,
+	"connectionstatus" varchar DEFAULT NULL,
 	"sumpcapacity" bigint NOT NULL,
-	"donationcharge" varchar NOT NULL,
-	"numberfftaps" bigint NOT NULL,
+	"donationcharge" varchar DEFAULT NULL,
+	"numberofftaps" bigint NOT NULL,
 	"numberofpersons" bigint NOT NULL,
-	"parentconnectionid" bigint NOT NULL,
-	"legacyconsumernumber" varchar NOT NULL,
+	"parentconnectionid" bigint DEFAULT NULL,
+	"legacyconsumernumber" varchar DEFAULT NULL,
 	"acknowledgmentnumber" varchar NOT NULL,
-	"consumernumber" varchar NOT NULL,
+	"consumernumber" varchar DEFAULT NULL,
 	"createdby" varchar NOT NULL,
 	"lastmodifiedby" varchar NOT NULL,
 	"createdtime" TIMESTAMP NOT NULL,
@@ -125,13 +125,13 @@ CREATE TABLE "egwtr_timeline" (
 
 
 CREATE TABLE "egwtr_documentowner" (
-	"document" bigint NOT NULL,
+    "id" serial NOT NULL,
+    "document" bigint NOT NULL,
 	"name" varchar NOT NULL,
-	"fileStoreID" varchar NOT NULL,
-	"ID" serial NOT NULL,
-	"connectionID" serial NOT NULL,
-	"tenantId" varchar NOT NULL,
-	CONSTRAINT egwtr_documentowner_pk PRIMARY KEY ("ID")
+	"fileStoreId" varchar NOT NULL,
+	"connectionId" serial NOT NULL,
+	"tenantid" varchar NOT NULL,
+	CONSTRAINT egwtr_documentowner_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
@@ -154,7 +154,7 @@ ALTER TABLE "egwtr_meterreading" ADD CONSTRAINT "egwtr_meterreading_fk0" FOREIGN
 ALTER TABLE "egwtr_timeline" ADD CONSTRAINT "egwtr_timeline_fk0" FOREIGN KEY ("connectionid","tenantid") REFERENCES "egwtr_waterconnection"("id","tenantid");
 
 
-ALTER TABLE "egwtr_documentowner" ADD CONSTRAINT "egwtr_documentowner_fk0" FOREIGN KEY ("connectionID","tenantId") REFERENCES "egwtr_waterconnection"("id","tenantid");
+ALTER TABLE "egwtr_documentowner" ADD CONSTRAINT "egwtr_documentowner_fk0" FOREIGN KEY ("connectionId","tenantid") REFERENCES "egwtr_waterconnection"("id","tenantid");
 
 ALTER TABLE "egwtr_waterconnection" ADD CONSTRAINT "egwtr_connection_category_fk0" FOREIGN KEY (categorytype,tenantid) REFERENCES "egwtr_category"(id,tenantid);
 

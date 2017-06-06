@@ -28,7 +28,7 @@ public class Connection {
 	private String categoryType;
 	
 	@NotNull
-	private String hscPipeSizeType;
+	private double hscPipeSizeType;
 	
 	@NotNull
 	private String supplyType;

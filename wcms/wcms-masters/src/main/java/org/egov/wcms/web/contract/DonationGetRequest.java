@@ -25,8 +25,8 @@ public class DonationGetRequest {
 	private String propertyType;
 	private String categoryType;
     private String usageType;
-	private String minHSCPipeSize;
-	private String maxHSCPipeSize;
+	private double minHSCPipeSize;
+	private double maxHSCPipeSize;
 	private Date fromDate;
 	private Date toDate;
 	private boolean active;

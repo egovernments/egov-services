@@ -147,8 +147,7 @@ public class NewWaterConnectionValidator {
                     .field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == null || 
-        		waterConnectionRequest.getConnection().getHscPipeSizeType().isEmpty()) {
+        } else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == 0L) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
                     .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
@@ -292,7 +291,9 @@ public class NewWaterConnectionValidator {
 	
 	private boolean validatePropertyUsageMapping(WaterConnectionReq waterConnectionRequest){
 		LOGGER.info("Validating Property - Usage Mapping");
+		boolean result = false;
 
+		
 		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
 		PropertyTypeUsageType propertyTypeUsageType = new PropertyTypeUsageType();
 		
@@ -302,7 +303,13 @@ public class NewWaterConnectionValidator {
 		
 		propUsageTypeRequest.setPropertyTypeUsageType(propertyTypeUsageType);
 		
-		return propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest);
+		try{
+			result = propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest);
+		}catch(Exception e){
+			LOGGER.info("Validating Property - Usage Mapping FAILED!");
+		}
+		
+		return result;
 		
 	}
 	
@@ -340,20 +347,20 @@ public class NewWaterConnectionValidator {
 		
 		if(!(waterConnectionRequest.getConnection().getConnectionType().equals("TEMPORARY") || 
 				waterConnectionRequest.getConnection().getConnectionType().equals("PERMANENT"))){
-			LOGGER.info("ConnectionType is invalid");
+			LOGGER.info("ConnectionType is INVALID");
 			return isRequestValid;
 		}else if(!(waterConnectionRequest.getConnection().getBillingType().equals("METERED") || 
 				waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED"))){
-			LOGGER.info("BillingType is invalid");
+			LOGGER.info("BillingType is INVALID");
 			return isRequestValid;
 		}else if(!(waterConnectionRequest.getConnection().getSupplyType().equals("REGULAR") || 
 				waterConnectionRequest.getConnection().getSupplyType().equals("BULK") || 
 				waterConnectionRequest.getConnection().getSupplyType().equals("SEMIBULK"))){
-			LOGGER.info("SupplyType is invalid");
+			LOGGER.info("SupplyType is INVALID");
 			return isRequestValid;
 		}else if(!(waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") || 
 				waterConnectionRequest.getConnection().getSourceType().equals("SURFACEWATER"))){
-			LOGGER.info("SourceType is invalid");
+			LOGGER.info("SourceType is INVALID");
 			return isRequestValid;
 		}
 		

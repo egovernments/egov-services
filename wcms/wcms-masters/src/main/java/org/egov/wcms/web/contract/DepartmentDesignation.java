@@ -37,35 +37,18 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.NotNull;
-
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.model.WaterSourceType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
+@Data
 @NoArgsConstructor
-@Setter
-@ToString
-public class WaterSourceTypeRequest {
+public class DepartmentDesignation {
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+	private Long id;
+	private Long departmentId;
+	private Designation designation;
 
-    @JsonProperty("waterSourceType")
-    private WaterSourceType waterSourceType;
 
 }

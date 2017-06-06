@@ -37,26 +37,39 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
+package org.egov.wcms.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Date;
 
-import org.egov.wcms.model.WaterSourceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Component
-public class WaterSourceTypeRowMapper implements RowMapper<WaterSourceType> {
-    @Override
-    public WaterSourceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final WaterSourceType waterSourceType = new WaterSourceType();
-        waterSourceType.setId(rs.getLong("watersource_id"));
-        waterSourceType.setCode(rs.getString("watersource_code"));
-        waterSourceType.setName(rs.getString("watersource_name"));
-        waterSourceType.setDescription(rs.getString("watersource_description"));
-        waterSourceType.setActive(rs.getBoolean("watersource_active"));
-        waterSourceType.setTenantId(rs.getString("watersource_tenantId"));
-        return waterSourceType;
-    }
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@ToString
+public class Task   {
+
+	private String id;
+	private String businessKey;
+	private String type;
+	private Position assignee;
+	private String comments;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastupdatedSince;
+	private Position owner;
+	private String state;
+	private String status;
+	private String url;
+	private String action;
+	private String senderName;
+	private String details;
+	private String natureOfTask;
+	private String entity;
+	private String tenantId;
 }
+

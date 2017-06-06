@@ -37,35 +37,33 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.egov.wcms.repository.builder;
 
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.WaterSourceType;
+import org.egov.wcms.config.ApplicationProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+@Component
+public class WaterConnectionQueryBuilder {
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class WaterSourceTypeResponse {
+    private static final Logger logger = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
     
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-
-    @JsonProperty("waterSourceType")
-    private List<WaterSourceType> waterSourceTypes = new ArrayList<>();
-
+    public static String insertDocumentQuery() {
+        return "INSERT INTO egwtr_usage_type(document,name,filestoreId,connectionId,tenantId) values "
+                + "(?,?,?,?,?)";
+    }
+        
+    public static String insertConnectionQuery() {
+        return "INSERT INTO egwtr_usage_type(tenantid, connectiontype, billingtype, categorytype, hscpipesizetype, supplytype, "
+        		+ "sourcetype, connectionstatus, sumpcapacity, numberoftaps, numberofpersons, acknowledgmentnumber, createdby, "
+        		+ "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress) values"
+        		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+    }
+	
 }

@@ -114,11 +114,11 @@ public class ApplicationProperties {
     @Value("${kafka.topics.donation.update.name}")
     private String updateDonationTopicName;
     
-    @Value("${kafka.topics.watersourcetype.create.name}")
-    private String createWaterSourceTypeTopicName;
+    @Value("${kafka.topics.sourcetype.create.name}")
+    private String createSourceTypeTopicName;
 
-    @Value("${kafka.topics.watersourcetype.update.name}")
-    private String updateWaterSourceTypeTopicName;
+    @Value("${kafka.topics.sourcetype.update.name}")
+    private String updateSourceTypeTopicName;
 
     // topic for water-transaction use case
     @Value("${kafka.topics.newconnection.create.name}")
@@ -218,12 +218,12 @@ public class ApplicationProperties {
         return updateDonationTopicName;
     }
     
-    public String getCreateWaterSourceTypeTopicName() {
-        return createWaterSourceTypeTopicName;
+    public String getCreateSourceTypeTopicName() {
+        return createSourceTypeTopicName;
     }
 
-    public String getUpdateWaterSourceTypeTopicName() {
-        return updateWaterSourceTypeTopicName;
+    public String getUpdateSourceTypeTopicName() {
+        return updateSourceTypeTopicName;
     }
 
     public String getCreateNewConnectionTopicName() {

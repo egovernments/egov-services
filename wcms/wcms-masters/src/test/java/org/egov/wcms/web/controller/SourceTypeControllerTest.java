@@ -51,10 +51,10 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.WaterSourceType;
-import org.egov.wcms.service.WaterSourceTypeService;
+import org.egov.wcms.model.SourceType;
+import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.util.FileUtils;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -69,14 +69,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(WaterSourceTypeController.class)
-public class WaterSourceTypeControllerTest {
+@WebMvcTest(SourceTypeController.class)
+public class SourceTypeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private WaterSourceTypeService waterSourceTypeService;
+    private SourceTypeService waterSourceTypeService;
 
     @MockBean
     private ErrorHandler errHandler;
@@ -88,15 +88,15 @@ public class WaterSourceTypeControllerTest {
     private ApplicationProperties applicationProperties;
 
     @InjectMocks
-    private WaterSourceTypeController waterSourceTypeController;
+    private SourceTypeController waterSourceTypeController;
 
     @Test(expected = Exception.class)
     public void test_Should_Search_WaterSource() throws Exception {
 
-        final List<WaterSourceType> waterSourceTypes = new ArrayList<>();
+        final List<SourceType> waterSourceTypes = new ArrayList<>();
         final RequestInfo requestInfo = new RequestInfo();
         final ResponseInfo responseInfo = new ResponseInfo();
-        final WaterSourceType waterSource = new WaterSourceType();
+        final SourceType waterSource = new SourceType();
         waterSource.setTenantId("default");
         waterSource.setCode("2");
         waterSource.setName("water source");
@@ -105,12 +105,12 @@ public class WaterSourceTypeControllerTest {
 
         waterSourceTypes.add(waterSource);
 
-        final WaterSourceTypeGetRequest waterSourceTypeGetRequest = Mockito.mock(WaterSourceTypeGetRequest.class);
+        final SourceTypeGetRequest waterSourceTypeGetRequest = Mockito.mock(SourceTypeGetRequest.class);
 
         when(waterSourceTypeService.getWaterSourceTypes(waterSourceTypeGetRequest)).thenReturn(waterSourceTypes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/watersourcetype/_search")
+        mockMvc.perform(post("/sourcetype/_search")
                 .param("tenantId", "default")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))

@@ -41,8 +41,10 @@ package org.egov.wcms.service;
 
 import org.egov.wcms.model.Connection;
 import org.egov.wcms.producers.WaterTransactionProducer;
-import org.egov.wcms.repository.WaterConnectionRepository;
+import org.egov.wcms.repository.WorkflowRepository;
 import org.egov.wcms.util.AckConsumerNoGenerator;
+import org.egov.wcms.web.contract.ProcessInstance;
+import org.egov.wcms.web.contract.TaskResponse;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +55,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class WaterConnectionService {
-	
-    public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
+public class WorkflowService {
+
+public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
     
     @Autowired
     private WaterTransactionProducer waterTransactionProducer;
@@ -64,7 +66,7 @@ public class WaterConnectionService {
     private AckConsumerNoGenerator ackConsumerNoGenerator;
     
     @Autowired
-    private WaterConnectionRepository waterConnectionRepository;
+    private WorkflowRepository workflowRepository;
     
     public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
         final ObjectMapper mapper = new ObjectMapper();
@@ -77,25 +79,23 @@ public class WaterConnectionService {
         	logger.error("Exception while stringifying water coonection object", e);
         }
         try {
-        	waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
+        	waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
-            return waterConnectionRequest.getConnection();
         }
         waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
         
         return waterConnectionRequest.getConnection();
     }
     
-    public Connection create(WaterConnectionReq waterConnectionRequest){
-    	logger.info("Service API entry for create New Connection");
-    	try{
-    	waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
-    	}catch(Exception e){
-    		logger.error("Persisting failed due to db exception", e);
-    	}
-    	return waterConnectionRequest.getConnection();
+    public void startWorkflow(WaterConnectionReq waterConnectionRequest){
+    	ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(waterConnectionRequest);
+    	logger.info("Process Instance Reponse Received from Start Workflow : " + processInstanceResponse);
     }
-
+    
+    public void updateWorkflow(WaterConnectionReq waterConnectionRequest){
+    	TaskResponse taskResponse = workflowRepository.updateWorkflow(waterConnectionRequest);
+    	logger.info("Task Response Received from Update Workflow : " + taskResponse);
+    }
 }

@@ -42,26 +42,26 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WaterSourceTypeQueryBuilder {
+public class SourceTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final Logger logger = LoggerFactory.getLogger(WaterSourceTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(SourceTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT watersource.id as watersource_id, watersource.code as watersource_code,"
             + " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId "
             + " FROM egwtr_water_source_type watersource ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final WaterSourceTypeGetRequest waterSourceTypeGetRequest, final List preparedStatementValues) {
+    public String getQuery(final SourceTypeGetRequest waterSourceTypeGetRequest, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, waterSourceTypeGetRequest);
         addOrderByClause(selectQuery, waterSourceTypeGetRequest);
@@ -72,7 +72,7 @@ public class WaterSourceTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final WaterSourceTypeGetRequest waterSourceTypeGetRequest) {
+            final SourceTypeGetRequest waterSourceTypeGetRequest) {
 
         if (waterSourceTypeGetRequest.getId() == null && waterSourceTypeGetRequest.getName() == null
                 && waterSourceTypeGetRequest.getActive() == null
@@ -112,7 +112,7 @@ public class WaterSourceTypeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(final StringBuilder selectQuery, final WaterSourceTypeGetRequest waterSourceTypeGetRequest) {
+    private void addOrderByClause(final StringBuilder selectQuery, final SourceTypeGetRequest waterSourceTypeGetRequest) {
         final String sortBy = waterSourceTypeGetRequest.getSortBy() == null ? "watersource.code"
                 : "watersource." + waterSourceTypeGetRequest.getSortBy();
         final String sortOrder = waterSourceTypeGetRequest.getSortOrder() == null ? "DESC"
@@ -122,7 +122,7 @@ public class WaterSourceTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final WaterSourceTypeGetRequest waterSourceTypeGetRequest) {
+            final SourceTypeGetRequest waterSourceTypeGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());

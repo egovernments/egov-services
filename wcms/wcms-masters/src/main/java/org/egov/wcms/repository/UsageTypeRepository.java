@@ -67,7 +67,7 @@ public class UsageTypeRepository {
     private UsageTypeQueryBuilder usageTypeQueryBuilder;
 
     @Autowired
-    private UsageTypeRowMapper usageTypeRowMapper;
+    private UsageTypeRowMapper usageTypeRowMapper; 
 
     public UsageTypeRequest persistCreateUsageType(final UsageTypeRequest usageTypeRequest) {
         LOGGER.info("UsageTypeRequest::" + usageTypeRequest);

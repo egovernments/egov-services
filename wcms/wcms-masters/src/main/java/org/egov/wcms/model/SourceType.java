@@ -58,7 +58,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class WaterSourceType {
+public class SourceType {
 
     public static final String SEQ_WATERSOURCE = "SEQ_EGWTR_WATER_SOURCE_TYPE";
 

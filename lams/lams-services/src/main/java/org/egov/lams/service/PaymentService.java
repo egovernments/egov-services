@@ -194,6 +194,7 @@ public class PaymentService {
 					orderNo++;
 					totalAmount = totalAmount
 							.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+					LOGGER.info("the amount added to bill : "+totalAmount);
 					billDetailInfos
 							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
 				}

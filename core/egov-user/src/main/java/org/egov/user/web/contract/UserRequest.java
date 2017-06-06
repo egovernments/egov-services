@@ -52,13 +52,13 @@ public class UserRequest {
 	private String tenantId;
 	private List<RoleRequest> roles;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date createdDate;
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date lastModifiedDate;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dob;
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date pwdExpiryDate;
 
 	public UserRequest(User user) {

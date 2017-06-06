@@ -78,7 +78,6 @@ public class CategoryTypeService {
 
     public CategoryType createCategory(final String topic, final String key,
             final CategoryTypeRequest categoryRequest) {
-        categoryRequest.getCategory();
         categoryRequest.getCategory().setCode(codeGeneratorService.generate(CategoryType.SEQ_CATEGORY));
         final ObjectMapper mapper = new ObjectMapper();
         String categoryValue = null;

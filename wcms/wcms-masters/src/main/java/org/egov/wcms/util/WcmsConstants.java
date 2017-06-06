@@ -60,6 +60,7 @@ public class WcmsConstants {
     public static final String INVALID_DOCUMENTTYPE_REQUEST_MESSAGE = "Document Type Request is Invalid";
     public static final String INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE = "PropertyPipeSize is invalid";
     public static final String INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE = "DocumentTypeApplicationType is invalid";
+    public static final String INVALID_WATERSOURCETYPE_REQUEST_MESSAGE = "Water Source Type is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -222,6 +223,15 @@ public class WcmsConstants {
     public static final String DONATION_INVALID_CODE = "wcms.0039";
     public static final String DONATION_INVALID_FIELD_NAME = "donationAmount";
     public static final String DONATION_INVALID_ERROR_MESSAGE = "Donation Amount couldn't be generated, Please check data";
+    
+    public static final String WATERSOURCETYPE_NAME_UNIQUE_CODE = "wcms.0034";
+    public static final String WATERSOURCETYPE_NAME_UNQ_FIELD_NAME = "name";
+    public static final String WATERSOURCETYPE_UNQ_ERROR_MESSAGE = "Entered Water Source Type  already exist";
+
+    public static final String WATERSOURCETYPE_NAME_MANDATORY_CODE = "wcms.0035";
+    public static final String WATERSOURCETYPE_NAME_MANADATORY_FIELD_NAME = "name";
+    public static final String WATERSOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Water Source Type is required";
+
  
 
     @Autowired

@@ -37,51 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.repository.rowmapper;
 
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.egov.wcms.model.WaterSourceType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import org.hibernate.validator.constraints.Length;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class CategoryTypeGetRequest {
-
-    private List<Long> id;
-
-    @Length(min = 3, max = 100)
-    private String name;
-
-    private String code;
-
-    private Boolean active;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
-
+@Component
+public class WaterSourceTypeRowMapper implements RowMapper<WaterSourceType> {
+    @Override
+    public WaterSourceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final WaterSourceType waterSourceType = new WaterSourceType();
+        waterSourceType.setId(rs.getLong("watersource_id"));
+        waterSourceType.setCode(rs.getString("watersource_code"));
+        waterSourceType.setName(rs.getString("watersource_name"));
+        waterSourceType.setDescription(rs.getString("watersource_description"));
+        waterSourceType.setActive(rs.getBoolean("watersource_active"));
+        waterSourceType.setTenantId(rs.getString("watersource_tenantId"));
+        return waterSourceType;
+    }
 }

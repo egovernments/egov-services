@@ -77,7 +77,6 @@ public class PipeSizeTypeService {
     }
 
     public PipeSizeType createPipeSize(final String topic, final String key, final PipeSizeTypeRequest pipeSizeRequest) {
-        pipeSizeRequest.getPipeSize();
         pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(PipeSizeType.SEQ_PIPESIZE));
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);

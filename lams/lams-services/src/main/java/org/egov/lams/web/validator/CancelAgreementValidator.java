@@ -10,8 +10,10 @@ import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+@Component
 public class CancelAgreementValidator {
 
 	@Autowired

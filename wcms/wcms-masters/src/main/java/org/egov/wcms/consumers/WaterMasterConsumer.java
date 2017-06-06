@@ -54,8 +54,8 @@ import org.egov.wcms.service.PipeSizeTypeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
+import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.UsageTypeService;
-import org.egov.wcms.service.WaterSourceTypeService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
@@ -65,8 +65,8 @@ import org.egov.wcms.web.contract.PipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.UsageTypeRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +113,7 @@ public class WaterMasterConsumer {
     private PropertyTypePipeSizeTypeService propertyPipeSizeService;
 
     @Autowired
-    private WaterSourceTypeService waterSourceTypeService;
+    private SourceTypeService waterSourceTypeService;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.usagetype.create.name}","${kafka.topics.usagetype.update.name}",
             
@@ -125,7 +125,7 @@ public class WaterMasterConsumer {
             "${kafka.topics.documenttype.applicationtype.create.name}","${kafka.topics.documenttype.applicationtype.update.name}",
             "${kafka.topics.propertyusage.create.name}","${kafka.topics.propertyusage.update.name}",
             "${kafka.topics.propertypipesize.create.name}", "${kafka.topics.propertypipesize.update.name}",
-            "${kafka.topics.watersourcetype.create.name}", "${kafka.topics.watersourcetype.update.name}" })
+            "${kafka.topics.sourcetype.create.name}", "${kafka.topics.sourcetype.update.name}" })
 
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
@@ -169,10 +169,10 @@ public class WaterMasterConsumer {
             	docTypeApplTypeService.update(objectMapper.readValue(record.value(), DocumentTypeApplicationTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateMeterCostTopicName()))
             	meterCostService.create(objectMapper.readValue(record.value(), MeterCostRequest.class));
-            else if (record.topic().equals(applicationProperties.getCreateWaterSourceTypeTopicName()))
-                waterSourceTypeService.create(objectMapper.readValue(record.value(), WaterSourceTypeRequest.class));
-            else if (record.topic().equals(applicationProperties.getUpdateWaterSourceTypeTopicName()))
-                waterSourceTypeService.update(objectMapper.readValue(record.value(), WaterSourceTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreateSourceTypeTopicName()))
+                waterSourceTypeService.create(objectMapper.readValue(record.value(), SourceTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getUpdateSourceTypeTopicName()))
+                waterSourceTypeService.update(objectMapper.readValue(record.value(), SourceTypeRequest.class));
         } catch (final IOException e) {
             e.printStackTrace();
         }

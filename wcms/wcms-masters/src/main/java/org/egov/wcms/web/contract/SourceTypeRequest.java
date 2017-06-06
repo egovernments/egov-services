@@ -37,14 +37,16 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.wcms.web.contract;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.SourceType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,30 +59,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class WaterSourceType {
-
-    public static final String SEQ_WATERSOURCE = "SEQ_EGWTR_WATER_SOURCE_TYPE";
+public class SourceTypeRequest {
 
     @NotNull
-    private Long id;
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-    @NotNull
-    @Length(min = 3, max = 20)
-    private String code;
+    @JsonProperty("sourceType")
+    private SourceType waterSourceType;
 
-    @NotNull
-    @Length(min = 3, max = 100)
-    private String name;
-
-    @Length(max = 250)
-    private String description;
-
-    private Boolean active;
-
-    private AuditDetails auditDeatils;
-
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
 }

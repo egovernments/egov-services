@@ -39,10 +39,11 @@
  */
 package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.model.WaterSourceType;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.SourceType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,13 +60,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class WaterSourceTypeRequest {
-
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+public class SourceTypeResponse {
+    
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
     @JsonProperty("waterSourceType")
-    private WaterSourceType waterSourceType;
+    private List<SourceType> waterSourceTypes = new ArrayList<>();
 
 }

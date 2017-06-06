@@ -49,12 +49,12 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.WaterSourceType;
-import org.egov.wcms.repository.builder.WaterSourceTypeQueryBuilder;
-import org.egov.wcms.repository.rowmapper.WaterSourceTypeRowMapper;
-import org.egov.wcms.service.WaterSourceTypeService;
-import org.egov.wcms.web.contract.WaterSourceTypeGetRequest;
-import org.egov.wcms.web.contract.WaterSourceTypeRequest;
+import org.egov.wcms.model.SourceType;
+import org.egov.wcms.repository.builder.SourceTypeQueryBuilder;
+import org.egov.wcms.repository.rowmapper.SourceTypeRowMapper;
+import org.egov.wcms.service.SourceTypeService;
+import org.egov.wcms.web.contract.SourceTypeGetRequest;
+import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -69,21 +69,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(WaterSourceTypeRepository.class)
+@WebMvcTest(SourceTypeRepository.class)
 @WebAppConfiguration
-public class WaterSourceTypeRepositoryTest {
+public class SourceTypeRepositoryTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
 
     @Mock
-    private WaterSourceTypeQueryBuilder waterSourceTypeQueryBuilder;
+    private SourceTypeQueryBuilder waterSourceTypeQueryBuilder;
 
     @Mock
-    private WaterSourceTypeRowMapper waterSourceTypeRowMapper;
+    private SourceTypeRowMapper waterSourceTypeRowMapper;
 
     @MockBean
-    private WaterSourceTypeService waterSourceTypeService;
+    private SourceTypeService waterSourceTypeService;
 
     @MockBean
     private ErrorHandler errHandler;
@@ -95,18 +95,18 @@ public class WaterSourceTypeRepositoryTest {
     private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
-    private WaterSourceTypeRepository waterSourceTypeRepository;
+    private SourceTypeRepository waterSourceTypeRepository;
 
     @Test
     public void test_Should_Create_WaterSource() {
 
-        final WaterSourceTypeRequest waterSourceTypeRequest = new WaterSourceTypeRequest();
+        final SourceTypeRequest waterSourceTypeRequest = new SourceTypeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1l);
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
-        final WaterSourceType waterSource = getWaterSourceType();
+        final SourceType waterSource = getWaterSourceType();
         waterSourceTypeRequest.setWaterSourceType(waterSource);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
@@ -117,13 +117,13 @@ public class WaterSourceTypeRepositoryTest {
     @Test
     public void test_Should_Update_WaterSource() {
 
-        final WaterSourceTypeRequest waterSourceTypeRequest = new WaterSourceTypeRequest();
+        final SourceTypeRequest waterSourceTypeRequest = new SourceTypeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1l);
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
-        final WaterSourceType waterSource = getWaterSourceType();
+        final SourceType waterSource = getWaterSourceType();
         waterSourceTypeRequest.setWaterSourceType(waterSource);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
@@ -134,24 +134,24 @@ public class WaterSourceTypeRepositoryTest {
     @Test
     public void test_Should_Search_WaterSource() {
 
-        final List<WaterSourceType> waterSourceTypes = new ArrayList<>();
-        final WaterSourceType waterSource = getWaterSourceType();
+        final List<SourceType> waterSourceTypes = new ArrayList<>();
+        final SourceType waterSource = getWaterSourceType();
         waterSourceTypes.add(waterSource);
 
-        when(waterSourceTypeQueryBuilder.getQuery(any(WaterSourceTypeGetRequest.class), any(List.class))).thenReturn("");
-        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(WaterSourceTypeRowMapper.class)))
+        when(waterSourceTypeQueryBuilder.getQuery(any(SourceTypeGetRequest.class), any(List.class))).thenReturn("");
+        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(SourceTypeRowMapper.class)))
                 .thenReturn(waterSourceTypes);
 
-        assertTrue(waterSourceTypes.equals(waterSourceTypeRepository.findForCriteria(new WaterSourceTypeGetRequest())));
+        assertTrue(waterSourceTypes.equals(waterSourceTypeRepository.findForCriteria(new SourceTypeGetRequest())));
     }
 
     @Test
     public void test_Inavalid_Find_WaterSource() throws Exception {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
-        final List<WaterSourceType> waterSourceTypes = new ArrayList<>();
-        final WaterSourceType waterSource = getWaterSourceType();
+        final List<SourceType> waterSourceTypes = new ArrayList<>();
+        final SourceType waterSource = getWaterSourceType();
         waterSourceTypes.add(waterSource);
-        final WaterSourceTypeGetRequest waterSourceGetRequest = Mockito.mock(WaterSourceTypeGetRequest.class);
+        final SourceTypeGetRequest waterSourceGetRequest = Mockito.mock(SourceTypeGetRequest.class);
         when(waterSourceTypeQueryBuilder.getQuery(waterSourceGetRequest, preparedStatementValues)).thenReturn(null);
         when(jdbcTemplate.query("query", preparedStatementValues.toArray(), waterSourceTypeRowMapper))
                 .thenReturn(waterSourceTypes);
@@ -159,8 +159,8 @@ public class WaterSourceTypeRepositoryTest {
         assertTrue(!waterSourceTypes.equals(waterSourceTypeRepository.findForCriteria(waterSourceGetRequest)));
     }
 
-    private WaterSourceType getWaterSourceType() {
-        final WaterSourceType waterSource = new WaterSourceType();
+    private SourceType getWaterSourceType() {
+        final SourceType waterSource = new SourceType();
         waterSource.setTenantId("default");
         waterSource.setCode("10");
         waterSource.setName("water source");

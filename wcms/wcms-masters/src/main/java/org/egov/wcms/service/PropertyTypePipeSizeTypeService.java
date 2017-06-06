@@ -105,5 +105,6 @@ public class PropertyTypePipeSizeTypeService {
     public boolean checkPipeSizeExists(final Double pipeSizeType, final String tenantId) {
         return propertyPipeSizeRepository.checkPipeSizeExists(pipeSizeType, tenantId);
     }
+   
 
 }

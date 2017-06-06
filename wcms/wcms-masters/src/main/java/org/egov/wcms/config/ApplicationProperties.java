@@ -114,6 +114,10 @@ public class ApplicationProperties {
 	
 	@Value("${kafka.topics.donation.update.name}")
 	private String updateDonationTopicName;
+	
+	//topic for water-transaction use case
+	@Value("${kafka.topics.newconnection.create.name}")
+	private String createNewConnectionTopicName;
 
     @Autowired
     private Environment environment;
@@ -206,5 +210,9 @@ public class ApplicationProperties {
     public String getUpdateDonationTopicName() {
         return updateDonationTopicName;
     }
+
+	public String getCreateNewConnectionTopicName() {
+		return createNewConnectionTopicName;
+	}  
    
 }

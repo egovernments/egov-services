@@ -43,9 +43,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
+import org.egov.wcms.model.Connection;
+import org.egov.wcms.service.WaterConnectionService;
 import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.WaterConnectionReq;
+import org.egov.wcms.web.contract.WaterConnectionRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
@@ -66,10 +71,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WaterConnectionController {
 	
     private static final Logger logger = LoggerFactory.getLogger(WaterConnectionController.class);
-    
-    @Autowired
-    private ErrorHandler errHandler;
-
+   
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
@@ -78,6 +80,9 @@ public class WaterConnectionController {
     
     @Autowired
     private NewWaterConnectionValidator newWaterConnectionValidator;
+    
+    @Autowired
+    private WaterConnectionService waterConnectionService;
     
     @PostMapping(value = "/_create")
     @ResponseBody
@@ -94,10 +99,21 @@ public class WaterConnectionController {
         }
         
         //Call to service.
+        Connection connection = waterConnectionService.createWaterConnection(applicationProperties.getCreateNewConnectionTopicName(), 
+        		"newconnection-create", waterConnectionRequest);           
+        return getSuccessResponse(connection, waterConnectionRequest.getRequestInfo());
+        
+    }
+    
+    private ResponseEntity<?> getSuccessResponse(final Connection connection,
+            final RequestInfo requestInfo) {
+        final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();;
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        waterConnectionRes.setResponseInfo(responseInfo);
+        waterConnectionRes.setConnection(connection);
+        return new ResponseEntity<WaterConnectionRes>(waterConnectionRes, HttpStatus.OK);
 
-        
-        return null;
-        
     }
 
 

@@ -2,7 +2,7 @@ package org.egov.wcms.web.contract;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.model.Connection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,7 +20,7 @@ public class WaterConnectionReq {
 	
 	@NotNull
 	@JsonProperty("RequestInfo")
-	private ResponseInfo requestInfo;
+	private RequestInfo requestInfo;
 	
 	@NotNull
 	@JsonProperty("Connection")

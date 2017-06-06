@@ -99,8 +99,7 @@ public class DocumentTypeApplicationTypeRepository {
 
     }
     
-    
-    
+     
     public boolean checkDocumentTypeApplicationTypeExist(long documentType,String applicationType,String tenantid){
     	
         final List<Object> preparedStatementValues = new ArrayList<Object>();

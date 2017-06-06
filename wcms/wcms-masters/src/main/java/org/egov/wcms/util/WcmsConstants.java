@@ -51,6 +51,7 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class WcmsConstants {
 
+	public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
 	public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
@@ -197,6 +198,30 @@ public class WcmsConstants {
     public static final String DOCUMENTTYPE_NAME_UNIQUE_CODE = "wcms.0033";
     public static final String DOCUMENTTYPE_NAME_UNQ_FIELD_NAME = "name";
     public static final String DOCUMENTTYPE_UNQ_ERROR_MESSAGE = "Entered Document Type already exist";
+    
+    public static final String PROPERTY_CATEGORY_INVALID_CODE = "wcms.0034";
+    public static final String PROPERTY_CATEGORY_INVALID_FIELD_NAME = "propertyType - categoryType";
+    public static final String PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE = "Property Type - Category Type values don't match.";
+    
+    public static final String PROPERTY_USAGE_INVALID_CODE = "wcms.0035";
+    public static final String PROPERTY_USAGE_INVALID_FIELD_NAME = "propertyType - usageType";
+    public static final String PROPERTY_USAGE_INVALID_ERROR_MESSAGE = "Property Type - Usage Type values don't match.";
+    
+    public static final String DOCUMENT_APPLICATION_INVALID_CODE = "wcms.0036";
+    public static final String DOCUMENT_APPLICATION_INVALID_FIELD_NAME = "documentType - applicationType";
+    public static final String DOCUMENT_APPLICATION_INVALID_ERROR_MESSAGE = "Document Type - Application Type values don't match.";
+    
+    public static final String STATIC_INVALID_CODE = "wcms.0037";
+    public static final String STATIC_INVALID_FIELD_NAME = "enums";
+    public static final String STATIC_INVALID_ERROR_MESSAGE = "Please check: connection, supply, source or billing type.";
+    
+    public static final String BPL_INVALID_CODE = "wcms.0038";
+    public static final String BPL_INVALID_FIELD_NAME = "bplCardHolderName";
+    public static final String BPL_INVALID_ERROR_MESSAGE = "BPL Card Holder Name is invalid!";
+    
+    public static final String DONATION_INVALID_CODE = "wcms.0039";
+    public static final String DONATION_INVALID_FIELD_NAME = "donationAmount";
+    public static final String DONATION_INVALID_ERROR_MESSAGE = "Donation Amount couldn't be generated, Please check data";
  
 
     @Autowired

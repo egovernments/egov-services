@@ -37,28 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms;
+package org.egov.wcms.service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import org.egov.wcms.model.Connection;
+import org.egov.wcms.producers.WaterTransactionProducer;
+import org.egov.wcms.util.AckConsumerNoGenerator;
+import org.egov.wcms.web.contract.WaterConnectionReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-@SpringBootApplication
-public class WcmsMastersApplication {
+@Service
+public class WaterConnectionService {
+	
+    public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
+    
+    @Autowired
+    private WaterTransactionProducer waterTransactionProducer;
+    
+    @Autowired
+    private AckConsumerNoGenerator ackConsumerNoGenerator;
+    
+    public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
+        final ObjectMapper mapper = new ObjectMapper();
+        String waterConnectionValue = null;
+        try {
+            logger.info("WaterConnectionService request::" + waterConnectionRequest);
+            waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
+            logger.info("waterConnectionValue::" + waterConnectionValue);
+        } catch (final JsonProcessingException e) {
+        	logger.error("Exception while stringifying water coonection object", e);
+        }
+        try {
+        	waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
+        } catch (final Exception e) {
+            logger.error("Producer failed to post request to kafka queue", e);
+            waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
+        }
+        waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
+        
+        return waterConnectionRequest.getConnection();
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(WcmsMastersApplication.class, args);
-	}
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
 }

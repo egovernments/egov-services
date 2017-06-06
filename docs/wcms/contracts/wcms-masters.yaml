@@ -615,8 +615,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/documentTypeCode"
-          - $ref: "#/parameters/applicationTypeCode"
+          - $ref: "#/parameters/documentType"
+          - $ref: "#/parameters/applicationType"
         responses:
           200: 
             description: Successful response
@@ -694,15 +694,15 @@
       required: false
       type: string
     
-    documentTypeCode:
-      name: documentTypeCode
+    documentType:
+      name: documentType
       in: query
       description: unique code of document type
       required: false
       type: string
 
-    applicationTypeCode:
-      name: applicationTypeCode
+    applicationType:
+      name: applicationType
       in: query
       description: unique identifier of application type
       required: false
@@ -888,17 +888,22 @@
           type: integer
           format: int64
           description: Unique identifier of document type object
-        applicationTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of application type object
-        fileStoreId:
-          type: integer
-          format: int64
-          description: unique identifier of uploaded file object
-        filePath:
+        applicationType:
           type: string
-          description: absolute path of uploaded file object
+          format: varchar
+          description: unique identifier of application type object
+        documentType:
+          type: string
+          format: varchar
+          description: Unique identifier of document type object
+        mandatory:
+          type: boolean
+          format: varchar
+          description: TRUE for active Document Names and FALSE for inactive Document Names.
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active Document Names and FALSE for inactive Document Names    
         tenantId:
           type: string
           description: Unique Identifier of the tenant   
@@ -906,7 +911,8 @@
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - documentTypeId
-        - applicationTypeId
+        - applicationType
+        - mandatory
         - tenantId
 
   # Application Type definitions
@@ -1031,11 +1037,11 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        document:
+        documentType:
           $ref: '#/definitions/DocumentType'
       required:
         - RequestInfo
-        - document
+        - documentType
     
     DocumentTypesRes:
       type: object

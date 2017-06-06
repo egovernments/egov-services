@@ -47,7 +47,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
-public class WaterMasterProducer {
+public class WaterTransactionProducer {
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;

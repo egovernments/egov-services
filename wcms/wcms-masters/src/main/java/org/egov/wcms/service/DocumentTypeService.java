@@ -80,7 +80,11 @@ public class DocumentTypeService {
 
 
     public DocumentType sendMessage(final String topic,final String key,final DocumentTypeReq documentTypeReq ){
-       documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(documentTypeReq.getDocumentType().SEQ_DOCUMENTTYPE));
+    	
+    if(key.equalsIgnoreCase("documenttype-create")){
+    	 documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(documentTypeReq.getDocumentType().SEQ_DOCUMENTTYPE));
+    }
+      
         final ObjectMapper mapper = new ObjectMapper();
         String documentTypeValue = null;
         try {

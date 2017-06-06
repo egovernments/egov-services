@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -80,6 +82,7 @@ public class Employee {
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
 	private Date dateOfAppointment;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")

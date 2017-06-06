@@ -10,6 +10,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
+import Api from '../../api/financialsApi';
 
 const styles = {
     errorStyle: {
@@ -45,6 +46,36 @@ class NewFunction extends Component {
        }
 
    }
+
+   componentWillMount() {
+     //call boundary service fetch wards,location,zone data
+   }
+
+   componentDidMount() {
+     let {initForm} = this.props;
+     initForm();
+
+     Api.commonApiPost("egf-masters", "functionaries", "_search").then(function(response)
+     {
+     console.log(response);
+     },function(err) {
+     console.log(err);
+     });
+   }
+
+   componentWillUnmount() {
+
+   }
+
+   componentWillUpdate() {
+
+   }
+
+   componentDidUpdate(prevProps, prevState) {
+
+   }
+
+
    handleCheckBoxChange = (prevState) => {
        this.setState((prevState) => {prevState.isActive.checked = !prevState.isActive.checked})
    }

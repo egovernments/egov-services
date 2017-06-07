@@ -176,6 +176,7 @@ public class ServiceRequestServiceTest {
             .userId("userId")
             .firstName("first name")
             .mobile("mobile number")
+            .email("email@gmail.com")
             .build();
         return ServiceRequest.builder()
             .requester(complainant)

@@ -86,7 +86,8 @@ public class ServiceRequest {
             || isDescriptionAbsent()
             || isCrnAbsent()
             || descriptionLength()
-            || isProcessingFeePresentForCreation()) {
+            || isProcessingFeePresentForCreation()
+        	|| !emailValidate()) {
             throw new InvalidComplaintException(this);
         }
     }
@@ -118,4 +119,7 @@ public class ServiceRequest {
 	public boolean descriptionLength() {
 		return description.length() < 10 || description.length() >500;
 	}
+	 public boolean emailValidate(){
+		return requester.isValidEmailAddress();
+	} 
 }

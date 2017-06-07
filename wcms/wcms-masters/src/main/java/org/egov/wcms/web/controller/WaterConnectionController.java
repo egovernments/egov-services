@@ -52,7 +52,6 @@ import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.egov.wcms.web.contract.WaterConnectionRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

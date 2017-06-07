@@ -118,6 +118,19 @@ public class DocumentTypeRepository {
         List<DocumentType> documentTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), documentTypeRowMapper);
         return documentTypes;
     }
+    
+    public List<Long> getMandatoryocs(String applicationType){
+       ArrayList<Long> mandatoryDocs = new ArrayList<>();
+ 	   String query = documentTypeQueryBuilder.getMandatoryDocsQuery();
+ 	   LOGGER.info("Mandatory Doc Query: "+query.toString());
+
+ 	   mandatoryDocs =jdbcTemplate.queryForObject(query, new Object[] {"true", applicationType}, ArrayList.class);
+ 	   
+ 	   LOGGER.info("Mandatory Doc List: "+mandatoryDocs.toString());
+ 	   
+ 	   return mandatoryDocs;
+ 	   
+    }
 
 
 }

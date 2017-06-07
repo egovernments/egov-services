@@ -50,6 +50,7 @@ import org.egov.wcms.model.Property;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
+import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
@@ -82,6 +83,9 @@ public class NewWaterConnectionValidator {
 	
 	@Autowired
 	private DocumentTypeApplicationTypeService documentTypeApplicationTypeService;
+	
+	@Autowired
+	private DocumentTypeService documentTypeService;
 	
 	@Autowired
 	private PropertyTypePipeSizeTypeService propertyPipeSizeService;
@@ -339,12 +343,15 @@ public class NewWaterConnectionValidator {
 		LOGGER.info("Validating Document - Application Mapping");
 		
 		boolean isDocumentValid = true;
+		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs("NEW CONNECTION");
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
-			if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
-				LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
-				isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
-				return isDocumentValid;
-			}			
+			if(mandatoryDocs.contains(documentOwner.getDocument().getDocumentTypeId())){
+				if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
+					LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
+					isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
+					return isDocumentValid;
+				}	
+			}
 		}
 		return isDocumentValid;
 	}

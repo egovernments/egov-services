@@ -131,15 +131,8 @@ public class NewWaterConnectionValidator {
                     .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getConnectionType() == null || 
-        		waterConnectionRequest.getConnection().getConnectionType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
-                    .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getDocuments() == null || 
+        }  else if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
+        	if (waterConnectionRequest.getConnection().getDocuments() == null || 
         		waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.DOCUMENTS_INVALID_CODE)
@@ -147,6 +140,7 @@ public class NewWaterConnectionValidator {
                     .field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
+        	}
         } else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == 0L) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
@@ -194,6 +188,16 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
+        
+        if (waterConnectionRequest.getConnection().getConnectionType() == null || 
+        		waterConnectionRequest.getConnection().getConnectionType().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
+                    .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+        }
        
         List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
@@ -229,6 +233,7 @@ public class NewWaterConnectionValidator {
             errorFields.add(errorField);
 		}
 		
+		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
 		isRequestValid = validateDocumentApplicationType(waterConnectionRequest);
 		if(!isRequestValid){
             final ErrorField errorField = ErrorField.builder()
@@ -237,6 +242,7 @@ public class NewWaterConnectionValidator {
                     .field(WcmsConstants.DOCUMENT_APPLICATION_INVALID_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
+		}
 		}
 		
 		isRequestValid = validateStaticFields(waterConnectionRequest);
@@ -330,12 +336,14 @@ public class NewWaterConnectionValidator {
 		LOGGER.info("Validating Document - Application Mapping");
 		
 		boolean isDocumentValid = true;
+		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
 			if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
 				LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
 				isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
 				return isDocumentValid;
 			}			
+		}
 		}
 		return isDocumentValid;
 	}

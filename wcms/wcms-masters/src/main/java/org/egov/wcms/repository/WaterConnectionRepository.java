@@ -72,6 +72,13 @@ public class WaterConnectionRepository {
 					statement.setString(19,waterConnectionRequest.getConnection().getProperty().getPropertyType());
 					statement.setString(20,waterConnectionRequest.getConnection().getProperty().getAddress());
 					
+					if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
+			    	
+						statement.setString(21,waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+						statement.setLong(22,waterConnectionRequest.getConnection().getDonationCharge());
+						statement.setString(23,waterConnectionRequest.getConnection().getConsumerNumber());
+			    	}
+					
 					//Please verify if there's proper validation on all these fields to avoid NPE.
 					
 					return statement;

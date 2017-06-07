@@ -95,6 +95,7 @@ public class BankContract extends AuditableContract {
 		this.setId(bean.getId());
 		this.setCode(bean.getCode());
 		this.setName(bean.getName());
+		this.setType(bean.getType());
 		this.setActive(bean.getActive());
 		this.setDescription(bean.getDescription());
 	}

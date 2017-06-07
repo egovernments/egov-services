@@ -55,7 +55,7 @@ public class WaterConnectionQueryBuilder {
     private static final Logger logger = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
     
     public static String insertDocumentQuery() {
-        return "INSERT INTO egwtr_usage_type(document,name,filestoreId,connectionId,tenantId) values "
+        return "INSERT INTO egwtr_documentowner(document,name,filestoreid,connectionid,tenantid) values "
                 + "(?,?,?,?,?)";
     }
     

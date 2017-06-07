@@ -37,41 +37,53 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+package org.egov.wcms.web.controller;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.egov.wcms.model.enums.ApplicationType;
+import org.egov.wcms.model.enums.BillingType;
+import org.egov.wcms.model.enums.ConnectionType;
+import org.egov.wcms.model.enums.SupplyType;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-public class WcmsMastersApplication {
-	
-	public static volatile ConcurrentHashMap<Long, String> categoryTypeMap = new ConcurrentHashMap<>();
-	public static volatile ConcurrentHashMap<Long, String> pipeSizeMap = new ConcurrentHashMap<>();
-	public static volatile ConcurrentHashMap<Long, String> sourceTypeMap = new ConcurrentHashMap<>();
-	public static volatile ConcurrentHashMap<Long, String> supplyTypeMap = new ConcurrentHashMap<>();
-	
+@RestController
+@RequestMapping("/master")
+public class CommonMastersController {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WcmsMastersApplication.class, args);
-	}
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
-	
-	private void prepareMasterMaps(){
-		
-	}
+    @RequestMapping(value = "/_getsupplytypes")
+    public Map<String, SupplyType> getAllSupplyTypes() {
+        final Map<String, SupplyType> supplyType = new HashMap<>();
+        for (final SupplyType key : SupplyType.values())
+            supplyType.put(key.name(), key);
+        return supplyType;
+    }
+
+    @RequestMapping(value = "/_getapplicationtypes")
+    public Map<String, ApplicationType> getApplicationTypeEnum() {
+        final Map<String, ApplicationType> applicationType = new HashMap<>();
+        for (final ApplicationType key : ApplicationType.values())
+            applicationType.put(key.name(), key);
+        return applicationType;
+    }
+
+    @RequestMapping(value = "/_getconnectiontypes")
+    public Map<String, ConnectionType> getConnectionTypeEnum() {
+        final Map<String, ConnectionType> connectionType = new HashMap<>();
+        for (final ConnectionType key : ConnectionType.values())
+            connectionType.put(key.name(), key);
+        return connectionType;
+    }
+
+    @RequestMapping(value = "/_getbillingtypes")
+    public Map<String, BillingType> getBillingTypeEnum() {
+        final Map<String, BillingType> billingType = new HashMap<>();
+        for (final BillingType key : BillingType.values())
+            billingType.put(key.name(), key);
+        return billingType;
+    }
+
 }

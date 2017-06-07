@@ -41,9 +41,7 @@
 package org.egov.wcms.web.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -53,8 +51,6 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.BillingType;
-import org.egov.wcms.model.enums.ConnectionType;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
@@ -80,8 +76,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 @RequestMapping("/documenttype-applicationtype")
 public class DocumentTypeApplicationTypeController {
@@ -100,11 +94,10 @@ public class DocumentTypeApplicationTypeController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final DocumentTypeApplicationTypeReq documentNameRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final DocumentTypeApplicationTypeReq documentNameRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -115,16 +108,19 @@ public class DocumentTypeApplicationTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentTypeApplicationType docTypeAppType = docTypeAppTypeService.sendMessage(applicationProperties.getCreateDocumentTypeApplicationTypeTopicName(),"documenttypeapplicationtype-create", documentNameRequest);
-        List<DocumentTypeApplicationType> docTypesAppTypes = new ArrayList<>();
+        final DocumentTypeApplicationType docTypeAppType = docTypeAppTypeService.sendMessage(
+                applicationProperties.getCreateDocumentTypeApplicationTypeTopicName(), "documenttypeapplicationtype-create",
+                documentNameRequest);
+        final List<DocumentTypeApplicationType> docTypesAppTypes = new ArrayList<>();
         docTypesAppTypes.add(docTypeAppType);
         return getSuccessResponse(docTypesAppTypes, documentNameRequest.getRequestInfo());
 
     }
-    
+
     @PostMapping(value = "/_update/{docTypeAppliTypeId}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeApplicationTypeReq documentTypeApplicationTypeReq, final BindingResult errors, @PathVariable("docTypeAppliTypeId") Long docTypeAppliTypeId) {
+    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeApplicationTypeReq documentTypeApplicationTypeReq,
+            final BindingResult errors, @PathVariable("docTypeAppliTypeId") final Long docTypeAppliTypeId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -136,55 +132,50 @@ public class DocumentTypeApplicationTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentTypeApplicationType documentTypeAppliType = docTypeAppTypeService.sendMessage(applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(),"documenttypeapplicationtype-update",documentTypeApplicationTypeReq);
-        List<DocumentTypeApplicationType> documentTypeApplicaTypes = new ArrayList<>();
+        final DocumentTypeApplicationType documentTypeAppliType = docTypeAppTypeService.sendMessage(
+                applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(), "documenttypeapplicationtype-update",
+                documentTypeApplicationTypeReq);
+        final List<DocumentTypeApplicationType> documentTypeApplicaTypes = new ArrayList<>();
         documentTypeApplicaTypes.add(documentTypeAppliType);
         return getSuccessResponse(documentTypeApplicaTypes, documentTypeApplicationTypeReq.getRequestInfo());
     }
-   
-    
-    
+
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid DocumentTypeApplicationTypeGetRequest docTypeAppTypeGetRequest,
-                                    BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-                                    BindingResult requestBodyBindingResult) {
-        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    public ResponseEntity<?> search(@ModelAttribute @Valid final DocumentTypeApplicationTypeGetRequest docTypeAppTypeGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-        if (modelAttributeBindingResult.hasErrors()) {
+        if (modelAttributeBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-        }
 
-        if (requestBodyBindingResult.hasErrors()) {
+        if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-        }
 
         List<DocumentTypeApplicationType> docNameList = null;
         try {
-        	docNameList = docTypeAppTypeService.getDocumentAndApplicationTypes(docTypeAppTypeGetRequest);
-        } catch (Exception exception) {
+            docNameList = docTypeAppTypeService.getDocumentAndApplicationTypes(docTypeAppTypeGetRequest);
+        } catch (final Exception exception) {
             logger.error("Error while processing request " + docTypeAppTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-      return getSuccessResponse(docNameList, requestInfo);
+        return getSuccessResponse(docNameList, requestInfo);
 
     }
 
-    
-    
-    
-    private ResponseEntity<?> getSuccessResponse(List<DocumentTypeApplicationType> docTypeAppTypeList, RequestInfo requestInfo) {
-        DocumentTypeApplicationTypeRes docNameResponse = new DocumentTypeApplicationTypeRes();
+    private ResponseEntity<?> getSuccessResponse(final List<DocumentTypeApplicationType> docTypeAppTypeList,
+            final RequestInfo requestInfo) {
+        final DocumentTypeApplicationTypeRes docNameResponse = new DocumentTypeApplicationTypeRes();
         docNameResponse.setDocumentTypeApplicationTypes(docTypeAppTypeList);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         docNameResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<DocumentTypeApplicationTypeRes>(docNameResponse, HttpStatus.OK);
 
     }
-    
-    
+
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
 
@@ -192,26 +183,25 @@ public class DocumentTypeApplicationTypeController {
         error.setCode(1);
         error.setDescription("Error while binding request");
         if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors()) {
+            for (final FieldError fieldError : errors.getFieldErrors())
                 error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            }
         errRes.setError(error);
         return errRes;
     }
-    
+
     private List<ErrorResponse> validateDocumentNameRequest(final DocumentTypeApplicationTypeReq documentNameRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(documentNameRequest);
         errorResponse.setError(error);
-        if(!errorResponse.getErrorFields().isEmpty())
+        if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
 
         return errorResponses;
     }
-    
+
     private Error getError(final DocumentTypeApplicationTypeReq documentNameRequest) {
-        List<ErrorField> errorFields = getErrorFields(documentNameRequest);
+        final List<ErrorField> errorFields = getErrorFields(documentNameRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE)
                 .errorFields(errorFields)
@@ -219,125 +209,95 @@ public class DocumentTypeApplicationTypeController {
     }
 
     private List<ErrorField> getErrorFields(final DocumentTypeApplicationTypeReq documentNameRequest) {
-        List<ErrorField> errorFields = new ArrayList<>();
-        DocumentTypeApplicationType docTypeAppType=documentNameRequest.getDocumentTypeApplicationType();
+        final List<ErrorField> errorFields = new ArrayList<>();
+        final DocumentTypeApplicationType docTypeAppType = documentNameRequest.getDocumentTypeApplicationType();
         addDocumentTypeValidationErrors(docTypeAppType, errorFields);
-        addTeanantIdValidationErrors(docTypeAppType,errorFields);
-        addActiveValidationErrors(docTypeAppType,errorFields);
-        addApplicationTypeValidationErrors(docTypeAppType,errorFields);
-        addDocumentApplicationTypeUniqueValidation(docTypeAppType,errorFields);
+        addTeanantIdValidationErrors(docTypeAppType, errorFields);
+        addActiveValidationErrors(docTypeAppType, errorFields);
+        addApplicationTypeValidationErrors(docTypeAppType, errorFields);
+        addDocumentApplicationTypeUniqueValidation(docTypeAppType, errorFields);
         return errorFields;
     }
-    
-    private void addDocumentTypeValidationErrors(DocumentTypeApplicationType docTypeAppType, List<ErrorField> errorFields){
-    	
-    	if(docTypeAppType.getDocumentTypeId()== 0){
-    		
+
+    private void addDocumentTypeValidationErrors(final DocumentTypeApplicationType docTypeAppType,
+            final List<ErrorField> errorFields) {
+
+        if (docTypeAppType.getDocumentTypeId() == 0) {
+
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.DOCTYPE_MANDATORY_CODE)
                     .message(WcmsConstants.DOCTYPE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.DOCTYPE_MANADATORY_FIELD_NAME)
                     .build();
-            errorFields.add(errorField);	
-    		
-    	} else     		
-    		return;
-     }
-    
-    private void addApplicationTypeValidationErrors(DocumentTypeApplicationType docTypeAppType, List<ErrorField> errorFields){
-    	if(docTypeAppType.getApplicationType() == null || docTypeAppType.getApplicationType().isEmpty()){
-    		
+            errorFields.add(errorField);
+
+        } else
+            return;
+    }
+
+    private void addApplicationTypeValidationErrors(final DocumentTypeApplicationType docTypeAppType,
+            final List<ErrorField> errorFields) {
+        if (docTypeAppType.getApplicationType() == null || docTypeAppType.getApplicationType().isEmpty()) {
+
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.APPLICATION_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.APPLICATION_TYPE_ERROR_MESSAGE)
                     .field(WcmsConstants.APPLICATION_TYPE_MANADATORY_FIELD_NAME)
                     .build();
-            errorFields.add(errorField);	
-    		
-    	} else if(ApplicationType.fromValue(docTypeAppType.getApplicationType()) ==null ){
-    		
-    		final ErrorField errorField = ErrorField.builder()
+            errorFields.add(errorField);
+
+        } else if (ApplicationType.fromValue(docTypeAppType.getApplicationType()) == null) {
+
+            final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.VALID_APPLICATION_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.VALID_APPLICATION_TYPE_ERROR_MESSAGE)
                     .field(WcmsConstants.VALID_APPLICATION_TYPE_MANADATORY_FIELD_NAME)
                     .build();
-            errorFields.add(errorField);	
-    		
-    	} else return;
-    	
+            errorFields.add(errorField);
+
+        } else
+            return;
+
     }
-    
-    private void addDocumentApplicationTypeUniqueValidation(DocumentTypeApplicationType docTypeAppType, List<ErrorField> errorFields){
-    	
-    	if(!docTypeAppTypeService.checkDocumentTypeApplicationTypeExist(docTypeAppType.getApplicationType(),docTypeAppType.getDocumentTypeId(),docTypeAppType.getTenantId())){
-    		
-    	       final ErrorField errorField = ErrorField.builder()
-                       .code(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE)
-                       .message(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE)
-                       .field(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNQ_FIELD_NAME)
-                       .build();
-               errorFields.add(errorField);
-    	}
+
+    private void addDocumentApplicationTypeUniqueValidation(final DocumentTypeApplicationType docTypeAppType,
+            final List<ErrorField> errorFields) {
+
+        if (!docTypeAppTypeService.checkDocumentTypeApplicationTypeExist(docTypeAppType.getApplicationType(),
+                docTypeAppType.getDocumentTypeId(), docTypeAppType.getTenantId())) {
+
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE)
+                    .message(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE)
+                    .field(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNQ_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+        }
     }
-    
-    private void addTeanantIdValidationErrors(DocumentTypeApplicationType docTypeAppType, List<ErrorField> errorFields){
-        if(docTypeAppType.getTenantId()==null || docTypeAppType.getTenantId().isEmpty()){
+
+    private void addTeanantIdValidationErrors(final DocumentTypeApplicationType docTypeAppType,
+            final List<ErrorField> errorFields) {
+        if (docTypeAppType.getTenantId() == null || docTypeAppType.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
-    private void addActiveValidationErrors(DocumentTypeApplicationType docTypeAppType, List<ErrorField> errorFields){
-        if(docTypeAppType.getActive()==null){
+    private void addActiveValidationErrors(final DocumentTypeApplicationType docTypeAppType, final List<ErrorField> errorFields) {
+        if (docTypeAppType.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
-    
-	@RequestMapping(value = "/getapplicationtypes")
-	public Map<String, ApplicationType> getApplicationTypeEnum() {
-		Map<String, ApplicationType> applicationType = new HashMap<>();
-		for (ApplicationType key : ApplicationType.values()) {
-			applicationType.put(key.name(),key);
-		}
-		return applicationType;
-	}
-	
-	@RequestMapping(value = "/getconnectiontypes")
-	public Map<String, ConnectionType> getConnectionTypeEnum() {
-		Map<String, ConnectionType> connectionType = new HashMap<>();
-		for (ConnectionType key : ConnectionType.values()) {
-			connectionType.put(key.name(),key);
-		}
-		return connectionType;
-	}
-	
-	@RequestMapping(value = "/getbillingtypes")
-	public Map<String, BillingType> getBillingTypeEnum() {
-		Map<String, BillingType> billingType = new HashMap<>();
-		for (BillingType key : BillingType.values()) {
-			billingType.put(key.name(),key);
-		}
-		return billingType;
-	}
-	
+
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

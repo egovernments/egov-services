@@ -21,6 +21,9 @@ public class Document {
 	private String name;
 	
 	@NotNull
+	private long typeId;
+	
+	@NotNull
 	private String description;
 	
 	@NotNull

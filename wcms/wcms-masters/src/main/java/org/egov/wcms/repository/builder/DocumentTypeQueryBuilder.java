@@ -187,6 +187,10 @@ public class DocumentTypeQueryBuilder {
     public static String selectDocumentTypeByNameAndCodeNotInQuery() {
         return " select code from egwtr_document_type where name = ? and tenantId = ? and code != ? ";
     }
+    
+    public static String getMandatoryDocsQuery(){
+    	return "SELECT id FROM egwtr_documenttype_applicationtype WHERE mandatory IS TRUE AND applicationtype = ?";
+    }
 
 }
 

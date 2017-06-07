@@ -47,8 +47,10 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.model.DocumentOwner;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.PropertyTypeUsageType;
+import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
+import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
@@ -83,6 +85,9 @@ public class NewWaterConnectionValidator {
 	private DocumentTypeApplicationTypeService documentTypeApplicationTypeService;
 	
 	@Autowired
+	private DocumentTypeService documentTypeService;
+	
+	@Autowired
 	private PropertyTypePipeSizeTypeService propertyPipeSizeService;
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
@@ -113,102 +118,102 @@ public class NewWaterConnectionValidator {
         return errorResponses;
     }
     
-    public Error getError(final WaterConnectionReq waterConnectionRequest) {
-        List<ErrorField> errorFields = new ArrayList<>();
-        if (waterConnectionRequest.getConnection().getBillingType() == null || 
-        		waterConnectionRequest.getConnection().getBillingType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.BILLING_TYPE_INVALID_CODE)
-                    .message(WcmsConstants.BILLING_TYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.BILLING_TYPE_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getCategoryType() == null || 
-        		waterConnectionRequest.getConnection().getCategoryType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getConnectionType() == null || 
-        		waterConnectionRequest.getConnection().getConnectionType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
-                    .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == 0L) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
-                    .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getProperty() == null || 
-        		waterConnectionRequest.getConnection().getProperty().getPropertyType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTY_TYPE_MANDATORY_CODE)
-                    .message(WcmsConstants.PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTY_TYPE_MANDATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getProperty() == null || 
-        		waterConnectionRequest.getConnection().getProperty().getUsageType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getSourceType() == null || 
-        		waterConnectionRequest.getConnection().getSourceType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.SOURCE_TYPE_INVALID_CODE)
-                    .message(WcmsConstants.SOURCE_TYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.SOURCE_TYPE_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getSumpCapacity() == 0L) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.SUMP_CAPACITY_INVALID_CODE)
-                    .message(WcmsConstants.SUMP_CAPACITY_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.SUMP_CAPACITY_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getSupplyType() == null || 
-        		waterConnectionRequest.getConnection().getSupplyType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.SUPPLY_TYPE_INVALID_CODE)
-                    .message(WcmsConstants.SUPPLY_TYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.SUPPLY_TYPE_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        }
-        
-        if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
-        if (waterConnectionRequest.getConnection().getDocuments() == null || 
-        		waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.DOCUMENTS_INVALID_CODE)
-                    .message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        
-        }
-        }
-        
-        
-        List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
-        errorFields.addAll(errorFieldList);
+	public Error getError(final WaterConnectionReq waterConnectionRequest) {
+		List<ErrorField> errorFields = new ArrayList<>();
+		if (waterConnectionRequest.getConnection().getBillingType() == null
+				|| waterConnectionRequest.getConnection().getBillingType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.BILLING_TYPE_INVALID_CODE)
+					.message(WcmsConstants.BILLING_TYPE_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.BILLING_TYPE_INVALID_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getCategoryType() == null
+				|| waterConnectionRequest.getConnection().getCategoryType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
+					.message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getConnectionType() == null
+				|| waterConnectionRequest.getConnection().getConnectionType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
+					.message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == 0L) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
+					.message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
+					.field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getProperty() == null
+				|| waterConnectionRequest.getConnection().getProperty().getPropertyType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_TYPE_MANDATORY_CODE)
+					.message(WcmsConstants.PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE)
+					.field(WcmsConstants.PROPERTY_TYPE_MANDATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getProperty() == null
+				|| waterConnectionRequest.getConnection().getProperty().getUsageType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
+					.message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getSourceType() == null
+				|| waterConnectionRequest.getConnection().getSourceType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCE_TYPE_INVALID_CODE)
+					.message(WcmsConstants.SOURCE_TYPE_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.SOURCE_TYPE_INVALID_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getSumpCapacity() == 0L) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUMP_CAPACITY_INVALID_CODE)
+					.message(WcmsConstants.SUMP_CAPACITY_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.SUMP_CAPACITY_INVALID_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (waterConnectionRequest.getConnection().getSupplyType() == null
+				|| waterConnectionRequest.getConnection().getSupplyType().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUPPLY_TYPE_INVALID_CODE)
+					.message(WcmsConstants.SUPPLY_TYPE_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.SUPPLY_TYPE_INVALID_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
 
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_REQUEST_MESSAGE)
-                .errorFields(errorFields)
-                .build();
-    }
+		if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) {
+			if (waterConnectionRequest.getConnection().getDocuments() == null
+					|| waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
+				final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCUMENTS_INVALID_CODE)
+						.message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+						.field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
+				errorFields.add(errorField);
+
+			} else {
+				for (DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
+					if (null == document.getDocument()) {
+						final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCUMENTS_INVALID_CODE)
+								.message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+								.field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
+						errorFields.add(errorField);
+					} else {
+						if (0 == document.getDocument().getTypeId()) {
+							final ErrorField errorField = ErrorField.builder()
+									.code(WcmsConstants.DOCUMENTS_INVALID_CODE)
+									.message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+									.field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
+							errorFields.add(errorField);
+						}
+					}
+				}
+
+			}
+		}
+
+		if (errorFields.size() > 0) {
+			return Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(WcmsConstants.INVALID_REQUEST_MESSAGE)
+					.errorFields(errorFields).build();
+		}
+
+		List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
+		errorFields.addAll(errorFieldList);
+
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(WcmsConstants.INVALID_REQUEST_MESSAGE)
+				.errorFields(errorFields).build();
+	}
 	
 	
 	public List<ErrorField> validateNewConnectionBusinessRules(WaterConnectionReq waterConnectionRequest){
@@ -280,7 +285,6 @@ public class NewWaterConnectionValidator {
             errorFields.add(errorField);
 		}
 		
-		
 		return errorFields;
 	}
 	
@@ -296,7 +300,7 @@ public class NewWaterConnectionValidator {
 				return false;
 			}
 		}
-		waterConnectionRequest.getConnection().setDonationCharge(donation.getDonationAmount());
+		waterConnectionRequest.getConnection().setDonationCharge("400");
 		return true;
 		
 	}
@@ -342,15 +346,23 @@ public class NewWaterConnectionValidator {
 		LOGGER.info("Validating Document - Application Mapping");
 		
 		boolean isDocumentValid = true;
+		int countOfDocs = 0;
+		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs(ApplicationType.NEWCONNECTION.toString());
 		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
-			if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
-				LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
-				isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
-				return isDocumentValid;
-			}			
+			if(mandatoryDocs.contains(documentOwner.getDocument().getTypeId())){
+				countOfDocs++;
+				if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
+					LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
+					isDocumentValid = false;
+					return isDocumentValid;
+				}	
+			}
 		}
 		}
+		if(countOfDocs != mandatoryDocs.size())
+			isDocumentValid = false;
+		
 		return isDocumentValid;
 	}
 	
@@ -390,6 +402,7 @@ public class NewWaterConnectionValidator {
 		// Receive new connection request as a parameter for this method
 		// Then using the values in the New Connection Request, prepare a Donation Get Request Object
 		// Pass this Object to Get Method of Donation Service
+		
 		DonationGetRequest donationGetRequest = new DonationGetRequest();
 		donationGetRequest.setPropertyType(waterConnectionRequest.getConnection().getProperty().getPropertyType());
 		donationGetRequest.setUsageType(waterConnectionRequest.getConnection().getProperty().getUsageType());

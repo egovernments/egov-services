@@ -17,6 +17,7 @@ import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -144,7 +145,10 @@ public static final Logger LOGGER = LoggerFactory.getLogger(WorkflowRepository.c
 	
 	
 	
-	
+	@Bean
+	public RestTemplate restTemplate() {
+	    return new RestTemplate();
+	}
 	
 	
 	private TaskRequest getTaskRequest(WaterConnectionReq waterConnectionRequest) {

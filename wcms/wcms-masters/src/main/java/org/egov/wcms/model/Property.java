@@ -19,9 +19,11 @@ public class Property {
 	
 	@NotNull
 	private String usageType;
+	private long usageTypeId;
 	
 	@NotNull
 	private String propertyType;
+	private long propertyTypeId;
 	
 	@NotNull
 	private String address;

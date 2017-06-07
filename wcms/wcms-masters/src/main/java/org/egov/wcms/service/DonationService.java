@@ -149,15 +149,15 @@ public class DonationService {
 		// Once APIs are available, remove random number function. 
     	Donation donation = new Donation();
 		int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setPropertyTypeId(randomNum);
+		donation.setPropertyTypeId(2L);
 		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setUsageTypeId(randomNum);
+		donation.setUsageTypeId(3L);
 		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setCategoryTypeId(randomNum);
+		donation.setCategoryTypeId(3L);
 		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setMinHSCPipeSizeId(randomNum);
+		donation.setMinHSCPipeSizeId(1);
 		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setMaxHSCPipeSizeId(randomNum);
+		donation.setMaxHSCPipeSizeId(2);
 		return donation;
 	}
     

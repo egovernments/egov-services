@@ -74,9 +74,14 @@ class UpdateLeave extends React.Component {
     commonApiPost("hr-leave","leaveapplications", "_search", {tenantId, stateId}, function(err, res) {
       if(res) {
         _leaveSet = res.LeaveApplication[0];
-        if(_leaveSet.status!="REJECTED"){
-          $("input,select,textarea").prop("disabled", true);
-        }
+        commonApiPost("hr-masters", "hrstatuses","_search",{tenantId, id:_leaveSet.status},function(err, res2){
+          if(res2){
+            var _status = res2.HRStatus[0];
+            if(_status.code!="REJECTED") {
+              $("input,select,textarea").prop("disabled", true);
+            }
+          }
+        });
         commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
             id: _leaveSet.employee
@@ -92,7 +97,7 @@ class UpdateLeave extends React.Component {
                employeeid:employee.id
             })
           }
-        })
+        });
       }
     });
 

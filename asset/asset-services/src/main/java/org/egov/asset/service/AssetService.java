@@ -106,8 +106,6 @@ public class AssetService {
 		assetRequest.getAsset().setId(Long.valueOf(assetRepository.getNextAssetId().longValue()));
 
 		// TODO validate assetcategory for an asset
-		/*ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));*/
 		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 
@@ -135,7 +133,6 @@ public class AssetService {
 
 	public AssetResponse updateAsync(AssetRequest assetRequest) {
 
-		ObjectMapper objectMapper = new ObjectMapper();
 		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 

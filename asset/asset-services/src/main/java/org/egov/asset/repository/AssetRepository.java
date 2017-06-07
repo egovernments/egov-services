@@ -129,11 +129,12 @@ public class AssetRepository {
 
 		String property = null;
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
-			property = objectMapper.writeValueAsString(asset2);
+			property = mapper.writeValueAsString(asset2);
 		} catch (JsonProcessingException e) {
 			logger.info("the exception in insert from parsing attributes : " + e);
 		}
@@ -177,11 +178,11 @@ public class AssetRepository {
 		String property = null;
 		try {
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
-			property = objectMapper.writeValueAsString(asset2);
+			property = mapper.writeValueAsString(asset2);
 
 		} catch (JsonProcessingException e) {
 			logger.info("exception from parsing the assetattributes : " + e);

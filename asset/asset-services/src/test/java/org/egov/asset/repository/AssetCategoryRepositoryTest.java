@@ -18,6 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +40,9 @@ public class AssetCategoryRepositoryTest {
 	
 	@InjectMocks
 	private AssetCategoryRepository assetCategoryRepository;
+	
+	@Mock
+	private ObjectMapper objectMapper;
 	
 	@Test
 	public void testSearch(){

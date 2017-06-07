@@ -30,6 +30,9 @@ public class RevaluationService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	private static final Logger logger = LoggerFactory.getLogger(RevaluationService.class);
 	
 	public RevaluationResponse createAsync(RevaluationRequest revaluationRequest) {
@@ -37,8 +40,7 @@ public class RevaluationService {
 		logger.info("RevaluationService createAsync revaluationRequest:"+revaluationRequest);
 		
 		revaluationRequest.getRevaluation().setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
-		
-		ObjectMapper objectMapper = new ObjectMapper(); 
+		 
 		String json = null;
 		
 		try {

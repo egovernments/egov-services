@@ -37,6 +37,9 @@ public class DisposalService {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	public DisposalResponse search(DisposalCriteria disposalCriteria, RequestInfo requestInfo){
 		List<Disposal> disposals = null;
 		
@@ -55,7 +58,6 @@ public class DisposalService {
 	
 	public DisposalResponse createAsync(DisposalRequest disposalRequest) {
 		
-		ObjectMapper objectMapper = new ObjectMapper();
 		disposalRequest.getDisposal().setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
 		
 		String value = null;

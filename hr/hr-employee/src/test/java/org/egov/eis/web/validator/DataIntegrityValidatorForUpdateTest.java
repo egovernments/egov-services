@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.repository.NonVacantPositionsRepository;
 import org.egov.eis.utils.FileUtils;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.junit.After;
@@ -24,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -36,7 +39,10 @@ public class DataIntegrityValidatorForUpdateTest {
 
 	@Mock
 	private EmployeeRepository employeeRepository;
-	
+
+	@Mock
+	private NonVacantPositionsRepository nonVacantPositionsRepository;
+
 	@Mock
 	private EmployeeDocumentsRepository employeeDocumentsRepository;
 	
@@ -45,6 +51,7 @@ public class DataIntegrityValidatorForUpdateTest {
 
 	@Before
 	public void setUp() throws Exception {
+		when(nonVacantPositionsRepository.checkIfPositionIsOccupied(Mockito.any(Assignment.class), Mockito.anyLong(), Mockito.anyString(), Mockito.anyString())).thenReturn(false);
 	}
 
 	@After

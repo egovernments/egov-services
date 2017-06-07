@@ -253,7 +253,6 @@ public class EmployeeService {
 
 		employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-		LOGGER.info("employeeRequest in create::" + employeeRequest);
 		String employeeRequestJson = null;
 		employeeRequestJson = objectMapper.writeValueAsString(employeeRequest);
 		LOGGER.info("employeeJson::" + employeeRequestJson);

@@ -41,6 +41,9 @@ package org.egov.wcms;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +51,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 @SpringBootApplication
 public class WcmsMastersApplication {
+	
+	public static volatile ConcurrentHashMap<Long, String> categoryTypeMap = new ConcurrentHashMap<>();
+	public static volatile ConcurrentHashMap<Long, String> pipeSizeMap = new ConcurrentHashMap<>();
+	public static volatile ConcurrentHashMap<Long, String> sourceTypeMap = new ConcurrentHashMap<>();
+	public static volatile ConcurrentHashMap<Long, String> supplyTypeMap = new ConcurrentHashMap<>();
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(WcmsMastersApplication.class, args);
@@ -60,5 +69,9 @@ public class WcmsMastersApplication {
 		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
 		converter.setObjectMapper(mapper);
 		return converter;
+	}
+	
+	private void prepareMasterMaps(){
+		
 	}
 }

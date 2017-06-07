@@ -349,7 +349,7 @@ public class NewWaterConnectionValidator {
 		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs("NEW CONNECTION");
 		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
-			if(mandatoryDocs.contains(documentOwner.getDocument().getDocumentTypeId())){
+			if(mandatoryDocs.contains(documentOwner.getDocument().getTypeId())){
 				if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
 					LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
 					isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.

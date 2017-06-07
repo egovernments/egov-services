@@ -21,7 +21,7 @@ public class Document {
 	private String name;
 	
 	@NotNull
-	private long documentTypeId;
+	private long typeId;
 	
 	@NotNull
 	private String description;

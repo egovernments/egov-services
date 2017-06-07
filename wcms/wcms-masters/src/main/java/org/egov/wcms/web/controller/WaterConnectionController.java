@@ -104,6 +104,30 @@ public class WaterConnectionController {
         
     }
     
+    
+    @PostMapping(value = "/legacy/_create")
+    @ResponseBody
+    public ResponseEntity<?> legacyConnectionCreate(@RequestBody @Valid  final WaterConnectionReq legacyConnectionRequest,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
+            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Legacy WaterConnectionRequest::" + legacyConnectionRequest);
+        final List<ErrorResponse> errorResponses = newWaterConnectionValidator.validateWaterConnectionRequest(legacyConnectionRequest);
+        if (!errorResponses.isEmpty()){
+            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+        }
+        
+        //Call to service.
+        Connection connection = waterConnectionService.createWaterConnection(applicationProperties.getCreateLegacyConnectionTopicName(), 
+        		"legacyconnection-create", legacyConnectionRequest);           
+        return getSuccessResponse(connection, legacyConnectionRequest.getRequestInfo());
+        
+    }
+    
+    
+    
     private ResponseEntity<?> getSuccessResponse(final Connection connection,
             final RequestInfo requestInfo) {
         final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();;

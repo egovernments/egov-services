@@ -1648,7 +1648,7 @@ function printValue(object = "", values) {
     if (object != "") {
 
     } else {
-        for (let key in values) {
+        for (var key in values) {
             if (key == "documents") continue;
             if (typeof values[key] === "object" && key == "user") {
                 for (ckey in values[key]) {
@@ -1688,7 +1688,6 @@ function printValue(object = "", values) {
                             $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
                         }
                         $("[name='" + key + "']").val(values[key] ? values[key] : "");
-                        if(values["bankBranch"]) $("#bankBranch").val(values["bankBranch"]);
                     }
                 })
             } else if (values[key]) {

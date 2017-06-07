@@ -202,6 +202,19 @@ public class NewWaterConnectionValidator {
             errorFields.add(errorField);
         
         }
+        else { 
+        	for(DocumentOwner document: waterConnectionRequest.getConnection().getDocuments()){
+        	if(document.getDocument() == null || document.getDocument().getTypeId() == 0){
+                final ErrorField errorField = ErrorField.builder()
+                        .code(WcmsConstants.DOCUMENTS_INVALID_CODE)
+                        .message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME)
+                        .build();
+                errorFields.add(errorField);
+        	}
+        }
+        	
+        }
         }
         
         
@@ -283,7 +296,6 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
 		}
-		
 		
 		return errorFields;
 	}

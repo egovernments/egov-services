@@ -70,6 +70,7 @@ public class WaterConnectionService {
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
         try {
+        	waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
             logger.info("WaterConnectionService request::" + waterConnectionRequest);
             waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
             logger.info("waterConnectionValue::" + waterConnectionValue);
@@ -83,8 +84,6 @@ public class WaterConnectionService {
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
             return waterConnectionRequest.getConnection();
         }
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
-        
         return waterConnectionRequest.getConnection();
     }
     

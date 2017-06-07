@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.producers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -48,11 +50,12 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
 public class WaterTransactionProducer {
-
+	public static final Logger LOGGER = LoggerFactory.getLogger(WaterTransactionProducer.class);
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessage(final String topic, final String key, final Object message) {
+    	LOGGER.info("Message Received is : Topic : " + topic +" Key : "+key+" Message : "+message);
         final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
             @Override

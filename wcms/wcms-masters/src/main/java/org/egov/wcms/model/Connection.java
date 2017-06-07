@@ -26,6 +26,7 @@ public class Connection {
 	
 	@NotNull
 	private String categoryType;
+	private long categoryTypeId;
 	
 	@NotNull
 	private double hscPipeSizeType;

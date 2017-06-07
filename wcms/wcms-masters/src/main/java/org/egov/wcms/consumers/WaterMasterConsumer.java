@@ -56,6 +56,7 @@ import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.UsageTypeService;
+import org.egov.wcms.service.WaterConnectionService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
@@ -67,13 +68,16 @@ import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.UsageTypeRequest;
+import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Service
 public class WaterMasterConsumer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(WaterMasterConsumer.class);
@@ -114,6 +118,9 @@ public class WaterMasterConsumer {
 
     @Autowired
     private SourceTypeService waterSourceTypeService;
+    
+    @Autowired
+    private WaterConnectionService waterConnectionService; 
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.usagetype.create.name}","${kafka.topics.usagetype.update.name}",
             
@@ -173,6 +180,13 @@ public class WaterMasterConsumer {
                 waterSourceTypeService.create(objectMapper.readValue(record.value(), SourceTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdateSourceTypeTopicName()))
                 waterSourceTypeService.update(objectMapper.readValue(record.value(), SourceTypeRequest.class));
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            if (record.topic().equals(applicationProperties.getCreateNewConnectionTopicName()))
+            	waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
         } catch (final IOException e) {
             e.printStackTrace();
         }

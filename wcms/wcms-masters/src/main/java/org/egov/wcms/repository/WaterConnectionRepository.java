@@ -54,13 +54,10 @@ public class WaterConnectionRepository {
 					statement.setString(1,waterConnectionRequest.getConnection().getTenantId());
 					statement.setString(2,waterConnectionRequest.getConnection().getConnectionType());
 					statement.setString(3,waterConnectionRequest.getConnection().getBillingType());
-					statement.setInt(4,1);
-					//statement.setString(4,waterConnectionRequest.getConnection().getCategoryType());
-					//statement.setDouble(5,waterConnectionRequest.getConnection().getHscPipeSizeType());
-					statement.setDouble(5,1);
+					statement.setLong(4, 3L); // waterConnectionRequest.getConnection().getCategoryType());
+					statement.setLong(5, 1L); // waterConnectionRequest.getConnection().getHscPipeSizeType());
 					statement.setString(6,waterConnectionRequest.getConnection().getSupplyType());
-					//statement.setString(7,waterConnectionRequest.getConnection().getSourceType());
-					statement.setInt(7,1);
+					statement.setLong(7,1L);  // waterConnectionRequest.getConnection().getSourceType());
 					statement.setString(8,waterConnectionRequest.getConnection().getConnectionStatus());
 					statement.setDouble(9,waterConnectionRequest.getConnection().getSumpCapacity());
 					statement.setInt(10,waterConnectionRequest.getConnection().getNumberOfTaps());
@@ -73,16 +70,16 @@ public class WaterConnectionRepository {
 					statement.setLong(17,waterConnectionRequest.getConnection().getProperty().getId());
 					statement.setString(18,waterConnectionRequest.getConnection().getProperty().getUsageType());
 					statement.setString(19,waterConnectionRequest.getConnection().getProperty().getPropertyType());
-					
-					//statement.setString(20,waterConnectionRequest.getConnection().getProperty().getAddress());
-					statement.setString(20,"testaddress");
-					
+                     statement.setString(20,"AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
+                     statement.setString(21, waterConnectionRequest.getConnection().getDonationCharge());
+                     
 					if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
 			    	
-						statement.setString(21,waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-						statement.setLong(22,waterConnectionRequest.getConnection().getDonationCharge());
+						statement.setString(22,waterConnectionRequest.getConnection().getLegacyConsumerNumber());
 						statement.setString(23,waterConnectionRequest.getConnection().getConsumerNumber());
 			    	}
+			
+					
 					
 					//Please verify if there's proper validation on all these fields to avoid NPE.
 					

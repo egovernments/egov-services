@@ -26,6 +26,7 @@ public class Connection {
 	
 	@NotNull
 	private String categoryType;
+	private long categoryTypeId;
 	
 	@NotNull
 	private double hscPipeSizeType;
@@ -43,7 +44,7 @@ public class Connection {
 	private double sumpCapacity;
 	
 	@NotNull
-	private long donationCharge;
+	private String donationCharge;
 	
 	@NotNull
 	private int numberOfTaps;

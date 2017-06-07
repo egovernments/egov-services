@@ -286,16 +286,19 @@ public class NewWaterConnectionValidator {
 	
 	@SuppressWarnings("rawtypes")
 	private boolean validateDonationAmount(WaterConnectionReq waterConnectionRequest){
-		String donationCharges = "1000";   // Receive this from Connection Request
+		
 		List<Donation> donationList = donationService.getDonationList(prepareDonationGetRequest(waterConnectionRequest));
 		Iterator itr = donationList.iterator();
+		Donation donation = null;
 		while(itr.hasNext()){
-			Donation donation = (Donation) itr.next();
-			if(donationCharges.equals(donation.getDonationAmount())){
-				return true;
+			donation = (Donation) itr.next();
+			if(null == donation.getDonationAmount() || donation.getDonationAmount().isEmpty()){
+				return false;
 			}
 		}
-		return false;
+		waterConnectionRequest.getConnection().setDonationCharge(donation.getDonationAmount());
+		return true;
+		
 	}
 	
 	private boolean validatePropertyUsageMapping(WaterConnectionReq waterConnectionRequest){

@@ -99,11 +99,9 @@ public class DonationRepository {
         preparedStatementValues.add(7L);
         preparedStatementValues.add(7L);
         preparedStatementValues.add(1L);
-        preparedStatementValues.add(new Date());
-        preparedStatementValues.add(new Date());
         String queryStr = "SELECT * FROM egwtr_donation WHERE property_type = ? AND usage_type = ? "
-        		+ " AND category = ? AND hsc_pipesize_max = ? AND hsc_pipesize_min = ? AND from_date <= ? "
-        		+ " AND to_date >= ? AND active IS TRUE" ; 
+        		+ " AND category = ? AND hsc_pipesize_max = ? AND hsc_pipesize_min = ? AND  "
+        		+ "  active IS TRUE" ; 
         List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), donationRowMapper);
         return donationList;
     }

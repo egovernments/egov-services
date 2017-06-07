@@ -62,8 +62,8 @@ public class WaterConnectionQueryBuilder {
     public static String insertConnectionQuery() {
         return "INSERT INTO egwtr_waterconnection (tenantid, connectiontype, billingtype, categorytype, hscpipesizetype, supplytype, "
         		+ "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-        		+ "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress) values"
-        		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+        		+ "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress, donationcharge) values"
+        		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
     }
 	
 }

@@ -65,17 +65,19 @@ public class HolidayService {
 
 	@Autowired
 	private HolidayProducer holidayProducer;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<Holiday> getHolidays(HolidayGetRequest holidayGetRequest) {
 		return holidayRepository.findForCriteria(holidayGetRequest);
 	}
 
 	public Holiday createHoliday(final HolidayRequest holidayRequest) {
-		final ObjectMapper mapper = new ObjectMapper();
 		String holidayValue = null;
 		try {
 			logger.info("createHoliday service::" + holidayRequest);
-			holidayValue = mapper.writeValueAsString(holidayRequest);
+			holidayValue = objectMapper.writeValueAsString(holidayRequest);
 			logger.info("holidayValue::" + holidayValue);
 		} catch (final JsonProcessingException e) {
 			e.printStackTrace();

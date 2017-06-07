@@ -30,6 +30,7 @@ public class HREmployeeIndexerApplication {
     public ObjectMapper getObjectMapper() {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
         return objectMapper;
     }
 

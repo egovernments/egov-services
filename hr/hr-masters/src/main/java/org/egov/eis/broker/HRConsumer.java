@@ -76,6 +76,9 @@ public class HRConsumer {
 
 	@Autowired
 	private PositionService positionService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.designation.create.name}", "${kafka.topics.designation.update.name}",
@@ -83,7 +86,6 @@ public class HRConsumer {
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-		final ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			if (record.topic().equalsIgnoreCase(designationCreateTopic))
 				designationService.create(objectMapper.readValue(record.value(), DesignationRequest.class));

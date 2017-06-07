@@ -26,12 +26,14 @@ public class AttendanceConsumers {
 
     @Autowired
     private ElasticSearchRepository elasticSearchRepository;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "${kafka.topics.attendance.name}")
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        final ObjectMapper objectMapper = new ObjectMapper();
         try {
             LOGGER.info("SaveAttendanceConsumer egov-hr-attendance attendanceService:" + attendanceService);
             final AttendanceRequest attendanceRequest = attendanceService

@@ -40,8 +40,10 @@
 
 package org.egov.eis;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.eis.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -50,15 +52,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 public class EgovLeaveApplication {
-
-	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
 	@Value("${app.timezone}")
 	private String timeZone;
@@ -72,19 +70,26 @@ public class EgovLeaveApplication {
 	public RestTemplate getRestTemplate() {
 		return new CorrelationIdAwareRestTemplate();
 	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper() {
+	    final ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+	    objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+	    return objectMapper;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(EgovLeaveApplication.class, args);
 	}
 
 	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
+	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		converter.setObjectMapper(objectMapper);
 		return converter;
 	}
 }

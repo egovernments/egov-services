@@ -39,13 +39,15 @@ public class EmployeeListener {
 		this.elasticSearchRepository = elasticSearchRepository;
 		this.employeeAdapter = employeeAdapter;
 	}
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.employee.esindex.savedb.name}", "${kafka.topics.employee.esindex.updatedb.name}" })
 	public void listen(ConsumerRecord<String, String> record) {
 		LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
 
-		ObjectMapper objectMapper = new ObjectMapper();
 		EmployeeRequest employeeRequest = null;
 
 		try {

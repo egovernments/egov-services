@@ -69,19 +69,26 @@ public class EgovCommonMastersApplication {
 	public RestTemplate getRestTemplate() {
 		return new CorrelationIdAwareRestTemplate();
 	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper() {
+	    final ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+	    objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+	    return objectMapper;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(EgovCommonMastersApplication.class, args);
 	}
 
 	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
+	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		converter.setObjectMapper(objectMapper);
 		return converter;
 	}
 }

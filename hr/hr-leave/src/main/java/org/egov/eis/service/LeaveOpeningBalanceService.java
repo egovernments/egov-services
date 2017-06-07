@@ -108,6 +108,9 @@ public class LeaveOpeningBalanceService {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<LeaveOpeningBalance> getLeaveOpeningBalances(
 			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
@@ -129,8 +132,7 @@ public class LeaveOpeningBalanceService {
 		leaveOpeningBalanceRequest.setLeaveOpeningBalance(successLeaveOpeningBalanceList);
 		String leaveOpeningBalanceRequestJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			leaveOpeningBalanceRequestJson = mapper.writeValueAsString(leaveOpeningBalanceRequest);
+			leaveOpeningBalanceRequestJson = objectMapper.writeValueAsString(leaveOpeningBalanceRequest);
 			LOGGER.info("leaveOpeningBalanceRequestJson::" + leaveOpeningBalanceRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);
@@ -226,8 +228,7 @@ public class LeaveOpeningBalanceService {
 		List<LeaveOpeningBalance> leaveOpeningBalance = leaveOpeningBalanceRequest.getLeaveOpeningBalance();
 		String leaveOpeningBalanceRequestJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			leaveOpeningBalanceRequestJson = mapper.writeValueAsString(leaveOpeningBalanceRequest);
+			leaveOpeningBalanceRequestJson = objectMapper.writeValueAsString(leaveOpeningBalanceRequest);
 			LOGGER.info("leaveOpeningBalanceRequestJson::" + leaveOpeningBalanceRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);

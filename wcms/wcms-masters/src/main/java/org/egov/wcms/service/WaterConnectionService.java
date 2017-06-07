@@ -89,7 +89,7 @@ public class WaterConnectionService {
     }
     
     public Connection create(WaterConnectionReq waterConnectionRequest){
-    	logger.info("Service API entry for create New Connection");
+    	logger.info("Service API entry for create Connection");
     	try{
     	waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
     	}catch(Exception e){
@@ -97,5 +97,4 @@ public class WaterConnectionService {
     	}
     	return waterConnectionRequest.getConnection();
     }
-
 }

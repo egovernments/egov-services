@@ -33,14 +33,23 @@ public class WaterConnectionRepository {
     
     public WaterConnectionReq persistConnection(WaterConnectionReq waterConnectionRequest){
     	
-    	String insertQuery = waterConnectionQueryBuilder.insertConnectionQuery();
+    	String insertQuery="";
+    	if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
+    		
+    		insertQuery = waterConnectionQueryBuilder.insertLegacyConnectionQuery();
+    	} else {
+        	insertQuery = waterConnectionQueryBuilder.insertConnectionQuery();
+    	}
+    	
+    	 final String query= insertQuery;
+    	
     	long connectionId = 0L;
     	try {
 			KeyHolder keyHolder = new GeneratedKeyHolder();
 			jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 					String[] returnValColumn = new String[] { "id" };
-					PreparedStatement statement = connection.prepareStatement(insertQuery,
+					PreparedStatement statement = connection.prepareStatement(query,
 							returnValColumn);
 					statement.setString(1,waterConnectionRequest.getConnection().getTenantId());
 					statement.setString(2,waterConnectionRequest.getConnection().getConnectionType());

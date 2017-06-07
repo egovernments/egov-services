@@ -189,7 +189,7 @@ public class DocumentTypeQueryBuilder {
     }
     
     public static String getMandatoryDocsQuery(){
-    	return "SELECT id FROM egwtr_document_type WHERE mandatory = ? AND applicationtype = ?";
+    	return "SELECT id FROM egwtr_documenttype_applicationtype WHERE mandatory IS TRUE AND applicationtype = ?";
     }
 
 }

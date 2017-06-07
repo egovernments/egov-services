@@ -40,6 +40,8 @@
 package org.egov.wcms.repository;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -120,11 +123,16 @@ public class DocumentTypeRepository {
     }
     
     public List<Long> getMandatoryocs(String applicationType){
-       ArrayList<Long> mandatoryDocs = new ArrayList<>();
+       List<Long> mandatoryDocs = new ArrayList<>();
  	   String query = documentTypeQueryBuilder.getMandatoryDocsQuery();
  	   LOGGER.info("Mandatory Doc Query: "+query.toString());
 
- 	   mandatoryDocs =jdbcTemplate.queryForObject(query, new Object[] {"true", applicationType}, ArrayList.class);
+ 	   mandatoryDocs =jdbcTemplate.query(query, new Object[] { applicationType}, 
+ 			  new RowMapper<Long>() {
+			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getLong("id");
+			}
+ 	   });
  	   
  	   LOGGER.info("Mandatory Doc List: "+mandatoryDocs.toString());
  	   

@@ -345,10 +345,12 @@ public class NewWaterConnectionValidator {
 		LOGGER.info("Validating Document - Application Mapping");
 		
 		boolean isDocumentValid = true;
+		int countOfDocs = 0;
 		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs("NEW CONNECTION");
 		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
 			if(mandatoryDocs.contains(documentOwner.getDocument().getTypeId())){
+				countOfDocs++;
 				if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
 					LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
 					isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
@@ -357,6 +359,9 @@ public class NewWaterConnectionValidator {
 			}
 		}
 		}
+		if(countOfDocs != mandatoryDocs.size())
+			isDocumentValid = false;
+		
 		return isDocumentValid;
 	}
 	

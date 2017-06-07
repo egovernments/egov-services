@@ -377,7 +377,6 @@ handleProcess(e) {
                           },function(err,res){
                             if(res){
                               var process = res["processInstance"];
-                              console.log(process);
                               if (process) {
                                   var positionId = process.owner.id;
                                   console.log(positionId);
@@ -385,10 +384,13 @@ handleProcess(e) {
                                       tenantId,
                                       positionId: positionId
                                   }, function(err, res) {
-                                      if (res) {
+                                      if(res && res["Employee"] && res["Employee"][0]) {
                                           employee = res["Employee"][0];
                                           owner = employee.name;
                                           window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
+                                    }
+                                    else{
+                                      return  (showError("Unable to fetch Employee details after forwarding."))
                                     }
 
                                   });

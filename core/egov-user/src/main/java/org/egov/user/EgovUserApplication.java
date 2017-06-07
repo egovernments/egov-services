@@ -66,6 +66,14 @@ public class EgovUserApplication {
 		converter.setObjectMapper(mapper);
 		return converter;
 	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper(){
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return objectMapper;
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

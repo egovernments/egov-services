@@ -112,7 +112,7 @@ public class AssetController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		AssetResponse assetResponse = assetService.getAssets(assetCriteria);
+		AssetResponse assetResponse = assetService.getAssets(assetCriteria,requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
@@ -214,7 +214,7 @@ public class AssetController {
 		}
 		// TODO Input field validation, need to be done.
 		
-		DisposalResponse disposalResponse = disposalService.search(disposalCriteria);
+		DisposalResponse disposalResponse = disposalService.search(disposalCriteria, requestInfoWrapper.getRequestInfo());
 		
 		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.OK);
 	}
@@ -231,7 +231,8 @@ public class AssetController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		
-		AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentAmount(assetId, tenantId);
+		AssetCurrentValueResponse assetCurrentValueResponse = 
+				assetCurrentAmountService.getCurrentAmount(assetId, tenantId, requestInfoWrapper.getRequestInfo());
 
 		logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
 		return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);

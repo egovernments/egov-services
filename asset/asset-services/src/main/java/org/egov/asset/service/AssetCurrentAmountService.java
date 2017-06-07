@@ -14,6 +14,7 @@ import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.web.controller.AssetController;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,10 @@ public class AssetCurrentAmountService {
 	private static final Logger logger = LoggerFactory.getLogger(AssetCurrentAmountService.class);
 
 	
-	public AssetCurrentValueResponse getCurrentAmount(Long assetId,String tenantId) {
+	public AssetCurrentValueResponse getCurrentAmount(Long assetId,String tenantId, RequestInfo requestInfo) {
 		
 		Double currentValue = null;
-		Asset asset = getAsset(assetId, tenantId);
+		Asset asset = getAsset(assetId, tenantId,requestInfo);
 		Revaluation revaluation= getRevaluateAsset(assetId, tenantId);
 		currentValue = asset.getGrossValue();
 		
@@ -50,7 +51,7 @@ public class AssetCurrentAmountService {
 		return getResponse(currentValue, tenantId, assetId);
 	}
 	
-	public Asset getAsset(Long assetId,String tenantId){
+	public Asset getAsset(Long assetId,String tenantId, RequestInfo requestInfo){
 		
 		logger.info("AssetCurrentAmountService getAsset");
 		
@@ -59,7 +60,7 @@ public class AssetCurrentAmountService {
 		assetIds.add(assetId);
 		assetCriteria.setId(assetIds);
 		assetCriteria.setTenantId(tenantId);
-		AssetResponse assetResponse = assetService.getAssets(assetCriteria); 
+		AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfo); 
 		
 		Asset asset = null;
 		if(assetResponse.getAssets().size()!=0)

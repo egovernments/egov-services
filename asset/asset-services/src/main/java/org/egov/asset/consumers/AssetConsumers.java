@@ -36,6 +36,9 @@ public class AssetConsumers {
 	
 	@Autowired
 	private DisposalService disposalService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@KafkaListener(containerFactory="kafkaListenerContainerFactory",
 					topics = {"${kafka.topics.save.assetcategory}","${kafka.topics.update.assetcategory}",
@@ -46,7 +49,7 @@ public class AssetConsumers {
 		
 		LOGGER.info("topic:"+ record.topic() +":"+ "value:" +record.value()+"thread:"+Thread.currentThread());
 	   
-			ObjectMapper objectMapper=new ObjectMapper();
+			//ObjectMapper objectMapper=new ObjectMapper();
 			try {
 				if (record.topic().equals(applicationProperties.getCreateAssetTopicName()))
 					assetService.create(objectMapper.readValue(record.value(),AssetRequest.class));	

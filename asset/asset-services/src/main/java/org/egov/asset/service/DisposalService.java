@@ -10,6 +10,8 @@ import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.DisposalRepository;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,10 @@ public class DisposalService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	public DisposalResponse search(DisposalCriteria disposalCriteria){
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
+	
+	public DisposalResponse search(DisposalCriteria disposalCriteria, RequestInfo requestInfo){
 		List<Disposal> disposals = null;
 		
 		try{
@@ -41,7 +46,7 @@ public class DisposalService {
 			LOGGER.info("DisposalService:",ex);
 			throw new RuntimeException(ex);
 		}
-		return getResponse(disposals);
+		return getResponse(disposals, requestInfo);
 	}
 	
 	public void create(DisposalRequest disposalRequest){
@@ -69,12 +74,13 @@ public class DisposalService {
 		}
 		List<Disposal> disposals = new ArrayList<Disposal>();
 		disposals.add(disposalRequest.getDisposal());
-		return getResponse(disposals);
+		return getResponse(disposals, disposalRequest.getRequestInfo());
 	}
 	
-	public DisposalResponse getResponse(List<Disposal> disposals){
+	public DisposalResponse getResponse(List<Disposal> disposals, RequestInfo requestInfo){
 		DisposalResponse disposalResponse = new DisposalResponse();
 		disposalResponse.setDisposals(disposals);
+		
 		return disposalResponse;
 	}
 

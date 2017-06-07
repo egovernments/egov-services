@@ -88,6 +88,7 @@ public class WaterConnectionRepository {
 			}, keyHolder);
 			
 			connectionId = keyHolder.getKey().longValue();
+			waterConnectionRequest.getConnection().setId(connectionId);
 		} catch (Exception e) {
     		LOGGER.error("Inserting Connection Object failed!", e);
 		}

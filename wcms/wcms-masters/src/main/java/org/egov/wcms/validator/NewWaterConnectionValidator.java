@@ -47,6 +47,7 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.model.DocumentOwner;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.PropertyTypeUsageType;
+import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
@@ -346,14 +347,14 @@ public class NewWaterConnectionValidator {
 		
 		boolean isDocumentValid = true;
 		int countOfDocs = 0;
-		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs("NEW CONNECTION");
+		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs(ApplicationType.NEWCONNECTION.toString());
 		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
 			if(mandatoryDocs.contains(documentOwner.getDocument().getTypeId())){
 				countOfDocs++;
 				if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
 					LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
-					isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
+					isDocumentValid = false;
 					return isDocumentValid;
 				}	
 			}
@@ -401,6 +402,7 @@ public class NewWaterConnectionValidator {
 		// Receive new connection request as a parameter for this method
 		// Then using the values in the New Connection Request, prepare a Donation Get Request Object
 		// Pass this Object to Get Method of Donation Service
+		
 		DonationGetRequest donationGetRequest = new DonationGetRequest();
 		donationGetRequest.setPropertyType(waterConnectionRequest.getConnection().getProperty().getPropertyType());
 		donationGetRequest.setUsageType(waterConnectionRequest.getConnection().getProperty().getUsageType());

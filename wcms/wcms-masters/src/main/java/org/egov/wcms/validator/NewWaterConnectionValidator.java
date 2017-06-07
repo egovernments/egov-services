@@ -286,12 +286,14 @@ public class NewWaterConnectionValidator {
 	private boolean validateDonationAmount(WaterConnectionReq waterConnectionRequest){
 		List<Donation> donationList = donationService.getDonationList(prepareDonationGetRequest(waterConnectionRequest));
 		Iterator itr = donationList.iterator();
+		Donation donation = null;
 		while(itr.hasNext()){
-			Donation donation = (Donation) itr.next();
+			donation = (Donation) itr.next();
 			if(null == donation.getDonationAmount() || donation.getDonationAmount().isEmpty()){
 				return false;
 			}
 		}
+		waterConnectionRequest.getConnection().setDonationCharge(donation.getDonationAmount());
 		return true;
 		
 	}

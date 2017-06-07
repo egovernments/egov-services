@@ -52,7 +52,6 @@ import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.egov.wcms.web.contract.WaterConnectionRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +103,30 @@ public class WaterConnectionController {
         return getSuccessResponse(connection, waterConnectionRequest.getRequestInfo());
         
     }
+    
+    
+    @PostMapping(value = "/legacy/_create")
+    @ResponseBody
+    public ResponseEntity<?> legacyConnectionCreate(@RequestBody @Valid  final WaterConnectionReq legacyConnectionRequest,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
+            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Legacy WaterConnectionRequest::" + legacyConnectionRequest);
+        final List<ErrorResponse> errorResponses = newWaterConnectionValidator.validateWaterConnectionRequest(legacyConnectionRequest);
+        if (!errorResponses.isEmpty()){
+            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+        }
+        
+        //Call to service.
+        Connection connection = waterConnectionService.createWaterConnection(applicationProperties.getCreateLegacyConnectionTopicName(), 
+        		"legacyconnection-create", legacyConnectionRequest);           
+        return getSuccessResponse(connection, legacyConnectionRequest.getRequestInfo());
+        
+    }
+    
+    
     
     private ResponseEntity<?> getSuccessResponse(final Connection connection,
             final RequestInfo requestInfo) {

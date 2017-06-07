@@ -40,6 +40,7 @@
 
 package org.egov.wcms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.model.DocumentType;
@@ -109,6 +110,17 @@ public class DocumentTypeService {
     public List<DocumentType> getDocumentTypes(DocumentTypeGetReq documentTypeGetRequest) {
        return documentTypeRepository.findForCriteria(documentTypeGetRequest);
 
+   }
+    
+   public List<Long> getAllMandatoryDocs(String applicationType){
+	   List<Long> mandatoryDocs = new ArrayList<>();
+	   try{
+		   mandatoryDocs = documentTypeRepository.getMandatoryocs(applicationType);
+	   }catch(Exception e){
+		   logger.error("There are no mandatory docs for this application type", e.getMessage());
+		   return mandatoryDocs;
+	   }
+	   return mandatoryDocs;
    }
 
 }

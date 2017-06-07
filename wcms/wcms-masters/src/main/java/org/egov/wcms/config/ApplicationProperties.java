@@ -123,6 +123,12 @@ public class ApplicationProperties {
     // topic for water-transaction use case
     @Value("${kafka.topics.newconnection.create.name}")
     private String createNewConnectionTopicName;
+    
+    @Value("${kafka.topics.legacyconnection.create.name}")
+    private String createLegacyConnectionTopicName;
+    
+    
+    
 
     @Autowired
     private Environment environment;
@@ -229,5 +235,10 @@ public class ApplicationProperties {
     public String getCreateNewConnectionTopicName() {
         return createNewConnectionTopicName;
     }
+    
+    public String getCreateLegacyConnectionTopicName() {
+        return createLegacyConnectionTopicName;
+    }
+
 
 }

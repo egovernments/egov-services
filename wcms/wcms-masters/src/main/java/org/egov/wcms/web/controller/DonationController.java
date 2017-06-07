@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.wcms.web.controller;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,6 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.Donation;
-import org.egov.wcms.model.UsageType;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.validator.NewWaterConnectionValidator;
@@ -56,7 +56,6 @@ import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.DonationResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
-import org.egov.wcms.web.contract.UsageTypeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;

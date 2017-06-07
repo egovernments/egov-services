@@ -78,17 +78,19 @@ public class WaterConnectionService {
         	logger.error("Exception while stringifying water coonection object", e);
         }
         try {
+           
         	waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
         } catch (final Exception e) {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
             return waterConnectionRequest.getConnection();
         }
+
         return waterConnectionRequest.getConnection();
     }
     
     public Connection create(WaterConnectionReq waterConnectionRequest){
-    	logger.info("Service API entry for create New Connection");
+    	logger.info("Service API entry for create Connection");
     	try{
     	waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
     	}catch(Exception e){
@@ -96,5 +98,4 @@ public class WaterConnectionService {
     	}
     	return waterConnectionRequest.getConnection();
     }
-
 }

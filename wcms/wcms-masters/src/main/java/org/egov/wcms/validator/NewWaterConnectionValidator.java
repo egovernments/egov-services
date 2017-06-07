@@ -46,10 +46,10 @@ import java.util.List;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.model.DocumentOwner;
 import org.egov.wcms.model.Donation;
-import org.egov.wcms.model.Property;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
+import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
@@ -84,6 +84,9 @@ public class NewWaterConnectionValidator {
 	private DocumentTypeApplicationTypeService documentTypeApplicationTypeService;
 	
 	@Autowired
+	private DocumentTypeService documentTypeService;
+	
+	@Autowired
 	private PropertyTypePipeSizeTypeService propertyPipeSizeService;
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
@@ -104,13 +107,7 @@ public class NewWaterConnectionValidator {
     }
     
     public List<ErrorResponse> validateWaterConnectionRequest(final WaterConnectionReq waterConnectionRequest) {
-    	// As we are creating a stub of Property Tax Module, we are creating objects and 
-    	// filling data manually
-    	// These lines of code can be removed once PTax Module gets integrated
-    	waterConnectionRequest.getConnection().getProperty().setPropertyTypeId(1L);
-    	waterConnectionRequest.getConnection().getProperty().setUsageTypeId(1L);
-
-    	final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(waterConnectionRequest);
         errorResponse.setError(error);
@@ -144,14 +141,6 @@ public class NewWaterConnectionValidator {
                     .code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
                     .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getDocuments() == null || 
-        		waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.DOCUMENTS_INVALID_CODE)
-                    .message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         } else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == 0L) {
@@ -201,7 +190,21 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-       
+        
+        if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
+        if (waterConnectionRequest.getConnection().getDocuments() == null || 
+        		waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.DOCUMENTS_INVALID_CODE)
+                    .message(WcmsConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.DOCUMENTS_INVALID_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+        
+        }
+        }
+        
+        
         List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
 
@@ -236,6 +239,7 @@ public class NewWaterConnectionValidator {
             errorFields.add(errorField);
 		}
 		
+		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		isRequestValid = validateDocumentApplicationType(waterConnectionRequest);
 		if(!isRequestValid){
             final ErrorField errorField = ErrorField.builder()
@@ -245,6 +249,8 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
 		}
+		}
+		
 		
 		isRequestValid = validateStaticFields(waterConnectionRequest);
 		if(!isRequestValid){
@@ -284,6 +290,7 @@ public class NewWaterConnectionValidator {
 	
 	@SuppressWarnings("rawtypes")
 	private boolean validateDonationAmount(WaterConnectionReq waterConnectionRequest){
+		
 		List<Donation> donationList = donationService.getDonationList(prepareDonationGetRequest(waterConnectionRequest));
 		Iterator itr = donationList.iterator();
 		Donation donation = null;
@@ -302,6 +309,7 @@ public class NewWaterConnectionValidator {
 		LOGGER.info("Validating Property - Usage Mapping");
 		boolean result = false;
 
+		
 		PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
 		PropertyTypeUsageType propertyTypeUsageType = new PropertyTypeUsageType();
 		
@@ -314,9 +322,6 @@ public class NewWaterConnectionValidator {
 		try{
 			result = propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest);
 		}catch(Exception e){
-			LOGGER.info("Validating Property - Usage Mapping FAILED!");
-		}
-		if(!result){
 			LOGGER.info("Validating Property - Usage Mapping FAILED!");
 		}
 		
@@ -341,12 +346,17 @@ public class NewWaterConnectionValidator {
 		LOGGER.info("Validating Document - Application Mapping");
 		
 		boolean isDocumentValid = true;
+		List<Long> mandatoryDocs = documentTypeService.getAllMandatoryDocs("NEW CONNECTION");
+		if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null){
 		for(DocumentOwner documentOwner: waterConnectionRequest.getConnection().getDocuments()){
-			if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
-				LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
-				isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
-				return isDocumentValid;
-			}			
+			if(mandatoryDocs.contains(documentOwner.getDocument().getTypeId())){
+				if(documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()){
+					LOGGER.info("File Upload FAILED for the document: "+documentOwner.toString());
+					isDocumentValid = false; //This flow should get activated only when the document is mandatory, revisit the logic.
+					return isDocumentValid;
+				}	
+			}
+		}
 		}
 		return isDocumentValid;
 	}

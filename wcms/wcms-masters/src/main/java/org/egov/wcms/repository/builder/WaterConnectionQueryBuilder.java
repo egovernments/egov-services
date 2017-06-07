@@ -67,15 +67,11 @@ public class WaterConnectionQueryBuilder {
         		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
     }
     
-    
     public static String insertLegacyConnectionQuery() {
         return "INSERT INTO egwtr_waterconnection(tenantid, connectiontype, billingtype, categorytype, hscpipesizetype, supplytype, "
-        		+ "sourcetype, connectionstatus, sumpcapacity, numberoftaps, numberofpersons, acknowledgmentnumber, createdby, "
+        		+ "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
         		+ "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress,legacyconsumernumber,"
         		+ "donationcharge,consumernumber) values"
         		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
     }
-    
-    
-	
 }

@@ -70,6 +70,7 @@ public class WaterConnectionService {
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
         try {
+        	 waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
             logger.info("WaterConnectionService request::" + waterConnectionRequest);
             waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
             logger.info("waterConnectionValue::" + waterConnectionValue);
@@ -77,14 +78,14 @@ public class WaterConnectionService {
         	logger.error("Exception while stringifying water coonection object", e);
         }
         try {
+           
         	waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
         } catch (final Exception e) {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
             return waterConnectionRequest.getConnection();
         }
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
-        
+
         return waterConnectionRequest.getConnection();
     }
     

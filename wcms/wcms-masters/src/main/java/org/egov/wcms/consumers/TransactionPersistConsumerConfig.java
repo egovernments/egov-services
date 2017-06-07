@@ -108,10 +108,10 @@ public class TransactionPersistConsumerConfig {
         return propsMap;
     }
 
-    @Bean
+   /* @Bean
     public TransactionPersistConsumer listener() {
         return new TransactionPersistConsumer();
-    }
+    }*/
 
 }
 

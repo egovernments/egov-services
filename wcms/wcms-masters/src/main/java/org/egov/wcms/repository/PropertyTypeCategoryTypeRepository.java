@@ -60,7 +60,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PropertyTypeCategoryTypeRepository {
 	
-    public static final Logger LOGGER = LoggerFactory.getLogger(PropertyTypeCategoryType.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(PropertyTypeCategoryTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -164,24 +164,23 @@ public class PropertyTypeCategoryTypeRepository {
     public boolean checkIfMappingExists(String propertyType, String categoryType, String tenantId){
     	boolean isMappingPresent = false;
     	Long result = 0L;
-    	
+    	LOGGER.info("Incoming values - Property Type : "+propertyType+ "Category Type : "+ categoryType);
     	//hit property tax api to obtain property id for the given property name.
-    	long propertyId = 10;
-    	
+    	long propertyId = 1L;
     	long categoryId = jdbcTemplate.queryForObject(propertyCategoryueryBuilder.getCategoryId(), 
         		new Object[] {categoryType}, Long.class);
     	String query = propertyCategoryueryBuilder.getCheckQuery();
     	try{
     		result = jdbcTemplate.queryForObject(query, new Object[] {propertyId, categoryId, tenantId}, Long.class);
     	}catch(Exception e){
+    		LOGGER.error("Exception Encountered at Property Category Mapping : " + e.getMessage());
     		return isMappingPresent;
     	}
     	if(result <= 0){
+    		LOGGER.error("Property Category Mapping does not exist");
     		return isMappingPresent;
     	}
-    	
     	isMappingPresent = true;
-
     	return isMappingPresent;
     }
 

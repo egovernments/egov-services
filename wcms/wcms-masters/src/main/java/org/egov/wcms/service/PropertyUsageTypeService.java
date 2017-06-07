@@ -115,9 +115,9 @@ public class PropertyUsageTypeService {
         // Hit the Property Tax APIs to verify and get the IDs for the Code.
         // Once APIs are available, remove random number function.
         int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(randomNum);
+        propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(1L);
         randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        propUsageTypeRequest.getPropertyTypeUsageType().setUsageTypeId(randomNum);
+        propUsageTypeRequest.getPropertyTypeUsageType().setUsageTypeId(1L);
 
         return propUsageTypeRequest;
     }

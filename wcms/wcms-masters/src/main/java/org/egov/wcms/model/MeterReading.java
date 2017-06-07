@@ -25,9 +25,6 @@ public class MeterReading {
 	private long reading;
 	
 	@NotNull
-	private String meterSlNo;
-	
-	@NotNull
 	private AuditDetails auditDetails;
 	
 	@NotNull

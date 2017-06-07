@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.model.DocumentOwner;
+import org.egov.wcms.model.MeterReading;
 import org.egov.wcms.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -37,8 +38,13 @@ public class WaterConnectionRepository {
     	if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
     		
     		insertQuery = waterConnectionQueryBuilder.insertLegacyConnectionQuery();
+    	} else if(waterConnectionRequest.getConnection().getParentConnectionId() != 0){
+        	
+    		insertQuery = waterConnectionQueryBuilder.insertAdditionalConnectionQuery();
+    		
     	} else {
-        	insertQuery = waterConnectionQueryBuilder.insertConnectionQuery();
+    		
+    		insertQuery = waterConnectionQueryBuilder.insertConnectionQuery();
     	}
     	
     	 final String query= insertQuery;
@@ -73,13 +79,16 @@ public class WaterConnectionRepository {
                      statement.setString(20,"AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
                      statement.setString(21, waterConnectionRequest.getConnection().getDonationCharge());
                      
-					if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null){
+					if(waterConnectionRequest.getConnection().getLegacyConsumerNumber()!=null || waterConnectionRequest.getConnection().getParentConnectionId() != 0){
 			    	
 						statement.setString(22,waterConnectionRequest.getConnection().getLegacyConsumerNumber());
 						statement.setString(23,waterConnectionRequest.getConnection().getConsumerNumber());
-			    	}
+			    	} 
 			
-					
+					if(waterConnectionRequest.getConnection().getParentConnectionId() != 0){
+						
+						statement.setLong(24,waterConnectionRequest.getConnection().getParentConnectionId());
+					}
 					
 					//Please verify if there's proper validation on all these fields to avoid NPE.
 					
@@ -92,7 +101,7 @@ public class WaterConnectionRepository {
     		LOGGER.error("Inserting Connection Object failed!", e);
 		}
 
-    	if(connectionId > 0){
+    	if(connectionId > 0 && waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null ){
     	List<Object[]> values = new ArrayList<>();
     	for(DocumentOwner document: waterConnectionRequest.getConnection().getDocuments()){
     		Object[] obj = {document.getDocument().getId(),
@@ -103,13 +112,44 @@ public class WaterConnectionRepository {
     		
     		values.add(obj);
     	}
-    	String insertDocsQuery = waterConnectionQueryBuilder.insertDocumentQuery();
+    	String insertDocsQuery = WaterConnectionQueryBuilder.insertDocumentQuery();
     	try{
     		jdbcTemplate.batchUpdate(insertDocsQuery, values);
     	}catch(Exception e){
     		LOGGER.error("Inserting documents failed!", e);
     	}
+    } else if(connectionId > 0){
+    	
+    	String insertMeterQuery = waterConnectionQueryBuilder.insertMeterQuery();
+    	try{
+    	 Object[] obj = new Object[] {waterConnectionRequest.getConnection().getMeter().getMeterMake(),connectionId,waterConnectionRequest.getConnection().getTenantId(),
+    			 waterConnectionRequest.getRequestInfo().getUserInfo().getId(),new Date(new java.util.Date().getTime())};
+
+         jdbcTemplate.update(insertMeterQuery, obj);
+    	}catch(Exception e){
+     		LOGGER.error("Inserting Meter failed!", e);
+    	}
+    	String insertMeterReadingQuery = waterConnectionQueryBuilder.insertMeterReadingQuery();
+    	List<Object[]> values = new ArrayList<>();
+    	for(MeterReading meterReading: waterConnectionRequest.getConnection().getMeterReadings()){
+    	 
+    		Object[] obj = {connectionId,
+    				meterReading.getReading(),waterConnectionRequest.getConnection().getTenantId(),waterConnectionRequest.getRequestInfo().getUserInfo().getId(),
+    				meterReading.getAuditDetails().getCreatedDate(),waterConnectionRequest.getRequestInfo().getUserInfo().getId(),meterReading.getAuditDetails().getCreatedDate()};
+    		
+    		values.add(obj);
+    	}
+    	try{
+    		jdbcTemplate.batchUpdate(insertMeterReadingQuery, values);
+    	}catch(Exception e){
+    		LOGGER.error("Inserting documents failed!", e);
+    	}
+    	
     }
+    	
+    	
+    	
+    	
 	LOGGER.info("Insertion to document owner table left unattempted upon failure of connection object insertion.");
     return waterConnectionRequest;
     

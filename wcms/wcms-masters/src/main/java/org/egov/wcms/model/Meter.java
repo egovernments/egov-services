@@ -24,6 +24,9 @@ public class Meter {
 	private String meterCost;
 	
 	@NotNull
+	private String meterSlNo;
+	
+	@NotNull
 	private String meterReading;
 	
 	@NotNull

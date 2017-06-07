@@ -65,6 +65,9 @@ public class Connection {
 	private String bplCardHolderName;
 	
 	@NotNull
+	private long parentConnectionId;
+	
+	@NotNull
 	private List<DocumentOwner> documents;
 	
 	@NotNull
@@ -83,7 +86,7 @@ public class Connection {
 	private WorkOrder workOrder;
 	
 	@NotNull
-	private MeterReading meterReadings;
+	private List<MeterReading> meterReadings;
 	
 	@NotNull
 	private AuditDetails auditDetails;

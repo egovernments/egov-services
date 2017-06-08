@@ -48,13 +48,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DonationRowMapper implements RowMapper<Donation>  {
+public class DonationRowMapper implements RowMapper<Donation> {
 
     @Override
-    public Donation mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    public Donation mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        new SimpleDateFormat("dd/MM/yyyy");
 
-        Donation donation = new Donation();
+        final Donation donation = new Donation();
         donation.setPropertyTypeId(rs.getLong("property_type"));
         donation.setUsageTypeId(rs.getLong("usage_type"));
         donation.setCategoryTypeId(rs.getLong("category"));
@@ -66,6 +66,5 @@ public class DonationRowMapper implements RowMapper<Donation>  {
         donation.setDonationAmount(rs.getString("donation_amount"));
         return donation;
     }
-
 
 }

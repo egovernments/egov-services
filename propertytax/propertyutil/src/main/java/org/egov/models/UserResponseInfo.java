@@ -1,10 +1,6 @@
 package org.egov.models;
 
 import java.util.List;
-
-import org.egov.models.ResponseInfo;
-import org.egov.models.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

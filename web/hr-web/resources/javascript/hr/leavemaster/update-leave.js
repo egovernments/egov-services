@@ -162,16 +162,24 @@ class UpdateLeave extends React.Component {
                 if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
-                      var employeeid = getUrlVars()["id"];
+                      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;;
                       commonApiPost("hr-leave","eligibleleaves","_search",{
                         leaveType,tenantId,asOnDate,employeeid
                       }, function(err, res) {
-                        _this.setState({
-                          leaveSet:{
-                            ..._this.state.leaveSet,
-                            availableDays: res["EligibleLeave"][0].noOfDays
+                        if(res) {
+                          var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                          if(_day <=0 || _day ==""){
+                            return (showError("You Do not have leave for this leave type."));
                           }
-                        });
+                          else{
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : ""
+                              }
+                            });
+                          }
+                        }
                       });
                 }
               }, 200);
@@ -228,28 +236,29 @@ class UpdateLeave extends React.Component {
       var _this = this;
       if(pName=="leaveType" && _this.state.leaveSet.toDate){
 
-        try {
           var leaveType = e.target.value;
           var asOnDate = _this.state.leaveSet.toDate;
           var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
           commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}, function(err, res) {
             if(res) {
-                _this.setState({
+              var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                if(_day <=0 || _day ==""){
+                  return (showError("You Do not have leave for this Leave Type."));
+                }
+                else {
+                  _this.setState({
                   leaveSet:{
                     ..._this.state.leaveSet,
                     availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "",
                     [pName]:{
                         ..._this.state.leaveSet[pName],
                         [name]:e.target.value
-                    }
                   }
-                })
+                }
+                });
+              }
             }
           });
-        }
-        catch (e){
-          console.log(e);
-        }
 
       } else {
         this.setState({
@@ -290,7 +299,8 @@ handleProcess(e) {
 
             if (ID === "Submit") {
                 var employee;
-                var asOnDate = _this.state.leaveSet.toDate;
+                var today = new Date();
+                var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
                 var departmentId = _this.state.departmentId;
                 var leaveNumber = _this.state.leaveNumber;
                 var tempInfo = Object.assign({}, _this.state.leaveSet),

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.egov.lams.config.ApplicationProperties;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillRequest;
@@ -26,6 +27,9 @@ public class BillRepository {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	@Autowired 
+	ApplicationProperties applicationProperties;
 
 	public String createBillAndGetXml(List<BillInfo> billInfos, RequestInfo requestInfo) {
 
@@ -67,8 +71,8 @@ public class BillRepository {
 		return billResponse.getBillInfos().get(0);
 	}
 
-	public Map getPurpose() {
-		String url = propertiesManager.getPurposeHostName() + propertiesManager.getPurposeService();
+	public Map getPurpose(String tenantId) {
+		String url = applicationProperties.getHostNameForMonolith(tenantId) + propertiesManager.getPurposeService();
 		Map purpose = null;
 		try {
 			System.out.println("url>>>>>>>>>>" + url);

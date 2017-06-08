@@ -160,14 +160,20 @@ class ApplyLeave extends React.Component {
                       }, function(err, res) {
                         if(res) {
                           var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-                          if( _day <=0 || _day ==""){
-                            return (showError("You Do not have leave for this leave type."));
+                          if( _day <=0 || _day =="") {
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: ""
+                              }
+                            });
+                            return (showError("You do not have leave for this leave type."));
                           }
                           else{
                             _this.setState({
                               leaveSet:{
                                 ..._this.state.leaveSet,
-                                availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : ""
+                                availableDays: res["EligibleLeave"][0].noOfDays
                               }
                             });
                           }
@@ -250,13 +256,23 @@ class ApplyLeave extends React.Component {
         if(res) {
           var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
               if( _day <=0 || _day ==""){
-                  return (showError("You Do not have leave for this leave type."));
+                _this.setState({
+                  leaveSet:{
+                    ..._this.state.leaveSet,
+                    availableDays:  "",
+                    [pName]:{
+                        ..._this.state.leaveSet[pName],
+                        [name]:""
+                  }
+                }
+              });
+                  return (showError("You do not have leave for this leave type."));
               }
               else {
                 _this.setState({
                   leaveSet:{
                     ..._this.state.leaveSet,
-                    availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "",
+                    availableDays: res["EligibleLeave"][0].noOfDays,
                     [pName]:{
                         ..._this.state.leaveSet[pName],
                         [name]:val
@@ -306,7 +322,11 @@ isFourthSat (d) {
 
 addOrUpdate(e, mode) {
         e.preventDefault();
-        console.log(this.state.leaveNumber);
+        var _this = this;
+
+        if(_this.state.availableDays<=0){
+          return (showError("You do not have leave for this leave type."));
+        }
         var employee;
         var today = new Date();
         var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();

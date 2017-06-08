@@ -123,6 +123,61 @@ class Revaluation extends React.Component {
             })
           }
         })
+      } else if(name == "revaluationAmount" || name == "typeOfChange" && this.assetSet.grossValue) {
+        switch(name) {
+          case 'revaluationAmount':
+            if(this.state.typeOfChange) {
+              switch (this.state.typeOfChange) {
+                case 'INCREASE':
+                  setTimeout(function() {
+                    _this.setState({
+                      revaluationSet: {
+                        ..._this.state.revaluationSet,
+                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) + Number(e.target.value)
+                      }
+                    })
+                  }, 200);
+                  break;
+                case 'DECREASE':
+                  setTimeout(function() {
+                    _this.setState({
+                      revaluationSet: {
+                        ..._this.state.revaluationSet,
+                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) - Number(e.target.value)
+                      }
+                    });
+                  }, 200);
+                  break;
+              }
+            }
+            break;
+          case 'typeOfChange':
+            if(this.state.revaluationAmount) {
+              switch (this.state.typeOfChange) {
+                case 'INCREASE':
+                  setTimeout(function() {
+                    _this.setState({
+                      revaluationSet: {
+                        ..._this.state.revaluationSet,
+                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) + Number(e.target.value)
+                      }
+                    })
+                  }, 200);
+                  break;
+                case 'DECREASE':
+                  setTimeout(function() {
+                    _this.setState({
+                      revaluationSet: {
+                        ..._this.state.revaluationSet,
+                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) - Number(e.target.value)
+                      }
+                    });
+                  }, 200);
+                  break;
+              }
+            }
+            break;
+        }
       }
 
       this.setState({
@@ -273,6 +328,8 @@ class Revaluation extends React.Component {
                             <div>
                               <select value={revaluationSet.typeOfChange} onChange={(e) => handleChange(e, "typeOfChange")}>
                                 <option value="">Select Type Of Change</option>
+                                <option value="INCREASE">Increase</option>
+                                <option value="DECREASE">Decrease</option>
                               </select>
                             </div>
                           </div>

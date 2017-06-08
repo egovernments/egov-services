@@ -23,7 +23,6 @@ class SearchAsset extends React.Component {
               [name]:e.target.value
           }
       })
-
   }
 
   setInitialState(initState) {
@@ -106,7 +105,9 @@ class SearchAsset extends React.Component {
       open(location, '_self').close();
   }
 
-  handleClick(type, id) {
+  handleClick(type, id, status) {
+    if(type == "sale" && status != "CAPITALIZED")
+      return showError("Asset sale/disposal is only possible for assets with status as 'Capitalized'");
     window.open(`app/asset/create-asset.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
@@ -174,7 +175,7 @@ class SearchAsset extends React.Component {
       if (list.length>0) {
         return list.map((item,index)=>
         {
-              return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
+              return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id, item.status)}}>
                         <td>{index+1}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>

@@ -595,3 +595,11 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 input:invalid {
     box-shadow: none !important;
 }
+
+div#agreementTable_filter input {
+    border: solid 1px #ddd;
+}
+
+div#relatedTable_filter input {
+	border: solid 1px #ddd;
+}

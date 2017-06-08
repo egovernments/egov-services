@@ -5,6 +5,7 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Upload from 'material-ui-upload/Upload';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -59,7 +60,13 @@ const styles = {
  },
  iconFont: {
    fontSize:17
- }
+ },
+ radioButton: {
+    marginBottom: 16,
+  },
+actionWidth: {
+  width:160
+}
 };
 
 //Create Class for Create and update property
@@ -86,7 +93,7 @@ class CruProperty extends Component {
   }
 
   onFileLoad = (e) => console.log(e.target.result)
-  
+
   componentWillUpdate() {
 
   }
@@ -232,6 +239,74 @@ class CruProperty extends Component {
         />
     </Col>
 
+    <Col xs={12} md={6}>
+      <br/><br/>
+      <RadioButtonGroup name="ownerDetails" defaultSelected="not_light">
+       <RadioButton
+          value={cruProperty.ownerDetail ? cruProperty.ownerDetail.primaryOwner:"primaryOwner"}
+          onChange={(e, v) =>{
+            var e = {
+              target: {
+                value: v
+              }
+            }
+               handleChangeNextOne(e,"ownerDetail", "primaryOwner", true,'')
+          }}
+         label="Primary owner"
+         style={styles.radioButton}
+       />
+       <RadioButton
+          value={cruProperty.ownerDetail ? cruProperty.ownerDetail.secondaryOwner:"secondaryOwner"}
+          onChange={(e, v) =>{
+            var e = {
+              target: {
+                value: v
+              }
+            }
+               handleChangeNextOne(e,"ownerDetail", "secondaryOwner", true,'')
+          }}
+         label="Secondary owner"
+         style={styles.radioButton}
+       />
+     </RadioButtonGroup>
+    </Col>
+
+    <Col xs={12} md={6}>
+        <SelectField
+            floatingLabelText="Owner type"
+            errorText={fieldErrors.ownerDetail ? fieldErrors.ownerDetail.ownerType: ""}
+            value={cruProperty.ownerDetail ? cruProperty.ownerDetail.ownerType:""}
+            onChange={(event, index, value) => {
+                var e = {
+                  target: {
+                    value: value
+                  }
+                };
+                handleChangeNextOne(e, "ownerDetail" ,"ownerType", false, "")}
+            }
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+        >
+            <MenuItem value={1} primaryText="Ex-Service man"/>
+            <MenuItem value={2} primaryText="Freedom Fighter"/>
+            <MenuItem value={3} primaryText="Freedom figher's wife"/>
+        </SelectField>
+    </Col>
+
+    <Col xs={12} md={6}>
+        <TextField
+            hintText="eg- 100"
+            floatingLabelText="Percentage of Ownership"
+            errorText={fieldErrors.ownerDetail ? fieldErrors.ownerDetail.percentageOwnership: ""}
+            value={cruProperty.ownerDetail ? cruProperty.ownerDetail.percentageOwnership:""}
+            onChange={(e) => handleChangeNextOne(e,"ownerDetail", "percentageOwnership", false, /^\d{3}$/g)}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+    </Col>
+
     <Col xs={12}>
     <br/>
     { (editIndex == -1) &&
@@ -255,7 +330,7 @@ class CruProperty extends Component {
     </Row>)
 
 
-    const addFloor = () => (
+    const floorForm = () => (
       <Row>
       <Col xs={12} md={6}>
           <SelectField
@@ -280,42 +355,104 @@ class CruProperty extends Component {
           </SelectField>
       </Col>
       <Col xs={12} md={6}>
+          <TextField
+            floatingLabelText="Unit Number"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.unitNumber : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.unitNumber : ""}
+            onChange={(e) => {handleChangeNextOne(e,"floorDetail" ,"unitNumber", true, /^\d{3}$/g)}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
+      <div className="clearfix"></div>
+      <Col xs={12} md={6}>
           <SelectField
-            floatingLabelText="Classification of Building"
-            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.classifOfBuilding : ""}
-            value={cruProperty.floorDetail ? cruProperty.floorDetail.classifOfBuilding : ""}
+            floatingLabelText="Room Type"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.roomType : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.roomType : ""}
             onChange={(event, index, value) => {
                 var e = {
                   target: {
                     value: value
                   }
                 };
-                handleChangeNextOne(e,"floorDetail" ,"classifOfBuilding", true, "")}
+                handleChangeNextOne(e,"floorDetail" ,"roomType", true, "")}
+            }
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          >
+                <MenuItem value={1} primaryText="Options" />
+          </SelectField>
+      </Col>
+      <Col xs={12} md={6}>
+          <SelectField
+            floatingLabelText="Construction type"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.constructionType : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.constructionType : ""}
+            onChange={(event, index, value) => {
+                var e = {
+                  target: {
+                    value: value
+                  }
+                };
+                handleChangeNextOne(e,"floorDetail" ,"constructionType", true, "")}
             }
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
           >
                 <MenuItem value={1} primaryText="Country Tiles" />
-                <MenuItem value={2} primaryText="Huts" />
-                <MenuItem value={3} primaryText="Madras Terras" />
-                <MenuItem value={4} primaryText="Mangalore Tiles" />
-                <MenuItem value={5} primaryText="R C C Ordinary Building" />
-                <MenuItem value={6} primaryText="R C C Posh Building" />
+                <MenuItem value={1} primaryText="Huts" />
+                <MenuItem value={1} primaryText="Madras Terras" />
+                <MenuItem value={1} primaryText="Mangalore Tiles" />
+                <MenuItem value={1} primaryText="R C C Ordinary Building" />
+                <MenuItem value={1} primaryText="R C C Posh Building" />
           </SelectField>
       </Col>
       <Col xs={12} md={6}>
           <SelectField
-            floatingLabelText="Nature of Usage"
-            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.natureOfUsage : ""}
-            value={cruProperty.floorDetail ? cruProperty.floorDetail.natureOfUsage : ""}
+            floatingLabelText="Usage type"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.usageType : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.usageType : ""}
             onChange={(event, index, value) => {
                 var e = {
                   target: {
                     value: value
                   }
                 };
-                handleChangeNextOne(e,"floorDetail" ,"natureOfUsage", true, "")}
+                handleChangeNextOne(e,"floorDetail" ,"usageType", true, "")}
+            }
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          >
+                <MenuItem value={1} primaryText="Residential" />
+                <MenuItem value={1} primaryText="Non-Residential" />
+                <MenuItem value={1} primaryText="Residential Slum" />
+                <MenuItem value={1} primaryText="Non-Residential Slum" />
+                <MenuItem value={1} primaryText="Mixed" />
+                <MenuItem value={1} primaryText="Religious" />
+                <MenuItem value={1} primaryText="Residential Open Land" />
+                <MenuItem value={1} primaryText="Non-Residential Open Land" />
+                <MenuItem value={1} primaryText="Industrial" />
+                <MenuItem value={1} primaryText="Others" />
+
+          </SelectField>
+      </Col>
+      <Col xs={12} md={6}>
+          <SelectField
+            floatingLabelText="Usage sub type"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.usageSubType : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.usageSubType : ""}
+            onChange={(event, index, value) => {
+                var e = {
+                  target: {
+                    value: value
+                  }
+                };
+                handleChangeNextOne(e,"floorDetail" ,"usageSubType", true, "")}
             }
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -349,7 +486,6 @@ class CruProperty extends Component {
             underlineFocusStyle={styles.underlineFocusStyle}
           />
       </Col>
-      <div className="clearfix"></div>
       <Col xs={12} md={6}>
           <SelectField
             floatingLabelText="Occupancy"
@@ -371,6 +507,7 @@ class CruProperty extends Component {
                 <MenuItem value={2} primaryText="Tenant" />
           </SelectField>
       </Col>
+        <div className="clearfix"></div>
       <Col xs={12} md={6}>
           <TextField
             floatingLabelText="Occupant Name"
@@ -382,7 +519,28 @@ class CruProperty extends Component {
             underlineFocusStyle={styles.underlineFocusStyle}
           />
       </Col>
-      <div className="clearfix"></div>
+      <Col xs={12} md={6}>
+          <TextField
+            floatingLabelText="Annual Rent"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.annualRent : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.annualRent : ""}
+            onChange={(e) => {handleChangeNextOne(e,"floorDetail" , "annualRent", false, /^\d{9}$/g)}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
+      <Col xs={12} md={6}>
+          <TextField
+            floatingLabelText="Manual ARV"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.manualArv : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.manualArv : ""}
+            onChange={(e) => {handleChangeNextOne(e,"floorDetail" , "manualArv", false, /^\d{9}$/g)}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
       <Col xs={12} md={6}>
           <DatePicker
             floatingLabelText="Construction Date"
@@ -449,7 +607,6 @@ class CruProperty extends Component {
             underlineFocusStyle={styles.underlineFocusStyle}
           />
       </Col>
-      <div className="clearfix"></div>
       <Col xs={12} md={6}>
           <TextField
             floatingLabelText="Breadth"
@@ -467,6 +624,56 @@ class CruProperty extends Component {
             errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.plinthArea : ""}
             value={cruProperty.floorDetail ? cruProperty.floorDetail.plinthArea : ""}
             onChange={(e) => {handleChangeNextOne(e, "floorDetail","plinthArea", true, "")}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
+      <Col xs={12} md={6}>
+          <TextField
+            floatingLabelText="Occupancy Certificate Number"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.occupancyCertiNumber : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.occupancyCertiNumber : ""}
+            onChange={(e) => {handleChangeNextOne(e,"floorDetail" ,"occupancyCertiNumber", false, /^\d[a-zA-Z0-9]{9}$/g)}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
+      <Col xs={12} md={6}>
+          <TextField
+            floatingLabelText="Building Permission number"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.buildingPermissionNo : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.buildingPermissionNo : ""}
+            onChange={(e) => {handleChangeNextOne(e,"floorDetail" ,"buildingPermissionNo", false, /^\d[a-zA-Z0-9]{14}$/g)}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
+      <Col xs={12} md={6}>
+          <DatePicker
+            floatingLabelText="Building Permission Date"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.buildingPermissionDate : ""}
+            defaultDate={cruProperty.floorDetail ? new Date(cruProperty.floorDetail.buildingPermissionDate) : new Date()}
+            onChange={(event,date) => {
+                var e = {
+                  target:{
+                      value: date
+                  }
+                }
+                handleChangeNextOne(e,"floorDetail" ,"buildingPermissionDate", false, "")}}
+            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+            underlineStyle={styles.underlineStyle}
+            underlineFocusStyle={styles.underlineFocusStyle}
+          />
+      </Col>
+      <Col xs={12} md={6}>
+          <TextField
+            floatingLabelText="Plinth area in Building plan"
+            errorText={fieldErrors.floorDetail ? fieldErrors.floorDetail.plinthAreaBuildingPlan : ""}
+            value={cruProperty.floorDetail ? cruProperty.floorDetail.plinthAreaBuildingPlan : ""}
+            onChange={(e) => {handleChangeNextOne(e, "floorDetail","plinthAreaBuildingPlan", false,  /^\d{6}$/g)}}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
@@ -658,7 +865,10 @@ class CruProperty extends Component {
                                             <th>Email</th>
                                             <th>Gaurdian Relation</th>
                                             <th>Gaurdian</th>
-                                            <th>Action</th>
+                                            <th>Gaurdian</th>
+                                            <th>Owner Type</th>
+                                            <th>Percentage of Ownership</th>
+                                            <th  style={styles.actionWidth}>Action</th>
                                           </tr>
                                         </thead>
                                         <tbody>
@@ -674,7 +884,10 @@ class CruProperty extends Component {
                                                   <td>{i.email}</td>
                                                   <td>{i.gaurdianRelation}</td>
                                                   <td>{i.gaurdian}</td>
-                                                  <td>
+                                                  <td>{i.gaurdian}</td>
+                                                  <td>{i.ownerType}</td>
+                                                  <td>{i.percentageOwnership}</td>
+                                                  <td style={styles.actionWidth}>
                                                      <FloatingActionButton mini={true} style={styles.floatButtonMargin} onClick={ () => {
 
                                                        editObject("ownerDetail",i);
@@ -703,6 +916,30 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
+                    <CardHeader title={<strong style={{color: brown500}}>Header</strong>} />
+                    <CardText>
+                      <Card>
+                          <CardText>
+                              <Grid>
+                                  <Row>
+                                    <Col xs={12} md={6}>
+                                        <TextField
+                                            floatingLabelText="Reference property number"
+                                            errorText={fieldErrors.doorNo ? fieldErrors.refPropertyNumber : ""}
+                                            value={cruProperty.doorNo ? cruProperty.refPropertyNumber : ""}
+                                            onChange={(e) => handleChange(e, "refPropertyNumber", false, /^\d{15}$/g)}
+                                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                            underlineStyle={styles.underlineStyle}
+                                            underlineFocusStyle={styles.underlineFocusStyle}
+                                        />
+                                    </Col>
+                                  </Row>
+                              </Grid>
+                          </CardText>
+                      </Card>
+                    </CardText>
+                  </Card>
+                  <Card>
                       <CardHeader title={<strong style={{color: brown500}}>Property Address</strong>} />
                       <CardText>
                           <Card>
@@ -721,6 +958,30 @@ class CruProperty extends Component {
                                                         }
                                                       };
                                                       handleChange(e, "locality", true, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              >
+                                                      <MenuItem value={1} primaryText="Never"/>
+                                                      <MenuItem value={2} primaryText="Every Night"/>
+                                                      <MenuItem value={3} primaryText="Weeknights"/>
+                                                      <MenuItem value={4} primaryText="Weekends"/>
+                                                      <MenuItem value={5} primaryText="Weekly"/>
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={6}>
+                                              <SelectField
+                                                  floatingLabelText="Appartment/Complex name"
+                                                  errorText={fieldErrors.locality ? fieldErrors.appComplexName: ""}
+                                                  value={cruProperty.locality ? cruProperty.appComplexName:""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "appComplexName", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -831,6 +1092,30 @@ class CruProperty extends Component {
                                           </Col>
                                           <Col xs={12} md={6}>
                                               <SelectField
+                                                  floatingLabelText="Revenue circle"
+                                                  errorText={fieldErrors.revenueCircle ? fieldErrors.revenueCircle : ""}
+                                                  value={cruProperty.revenueCircle ? cruProperty.revenueCircle : ""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "revenueCircle", false, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              >
+                                                    <MenuItem value={1} primaryText="Never"/>
+                                                    <MenuItem value={2} primaryText="Every Night"/>
+                                                    <MenuItem value={3} primaryText="Weeknights"/>
+                                                    <MenuItem value={4} primaryText="Weekends"/>
+                                                    <MenuItem value={5} primaryText="Weekly"/>
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={6}>
+                                              <SelectField
                                                   floatingLabelText="Election ward"
                                                   errorText={fieldErrors.electionCard ? fieldErrors.electionCard : ""}
                                                   value={cruProperty.electionCard ? cruProperty.electionCard : ""}
@@ -891,10 +1176,10 @@ class CruProperty extends Component {
                                             <div className="addMoreAddress">
                                                 <Col xs={12} md={6}>
                                                     <TextField
-                                                        floatingLabelText="Address 1"
-                                                        errorText={fieldErrors.addressOne ? fieldErrors.addressOne : ""}
-                                                        value={cruProperty.addressOne ? cruProperty.addressOne : ""}
-                                                        onChange={(e) => handleChange(e, "addressOne", true, '')}
+                                                        floatingLabelText="Door No."
+                                                        errorText={fieldErrors.cDoorno ? fieldErrors.cDoorno : ""}
+                                                        value={cruProperty.cDoorno ? cruProperty.cDoorno : ""}
+                                                        onChange={(e) => handleChange(e, "cDoorno", true, '')}
                                                         multiLine={true}
                                                          rows={2}
                                                          rowsMax={4}
@@ -930,74 +1215,6 @@ class CruProperty extends Component {
                                                 </Col>
                                             </div>
                                           }
-                                      </Row>
-                                  </Grid>
-                              </CardText>
-                          </Card>
-                      </CardText>
-                  </Card>
-                  <Card>
-                      <CardHeader title={<strong style={{color:brown500}}>Assessment details</strong>} />
-                      <CardText>
-                          <Card>
-                              <CardText>
-                                  <Grid>
-                                      <Row>
-                                          <Col xs={12} md={6}>
-                                              <SelectField
-                                                  floatingLabelText="Reason for Creation"
-                                                  errorText={fieldErrors.reasonForCreation ? fieldErrors.reasonForCreation : ""}
-                                                  value={cruProperty.reasonForCreation ? cruProperty.reasonForCreation : ""}
-                                                  onChange={(event, index, value) => {
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
-                                                      handleChange(e, "reasonForCreation", true, "")}
-                                                  }
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                              >
-                                                  <MenuItem value={1} primaryText="New Property"/>
-                                                  <MenuItem value={2} primaryText="Bifurcation"/>
-                                              </SelectField>
-                                          </Col>
-                                          <Col xs={12} md={6}>
-                                              <TextField
-                                                  floatingLabelText="Parent UPIC No."
-                                                  errorText={fieldErrors.parentUpicNo ? fieldErrors.parentUpicNo : ""}
-                                                  value={cruProperty.parentUpicNo ? cruProperty.parentUpicNo : ""}
-                                                  onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                              />
-                                          </Col>
-                                          <div className="clearfix"></div>
-                                          <Col xs={12} md={6}>
-                                              <TextField
-                                                  floatingLabelText="Extent of Site (Sq. Mtrs)"
-                                                  errorText={fieldErrors.extentOfSite ? fieldErrors.extentOfSite : ""}
-                                                  value={cruProperty.extentOfSite ? cruProperty.extentOfSite : ""}
-                                                  onChange={(e) => {handleChange(e, "extentOfSite", true, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                              />
-                                          </Col>
-                                          <Col xs={12} md={6}>
-                                              <TextField
-                                                  floatingLabelText="Occupancy Certificate Number"
-                                                  errorText={fieldErrors.occupCertiNo ? fieldErrors.occupCertiNo : ""}
-                                                  value={cruProperty.occupCertiNo ? cruProperty.occupCertiNo : ""}
-                                                  onChange={(e) => {handleChange(e, "occupCertiNo", false, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                              />
-                                          </Col>
                                       </Row>
                                   </Grid>
                               </CardText>
@@ -1116,6 +1333,127 @@ class CruProperty extends Component {
                                                 }}
                                               />
                                           </Col>
+                                      </Row>
+                                  </Grid>
+                              </CardText>
+                          </Card>
+                      </CardText>
+                  </Card>
+                  <Card>
+                      <CardHeader title={<strong style={{color:brown500}}>Assessment details</strong>} />
+                      <CardText>
+                          <Card>
+                              <CardText>
+                                  <Grid>
+                                      <Row>
+                                          <Col xs={12} md={6}>
+                                              <SelectField
+                                                  floatingLabelText="Reason for Creation"
+                                                  errorText={fieldErrors.reasonForCreation ? fieldErrors.reasonForCreation : ""}
+                                                  value={cruProperty.reasonForCreation ? cruProperty.reasonForCreation : ""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "reasonForCreation", true, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              >
+                                                  <MenuItem value={1} primaryText="New Property"/>
+                                                  <MenuItem value={2} primaryText="Bifurcation"/>
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={6}>
+                                              <TextField
+                                                  floatingLabelText="Parent UPIC No."
+                                                  errorText={fieldErrors.parentUpicNo ? fieldErrors.parentUpicNo : ""}
+                                                  value={cruProperty.parentUpicNo ? cruProperty.parentUpicNo : ""}
+                                                  onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              />
+                                          </Col>
+                                          <div className="clearfix"></div>
+                                          <Col xs={12} md={6}>
+                                              <SelectField
+                                                  floatingLabelText="Property Type"
+                                                  errorText={fieldErrors.assessmentPropertyType ? fieldErrors.assessmentPropertyType : ""}
+                                                  value={cruProperty.assessmentPropertyType ? cruProperty.assessmentPropertyType : ""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "assessmentPropertyType", true, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              >
+                                                  <MenuItem value={1} primaryText="Building"/>
+                                                  <MenuItem value={2} primaryText="Open Land"/>
+                                                  <MenuItem value={2} primaryText="Religious"/>
+                                                  <MenuItem value={2} primaryText="Others"/>
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={6}>
+                                              <SelectField
+                                                  floatingLabelText="Property Sub-type"
+                                                  errorText={fieldErrors.assessmentPropertySubType ? fieldErrors.assessmentPropertySubType : ""}
+                                                  value={cruProperty.assessmentPropertySubType ? cruProperty.assessmentPropertySubType : ""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "assessmentPropertySubType", true, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              >
+                                                  <MenuItem value={1} primaryText="Options"/>
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={6}>
+                                              <SelectField
+                                                  floatingLabelText="assessmentDepartment"
+                                                  errorText={fieldErrors.assessmentDepartment ? fieldErrors.assessmentDepartment : ""}
+                                                  value={cruProperty.assessmentDepartment ? cruProperty.assessmentDepartment : ""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "assessmentDepartment", false, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              >
+                                                  <MenuItem value={1} primaryText="Options"/>
+                                              </SelectField>
+                                          </Col>
+                                          <Col xs={12} md={6}>
+                                              <TextField
+                                                  floatingLabelText="Extent of Site (Sq. Mtrs)"
+                                                  errorText={fieldErrors.extentOfSite ? fieldErrors.extentOfSite : ""}
+                                                  value={cruProperty.extentOfSite ? cruProperty.extentOfSite : ""}
+                                                  onChange={(e) => {handleChange(e, "extentOfSite", true, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                              />
+                                          </Col>
+
                                       </Row>
                                   </Grid>
                               </CardText>
@@ -1246,17 +1584,26 @@ class CruProperty extends Component {
                                             <tr>
                                               <th>#</th>
                                               <th>Floor Number</th>
-                                              <th>Classification of Building</th>
-                                              <th>Nature of Usage</th>
+                                              <th>Unit Number</th>
+                                              <th>Room Type</th>
+                                              <th>Construction Type</th>
+                                              <th>Usage Type</th>
+                                              <th>Usage Sub Type</th>
                                               <th>Firm Name</th>
                                               <th>Occupancy</th>
                                               <th>Occupant Name</th>
+                                              <th>Annual Rent</th>
+                                              <th>Manual ARV</th>
                                               <th>Construction Date</th>
                                               <th>Effective From Date</th>
                                               <th>Unstructured land</th>
                                               <th>Length</th>
                                               <th>Breadth</th>
                                               <th>Plinth Area</th>
+                                              <th>Occupancy Certificate Number</th>
+                                              <th>Building Permission Number</th>
+                                              <th>Building Permission Date</th>
+                                              <th>Plinth Area In Building Plan</th>
                                               <th>Action</th>
                                             </tr>
                                           </thead>
@@ -1265,17 +1612,26 @@ class CruProperty extends Component {
                                               return (<tr key={index}>
                                                   <td>{index}</td>
                                                   <td>{i.floorNo}</td>
-                                                  <td>{i.classifOfBuilding}</td>
-                                                  <td>{i.natureOfUsage}</td>
+                                                  <td>{i.unitNumber}</td>
+                                                  <td>{i.roomType}</td>
+                                                  <td>{i.constructionType}</td>
+                                                  <td>{i.usageType}</td>
+                                                  <td>{i.usageSubType}</td>
                                                   <td>{i.firmName}</td>
                                                   <td>{i.occupancy}</td>
                                                   <td>{i.occupantName}</td>
+                                                  <td>{i.annualRent}</td>
+                                                  <td>{i.manualArv}</td>
                                                   <td>{i.constructionDate}</td>
                                                   <td>{i.effectiveDate}</td>
                                                   <td>{i.unstructuredLand}</td>
                                                   <td>{i.length}</td>
                                                   <td>{i.breadth}</td>
                                                   <td>{i.plinthArea}</td>
+                                                  <td>{i.occupancyCertiNumber}</td>
+                                                  <td>{i.buildingPermissionNo}</td>
+                                                  <td>{i.buildingPermissionDate}</td>
+                                                  <td>{i.plinthAreaBuildingPlan}</td>
                                                   <td>
                                                     <FloatingActionButton mini={true} style={styles.floatButtonMargin} onClick={ () => {
                                                       editObject("floorDetail",i);
@@ -1293,7 +1649,7 @@ class CruProperty extends Component {
                                           </Table>
                                       </Col>
                                       </Row>
-                                      {this.state.addFloor &&addFloor()}
+                                      {this.state.addFloor && floorForm()}
                                   </Grid>
                               </CardText>
                           </Card>

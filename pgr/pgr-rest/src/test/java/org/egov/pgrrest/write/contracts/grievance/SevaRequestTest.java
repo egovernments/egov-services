@@ -76,7 +76,7 @@ public class SevaRequestTest {
         final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
         assertNotNull(serviceRequestRecord);
-        assertNull(serviceRequestRecord.getComplainantUserId());
+        assertNull(serviceRequestRecord.getLoggedInRequesterUserId());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class SevaRequestTest {
         final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
         assertNotNull(serviceRequestRecord);
-        assertNull(serviceRequestRecord.getComplainantUserId());
+        assertNull(serviceRequestRecord.getLoggedInRequesterUserId());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class SevaRequestTest {
         final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
         assertNotNull(serviceRequestRecord);
-        assertEquals(Long.valueOf(4), serviceRequestRecord.getComplainantUserId());
+        assertEquals(Long.valueOf(4), serviceRequestRecord.getLoggedInRequesterUserId());
     }
 
 }

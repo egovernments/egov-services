@@ -3,7 +3,9 @@ package org.egov.egf.persistence.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,6 +25,7 @@ import org.egov.egf.persistence.specification.ChartOfAccountSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -91,7 +94,7 @@ public class ChartOfAccountService {
 	@Transactional
 	public ChartOfAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountContractRequest chartOfAccountContractRequest = ObjectMapperFactory.create().convertValue(
-				financialContractRequestMap.get("ChartOfAccountCreate"), ChartOfAccountContractRequest.class);
+				financialContractRequestMap.get("ChartOfAccountUpdateAll"), ChartOfAccountContractRequest.class);
 		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
 		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
 		ModelMapper modelMapper = new ModelMapper();
@@ -166,34 +169,34 @@ public class ChartOfAccountService {
 	}
 
 	public Page<ChartOfAccount> search(final ChartOfAccountContractRequest chartOfAccountContractRequest) {
-		// ChartOfAccountContract chartOfAccountContract =
-		// chartOfAccountContractRequest.getChartOfAccount();
-		//
-		// List<ChartOfAccount> chartOfAccounts = new
-		// ArrayList<ChartOfAccount>();
-		// final StringBuilder queryStr = new StringBuilder();
-		//
-		// queryStr.append("select coa.glcode,coa.parentid,coa.tenantid from
-		// egf_chartofaccount as coa where coa.tenantid =: tenantId and
-		// coa.parentid.tenantid =: tenantId");
-		//
-		// if(chartOfAccountContract.getGlcode() != null)
-		// queryStr.append("and coa.purposeId.id =: glcode and
-		// coa.purposeId.tenantid =: tenantId");
-		//
-		// final Query query = entityManager.createQuery(queryStr.toString());
-		// query.setParameter("tenantId", chartOfAccountContract.getTenantId());
-		//
-		// if(chartOfAccountContract.getGlcode() != null)
-		// query.setParameter("glcode", chartOfAccountContract.getGlcode());
-		//
-		// chartOfAccounts = query.getResultList();
 
 		final ChartOfAccountSpecification specification = new ChartOfAccountSpecification(
 				chartOfAccountContractRequest.getChartOfAccount());
 		final Pageable page = new PageRequest(chartOfAccountContractRequest.getPage().getOffSet(),
 				chartOfAccountContractRequest.getPage().getPageSize());
-		return chartOfAccountJpaRepository.findAll(specification, page);
+		Set<ChartOfAccount> chartOfAccountSet = new HashSet<ChartOfAccount>();
+		Page<ChartOfAccount> chartOfAccounts = chartOfAccountJpaRepository.findAll(specification, page);
+		if (chartOfAccountContractRequest.getChartOfAccount() != null
+				&& chartOfAccountContractRequest.getChartOfAccount().getAccountCodePurpose() != null
+				&& chartOfAccountContractRequest.getChartOfAccount().getAccountCodePurpose().getId() != null) {
+			for (ChartOfAccount coa : chartOfAccounts) {
+				chartOfAccountSet.add(coa);
+				chartOfAccountContractRequest.setChartOfAccount(new ChartOfAccountContract());
+				chartOfAccountContractRequest.getChartOfAccount().setGlcode(coa.getGlcode() + "%");
+				final ChartOfAccountSpecification specification1 = new ChartOfAccountSpecification(
+						chartOfAccountContractRequest.getChartOfAccount());
+				final Pageable page1 = new PageRequest(chartOfAccountContractRequest.getPage().getOffSet(),
+						chartOfAccountContractRequest.getPage().getPageSize());
+				for (ChartOfAccount temp : chartOfAccountJpaRepository.findAll(specification1, page1)) {
+					chartOfAccountSet.add(temp);
+				}
+			}
+
+		}
+		if (chartOfAccountSet.isEmpty())
+			return chartOfAccounts;
+		else
+			return new PageImpl<ChartOfAccount>(new ArrayList(chartOfAccountSet));
 	}
 
 	public BindingResult validate(final ChartOfAccountContractRequest chartOfAccountContractRequest,
@@ -237,7 +240,7 @@ public class ChartOfAccountService {
 		final ModelMapper model = new ModelMapper();
 		for (final ChartOfAccountContract chartOfAccount : chartOfAccountContractRequest.getChartOfAccounts()) {
 			if (chartOfAccount.getAccountCodePurpose() != null) {
-				final AccountCodePurpose accountCodePurpose = null;//accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
+				final AccountCodePurpose accountCodePurpose = null;// accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
 				if (accountCodePurpose == null)
 					throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
 							" Invalid accountCodePurpose");
@@ -252,7 +255,7 @@ public class ChartOfAccountService {
 		}
 		final ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
 		if (chartOfAccount.getAccountCodePurpose() != null) {
-			final AccountCodePurpose accountCodePurpose = null;//accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
+			final AccountCodePurpose accountCodePurpose = null;// accountCodePurposeService.findOne(chartOfAccount.getAccountCodePurpose().getId());
 			if (accountCodePurpose == null)
 				throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
 						" Invalid accountCodePurpose");

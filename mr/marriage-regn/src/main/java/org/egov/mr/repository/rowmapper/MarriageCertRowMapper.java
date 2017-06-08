@@ -12,7 +12,7 @@ import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.enums.CertificateType;
-import org.egov.mr.model.enums.RegnStatus;
+import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.Source;
 import org.egov.mr.model.enums.Venue;
 import org.springframework.dao.DataAccessException;

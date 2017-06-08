@@ -39,25 +39,18 @@
  */
 package org.egov.egf.persistence.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.egov.egf.persistence.queue.contract.BankContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -67,11 +60,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"bankBranches" },callSuper=false)
 @Table(name = "egf_bank")
 @SequenceGenerator(name = Bank.SEQ_BANK, sequenceName = Bank.SEQ_BANK, allocationSize = 1)
 
-public class  Bank extends AbstractAuditable {
+public class Bank extends AbstractAuditable {
 
 	private static final long serialVersionUID = -2839424467289504649L;
 
@@ -82,11 +74,11 @@ public class  Bank extends AbstractAuditable {
 	private Long id;
 
 	@NotNull
-	@Length(max = 50,min=1)
+	@Length(max = 50, min = 1)
 	private String code;
 
 	@NotNull
-	@Length(max = 100,min=2)
+	@Length(max = 100, min = 2)
 	private String name;
 
 	@Length(max = 250)
@@ -94,47 +86,22 @@ public class  Bank extends AbstractAuditable {
 
 	@NotNull
 	private Boolean active;
-// is this required?
+	// is this required?
 	@Length(max = 50)
 	private String type;
-
-	@Fetch(FetchMode.SELECT)
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bank", targetEntity = BankBranch.class)
-	private Set<BankBranch> bankBranches = new HashSet<>(0);
 
 	@Override
 	public Long getId() {
 		return id;
 	}
 
-	 
-	 
-	
-	/*public void map(BankContract bank)
-	{
-		if(bank!=null)
-		{
-		if(bank.getActive()!=null)
-		this.setActive(bank.getActive());
-		if(bank.getName()!=null)
-		this.setName(bank.getName());
-		if(bank.getCode()!=null)
-		this.setCode(bank.getCode());
-		if(bank.getDescription()!=null)
-		this.setDescription(bank.getDescription());
-		
-		}
-	 
-		
+	public Bank(BankContract contract) {
+		this.setId(contract.getId());
+		this.setCode(contract.getCode());
+		this.setName(contract.getName());
+		this.setType(contract.getType());
+		this.setActive(contract.getActive());
+		this.setDescription(contract.getDescription());
 	}
 
-	public BankContract mapContract(BankContract bank) {
-		 bank.setId(id);
-		 bank.setCode(code);
-		 bank.setName(name);
-		 bank.setActive(active);
-		 bank.setDescription(description);
-		return bank;
-	}*/
-	 
 }

@@ -82,14 +82,30 @@ public class DemandService {
 
 	public EgDemand updateDemand(Demand demand) throws Exception {
 		EgDemand egDemand = demandRepository.findOne(demand.getId());
+		EgDemandDetails egDemandDetails = null;
+		EgDemandReason demandReason;
+		Boolean isDemandDetailExists = Boolean.FALSE;
 		for (DemandDetails demandDetails : demand.getDemandDetails()) {
+			isDemandDetailExists = Boolean.FALSE;
 			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
-				if (egDemandDetail.getId().equals(demandDetails.getId())) {
+				if (egDemandDetail.getId()!=null && egDemandDetail.getId().equals(demandDetails.getId())) {
+					isDemandDetailExists = Boolean.TRUE;
 					LOGGER.info("match is occuring in update service");
 					egDemandDetail.setAmount(demandDetails.getTaxAmount());
 					egDemandDetail.setAmtCollected(demandDetails.getCollectionAmount());
 					egDemandDetail.setAmtRebate(demandDetails.getRebateAmount());
 				}
+			}
+			// adding to demand if demanddetails does not exists
+			if (!isDemandDetailExists) {
+				demandReason = demandReasonService.findByCodeInstModule(demandDetails.getTaxReason(),
+						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
+				
+				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
+						BigDecimal.ZERO);
+				egDemand.addEgDemandDetails(egDemandDetails);
+				egDemandDetails.setTenantId(demand.getTenantId());
+				egDemandDetails.setEgDemand(egDemand);
 			}
 		}
 		egDemand.addCollected(demand.getCollectionAmount());

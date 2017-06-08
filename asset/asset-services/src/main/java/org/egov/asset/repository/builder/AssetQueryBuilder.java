@@ -65,8 +65,8 @@ public class AssetQueryBuilder {
 			+ "ON asset.assetcategory = assetcategory.id ";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(AssetCriteria searchAsset, List preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+	public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
+		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		logger.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
@@ -75,7 +75,8 @@ public class AssetQueryBuilder {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues, AssetCriteria searchAsset) {
+	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final AssetCriteria searchAsset) {
 
 		if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
 				&& searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
@@ -101,13 +102,13 @@ public class AssetQueryBuilder {
 		if (searchAsset.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.name like ?");
-			preparedStatementValues.add("%"+searchAsset.getName()+"%");
+			preparedStatementValues.add("%" + searchAsset.getName() + "%");
 		}
 
 		if (searchAsset.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.code like ?");
-			preparedStatementValues.add("%"+searchAsset.getCode()+"%");
+			preparedStatementValues.add("%" + searchAsset.getCode() + "%");
 		}
 
 		if (searchAsset.getDepartment() != null) {
@@ -175,17 +176,30 @@ public class AssetQueryBuilder {
 			selectQuery.append(" ASSET.doorno = ?");
 			preparedStatementValues.add(searchAsset.getDoorNo());
 		}
-		
+
 		if (searchAsset.getAssetReference() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.assetreference = ?");
 			preparedStatementValues.add(searchAsset.getAssetReference());
 		}
 
+		if (searchAsset.getDescription() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ASSET.description ilike ?");
+			preparedStatementValues.add("%" + searchAsset.getDescription() + "%");
+		}
+
+		if (searchAsset.getGrossValue() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ASSET.grossvalue = ?");
+			preparedStatementValues.add(searchAsset.getGrossValue());
+		}
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues, AssetCriteria searchAsset) {
+	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final AssetCriteria searchAsset) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" ORDER BY asset.name");
 
@@ -207,24 +221,23 @@ public class AssetQueryBuilder {
 	/**
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.
-	 * 
+	 *
 	 * @param appendAndClauseFlag
 	 * @param queryString
 	 * @return boolean indicates if the next predicate should append an "AND"
 	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
 		return true;
 	}
 
-	private static String getIdQuery(List<Long> idList) {
+	private static String getIdQuery(final List<Long> idList) {
 		StringBuilder query = null;
 		if (idList.size() >= 1) {
 			query = new StringBuilder(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
+			for (int i = 1; i < idList.size(); i++)
 				query.append("," + idList.get(i));
-			}
 		}
 		return query.append(")").toString();
 	}
@@ -234,7 +247,7 @@ public class AssetQueryBuilder {
 				+ "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
 				+ "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
 				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version)"
-				+ "values(nextval('seq_egasset_asset'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public String getUpdateQuery() {

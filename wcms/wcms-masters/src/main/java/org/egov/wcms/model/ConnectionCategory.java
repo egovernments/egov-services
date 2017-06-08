@@ -39,14 +39,21 @@
  */
 package org.egov.wcms.model;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -58,7 +65,7 @@ import java.util.Date;
 public class ConnectionCategory {
 
     public static final String SEQ_CATEGORY = "SEQ_EGWTR_CATEGORY";
-    
+
     @NotNull
     private Long id;
 
@@ -70,23 +77,19 @@ public class ConnectionCategory {
     @Length(min = 3, max = 100)
     private String name;
 
-    @Length(max=250)
+    @Length(max = 250)
     private String description;
 
     @NotNull
     private Boolean active;
 
-    @JsonIgnore
     private Long createdBy;
 
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdDate;
 
-    @JsonIgnore
     private Long lastModifiedBy;
 
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
 

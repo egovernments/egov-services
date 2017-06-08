@@ -21,7 +21,7 @@ echo "Stopping db-container: $db"
 docker rm -f $db
 
 echo "Stopping ci-container: $ci"
-docker rm -f $ci
+docker rm -f -v $ci
 
 exit $result
 

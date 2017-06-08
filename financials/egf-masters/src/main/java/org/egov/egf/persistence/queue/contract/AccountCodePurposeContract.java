@@ -41,6 +41,7 @@ package org.egov.egf.persistence.queue.contract;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -69,6 +70,16 @@ public class AccountCodePurposeContract extends AuditableContract {
 	public AccountCodePurposeContract(final String id) {
 		super();
 		this.id = Long.valueOf(id);
+	}
+
+	public AccountCodePurposeContract(AccountCodePurpose bean) {
+		this.setId(bean.getId());
+		this.setName(bean.getName());
+		this.setCreatedBy(bean.getCreatedBy());
+		this.setCreatedDate(bean.getCreatedDate());
+		this.setLastModifiedBy(bean.getLastModifiedBy());
+		this.setLastModifiedDate(bean.getLastModifiedDate());
+		this.setTenantId(bean.getTenantId());
 	}
 
 }

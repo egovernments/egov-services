@@ -1,11 +1,7 @@
 package org.egov.lams.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.contract.Attribute;
 import org.egov.lams.contract.Position;
 import org.egov.lams.contract.ProcessInstance;
 import org.egov.lams.contract.ProcessInstanceRequest;
@@ -30,6 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class WorkflowRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(WorkflowRepository.class);
+	
+	public static final String ACTION = "Forward";
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -122,12 +120,21 @@ public class WorkflowRepository {
 		ProcessInstance processInstance = new ProcessInstance();
 
 		assignee.setId(workFlowDetails.getAssignee());
-		processInstance.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
-		processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
+		if(agreement.getRenewal()!=null){
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
+		}else if(agreement.getCancellation()!=null){
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+		}else{
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+		}
 		processInstance.setAssignee(assignee);
-		processInstance.setComments("acknowledgementNumber : "+agreement.getAcknowledgementNumber());
+		processInstance.setComments(workFlowDetails.getComments());
 		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
 		processInstance.setTenantId(agreement.getTenantId());
+		processInstance.setDetails("Acknowledgement Number : " + agreement.getAcknowledgementNumber());
 		processInstanceRequest.setProcessInstance(processInstance);
 		processInstanceRequest.setRequestInfo(requestInfo);
 
@@ -148,8 +155,16 @@ public class WorkflowRepository {
 		Position assignee = new Position();
 
 		taskRequest.setRequestInfo(requestInfo);
-		task.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
-		task.setType(propertiesManager.getWorkflowServiceBusinessKey());
+		if(agreement.getRenewal()!=null){
+			task.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
+		}else if(agreement.getCancellation()!=null){
+			task.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+		}else{
+			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+		}
 		task.setId(agreement.getStateId());
 
 		if (workflowDetails != null) {
@@ -176,8 +191,8 @@ public class WorkflowRepository {
 
 			LOGGER.info("process instance responce ::: from search ::: " + processInstanceResponse);
 			ProcessInstance processInstance = processInstanceResponse.getProcessInstance();
-			List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
-			task.setAction(attributes.get(0).getValues().get(0).getKey());
+			//List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
+			task.setAction(ACTION);
 			task.setStatus(processInstance.getStatus());
 			assignee = processInstance.getOwner();
 			LOGGER.info("the owner object from response is ::: " + processInstance.getOwner());

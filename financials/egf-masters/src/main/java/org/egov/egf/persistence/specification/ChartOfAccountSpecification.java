@@ -9,7 +9,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.entity.ChartOfAccount;
 import org.egov.egf.persistence.entity.ChartOfAccount_;
 import org.egov.egf.persistence.queue.contract.ChartOfAccountContract;
@@ -49,7 +48,7 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 			}
 
 			if (criteria.getGlcode() != null) {
-				predicates.add(criteriaBuilder.equal(glcode, criteria.getGlcode()));
+				predicates.add(criteriaBuilder.like(glcode, criteria.getGlcode()));
 			}
 
 			if (criteria.getName() != null) {

@@ -1,0 +1,2 @@
+delete from value_definition where attributecode='PPTPHAF' and servicecode='PPTPH' and key='PTPAF' and tenantid='panavel';
+delete from attribute_definition where code='PPTPHAF' and servicecode='PPTPH' and tenantid='panavel';

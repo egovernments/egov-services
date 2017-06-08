@@ -21,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import redis.clients.jedis.JedisShardInfo;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -30,10 +31,18 @@ import java.util.TimeZone;
 public class EgovUserApplication {
 
 	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
-	private static final String IST = "Asia/Calcutta";
+
+	@Value("${app.timezone}")
+	private String timeZone;
 
 	@Value("${spring.redis.host}")
 	private String host;
+
+
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
 
 	@Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
@@ -53,8 +62,17 @@ public class EgovUserApplication {
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
+	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper(){
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return objectMapper;
 	}
 
 	@Bean
@@ -73,7 +91,6 @@ public class EgovUserApplication {
 	}
 
 	public static void main(String[] args) {
-		TimeZone.setDefault(TimeZone.getTimeZone(IST));
 		SpringApplication.run(EgovUserApplication.class, args);
 	}
 

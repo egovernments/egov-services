@@ -116,7 +116,9 @@ public class EgDemandDetails implements Serializable, Cloneable {
 		return DemandDetails.builder().id(id).taxAmount(amount).collectionAmount(amtCollected).rebateAmount(amtRebate)
 				.taxReason(egDemandReason.getEgDemandReasonMaster().getReasonMaster())
 				.taxPeriod(egDemandReason.getEgInstallmentMaster().getDescription())
-				.glCode(egDemandReason.getGlcode()).isActualDemand(1).tenantId(tenantId).build();
+				.periodStartDate(egDemandReason.getEgInstallmentMaster().getFromDate())
+				.periodEndDate(egDemandReason.getEgInstallmentMaster().getToDate()).glCode(egDemandReason.getGlcode())
+				.isActualDemand(1).tenantId(tenantId).build();
 	}
 
 	/**

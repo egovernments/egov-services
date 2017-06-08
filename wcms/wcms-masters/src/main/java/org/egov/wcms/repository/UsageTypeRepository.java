@@ -39,6 +39,11 @@
  */
 package org.egov.wcms.repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.repository.builder.UsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.UsageTypeRowMapper;
@@ -49,11 +54,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class UsageTypeRepository {
@@ -71,38 +71,41 @@ public class UsageTypeRepository {
 
     public UsageTypeRequest persistCreateUsageType(final UsageTypeRequest usageTypeRequest) {
         LOGGER.info("UsageTypeRequest::" + usageTypeRequest);
-        final String usageTypeInsert = usageTypeQueryBuilder.insertUsageTypeQuery();
+        final String usageTypeInsert = UsageTypeQueryBuilder.insertUsageTypeQuery();
         final UsageType usageType = usageTypeRequest.getUsageType();
-        Object[] obj = new Object[] {Long.valueOf(usageType.getCode()),usageType.getCode(),usageType.getName(),usageType.getDescription(),usageType.getActive(),Long.valueOf(usageTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(usageTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),usageType.getTenantId() };
+        final Object[] obj = new Object[] { Long.valueOf(usageType.getCode()), usageType.getCode(), usageType.getName(),
+                usageType.getDescription(), usageType.getActive(),
+                Long.valueOf(usageTypeRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(usageTypeRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), usageType.getTenantId() };
 
         jdbcTemplate.update(usageTypeInsert, obj);
         return usageTypeRequest;
     }
 
-
     public UsageTypeRequest persistModifyUsageType(final UsageTypeRequest usageTypeRequest) {
         LOGGER.info("UsageTypeRequest::" + usageTypeRequest);
-        final String usageTypeUpdate = usageTypeQueryBuilder.updateUsageTypeQuery();
+        final String usageTypeUpdate = UsageTypeQueryBuilder.updateUsageTypeQuery();
         final UsageType usageType = usageTypeRequest.getUsageType();
-        Object[] obj = new Object[] {usageType.getName(),usageType.getDescription(),usageType.getActive(),
-                Long.valueOf(usageTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), usageType.getCode() };
+        final Object[] obj = new Object[] { usageType.getName(), usageType.getDescription(), usageType.getActive(),
+                Long.valueOf(usageTypeRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
+                usageType.getCode() };
         jdbcTemplate.update(usageTypeUpdate, obj);
         return usageTypeRequest;
 
     }
 
-    public boolean checkUsageTypeByNameAndCode(final String code,final String name,final String tenantId) {
+    public boolean checkUsageTypeByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(name);
-       // preparedStatementValues.add(id);
+        // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)
-            query = usageTypeQueryBuilder.selectUsageTypeByNameAndCodeQuery();
+            query = UsageTypeQueryBuilder.selectUsageTypeByNameAndCodeQuery();
         else {
             preparedStatementValues.add(code);
-            query = usageTypeQueryBuilder.selectUsageTypeByNameAndCodeNotInQuery();
+            query = UsageTypeQueryBuilder.selectUsageTypeByNameAndCodeNotInQuery();
         }
         final List<Map<String, Object>> usageTypes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
@@ -112,12 +115,11 @@ public class UsageTypeRepository {
         return true;
     }
 
-    public List<UsageType> findForCriteria(UsageTypeGetRequest usageTypeGetRequest) {
-        List<Object> preparedStatementValues = new ArrayList<Object>();
-        String queryStr = usageTypeQueryBuilder.getQuery(usageTypeGetRequest, preparedStatementValues);
-        List<UsageType> usageTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), usageTypeRowMapper);
+    public List<UsageType> findForCriteria(final UsageTypeGetRequest usageTypeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = usageTypeQueryBuilder.getQuery(usageTypeGetRequest, preparedStatementValues);
+        final List<UsageType> usageTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), usageTypeRowMapper);
         return usageTypes;
     }
-
 
 }

@@ -28,6 +28,11 @@ public class AssetCategoryRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	
+	
+	@Autowired
+	private AssetCategoryRowMapper assetCategoryRowMapper;
 
 	@Autowired
 	private AssetCategoryQueryBuilder assetCategoryQueryBuilder;
@@ -40,7 +45,7 @@ public class AssetCategoryRepository {
 		List<AssetCategory> assetCategory = null;
 		try {
 			assetCategory = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-					new AssetCategoryRowMapper());
+					assetCategoryRowMapper);
 		} catch (Exception exception) {
 			logger.info("the exception in assetcategory search :" + exception);
 		}
@@ -66,10 +71,10 @@ public class AssetCategoryRepository {
 		RequestInfo requestInfo = assetCategoryRequest.getRequestInfo();
 		AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
 		String queryStr = assetCategoryQueryBuilder.getInsertQuery();
-
+		
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
-
+		
 		AssetCategory assetCategory2 = new AssetCategory();
 		assetCategory2.setAssetFieldsDefination(assetCategory.getAssetFieldsDefination());
 

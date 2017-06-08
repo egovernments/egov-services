@@ -39,16 +39,20 @@
  */
 package org.egov.wcms.web.contract;
 
-
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.List;
 
+import org.hibernate.validator.constraints.Length;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -60,10 +64,10 @@ public class CategoryGetRequest {
 
     private List<Long> id;
 
-    @Length(min=3, max=100)
+    @Length(min = 3, max = 100)
     private String name;
 
-    @Length(min=3,max=20)
+    @Length(min = 3, max = 20)
     private String code;
 
     private Boolean active;

@@ -39,13 +39,8 @@
  */
 package org.egov.egf.persistence.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -57,29 +52,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Entity
-@Table(name = "egf_bankbranch")
-@SequenceGenerator(name = BankBranch.SEQ_BANKBRANCH, sequenceName = BankBranch.SEQ_BANKBRANCH, allocationSize = 1)
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bank", "bankAccounts" }, callSuper = false)
-public class BankBranch extends AbstractAuditable {
+@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
+public class BankBranch {
 
-	private static final long serialVersionUID = -1445070413847273114L;
-
-	public static final String SEQ_BANKBRANCH = "seq_egf_bankbranch";
-
-	@Id
-	@GeneratedValue(generator = SEQ_BANKBRANCH, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	// @ManyToOne
-	// @JoinColumn(name = "bankid")
 	@NotNull
-	@Column(name = "bankid")
 	private Long bank;
 
 	@NotNull
@@ -123,20 +108,18 @@ public class BankBranch extends AbstractAuditable {
 	private String description;
 
 	@Length(max = 50)
-	@Column(name = "micr")
 	private String micr;
 
-/*	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bankBranch", targetEntity = BankAccount.class)
-	private Set<BankAccount> bankAccounts = new HashSet<>(0);
+	private Long createdBy;
 
-	public boolean isAccountsExist() {
-		return bankAccounts != null && !bankAccounts.isEmpty();
-	}*/
+	private Date createdDate;
 
-	@Override
-	public Long getId() {
-		return this.id;
-	}
+	private Long lastModifiedBy;
+
+	private Date lastModifiedDate;
+
+	@NotNull
+	private String tenantId;
 
 	public BankBranch(BankBranchContract contract) {
 		this.setId(contract.getId());

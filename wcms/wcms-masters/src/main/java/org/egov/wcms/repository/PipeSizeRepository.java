@@ -126,5 +126,18 @@ public class PipeSizeRepository {
         List<PipeSize> pipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), pipeSizeRowMapper);
         return pipeSizes;
     }
+    
+    public boolean checkPipeSizeId(final Long pipeSizeId) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(pipeSizeId);
+        //preparedStatementValues.add(tenantId);
+        final String   query = pipeSizeQueryBuilder.selectPipeSizeIdQuery();
+        final List<Map<String, Object>> pipeSizes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!pipeSizes.isEmpty())
+            return false;
+
+        return true;
+    }
 
 }

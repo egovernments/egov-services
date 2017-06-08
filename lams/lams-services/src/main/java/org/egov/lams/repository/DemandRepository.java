@@ -3,6 +3,7 @@ package org.egov.lams.repository;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -11,6 +12,9 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.model.enums.PaymentCycle;
+import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandReasonResponse;
@@ -44,10 +48,47 @@ public class DemandRepository {
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
 
-		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
-				+ demandHelper.getDemandReasonUrlParams(agreementRequest);
+		List<DemandReason> demandReasons = new ArrayList<>();
+		Agreement agreement = agreementRequest.getAgreement();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agreement.getCommencementDate());
+		
+		if (agreement.getPaymentCycle().equals(PaymentCycle.MONTH))
+			calendar.add(Calendar.MONTH, 1);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER))
+			calendar.add(Calendar.MONTH, 3);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR))
+			calendar.add(Calendar.MONTH, 6);
+		else
+			calendar.add(Calendar.YEAR, 1);
+		calendar.add(Calendar.DATE, -1);
+		Date date = calendar.getTime();
+		String taxReason = null;
+		LOGGER.info("month plus start date is : " + date);
+		for (int i = 0; i < 3; i++) {
+			if (i == 0 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
+				taxReason = propertiesManager.getTaxReasonAdvanceTax();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			} else if (i == 1 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
+				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			} else if (i == 2 && agreement.getStatus().equals(Status.ACTIVE)) {
+				taxReason = propertiesManager.getTaxReasonRent();
+				date = agreementRequest.getAgreement().getExpiryDate();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			}
+		}
+		return demandReasons;
+	}
 
-		System.out.println("DemandRepository getDemandReason url:" + url);
+	private List<DemandReason> getDemandReasonsForTaxReason(AgreementRequest agreementRequest, Date date,
+			String taxReason) {
+
+		LOGGER.info("todate value : " + date);
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchPath()
+				+ demandHelper.getDemandReasonUrlParams(agreementRequest, taxReason, date);
+
+		LOGGER.info("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {
 			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
@@ -61,68 +102,68 @@ public class DemandRepository {
 				ObjectMapper mapper = new ObjectMapper();
 				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
 			} catch (JsonMappingException jme) {
-				LOGGER.error("Following Exception Occurred While Mapping JSON Response From User Service : "
-						+ jme.getMessage());
-				jme.printStackTrace();
+				LOGGER.error(
+						"Exception Occurred While Mapping JSON Response From demand Service : " + jme.getMessage());
+				throw new RuntimeException(jme);
 			} catch (JsonProcessingException jpe) {
-				LOGGER.error("Following Exception Occurred While Processing JSON Response From User Service : "
-						+ jpe.getMessage());
-				jpe.printStackTrace();
+				LOGGER.error(
+						"Exception Occurred While Processing JSON Response From demand Service : " + jpe.getMessage());
+				throw new RuntimeException(jpe);
 			} catch (IOException ioe) {
-				LOGGER.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
-				ioe.printStackTrace();
+				LOGGER.error("Exception Occurred Calling demand Service : " + ioe.getMessage());
+				throw new RuntimeException(ioe);
 			}
-			// return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-			LOGGER.error("the exception from user module inside first catch block ::"
+			LOGGER.error("exception from demand module inside first catch block ::"
 					+ userErrorResponse.getError().toString());
 		} catch (Exception e) {
-			LOGGER.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
-			e.printStackTrace();
+			LOGGER.error("Exception Occurred While Calling demandReason Service : " + e.getMessage());
+			throw e;
 		}
-		System.out.println("demandReasonResponse:" + demandReasonResponse);
-		// Todo if api returns exception object
+		LOGGER.info("demandReasonResponse:" + demandReasonResponse);
+
 		return demandReasonResponse.getDemandReasons();
 	}
 
 	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
 
 		Agreement agreement = agreementRequest.getAgreement();
-		List<Demand> demands = new ArrayList<>();
-		List<DemandDetails> demandDetails = new ArrayList<>();
 		Demand demand = new Demand();
+		List<Demand> demandList = new ArrayList<>();
+		List<DemandDetails> demandDetails = new ArrayList<>();
 		demand.setTenantId(agreement.getTenantId());
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
-
-		int goodWill = 0;
-		int advance = 0;
+		
+		if (agreement.getDemands() != null) 
+			demand.setId(agreement.getDemands().get(0));
+		
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
-			
-			demandDetail = new DemandDetails();
-			LOGGER.info("the demand reason object in the loop : "+ demandReason);
-			if ("Rent".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-			} else if ("Goodwill Amount".equalsIgnoreCase(demandReason.getName()) && goodWill == 0) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
-				goodWill++;
 
-			} else if ("Advance Tax".equalsIgnoreCase(demandReason.getName()) && advance == 0) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
-				advance++;
-			}
+			demandDetail = new DemandDetails();
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
-
+			
+			LOGGER.info("the demand reason object in the loop : " + demandReason);
+			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
+				if(agreement .getGoodWillAmount()!=null)
+					demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
+			}
+			if(demandDetail.getTaxAmount()!=null)
 			demandDetails.add(demandDetail);
 		}
-		demand.setDemandDetails(demandDetails);
-		demands.add(demand);
-		System.err.println(demands);
 
-		return demands;
+		demand.setDemandDetails(demandDetails);
+		demandList.add(demand);
+		LOGGER.info("the demand object result after adding details : " + demandList);
+
+		return demandList;
 	}
 
 	public DemandResponse createDemand(List<Demand> demands, RequestInfo requestInfo) {

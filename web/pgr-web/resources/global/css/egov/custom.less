@@ -1150,10 +1150,15 @@ label.error.custom{
 
                 header{
 
+                    div{
+                        font-size: 19px;
+                        margin: 5px 0;
+                    }
+
                     i {
                         width: 34px;
                         .font-size(18px);
-                        padding: 4px 5px;
+                        padding: 2px 5px;
                         text-align: center;
                     }
 
@@ -1168,9 +1173,11 @@ label.error.custom{
                     a {
                         color: #333;
                         text-decoration: none;
+                        font-size: 19px;
+                        margin: 5px 0;
                     }
 
-                    h3, a {
+                    a {
                         margin: 0;
                         padding: 0;
                         /*font-weight: bold;*/
@@ -1180,8 +1187,8 @@ label.error.custom{
                     }
 
                      span.msg-status {
-                        margin: 0 15px;
-                        padding: 5px 15px;
+                        padding: 2px 15px;
+                        margin:0;
                         background: #c9c9c9;
                         .font-size(13px);
                         color: @whitecolor;
@@ -1193,7 +1200,7 @@ label.error.custom{
 
                     .msg-info {
                         padding-top: 5px;
-                        padding-left: 20px;
+                        padding-left: 0;
                         font-style: italic;
                         .font-size(14px);
 
@@ -1208,21 +1215,22 @@ label.error.custom{
                 }
 
                 .msg-content > p {
-                    margin: 15px 20px 0px 20px;
+                    margin: 15px 0 0 0;
                     .font-size(14px);
                 }
 
             }
             
             section div.msg, section div.msg {
-                /* margin-top: 10px; */
-                margin-bottom: 5px;
+                margin-bottom: 15px;
+                padding: 15px;
                 overflow: hidden;
                 position: relative;
             }
             
             .content-wrap {
                 position: relative;
+                margin-top: 20px;
                 
                 section {
                     display: none;
@@ -2049,7 +2057,7 @@ label.error.custom{
     }   
     
     .panel-body.custom-form {
-        padding: 0;
+        padding-bottom: 0;
     }
 }
 

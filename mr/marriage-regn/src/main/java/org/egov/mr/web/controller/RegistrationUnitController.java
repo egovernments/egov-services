@@ -14,7 +14,6 @@ import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
-import org.egov.mr.web.validator.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,6 @@ public class RegistrationUnitController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(RegistrationUnitController.class);
 
 	@Autowired
-	private RequestValidator requestValidator;
-
-	@Autowired
 	private RegistrationUnitService registrationUnitService;
 
 	@Autowired
@@ -52,7 +48,7 @@ public class RegistrationUnitController {
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
 
 		// Validation
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
 				regnUnitRequestBindingResults, null);
 
 		if (errorResponseEntity != null)
@@ -62,15 +58,10 @@ public class RegistrationUnitController {
 
 		try {
 			registrationUnitsList = registrationUnitService.createAsync(regnUnitRequest);
-			if (registrationUnitsList.isEmpty()) {
-				return errorHandler.getRegistrationUnitEmptyListErrorResponse(regnUnitRequestBindingResults,
-						requestInfo);
-			}
-
 		} catch (Exception e) {
 			LOGGER.error(" Error While Procssing the Request!");
-			return errorHandler.getRegistrationUnitForUnExpectedErrorResponse(regnUnitRequestBindingResults,
-					requestInfo, "Encountered : " + e.getMessage());
+			return errorHandler.getUnExpectedErrorResponse(regnUnitRequestBindingResults, requestInfo,
+					"Encountered : " + e.getMessage());
 		}
 
 		return getSuccessResponse(registrationUnitsList, requestInfo);
@@ -89,7 +80,7 @@ public class RegistrationUnitController {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		// Validation
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultsForSearchCriteria);
 
 		if (errorResponseEntity != null)
@@ -99,14 +90,10 @@ public class RegistrationUnitController {
 
 		try {
 			registrationUnitsList = registrationUnitService.search(regnUnitSearchCriteria);
-			if (registrationUnitsList.isEmpty()) {
-				return errorHandler.getRegistrationUnitEmptyListErrorResponse(bindingResultsForRequestInfoWrapper,
-						requestInfo);
-			}
 		} catch (Exception e) {
 			LOGGER.error(" Error While Procssing the Request!");
-			return errorHandler.getRegistrationUnitForUnExpectedErrorResponse(bindingResultsForSearchCriteria,
-					requestInfo, "Encountered : " + e.getMessage());
+			return errorHandler.getUnExpectedErrorResponse(bindingResultsForSearchCriteria, requestInfo,
+					"Encountered : " + e.getMessage());
 		}
 
 		return getSuccessResponse(registrationUnitsList, requestInfo);
@@ -122,7 +109,7 @@ public class RegistrationUnitController {
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
 
 		// Validation
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
 				regnUnitRequestBindingResults, null);
 
 		if (errorResponseEntity != null)
@@ -138,8 +125,8 @@ public class RegistrationUnitController {
 			}
 		} catch (Exception e) {
 			LOGGER.error(" Error While Procssing the Request!");
-			return errorHandler.getRegistrationUnitForUnExpectedErrorResponse(regnUnitRequestBindingResults,
-					requestInfo, "Encountered : " + e.getCause());
+			return errorHandler.getUnExpectedErrorResponse(regnUnitRequestBindingResults, requestInfo,
+					"Encountered : " + e.getCause());
 		}
 
 		return getSuccessResponse(registrationUnitsList, requestInfo);

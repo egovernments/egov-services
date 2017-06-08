@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum RevaluationStatus {
-    ACTIVE("ACTIVE");
+    ACTIVE("ACTIVE"),INACTIVE("INACTIVE");
 
     private String value;
 

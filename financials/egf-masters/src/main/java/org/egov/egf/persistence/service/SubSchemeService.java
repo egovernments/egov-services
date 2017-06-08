@@ -88,7 +88,7 @@ public class SubSchemeService {
 	@Transactional
 	public SubSchemeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final SubSchemeContractRequest subSchemeContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("SubSchemeCreate"), SubSchemeContractRequest.class);
+				.convertValue(financialContractRequestMap.get("SubSchemeUpdateAll"), SubSchemeContractRequest.class);
 		SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
 		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
 		ModelMapper modelMapper = new ModelMapper();

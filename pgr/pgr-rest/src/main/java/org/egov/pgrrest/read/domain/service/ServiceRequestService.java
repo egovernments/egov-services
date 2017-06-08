@@ -30,10 +30,14 @@ public class ServiceRequestService {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return serviceRequestRepository.findAll(serviceRequestSearchCriteria);
+        return serviceRequestRepository.find(serviceRequestSearchCriteria);
     }
 
-	public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
+    public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return serviceRequestRepository.getCount(serviceRequestSearchCriteria);
+    }
+
+    public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
 		complaint.validate();
 		final String crn = sevaNumberGeneratorService.generate();
 		complaint.setCrn(crn);

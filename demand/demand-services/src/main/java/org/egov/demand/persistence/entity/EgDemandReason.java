@@ -99,7 +99,7 @@ public class EgDemandReason implements java.io.Serializable {
 	@OneToMany(mappedBy = "egDemandReason", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EgDemandReasonDetails> egDemandReasonDetails = new HashSet<EgDemandReasonDetails>(0);
 	@Column(name = "glcode")
-	private Long glcode;
+	private String glcode;
 	@Column(name = "tenantid")
 	private String tenantId;
 	

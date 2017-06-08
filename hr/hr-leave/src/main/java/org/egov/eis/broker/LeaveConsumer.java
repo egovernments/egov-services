@@ -103,6 +103,9 @@ public class LeaveConsumer {
 
     @Autowired
     private LeaveApplicationService leaveApplicationService;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
             "${kafka.topics.leaveopeningbalance.create.name}", "${kafka.topics.leaveopeningbalance.update.name}",
@@ -112,7 +115,6 @@ public class LeaveConsumer {
 
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-        final ObjectMapper objectMapper = new ObjectMapper();
         try {
             if (record.topic().equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
                 leaveOpeningBalanceService

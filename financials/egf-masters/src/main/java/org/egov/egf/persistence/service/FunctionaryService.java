@@ -83,7 +83,7 @@ public class FunctionaryService {
 	@Transactional
 	public FunctionaryContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final FunctionaryContractRequest functionaryContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("FunctionaryCreate"), FunctionaryContractRequest.class);
+				.convertValue(financialContractRequestMap.get("FunctionaryUpdateAll"), FunctionaryContractRequest.class);
 		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
 		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
 		ModelMapper modelMapper = new ModelMapper();

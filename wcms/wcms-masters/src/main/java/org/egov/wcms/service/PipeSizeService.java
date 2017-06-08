@@ -39,17 +39,11 @@
  */
 package org.egov.wcms.service;
 
+import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.wcms.model.ConnectionCategory;
 import org.egov.wcms.model.PipeSize;
-import org.egov.wcms.producers.ConnectionCategoryProducer;
-import org.egov.wcms.producers.PipeSizeProducer;
-import org.egov.wcms.repository.ConnectionCategoryRepository;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PipeSizeRepository;
-import org.egov.wcms.web.contract.CategoryGetRequest;
-import org.egov.wcms.web.contract.ConnectionCategoryRequest;
 import org.egov.wcms.web.contract.PipeSizeGetRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.slf4j.Logger;
@@ -57,7 +51,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PipeSizeService {
@@ -68,11 +63,10 @@ public class PipeSizeService {
     private PipeSizeRepository pipeSizeRepository;
 
     @Autowired
-    private PipeSizeProducer pipeSizeProducer;
+    private WaterMasterProducer waterMasterProducer;
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
-
 
     public PipeSizeRequest create(final PipeSizeRequest pipeSizeRequest) {
         return pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest);
@@ -82,9 +76,9 @@ public class PipeSizeService {
         return pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest);
     }
 
-
     public PipeSize createPipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
-        pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(pipeSizeRequest.getPipeSize().SEQ_PIPESIZE));
+        pipeSizeRequest.getPipeSize();
+        pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
         final ObjectMapper mapper = new ObjectMapper();
@@ -97,14 +91,14 @@ public class PipeSizeService {
             e.printStackTrace();
         }
         try {
-            pipeSizeProducer.sendMessage(topic,key,pipeSizeValue);
+            waterMasterProducer.sendMessage(topic, key, pipeSizeValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return pipeSizeRequest.getPipeSize();
     }
 
-    public PipeSize updatePipeSize(final String topic,final String key,final PipeSizeRequest pipeSizeRequest) {
+    public PipeSize updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
@@ -117,16 +111,15 @@ public class PipeSizeService {
             e.printStackTrace();
         }
         try {
-            pipeSizeProducer.sendMessage(topic,key,pipeSizeValue);
+            waterMasterProducer.sendMessage(topic, key, pipeSizeValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return pipeSizeRequest.getPipeSize();
     }
 
-
-    public boolean getPipeSizeInmmAndCode(final String code,final Double sizeInMilimeter,final String tenantId) {
-        return pipeSizeRepository.checkPipeSizeInmmAndCode(code,sizeInMilimeter,tenantId);
+    public boolean getPipeSizeInmmAndCode(final String code, final Double sizeInMilimeter, final String tenantId) {
+        return pipeSizeRepository.checkPipeSizeInmmAndCode(code, sizeInMilimeter, tenantId);
     }
 
     public List<PipeSize> getPipeSizes(final PipeSizeGetRequest pipeSizeGetRequest) {
@@ -134,5 +127,8 @@ public class PipeSizeService {
 
     }
 
+    public boolean checkPipeSizeIdExists(final Long pipeSizeId) {
+        return pipeSizeRepository.checkPipeSizeId(pipeSizeId);
+    }
 
 }

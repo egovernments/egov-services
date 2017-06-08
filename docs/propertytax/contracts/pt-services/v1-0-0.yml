@@ -19,7 +19,7 @@ info:
   
   title: eGov Property Tax Information System.
   description: |
-    APIs for Property Tax module. This modules handles registration of new properties, changes to existing properties (Detail Updates, division of property, amalgmation of properties, title transfer etc.), search of required properties and property tax calculation, demand generation, notices to enable ULBs to cmpletely manage the proeprties within their jurisdiction.
+    APIs for Property Tax module. This modules handles assessment of new properties, changes to existing properties (Detail Updates, division of property, amalgmation of properties, title transfer etc.), search of required properties and property tax calculation, demand generation, notices to enable ULBs to cmpletely manage the proeprties within their jurisdiction.
   contact:
     name: Ramki
 host: phoenix-qa.egovernments.org
@@ -47,9 +47,8 @@ paths:
           required: false
           type: boolean
           format: varchar
-          default: true
           allowEmptyValue: true
-        - name: upicNo
+        - name: upicNumber
           in: query
           required: false
           description: The unique reference number for a property.
@@ -86,7 +85,7 @@ paths:
         - name: houseNoBldgApt
           in: query
           required: false
-          description: The house no for a building of a property.
+          description: The house no for a building/land of a property.
           type: string
           minLength: 0
           maxLength: 32
@@ -203,10 +202,10 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
-
     
   Property:
     type: object
+    description: A Object holds the basic data for a property
     properties:
       id:
         type: integer
@@ -217,74 +216,108 @@ definitions:
         description: tenant id of the Property
         maxLength: 128
         minLength: 4
-      upicNo:
+      upicNumber:
         type: string
-        description: upic no of the Property
+        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
         maxLength: 128
-        minLength: 8
-      oldUpicNo:
+        minLength: 6
+      oldUpicNumber:
         type: string
-        description: old upic no of the Property
+        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
         maxLength: 128
         minLength: 4
-      vltUpicNo:
+      vltUpicNumber:
         type: string
-        description: vlt upic no of the Property
+        description: Vacant lands also be assessed in system. If building constructed in the same vacant land. The Vacant land upicno will be captured here for a the new building.
         maxLength: 128
         minLength: 4
       creationReason:
         type: string
-        description: creation reason of the Property
+        description: New property comes into system either property is newly constructed or existing property got sub divided. Here the reason for creation will be captured.
         maxLength: 256
         minLength: 1
+        enum:
+         - NEWPROPERTY
+         - SUBDIVISION
       address:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
       owners:
-        description: Owners
+        description: Property owners, these will be citizen users in system.
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+          $ref: '#/definitions/OwnerInfo'
       propertyDetail:
         $ref: "#/definitions/PropertyDetail"
+      vacantLand:
+        $ref: "#/definitions/VacantLandDetail"
       assessmentDate:
         type: string
         format: date
-        description: assessment date of the Property
+        description: There will be work flow to create a new property in a system. The assessment date is the final approval and UPIC no generation date.
       occupancyDate:
         type: string
         format: date
-        description: occupancy date of the Property
+        description: Property is constructed but the tax will be applicable only from the occupation date. System capture that date here.
       gisRefNo:
         type: string
-        description: gis ref no of the Property
+        description: Property tax system will be integrated with GIS system. Here we capture the GIS ref. no.
         maxLength: 32
         minLength: 4
       isAuthorised:
         type: boolean
-        description: is authorised of the Property
+        description: Property can be authorised or not authorised in a ULB depends on different parameters Eg. If there is Building plan approval property is a authorised property otherwise its a not a authorised property. System will capture the info here.
+        default: true
       isUnderWorkflow:
         type: boolean
-        description: is under workflow of the Property
+        description: There are different transactions can be performed on a property and all the transactions goes through the work flow. If one workflow is happening system should not allow other work flow on a same property so, when any work flow starts we flag this field as true and when the same work flow ends we flag this field as false.
+        default: false
       boundary:
-        $ref: "#/definitions/PropertyBoundary"
+        $ref: "#/definitions/PropertyLocation"
       active:
         type: boolean
         description: True if the property is active and False if the property is inactive.
+        default: true
       channel:
         type: string
-        description: channel of the Property
+        description: Property can be created from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
         maxLength: 16
         minLength: 4
+        enum:
+         - SYSTEM
+         - CFC_COUNTER
+         - CITIZEN
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
-    - upicNo
     - creationReason
     - address
-    - assessmentDate
+    - owners
+    - boundary
+    - propertyDetail
     - occupancyDate
     - channel
+    
+  OwnerInfo:
+    allOf: 
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+    - type: object
+      properties:
+        isPrimaryOwner:
+          type: boolean
+          description: The owner is primary or not
+        isSecondaryOwner:
+          type: boolean
+          description: The owner is secondary or not
+        ownerShipPercentage:
+          type: number
+          format: double
+          description: Ownership percentage.
+        ownerType:
+          type: string
+          description: Type of owner, based on this option rebate will be calculated. 
+          maxLength: 32
+          minLength: 4
     
   PropertyRequest:
     description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
@@ -309,146 +342,6 @@ definitions:
         type:  array
         items:
           $ref: '#/definitions/Property'
-        
-  Floor:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the Floor
-      tenantId:
-        type: string
-        description: tenant id of the Floor
-        maxLength: 128
-        minLength: 4
-      floorNo:
-        type: string
-        description: floor no of the Floor
-        maxLength: 16
-        minLength: 1
-      unitNo:
-        type: string
-        description: unit no of the Floor
-        maxLength: 8
-        minLength: 1
-      type:
-        type: string
-        description: type of the Floor
-        maxLength: 16
-        minLength: 1
-      length:
-        type: number
-        format: double
-        description: length of the Floor
-      width:
-        type: number
-        format: double
-        description: width of the Floor
-      builtupArea:
-        type: number
-        format: double
-        description: builtup area of the Floor
-      assessableArea:
-        type: number
-        format: double
-        description: assessable area of the Floor
-      bpaBuiltupArea:
-        type: number
-        format: double
-        description: bpa builtup area of the Floor
-      category:
-        type: string
-        description: category of the Floor
-        maxLength: 16
-        minLength: 1
-      usage:
-        type: string
-        description: usage of the Floor
-        maxLength: 16
-        minLength: 1
-      occupancy:
-        type: string
-        description: occupancy of the Floor
-        maxLength: 16
-        minLength: 1
-      structure:
-        type: string
-        description: structure of the Floor
-        maxLength: 16
-        minLength: 1
-      depreciation:
-        type: string
-        description: depreciation of the Floor
-        maxLength: 16
-        minLength: 1
-      occupierName:
-        type: string
-        description: occupier name of the Floor
-        maxLength: 128
-        minLength: 1
-      firmName:
-        type: string
-        description: firm name of the Floor
-        maxLength: 128
-        minLength: 1
-      rentCollected:
-        type: number
-        format: double
-        description: rent collected of the Floor
-      exemptionReason:
-        type: string
-        description: exemption reason of the Floor
-        maxLength: 32
-        minLength: 1
-      isStructured:
-        type: boolean
-        description: is structured of the Floor
-      occupancyDate:
-        type: string
-        format: date
-        description: occupancy date of the Floor
-      constCompletionDate:
-        type: string
-        format: date
-        description: const completion date of the Floor
-      bpaNo:
-        type: string
-        description: bpa no of the Floor
-        maxLength: 16
-        minLength: 1
-      bpaDate:
-        type: string
-        format: date
-        description: bpa date of the Floor
-      manualArv:
-        type: number
-        format: double
-        description: manual arv of the Floor
-      arv:
-        type: number
-        format: double
-        description: arv of the Floor
-      electricMeterNo:
-        type: string
-        description: electric meter no of the Floor
-        maxLength: 64
-        minLength: 1
-      waterMeterNo:
-        type: string
-        description: water meter no of the Floor
-        maxLength: 64
-        minLength: 1
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-    - id
-    - tenantId
-    - floorNo
-    - builtupArea
-    - usage
-    - occupancy
-    - structure
 
   PropertyDetail:
     type: object
@@ -457,24 +350,23 @@ definitions:
         type: integer
         format: int64
         description: Unique Identifier of the PropertyDetail
-      tenantId:
+      source:
         type: string
-        description: tenant id of the PropertyDetail
-        maxLength: 128
-        minLength: 4
+        description: Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
+        maxLength: 64
+        minLength: 1
+        enum:
+         - MUNICIPAL_RECORDS
+         - FIELD_SURVEY
       regdDocNo:
         type: string
-        description: regd doc no of the PropertyDetail
+        description: Property registered no from Registration Department.
         maxLength: 64
         minLength: 1
       regdDocDate:
         type: string
         format: date
-        description: regd doc date of the PropertyDetail
-      occupancyDate:
-        type: string
-        format: date
-        description: occupancy date of the PropertyDetail
+        description: roperty registered date from Registration Department.
       reason:
         type: string
         description: reason of the PropertyDetail
@@ -482,42 +374,49 @@ definitions:
         minLength: 1
       status:
         type: string
-        description: status of the PropertyDetail
-        maxLength: 4
+        description: status of the Property
+        maxLength: 8
         minLength: 1
+        enum:
+         - ACTIVE
+         - INACTIVE
+         - WORKFLOW
+         - HISTORY
+         - CANCELED
       isVerified:
         type: boolean
-        description: is verified of the PropertyDetail
+        description: When 'source' of property is FIELD_SURVEY then property should be verified by higher officials or during a work flow also property to be verified in some cases. This field to capture the verification status.
       verificationDate:
         type: string
         format: date
-        description: verification date of the PropertyDetail
+        description: verification date of the Property
       isExempted:
         type: boolean
-        description: is exempted of the PropertyDetail
+        description: Property can be exempted from tax for different reasons, this field captures the exempted status
+        default: false
       exemptionReason:
         type: string
-        description: exemption reason of the PropertyDetail
+        description: exemption reason for the property
         maxLength: 32
         minLength: 1
       propertyType:
         type: string
-        description: property type of the PropertyDetail
+        description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
         maxLength: 16
         minLength: 1
       category:
         type: string
-        description: category of the PropertyDetail
+        description: category of the property like Residential, Non-Residential, etc.
         maxLength: 16
         minLength: 1
       usage:
         type: string
-        description: usage of the PropertyDetail
+        description: usage of the property
         maxLength: 16
         minLength: 1
       department:
         type: string
-        description: department of the PropertyDetail
+        description: department of the property which belongs to. This is applicable when property type is State Govternment or Central Government.
         maxLength: 16
         minLength: 1
       apartment:
@@ -525,215 +424,305 @@ definitions:
         description: apartment of the PropertyDetail
         maxLength: 16
         minLength: 1
-      length:
+      siteLength:
         type: number
         format: double
-        description: length of the PropertyDetail
-      breadth:
+        description: length of the land
+      siteBreadth:
         type: number
         format: double
-        description: breadth of the PropertyDetail
+        description: breadth of the land
       sitalArea:
         type: number
         format: double
-        description: sital area of the PropertyDetail
+        description: sital area of the land
       totalBuiltupArea:
         type: number
         format: double
-        description: total builtup area of the PropertyDetail
+        description: total builtup area of the property. If building has multiple floors, this is a sum of individual floor builtup area.
       undividedShare:
         type: number
         format: double
-        description: undivided share of the PropertyDetail
+        description: undivided share of the flat. In case of apartment this is valid.
       noOfFloors:
         type: integer
         format: int64
-        description: no of floors of the PropertyDetail
+        description: no of floors in the property
       isSuperStructure:
         type: boolean
-        description: is super structure of the PropertyDetail
+        description: is property a super structure. If Land is ownned by one person and building constructed by one person then its called Super structure
+        default: false
       landOwner:
         type: string
-        description: land owner of the PropertyDetail
+        description: Name of the land owner in case property is Super structure
         maxLength: 128
         minLength: 1
       floorType:
         type: string
-        description: floor type of the PropertyDetail
+        description: type of floor
         maxLength: 16
         minLength: 1
       woodType:
         type: string
-        description: wood type of the PropertyDetail
+        description: type of wood used in the property
         maxLength: 16
         minLength: 1
       roofType:
         type: string
-        description: roof type of the PropertyDetail
+        description: type of roof the property having
         maxLength: 16
         minLength: 1
       wallType:
         type: string
-        description: wall type of the PropertyDetail
+        description: type of walls the property having
         maxLength: 16
         minLength: 1
-      vacantLand:
-        $ref: "#/definitions/VacantLandProperty"
       floors:
         description: Floors
         type: array
         items:
           $ref: '#/definitions/Floor'
       documents:
-        description: documents
+        description: The documents attached during assessment, modification or any transaction happened on the property.
         type: array
         items:
           $ref: '#/definitions/Document'
-      channel:
+      stateId:
         type: string
-        description: channel of the PropertyDetail
-        maxLength: 16
-        minLength: 4
+        description: Work flow ref id.
       applicationNo:
         type: string
-        description: Acknowldgement number given to citizen on submitting the application.
+        description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
         maxLength: 64
         minLength: 1
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - tenantId
-    - channel
+    - sitalArea
+    - propertyType
 
-  PropertyBoundary:
+  PropertyLocation:
     type: object
+    description: Boundary details for a property. 'revenueBoundary' is granular level Revenue heirarchy boundary, 'locationBoundary' is granular level Location heirarchy boundary, 'adminBoundary' is granular level Administration heirarchy boundary.
     properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the PropertyBoundary
-      tenantId:
-        type: string
-        description: tenant id of the PropertyBoundary
-        maxLength: 128
-        minLength: 4
-      longitude:
-        type: number
-        format: double
-        description: longitude of the PropertyBoundary
-      latitude:
-        type: number
-        format: double
-        description: latitude of the PropertyBoundary
-      revenueZone:
-        type: integer
-        format: int64
-        description: revenue zone of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      revenueWard:
-        type: string
-        description: revenue ward of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      revenueBlock:
-        type: string
-        description: revenue block of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      area:
-        type: string
-        description: area of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      locality:
-        type: string
-        description: locality of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      street:
-        type: string
-        description: street of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
-      adminWard:
-        type: string
-        description: admin ward of the PropertyBoundary
-        maxLength: 16
-        minLength: 1
+      revenueBoundary:
+        $ref: '#/definitions/Boundary'
+      locationBoundary:
+        $ref: '#/definitions/Boundary'
+      adminBoundary:
+        $ref: '#/definitions/Boundary'
       northBoundedBy:
         type: string
-        description: north bounded by of the PropertyBoundary
+        description: property bounded by on north side
         maxLength: 256
         minLength: 1
       eastBoundedBy:
         type: string
-        description: east bounded by of the PropertyBoundary
+        description: property bounded by on east side
         maxLength: 256
         minLength: 1
       westBoundedBy:
         type: string
-        description: west bounded by of the PropertyBoundary
+        description: property bounded by on west side
         maxLength: 256
         minLength: 1
       southBoundedBy:
         type: string
-        description: south bounded by of the PropertyBoundary
+        description: property bounded by on south side
         maxLength: 256
+        minLength: 1
+
+  VacantLandDetail:
+    type: object
+    properties:
+      surveyNumber:
+        type: string
+        description: survey number of the Land
+        maxLength: 64
+        minLength: 4
+      pattaNumber:
+        type: string
+        description: patta number of the Land
+        maxLength: 64
+        minLength: 4
+      marketValue:
+        type: number
+        format: double
+        description: market value of the Land
+      capitalValue:
+        type: number
+        format: double
+        description: capital value of the Land
+      layoutApprovedAuth:
+        type: string
+        description: layout approved authority of the Land
+        maxLength: 64
+        minLength: 4
+      layoutPermissionNo:
+        type: string
+        description: layout permission no by approved authority for the Land
+        maxLength: 64
+        minLength: 4
+      layoutPermissionDate:
+        type: string
+        format: date
+        description: layout permission date by approved authority for the Land
+      resdPlotArea:
+        type: number
+        format: double
+        description: resd plot area of the land
+      nonResdPlotArea:
+        type: number
+        format: double
+        description: non resd plot area of the land
+        
+  Floor:
+    type: object
+    description: The floor details. The Floor contains either Flats in case of apartment or Rooms in case of group or individual house.
+    properties:
+      floorNo:
+        type: string
+        description: floor no for the floor
+        maxLength: 16
+        minLength: 1
+      units:
+        description: Flat(s) or Room(s) information on a floor or in a Flat respectively.
+        type: array
+        items:
+          $ref: "#/definitions/Unit"
+    required:
+      - floorNo
+    
+  Unit:
+    type: object
+    description: A logical group of rooms on a floor
+    properties:
+      unitNo:
+        type: integer
+        format: int32
+        description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
+        maxLength: 8
+        minLength: 1
+      unitType:
+        type: string
+        description: type of the unit
+        maxLength: 16
+        minLength: 1
+        enum:
+          - FLAT
+          - ROOM
+      units:
+        description: Flat(s) or Room(s) information. When unit is there inside a unit is a room.
+        type: array
+        items:
+          $ref: "#/definitions/Unit"
+      length:
+        type: number
+        format: double
+        description: length of the Unit
+      width:
+        type: number
+        format: double
+        description: width of the Unit
+      builtupArea:
+        type: number
+        format: double
+        description: builtup area of the Unit
+      assessableArea:
+        type: number
+        format: double
+        description: assessable area for the Unit. Some ULBs have their own logic to consider builtup area for tax calculation.
+      bpaBuiltupArea:
+        type: number
+        format: double
+        description: builtup area given during the Building plan approval of the Floor
+      bpaNo:
+        type: string
+        description: Buidling plan approval no for the Floor
+        maxLength: 16
+        minLength: 1
+      bpaDate:
+        type: string
+        format: date
+        description: Buidling plan approval date for the Floor
+      usage:
+        type: string
+        description: usage of the Unit
+        maxLength: 16
+        minLength: 1
+      occupancy:
+        type: string
+        description: occupancy of the Unit
+        maxLength: 16
+        minLength: 1
+      occupierName:
+        type: string
+        description: Name of the occupier in a Unit
+        maxLength: 128
+        minLength: 1
+      firmName:
+        type: string
+        description: Name of the firm in a Unit
+        maxLength: 128
+        minLength: 1
+      rentCollected:
+        type: number
+        format: double
+        description: rent collected for the Unit it its given tenants are living.
+      structure:
+        type: string
+        description: structure of the Unit
+        maxLength: 16
+        minLength: 1
+      age:
+        type: string
+        description: age of the Unit
+        maxLength: 16
+        minLength: 1
+      exemptionReason:
+        type: string
+        description: exemption reason for the Unit
+        maxLength: 32
+        minLength: 1
+      isStructured:
+        type: boolean
+        description: is Unit is structured. Some building may not be in square or rectangle or in a proper shape to calculate a builtup area.
+        default: true
+      occupancyDate:
+        type: string
+        format: date
+        description: occupancy date of the Unit
+      constCompletionDate:
+        type: string
+        format: date
+        description: construction completion date of the Unit
+      manualArv:
+        type: number
+        format: double
+        description: manual arv for the Unit
+      arv:
+        type: number
+        format: double
+        description: The system calculated arv for the Unit
+      electricMeterNo:
+        type: string
+        description: electricity meter no for the Unit
+        maxLength: 64
+        minLength: 1
+      waterMeterNo:
+        type: string
+        description: water meter no for the Unit
+        maxLength: 64
         minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - tenantId
-
-  VacantLandProperty:
-    allOf: 
-    - $ref: '#/definitions/Property'
-    - type: object
-      properties:
-        surveyNumber:
-          type: string
-          description: survey number of the VacantLandProperty
-          maxLength: 64
-          minLength: 4
-        pattaNumber:
-          type: string
-          description: patta number of the VacantLandProperty
-          maxLength: 64
-          minLength: 4
-        marketValue:
-          type: number
-          format: double
-          description: market value of the VacantLandProperty
-        capitalValue:
-          type: number
-          format: double
-          description: capital value of the VacantLandProperty
-        layoutApprovedAuth:
-          type: string
-          description: layout approved auth of the VacantLandProperty
-          maxLength: 64
-          minLength: 4
-        layoutPermissionNo:
-          type: string
-          description: layout permission no of the VacantLandProperty
-          maxLength: 64
-          minLength: 4
-        layoutPermissionDate:
-          type: string
-          format: date
-          description: layout permission date of the VacantLandProperty
-        resdPlotArea:
-          type: number
-          format: double
-          description: resd plot area of the VacantLandProperty
-        nonResdPlotArea:
-          type: number
-          format: double
-          description: non resd plot area of the VacantLandProperty
-
+    - unitNo
+    - builtupArea
+    - usage
+    - occupancy
+    - structure
+    
   WorkFlowDetails:
     type: object
     description: This object holds info about the assignee and other workflow related info
@@ -788,6 +777,18 @@ definitions:
       fileStore:
         type: string
         description: File store reference key.
+
+  Boundary:
+    type: object
+    description: This object the boundary info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Boundary.
+      name:
+        type: string
+        description: Name of the boundary.
       
 parameters:
 ##########################################################
@@ -827,4 +828,4 @@ parameters:
 
 tags:
   - name: Property
-    description: APIs required to for property.
+    description: APIs required for property.

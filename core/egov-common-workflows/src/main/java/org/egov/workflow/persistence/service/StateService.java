@@ -63,7 +63,7 @@ public class StateService {
 	            .add(Restrictions.eq("tenantId", tenantId))
 	            .add(Restrictions.ne("status", StateStatus.ENDED))
 	            .add(Restrictions.not(Restrictions.conjunction().add(Restrictions.eq("status", StateStatus.STARTED))
-	                    .add(Restrictions.eq("createdBy.id", userId)))).addOrder(Order.desc("createdDate"))
+	                    .add(Restrictions.eq("createdBy", userId)))).addOrder(Order.desc("createdDate"))
 	                    .list();  
 	    
 	    }

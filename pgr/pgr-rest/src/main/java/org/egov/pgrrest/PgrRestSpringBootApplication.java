@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.tracer.config.TracerConfiguration;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +19,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -25,46 +32,74 @@ public class PgrRestSpringBootApplication {
 
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
     private static final String IST = "Asia/Calcutta";
+    private static final String CLUSTER_NAME = "cluster.name";
 
     @Value("${user.service.url}")
-	private String userServiceHost;
+    private String userServiceHost;
 
-	@Value("${egov.services.user.get_user_details}")
-	private String getUserDetailsUrl;
+    @Value("${egov.services.user.get_user_details}")
+    private String getUserDetailsUrl;
 
-	@Value("${egov.services.user.get_user_by_username}")
-	private String getUserByUserNameUrl;
+    @Value("${egov.services.user.get_user_by_username}")
+    private String getUserByUserNameUrl;
 
+    @Value("${es.host}")
+    private String elasticSearchHost;
 
-	@Bean
-	public UserRepository userRepository(RestTemplate restTemplate) {
-		return new UserRepository(restTemplate, userServiceHost, getUserDetailsUrl, getUserByUserNameUrl);
-	}
+    @Value("${es.transport.port}")
+    private Integer elasticSearchTransportPort;
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
+    @Value("${es.cluster.name}")
+    private String elasticSearchClusterName;
 
-	@Bean
-	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-		return new WebMvcConfigurerAdapter() {
+    private TransportClient client;
 
-			@Override
-			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-			}
+    @PostConstruct
+    public void init() throws UnknownHostException {
+        Settings settings = Settings.builder()
+            .put(CLUSTER_NAME, elasticSearchClusterName)
+            .build();
+        final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
+        final InetSocketTransportAddress transportAddress =
+            new InetSocketTransportAddress(esAddress, elasticSearchTransportPort);
+        client = new PreBuiltTransportClient(settings)
+            .addTransportAddress(transportAddress);
+    }
 
-		};
-	}
+    @Bean
+    public UserRepository userRepository(RestTemplate restTemplate) {
+        return new UserRepository(restTemplate, userServiceHost, getUserDetailsUrl, getUserByUserNameUrl);
+    }
 
-	public static void main(String[] args) {
-		TimeZone.setDefault(TimeZone.getTimeZone(IST));
-		SpringApplication.run(PgrRestSpringBootApplication.class, args);
-	}
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter() {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+        converter.setObjectMapper(mapper);
+        return converter;
+    }
+
+    @Bean
+    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+        return new WebMvcConfigurerAdapter() {
+
+            @Override
+            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+                configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+            }
+
+        };
+    }
+
+    @Bean
+    public TransportClient getTransportClient() {
+        return client;
+    }
+
+    public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone(IST));
+        SpringApplication.run(PgrRestSpringBootApplication.class, args);
+    }
 }

@@ -40,16 +40,20 @@
 
 package org.egov.wcms.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.model.UsageType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -59,10 +63,10 @@ import java.util.List;
 @ToString
 public class UsageTypeResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	@JsonProperty("UsageType")
-	private List<UsageType> usageType = new ArrayList<UsageType>();
+    @JsonProperty("UsageType")
+    private List<UsageType> usageType = new ArrayList<UsageType>();
 
 }

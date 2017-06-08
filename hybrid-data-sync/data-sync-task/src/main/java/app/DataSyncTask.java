@@ -41,14 +41,17 @@ public class DataSyncTask {
 
     @Value("${spring.profiles.active}")
     private String activeProfile;
+    
+    @Value("${app.timezone}")
+	private String timeZone;
 
     @Scheduled(fixedRateString = "${rate-in-milliseconds}")
     public void startSync() {
         Timestamp epoch = findEpoch();
         LocalDateTime ldt = LocalDateTime.now();
-        ZonedDateTime utcTime = ldt.atZone(ZoneId.of("UTC"));
-        String utcNow = utcTime.format(dateFormatter);
-        log.info("Staring sync at {} UTC", utcNow);
+        ZonedDateTime timeZoneTime = ldt.atZone(ZoneId.of(timeZone));
+        String timeZoneNow = timeZoneTime.format(dateFormatter);
+        log.info("Staring sync at {} "+timeZone, timeZoneNow);
 
         for (String sourceSchema : sourceSchemas) {
             for (SyncInfo info : syncConfig.getInfo()) {
@@ -69,12 +72,12 @@ public class DataSyncTask {
                 });
             }
         }
-        updateEpoch(utcNow);
+        updateEpoch(timeZoneNow);
     }
 
     private Timestamp calculateEpochWithTZ(Timestamp epoch, SyncInfo info) {
-        ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of("UTC"));
-        LocalDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.of(info.getSourceTimeZone())).toLocalDateTime();
+        ZonedDateTime timeZoneDateTime = ZonedDateTime.ofInstant(epoch.toInstant(), ZoneId.of(timeZone));
+        LocalDateTime localDateTime = timeZoneDateTime.withZoneSameInstant(ZoneId.of(info.getSourceTimeZone())).toLocalDateTime();
         return Timestamp.valueOf(localDateTime);
     }
 

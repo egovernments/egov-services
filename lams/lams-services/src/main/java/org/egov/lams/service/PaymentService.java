@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.lams.brokers.producer.AgreementProducer;
@@ -189,9 +188,17 @@ public class PaymentService {
 			System.out.print("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-				orderNo++;
-				totalAmount = totalAmount.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
-				billDetailInfos.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+				LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
+				if ("ADVANCE TAX".equalsIgnoreCase(demandDetail.getTaxReason())
+						|| "GOODWILL AMOUNT".equalsIgnoreCase(demandDetail.getTaxReason())
+						|| (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
+					orderNo++;
+					totalAmount = totalAmount
+							.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+					LOGGER.info("the amount added to bill : "+totalAmount);
+					billDetailInfos
+							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+				}
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
@@ -223,7 +230,7 @@ public class PaymentService {
 			billdetail.setCreditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 			billdetail.setDebitAmount(BigDecimal.ZERO);
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
-			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(), demandDetail.getTenantId(), requestInfo));
+			billdetail.setGlCode(demandDetail.getGlCode());
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
 			billdetail.setPeriod(demandDetail.getTaxPeriod());

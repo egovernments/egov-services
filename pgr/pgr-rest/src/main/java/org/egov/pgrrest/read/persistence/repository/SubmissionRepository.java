@@ -9,6 +9,7 @@ import org.egov.pgrrest.common.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.specification.SubmissionSpecification;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SubmissionRepository {
+    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
     private ServiceRequestTypeJpaRepository serviceTypeJpaRepository;
@@ -35,27 +37,40 @@ public class SubmissionRepository {
 
     public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
         final List<Submission> submissions = getSubmissions(searchCriteria);
-        enrichSubmissionsWithAttributeEntries(searchCriteria, submissions);
-        enrichSubmissionsWithServiceTypes(searchCriteria, submissions);
+        enrichSubmissionsWithAttributeEntries(searchCriteria.getTenantId(), submissions);
+        enrichSubmissionsWithServiceTypes(searchCriteria.getTenantId(), submissions);
         return submissions.stream()
             .map(Submission::toDomain)
             .collect(Collectors.toList());
     }
 
-    private void enrichSubmissionsWithServiceTypes(ServiceRequestSearchCriteria searchCriteria,
-                                                   List<Submission> submissions) {
+    public Long count(ServiceRequestSearchCriteria searchCriteria) {
+        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
+        return this.submissionJpaRepository.count(specification);
+    }
+
+    public List<ServiceRequest> findBy(List<String> serviceRequestIdList, String tenantId) {
+        final List<Submission> submissions = submissionJpaRepository.findCRNList(serviceRequestIdList, tenantId);
+        enrichSubmissionsWithAttributeEntries(tenantId, submissions);
+        enrichSubmissionsWithServiceTypes(tenantId, submissions);
+        return submissions.stream()
+            .map(Submission::toDomain)
+            .collect(Collectors.toList());
+    }
+
+    private void enrichSubmissionsWithServiceTypes(String tenantId, List<Submission> submissions) {
         final List<String> serviceCodes = getServiceCodes(submissions);
-        final Map<String, ServiceType> codeToServiceTypeMap = getServiceCodeToTypeMap(searchCriteria, serviceCodes);
+        final Map<String, ServiceType> codeToServiceTypeMap = getServiceCodeToTypeMap(tenantId, serviceCodes);
         submissions.forEach(submission -> {
             final ServiceType matchingServiceType = codeToServiceTypeMap.get(submission.getServiceCode());
             submission.setServiceType(matchingServiceType);
         });
     }
 
-    private Map<String, ServiceType> getServiceCodeToTypeMap(ServiceRequestSearchCriteria searchCriteria,
+    private Map<String, ServiceType> getServiceCodeToTypeMap(String tenantId,
                                                              List<String> serviceCodes) {
         final List<ServiceType> serviceTypes = serviceTypeJpaRepository
-            .findByCodeInAndTenantId(serviceCodes, searchCriteria.getTenantId());
+            .findByCodeInAndTenantId(serviceCodes, tenantId);
         return serviceTypes.stream()
             .collect(Collectors.toMap(ServiceType::getCode, serviceType -> serviceType));
     }
@@ -68,15 +83,32 @@ public class SubmissionRepository {
     }
 
     private List<Submission> getSubmissions(ServiceRequestSearchCriteria searchCriteria) {
-        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
-        final Sort sort = new Sort(Sort.Direction.DESC, "lastModifiedDate");
-        return this.submissionJpaRepository.findAll(specification, sort);
+        if (searchCriteria.isPaginationCriteriaPresent()) {
+            return getPagedSubmissions(searchCriteria);
+        }
+        return getNonPagedSubmissions(searchCriteria);
     }
 
-    private void enrichSubmissionsWithAttributeEntries(ServiceRequestSearchCriteria searchCriteria,
+    private List<Submission> getNonPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
+        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
+        return this.submissionJpaRepository.findAll(specification, getDefaultSort());
+    }
+
+    private List<Submission> getPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
+        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
+        final PageRequest pageRequest =
+            new PageRequest(searchCriteria.getFromIndex(), searchCriteria.getPageSize(), getDefaultSort());
+        return this.submissionJpaRepository.findAll(specification, pageRequest).getContent();
+    }
+
+    private Sort getDefaultSort() {
+        return new Sort(Sort.Direction.DESC, DEFAULT_SORT_FIELD);
+    }
+
+    private void enrichSubmissionsWithAttributeEntries(String tenantId,
                                                        List<Submission> submissions) {
         final Map<String, List<SubmissionAttribute>> submissionAttributes =
-            getSubmissionAttributes(searchCriteria, submissions);
+            getSubmissionAttributes(tenantId, submissions);
         submissions.forEach(submission -> {
             final List<SubmissionAttribute> matchingAttributes = submissionAttributes
                 .getOrDefault(submission.getCrn(), Collections.emptyList());
@@ -84,8 +116,8 @@ public class SubmissionRepository {
         });
     }
 
-    private Map<String, List<SubmissionAttribute>> getSubmissionAttributes(
-        ServiceRequestSearchCriteria searchCriteria, List<Submission> submissions) {
+    private Map<String, List<SubmissionAttribute>> getSubmissionAttributes(String tenantId,
+                                                                           List<Submission> submissions) {
         final List<String> crnList = submissions.stream()
             .map(Submission::getCrn)
             .collect(Collectors.toList());
@@ -93,7 +125,7 @@ public class SubmissionRepository {
             return new HashMap<>();
         }
         final List<SubmissionAttribute> submissionAttributes = submissionAttributeJpaRepository
-            .findByCrnListAndTenantId(crnList, searchCriteria.getTenantId());
+            .findByCrnListAndTenantId(crnList, tenantId);
         return submissionAttributes.stream()
             .collect(Collectors.groupingBy(SubmissionAttribute::getCrn));
     }

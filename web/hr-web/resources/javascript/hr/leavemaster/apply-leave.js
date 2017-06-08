@@ -155,7 +155,7 @@ class ApplyLeave extends React.Component {
                    try{
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
-                      var employeeid = getUrlVars()["id"];
+                      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
                       commonApiPost("hr-leave","eligibleleaves","_search",{
                         leaveType,tenantId,asOnDate,employeeid
                       }, function(err, res) {
@@ -307,10 +307,10 @@ addOrUpdate(e, mode) {
         delete tempInfo.code;
         commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId}, function(err, res) {
             if(res && res["Employee"] && res["Employee"][0]){
-              employee = res["Employee"][0]
+              employee = res["Employee"][0];
             }
             else{
-              employee={};
+              return  (showError("HOD does not exists for given date range Please assign the HOD."))
             }
             var hodname = employee.name;
             tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
@@ -333,7 +333,11 @@ addOrUpdate(e, mode) {
                         window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
                       },
                       error: function(err) {
-                        showError(err["statusText"]);
+                        if (err.LeaveApplication && err.LeaveApplication[0] && err.LeaveApplication[0].errorMsg) {
+                          showError(err.LeaveApplication[0].errorMsg);
+                        } else {
+                          showError("Something went wrong. Please contact Administrator.");
+                        }
                       }
                   });
         })
@@ -361,7 +365,7 @@ addOrUpdate(e, mode) {
 
     }
     const showActionButton=function() {
-      if(mode==="create" ||mode==="update")
+      if(mode==="create" || !(mode))
       {
         return (<button type="submit" className="btn btn-submit">Apply</button>);
       }

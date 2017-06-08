@@ -75,6 +75,10 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.revaluation}")
 	private String createAssetRevaluationTopicName;
 	
+	@Value("${kafka.topics.save.disposal}")
+	private String createAssetDisposalTopicName;
+	
+	
 	@Autowired
 	private Environment environment;
 
@@ -107,6 +111,9 @@ public class ApplicationProperties {
 	}
 	public String getCreateAssetRevaluationTopicName() {
 		return createAssetRevaluationTopicName;
+	}
+	public String getCreateAssetDisposalTopicName() {
+		return createAssetDisposalTopicName;
 	}
 
 }

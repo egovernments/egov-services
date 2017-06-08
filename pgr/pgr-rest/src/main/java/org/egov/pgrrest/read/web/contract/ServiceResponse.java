@@ -12,6 +12,6 @@ import java.util.List;
 public class ServiceResponse {
 
     private ResponseInfo responseInfo;
-
     private List<ServiceRequest> serviceRequests;
 }
+

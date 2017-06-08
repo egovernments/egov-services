@@ -76,6 +76,9 @@ public class UserService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<User> getUsers(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(employeeCriteria.getId(), employeeCriteria.getTenantId());
@@ -116,8 +119,7 @@ public class UserService {
 			LOGGER.debug("\n\n" + "Following exception occurred while creating user: " + errorResponseBody);
 			UserErrorResponse userErrorResponse = null;
 			try {
-				ObjectMapper mapper = new ObjectMapper();
-				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
 			} catch (JsonMappingException jme) {
 				LOGGER.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
 						+ jme.getMessage());
@@ -158,8 +160,7 @@ public class UserService {
 			LOGGER.debug("\n\n" + "Following exception occurred while updating user: " + errorResponseBody);
 			UserErrorResponse userErrorResponse = null;
 			try {
-				ObjectMapper mapper = new ObjectMapper();
-				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
 			} catch (JsonMappingException jme) {
 				LOGGER.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
 						+ jme.getMessage());

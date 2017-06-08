@@ -21,11 +21,11 @@ public class AssetRepository {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public Asset getAsset(Long assetId) {
+	public Asset getAsset(Long assetId,String tenantId) {
 
 		String url = propertiesManager.getAssetApiHostUrl()
 					+propertiesManager.getAssetApiSearchPath()
-					+ "?" + "id=" + assetId;
+					+ "?id=" + assetId + "&tenantId=" + tenantId;
 		LOGGER.info("ASSET API URL : "+url);
 		AssetResponse assetResponse = null;
 		try {

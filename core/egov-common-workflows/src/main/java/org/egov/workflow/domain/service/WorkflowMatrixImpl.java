@@ -67,7 +67,7 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Transactional
 	@Override
 	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
-		LOG.debug(processInstanceRequest.toString());
+		LOG.info("ProcessInstance Request Payload"+processInstanceRequest.toString());
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
 				null, null,processInstance.getTenantId());
@@ -325,15 +325,15 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	@Override
 	public TaskResponse getTasks(TaskRequest taskRequest) {
-		//LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
+		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
 		final List<Task> tasks = new ArrayList<Task>();
 		final Long userId = taskRequest.getRequestInfo().getUserInfo().getId();
-		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,taskRequest.getRequestInfo().getTenantId());
+		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		final List<Long> ownerIds = positionRepository.getByEmployeeId(userId.toString(), taskRequest.getRequestInfo())
 				.parallelStream().map(position -> position.getId()).collect(Collectors.toList());
 		List<State> states = new ArrayList<State>();
 		if (!types.isEmpty())
-			states = stateService.getStates(ownerIds, types, userId,taskRequest.getRequestInfo().getTenantId());
+			states = stateService.getStates(ownerIds, types, userId,taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		for (final State s : states)
 			tasks.add(s.map());
 

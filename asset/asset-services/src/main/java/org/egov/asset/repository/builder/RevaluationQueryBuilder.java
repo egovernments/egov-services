@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.model.enums.RevaluationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +45,24 @@ public class RevaluationQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues, RevaluationCriteria revaluationCriteria) {
 
 		System.out.println("revaluationCriteria>>"+revaluationCriteria);
+		boolean isAppendAndClause = false;
+		
+		selectQuery.append(" WHERE");
+		if (revaluationCriteria.getStatus() != null) {
+			isAppendAndClause = true;
+			selectQuery.append(" revalution.status = ?");
+			preparedStatementValues.add(revaluationCriteria.getStatus().toString());
+		} else {
+			isAppendAndClause = true;
+			selectQuery.append(" revalution.status = ?");
+			preparedStatementValues.add(RevaluationStatus.ACTIVE.toString());
+		}
+		
 		if (revaluationCriteria.getId() == null && revaluationCriteria.getAssetId() == null)
 			return;
-
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
-
+		
 		if (revaluationCriteria.getTenantId() != null) {
-			isAppendAndClause = true;
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" revalution.tenantId = ?");
 			preparedStatementValues.add(revaluationCriteria.getTenantId());
 		}
@@ -65,13 +76,14 @@ public class RevaluationQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" revalution.assetid IN (" + getIdQuery(revaluationCriteria.getAssetId()));
 		}
-
+		
+		selectQuery.append(" ORDER BY revalution.revaluationdate desc");
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues, RevaluationCriteria revaluationCriteria) {
 		// handle limit(also called pageSize) here
-		//selectQuery.append(" ORDER BY asset.name");
+		
 
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());

@@ -39,11 +39,10 @@
  */
 package org.egov.wcms.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.wcms.config.ApplicationProperties;
+import java.util.List;
+
 import org.egov.wcms.model.UsageType;
-import org.egov.wcms.producers.UsageTypeProducer;
+import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.UsageTypeRepository;
 import org.egov.wcms.web.contract.UsageTypeGetRequest;
 import org.egov.wcms.web.contract.UsageTypeRequest;
@@ -52,7 +51,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class UsageTypeService {
@@ -63,23 +63,22 @@ public class UsageTypeService {
     private UsageTypeRepository usageTypeRepository;
 
     @Autowired
-    private UsageTypeProducer usageTypeProducer;
+    private WaterMasterProducer waterMasterProducer;
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-
-   public UsageTypeRequest create(final UsageTypeRequest usageTypeRequest) {
-       return usageTypeRepository.persistCreateUsageType(usageTypeRequest);
-   }
+    public UsageTypeRequest create(final UsageTypeRequest usageTypeRequest) {
+        return usageTypeRepository.persistCreateUsageType(usageTypeRequest);
+    }
 
     public UsageTypeRequest update(final UsageTypeRequest usageTypeRequest) {
         return usageTypeRepository.persistModifyUsageType(usageTypeRequest);
     }
 
-
-    public UsageType createUsageType(final String topic,final String key,final UsageTypeRequest usageTypeRequest) {
-        usageTypeRequest.getUsageType().setCode(codeGeneratorService.generate(usageTypeRequest.getUsageType().SEQ_USAGETYPE));
+    public UsageType createUsageType(final String topic, final String key, final UsageTypeRequest usageTypeRequest) {
+        usageTypeRequest.getUsageType();
+        usageTypeRequest.getUsageType().setCode(codeGeneratorService.generate(UsageType.SEQ_USAGETYPE));
         final ObjectMapper mapper = new ObjectMapper();
         String usageTypeValue = null;
         try {
@@ -90,14 +89,14 @@ public class UsageTypeService {
             e.printStackTrace();
         }
         try {
-            usageTypeProducer.sendMessage(topic,key,usageTypeValue);
+            waterMasterProducer.sendMessage(topic, key, usageTypeValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return usageTypeRequest.getUsageType();
     }
 
-    public UsageType updateUsageType(final String topic,final String key,final UsageTypeRequest usageTypeRequest) {
+    public UsageType updateUsageType(final String topic, final String key, final UsageTypeRequest usageTypeRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String usageTypeValue = null;
         try {
@@ -108,21 +107,20 @@ public class UsageTypeService {
             e.printStackTrace();
         }
         try {
-            usageTypeProducer.sendMessage(topic,key,usageTypeValue);
+            waterMasterProducer.sendMessage(topic, key, usageTypeValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return usageTypeRequest.getUsageType();
     }
 
-
-    public boolean getUsageTypeByNameAndCode(final String code,final String name,final String tenantId) {
-        return usageTypeRepository.checkUsageTypeByNameAndCode(code,name,tenantId);
+    public boolean getUsageTypeByNameAndCode(final String code, final String name, final String tenantId) {
+        return usageTypeRepository.checkUsageTypeByNameAndCode(code, name, tenantId);
     }
 
-    public List<UsageType> getUsageTypes(UsageTypeGetRequest usageTypeGetRequest) {
-       return usageTypeRepository.findForCriteria(usageTypeGetRequest);
+    public List<UsageType> getUsageTypes(final UsageTypeGetRequest usageTypeGetRequest) {
+        return usageTypeRepository.findForCriteria(usageTypeGetRequest);
 
-   }
+    }
 
 }

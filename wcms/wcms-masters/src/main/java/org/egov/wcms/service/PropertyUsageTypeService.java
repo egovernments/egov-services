@@ -90,7 +90,7 @@ public class PropertyUsageTypeService {
         try {
             waterMasterProducer.sendMessage(topic, key, propUsageTypeValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Exception Encountered : " + ex);
         }
         return propUsageTypeRequest.getPropertyTypeUsageType();
     }

@@ -93,12 +93,12 @@ public class DocumentTypeService {
             documentTypeValue = mapper.writeValueAsString(documentTypeReq);
             logger.info("documentTypeValue::" + documentTypeValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+        	logger.error("Exception Encountered : " + e);
         }
         try {
         	waterMasterProducer.sendMessage(topic,key,documentTypeValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Exception Encountered : " + ex);
         }
         return documentTypeReq.getDocumentType();
     }

@@ -79,12 +79,12 @@ public class DocumentTypeApplicationTypeService {
             docTypeApplTypeValue = mapper.writeValueAsString(docNameRequest);
             logger.info("DocumentTypeApplicationTypeValue::" + docTypeApplTypeValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+        	logger.error("Exception Encountered : " + e);
         }
         try {
         	mastertProducer.sendMessage(topic,key,docTypeApplTypeValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Exception Encountered : " + ex);
         }
         return docNameRequest.getDocumentTypeApplicationType();
     }

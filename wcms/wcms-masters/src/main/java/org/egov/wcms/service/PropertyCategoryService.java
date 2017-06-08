@@ -74,12 +74,12 @@ public class PropertyCategoryService {
             propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
             logger.info("propertyCategoryValue::" + propertyCategoryValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+        	logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, propertyCategoryValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Exception Encountered : " + ex);
         }
         return propertyCategoryRequest;
     }

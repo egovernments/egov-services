@@ -77,7 +77,7 @@ public class TransactionPersistConsumer {
             if (record.topic().equals(applicationProperties.getCreateLegacyConnectionTopicName()))
             	waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
         } catch (final IOException e) {
-            e.printStackTrace();
+        	logger.error("Exception Encountered : " + e);
         }
     }
 	

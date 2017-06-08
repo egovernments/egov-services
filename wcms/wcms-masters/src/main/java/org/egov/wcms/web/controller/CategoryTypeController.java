@@ -259,6 +259,11 @@ public class CategoryTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         categoryResponse.setResponseInfo(responseInfo);
+        try{
+        	
+        }catch (Exception e){
+        	logger.error("Exception Encountered : " + e);
+        }
         return new ResponseEntity<CategoryTypeResponse>(categoryResponse, HttpStatus.OK);
 
     }

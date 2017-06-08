@@ -82,12 +82,12 @@ public class PropertyTypePipeSizeTypeService {
             propertyPipeSizeValue = mapper.writeValueAsString(propertyPipeSizeRequest);
             logger.info("propertyPipeSizeValue::" + propertyPipeSizeValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+        	logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, propertyPipeSizeValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Exception Encountered : " + ex);
         }
         return propertyPipeSizeRequest.getPropertyPipeSize();
     }

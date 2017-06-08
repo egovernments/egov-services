@@ -32,8 +32,6 @@ public class RevaluationIndexService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private final String egfServiceHost = applicationProperties.getEgfServiceHostName();
-
 	public void postAssetRevaluation(final RevaluationRequest revaluationRequest) {
 		if (revaluationRequest != null) {
 			final RevaluationIndex revaluationIndex = prepareRevaluationIndex(revaluationRequest);
@@ -44,6 +42,7 @@ public class RevaluationIndexService {
 	}
 
 	private RevaluationIndex prepareRevaluationIndex(final RevaluationRequest revaluationRequest) {
+
 		final RevaluationIndex revaluationIndex = new RevaluationIndex();
 		final Revaluation revaluation = revaluationRequest.getRevaluation();
 		revaluationIndex.setRevaluationData(revaluation);
@@ -113,8 +112,9 @@ public class RevaluationIndexService {
 	}
 
 	private SubScheme getSubSchemeData(final Revaluation revaluation) {
-		final String url = egfServiceHost + applicationProperties.getEgfServiceSubSchemesSearchPath() + "?&tenantId="
-				+ revaluation.getTenantId() + "&id=" + revaluation.getSubScheme().toString();
+		final String url = applicationProperties.getEgfServiceHostName()
+				+ applicationProperties.getEgfServiceSubSchemesSearchPath() + "?&tenantId=" + revaluation.getTenantId()
+				+ "&id=" + revaluation.getSubScheme().toString();
 		LOGGER.info("subscheme url :: " + url);
 		final SubScheme subScheme = restTemplate.postForObject(url, new RequestInfo(), SubScheme.class);
 		LOGGER.info("subscheme object :: " + subScheme);
@@ -122,8 +122,9 @@ public class RevaluationIndexService {
 	}
 
 	private Scheme getSchemeData(final Revaluation revaluation) {
-		final String url = egfServiceHost + applicationProperties.getEgfServiceSchemesSearchPath() + "?&tenantId="
-				+ revaluation.getTenantId() + "&id=" + revaluation.getScheme().toString();
+		final String url = applicationProperties.getEgfServiceHostName()
+				+ applicationProperties.getEgfServiceSchemesSearchPath() + "?&tenantId=" + revaluation.getTenantId()
+				+ "&id=" + revaluation.getScheme().toString();
 		LOGGER.info("scheme url :: " + url);
 		final Scheme scheme = restTemplate.postForObject(url, new RequestInfo(), Scheme.class);
 		LOGGER.info("scheme object :: " + scheme);
@@ -131,8 +132,9 @@ public class RevaluationIndexService {
 	}
 
 	private Fund getFundData(final Revaluation revaluation) {
-		final String url = egfServiceHost + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId="
-				+ revaluation.getTenantId() + "&id=" + revaluation.getFund().toString();
+		final String url = applicationProperties.getEgfServiceHostName()
+				+ applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + revaluation.getTenantId()
+				+ "&id=" + revaluation.getFund().toString();
 		LOGGER.info("fund url :: " + url);
 		final Fund fund = restTemplate.postForObject(url, new RequestInfo(), Fund.class);
 		LOGGER.info("fund object :: " + fund);
@@ -141,8 +143,9 @@ public class RevaluationIndexService {
 	}
 
 	private Function getFunctionData(final Revaluation revaluation) {
-		final String url = egfServiceHost + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId="
-				+ revaluation.getTenantId() + "&id=" + revaluation.getFunction().toString();
+		final String url = applicationProperties.getEgfServiceHostName()
+				+ applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + revaluation.getTenantId()
+				+ "&id=" + revaluation.getFunction().toString();
 		LOGGER.info("function url :: " + url);
 		final Function function = restTemplate.postForObject(url, new RequestInfo(), Function.class);
 		LOGGER.info("function object :: " + function);

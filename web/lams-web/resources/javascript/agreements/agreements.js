@@ -789,7 +789,7 @@ try {
 
     if (rentInc && rentInc.constructor == Array) {
         for (var i = 0; i < rentInc.length; i++) {
-            $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['type']}</option>`)
+            $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`)
         }
     }
 } catch (e) {

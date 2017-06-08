@@ -208,7 +208,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /occuapancymasters/_search:
+    /occuapancies/_search:
       post:
         summary: Get the list of occuapancymaster(s)
         description: occuapancymasters
@@ -261,7 +261,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /occuapancymasters/_create:
+    /occuapancies/_create:
       post:
         summary: Create new occuapancymaster(s)
         description: Create new occuapancymaster(s)
@@ -284,7 +284,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /occuapancymasters/{id}/_update:
+    /occuapancies/{id}/_update:
       post:
         summary: Update any of the occuapancymasters
         description: Update any of the occuapancymasters
@@ -619,7 +619,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /usagemasters/_search:
+    /usages/_search:
       post:
         summary: Get the list of usagemaster(s)
         description: usagemasters
@@ -676,7 +676,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /usagemasters/_create:
+    /usages/_create:
       post:
         summary: Create new usagemaster(s)
         description: Create new usagemaster(s)
@@ -699,7 +699,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /usagemasters/{id}/_update:
+    /usages/{id}/_update:
       post:
         summary: Update any of the usagemasters
         description: Update any of the usagemasters

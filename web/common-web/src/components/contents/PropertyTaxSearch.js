@@ -9,7 +9,6 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import DataTable from '../common/Table';
 import Api from '../../api/pTAPIS';
 
 const $ = require('jquery');
@@ -66,12 +65,18 @@ class PropertyTaxSearch extends Component {
     let {initForm} = this.props;
     initForm();
     let {toggleDailogAndSetText}=this.props;
-    // let response=Api.commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" }).then(function(response)
+    // Api.commonApiPost("egf-masters", "functionaries", "_search").then(function(response)
     // {
-    //
+    // console.log(response);
     // },function(err) {
-    //     toggleDailogAndSetText(true,err)
+    // console.log(err);
     // });
+    let response=Api.commonApiPost("egf-masters", "functions", "_search").then(function(response)
+    {
+      console.log(response)
+    },function(err) {
+        console.log(err);
+    });
 
   }
 
@@ -87,7 +92,7 @@ class PropertyTaxSearch extends Component {
   {
       let {showTable,changeButtonText}=this.props;
       e.preventDefault();
-      console.log("Show Table");
+      // console.log("Show Table");
       flag=1;
       changeButtonText("Search Again");
       // this.setState({searchBtnText:'Search Again'})
@@ -127,8 +132,8 @@ class PropertyTaxSearch extends Component {
       buttonText
     } = this.props;
     let {search} = this;
-    console.log(propertyTaxSearch);
-    console.log(isTableShow);
+    // console.log(propertyTaxSearch);
+    // console.log(isTableShow);
     const viewTabel=()=>
     {
       return (

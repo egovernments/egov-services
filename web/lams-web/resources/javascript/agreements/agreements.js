@@ -100,10 +100,10 @@ $("select").on("change", function() {
             departmentId: $("#approverDepartment").val(),
             designationId: $("#approverDesignation").val()
         }).responseJSON["Employee"] || [];
-        $(`#approverPositionId`).html(`<option value=''>Select</option>`)
+        $(`#approverName`).html(`<option value=''>Select</option>`)
 
         for (var i = 0; i < employees.length; i++) {
-            $(`#approverPositionId`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+            $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
         }
     }
 
@@ -242,7 +242,7 @@ var commomFieldsRules = {
     paymentCycle: {
         required: true
     },
-    approverPositionId: {
+    approverName: {
         required: true
     },
     rentIncrementMethod: {
@@ -325,7 +325,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
 
     //append category text
     $(".categoryType").prepend("Land ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Shop") {
     // validation rules for shop agreement
     validationRules = {
         // shoppingComplexName: {
@@ -1116,10 +1116,9 @@ $("#createAgreementForm").validate({
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
         agreement["workflowDetails"] = {};
-        agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverPositionId"]);
-        if(agreement.wFremarks) {
-            agreement["workflowDetails"]["remarks"] = agreement.wFremarks;
-            delete agreement.wFremarks;
+        agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
+        if(agreement.remarks) {
+            agreement["workflowDetails"]["remarks"] = agreement.remarks;
         }
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
@@ -1166,7 +1165,7 @@ $("#createAgreementForm").validate({
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
-                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverPositionId"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
+                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
                     }
 
                 } else if(response["responseJSON"] && response["responseJSON"].Error) {

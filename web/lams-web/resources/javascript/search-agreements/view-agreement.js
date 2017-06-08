@@ -76,13 +76,10 @@ $(document).ready(function() {
     // })
 
     function printNotice(noticeData) {
-        var commencementDate=new Date(noticeData.commencementDate);
-        var expiryDate=new Date(noticeData.expiryDate);
-        var rentPayableDate = new Date(noticeData.rentPayableDate);
+        var commencementDate=noticeData.commencementDate;
+        var expiryDate= noticeData.expiryDate;
+        var rentPayableDate = noticeData.rentPayableDate;
 
-        var commencementDateInFormate=commencementDate.getDate()<10?"0"+commencementDate.getDate():commencementDate.getDate() +"-"+commencementDate.getMonth()<10?"0"+commencementDate.getMonth():commencementDate.getMonth() +"-"+commencementDate.getFullYear();
-        var expiryDateInFormate=expiryDate.getDate()<10?"0"+expiryDate.getDate():expiryDate.getDate() +"-"+expiryDate.getMonth()<10?"0"+expiryDate.getMonth():expiryDate.getMonth() +"-"+expiryDate.getFullYear();
-        var rentPayableDateInFormate= rentPayableDate.getDate() < 10 ? "0" + rentPayableDate.getDate() :rentPayableDate.getDate() +"-"+rentPayableDate.getMonth()<10?"0"+rentPayableDate.getMonth():rentPayableDate.getMonth() +"-"+rentPayableDate.getFullYear();
 
         var doc = new jsPDF();
         doc.setFontType("bold");
@@ -98,17 +95,17 @@ $(document).ready(function() {
         doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
 
         doc.setFontType("normal");
-        doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __' + noticeData.agreementPeriod * 12 + '____ months commencing from _____' + commencementDateInFormate + '_____(dd-mm-yyyy) to ____' + expiryDateInFormate + '__________(dd-mm-yyyy).', (210 - 15 - 15)));
-        doc.text(15, 100, doc.splitTextToSize('2.The property leased is shop No___' + noticeData.assetNo + '_____and shall be leased for a sum of Rs. ____' + noticeData.rent + '____/-DDD (Rupees _____' + noticeData.rentInWord + '______ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
-        doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ____' + noticeData.securityDeposit + '____/- (Rupees ____' + noticeData.securityDepositInWord + '____ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-        doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __' + rentPayableDateInFormate + '___ of the succeeding month.', (210 - 15 - 15)));
+        doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __' + noticeData.agreementPeriod * 12 + '____ months commencing from _____' + commencementDate + '_____(dd/mm/yyyy) to ____' + expiryDate + '__________(dd/mm/yyyy).', (210 - 15 - 15)));
+        doc.text(15, 100, doc.splitTextToSize('2.The property leased is shop No___' + noticeData.assetNo + '_____and shall be leased for a sum of Rs. ____' + noticeData.rent + '____/-DDD (' + noticeData.rentInWord + ') per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
+        doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ____' + noticeData.securityDeposit + '____/- (' + noticeData.securityDepositInWord + ') as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
+        doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __' + rentPayableDate + '___ of the succeeding month.', (210 - 15 - 15)));
         doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
         doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
         doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
         doc.addPage()
         doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
         doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-        doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __' + expiryDateInFormate + '___ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
+        doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __' + expiryDate + '___ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
 
         doc.text(15, 90, noticeData.commissionerName?noticeData.commissionerName:"");
         doc.text(160, 90, 'LESSEE');
@@ -117,6 +114,7 @@ $(document).ready(function() {
         doc.text(15, 110, tenantId.split(".")[1]);
 
         doc.save('Notice.pdf');
+        open(location, '_self').close();
     }
 
     // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {
@@ -238,17 +236,17 @@ $(document).ready(function() {
         // console.log(this.value);
         renewAgreement[this.id] = this.value;
 
-        if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
+        if (($("#approver_department").val() != "" && $("#approver_designation").val() != "") && (this.id == "approver_department" || this.id == "approver_designation")) {
             employees = commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,
-                departmentId: $("#approverDepartment").val(),
-                designationId: $("#approverDesignation").val()
+                departmentId: $("#approver_department").val(),
+                designationId: $("#approver_designation").val()
             }).responseJSON["Employee"] || [];
 
 
 
             for (var i = 0; i < employees.length; i++) {
-                $(`#approverPositionId`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+                $(`#approver_name`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
             }
         }
     });
@@ -372,7 +370,7 @@ $(document).ready(function() {
                         designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
                     }
 
-                    $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
+                    $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
                 }
             },process.businessKey);
         }
@@ -395,10 +393,10 @@ $(document).ready(function() {
     }
 
     for (var variable in department) {
-        $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
+        $(`#approver_department`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
     }
     /* for (var variable in designation) {
-       $(`#approverDesignation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
+       $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
      }*/
 
     _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name", agreementDetail.asset.assetCategory.id);
@@ -502,7 +500,7 @@ $(document).ready(function() {
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
             "type": process.businessKey,
-            "assignee": $("#approverPositionId") && $("#approverPositionId").val() ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
+            "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };
@@ -532,7 +530,7 @@ $(document).ready(function() {
                 contentType: 'application/json'
             });
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approver_name").val() ? getNameById(employees, $("#approver_name").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }

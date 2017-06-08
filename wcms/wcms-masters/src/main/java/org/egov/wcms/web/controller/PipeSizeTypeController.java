@@ -98,13 +98,13 @@ public class PipeSizeTypeController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("pipeSizeRequest::" + pipeSizeRequest);
 
         final List<ErrorResponse> errorResponses = validatePipeSizeRequest(pipeSizeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PipeSizeType pipeSize = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),
                 "pipesize-create", pipeSizeRequest);
@@ -120,14 +120,14 @@ public class PipeSizeTypeController {
             @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("pipeSizeRequest::" + pipeSizeRequest);
         pipeSizeRequest.getPipeSize().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatePipeSizeRequest(pipeSizeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PipeSizeType pipeSize = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),
                 "pipesize-update", pipeSizeRequest);
@@ -258,7 +258,7 @@ public class PipeSizeTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         pipeSizeResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<PipeSizeTypeResponse>(pipeSizeResponse, HttpStatus.OK);
+        return new ResponseEntity<>(pipeSizeResponse, HttpStatus.OK);
 
     }
 

@@ -83,16 +83,18 @@ public class PropertyPipeSizeRepositoryTest {
         final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizes.add(propertyPipeSize);
 
-        when(propertyPipeSizeQueryBuilder.getQuery(any(PropertyTypePipeSizeTypeGetRequest.class), any(List.class))).thenReturn("");
+        when(propertyPipeSizeQueryBuilder.getQuery(any(PropertyTypePipeSizeTypeGetRequest.class), any(List.class)))
+                .thenReturn("");
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(PropertyPipeSizeRowMapper.class)))
                 .thenReturn(propertyPipeSizes);
 
-        assertTrue(propertyPipeSizes.equals(propertyPipeSizeRepository.findForCriteria(new PropertyTypePipeSizeTypeGetRequest())));
+        assertTrue(
+                propertyPipeSizes.equals(propertyPipeSizeRepository.findForCriteria(new PropertyTypePipeSizeTypeGetRequest())));
     }
 
     @Test
     public void test_Inavalid_Find_PropertyPipeSize() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
         final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizes.add(propertyPipeSize);

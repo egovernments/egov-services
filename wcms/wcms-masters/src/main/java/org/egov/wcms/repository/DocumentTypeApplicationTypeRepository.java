@@ -66,56 +66,69 @@ public class DocumentTypeApplicationTypeRepository {
 
     @Autowired
     private DocumentTypeApplicationTypeQueryBuilder documentTypeApplicationTypeQueryBuilder;
-    
+
     @Autowired
     private DocumentTypeApplicationTypeMapper documentTypeApplicationTypeRowMapper;
 
-    public DocumentTypeApplicationTypeReq persistCreateDocTypeApplicationType(final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
+    public DocumentTypeApplicationTypeReq persistCreateDocTypeApplicationType(
+            final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
         LOGGER.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
         final String docNameInsert = DocumentTypeApplicationTypeQueryBuilder.insertDocNameQuery();
         final DocumentTypeApplicationType docName = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
-        Object[] obj = new Object[] {docName.getApplicationType(),docName.getDocumentTypeId(),docName.getMandatory(),docName.getActive(),Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),docName.getTenantId() };
+        final Object[] obj = new Object[] { docName.getApplicationType(), docName.getDocumentTypeId(), docName.getMandatory(),
+                docName.getActive(), Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), docName.getTenantId() };
 
         jdbcTemplate.update(docNameInsert, obj);
         return docTypeAppliTypeRequest;
     }
 
-    public List<DocumentTypeApplicationType> findForCriteria(DocumentTypeApplicationTypeGetRequest docTypeAppliTypeGetRequest) {
-        List<Object> preparedStatementValues = new ArrayList<Object>();
-         String queryStr = documentTypeApplicationTypeQueryBuilder.getQuery(docTypeAppliTypeGetRequest, preparedStatementValues);
-        List<DocumentTypeApplicationType> docTypeAppliTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), documentTypeApplicationTypeRowMapper);
+    public List<DocumentTypeApplicationType> findForCriteria(
+            final DocumentTypeApplicationTypeGetRequest docTypeAppliTypeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = documentTypeApplicationTypeQueryBuilder.getQuery(docTypeAppliTypeGetRequest,
+                preparedStatementValues);
+        final List<DocumentTypeApplicationType> docTypeAppliTypes = jdbcTemplate.query(queryStr,
+                preparedStatementValues.toArray(),
+                documentTypeApplicationTypeRowMapper);
         return docTypeAppliTypes;
     }
-   
-    public DocumentTypeApplicationTypeReq persistModifyDocTypeApplicationType(final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
+
+    public DocumentTypeApplicationTypeReq persistModifyDocTypeApplicationType(
+            final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
         LOGGER.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
-        final String documentTypeApplicationTypeUpdate = documentTypeApplicationTypeQueryBuilder.updateDocumentTypeApplicationTypeQuery();
-        final DocumentTypeApplicationType docTypeAppliType= docTypeAppliTypeRequest.getDocumentTypeApplicationType();
-        Object[] obj = new Object[] {docTypeAppliType.getApplicationType(),docTypeAppliType.getDocumentTypeId(),docTypeAppliType.getMandatory(),docTypeAppliType.getActive(),
-                Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), docTypeAppliType.getId() };
+        final String documentTypeApplicationTypeUpdate = DocumentTypeApplicationTypeQueryBuilder
+                .updateDocumentTypeApplicationTypeQuery();
+        final DocumentTypeApplicationType docTypeAppliType = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
+        final Object[] obj = new Object[] { docTypeAppliType.getApplicationType(), docTypeAppliType.getDocumentTypeId(),
+                docTypeAppliType.getMandatory(), docTypeAppliType.getActive(),
+                Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), docTypeAppliType.getId() };
         jdbcTemplate.update(documentTypeApplicationTypeUpdate, obj);
         return docTypeAppliTypeRequest;
 
     }
-    
-     
-    public boolean checkDocumentTypeApplicationTypeExist(long documentType,String applicationType,String tenantid){
-    	
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
-       
+
+    public boolean checkDocumentTypeApplicationTypeExist(final long documentType, final String applicationType,
+            final String tenantid) {
+
+        final List<Object> preparedStatementValues = new ArrayList<>();
+
         preparedStatementValues.add(applicationType);
         preparedStatementValues.add(documentType);
         preparedStatementValues.add(tenantid);
-        String query =null;
-        if (documentType !=0 &&  applicationType!=null && tenantid!=null)
-        query = documentTypeApplicationTypeQueryBuilder.checkDocTypeApplicationTypeExist();
-       
-        final List<Map<String, Object>> documentAndAppliTypes = jdbcTemplate.queryForList(query,preparedStatementValues.toArray());
+        String query = null;
+        if (documentType != 0 && applicationType != null && tenantid != null)
+            query = documentTypeApplicationTypeQueryBuilder.checkDocTypeApplicationTypeExist();
+
+        final List<Map<String, Object>> documentAndAppliTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
         if (!documentAndAppliTypes.isEmpty())
             return false;
 
         return true;
-    	
+
     }
 }

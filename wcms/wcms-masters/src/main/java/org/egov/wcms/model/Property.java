@@ -41,8 +41,13 @@ package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -53,19 +58,19 @@ import lombok.*;
 @Builder
 public class Property {
 
-	@NotNull
-	private long id;
-	
-	@NotNull
-	private String usageType;
-	private long usageTypeId;
-	
-	@NotNull
-	private String propertyType;
-	private long propertyTypeId;
-	
-	@NotNull
-	private String address;
+    @NotNull
+    private long id;
+
+    @NotNull
+    private String usageType;
+    private long usageTypeId;
+
+    @NotNull
+    private String propertyType;
+    private long propertyTypeId;
+
+    @NotNull
+    private String address;
 }
 
-//This object needs modification based on the response received from property tax module.
+// This object needs modification based on the response received from property tax module.

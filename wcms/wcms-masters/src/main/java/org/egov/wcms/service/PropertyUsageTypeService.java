@@ -56,7 +56,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @Service
 public class PropertyUsageTypeService {
 
@@ -71,7 +70,7 @@ public class PropertyUsageTypeService {
     public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
     }
-    
+
     public PropertyTypeUsageTypeReq update(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest);
     }
@@ -90,7 +89,7 @@ public class PropertyUsageTypeService {
         try {
             waterMasterProducer.sendMessage(topic, key, propUsageTypeValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return propUsageTypeRequest.getPropertyTypeUsageType();
     }
@@ -112,11 +111,9 @@ public class PropertyUsageTypeService {
     }
 
     private PropertyTypeUsageTypeReq getIdForRequestCodes(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        // Hit the Property Tax APIs to verify and get the IDs for the Code.
-        // Once APIs are available, remove random number function.
-        int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
         propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(1L);
-        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
         propUsageTypeRequest.getPropertyTypeUsageType().setUsageTypeId(1L);
 
         return propUsageTypeRequest;

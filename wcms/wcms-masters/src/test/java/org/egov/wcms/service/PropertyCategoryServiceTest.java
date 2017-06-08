@@ -96,7 +96,7 @@ public class PropertyCategoryServiceTest {
 
         assertTrue(propertyCategories.equals(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)));
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
     public void test_throwException_Update_PropertyCategory() throws Exception {

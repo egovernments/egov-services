@@ -54,32 +54,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class WaterConnectionService {
-	
+
     public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
-    
+
     @Autowired
     private WaterTransactionProducer waterTransactionProducer;
-    
+
     @Autowired
     private AckConsumerNoGenerator ackConsumerNoGenerator;
-    
+
     @Autowired
     private WaterConnectionRepository waterConnectionRepository;
-    
-    public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
+
+    public Connection createWaterConnection(final String topic, final String key,
+            final WaterConnectionReq waterConnectionRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
         try {
-        	waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
+            waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
             logger.info("WaterConnectionService request::" + waterConnectionRequest);
             waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
             logger.info("waterConnectionValue::" + waterConnectionValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception while stringifying water coonection object", e);
+            logger.error("Exception while stringifying water coonection object", e);
         }
         try {
-           
-        	waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
+
+            waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
         } catch (final Exception e) {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
@@ -88,14 +89,14 @@ public class WaterConnectionService {
 
         return waterConnectionRequest.getConnection();
     }
-    
-    public Connection create(WaterConnectionReq waterConnectionRequest){
-    	logger.info("Service API entry for create Connection");
-    	try{
-    	waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
-    	}catch(Exception e){
-    		logger.error("Persisting failed due to db exception", e);
-    	}
-    	return waterConnectionRequest.getConnection();
+
+    public Connection create(WaterConnectionReq waterConnectionRequest) {
+        logger.info("Service API entry for create Connection");
+        try {
+            waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
+        } catch (final Exception e) {
+            logger.error("Persisting failed due to db exception", e);
+        }
+        return waterConnectionRequest.getConnection();
     }
 }

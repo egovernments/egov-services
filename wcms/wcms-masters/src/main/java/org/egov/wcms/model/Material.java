@@ -41,8 +41,13 @@ package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -54,29 +59,28 @@ import lombok.*;
 
 public class Material {
 
-	@NotNull
-	private long id;
-	
-	@NotNull
-	private long connectionId;
-	
-	@NotNull
-	private String name;
-	
-	@NotNull
-	private long quantity;
-	
-	@NotNull
-	private double size;
-	
-	@NotNull
-	private double amountDetails;
-	
-	@NotNull
-	private AuditDetails auditDetails;
-	
-	@NotNull
-	private String tenantId;
-	
-	
+    @NotNull
+    private long id;
+
+    @NotNull
+    private long connectionId;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private long quantity;
+
+    @NotNull
+    private double size;
+
+    @NotNull
+    private double amountDetails;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
+
 }

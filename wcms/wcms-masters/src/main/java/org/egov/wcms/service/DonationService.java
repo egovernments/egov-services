@@ -39,8 +39,6 @@
  */
 package org.egov.wcms.service;
 
-import static org.mockito.Matchers.endsWith;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -71,11 +69,10 @@ public class DonationService {
     public DonationRequest create(final DonationRequest donationRequest) {
         return donationRepository.persistDonationDetails(donationRequest);
     }
-    
+
     public DonationRequest update(final DonationRequest donationRequest) {
         return donationRepository.persistModifyDonationDetails(donationRequest);
     }
-    
 
     public Donation sendMessage(final String topic, final String key, final DonationRequest donationRequest) {
         final ObjectMapper mapper = new ObjectMapper();
@@ -83,9 +80,9 @@ public class DonationService {
         try {
             logger.info("Donation service::" + donationRequest);
 
-            Donation donation = getIdForRequestCodes(donationRequest); 
+            final Donation donation = getIdForRequestCodes(donationRequest);
             donationRequest.setDonation(donation);
-            donationRequestValue  = mapper.writeValueAsString(donationRequest);
+            donationRequestValue = mapper.writeValueAsString(donationRequest);
 
             logger.info("Donation Request Value::" + donationRequestValue);
         } catch (final JsonProcessingException e) {
@@ -94,53 +91,52 @@ public class DonationService {
         try {
             waterMasterProducer.sendMessage(topic, key, donationRequestValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return donationRequest.getDonation();
     }
-    
-	public List<Donation> getDonationList(DonationGetRequest donationGetRequest) {
-		return donationRepository.getDonationList(getIdForRequestCodes(donationGetRequest));
-	}
-    
-    private Donation getIdForRequestCodes(DonationRequest donationRequest) {
-		// Hit the Property Tax APIs to verify and get the IDs for the Code.
-		// Once APIs are available, remove random number function. 
-    	Donation donation = new Donation();
-		int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setPropertyTypeId(2L);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setUsageTypeId(3L);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setCategoryTypeId(3L);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setMinHSCPipeSizeId(1);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setMaxHSCPipeSizeId(2);
-		return donation;
-	}
-    
-    private Donation getIdForRequestCodes(DonationGetRequest donationGetRequest) {
-		// Hit the Property Tax APIs to verify and get the IDs for the Code.
-		// Once APIs are available, remove random number function. 
-    	
-    	// Create a Donation Object. Transfer all the values from Donation Get Request to Donation
-    	// Return the Donation Object so that Get Donation List fetches the value for these
-    	// parameters. 
-    	
-    	Donation donation = new Donation();
-		int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setPropertyTypeId(randomNum);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setUsageTypeId(randomNum);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setCategoryTypeId(randomNum);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setMinHSCPipeSizeId(randomNum);
-		randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-		donation.setMaxHSCPipeSizeId(randomNum);
-		return donation; 
-	}
-    
+
+    public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {
+        return donationRepository.getDonationList(getIdForRequestCodes(donationGetRequest));
+    }
+
+    private Donation getIdForRequestCodes(final DonationRequest donationRequest) {
+        // Hit the Property Tax APIs to verify and get the IDs for the Code.
+        // Once APIs are available, remove random number function.
+        final Donation donation = new Donation();
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setPropertyTypeId(2L);
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setUsageTypeId(3L);
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setCategoryTypeId(3L);
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setMinHSCPipeSizeId(1);
+        ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setMaxHSCPipeSizeId(2);
+        return donation;
+    }
+
+    private Donation getIdForRequestCodes(final DonationGetRequest donationGetRequest) {
+        // Hit the Property Tax APIs to verify and get the IDs for the Code.
+        // Once APIs are available, remove random number function.
+
+        // Create a Donation Object. Transfer all the values from Donation Get Request to Donation
+        // Return the Donation Object so that Get Donation List fetches the value for these
+        // parameters.
+
+        final Donation donation = new Donation();
+        int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setPropertyTypeId(randomNum);
+        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setUsageTypeId(randomNum);
+        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setCategoryTypeId(randomNum);
+        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setMinHSCPipeSizeId(randomNum);
+        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        donation.setMaxHSCPipeSizeId(randomNum);
+        return donation;
+    }
 
 }

@@ -59,52 +59,53 @@ public class DonationRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
+
     @Autowired
     private DonationRowMapper donationRowMapper;
-    
-	public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
-		LOGGER.info("Donation Request::" + donationRequest);
-		final String donationInsert = "INSERT INTO egwtr_donation "
-				+ "(id, property_type, usage_type, category, hsc_pipesize_max, hsc_pipesize_min, from_date, to_date, donation_amount, active, tenantid, createddate, createdby) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		Object[] obj = new Object[] { donationRequest.getDonation().getId(),
-				donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
-				donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
-				donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(), donationRequest.getDonation().getToDate(),
-				donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
-				donationRequest.getDonation().getTenantId(), new Date(new java.util.Date().getTime()), donationRequest.getRequestInfo().getUserInfo().getId() };
-		jdbcTemplate.update(donationInsert, obj);
-		return donationRequest;
-	}
-	
-	public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
-		LOGGER.info("Donation update Request::" + donationRequest);
-		final String donationInsert = "update egwtr_donation set property_type=?,usage_type=?,category=?, hsc_pipesize_max=?, hsc_pipesize_min=?,"
-				+ " from_date=?, to_date=?, donation_amount=?, active=?,lastmodifiedby=?, lastmodifieddate=? where id=?) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-		Object[] obj = new Object[] {
-				donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
-				donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
-				donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(), donationRequest.getDonation().getToDate(),
-				donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
-				donationRequest.getRequestInfo().getUserInfo().getId(),new Date(new java.util.Date().getTime()),donationRequest.getDonation().getId() };
-		jdbcTemplate.update(donationInsert, obj);
-		return donationRequest;
-	}
 
-	
-	public List<Donation> getDonationList(Donation donation) {
-        List<Object> preparedStatementValues = new ArrayList<Object>();
+    public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
+        LOGGER.info("Donation Request::" + donationRequest);
+        final String donationInsert = "INSERT INTO egwtr_donation "
+                + "(id, property_type, usage_type, category, hsc_pipesize_max, hsc_pipesize_min, from_date, to_date, donation_amount, active, tenantid, createddate, createdby) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        final Object[] obj = new Object[] { donationRequest.getDonation().getId(),
+                donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
+                donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
+                donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(),
+                donationRequest.getDonation().getToDate(),
+                donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
+                donationRequest.getDonation().getTenantId(), new Date(new java.util.Date().getTime()),
+                donationRequest.getRequestInfo().getUserInfo().getId() };
+        jdbcTemplate.update(donationInsert, obj);
+        return donationRequest;
+    }
+
+    public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
+        LOGGER.info("Donation update Request::" + donationRequest);
+        final String donationInsert = "update egwtr_donation set property_type=?,usage_type=?,category=?, hsc_pipesize_max=?, hsc_pipesize_min=?,"
+                + " from_date=?, to_date=?, donation_amount=?, active=?,lastmodifiedby=?, lastmodifieddate=? where id=?) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        final Object[] obj = new Object[] {
+                donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
+                donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
+                donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(),
+                donationRequest.getDonation().getToDate(),
+                donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
+                donationRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                donationRequest.getDonation().getId() };
+        jdbcTemplate.update(donationInsert, obj);
+        return donationRequest;
+    }
+
+    public List<Donation> getDonationList(final Donation donation) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(2L);
         preparedStatementValues.add(3L);
         preparedStatementValues.add(3L);
         preparedStatementValues.add(1L);
         preparedStatementValues.add(2L);
-        String queryStr = "SELECT * FROM egwtr_donation WHERE property_type = ? AND usage_type = ? "
-        		+ " AND category = ? AND hsc_pipesize_max = ? AND hsc_pipesize_min = ? AND  "
-        		+ "  active IS TRUE" ; 
-        List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), donationRowMapper);
+        final String queryStr = "SELECT * FROM egwtr_donation WHERE property_type = ? AND usage_type = ? "
+                + " AND category = ? AND hsc_pipesize_max = ? AND hsc_pipesize_min = ? AND  "
+                + "  active IS TRUE";
+        final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), donationRowMapper);
         return donationList;
     }
 }
-
-

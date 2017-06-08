@@ -39,17 +39,22 @@
  */
 package org.egov.wcms.model;
 
-import javax.validation.constraints.Max;
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -59,7 +64,7 @@ import java.util.Date;
 @ToString
 @Builder
 public class MeterCost {
-    
+
     public static final String SEQ_METERCOST = "SEQ_EGWTR_METER_COST";
 
     @NotNull
@@ -70,11 +75,11 @@ public class MeterCost {
     private int pipeSize;
 
     @NotNull
-    @Length(min=3, max=100)
+    @Length(min = 3, max = 100)
     private String meterMake;
 
     @NotNull
-    @Length(min=3, max=100)
+    @Length(min = 3, max = 100)
     private double amount;
 
     @NotNull

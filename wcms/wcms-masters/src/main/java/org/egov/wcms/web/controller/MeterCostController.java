@@ -38,7 +38,6 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
 package org.egov.wcms.web.controller;
 
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ import org.egov.wcms.web.contract.MeterCostRequest;
 import org.egov.wcms.web.contract.MeterCostResponse;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
-import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +70,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/metercost")
 public class MeterCostController {
@@ -83,46 +80,42 @@ public class MeterCostController {
     private MeterCostService meterCostService;
 
     @Autowired
-    private ErrorHandler errHandler;
-
-    @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final MeterCostRequest meterCostRequest, final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final MeterCostRequest meterCostRequest, final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("meterCostRequest::" + meterCostRequest);
 
         final List<ErrorResponse> errorResponses = validateMeterCostRequest(meterCostRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final MeterCost meterCost = meterCostService.createMeterCost(applicationProperties.getCreateMeterCostTopicName(),"metercost-create", meterCostRequest);
-        List<MeterCost> meterCosts = new ArrayList<>();
+        final MeterCost meterCost = meterCostService.createMeterCost(applicationProperties.getCreateMeterCostTopicName(),
+                "metercost-create", meterCostRequest);
+        final List<MeterCost> meterCosts = new ArrayList<>();
         meterCosts.add(meterCost);
         return getSuccessResponse(meterCosts, meterCostRequest.getRequestInfo());
 
     }
-    
-    
-    private ResponseEntity<?> getSuccessResponse(List<MeterCost> meterCostList, RequestInfo requestInfo) {
-        MeterCostResponse meterCostResponse = new MeterCostResponse();
+
+    private ResponseEntity<?> getSuccessResponse(final List<MeterCost> meterCostList, final RequestInfo requestInfo) {
+        final MeterCostResponse meterCostResponse = new MeterCostResponse();
         meterCostResponse.setMeterCost(meterCostList);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         meterCostResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<MeterCostResponse>(meterCostResponse, HttpStatus.OK);
+        return new ResponseEntity<>(meterCostResponse, HttpStatus.OK);
 
     }
-    
+
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
 
@@ -130,62 +123,62 @@ public class MeterCostController {
         error.setCode(1);
         error.setDescription("Error while binding request");
         if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors()) {
+            for (final FieldError fieldError : errors.getFieldErrors())
                 error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            }
         errRes.setError(error);
         return errRes;
     }
-    
+
     private List<ErrorResponse> validateMeterCostRequest(final MeterCostRequest meterCostRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(meterCostRequest);
         errorResponse.setError(error);
-        if(!errorResponse.getErrorFields().isEmpty())
+        if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
 
         return errorResponses;
     }
-    
+
     private Error getError(final MeterCostRequest meterCostRequest) {
-       // MeterCost meterCost = meterCostRequest.getMeterCost();
-        List<ErrorField> errorFields = getErrorFields(meterCostRequest);
+        // MeterCost meterCost = meterCostRequest.getMeterCost();
+        final List<ErrorField> errorFields = getErrorFields(meterCostRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_USAGETYPE_REQUEST_MESSAGE)
                 .errorFields(errorFields)
                 .build();
     }
-    
+
     private List<ErrorField> getErrorFields(final MeterCostRequest meterCostRequest) {
-        List<ErrorField> errorFields = new ArrayList<>();
-        addTeanantIdValidationErrors(meterCostRequest,errorFields);
-        addActiveValidationErrors(meterCostRequest,errorFields);
+        final List<ErrorField> errorFields = new ArrayList<>();
+        addTeanantIdValidationErrors(meterCostRequest, errorFields);
+        addActiveValidationErrors(meterCostRequest, errorFields);
         return errorFields;
     }
-    
-    private void addTeanantIdValidationErrors(MeterCostRequest meterCostRequest, List<ErrorField> errorFields){
-        MeterCost meterCost=meterCostRequest.getMeterCost();
-        if(meterCost.getTenantId()==null || meterCost.getTenantId().isEmpty()){
+
+    private void addTeanantIdValidationErrors(final MeterCostRequest meterCostRequest, final List<ErrorField> errorFields) {
+        final MeterCost meterCost = meterCostRequest.getMeterCost();
+        if (meterCost.getTenantId() == null || meterCost.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
-    private void addActiveValidationErrors(MeterCostRequest meterCostRequest, List<ErrorField> errorFields){
-    	MeterCost meterCost=meterCostRequest.getMeterCost();
-        if(meterCost.getActive()==null){
+    private void addActiveValidationErrors(final MeterCostRequest meterCostRequest, final List<ErrorField> errorFields) {
+        final MeterCost meterCost = meterCostRequest.getMeterCost();
+        if (meterCost.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 }
-

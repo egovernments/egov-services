@@ -63,9 +63,9 @@ public class PropertyTypePipeSizeTypeGetRequest {
     private String propertyType;
 
     private Double pipeSizeType;
-    
+
     private Long propertyTypeId;
-    
+
     private Long pipeSizeId;
 
     private Boolean active;

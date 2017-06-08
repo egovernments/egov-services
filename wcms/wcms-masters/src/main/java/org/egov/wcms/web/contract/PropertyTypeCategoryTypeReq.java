@@ -40,14 +40,19 @@
 
 package org.egov.wcms.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -56,11 +61,11 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString
 public class PropertyTypeCategoryTypeReq {
-	
+
     @NotNull
     @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
-    
+
     @JsonProperty("propertyCategory")
-    public PropertyTypeCategoryType propertyTypeCategoryType; 
+    public PropertyTypeCategoryType propertyTypeCategoryType;
 }

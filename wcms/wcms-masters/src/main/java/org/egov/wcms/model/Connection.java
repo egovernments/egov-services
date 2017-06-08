@@ -43,7 +43,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -53,87 +59,86 @@ import lombok.*;
 @ToString
 @Builder
 public class Connection {
-	
-	@NotNull
-	private long id;
 
-	@NotNull
-	private String connectionType;
-	
-	@NotNull
-	private String billingType;
-	
-	@NotNull
-	private String categoryType;
-	private long categoryTypeId;
-	
-	@NotNull
-	private double hscPipeSizeType;
-	
-	@NotNull
-	private String supplyType;
-	
-	@NotNull
-	private String sourceType;
-	
-	@NotNull
-	private String connectionStatus;
-	
-	@NotNull
-	private double sumpCapacity;
-	
-	@NotNull
-	private String donationCharge;
-	
-	@NotNull
-	private int numberOfTaps;
-	
-	@NotNull
-	private int numberOfPersons;
-	
-	@NotNull
-	private String legacyConsumerNumber;
-	
-	@NotNull
-	private String acknowledgementNumber;
-	
-	@NotNull
-	private String consumerNumber;
-	
-	@NotNull
-	private String bplCardHolderName;
-	
-	@NotNull
-	private long parentConnectionId;
-	
-	@NotNull
-	private List<DocumentOwner> documents;
-	
-	@NotNull
-	private List<Timeline> timelines;
-	
-	@NotNull
-	private Property property;
-	
-	@NotNull
-	private Meter meter;
-	
-	@NotNull
-	private EstimationCharge estimationCharge;
-	
-	@NotNull
-	private WorkOrder workOrder;
-	
-	@NotNull
-	private List<MeterReading> meterReadings;
-	
-	@NotNull
-	private AuditDetails auditDetails;
-	
-	@NotNull
-	private String tenantId;
-	
-	private WorkflowDetails workflowDetails;
-	
-	
+    @NotNull
+    private long id;
+
+    @NotNull
+    private String connectionType;
+
+    @NotNull
+    private String billingType;
+
+    @NotNull
+    private String categoryType;
+    private long categoryTypeId;
+
+    @NotNull
+    private double hscPipeSizeType;
+
+    @NotNull
+    private String supplyType;
+
+    @NotNull
+    private String sourceType;
+
+    @NotNull
+    private String connectionStatus;
+
+    @NotNull
+    private double sumpCapacity;
+
+    @NotNull
+    private String donationCharge;
+
+    @NotNull
+    private int numberOfTaps;
+
+    @NotNull
+    private int numberOfPersons;
+
+    @NotNull
+    private String legacyConsumerNumber;
+
+    @NotNull
+    private String acknowledgementNumber;
+
+    @NotNull
+    private String consumerNumber;
+
+    @NotNull
+    private String bplCardHolderName;
+
+    @NotNull
+    private long parentConnectionId;
+
+    @NotNull
+    private List<DocumentOwner> documents;
+
+    @NotNull
+    private List<Timeline> timelines;
+
+    @NotNull
+    private Property property;
+
+    @NotNull
+    private Meter meter;
+
+    @NotNull
+    private EstimationCharge estimationCharge;
+
+    @NotNull
+    private WorkOrder workOrder;
+
+    @NotNull
+    private List<MeterReading> meterReadings;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
+
+    private WorkflowDetails workflowDetails;
+
 }

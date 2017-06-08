@@ -54,7 +54,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -63,9 +62,9 @@ import lombok.ToString;
 @ToString
 public class PropertyTypeUsageTypesRes {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	private List<PropertyTypeUsageType> propertyTypeUsageTypes = new ArrayList<PropertyTypeUsageType>();
+    private List<PropertyTypeUsageType> propertyTypeUsageTypes = new ArrayList<>();
 
 }

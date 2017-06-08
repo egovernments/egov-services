@@ -38,7 +38,6 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
 package org.egov.wcms.repository.rowmapper;
 
 import java.sql.ResultSet;
@@ -49,22 +48,21 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DocumentTypeApplicationTypeMapper implements RowMapper<DocumentTypeApplicationType>  {
+public class DocumentTypeApplicationTypeMapper implements RowMapper<DocumentTypeApplicationType> {
 
     @Override
-    public DocumentTypeApplicationType mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public DocumentTypeApplicationType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-    	DocumentTypeApplicationType appDocName = new DocumentTypeApplicationType();
-    	appDocName.setId(rs.getLong("id"));
-    	appDocName.setDocumentTypeId(rs.getLong("docTypeId"));
-    	appDocName.setDocumentType(rs.getString("docTypeName"));
-    	appDocName.setMandatory(rs.getBoolean("mandatory"));
-    	appDocName.setActive(rs.getBoolean("active"));
-    	appDocName.setTenantId(rs.getString("tenantid"));
-    	appDocName.setApplicationType(rs.getString("applicationtype"));
-    	
+        final DocumentTypeApplicationType appDocName = new DocumentTypeApplicationType();
+        appDocName.setId(rs.getLong("id"));
+        appDocName.setDocumentTypeId(rs.getLong("docTypeId"));
+        appDocName.setDocumentType(rs.getString("docTypeName"));
+        appDocName.setMandatory(rs.getBoolean("mandatory"));
+        appDocName.setActive(rs.getBoolean("active"));
+        appDocName.setTenantId(rs.getString("tenantid"));
+        appDocName.setApplicationType(rs.getString("applicationtype"));
+
         return appDocName;
     }
-
 
 }

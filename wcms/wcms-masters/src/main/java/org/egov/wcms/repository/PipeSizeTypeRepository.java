@@ -74,7 +74,7 @@ public class PipeSizeTypeRepository {
         final String pipeSizeInsert = PipeSizeTypeQueryBuilder.insertPipeSizeQuery();
         final PipeSizeType pipeSize = pipeSizeRequest.getPipeSize();
         final Object[] obj = new Object[] { Long.valueOf(pipeSize.getCode()), pipeSize.getCode(),
-                pipeSize.getSizeInMilimeter(), pipeSize.getSizeInInch(),pipeSize.getDescription(), pipeSize.getActive(),
+                pipeSize.getSizeInMilimeter(), pipeSize.getSizeInInch(), pipeSize.getDescription(), pipeSize.getActive(),
                 Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()),
@@ -87,7 +87,8 @@ public class PipeSizeTypeRepository {
         LOGGER.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeUpdate = PipeSizeTypeQueryBuilder.updatePipeSizeQuery();
         final PipeSizeType pipeSize = pipeSizeRequest.getPipeSize();
-        final Object[] obj = new Object[] { pipeSize.getSizeInMilimeter(), pipeSize.getSizeInInch(),pipeSize.getDescription(), pipeSize.getActive(),
+        final Object[] obj = new Object[] { pipeSize.getSizeInMilimeter(), pipeSize.getSizeInInch(), pipeSize.getDescription(),
+                pipeSize.getActive(),
                 Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
                 pipeSize.getCode() };
         jdbcTemplate.update(pipeSizeUpdate, obj);
@@ -96,7 +97,7 @@ public class PipeSizeTypeRepository {
     }
 
     public boolean checkPipeSizeInmmAndCode(final String code, final Double sizeInMilimeter, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(sizeInMilimeter);
         preparedStatementValues.add(tenantId);
         final String query;
@@ -115,7 +116,7 @@ public class PipeSizeTypeRepository {
     }
 
     public List<PipeSizeType> findForCriteria(final PipeSizeTypeGetRequest pipeSizeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = pipeSizeQueryBuilder.getQuery(pipeSizeGetRequest, preparedStatementValues);
         final List<PipeSizeType> pipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), pipeSizeRowMapper);
         return pipeSizes;

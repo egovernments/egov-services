@@ -108,9 +108,8 @@ public class WaterMasterConsumerConfig {
         return propsMap;
     }
 
- /*   @Bean
-    public WaterMasterConsumer listener() {
-        return new WaterMasterConsumer();
-    } */
+    /*
+     * @Bean public WaterMasterConsumer listener() { return new WaterMasterConsumer(); }
+     */
 
 }

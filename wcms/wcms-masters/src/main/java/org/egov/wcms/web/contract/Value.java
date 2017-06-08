@@ -46,7 +46,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Value {
 
-	private String key;
+    private String key;
 
-	private String name;
+    private String name;
 }

@@ -79,5 +79,5 @@ public class Error {
      * FIXME : If we take List of Object, it will generate twice the actual result. On first line, the key & on next line the
      * value. PROPOSITION : Can take Map instead where Key is fieldName, Value is Error description
      */
-    private Map<String, Object> fields = new LinkedHashMap<String, Object>();
+    private Map<String, Object> fields = new LinkedHashMap<>();
 }

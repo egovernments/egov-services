@@ -75,7 +75,7 @@ public class ErrorHandler {
         errorResponse.setResponseInfo(responseInfo);
         errorResponse.setError(error);
 
-        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingParameters(final BindingResult bindingResult,
@@ -94,7 +94,7 @@ public class ErrorHandler {
         errorResponse.setResponseInfo(responseInfo);
         errorResponse.setError(error);
 
-        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<ErrorResponse> getResponseEntityForUnexpectedErrors(final RequestInfo requestInfo) {
@@ -109,7 +109,7 @@ public class ErrorHandler {
         errorResponse.setResponseInfo(responseInfo);
         errorResponse.setError(error);
 
-        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(final BindingResult bindingResult,
@@ -134,6 +134,6 @@ public class ErrorHandler {
         errorResponse.setResponseInfo(responseInfo);
         errorResponse.setError(error);
 
-        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

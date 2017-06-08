@@ -48,13 +48,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
+public class DocumentTypeRowMapper implements RowMapper<DocumentType> {
 
     @Override
-    public DocumentType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    public DocumentType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        new SimpleDateFormat("dd/MM/yyyy");
 
-        DocumentType documentType = new DocumentType();
+        final DocumentType documentType = new DocumentType();
         documentType.setId(rs.getLong("document_id"));
         documentType.setCode(rs.getString("document_code"));
         documentType.setName(rs.getString("document_name"));
@@ -64,6 +64,5 @@ public class DocumentTypeRowMapper implements RowMapper<DocumentType>  {
 
         return documentType;
     }
-
 
 }

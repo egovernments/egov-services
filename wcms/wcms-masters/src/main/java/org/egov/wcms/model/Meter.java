@@ -41,8 +41,13 @@ package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -52,27 +57,26 @@ import lombok.*;
 @ToString
 @Builder
 public class Meter {
-	
-	@NotNull
-	private long id;
-	
-	@NotNull
-	private String meterMake;
-	
-	@NotNull
-	private String meterCost;
-	
-	@NotNull
-	private String meterSlNo;
-	
-	@NotNull
-	private String meterReading;
-	
-	@NotNull
-	private AuditDetails auditDetails;
-	
-	@NotNull
-	private String tenantId;
-	
+
+    @NotNull
+    private long id;
+
+    @NotNull
+    private String meterMake;
+
+    @NotNull
+    private String meterCost;
+
+    @NotNull
+    private String meterSlNo;
+
+    @NotNull
+    private String meterReading;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
 
 }

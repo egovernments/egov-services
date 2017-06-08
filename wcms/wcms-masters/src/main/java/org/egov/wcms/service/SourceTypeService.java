@@ -46,12 +46,12 @@ public class SourceTypeService {
             waterSourceValue = mapper.writeValueAsString(waterSourceRequest);
             logger.info("waterSourceValue::" + waterSourceValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, waterSourceValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return waterSourceRequest.getWaterSourceType();
     }
@@ -65,12 +65,12 @@ public class SourceTypeService {
             waterSourceValue = mapper.writeValueAsString(waterSourceRequest);
             logger.info("waterSourceValue::" + waterSourceValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, waterSourceValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return waterSourceRequest.getWaterSourceType();
     }

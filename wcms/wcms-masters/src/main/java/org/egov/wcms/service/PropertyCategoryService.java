@@ -74,12 +74,12 @@ public class PropertyCategoryService {
             propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
             logger.info("propertyCategoryValue::" + propertyCategoryValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, propertyCategoryValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return propertyCategoryRequest;
     }
@@ -87,7 +87,7 @@ public class PropertyCategoryService {
     public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         return propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest);
     }
-    
+
     public PropertyTypeCategoryTypeReq update(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         return propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest);
     }
@@ -96,9 +96,9 @@ public class PropertyCategoryService {
         return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
 
     }
-	    
-	public boolean checkIfMappingExists(String propertyType, String categoryType, String tenantId){
-	    	return propertyCategoryRepository.checkIfMappingExists(propertyType, categoryType, tenantId);
-	    }
+
+    public boolean checkIfMappingExists(final String propertyType, final String categoryType, final String tenantId) {
+        return propertyCategoryRepository.checkIfMappingExists(propertyType, categoryType, tenantId);
+    }
 
 }

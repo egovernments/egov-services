@@ -43,8 +43,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -56,38 +61,34 @@ import lombok.*;
 
 public class EstimationCharge {
 
-	@NotNull
-	private long id;
-	
-	@NotNull
-	private long connectionId;
-	
-	@NotNull
-	private List<Material> materials; 
-	
-	@NotNull
-	private String existingDistributionPipeline;
-	
-	@NotNull
-	private double pipelineToHomeDistance;
-	
-	@NotNull
-	private double estimationCharges;;
-	
-	@NotNull
-	private double supervisionCharges;
-	
-	@NotNull
-	private double materialCharges;
-	
-	@NotNull
-	private AuditDetails auditDetails;
-	
-	@NotNull
-	private String tenantId;
-	
-	
-	
-	
-}
+    @NotNull
+    private long id;
 
+    @NotNull
+    private long connectionId;
+
+    @NotNull
+    private List<Material> materials;
+
+    @NotNull
+    private String existingDistributionPipeline;
+
+    @NotNull
+    private double pipelineToHomeDistance;
+
+    @NotNull
+    private double estimationCharges;;
+
+    @NotNull
+    private double supervisionCharges;
+
+    @NotNull
+    private double materialCharges;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
+
+}

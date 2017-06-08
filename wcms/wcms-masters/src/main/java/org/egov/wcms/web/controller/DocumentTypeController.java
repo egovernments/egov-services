@@ -75,7 +75,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/documenttype")
 public class DocumentTypeController {
@@ -94,95 +93,92 @@ public class DocumentTypeController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final DocumentTypeReq documentTypeReq,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final DocumentTypeReq documentTypeReq,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("documentTypeRequest::" + documentTypeReq);
 
         final List<ErrorResponse> errorResponses = validateDocumentTypeRequest(documentTypeReq);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentType documentType = documentTypeService.sendMessage(applicationProperties.getCreateDocumentTypeTopicName(),"documenttype-create", documentTypeReq);
-        List<DocumentType> documentTypes = new ArrayList<>();
+        final DocumentType documentType = documentTypeService.sendMessage(applicationProperties.getCreateDocumentTypeTopicName(),
+                "documenttype-create", documentTypeReq);
+        final List<DocumentType> documentTypes = new ArrayList<>();
         documentTypes.add(documentType);
         return getSuccessResponse(documentTypes, documentTypeReq.getRequestInfo());
 
     }
-    
+
     @PostMapping(value = "/_update/{code}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeReq documentTypeReq, final BindingResult errors, @PathVariable("code") String code) {
+    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeReq documentTypeReq, final BindingResult errors,
+            @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("documentTypeRequest::" + documentTypeReq);
         documentTypeReq.getDocumentType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateDocumentTypeRequest(documentTypeReq);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentType documentType = documentTypeService.sendMessage(applicationProperties.getUpdateDocumentTypeTopicName(),"documenttype-update",documentTypeReq);
-        List<DocumentType> documentTypes = new ArrayList<>();
+        final DocumentType documentType = documentTypeService.sendMessage(applicationProperties.getUpdateDocumentTypeTopicName(),
+                "documenttype-update", documentTypeReq);
+        final List<DocumentType> documentTypes = new ArrayList<>();
         documentTypes.add(documentType);
         return getSuccessResponse(documentTypes, documentTypeReq.getRequestInfo());
     }
-    
-    
 
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid DocumentTypeGetReq documentTypeGetRequest,
-                                    BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-                                    BindingResult requestBodyBindingResult) {
-        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    public ResponseEntity<?> search(@ModelAttribute @Valid final DocumentTypeGetReq documentTypeGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate input params
-        if (modelAttributeBindingResult.hasErrors()) {
+        if (modelAttributeBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-        }
 
         // validate input params
-        if (requestBodyBindingResult.hasErrors()) {
+        if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-        }
 
         // Call service
         List<DocumentType> documentTypeList = null;
         try {
-        	documentTypeList = documentTypeService.getDocumentTypes(documentTypeGetRequest);
-        } catch (Exception exception) {
+            documentTypeList = documentTypeService.getDocumentTypes(documentTypeGetRequest);
+        } catch (final Exception exception) {
             logger.error("Error while processing request " + documentTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-      return getSuccessResponse(documentTypeList, requestInfo);
+        return getSuccessResponse(documentTypeList, requestInfo);
 
     }
 
     private List<ErrorResponse> validateDocumentTypeRequest(final DocumentTypeReq documentTypeReq) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(documentTypeReq);
         errorResponse.setError(error);
-        if(!errorResponse.getErrorFields().isEmpty())
+        if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
 
         return errorResponses;
     }
 
-
     private Error getError(final DocumentTypeReq documentTypeReq) {
-       DocumentType usageType = documentTypeReq.getDocumentType();
-        List<ErrorField> errorFields = getErrorFields(documentTypeReq);
+        documentTypeReq.getDocumentType();
+        final List<ErrorField> errorFields = getErrorFields(documentTypeReq);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_DOCUMENTTYPE_REQUEST_MESSAGE)
                 .errorFields(errorFields)
@@ -190,15 +186,16 @@ public class DocumentTypeController {
     }
 
     private List<ErrorField> getErrorFields(final DocumentTypeReq documentTypeReq) {
-        List<ErrorField> errorFields = new ArrayList<>();
+        final List<ErrorField> errorFields = new ArrayList<>();
         addDocumentTypeNameValidationErrors(documentTypeReq, errorFields);
-        addTeanantIdValidationErrors(documentTypeReq,errorFields);
-        addActiveValidationErrors(documentTypeReq,errorFields);
+        addTeanantIdValidationErrors(documentTypeReq, errorFields);
+        addActiveValidationErrors(documentTypeReq, errorFields);
         return errorFields;
     }
 
-    private void addDocumentTypeNameValidationErrors(DocumentTypeReq documentTypeRequest, List<ErrorField> errorFields) {
-        DocumentType documentType=documentTypeRequest.getDocumentType();
+    private void addDocumentTypeNameValidationErrors(final DocumentTypeReq documentTypeRequest,
+            final List<ErrorField> errorFields) {
+        final DocumentType documentType = documentTypeRequest.getDocumentType();
         if (documentType.getName() == null || documentType.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.DOCUMENTTYPE_NAME_MANDATORY_CODE)
@@ -206,38 +203,42 @@ public class DocumentTypeController {
                     .field(WcmsConstants.DOCUMENTTYPE_NAME_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if (!documentTypeService.getDocumentTypeByNameAndCode(documentType.getCode(),documentType.getName(),documentType.getTenantId())) {
+        } else if (!documentTypeService.getDocumentTypeByNameAndCode(documentType.getCode(), documentType.getName(),
+                documentType.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.DOCUMENTTYPE_NAME_UNIQUE_CODE)
                     .message(WcmsConstants.DOCUMENTTYPE_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.DOCUMENTTYPE_NAME_UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-   } else return;
+        } else
+            return;
     }
 
-    private void addTeanantIdValidationErrors(DocumentTypeReq documentTypeRequest, List<ErrorField> errorFields){
-        DocumentType documentType=documentTypeRequest.getDocumentType();
-        if(documentType.getTenantId()==null || documentType.getTenantId().isEmpty()){
+    private void addTeanantIdValidationErrors(final DocumentTypeReq documentTypeRequest, final List<ErrorField> errorFields) {
+        final DocumentType documentType = documentTypeRequest.getDocumentType();
+        if (documentType.getTenantId() == null || documentType.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
-    private void addActiveValidationErrors(DocumentTypeReq documentTypeRequest, List<ErrorField> errorFields){
-        DocumentType documentType=documentTypeRequest.getDocumentType();
-        if(documentType.getActive()==null){
+    private void addActiveValidationErrors(final DocumentTypeReq documentTypeRequest, final List<ErrorField> errorFields) {
+        final DocumentType documentType = documentTypeRequest.getDocumentType();
+        if (documentType.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
@@ -247,22 +248,20 @@ public class DocumentTypeController {
         error.setCode(1);
         error.setDescription("Error while binding request");
         if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors()) {
+            for (final FieldError fieldError : errors.getFieldErrors())
                 error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            }
         errRes.setError(error);
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(List<DocumentType> documnetTypeList, RequestInfo requestInfo) {
-        DocumentTypeRes documentTypeRes = new DocumentTypeRes();
+    private ResponseEntity<?> getSuccessResponse(final List<DocumentType> documnetTypeList, final RequestInfo requestInfo) {
+        final DocumentTypeRes documentTypeRes = new DocumentTypeRes();
         documentTypeRes.setDocumentTypes(documnetTypeList);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         documentTypeRes.setResponseInfo(responseInfo);
-        return new ResponseEntity<DocumentTypeRes>(documentTypeRes, HttpStatus.OK);
+        return new ResponseEntity<>(documentTypeRes, HttpStatus.OK);
 
     }
-
 
 }

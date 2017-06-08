@@ -98,13 +98,13 @@ public class PopertyTypePipeSizeTypeController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
 
         final List<ErrorResponse> errorResponses = validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypePipeSizeType propertyPipeSize = propertPipeSizeService.createPropertyPipeSize(
                 applicationProperties.getCreatePropertyPipeSizeTopicName(), "propertypipesize-create", propertyPipeSizeRequest);
@@ -121,14 +121,14 @@ public class PopertyTypePipeSizeTypeController {
             @PathVariable("propertyPipeSizeId") final Long propertyPipeSizeId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
         propertyPipeSizeRequest.getPropertyPipeSize().setId(propertyPipeSizeId);
 
         final List<ErrorResponse> errorResponses = validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypePipeSizeType propertyPipeSize = propertPipeSizeService.createPropertyPipeSize(
                 applicationProperties.getUpdatePropertyPipeSizeTopicName(), "propertypipesize-update", propertyPipeSizeRequest);
@@ -279,7 +279,7 @@ public class PopertyTypePipeSizeTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         propertyPipeSizeResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<PropertyTypePipeSizeTypeResponse>(propertyPipeSizeResponse, HttpStatus.OK);
+        return new ResponseEntity<>(propertyPipeSizeResponse, HttpStatus.OK);
 
     }
 

@@ -64,31 +64,32 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
 @RunWith(MockitoJUnitRunner.class)
 public class DocumentTypeServiceTest {
-	
-	@Mock
-	private DocumentTypeRepository documentRepository;
+
+    @Mock
+    private DocumentTypeRepository documentRepository;
 
     @Mock
     private WaterMasterProducer waterMasterProducer;
 
     @Mock
     private CodeGeneratorService codeGeneratorService;
-    
+
     @InjectMocks
     private DocumentTypeService docTypeService;
-    
+
     @Test
-    public void test_Search_For_DocumentTypeServices(){
-    	List<DocumentType> documentTypeList = new ArrayList<>();
-    	DocumentType docType = Mockito.mock(DocumentType.class);
-    	documentTypeList.add(docType);
-    
-    	when(documentRepository.findForCriteria(any(DocumentTypeGetReq.class))).thenReturn(documentTypeList);
-    	assertTrue(documentTypeList.equals(docTypeService.getDocumentTypes(any(DocumentTypeGetReq.class))));
+    public void test_Search_For_DocumentTypeServices() {
+        final List<DocumentType> documentTypeList = new ArrayList<>();
+        final DocumentType docType = Mockito.mock(DocumentType.class);
+        documentTypeList.add(docType);
+
+        when(documentRepository.findForCriteria(any(DocumentTypeGetReq.class))).thenReturn(documentTypeList);
+        assertTrue(documentTypeList.equals(docTypeService.getDocumentTypes(any(DocumentTypeGetReq.class))));
     }
-    
+
     @Test
     public void test_Should_DocumentType_Create() {
         final DocumentType docType = getDocumentType();
@@ -104,41 +105,40 @@ public class DocumentTypeServiceTest {
         assertTrue(docTypeReq.equals(docTypeService.create(docTypeReq)));
 
     }
-    
-    private DocumentType getDocumentType(){
-    	DocumentType docType = new DocumentType();
-    	docType.setCode("23");
-    	docType.setName("New Document Name");
-    	docType.setDescription("Document Name Description");
-    	docType.setActive(true);
-       return docType;
+
+    private DocumentType getDocumentType() {
+        final DocumentType docType = new DocumentType();
+        docType.setCode("23");
+        docType.setName("New Document Name");
+        docType.setDescription("Document Name Description");
+        docType.setActive(true);
+        return docType;
     }
-    
-    
+
     @Test
-    public void test_Search_For_DocumentType_Notnull(){
-    	List<DocumentType> docTypeList = new ArrayList<>();
-    	DocumentType docType = Mockito.mock(DocumentType.class);
-    	docTypeList.add(docType);
-    
-    	when(documentRepository.findForCriteria(any(DocumentTypeGetReq.class))).thenReturn(docTypeList);
-    	assertNotNull(docTypeService.getDocumentTypes(any(DocumentTypeGetReq.class)));
+    public void test_Search_For_DocumentType_Notnull() {
+        final List<DocumentType> docTypeList = new ArrayList<>();
+        final DocumentType docType = Mockito.mock(DocumentType.class);
+        docTypeList.add(docType);
+
+        when(documentRepository.findForCriteria(any(DocumentTypeGetReq.class))).thenReturn(docTypeList);
+        assertNotNull(docTypeService.getDocumentTypes(any(DocumentTypeGetReq.class)));
     }
-    
+
     @Test
-    public void test_Search_For_Document_Types_Null(){
-    	List<DocumentType> docTypeList = new ArrayList<>();
-    	DocumentType docType = Mockito.mock(DocumentType.class);
-    	docTypeList.add(docType);
-    
-    	when(documentRepository.findForCriteria(any(DocumentTypeGetReq.class))).thenReturn(null);
-    	assertNull(docTypeService.getDocumentTypes(any(DocumentTypeGetReq.class)));
+    public void test_Search_For_Document_Types_Null() {
+        final List<DocumentType> docTypeList = new ArrayList<>();
+        final DocumentType docType = Mockito.mock(DocumentType.class);
+        docTypeList.add(docType);
+
+        when(documentRepository.findForCriteria(any(DocumentTypeGetReq.class))).thenReturn(null);
+        assertNull(docTypeService.getDocumentTypes(any(DocumentTypeGetReq.class)));
     }
-    
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetReq docTypeGetRequest) {
+
+    public List<DocumentType> getDocumentTypes(final DocumentTypeGetReq docTypeGetRequest) {
         return documentRepository.findForCriteria(docTypeGetRequest);
     }
-    
+
     @Test
     public void test_Should_Update_DocumentType_NotNull() throws Exception {
         final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
@@ -147,8 +147,8 @@ public class DocumentTypeServiceTest {
         user.setId(1L);
         requestInfo.setUserInfo(user);
         final DocumentType docType = new DocumentType();
-        AuditDetails auditDetails = new AuditDetails();
-        
+        final AuditDetails auditDetails = new AuditDetails();
+
         docType.setAuditDetails(auditDetails);
         docType.setCode("10");
         docType.setActive(true);
@@ -179,6 +179,5 @@ public class DocumentTypeServiceTest {
         assertTrue(docTypeRequest.equals(docTypeService.update(docTypeRequest)));
 
     }
-    
-    
+
 }

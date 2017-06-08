@@ -56,7 +56,8 @@ public class PropertyPipeSizeQueryBuilder {
             + "propertypipesize.tenantId as propertypipesize_tenantId "
             + "FROM egwtr_property_pipe_size propertypipesize ";
 
-    public String getQuery(final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest, final List preparedStatementValues) {
+    public String getQuery(final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest,
+            final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, propertyPipeSizeGetRequest);
         addOrderByClause(selectQuery, propertyPipeSizeGetRequest);
@@ -106,7 +107,8 @@ public class PropertyPipeSizeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(final StringBuilder selectQuery, final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
+    private void addOrderByClause(final StringBuilder selectQuery,
+            final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
         final String sortBy = propertyPipeSizeGetRequest.getSortBy() == null ? "propertypipesize.id"
                 : "propertypipesize." + propertyPipeSizeGetRequest.getSortBy();
         final String sortOrder = propertyPipeSizeGetRequest.getSortOrder() == null ? "DESC"
@@ -135,7 +137,7 @@ public class PropertyPipeSizeQueryBuilder {
         return "INSERT INTO egwtr_property_pipe_size(id,pipesizeid,propertytypeid,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
                 + "(nextval('SEQ_EGWTR_PROPERTY_PIPESIZE'),?,?,?,?,?,?,?,?)";
     }
-    
+
     public static String updatePropertyPipeSizeQuery() {
         return "UPDATE egwtr_property_pipe_size SET pipesizeid = ?,propertytypeid = ?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";

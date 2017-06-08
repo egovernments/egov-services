@@ -95,9 +95,8 @@ public class WaterMasterProducerConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-  /*  @Bean
-    public WaterMasterProducer sender() {
-        return new WaterMasterProducer();
-    } */
+    /*
+     * @Bean public WaterMasterProducer sender() { return new WaterMasterProducer(); }
+     */
 
 }

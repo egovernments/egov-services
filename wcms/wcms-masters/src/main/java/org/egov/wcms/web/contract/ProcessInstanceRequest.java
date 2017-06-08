@@ -15,14 +15,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ProcessInstanceRequest {
-	
-	@JsonProperty("requestInfo")
-	private RequestInfo requestInfo = null;
 
-	@JsonProperty("processInstances")
-	private List<ProcessInstance> processInstances = new ArrayList<ProcessInstance>();
+    @JsonProperty("requestInfo")
+    private RequestInfo requestInfo = null;
 
-	@JsonProperty("processInstance")
-	private ProcessInstance processInstance = null;
+    @JsonProperty("processInstances")
+    private List<ProcessInstance> processInstances = new ArrayList<>();
+
+    @JsonProperty("processInstance")
+    private ProcessInstance processInstance = null;
 
 }

@@ -14,13 +14,13 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class TaskResponse   {
-  @JsonProperty("responseInfo")
-  private ResponseInfo responseInfo = null;
+public class TaskResponse {
+    @JsonProperty("responseInfo")
+    private ResponseInfo responseInfo = null;
 
-  @JsonProperty("tasks")
-  private List<Task> tasks = new ArrayList<Task>();
+    @JsonProperty("tasks")
+    private List<Task> tasks = new ArrayList<>();
 
-  @JsonProperty("task")
-  private Task task = null;
+    @JsonProperty("task")
+    private Task task = null;
 }

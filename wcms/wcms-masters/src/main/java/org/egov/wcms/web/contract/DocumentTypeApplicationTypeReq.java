@@ -62,10 +62,10 @@ import lombok.ToString;
 @ToString
 public class DocumentTypeApplicationTypeReq {
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
-	@JsonProperty("DocumentTypeApplicationType")
-	private DocumentTypeApplicationType documentTypeApplicationType ;
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
+    @JsonProperty("DocumentTypeApplicationType")
+    private DocumentTypeApplicationType documentTypeApplicationType;
 
 }

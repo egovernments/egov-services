@@ -57,18 +57,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class WorkflowService {
 
-public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
-    
+    public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
+
     @Autowired
     private WaterTransactionProducer waterTransactionProducer;
-    
+
     @Autowired
     private AckConsumerNoGenerator ackConsumerNoGenerator;
-    
+
     @Autowired
     private WorkflowRepository workflowRepository;
-    
-    public Connection createWaterConnection(final String topic, final String key, final WaterConnectionReq waterConnectionRequest){
+
+    public Connection createWaterConnection(final String topic, final String key,
+            final WaterConnectionReq waterConnectionRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
         try {
@@ -76,26 +77,26 @@ public static final Logger logger = LoggerFactory.getLogger(WaterConnectionServi
             waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
             logger.info("waterConnectionValue::" + waterConnectionValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception while stringifying water coonection object", e);
+            logger.error("Exception while stringifying water coonection object", e);
         }
         try {
-        	waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
+            waterTransactionProducer.sendMessage(topic, key, waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
         }
         waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
-        
+
         return waterConnectionRequest.getConnection();
     }
-    
-    public void startWorkflow(WaterConnectionReq waterConnectionRequest){
-    	ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(waterConnectionRequest);
-    	logger.info("Process Instance Reponse Received from Start Workflow : " + processInstanceResponse);
+
+    public void startWorkflow(final WaterConnectionReq waterConnectionRequest) {
+        final ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(waterConnectionRequest);
+        logger.info("Process Instance Reponse Received from Start Workflow : " + processInstanceResponse);
     }
-    
-    public void updateWorkflow(WaterConnectionReq waterConnectionRequest){
-    	TaskResponse taskResponse = workflowRepository.updateWorkflow(waterConnectionRequest);
-    	logger.info("Task Response Received from Update Workflow : " + taskResponse);
+
+    public void updateWorkflow(final WaterConnectionReq waterConnectionRequest) {
+        final TaskResponse taskResponse = workflowRepository.updateWorkflow(waterConnectionRequest);
+        logger.info("Task Response Received from Update Workflow : " + taskResponse);
     }
 }

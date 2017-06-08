@@ -51,7 +51,6 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.validator.NewWaterConnectionValidator;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.DonationResponse;
@@ -77,97 +76,93 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/donation")
 public class DonationController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
-	
-	@Autowired
-	private DonationService donationService;
-	
+
+    private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
+
+    @Autowired
+    private DonationService donationService;
+
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @Autowired
     private ErrorHandler errHandler;
 
     @Autowired
     private ApplicationProperties applicationProperties;
-    
-    @Autowired
-    private NewWaterConnectionValidator newConnectionValidator;
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final DonationRequest donationRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final DonationRequest donationRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Donation Create Request::" + donationRequest);
 
         final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final Donation donation= donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),"donation-create", donationRequest);
-        List<Donation> donationList = new ArrayList<>();
+        final Donation donation = donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),
+                "donation-create", donationRequest);
+        final List<Donation> donationList = new ArrayList<>();
         donationList.add(donation);
         return getSuccessResponse(donationList, donationRequest.getRequestInfo());
     }
-    
-    
+
     @PostMapping(value = "/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid  final DonationRequest donationRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> update(@RequestBody @Valid final DonationRequest donationRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Donation Update Request::" + donationRequest);
 
         final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final Donation donation= donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),"donation-update", donationRequest);
-        List<Donation> donationList = new ArrayList<>();
+        final Donation donation = donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),
+                "donation-update", donationRequest);
+        final List<Donation> donationList = new ArrayList<>();
         donationList.add(donation);
         return getSuccessResponse(donationList, donationRequest.getRequestInfo());
     }
-    
-    
+
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid DonationGetRequest donationGetRequest,
-                                    BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-                                    BindingResult requestBodyBindingResult) {
-        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    public ResponseEntity<?> search(@ModelAttribute @Valid final DonationGetRequest donationGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate input params
-        if (modelAttributeBindingResult.hasErrors()) {
+        if (modelAttributeBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-        }
 
         // validate input params
-        if (requestBodyBindingResult.hasErrors()) {
+        if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-        }
 
         // Call service
         List<Donation> donationList = null;
-      //  logger.info("+++===Validation Response is something like this +++=== : " + newConnectionValidator.validateNewConnectionBusinessRules());
+        // logger.info("+++===Validation Response is something like this +++=== : " +
+        // newConnectionValidator.validateNewConnectionBusinessRules());
         try {
             donationList = donationService.getDonationList(donationGetRequest);
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             logger.error("Error while processing request " + donationGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-      return getSuccessResponse(donationList, requestInfo);
+        return getSuccessResponse(donationList, requestInfo);
 
     }
-    
+
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
 
@@ -175,25 +170,24 @@ public class DonationController {
         error.setCode(1);
         error.setDescription("Error while binding request");
         if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors()) {
+            for (final FieldError fieldError : errors.getFieldErrors())
                 error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            }
         errRes.setError(error);
         return errRes;
     }
-    
+
     private List<ErrorResponse> validateDonationRequest(final DonationRequest donationRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(donationRequest);
         errorResponse.setError(error);
-        if(!errorResponse.getErrorFields().isEmpty())
+        if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
-    
+
     private Error getError(final DonationRequest donationRequest) {
-        List<ErrorField> errorFields = getErrorFields(donationRequest);
+        final List<ErrorField> errorFields = getErrorFields(donationRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_DONATION_REQUEST_MESSAGE)
                 .errorFields(errorFields)
@@ -201,8 +195,8 @@ public class DonationController {
     }
 
     private List<ErrorField> getErrorFields(final DonationRequest donationRequest) {
-    	Donation donation = donationRequest.getDonation();
-        List<ErrorField> errorFields = new ArrayList<>();
+        final Donation donation = donationRequest.getDonation();
+        final List<ErrorField> errorFields = new ArrayList<>();
         checkPropertyTypeValue(errorFields, donation);
         checkUsageTypeValue(errorFields, donation);
         checkCategoryValue(errorFields, donation);
@@ -211,9 +205,9 @@ public class DonationController {
         checkFromToDateValues(errorFields, donation);
         return errorFields;
     }
-    
-    private void checkPropertyTypeValue(List<ErrorField> errorFields, Donation donation){
-    	if (donation.getPropertyType()== null || donation.getPropertyType().isEmpty()) {
+
+    private void checkPropertyTypeValue(final List<ErrorField> errorFields, final Donation donation) {
+        if (donation.getPropertyType() == null || donation.getPropertyType().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PROPERTYTYPE_MANDATORY_CODE)
                     .message(WcmsConstants.PROPERTYTYPE_MANDATORY_ERROR_MESSAGE)
@@ -222,9 +216,9 @@ public class DonationController {
             errorFields.add(errorField);
         }
     }
-    
-    private void checkUsageTypeValue(List<ErrorField> errorFields, Donation donation){
-    	if (donation.getUsageType()== null || donation.getUsageType().isEmpty()) {
+
+    private void checkUsageTypeValue(final List<ErrorField> errorFields, final Donation donation) {
+        if (donation.getUsageType() == null || donation.getUsageType().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
@@ -233,9 +227,9 @@ public class DonationController {
             errorFields.add(errorField);
         }
     }
-    
-    private void checkCategoryValue(List<ErrorField> errorFields, Donation donation){
-    	if (donation.getCategory()== null || donation.getCategory().isEmpty()) {
+
+    private void checkCategoryValue(final List<ErrorField> errorFields, final Donation donation) {
+        if (donation.getCategory() == null || donation.getCategory().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
@@ -244,53 +238,49 @@ public class DonationController {
             errorFields.add(errorField);
         }
     }
-    
-    private void checkPipeSizeValues(List<ErrorField> errorFields, Donation donation) {
-    	if((donation.getMaxHSCPipeSize() == null || donation.getMaxHSCPipeSize().isEmpty()) && 
-    			donation.getMinHSCPipeSize() == null || donation.getMinHSCPipeSize().isEmpty()) {
-    		final ErrorField errorField = ErrorField.builder()
+
+    private void checkPipeSizeValues(final List<ErrorField> errorFields, final Donation donation) {
+        if ((donation.getMaxHSCPipeSize() == null || donation.getMaxHSCPipeSize().isEmpty()) &&
+                donation.getMinHSCPipeSize() == null || donation.getMinHSCPipeSize().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
                     .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-    	}
+        }
     }
-    
-    private void checkDonationAmountValues(List<ErrorField> errorFields, Donation donation) {
-    	if(donation.getDonationAmount() == null || donation.getDonationAmount().isEmpty()){
-    		final ErrorField errorField = ErrorField.builder()
+
+    private void checkDonationAmountValues(final List<ErrorField> errorFields, final Donation donation) {
+        if (donation.getDonationAmount() == null || donation.getDonationAmount().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.DONATION_MANDATORY_CODE)
                     .message(WcmsConstants.DONATION_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.DONATION_MANDATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-    	}
+        }
     }
-    
-    private void checkFromToDateValues(List<ErrorField> errorFields, Donation donation) {
-    	if(donation.getFromDate() == null || donation.getToDate() == null){
-    		final ErrorField errorField = ErrorField.builder()
+
+    private void checkFromToDateValues(final List<ErrorField> errorFields, final Donation donation) {
+        if (donation.getFromDate() == null || donation.getToDate() == null) {
+            final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.FROMTO_MANDATORY_CODE)
                     .message(WcmsConstants.FROMTO_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.FROMTO_MANDATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-    	}
+        }
     }
-    
-    private ResponseEntity<?> getSuccessResponse(List<Donation> donationList, RequestInfo requestInfo) {
-        DonationResponse donationResponse = new DonationResponse();
+
+    private ResponseEntity<?> getSuccessResponse(final List<Donation> donationList, final RequestInfo requestInfo) {
+        final DonationResponse donationResponse = new DonationResponse();
         donationResponse.setDonations(donationList);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         donationResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<DonationResponse>(donationResponse, HttpStatus.OK);
+        return new ResponseEntity<>(donationResponse, HttpStatus.OK);
 
     }
-        
-    
-	
-	
 
 }

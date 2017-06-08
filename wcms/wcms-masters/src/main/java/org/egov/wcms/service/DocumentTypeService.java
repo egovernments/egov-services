@@ -70,22 +70,22 @@ public class DocumentTypeService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-
-   public DocumentTypeReq create(final DocumentTypeReq documentTypeReq) {
-       return documentTypeRepository.persistCreateDocumentType(documentTypeReq);
-   }
+    public DocumentTypeReq create(final DocumentTypeReq documentTypeReq) {
+        return documentTypeRepository.persistCreateDocumentType(documentTypeReq);
+    }
 
     public DocumentTypeReq update(final DocumentTypeReq documentTypeReq) {
         return documentTypeRepository.persistModifyDocumentType(documentTypeReq);
     }
 
+    public DocumentType sendMessage(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
 
-    public DocumentType sendMessage(final String topic,final String key,final DocumentTypeReq documentTypeReq ){
-    	
-    if(key.equalsIgnoreCase("documenttype-create")){
-    	 documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(documentTypeReq.getDocumentType().SEQ_DOCUMENTTYPE));
-    }
-      
+        if (key.equalsIgnoreCase("documenttype-create")) {
+            documentTypeReq.getDocumentType();
+            documentTypeReq.getDocumentType()
+                    .setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
+        }
+
         final ObjectMapper mapper = new ObjectMapper();
         String documentTypeValue = null;
         try {
@@ -93,34 +93,34 @@ public class DocumentTypeService {
             documentTypeValue = mapper.writeValueAsString(documentTypeReq);
             logger.info("documentTypeValue::" + documentTypeValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
-        	waterMasterProducer.sendMessage(topic,key,documentTypeValue);
+            waterMasterProducer.sendMessage(topic, key, documentTypeValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return documentTypeReq.getDocumentType();
     }
 
-    public boolean getDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
-        return documentTypeRepository.checkDocumentTypeByNameAndCode(code,name,tenantId);
+    public boolean getDocumentTypeByNameAndCode(final String code, final String name, final String tenantId) {
+        return documentTypeRepository.checkDocumentTypeByNameAndCode(code, name, tenantId);
     }
 
-    public List<DocumentType> getDocumentTypes(DocumentTypeGetReq documentTypeGetRequest) {
-       return documentTypeRepository.findForCriteria(documentTypeGetRequest);
+    public List<DocumentType> getDocumentTypes(final DocumentTypeGetReq documentTypeGetRequest) {
+        return documentTypeRepository.findForCriteria(documentTypeGetRequest);
 
-   }
-    
-   public List<Long> getAllMandatoryDocs(String applicationType){
-	   List<Long> mandatoryDocs = new ArrayList<>();
-	   try{
-		   mandatoryDocs = documentTypeRepository.getMandatoryocs(applicationType);
-	   }catch(Exception e){
-		   logger.error("There are no mandatory docs for this application type", e.getMessage());
-		   return mandatoryDocs;
-	   }
-	   return mandatoryDocs;
-   }
+    }
+
+    public List<Long> getAllMandatoryDocs(final String applicationType) {
+        List<Long> mandatoryDocs = new ArrayList<>();
+        try {
+            mandatoryDocs = documentTypeRepository.getMandatoryocs(applicationType);
+        } catch (final Exception e) {
+            logger.error("There are no mandatory docs for this application type", e.getMessage());
+            return mandatoryDocs;
+        }
+        return mandatoryDocs;
+    }
 
 }

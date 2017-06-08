@@ -98,13 +98,13 @@ public class SourceTypeController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterSourceTypeRequest::" + waterSourceRequest);
 
         final List<ErrorResponse> errorResponses = validateWaterSourceRequest(waterSourceRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final SourceType waterSource = waterSourceTypeService.createWaterSource(
                 applicationProperties.getCreateSourceTypeTopicName(),
@@ -121,14 +121,14 @@ public class SourceTypeController {
             final BindingResult errors, @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("waterSourceRequest::" + waterSourceRequest);
         waterSourceRequest.getWaterSourceType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateWaterSourceRequest(waterSourceRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final SourceType waterSource = waterSourceTypeService.updateWaterSource(
                 applicationProperties.getUpdateSourceTypeTopicName(),
@@ -261,7 +261,7 @@ public class SourceTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         waterSourceResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<SourceTypeResponse>(waterSourceResponse, HttpStatus.OK);
+        return new ResponseEntity<>(waterSourceResponse, HttpStatus.OK);
 
     }
 

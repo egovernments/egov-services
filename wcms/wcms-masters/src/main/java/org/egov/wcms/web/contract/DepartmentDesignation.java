@@ -42,13 +42,13 @@ package org.egov.wcms.web.contract;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 public class DepartmentDesignation {
 
-	private Long id;
-	private Long departmentId;
-	private Designation designation;
-
+    private Long id;
+    private Long departmentId;
+    private Designation designation;
 
 }

@@ -104,7 +104,8 @@ public class PropertyTypePipeSizeTypeControllerTest {
 
         propertyPipeSizes.add(propertyPipeSize);
 
-        final PropertyTypePipeSizeTypeGetRequest propertyCategoryGetRequest = Mockito.mock(PropertyTypePipeSizeTypeGetRequest.class);
+        final PropertyTypePipeSizeTypeGetRequest propertyCategoryGetRequest = Mockito
+                .mock(PropertyTypePipeSizeTypeGetRequest.class);
 
         when(propertyPipeSizeService.getPropertyPipeSizes(propertyCategoryGetRequest)).thenReturn(propertyPipeSizes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);

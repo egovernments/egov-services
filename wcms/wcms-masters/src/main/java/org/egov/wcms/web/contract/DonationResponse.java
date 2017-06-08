@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -24,9 +23,9 @@ import lombok.ToString;
 @ToString
 public class DonationResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	private List<Donation> donations = new ArrayList<Donation>();
+    private List<Donation> donations = new ArrayList<>();
 
 }

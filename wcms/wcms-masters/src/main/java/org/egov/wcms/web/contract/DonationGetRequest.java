@@ -17,17 +17,17 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class DonationGetRequest {
-	
-	private List<Long> id;
-	
-	private String propertyType;
-	private String categoryType;
+
+    private List<Long> id;
+
+    private String propertyType;
+    private String categoryType;
     private String usageType;
-	private double minHSCPipeSize;
-	private double maxHSCPipeSize;
-	private Date fromDate;
-	private Date toDate;
-	private boolean active;
+    private double minHSCPipeSize;
+    private double maxHSCPipeSize;
+    private Date fromDate;
+    private Date toDate;
+    private boolean active;
     private String tenantId;
 
 }

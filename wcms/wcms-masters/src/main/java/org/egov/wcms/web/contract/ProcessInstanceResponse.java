@@ -1,4 +1,5 @@
 package org.egov.wcms.web.contract;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,19 +11,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @ToString
-public class ProcessInstanceResponse   {
-	
-  @JsonProperty("responseInfo")
-  private ResponseInfo responseInfo = null;
+public class ProcessInstanceResponse {
 
-  @JsonProperty("processInstances")
-  private List<ProcessInstance> processInstances = new ArrayList<ProcessInstance>();
+    @JsonProperty("responseInfo")
+    private ResponseInfo responseInfo = null;
 
-  @JsonProperty("processInstance")
-  private ProcessInstance processInstance = null;
+    @JsonProperty("processInstances")
+    private List<ProcessInstance> processInstances = new ArrayList<>();
+
+    @JsonProperty("processInstance")
+    private ProcessInstance processInstance = null;
 
 }

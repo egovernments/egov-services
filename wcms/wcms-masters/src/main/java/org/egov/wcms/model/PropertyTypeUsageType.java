@@ -59,26 +59,25 @@ import lombok.ToString;
 @ToString
 @Builder
 public class PropertyTypeUsageType {
-	
-	public static final String SEQ_PROPERTYUSAGETYPE = "seq_egwtr_property_usage_type";
-	
-	
-	private Long id;
-	
-	@Length(min=3, max=20)
+
+    public static final String SEQ_PROPERTYUSAGETYPE = "seq_egwtr_property_usage_type";
+
+    private Long id;
+
+    @Length(min = 3, max = 20)
     @NotNull
     private String propertyType;
-	private long propertyTypeId;
+    private long propertyTypeId;
 
     @NotNull
     private String usageType;
     private long usageTypeId;
 
     private boolean active;
-    
+
     @Length(max = 250)
     @NotNull
     private String tenantId;
-    
+
     private AuditDetails auditDetails;
 }

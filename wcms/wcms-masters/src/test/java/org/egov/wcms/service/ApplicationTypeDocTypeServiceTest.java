@@ -38,9 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
 package org.egov.wcms.service;
-
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -62,7 +60,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTypeDocTypeServiceTest {
 
@@ -80,47 +77,51 @@ public class ApplicationTypeDocTypeServiceTest {
 
     @Test
     public void testSearch() {
-       final List<DocumentTypeApplicationType> applicationTypeDocs = new ArrayList<>();
-       applicationTypeDocs.add(getApplicationTypeDoc());
-        when(propertyPipeSizeRepository.findForCriteria(any(DocumentTypeApplicationTypeGetRequest.class))).thenReturn(applicationTypeDocs);
-        assertTrue(applicationTypeDocs.equals(docTypeAppTypeService.getDocumentAndApplicationTypes(any(DocumentTypeApplicationTypeGetRequest.class))));
+        final List<DocumentTypeApplicationType> applicationTypeDocs = new ArrayList<>();
+        applicationTypeDocs.add(getApplicationTypeDoc());
+        when(propertyPipeSizeRepository.findForCriteria(any(DocumentTypeApplicationTypeGetRequest.class)))
+                .thenReturn(applicationTypeDocs);
+        assertTrue(applicationTypeDocs
+                .equals(docTypeAppTypeService.getDocumentAndApplicationTypes(any(DocumentTypeApplicationTypeGetRequest.class))));
     }
 
     @Test
     public void testCreate() {
 
-       final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
-       final DocumentTypeApplicationTypeReq propertyPipeSizeRequest = new DocumentTypeApplicationTypeReq();
+        final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
+        final DocumentTypeApplicationTypeReq propertyPipeSizeRequest = new DocumentTypeApplicationTypeReq();
         propertyPipeSizeRequest.setDocumentTypeApplicationType(applicationTypeDoc);
-        assertTrue(applicationTypeDoc.equals(docTypeAppTypeService.sendMessage("","",propertyPipeSizeRequest)));
+        assertTrue(applicationTypeDoc.equals(docTypeAppTypeService.sendMessage("", "", propertyPipeSizeRequest)));
     }
 
     @Test
-	public void testPersist() {
+    public void testPersist() {
 
-		final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
-		final DocumentTypeApplicationTypeReq propertyPipeSizeRequest = new DocumentTypeApplicationTypeReq();
-		propertyPipeSizeRequest.setDocumentTypeApplicationType(applicationTypeDoc);
-        when(propertyPipeSizeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeReq.class))).thenReturn(propertyPipeSizeRequest);
+        final DocumentTypeApplicationType applicationTypeDoc = getApplicationTypeDoc();
+        final DocumentTypeApplicationTypeReq propertyPipeSizeRequest = new DocumentTypeApplicationTypeReq();
+        propertyPipeSizeRequest.setDocumentTypeApplicationType(applicationTypeDoc);
+        when(propertyPipeSizeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeReq.class)))
+                .thenReturn(propertyPipeSizeRequest);
         assertTrue(propertyPipeSizeRequest.equals(docTypeAppTypeService.create(propertyPipeSizeRequest)));
-	}
+    }
 
     private DocumentTypeApplicationType getApplicationTypeDoc() {
 
-       final DocumentTypeApplicationType appTypeDoc = new DocumentTypeApplicationType();
-       appTypeDoc.setTenantId("default");
-       appTypeDoc.setApplicationType("property type");
-       appTypeDoc.setDocumentTypeId(123);
-       appTypeDoc.setActive(true);
+        final DocumentTypeApplicationType appTypeDoc = new DocumentTypeApplicationType();
+        appTypeDoc.setTenantId("default");
+        appTypeDoc.setApplicationType("property type");
+        appTypeDoc.setDocumentTypeId(123);
+        appTypeDoc.setActive(true);
         return appTypeDoc;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
     public void test_throwException_Update_ApplicationTypeDocumentType() throws Exception {
 
         final DocumentTypeApplicationTypeReq applicationDocumentTypeRequest = Mockito.mock(DocumentTypeApplicationTypeReq.class);
-        when(propertyPipeSizeRepository.persistModifyDocTypeApplicationType(applicationDocumentTypeRequest)).thenThrow(Exception.class);
+        when(propertyPipeSizeRepository.persistModifyDocTypeApplicationType(applicationDocumentTypeRequest))
+                .thenThrow(Exception.class);
 
         assertTrue(applicationDocumentTypeRequest.equals(docTypeAppTypeService.update(applicationDocumentTypeRequest)));
     }

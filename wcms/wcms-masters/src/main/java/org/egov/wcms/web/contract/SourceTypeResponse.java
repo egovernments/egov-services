@@ -61,7 +61,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SourceTypeResponse {
-    
+
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 

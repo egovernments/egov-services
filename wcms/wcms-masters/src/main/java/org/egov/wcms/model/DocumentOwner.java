@@ -41,8 +41,13 @@ package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -54,12 +59,12 @@ import lombok.*;
 
 public class DocumentOwner {
 
-	@NotNull
-	private Document document;
-	
-	@NotNull
-	private String name;
-	
-	@NotNull
-	private String fileStoreId;
+    @NotNull
+    private Document document;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private String fileStoreId;
 }

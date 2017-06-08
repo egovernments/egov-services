@@ -86,12 +86,12 @@ public class UsageTypeService {
             usageTypeValue = mapper.writeValueAsString(usageTypeRequest);
             logger.info("usageTypeValue::" + usageTypeValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, usageTypeValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return usageTypeRequest.getUsageType();
     }
@@ -104,12 +104,12 @@ public class UsageTypeService {
             usageTypeValue = mapper.writeValueAsString(usageTypeRequest);
             logger.info("usageTypeValue::" + usageTypeValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, usageTypeValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return usageTypeRequest.getUsageType();
     }

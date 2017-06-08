@@ -41,8 +41,15 @@ package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -54,32 +61,32 @@ import org.hibernate.validator.constraints.Length;
 public class PropertyTypeCategoryType {
 
     public static final String SEQ_PROPERTY_CATEGORY = "SEQ_EGWTR_PROPERTY_CATEGORY";
-    
+
     @NotNull
     private Long id;
 
     @NotNull
     private Long propertyTypeId;
-    
+
     @NotNull
     private String propertyTypeName;
 
     @NotNull
     private Long categoryTypeId;
-    
+
     @NotNull
     private String categoryTypeName;
 
     @NotNull
     private Boolean active;
-    
+
     @NotNull
     private AuditDetails auditDetails;
-    
+
     @Length(max = 250)
     @NotNull
     private String tenantId;
-    
+
     @Length(max = 250)
     @NotNull
     private String version;

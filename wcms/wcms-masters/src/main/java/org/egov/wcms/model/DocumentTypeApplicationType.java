@@ -59,23 +59,23 @@ import lombok.ToString;
 @ToString
 @Builder
 public class DocumentTypeApplicationType {
-    
+
     public static final String SEQ_DOCUMENT_TYPE_APPLICATION_TYPE = "SEQ_DOCUMENT_TYPE_APPLICATION_TYPE";
 
     @NotNull
     private Long id;
-    
+
     @NotNull
     private long documentTypeId;
-    
+
     @NotNull
-    @Length(max=150)
+    @Length(max = 150)
     private String applicationType;
-    
+
     @NotNull
-    @Length(max=150)
+    @Length(max = 150)
     private String documentType;
-    
+
     @NotNull
     private Boolean mandatory;
 
@@ -83,7 +83,7 @@ public class DocumentTypeApplicationType {
     private Boolean active;
 
     private AuditDetails auditDetails;
-    
+
     @Length(max = 250)
     @NotNull
     private String tenantId;

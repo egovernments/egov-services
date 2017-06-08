@@ -38,7 +38,6 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
 package org.egov.wcms.repository.rowmapper;
 
 import java.sql.ResultSet;
@@ -50,13 +49,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MeterCostRowMapper implements RowMapper<UsageType>  {
+public class MeterCostRowMapper implements RowMapper<UsageType> {
 
     @Override
-    public UsageType mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    public UsageType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        new SimpleDateFormat("dd/MM/yyyy");
 
-        UsageType usageType = new UsageType();
+        final UsageType usageType = new UsageType();
         usageType.setId(rs.getLong("usage_id"));
         usageType.setCode(rs.getString("usage_code"));
         usageType.setName(rs.getString("usage_name"));
@@ -66,6 +65,5 @@ public class MeterCostRowMapper implements RowMapper<UsageType>  {
 
         return usageType;
     }
-
 
 }

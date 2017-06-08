@@ -6,8 +6,12 @@ import org.egov.wcms.model.WorkflowDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -16,13 +20,13 @@ import lombok.*;
 @Setter
 @ToString
 public class WaterConnectionRes {
-	
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	
-	@JsonProperty("Connection")
-	private Connection connection;
-	
-	@JsonProperty("WorkflowDetails")
-	private WorkflowDetails workflowDetails;
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("Connection")
+    private Connection connection;
+
+    @JsonProperty("WorkflowDetails")
+    private WorkflowDetails workflowDetails;
 }

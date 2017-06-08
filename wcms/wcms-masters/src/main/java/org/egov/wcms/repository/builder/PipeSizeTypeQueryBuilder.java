@@ -39,14 +39,14 @@
  */
 package org.egov.wcms.repository.builder;
 
+import java.util.List;
+
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.PipeSizeTypeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class PipeSizeTypeQueryBuilder {
@@ -61,8 +61,8 @@ public class PipeSizeTypeQueryBuilder {
             + " FROM egwtr_pipesize pipesize ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final PipeSizeTypeGetRequest pipeSizeGetRequest, List preparedStatementValues) {
-        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    public String getQuery(final PipeSizeTypeGetRequest pipeSizeGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, pipeSizeGetRequest);
         addOrderByClause(selectQuery, pipeSizeGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, pipeSizeGetRequest);
@@ -71,10 +71,11 @@ public class PipeSizeTypeQueryBuilder {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-                                final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final PipeSizeTypeGetRequest pipeSizeGetRequest) {
 
-        if (pipeSizeGetRequest.getId() == null && pipeSizeGetRequest.getSizeInMilimeter() == 0 && pipeSizeGetRequest.getActive() == null
+        if (pipeSizeGetRequest.getId() == null && pipeSizeGetRequest.getSizeInMilimeter() == 0
+                && pipeSizeGetRequest.getActive() == null
                 && pipeSizeGetRequest.getTenantId() == null)
             return;
 
@@ -91,7 +92,6 @@ public class PipeSizeTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" pipesize.id IN " + getIdQuery(pipeSizeGetRequest.getId()));
         }
-
 
         if (pipeSizeGetRequest.getSizeInMilimeter() != 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -112,16 +112,16 @@ public class PipeSizeTypeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(StringBuilder selectQuery, final PipeSizeTypeGetRequest pipeSizeGetRequest) {
-        String sortBy = (pipeSizeGetRequest.getSortBy() == null ? "pipesize.code"
-                : "pipesize." + pipeSizeGetRequest.getSortBy());
-        String sortOrder = (pipeSizeGetRequest.getSortOrder() == null ? "DESC" : pipeSizeGetRequest.getSortOrder());
+    private void addOrderByClause(final StringBuilder selectQuery, final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+        final String sortBy = pipeSizeGetRequest.getSortBy() == null ? "pipesize.code"
+                : "pipesize." + pipeSizeGetRequest.getSortBy();
+        final String sortOrder = pipeSizeGetRequest.getSortOrder() == null ? "DESC" : pipeSizeGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-                                 final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final PipeSizeTypeGetRequest pipeSizeGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
@@ -138,33 +138,30 @@ public class PipeSizeTypeQueryBuilder {
         // pageNo * pageSize
     }
 
-
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString
      * @return boolean indicates if the next predicate should append an "AND"
      */
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
 
         return true;
     }
-    private static String getIdQuery(List<Long> idList) {
-        StringBuilder query = new StringBuilder("(");
+
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
             query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++) {
+            for (int i = 1; i < idList.size(); i++)
                 query.append(", " + idList.get(i));
-            }
         }
         return query.append(")").toString();
     }
-
-
 
     public static String insertPipeSizeQuery() {
         return "INSERT INTO egwtr_pipesize(id,code,sizeinmilimeter,sizeininch,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
@@ -175,19 +172,17 @@ public class PipeSizeTypeQueryBuilder {
         return "UPDATE egwtr_pipesize SET sizeinmilimeter = ?,sizeininch = ?,description = ? ,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
     }
-    
+
     public static String selectPipeSizeInmmAndCodeQuery() {
         return " select code FROM egwtr_pipesize where sizeinmilimeter = ? and tenantId = ?";
     }
 
-
     public static String selectPipeSizeInmmAndCodeNotInQuery() {
         return " select code from egwtr_pipesize where sizeinmilimeter = ? and tenantId = ? and code != ? ";
     }
-    
+
     public static String selectPipeSizeIdQuery() {
         return " select * FROM egwtr_pipesize where id = ?";
     }
-
 
 }

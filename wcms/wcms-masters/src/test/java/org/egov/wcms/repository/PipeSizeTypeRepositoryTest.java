@@ -107,7 +107,7 @@ public class PipeSizeTypeRepositoryTest {
         final PipeSizeType pipeSize = new PipeSizeType();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
-        //pipeSize.getAuditDeatils().setCreatedBy(1L);
+        // pipeSize.getAuditDeatils().setCreatedBy(1L);
         pipeSize.setSizeInInch(1.2);
         pipeSize.setSizeInMilimeter(10.1);
 
@@ -125,7 +125,7 @@ public class PipeSizeTypeRepositoryTest {
         final PipeSizeType pipeSize = new PipeSizeType();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
-       // pipeSize.getAuditDeatils().setCreatedBy(1L);
+        // pipeSize.getAuditDeatils().setCreatedBy(1L);
         pipeSize.setSizeInInch(1.2);
         pipeSize.setSizeInMilimeter(10.1);
 
@@ -146,7 +146,7 @@ public class PipeSizeTypeRepositoryTest {
         final PipeSizeType pipeSize = new PipeSizeType();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
-       // pipeSize.getAuditDeatils().setCreatedBy(1L);
+        // pipeSize.getAuditDeatils().setCreatedBy(1L);
         pipeSize.setSizeInInch(1.2);
         pipeSize.setSizeInMilimeter(10.1);
 
@@ -164,7 +164,7 @@ public class PipeSizeTypeRepositoryTest {
         final PipeSizeType pipeSize = new PipeSizeType();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
-       // pipeSize.getAuditDeatils().setCreatedBy(1L);
+        // pipeSize.getAuditDeatils().setCreatedBy(1L);
         pipeSize.setSizeInInch(1.2);
         pipeSize.setSizeInMilimeter(10.1);
 
@@ -177,7 +177,7 @@ public class PipeSizeTypeRepositoryTest {
 
     @Test
     public void test_Should_Check_PipeSize() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(1.22);
         preparedStatementValues.add(1.45);
 
@@ -194,7 +194,7 @@ public class PipeSizeTypeRepositoryTest {
 
     @Test
     public void test_Should__FindforCriteria() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final PipeSizeTypeGetRequest pipeSizeGetRequest = new PipeSizeTypeGetRequest();
         when(pipeSizeQueryBuilder.getQuery(pipeSizeGetRequest, preparedStatementValues)).thenReturn("query");
         final List<PipeSizeType> pipeSizes = pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
@@ -206,7 +206,7 @@ public class PipeSizeTypeRepositoryTest {
     @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
     public void test_throwException__FindforCriteria() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final PipeSizeTypeGetRequest pipeSizeGetRequest = new PipeSizeTypeGetRequest();
         when(pipeSizeQueryBuilder.getQuery(pipeSizeGetRequest, preparedStatementValues)).thenThrow(Exception.class);
         final List<PipeSizeType> pipeSizes = pipeSizeRepository.findForCriteria(pipeSizeGetRequest);

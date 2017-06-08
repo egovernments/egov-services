@@ -62,16 +62,17 @@ public class DocumentTypeApplicationTypeService {
 
     @Autowired
     private DocumentTypeApplicationTypeRepository docTypeApplTypeRepository;
-    
+
     @Autowired
     private WaterMasterProducer mastertProducer;
 
-   public DocumentTypeApplicationTypeReq create(final DocumentTypeApplicationTypeReq docNameRequest) {
-       return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
-   }
+    public DocumentTypeApplicationTypeReq create(final DocumentTypeApplicationTypeReq docNameRequest) {
+        return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
+    }
 
-    public DocumentTypeApplicationType sendMessage(final String topic,final String key,final DocumentTypeApplicationTypeReq docNameRequest) {
-    	//docNameRequest.getDocumentName().setCode(codeGeneratorService.generate(usageTypeRequest.getUsageType().SEQ_USAGETYPE));
+    public DocumentTypeApplicationType sendMessage(final String topic, final String key,
+            final DocumentTypeApplicationTypeReq docNameRequest) {
+        // docNameRequest.getDocumentName().setCode(codeGeneratorService.generate(usageTypeRequest.getUsageType().SEQ_USAGETYPE));
         final ObjectMapper mapper = new ObjectMapper();
         String docTypeApplTypeValue = null;
         try {
@@ -79,33 +80,30 @@ public class DocumentTypeApplicationTypeService {
             docTypeApplTypeValue = mapper.writeValueAsString(docNameRequest);
             logger.info("DocumentTypeApplicationTypeValue::" + docTypeApplTypeValue);
         } catch (final JsonProcessingException e) {
-        	logger.error("Exception Encountered : " + e);
+            logger.error("Exception Encountered : " + e);
         }
         try {
-        	mastertProducer.sendMessage(topic,key,docTypeApplTypeValue);
+            mastertProducer.sendMessage(topic, key, docTypeApplTypeValue);
         } catch (final Exception ex) {
-        	logger.error("Exception Encountered : " + ex);
+            logger.error("Exception Encountered : " + ex);
         }
         return docNameRequest.getDocumentTypeApplicationType();
     }
-    
-  
+
     public DocumentTypeApplicationTypeReq update(final DocumentTypeApplicationTypeReq documentTypeRequest) {
         return docTypeApplTypeRepository.persistModifyDocTypeApplicationType(documentTypeRequest);
     }
-    
-    
-    public List<DocumentTypeApplicationType> getDocumentAndApplicationTypes(DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
+
+    public List<DocumentTypeApplicationType> getDocumentAndApplicationTypes(
+            final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
         return docTypeApplTypeRepository.findForCriteria(docNameGetRequest);
 
     }
-    
-    public boolean checkDocumentTypeApplicationTypeExist(String applicationType,long documentType,String tenantid){
-    	
-    	 return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(documentType,applicationType,tenantid);
+
+    public boolean checkDocumentTypeApplicationTypeExist(final String applicationType, final long documentType,
+            final String tenantid) {
+
+        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(documentType, applicationType, tenantid);
     }
-    
-    
-    
-    
+
 }

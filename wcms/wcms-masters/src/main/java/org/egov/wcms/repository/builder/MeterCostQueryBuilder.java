@@ -40,18 +40,12 @@
 
 package org.egov.wcms.repository.builder;
 
-import org.egov.wcms.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MeterCostQueryBuilder {
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
 
     private static final Logger logger = LoggerFactory.getLogger(MeterCostQueryBuilder.class);
 
@@ -60,5 +54,3 @@ public class MeterCostQueryBuilder {
                 + "(nextval('seq_egwtr_meter_cost'),?,?,?,?,?,?,?,?,?)";
     }
 }
-
-

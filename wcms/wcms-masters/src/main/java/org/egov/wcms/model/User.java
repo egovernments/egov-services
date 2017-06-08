@@ -4,8 +4,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -15,58 +20,56 @@ import lombok.*;
 @ToString
 @Builder
 public class User {
-	
-	@NotNull
-	private long id;
-	
-	@NotNull
-	private String userName;
-	
-	@NotNull
-	private String authToken;
-	
-	@NotNull
-	private String salutation;
-	
-	@NotNull
-	private String name;
-	
-	@NotNull
-	private String gender;
-	
-	@NotNull
-	private String mobileNumber;
-	
-	@NotNull
-	private String emailId;
-	
-	@NotNull
-	private String aadhaarNumber;
-	
-	@NotNull
-	private boolean active;
-	
-	@NotNull
-	private long pwdExpiryDate;
-	
-	@NotNull
-	private String locale;
-	
-	@NotNull
-	private String type;
-	
-	@NotNull
-	private boolean accountLocked;
-	
-	@NotNull
-	private List<Role> roles;
-	
-	@NotNull
-	private UserDetails userDetails;
-	
-	@NotNull
-	private AuditDetails auditDetails; 
-	
-	
+
+    @NotNull
+    private long id;
+
+    @NotNull
+    private String userName;
+
+    @NotNull
+    private String authToken;
+
+    @NotNull
+    private String salutation;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private String gender;
+
+    @NotNull
+    private String mobileNumber;
+
+    @NotNull
+    private String emailId;
+
+    @NotNull
+    private String aadhaarNumber;
+
+    @NotNull
+    private boolean active;
+
+    @NotNull
+    private long pwdExpiryDate;
+
+    @NotNull
+    private String locale;
+
+    @NotNull
+    private String type;
+
+    @NotNull
+    private boolean accountLocked;
+
+    @NotNull
+    private List<Role> roles;
+
+    @NotNull
+    private UserDetails userDetails;
+
+    @NotNull
+    private AuditDetails auditDetails;
 
 }

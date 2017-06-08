@@ -95,9 +95,6 @@ public class PropertiesManager {
 	@Value("${egov.services.demand_service.bill.search}")
 	private String demandBillSearchService;
 
-	@Value("${egov.services.collection_service.hostname}")
-	public String purposeHostName;
-
 	@Value("${egov.services.collection_service.purpose}")
 	public String purposeService;
 	
@@ -139,4 +136,6 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.egov-common-workflows_service.historypath}")
 	public String commonWorkFlowServiceHistoryPath;
+	
+	
 }

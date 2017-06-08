@@ -69,5 +69,9 @@ public class ApplicationProperties {
 	public String lamsSearchPageSizeMax() {
 		return this.environment.getProperty(LAMS_SEARCH_PAGESIZE_MAX);
 	}
-	
+
+	public String getHostNameForMonolith(final String tenantId) {
+		return environment.getProperty(tenantId);
+	}
+
 }

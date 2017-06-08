@@ -2,6 +2,7 @@ package org.egov.lams.service;
 
 import org.egov.lams.contract.AgreementDetails;
 import org.egov.lams.contract.AgreementRequest;
+import org.egov.lams.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
@@ -31,19 +32,16 @@ public class AgreementAdaptorService {
 	public AgreementDetails indexOnCreate(AgreementRequest agreementRequest) {
 		
 		Agreement agreement = agreementRequest.getAgreement();
-
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		AgreementDetails agreementDetails = new AgreementDetails();
 		Asset asset = assetRepository.getAsset(agreement.getAsset().getId(),agreement.getTenantId());
-		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId());
+		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId(),agreement.getTenantId(),requestInfo);
 		
 		agreementDetails.setAsset(asset);
 		agreementDetails.setAgreement(agreement);
 		agreementDetails.setAllottee(allottee);
 		agreementDetails.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement));
-		
-		
 		//boundaryRepository.getBoundary(); FIXME make call to city controller
-
 		return agreementDetails;
 	}
 }

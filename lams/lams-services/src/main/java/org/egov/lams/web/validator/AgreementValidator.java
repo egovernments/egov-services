@@ -208,7 +208,7 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		allottee.setTenantId(agreementRequest.getAgreement().getTenantId());
 
-		AllotteeResponse allotteeResponse = allotteeService.isAllotteeExist(allottee, requestInfo);
+		AllotteeResponse allotteeResponse = allotteeService.getAllottees(allottee, requestInfo);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0) {
 			allotteeService.createAllottee(allottee, requestInfo);
 		} else

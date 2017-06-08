@@ -59,7 +59,7 @@ public class AllotteeRepository {
 		return allotteeResponse;
 	}
 
-	public AllotteeResponse isAllotteeExist(Allottee allottee, RequestInfo requestInfo) {
+	public AllotteeResponse getAllottees(Allottee allottee, RequestInfo requestInfo) {
 
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceSearchPath();

@@ -1651,7 +1651,7 @@ class CreateAsset extends React.Component {
       }
     }
 
-    const showDelBtn = function() {
+    const showDelBtn = function(item) {
       if(getUrlVars()["type"] != "view")
         return (
           <button type="button" className="btn btn-danger btn-close" onClick={(e) => {removeReferenceConfirm(e, item)}}>Delete</button>
@@ -1672,7 +1672,7 @@ class CreateAsset extends React.Component {
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td>
-                          {showDelBtn()}
+                          {showDelBtn(item)}
                         </td>
                       </tr>
               );

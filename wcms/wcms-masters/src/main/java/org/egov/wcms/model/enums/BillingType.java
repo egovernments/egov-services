@@ -46,29 +46,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum BillingType {
- METERED("METERED"), NONMETERED("NON-METERED");
+    METERED("METERED"), NONMETERED("NON-METERED");
 
+    private String value;
 
-private String value;
+    BillingType(final String value) {
+        this.value = value;
+    }
 
-BillingType(String value) {
-this.value = value;
-}
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-@Override
-@JsonValue
-public String toString() {
-return StringUtils.capitalize(name());
+    @JsonCreator
+    public static BillingType fromValue(final String passedValue) {
+        for (final BillingType obj : BillingType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }
-
-@JsonCreator
-public static BillingType fromValue(String passedValue) {
-for (BillingType obj : BillingType.values()) {
-if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-return obj;
-}
-}
-return null;
-}
-}
-

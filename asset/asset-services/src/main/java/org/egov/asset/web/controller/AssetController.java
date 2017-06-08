@@ -43,16 +43,22 @@ package org.egov.asset.web.controller;
 import javax.validation.Valid;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
+import org.egov.asset.contract.DisposalRequest;
+import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
 import org.egov.common.contract.response.ResponseInfo;
@@ -68,6 +74,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,6 +95,12 @@ public class AssetController {
 	
 	@Autowired
 	private RevaluationService revaluationService;
+	
+	@Autowired
+	private AssetCurrentAmountService  assetCurrentAmountService;
+	
+	@Autowired
+	private DisposalService disposalService;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -99,7 +112,7 @@ public class AssetController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		AssetResponse assetResponse = assetService.getAssets(assetCriteria);
+		AssetResponse assetResponse = assetService.getAssets(assetCriteria,requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
@@ -169,7 +182,60 @@ public class AssetController {
 		
 		RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
 		
-		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+		return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping("dispose/_create")
+	@ResponseBody
+	public ResponseEntity<?> dispose(@RequestBody @Valid DisposalRequest disposalRequest, BindingResult bindingResult) {
+
+		logger.info("create dispose:" + disposalRequest);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, need to be done.
+		
+		DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
+		logger.info("dispose disposalResponse:" + disposalResponse);
+		
+		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("dispose/_search")
+	@ResponseBody
+	public ResponseEntity<?> disposalSearch(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute @Valid DisposalCriteria disposalCriteria,BindingResult bindingResult) {
+
+		logger.info("disposalSearch disposalCriteria:" +disposalCriteria);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, need to be done.
+		
+		DisposalResponse disposalResponse = disposalService.search(disposalCriteria, requestInfoWrapper.getRequestInfo());
+		
+		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping("currentvalue/_search")
+	@ResponseBody
+	public ResponseEntity<?> getAssetCurrentValue(@RequestParam(name = "assetId",required = true) Long assetId,
+			@RequestParam(name = "tenantId", required = true) String tenantId,
+			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
+		
+		logger.info("getAssetCurrentValue assetId:" + assetId +",tenantId:"+tenantId);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		
+		AssetCurrentValueResponse assetCurrentValueResponse = 
+				assetCurrentAmountService.getCurrentAmount(assetId, tenantId, requestInfoWrapper.getRequestInfo());
+
+		logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+		return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
 	}
 		
 	private ErrorResponse populateErrors(BindingResult errors) {

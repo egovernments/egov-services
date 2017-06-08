@@ -100,13 +100,13 @@ public class DocumentTypeApplicationTypeController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("documentNameRequest::" + documentNameRequest);
 
         final List<ErrorResponse> errorResponses = validateDocumentNameRequest(documentNameRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final DocumentTypeApplicationType docTypeAppType = docTypeAppTypeService.sendMessage(
                 applicationProperties.getCreateDocumentTypeApplicationTypeTopicName(), "documenttypeapplicationtype-create",
@@ -123,14 +123,14 @@ public class DocumentTypeApplicationTypeController {
             final BindingResult errors, @PathVariable("docTypeAppliTypeId") final Long docTypeAppliTypeId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("documentTypeApplicationTypeRequest::" + documentTypeApplicationTypeReq);
         documentTypeApplicationTypeReq.getDocumentTypeApplicationType().setId(docTypeAppliTypeId);
 
         final List<ErrorResponse> errorResponses = validateDocumentNameRequest(documentTypeApplicationTypeReq);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final DocumentTypeApplicationType documentTypeAppliType = docTypeAppTypeService.sendMessage(
                 applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(), "documenttypeapplicationtype-update",
@@ -172,7 +172,7 @@ public class DocumentTypeApplicationTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         docNameResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<DocumentTypeApplicationTypeRes>(docNameResponse, HttpStatus.OK);
+        return new ResponseEntity<>(docNameResponse, HttpStatus.OK);
 
     }
 

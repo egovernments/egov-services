@@ -40,14 +40,22 @@
 
 package org.egov.wcms.web.controller;
 
-import org.egov.common.contract.request.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.*;
+import org.egov.wcms.web.contract.RequestInfoWrapper;
+import org.egov.wcms.web.contract.UsageTypeGetRequest;
+import org.egov.wcms.web.contract.UsageTypeRequest;
+import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -59,12 +67,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/usagetype")
@@ -84,23 +93,23 @@ public class UsageTypeController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final UsageTypeRequest usageTypeRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final UsageTypeRequest usageTypeRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("usageTypeRequest::" + usageTypeRequest);
 
         final List<ErrorResponse> errorResponses = validateUsageTypeRequest(usageTypeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final UsageType usageType = usageTypeService.createUsageType(applicationProperties.getCreateUsageTypeTopicName(),"usagetype-create", usageTypeRequest);
-        List<UsageType> usageTypes = new ArrayList<>();
+        final UsageType usageType = usageTypeService.createUsageType(applicationProperties.getCreateUsageTypeTopicName(),
+                "usagetype-create", usageTypeRequest);
+        final List<UsageType> usageTypes = new ArrayList<>();
         usageTypes.add(usageType);
         return getSuccessResponse(usageTypes, usageTypeRequest.getRequestInfo());
 
@@ -108,69 +117,67 @@ public class UsageTypeController {
 
     @PostMapping(value = "/_update/{code}")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final UsageTypeRequest usageTypeRequest, final BindingResult errors, @PathVariable("code") String code) {
+    public ResponseEntity<?> update(@RequestBody @Valid final UsageTypeRequest usageTypeRequest, final BindingResult errors,
+            @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("usageTypeRequest::" + usageTypeRequest);
         usageTypeRequest.getUsageType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateUsageTypeRequest(usageTypeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final UsageType usageType = usageTypeService.updateUsageType(applicationProperties.getUpdateUsageTypeTopicName(),"usagetype-update",usageTypeRequest);
-        List<UsageType> usageTypes = new ArrayList<>();
+        final UsageType usageType = usageTypeService.updateUsageType(applicationProperties.getUpdateUsageTypeTopicName(),
+                "usagetype-update", usageTypeRequest);
+        final List<UsageType> usageTypes = new ArrayList<>();
         usageTypes.add(usageType);
         return getSuccessResponse(usageTypes, usageTypeRequest.getRequestInfo());
     }
 
-
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid UsageTypeGetRequest usageTypeGetRequest,
-                                    BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-                                    BindingResult requestBodyBindingResult) {
-        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    public ResponseEntity<?> search(@ModelAttribute @Valid final UsageTypeGetRequest usageTypeGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate input params
-        if (modelAttributeBindingResult.hasErrors()) {
+        if (modelAttributeBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-        }
 
         // validate input params
-        if (requestBodyBindingResult.hasErrors()) {
+        if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-        }
 
         // Call service
         List<UsageType> usageTypeList = null;
         try {
             usageTypeList = usageTypeService.getUsageTypes(usageTypeGetRequest);
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             logger.error("Error while processing request " + usageTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-      return getSuccessResponse(usageTypeList, requestInfo);
+        return getSuccessResponse(usageTypeList, requestInfo);
 
     }
 
     private List<ErrorResponse> validateUsageTypeRequest(final UsageTypeRequest usageTypeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(usageTypeRequest);
         errorResponse.setError(error);
-        if(!errorResponse.getErrorFields().isEmpty())
+        if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
 
         return errorResponses;
     }
 
-
     private Error getError(final UsageTypeRequest usageTypeRequest) {
-        List<ErrorField> errorFields = getErrorFields(usageTypeRequest);
+        final List<ErrorField> errorFields = getErrorFields(usageTypeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_USAGETYPE_REQUEST_MESSAGE)
                 .errorFields(errorFields)
@@ -178,18 +185,15 @@ public class UsageTypeController {
     }
 
     private List<ErrorField> getErrorFields(final UsageTypeRequest usageTypeRequest) {
-        List<ErrorField> errorFields = new ArrayList<>();
+        final List<ErrorField> errorFields = new ArrayList<>();
         addUsageTypeNameValidationErrors(usageTypeRequest, errorFields);
-        addTeanantIdValidationErrors(usageTypeRequest,errorFields);
-        addActiveValidationErrors(usageTypeRequest,errorFields);
+        addTeanantIdValidationErrors(usageTypeRequest, errorFields);
+        addActiveValidationErrors(usageTypeRequest, errorFields);
         return errorFields;
     }
-    
-    private void validatePropertyData(DonationRequest donationRequest){
-    }
 
-    private void addUsageTypeNameValidationErrors(UsageTypeRequest usageTypeRequest, List<ErrorField> errorFields) {
-        UsageType usageType=usageTypeRequest.getUsageType();
+    private void addUsageTypeNameValidationErrors(final UsageTypeRequest usageTypeRequest, final List<ErrorField> errorFields) {
+        final UsageType usageType = usageTypeRequest.getUsageType();
         if (usageType.getName() == null || usageType.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
@@ -197,38 +201,42 @@ public class UsageTypeController {
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else if (!usageTypeService.getUsageTypeByNameAndCode(usageType.getCode(),usageType.getName(),usageType.getTenantId())) {
+        } else if (!usageTypeService.getUsageTypeByNameAndCode(usageType.getCode(), usageType.getName(),
+                usageType.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.USAGETYPE_NAME_UNIQUE_CODE)
                     .message(WcmsConstants.USAGETYPE_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_UNQ_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-   } else return;
+        } else
+            return;
     }
 
-    private void addTeanantIdValidationErrors(UsageTypeRequest usageTypeRequest, List<ErrorField> errorFields){
-        UsageType usageType=usageTypeRequest.getUsageType();
-        if(usageType.getTenantId()==null || usageType.getTenantId().isEmpty()){
+    private void addTeanantIdValidationErrors(final UsageTypeRequest usageTypeRequest, final List<ErrorField> errorFields) {
+        final UsageType usageType = usageTypeRequest.getUsageType();
+        if (usageType.getTenantId() == null || usageType.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
-    private void addActiveValidationErrors(UsageTypeRequest usageTypeRequest, List<ErrorField> errorFields){
-        UsageType usageType=usageTypeRequest.getUsageType();
-        if(usageType.getActive()==null){
+    private void addActiveValidationErrors(final UsageTypeRequest usageTypeRequest, final List<ErrorField> errorFields) {
+        final UsageType usageType = usageTypeRequest.getUsageType();
+        if (usageType.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        } else return;
+        } else
+            return;
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
@@ -238,22 +246,20 @@ public class UsageTypeController {
         error.setCode(1);
         error.setDescription("Error while binding request");
         if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors()) {
+            for (final FieldError fieldError : errors.getFieldErrors())
                 error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            }
         errRes.setError(error);
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(List<UsageType> usageTypeList, RequestInfo requestInfo) {
-        UsageTypeResponse usageTypeResponse = new UsageTypeResponse();
+    private ResponseEntity<?> getSuccessResponse(final List<UsageType> usageTypeList, final RequestInfo requestInfo) {
+        final UsageTypeResponse usageTypeResponse = new UsageTypeResponse();
         usageTypeResponse.setUsageType(usageTypeList);
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         usageTypeResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<UsageTypeResponse>(usageTypeResponse, HttpStatus.OK);
+        return new ResponseEntity<>(usageTypeResponse, HttpStatus.OK);
 
     }
-
 
 }

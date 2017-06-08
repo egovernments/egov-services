@@ -1,14 +1,10 @@
 class ShowCalender extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],calenderSet:{
-        name:"",
-        startDate:"",
-        endDate:"",
-        active:""
+    this.state={
+      list:[]
     }
   }
-}
 
 
   componentDidMount() {
@@ -25,7 +21,7 @@ class ShowCalender extends React.Component {
         _this.setState({
                list: res
         });
-     })  
+     })
    }
 
   componentDidUpdate(prevProps, prevState) {
@@ -50,8 +46,6 @@ class ShowCalender extends React.Component {
 
   render() {
     let {list}=this.state;
-    let {name,startDate,endDate,active}=this.state.calenderSet;
-
 
     const renderAction=function(type,id){
       if (type==="update") {

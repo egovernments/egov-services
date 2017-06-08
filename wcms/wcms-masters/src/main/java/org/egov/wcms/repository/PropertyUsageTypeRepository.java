@@ -75,8 +75,9 @@ public class PropertyUsageTypeRepository {
                 propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
                 propUsageTypeRequest.getPropertyTypeUsageType().isActive(),
                 propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(),
-                propUsageTypeRequest.getRequestInfo().getUserInfo().getId(), propUsageTypeRequest.getRequestInfo().getUserInfo().getId(),
-                new Date(new java.util.Date().getTime()),new Date(new java.util.Date().getTime())};
+                propUsageTypeRequest.getRequestInfo().getUserInfo().getId(),
+                propUsageTypeRequest.getRequestInfo().getUserInfo().getId(),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
         jdbcTemplate.update(propUsageTypeInsert, obj);
         return propUsageTypeRequest;
     }
@@ -94,7 +95,7 @@ public class PropertyUsageTypeRepository {
     }
 
     public List<PropertyTypeUsageType> getPropertyUsageType(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
         final List<PropertyTypeUsageType> propUsageTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 propUsageTypeMapper);
@@ -103,7 +104,7 @@ public class PropertyUsageTypeRepository {
 
     public List<PropertyTypeUsageType> checkPropertyUsageTypeExists(final long propertyType, final long usageType,
             final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(propertyType);
         preparedStatementValues.add(usageType);
         preparedStatementValues.add(tenantId);

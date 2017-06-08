@@ -87,6 +87,9 @@ public class LeaveAllotmentService {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<LeaveAllotment> getLeaveAllotments(LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
 		return leaveAllotmentRepository.findForCriteria(leaveAllotmentGetRequest);
@@ -96,8 +99,7 @@ public class LeaveAllotmentService {
 		List<LeaveAllotment> leaveAllotment = leaveAllotmentRequest.getLeaveAllotment();
 		String leaveAllotmentRequestJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			leaveAllotmentRequestJson = mapper.writeValueAsString(leaveAllotmentRequest);
+			leaveAllotmentRequestJson = objectMapper.writeValueAsString(leaveAllotmentRequest);
 			LOGGER.info("leaveAllotmentRequestJson::" + leaveAllotmentRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);
@@ -117,8 +119,7 @@ public class LeaveAllotmentService {
 		List<LeaveAllotment> leaveAllotment = leaveAllotmentRequest.getLeaveAllotment();
 		String leaveAllotmentRequestJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			leaveAllotmentRequestJson = mapper.writeValueAsString(leaveAllotmentRequest);
+			leaveAllotmentRequestJson = objectMapper.writeValueAsString(leaveAllotmentRequest);
 			LOGGER.info("leaveAllotmentRequestJson::" + leaveAllotmentRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);

@@ -38,8 +38,6 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
-
 package org.egov.wcms.repository.builder;
 
 import java.util.List;
@@ -57,22 +55,21 @@ public class DocumentTypeApplicationTypeQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-
     private static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeQueryBuilder.class);
 
-/*    private static final String BASE_QUERY = "SELECT doc.id , doc.applicationtype , doc.documenttypeid,doc.mandatory,doc.active,doc.createddate,"
-    		+ "doc.lastmodifieddate,doc.createdby,doc.lastmodifiedby,doc.tenantid from egwtr_documenttype_applicationtype doc";*/
-    
-    
-    private static final String BASE_QUERY = "SELECT docapp.id AS id ,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
-    		                                 +" docapp.lastmodifieddate,docapp.createdby,docapp.lastmodifiedby,docapp.tenantid from egwtr_documenttype_applicationtype docapp" 
-                                             +" LEFT JOIN egwtr_document_type doctype ON docapp.documenttypeid = doctype.id";
-           
+    /*
+     * private static final String BASE_QUERY =
+     * "SELECT doc.id , doc.applicationtype , doc.documenttypeid,doc.mandatory,doc.active,doc.createddate," +
+     * "doc.lastmodifieddate,doc.createdby,doc.lastmodifiedby,doc.tenantid from egwtr_documenttype_applicationtype doc";
+     */
 
-   
+    private static final String BASE_QUERY = "SELECT docapp.id AS id ,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
+            + " docapp.lastmodifieddate,docapp.createdby,docapp.lastmodifiedby,docapp.tenantid from egwtr_documenttype_applicationtype docapp"
+            + " LEFT JOIN egwtr_document_type doctype ON docapp.documenttypeid = doctype.id";
+
     @SuppressWarnings("rawtypes")
-    public String getQuery(DocumentTypeApplicationTypeGetRequest docNameGetRequest, List preparedStatementValues) {
-        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    public String getQuery(final DocumentTypeApplicationTypeGetRequest docNameGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, docNameGetRequest);
         addOrderByClause(selectQuery, docNameGetRequest);
@@ -86,18 +83,18 @@ public class DocumentTypeApplicationTypeQueryBuilder {
         return "INSERT INTO egwtr_documenttype_applicationtype(applicationtype,documenttypeid,mandatory,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
                 + "(?,?,?,?,?,?,?,?,?)";
     }
-    
- 
+
     public static String updateDocumentTypeApplicationTypeQuery() {
         return "UPDATE egwtr_documenttype_applicationtype SET applicationtype = ?,documenttypeid = ?,mandatory=?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
     }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-                                final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
 
-        if (docNameGetRequest.getId() == null && docNameGetRequest.getApplicationType() == null && docNameGetRequest.getActive() == null && docNameGetRequest.getTenantId() == null)
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
+
+        if (docNameGetRequest.getId() == null && docNameGetRequest.getApplicationType() == null
+                && docNameGetRequest.getActive() == null && docNameGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -114,72 +111,70 @@ public class DocumentTypeApplicationTypeQueryBuilder {
             selectQuery.append(" docapp.id IN " + getIdQuery(docNameGetRequest.getId()));
         }
 
-
-        if (docNameGetRequest.getApplicationType() !=  null) {
+        if (docNameGetRequest.getApplicationType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" docapp.applicationtype = ?");
             preparedStatementValues.add(docNameGetRequest.getApplicationType());
         }
 
-         if (docNameGetRequest.getActive() != null) {
+        if (docNameGetRequest.getActive() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" docapp.active = ?");
             preparedStatementValues.add(docNameGetRequest.getActive());
         }
     }
 
-    private void addOrderByClause(StringBuilder selectQuery, final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
-        String sortBy = (docNameGetRequest.getSortBy() == null ? "docapp.id"  : "docapp." + docNameGetRequest.getSortBy());
-        String sortOrder = (docNameGetRequest.getSortOrder() == null ? "DESC" : docNameGetRequest.getSortOrder());
+    private void addOrderByClause(final StringBuilder selectQuery,
+            final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
+        final String sortBy = docNameGetRequest.getSortBy() == null ? "docapp.id" : "docapp." + docNameGetRequest.getSortBy();
+        final String sortOrder = docNameGetRequest.getSortOrder() == null ? "DESC" : docNameGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-                                 final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
         if (docNameGetRequest.getPageSize() != null)
             pageSize = docNameGetRequest.getPageSize();
-        preparedStatementValues.add(pageSize); 
+        preparedStatementValues.add(pageSize);
 
         selectQuery.append(" OFFSET ?");
-        int pageNumber = 0; 
+        int pageNumber = 0;
         if (docNameGetRequest.getPageNumber() != null)
             pageNumber = docNameGetRequest.getPageNumber() - 1;
-        preparedStatementValues.add(pageNumber * pageSize); 
-       
+        preparedStatementValues.add(pageNumber * pageSize);
+
     }
 
-
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString
      * @return boolean indicates if the next predicate should append an "AND"
      */
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
 
         return true;
     }
 
-    private static String getIdQuery(List<Long> idList) {
-        StringBuilder query = new StringBuilder("(");
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
             query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++) {
+            for (int i = 1; i < idList.size(); i++)
                 query.append(", " + idList.get(i));
-            }
         }
         return query.append(")").toString();
     }
 
-    public  String checkDocTypeApplicationTypeExist() {
+    public String checkDocTypeApplicationTypeExist() {
         return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid=? and tenantid=? ";
     }
-    
+
 }

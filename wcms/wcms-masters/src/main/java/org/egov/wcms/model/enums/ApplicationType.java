@@ -46,28 +46,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ApplicationType {
-ADDITIONCONNECTION("ADDITION CONNECTION"), CHANGEOFUSE("CHANGE OF USE"), CLOSINGCONNECTION("CLOSING CONNECTION"), HOLDINGCONNECTION ("HOLDING CONNECTION"), NEWCONNECTION("NEW CONNECTION"),REGULARIZATIONCONNECTION("REGULARIZATION CONNECTION"),TITTLETRANSFER("TITTLE TRANSFER");
+    ADDITIONCONNECTION("ADDITION CONNECTION"), CHANGEOFUSE("CHANGE OF USE"), CLOSINGCONNECTION(
+            "CLOSING CONNECTION"), HOLDINGCONNECTION("HOLDING CONNECTION"), NEWCONNECTION(
+                    "NEW CONNECTION"), REGULARIZATIONCONNECTION("REGULARIZATION CONNECTION"), TITTLETRANSFER("TITTLE TRANSFER");
 
-private String value;
+    private String value;
 
-ApplicationType(String value) {
-this.value = value;
-}
+    ApplicationType(final String value) {
+        this.value = value;
+    }
 
-@Override
-@JsonValue
-public String toString() {
-return StringUtils.capitalize(name());
-}
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-@JsonCreator
-public static ApplicationType fromValue(String passedValue) {
-for (ApplicationType obj : ApplicationType.values()) {
-if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-return obj;
+    @JsonCreator
+    public static ApplicationType fromValue(final String passedValue) {
+        for (final ApplicationType obj : ApplicationType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }
-}
-return null;
-}
-}
-

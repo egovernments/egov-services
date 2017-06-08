@@ -87,12 +87,12 @@ public class PipeSizeTypeService {
             pipeSizeValue = mapper.writeValueAsString(pipeSizeRequest);
             logger.info("pipeSizeValue::" + pipeSizeValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, pipeSizeValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+            logger.error("Exception Encountered : " + ex);
         }
         return pipeSizeRequest.getPipeSize();
     }
@@ -107,12 +107,12 @@ public class PipeSizeTypeService {
             pipeSizeValue = mapper.writeValueAsString(pipeSizeRequest);
             logger.info("pipeSizeValue::" + pipeSizeValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, pipeSizeValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+            logger.error("Exception Encountered : " + ex);
         }
         return pipeSizeRequest.getPipeSize();
     }
@@ -125,7 +125,5 @@ public class PipeSizeTypeService {
         return pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
 
     }
-
-    
 
 }

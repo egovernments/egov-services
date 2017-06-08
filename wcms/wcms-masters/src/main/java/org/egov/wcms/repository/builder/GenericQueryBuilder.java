@@ -40,20 +40,13 @@
 
 package org.egov.wcms.repository.builder;
 
-import org.egov.wcms.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GenericQueryBuilder {
-	
-	@Autowired
-    private ApplicationProperties applicationProperties;
 
-	private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
-	
-	
-	
+    private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
+
 }

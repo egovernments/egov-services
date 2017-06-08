@@ -96,7 +96,7 @@ public class CategoryTypeRepository {
     }
 
     public boolean checkCategoryByNameAndCode(final String code, final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
         // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
@@ -116,7 +116,7 @@ public class CategoryTypeRepository {
     }
 
     public List<CategoryType> findForCriteria(final CategoryTypeGetRequest categoryGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = categoryQueryBuilder.getQuery(categoryGetRequest, preparedStatementValues);
         final List<CategoryType> categories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 categoryRowMapper);

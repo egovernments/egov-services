@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   version: 0.0.0
-  title: eGov Collection System  
+  title: Collection System  
   description: Collection Management System serves as revenue collection platform for all the billing systems through cash, cheque, dd, swipe machine. It also provides facility to integrate with multiple payment gateways in order to enable online payments. It is also integrated with financial system to post the ledger entries for every single receipt generated in the collection system.
 
 host: phoenix-qa.egovernments.org
@@ -20,7 +20,7 @@ paths:
           description: Commmon request info for getting business categories.
           required: true
           schema:
-            $ref: '#/definitions/RequestInfo'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
        -  name: businessCategoryName
           in: query
           required: false
@@ -38,7 +38,7 @@ paths:
           format: varchar
           default: true
           allowEmptyValue: true
-       -  $ref: '#/parameters/tenantId'
+       -  $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
        -  $ref: '#/parameters/fields'
        -  $ref: '#/parameters/sort'
        -  name: id
@@ -57,7 +57,7 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags: 
        - Business Category
   
@@ -80,7 +80,7 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Business Category
         
@@ -105,7 +105,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Business Category
         
@@ -119,7 +119,7 @@ paths:
           description: Commmon request info for getting business details.
           required: true
           schema:
-            $ref: '#/definitions/RequestInfo'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
        -  name: businessDetailsCode
           in: query
           required: false
@@ -141,7 +141,7 @@ paths:
           allowEmptyValue: true      
        -  $ref: '#/parameters/pageSize'
        -  $ref: '#/parameters/pageNumber'
-       -  $ref: '#/parameters/tenantId'
+       -  $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
        -  $ref: '#/parameters/sort'
        -  name: id
           in: query
@@ -168,7 +168,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags: 
        - Business Details
   /businessDetails/_create:     
@@ -213,7 +213,7 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Business Details
         
@@ -225,11 +225,11 @@ paths:
       parameters:
         - name: request_info
           in: body
-          description: Request to get the BillReceiptInfo for the given business details code and bill number(s).
+          description: Request to get the ReceiptInfo for the given business details code and bill number(s).
           required: true
           schema:
-            $ref: '#/definitions/RequestInfo'
-        - $ref: '#/parameters/tenantId'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
         - name: billNumbers
           in: query
           required: false
@@ -266,32 +266,32 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/BillReceiptInfoRes'
+              $ref: '#/definitions/ReceiptRes'
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Receipt
   
   /receipt/_create:
     post:
-      summary: Validate and persist receipt without receipt number.
-      description: This API generates a receipt number and persists the receipt with status as "PENDING" and pushes the receipt information to elasticsearch. The receipt details passed, in the bill, will be apportioned by the billing system based on the amount citizen is likely to pay.
+      summary: Validate and persist receipt with receipt number.
+      description: This API generates a receipt number and persists the receipt. The receipt information is then pushed to queue for further processing.
       parameters:
         - name: billInfo
           in: body
-          description: Receipt Creation Details passed as bill info along with common request info. 
+          description: Receipt Creation Details passed as bill info along with common request info.
           required: true
           schema:
-            $ref: '#/definitions/PendingReceiptReq'
+            $ref: '#/definitions/ReceiptReq'
       tags:
-        - Receipt  
+        - Receipt
       responses:
         '201':
           description: Receipt created sucessfully.
           schema:
-            $ref: '#/definitions/BillReceiptInfoRes'
+            $ref: '#/definitions/ReceiptRes'
         '400':
           description: Invalid input.
   
@@ -312,207 +312,44 @@ paths:
           description: Receipt Creation Details passed as bill info along with common request info.
           required: true
           schema:
-            $ref: '#/definitions/CreateReceiptReq'
+            $ref: '#/definitions/ReceiptReq'
       tags:
         - Receipt  
       responses:
         '201':
           description: Receipt created sucessfully.
           schema:
-            $ref: '#/definitions/BillReceiptInfoRes'
+            $ref: '#/definitions/ReceiptRes'
         '400':
           description: Invalid input. 
 
 definitions:
-  PendingReceiptReq:
+  ReceiptReq:
     type: object
-    description: Pending Receipt Request with Request Info.
+    description: Receipt Request with Request Info.
     properties:
       tenantId:
         type: string
         description: Unique id of tenant.
         format: varchar
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
-      receiptType:
-        type: string
-        enum:
-           - COUNTER
-           - FIELD
-           - ONLINE
-      BillInfo:
-        $ref: '#/definitions/BillInfo'
-
-  
-  CreateReceiptReq:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      ReceiptInfo:
+        $ref: '#/definitions/ReceiptInfo'
+        
+  ReceiptRes:
     type: object
-    description: Create Receipt Request.
+    description: Receipt Request with Request Info.
     properties:
       tenantId:
         type: string
         description: Unique id of tenant.
         format: varchar
-      RequestInfo:
-        $ref: '#/definitions/RequestInfo'
-      receiptType:
-        type: string
-        enum:
-           - COUNTER
-           - FIELD
-           - ONLINE
-      paymentInfoCash:
-        $ref: '#/definitions/PaymentInfoCash'
-      paymentInfoCard:
-        $ref: '#/definitions/PaymentInfoCard'
-      paymentInfoOnline:
-        $ref: '#/definitions/PaymentInfoOnline'    
-      paymentInfoCheque:
-        type: array
-        items:
-          $ref: '#/definitions/PaymentInfoCheque'
-      paymentInfoDD:
-        type: array
-        items:
-          $ref: '#/definitions/PaymentInfoDD'
-      paymentInfoBank:
-        type: array
-        items:
-          $ref: '#/definitions/PaymentInfoBank'
-          
-
-  PaymentInfoCash:
-    title: Payment information for the instrument type cash.
-    description: This object is subclass of 'PaymentInfo' object for the instrument type cash.
-    type: object
-    properties:
-      instrumentAmount:
-        type: number
-        format: double
-        description: Amount of instrument.
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      ReceiptInfo:
+        $ref: '#/definitions/ReceiptInfo'
   
-  PaymentInfoCheque:
-    title: Payment information for the instrument type cheque.
-    description: This object is subclass of 'PaymentInfo' object for the instrument type cheque.
-    type: object
-    properties:
-      instrumentAmount:
-        type: number
-        format: double
-        description: Amount of instrument.
-      bankCode:
-        type: string
-        description: Code of the Bank.
-      branchName:
-        type: string
-        description: Name of the bank branch.
-      chequeDate:
-        type: string
-        format: date
-        description: Cheque date.
-      chequeNumber:
-        type: string
-        description: Cheque number.
-    required:
-      - bankCode
-      - branchName
-      - chequeDate
-      - chequeNumber    
-  
-  PaymentInfoDD:
-    title: Payment information for the instrument type dd.
-    description: This object is subclass of 'PaymentInfo' object for the instrument type dd.
-    type: object
-    properties:
-      instrumentAmount:
-        type: number
-        format: double
-        description: Amount of instrument.
-      bankCode:
-        type: string
-        description: Code of the Bank.
-      branchName:
-        type: string
-        description: Name of the bank branch.
-      ddDate:
-        type: string
-        format: date
-        description: DD date.
-      ddNumber:
-        type: string
-        description: DD number.
-    required:
-      - bankCode
-      - branchName
-      - ddDate
-      - ddNumber
-      
-  
-  PaymentInfoBank:
-    title: Payment information for the instrument type bank.
-    description: This object is subclass of 'PaymentInfo' object for the instrument type bank.
-    type: object
-    properties:
-      instrumentAmount:
-        type: number
-        format: double
-        description: Amount of instrument.
-      bankCode:
-        type: string
-        description: Code of the Bank.
-      accountNumber:
-        type: string
-        description: Bank Account number to which the amount is deposited.
-      transactionDate:
-        type: string
-        format: date
-        description: Date on which the amount is deposited to bank account.
-      transactionNumber:
-        type: string
-        description: Bank transaction number.
-    required:
-      - bankCode
-      - accountNumber
-      - transactionDate
-      - transactionNumber
-      
-  PaymentInfoCard:
-    title: Payment information for the instrument type card.
-    description: This object is subclass of 'PaymentInfo' object for the instrument type card.
-    type: object
-    properties:
-      instrumentAmount:
-        type: number
-        format: double
-        description: Amount of instrument.
-      instrumentNumber:
-        type: string
-        description: Card number.
-      transactionNumber:
-        type: string
-        description: Transaction number of POS.
-      expiryMonth:
-        type: string
-        description: Card expiry month.
-      exiryYear:
-        type: string
-        description: Card expiry year.
-      cvvNumber:
-        type: string
-        description: CVV number of card.
-        
-  PaymentInfoOnline:
-    title: Payment information for the instrument type card.
-    description: This object is subclass of 'PaymentInfo' object for the instrument type card.
-    type: object
-    properties:
-      instrumentAmount:
-        type: number
-        format: double
-        description: Amount of instrument.
-      paymentGatewayCode:
-        type: string
-        description: Code of the payment gateway to which the payment request has to be redirected.
-        
   BillInfo:
     type: object
     properties:
@@ -531,37 +368,11 @@ definitions:
       paidBy:
         type: string
         description: Paid by person name.
-      source:
-        type: string
-        description: To be used by third party applications, to send the source name.
-      collectionType:
-        type: array
-        description: Type of collection.
-        items:
-          type: string
-          enum:
-           - COUNTER
-           - FIELD
-           - ONLINE
       billDetails:
         type: array
         items:
           $ref: '#/definitions/BillDetails'
       
-  BillPayeeDetails:
-    type: object
-    properties:
-      payeeName:
-        type: string
-        description: Consumer name defined in bill.
-      payeeAddress:
-        type: string
-        description: Consumer address defined in bill.
-      payeeEmail:
-        type: string
-        description: Consumer email defined in bill.
-      
-  
   BillDetails:
     type: object
     properties:
@@ -630,7 +441,6 @@ definitions:
         type: boolean
         description: True for tax/charges/penalty. False for advances(if any).
       purpose:
-        type: array
         description: Purpose of Account head.
         items:
           type: string
@@ -645,9 +455,15 @@ definitions:
            - OTHERS
         
         
-  BillReceiptInfo:
+  ReceiptInfo:
     type: object
     properties:
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        format: varchar
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       billNumber: 
         type: string
         description: This is the Bill Number sent to Collection system in billInfo.
@@ -661,68 +477,28 @@ definitions:
         type: string
         format: date
         description: Receipt Date.
-      payeeName:
-        type: string
-        description: Consumer name sent in billInfo.
-      payeeAddress:
-        type: string
-        description: Consumer address sent in billInfo.
-      businessName:
-        type: string
-        description: Name of the billing service.
-      paidBy:
-        type: string
-        description: Name of the payee at the counter/online.
-      billDescription: 
-        type: string
-        description: Description sent in billInfo.
-      accountDetails:
-        type: array
+      receiptType:
+        description: Type of Receipt.
         items:
-         $ref: "#/definitions/ReceiptAccountInfo"
-      tenantId:
+          type: string
+          enum:
+           - ADHOC
+           - BILLBASED
+           - CHALLAN
+      collectionType:
+        description: Type of collection.
+        items:
+          type: string
+          enum:
+           - COUNTER
+           - FIELD
+           - ONLINE
+      source:
         type: string
-        description: Unique id of tenant.
-        format: varchar
+        description: To be used by third party applications, to send the source name.
+      BillInfo:
+        $ref: '#/definitions/BillInfo'
   
-  ReceiptAccountInfo:
-    type: object
-    properties:
-      glCode: 
-        type: string
-        description: GLCode sent in billInfo.
-      accountDescrtion:
-        type: string
-        description: Description of GlCode sent in billInfo.
-      functionCode:
-        type: string
-        description: Function Code sent in billInfo.
-      debitAmount:
-        type: number
-        format: double
-        description: Discount/Rebate/Received Amount.
-      creditAmount:
-        type: number
-        format: double
-        description: Receivable Amount.
-      orderNumber:
-        type: integer
-        format: int32
-        description: Order number of the receivables.
-      purpose:
-        type: string
-        description: Purpose of account head i.e., ARREAR_AMOUNT, CURRENT_AMOUNT, ADVANCE_AMOUNT, ARREAR_LATEPAYMENT_CHARGES, CURRENT_LATEPAYMENT_CHARGES, CHEQUE_BOUNCE_PENALTY, REBATE, OTHERS
-  
-  BillReceiptInfoRes:      
-    type: object
-    properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      BillReceiptInfo:
-        type: array
-        items: 
-         $ref: '#/definitions/BillReceiptInfo'  
-      
   BusinessCategory:
     type: object
     properties:
@@ -756,7 +532,7 @@ definitions:
         description: Unique id of tenant.
         format: varchar
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       BusinessCategoryInfo:
         $ref: '#/definitions/BusinessCategory'
     required:
@@ -766,7 +542,7 @@ definitions:
     type: object
     properties:
       ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       BusinessCategoryInfo:
         type: array
         items: 
@@ -846,7 +622,7 @@ definitions:
         description: Unique id of tenant.
         format: varchar
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       BusinessDetailsInfo:
         $ref: '#/definitions/BusinessDetails'
   
@@ -854,7 +630,7 @@ definitions:
     type: object
     properties:
       ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       BusinessDetailsInfo:
         type: array
         items: 
@@ -896,95 +672,7 @@ definitions:
         type: object
         items:
           $ref: '#/definitions/ServiceAccountDetails'
-      
-        
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts   
-  ResponseInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
-      
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      fields:
-        type: object
-    required:
-      - code
-      - message
-  ErrorRes:
-    properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
-    type: object
+          
 parameters:
   businessDetailsCode:
     name: businessDetailsCode
@@ -1006,13 +694,6 @@ parameters:
     maxLength: 50
     exclusiveMinimum: true
     exclusiveMaximum: false
-  tenantId:
-    name: tenantId
-    in: query
-    description: Unique id of tenant.
-    required: true
-    type: string
-    format: varchar
   fields:
     name: fields
     in: query
@@ -1043,5 +724,6 @@ parameters:
     in: query
     description: Page number
     type: integer
-    default: 1  
+    default: 1
+      
 

@@ -75,76 +75,76 @@ public class DocumentTypeRepositoryTest {
 
     @Mock
     private DocumentTypeRowMapper docTypeRowMapper;
-    
+
     @InjectMocks
     private DocumentTypeRepository docTypeRepository;
-    
+
     @Test
     public void test_Should_Create_DocumentType_Valid() {
-    	DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
+        final DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(docTypeRequest.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
     }
-    
+
     @Test
     public void test_Should_Create_DocumentType_Invalid() {
-    	DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
-        DocumentType docType = docTypeRequest.getDocumentType();
+        final DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
+        final DocumentType docType = docTypeRequest.getDocumentType();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(!docType.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
     }
-    
+
     @Test
-	public void test_Should_Find_DocumentType_Valid() {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		DocumentTypeGetReq docTypeGetRequest = Mockito.mock(DocumentTypeGetReq.class);
-		String queryString = "MyQuery" ;
-		when(docTypeQueryBuilder.getQuery(docTypeGetRequest, preparedStatementValues)).thenReturn(queryString);
-		List<DocumentType> docTypes = new ArrayList<>();
-		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), docTypeRowMapper))
-				.thenReturn(docTypes);
+    public void test_Should_Find_DocumentType_Valid() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final DocumentTypeGetReq docTypeGetRequest = Mockito.mock(DocumentTypeGetReq.class);
+        final String queryString = "MyQuery";
+        when(docTypeQueryBuilder.getQuery(docTypeGetRequest, preparedStatementValues)).thenReturn(queryString);
+        final List<DocumentType> docTypes = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), docTypeRowMapper))
+                .thenReturn(docTypes);
 
-		assertTrue(
-				docTypes.equals(docTypeRepository.findForCriteria(docTypeGetRequest)));
-	}
-
-    private DocumentTypeReq getDocumentTypeRequest(){
-    	DocumentTypeReq docTypeRequest = new DocumentTypeReq();
-    	DocumentType docType = new DocumentType();
-    	docType.setCode("23");
-    	docType.setName("New Document Name");
-    	docType.setDescription("Document Name Description");
-    	docType.setActive(true);
-    	RequestInfo requestInfo = new RequestInfo();
-    	User newUser = new User();
-    	newUser.setId(2L);
-    	requestInfo.setUserInfo(newUser);
-    	docTypeRequest.setRequestInfo(requestInfo);
-    	docTypeRequest.setDocumentType(docType);
-    	return docTypeRequest;
+        assertTrue(
+                docTypes.equals(docTypeRepository.findForCriteria(docTypeGetRequest)));
     }
-    
-	@Test(expected = Exception.class)
-	public void test_throwException__FindforCriteria() throws Exception{
-        List<Object> preparedStatementValues = new ArrayList<Object>();
-        DocumentTypeGetReq docTypeGetRequest = new DocumentTypeGetReq();
+
+    private DocumentTypeReq getDocumentTypeRequest() {
+        final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
+        final DocumentType docType = new DocumentType();
+        docType.setCode("23");
+        docType.setName("New Document Name");
+        docType.setDescription("Document Name Description");
+        docType.setActive(true);
+        final RequestInfo requestInfo = new RequestInfo();
+        final User newUser = new User();
+        newUser.setId(2L);
+        requestInfo.setUserInfo(newUser);
+        docTypeRequest.setRequestInfo(requestInfo);
+        docTypeRequest.setDocumentType(docType);
+        return docTypeRequest;
+    }
+
+    @Test(expected = Exception.class)
+    public void test_throwException__FindforCriteria() throws Exception {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final DocumentTypeGetReq docTypeGetRequest = new DocumentTypeGetReq();
         when(docTypeQueryBuilder.getQuery(docTypeGetRequest, preparedStatementValues)).thenThrow(Exception.class);
-        List<DocumentType> docTypes = docTypeRepository.findForCriteria(docTypeGetRequest);
-        
+        final List<DocumentType> docTypes = docTypeRepository.findForCriteria(docTypeGetRequest);
+
         assertTrue(docTypes != null);
-        
-	}
-	
-	@Test
-	public void test_Should_Modify_DocumentType() throws Exception{
-        DocumentTypeReq docTypeRequest = new DocumentTypeReq();
-        
-        RequestInfo requestInfo = new RequestInfo();
-        User user = new User();
+
+    }
+
+    @Test
+    public void test_Should_Modify_DocumentType() throws Exception {
+        final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
+
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        DocumentType docType = new  DocumentType();
-        AuditDetails auditDetails = new AuditDetails();
+        final DocumentType docType = new DocumentType();
+        final AuditDetails auditDetails = new AuditDetails();
         docType.setAuditDetails(auditDetails);
         docType.setCode("10");
         docType.setActive(true);
@@ -153,29 +153,27 @@ public class DocumentTypeRepositoryTest {
         docType.setDescription("test description");
         docTypeRequest.setRequestInfo(requestInfo);
         docTypeRequest.setDocumentType(docType);
-        
+
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
-        
-	}
-	
-	@Test(expected = Exception.class)
-	public void test_throwException_Modify_DocumentType() throws Exception{
-        DocumentTypeReq docTypeRequest = new DocumentTypeReq();
-        RequestInfo requestInfo = new RequestInfo();
-        DocumentType docType = new DocumentType();
+
+    }
+
+    @Test(expected = Exception.class)
+    public void test_throwException_Modify_DocumentType() throws Exception {
+        final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
+        final RequestInfo requestInfo = new RequestInfo();
+        final DocumentType docType = new DocumentType();
         docType.setCode("10");
         docType.setActive(true);
         docType.getAuditDetails().setCreatedBy(1L);
         docType.setName("test name");
         docType.setDescription("test description");
-        
+
         docTypeRequest.setRequestInfo(requestInfo);
         docTypeRequest.setDocumentType(docType);
-        
-        
+
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
-        
-        
-	}
-    
+
+    }
+
 }

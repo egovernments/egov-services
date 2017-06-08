@@ -40,6 +40,9 @@ public class ServiceRequestDocument {
     @JsonProperty("serviceStatusName")
     private String serviceStatusName;
 
+    @JsonProperty("serviceStatusCode")
+    private String serviceStatusCode;
+
     @JsonProperty("requesterName")
     private String requesterName;
 
@@ -48,6 +51,9 @@ public class ServiceRequestDocument {
 
     @JsonProperty("requesterEmail")
     private String requesterEmail;
+
+    @JsonProperty("requesterId")
+    private Long requesterId;
 
     @JsonProperty("serviceTypeName")
     private String serviceTypeName;
@@ -187,6 +193,12 @@ public class ServiceRequestDocument {
 
     @JsonProperty("keyword")
     private List<String> keywords;
+
+    @JsonProperty("categoryName")
+    private String serviceCategoryName;
+
+    @JsonProperty("categoryId")
+    private Long serviceCategoryId;
 
     @JsonProperty("tenantId")
     private String tenantId;

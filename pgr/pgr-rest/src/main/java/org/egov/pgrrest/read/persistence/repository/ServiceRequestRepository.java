@@ -5,7 +5,9 @@ import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,12 +17,15 @@ public class ServiceRequestRepository {
     private static final String PUT = "PUT";
     private ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository;
     private SubmissionRepository submissionRepository;
+    private ServiceRequestESRepository serviceRequestESRepository;
 
     @Autowired
     public ServiceRequestRepository(ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository,
-                                    SubmissionRepository submissionRepository) {
+                                    SubmissionRepository submissionRepository, ServiceRequestESRepository
+                                            serviceRequestESRepository) {
         this.serviceRequestMessageQueueRepository = serviceRequestMessageQueueRepository;
         this.submissionRepository = submissionRepository;
+        this.serviceRequestESRepository = serviceRequestESRepository;
     }
 
     public void save(SevaRequest sevaRequest) {
@@ -32,11 +37,19 @@ public class ServiceRequestRepository {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return findInSubmissionTable(serviceRequestSearchCriteria);
+        return submissionRepository.find(serviceRequestSearchCriteria);
     }
 
-    private List<ServiceRequest> findInSubmissionTable(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return submissionRepository.find(serviceRequestSearchCriteria);
+    public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
+        final List<String> serviceRequestIds = serviceRequestESRepository.getMatchingServiceRequestIds(searchCriteria);
+        if(CollectionUtils.isEmpty(serviceRequestIds)) {
+            return Collections.emptyList();
+        }
+        return submissionRepository.findBy(serviceRequestIds, searchCriteria.getTenantId());
+    }
+
+    public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        return serviceRequestESRepository.getCount(serviceRequestSearchCriteria);
     }
 
     public void update(SevaRequest sevaRequest) {

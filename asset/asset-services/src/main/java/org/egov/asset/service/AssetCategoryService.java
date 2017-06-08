@@ -32,6 +32,9 @@ public class AssetCategoryService {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<AssetCategory> search(AssetCategoryCriteria assetCategoryCriteria) {
 		return assetCategoryRepository.search(assetCategoryCriteria);
@@ -51,7 +54,6 @@ public class AssetCategoryService {
 
 		assetCategoryRequest.getAssetCategory().setCode(assetCategoryRepository.getAssetCategoryCode());
 		logger.info("AssetCategoryService createAsync" + assetCategoryRequest);
-		ObjectMapper objectMapper = new ObjectMapper();
 		String value = null;
 		try {
 			value = objectMapper.writeValueAsString(assetCategoryRequest);
@@ -83,7 +85,6 @@ public class AssetCategoryService {
 	public AssetCategoryResponse updateAsync(AssetCategoryRequest assetCategoryRequest) {
 		
 		logger.info("AssetCategoryService updateAsync" + assetCategoryRequest);
-		ObjectMapper objectMapper = new ObjectMapper();
 		String value = null;
 		try {
 			value = objectMapper.writeValueAsString(assetCategoryRequest);

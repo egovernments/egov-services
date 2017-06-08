@@ -26,6 +26,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AssetRepositoryTest {
 
@@ -40,6 +42,9 @@ public class AssetRepositoryTest {
 
 	@InjectMocks
 	private AssetRepository assetRepository;
+	
+	@Mock
+	private ObjectMapper objectMapper;
 
 	@Test
 	public void testFindForCriteria() {

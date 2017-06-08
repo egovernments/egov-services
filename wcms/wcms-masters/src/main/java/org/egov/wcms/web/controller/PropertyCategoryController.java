@@ -99,13 +99,13 @@ public class PropertyCategoryController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyCategoryRequest::" + propertyCategoryRequest);
 
         final List<ErrorResponse> errorResponses = validatePropertyCategoryRequest(propertyCategoryRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
                 applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create", propertyCategoryRequest);
@@ -120,14 +120,14 @@ public class PropertyCategoryController {
             @PathVariable("propertyCategoryId") final Long propertyCategoryId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyCategoryRequest::" + propertyCategoryRequest);
         propertyCategoryRequest.getPropertyTypeCategoryType().setId(propertyCategoryId);
 
         final List<ErrorResponse> errorResponses = validatePropertyCategoryRequest(propertyCategoryRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
                 applicationProperties.getUpdatePropertyCategoryTopicName(), "property-category-update", propertyCategoryRequest);
@@ -229,7 +229,7 @@ public class PropertyCategoryController {
         propertyCategoryResponse.setResponseInfo(responseInfo);
         propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
 
-        return new ResponseEntity<PropertyTypeCategoryTypesRes>(propertyCategoryResponse, HttpStatus.OK);
+        return new ResponseEntity<>(propertyCategoryResponse, HttpStatus.OK);
 
     }
 
@@ -238,7 +238,7 @@ public class PropertyCategoryController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         propertyCategoryResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<PropertyTypeCategoryTypesRes>(propertyCategoryResponse, HttpStatus.OK);
+        return new ResponseEntity<>(propertyCategoryResponse, HttpStatus.OK);
 
     }
 

@@ -62,10 +62,10 @@ import lombok.ToString;
 @ToString
 public class MeterCostRequest {
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
-	@JsonProperty("MeterCost")
-	private MeterCost meterCost;
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
+    @JsonProperty("MeterCost")
+    private MeterCost meterCost;
 
 }

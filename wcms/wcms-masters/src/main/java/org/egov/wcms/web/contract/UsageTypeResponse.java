@@ -67,6 +67,6 @@ public class UsageTypeResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("UsageType")
-    private List<UsageType> usageType = new ArrayList<UsageType>();
+    private List<UsageType> usageType = new ArrayList<>();
 
 }

@@ -1,12 +1,15 @@
 package org.egov.mr.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.egov.mr.broker.MarriageRegnProducer;
 import org.egov.mr.config.PropertiesManager;
+import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.MarryingPerson;
-import org.egov.mr.model.enums.RegnStatus;
+import org.egov.mr.model.enums.ApplicationStatus;
+import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.repository.MarriageCertRepository;
 import org.egov.mr.repository.MarriageRegnRepository;
 import org.egov.mr.repository.MarryingPersonRepository;
@@ -40,6 +43,9 @@ public class MarriageRegnService {
 	private MarriageRegnProducer marriageRegnProducer;
 	
 	@Autowired
+	private RegnNumberService regnNumberService;
+	
+	@Autowired
 	private PropertiesManager propertiesManager;
 
 	public List<MarriageRegn> getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria, RequestInfo requestInfo) {
@@ -50,7 +56,8 @@ public class MarriageRegnService {
 	public MarriageRegn createAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 		marriageRegn.setApplicationNumber(marriageRegnRepository.generateApplicationNumber());
-
+		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
+	
 		String marriageRegnRequestJson = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -65,20 +72,31 @@ public class MarriageRegnService {
 		return marriageRegn;	
 	}
 
+	private void populateAuditDetailsForMarriageRegnCreate(MarriageRegnRequest marriageRegnRequest) {
+		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
+		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
+
+		marriageRegn.setIsActive(false);
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy(requestInfo.getRequesterId());
+		auditDetails.setCreatedTime(new Date().getTime());
+		auditDetails.setLastModifiedBy(requestInfo.getRequesterId());
+		auditDetails.setLastModifiedTime(new Date().getTime());	
+		marriageRegn.setAuditDetails(auditDetails);
+	}
+
 	@Transactional
 	public void create(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
-		
-
 		marriageRegnRepository.save(marriageRegn);
-		MarryingPerson brideGroom = marriageRegn.getBridegroom();
-		MarryingPerson bride = marriageRegn.getBride();
-		marryingPersonRepository.save(brideGroom, marriageRegn.getTenantId());
-		marryingPersonRepository.save(bride, marriageRegn.getTenantId());
+		marryingPersonRepository.save(marriageRegn.getBridegroom(), marriageRegn.getTenantId());
+		marryingPersonRepository.save(marriageRegn.getBride(), marriageRegn.getTenantId());
 	}
 
 	public MarriageRegn updateAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
+		populateAuditDetailsForMarriageRegnUpdate(marriageRegnRequest);
+		populateDefaultDetailsForMarriageRegnUpdate(marriageRegnRequest);
 		String marriageRegnRequestJson = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -92,24 +110,35 @@ public class MarriageRegnService {
 		return marriageRegn;	
 	}
 	
+	private void populateDefaultDetailsForMarriageRegnUpdate(MarriageRegnRequest marriageRegnRequest) {
+		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
+		if(marriageRegn.getStatus().toString().equals("REGISTERED"))
+		{
+			marriageRegn.setRegnNumber(regnNumberService.generateRegnNumber());
+			marriageRegn.setRegnDate(new Date().getTime());
+			marriageRegn.setIsActive(true);
+		}
+	}
+
+	private void populateAuditDetailsForMarriageRegnUpdate(MarriageRegnRequest marriageRegnRequest) {
+		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
+		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setLastModifiedBy(requestInfo.getRequesterId());
+		auditDetails.setLastModifiedTime(new Date().getTime());		
+		marriageRegn.setAuditDetails(auditDetails);
+	}
+
 	@Transactional
 	public void update(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 		marriageRegnRepository.update(marriageRegn);
-		MarryingPerson brideGroom = marriageRegn.getBridegroom();
-		MarryingPerson bride = marriageRegn.getBride();
-		marryingPersonRepository.update(brideGroom, marriageRegn.getTenantId());
-		marryingPersonRepository.update(bride, marriageRegn.getTenantId());
+		marryingPersonRepository.update(marriageRegn.getBridegroom(), marriageRegn.getTenantId());
+		marryingPersonRepository.update(marriageRegn.getBride(), marriageRegn.getTenantId());
 		//List<String> applicationNosList = marriageCertRepository.getApplicationNos(marriageRegn.getTenantId());
-		//if(marriageRegn.getStatus().equals(RegnStatusEnum.REGISTERED))
-			//marriageCertRepository.insert(marriageRegn);
-
-		/*
-		marriageRegn.getCertificates().forEach(certificate -> {
-			if(applicationNosList.contains(certificate.getApplicationNumber()))
-			     //marriageCertRepository.update(certificate);
-			marriageCertRepository.insert(certificate);
-		});
-		*/
+		if(marriageRegn.getStatus().toString().equals("REGISTERED"))
+			marriageCertRepository.insert(marriageRegn);
+		
 	}
 }

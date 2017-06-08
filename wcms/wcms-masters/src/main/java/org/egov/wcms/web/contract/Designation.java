@@ -42,15 +42,16 @@ package org.egov.wcms.web.contract;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 public class Designation {
-	
-	private Long id;
-	private String name;
-	private String code;
-	private String description;
-	private String chartOfAccounts;
-	private Boolean active;
-	private String tenantId;
+
+    private Long id;
+    private String name;
+    private String code;
+    private String description;
+    private String chartOfAccounts;
+    private Boolean active;
+    private String tenantId;
 }

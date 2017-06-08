@@ -74,9 +74,14 @@ class UpdateLeave extends React.Component {
     commonApiPost("hr-leave","leaveapplications", "_search", {tenantId, stateId}, function(err, res) {
       if(res) {
         _leaveSet = res.LeaveApplication[0];
-        if(_leaveSet.status!="REJECTED"){
-          $("input,select,textarea").prop("disabled", true);
-        }
+        commonApiPost("hr-masters", "hrstatuses","_search",{tenantId, id:_leaveSet.status},function(err, res2){
+          if(res2){
+            var _status = res2.HRStatus[0];
+            if(_status.code!="REJECTED") {
+              $("input,select,textarea").prop("disabled", true);
+            }
+          }
+        });
         commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
             id: _leaveSet.employee
@@ -92,7 +97,7 @@ class UpdateLeave extends React.Component {
                employeeid:employee.id
             })
           }
-        })
+        });
       }
     });
 
@@ -151,22 +156,44 @@ class UpdateLeave extends React.Component {
                 }
               }
 
+              _this.setState({
+                leaveSet: {
+                    ..._this.state.leaveSet,
+                    [_triggerId]: $("#" + _triggerId).val(),
+                    leaveDays: _days
+                }
+              });
 
 
               setTimeout(function() {
                 if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
-                      var employeeid = getUrlVars()["id"];
+                      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;;
                       commonApiPost("hr-leave","eligibleleaves","_search",{
                         leaveType,tenantId,asOnDate,employeeid
                       }, function(err, res) {
-                        _this.setState({
-                          leaveSet:{
-                            ..._this.state.leaveSet,
-                            availableDays: res["EligibleLeave"][0].noOfDays
+                        if(res) {
+                          var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                          if(_day <=0 || _day =="") {
+
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: ""
+                              }
+                            });
+                            return (showError("You do not have leave for this leave type."));
                           }
-                        });
+                          else{
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: res["EligibleLeave"][0].noOfDays
+                              }
+                            });
+                          }
+                        }
                       });
                 }
               }, 200);
@@ -223,28 +250,39 @@ class UpdateLeave extends React.Component {
       var _this = this;
       if(pName=="leaveType" && _this.state.leaveSet.toDate){
 
-        try {
           var leaveType = e.target.value;
           var asOnDate = _this.state.leaveSet.toDate;
           var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
           commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}, function(err, res) {
             if(res) {
-                _this.setState({
+              var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                if(_day <=0 || _day ==""){
+                  _this.setState({
+                    leaveSet:{
+                      ..._this.state.leaveSet,
+                      availableDays:  "",
+                      [pName]:{
+                          ..._this.state.leaveSet[pName],
+                          [name]:""
+                    }
+                  }
+                });
+                  return (showError("You do not have leave for this Leave Type."));
+                }
+                else {
+                  _this.setState({
                   leaveSet:{
                     ..._this.state.leaveSet,
-                    availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "",
+                    availableDays: res["EligibleLeave"][0].noOfDays,
                     [pName]:{
                         ..._this.state.leaveSet[pName],
                         [name]:e.target.value
-                    }
                   }
-                })
+                }
+                });
+              }
             }
           });
-        }
-        catch (e){
-          console.log(e);
-        }
 
       } else {
         this.setState({
@@ -277,22 +315,18 @@ close(){
 
 handleProcess(e) {
     e.preventDefault();
-    var ID = e.target.id,
-        _this = this;
-    var owner;
+    var ID = e.target.id,_this = this, employee= {}, owner;
+    var stateId = getUrlVars()["stateId"];
+    var _this = this;
 
-    //Make your server calls here for these actions/buttons
-    //Please test it, I have only wrote the code, not tested - Sourabh
-    commonApiPost("hr-employee", "employees", "_search", {
-        tenantId,
-        positionId: _this.state.positionId
-    }, function(err, res) {
-        if (res) {
-            var employee = res["Employee"][0];
-            owner = employee.name;
+    if( _this.state.availableDays<=0) {
+      return (showError("You do not have leave for this leave type."));
+    }
+
             if (ID === "Submit") {
                 var employee;
-                var asOnDate = _this.state.leaveSet.toDate;
+                var today = new Date();
+                var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
                 var departmentId = _this.state.departmentId;
                 var leaveNumber = _this.state.leaveNumber;
                 var tempInfo = Object.assign({}, _this.state.leaveSet),
@@ -300,42 +334,47 @@ handleProcess(e) {
                 delete tempInfo.name;
                 delete tempInfo.code;
                 commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function(err, res2) {
-                    if (res2) {
-                        var employee = res2["Employee"][0];
-                        if (!tempInfo.workflowDetails) {
-                            tempInfo.workflowDetails = {
-                                action: ID,
-                                assignee: employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
-                            };
-                        } else {
-                          tempInfo.workflowDetails.action = ID,
-                          tempInfo.workflowDetailsassignee= employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
-                          }
-                        var body = {
-                            "RequestInfo": requestInfo,
-                            "LeaveApplication": tempInfo
+                  if(res2 && res2["Employee"] && res2["Employee"][0]){
+                    employee = res2["Employee"][0];
+                    var hodname = employee.name;
+                    if (!tempInfo.workflowDetails) {
+                        tempInfo.workflowDetails = {
+                            action: ID,
+                            assignee: employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
                         };
+                    } else {
+                      tempInfo.workflowDetails.action = ID,
+                      tempInfo.workflowDetailsassignee= employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
+                      }
+                    var body = {
+                        "RequestInfo": requestInfo,
+                        "LeaveApplication": tempInfo
+                    };
 
-                        $.ajax({
-                            url: baseUrl + "/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-                            type: 'POST',
-                            dataType: 'json',
-                            data: JSON.stringify(body),
+                    $.ajax({
+                        url: baseUrl + "/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify(body),
 
-                            contentType: 'application/json',
-                            headers: {
-                                'auth-token': authToken
-                            },
-                            success: function(res) {
-                                window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
+                        contentType: 'application/json',
+                        headers: {
+                            'auth-token': authToken
+                        },
+                        success: function(res) {
+                            window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${hodname}`;
 
-                            },
-                            error: function(err) {
-                                showError(err);
+                        },
+                        error: function(err) {
+                            showError(err);
 
-                            }
-                        });
-                    }
+                        }
+                    });
+                  }
+                  else{
+                    return  (showError("HOD does not exists for given date range Please assign the HOD."))
+                  }
+
                 });
             } else {
                 var employee;
@@ -372,7 +411,36 @@ handleProcess(e) {
                         if (ID == "Approve" || ID == "Cancel")
                             window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
                         else
-                            window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
+                        {
+                          commonApiPost("egov-common-workflows", "process", "_search", {
+                            tenantId: tenantId,
+                            id: stateId
+                          },function(err,res){
+                            if(res){
+                              var process = res["processInstance"];
+                              if (process) {
+                                  var positionId = process.owner.id;
+                                  console.log(positionId);
+                                  commonApiPost("hr-employee", "employees", "_search", {
+                                      tenantId,
+                                      positionId: positionId
+                                  }, function(err, res) {
+                                      if(res && res["Employee"] && res["Employee"][0]) {
+                                          employee = res["Employee"][0];
+                                          owner = employee.name;
+                                          window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
+                                    }
+                                    else{
+                                      return  (showError("Unable to fetch Employee details after forwarding."))
+                                    }
+
+                                  });
+
+                              }
+                            }
+                          })
+
+                        }
                     },
                     error: function(err) {
                         showError(err);
@@ -380,11 +448,7 @@ handleProcess(e) {
                     }
                 });
             }
-        } else {
-            showError("Something went wrong. Please try again later.");
-        }
-    })
-}
+          }
 
 
 
@@ -557,6 +621,7 @@ handleProcess(e) {
 
   }
 }
+
 
 
 

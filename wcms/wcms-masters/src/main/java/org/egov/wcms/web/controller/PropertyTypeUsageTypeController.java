@@ -99,13 +99,13 @@ public class PropertyTypeUsageTypeController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Property Usage Type Request::" + propUsageTypeRequest);
 
         final List<ErrorResponse> errorResponses = validateUsageTypeRequest(propUsageTypeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeUsageType propUsageType = propUsageTypeService.createPropertyUsageType(
                 applicationProperties.getCreatePropertyUsageTopicName(), "propertyusage-create", propUsageTypeRequest);
@@ -121,14 +121,14 @@ public class PropertyTypeUsageTypeController {
             @PathVariable("propertyUsageId") final Long propertyUsageId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Property Usage Type Request::" + propUsageTypeRequest);
         propUsageTypeRequest.getPropertyTypeUsageType().setId(propertyUsageId);
 
         final List<ErrorResponse> errorResponses = validateUsageTypeRequest(propUsageTypeRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeUsageType propUsageType = propUsageTypeService.createPropertyUsageType(
                 applicationProperties.getUpdatePropertyUsageTopicName(), "propertyusage-update", propUsageTypeRequest);
@@ -255,7 +255,7 @@ public class PropertyTypeUsageTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         propUsageTypeResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<PropertyTypeUsageTypesRes>(propUsageTypeResponse, HttpStatus.OK);
+        return new ResponseEntity<>(propUsageTypeResponse, HttpStatus.OK);
 
     }
 

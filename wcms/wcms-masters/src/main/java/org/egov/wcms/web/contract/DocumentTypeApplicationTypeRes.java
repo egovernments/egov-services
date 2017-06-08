@@ -38,7 +38,6 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
 package org.egov.wcms.web.contract;
 
 import java.util.ArrayList;
@@ -56,7 +55,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -65,10 +63,10 @@ import lombok.ToString;
 @Setter
 public class DocumentTypeApplicationTypeRes {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	@JsonProperty("DocumentTypeApplicationType")
-	private List<DocumentTypeApplicationType> documentTypeApplicationTypes = new ArrayList<DocumentTypeApplicationType>();
+    @JsonProperty("DocumentTypeApplicationType")
+    private List<DocumentTypeApplicationType> documentTypeApplicationTypes = new ArrayList<>();
 
 }

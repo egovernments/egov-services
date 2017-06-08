@@ -42,23 +42,30 @@ package org.egov.asset.web.wrapperfactory;
 
 import java.util.Date;
 
+import org.egov.asset.repository.AssetRepository;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.springframework.http.HttpHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @Component
 public class ResponseInfoFactory {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ResponseInfoFactory.class);
+	
     public ResponseInfo createResponseInfoFromRequestHeaders(RequestInfo requestInfo) {
         ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.setApiId(requestInfo.getApiId());
-        responseInfo.setMsgId(requestInfo.getMsgId());
-        //responseInfo.setResMsgId("");
-        //responseInfo.setStatus(status);
-        responseInfo.setTs(new Date().toString());
-        responseInfo.setVer("v1");
-        
+        try{
+        	 responseInfo.setApiId(requestInfo.getApiId());
+             responseInfo.setMsgId(requestInfo.getMsgId());
+             //responseInfo.setResMsgId("");
+             //responseInfo.setStatus(status);
+             responseInfo.setTs(new Date().toString());
+             responseInfo.setVer("v1");
+        } catch (Exception ex){
+        	logger.info("ResponseInfoFactory createResponseInfoFromRequestHeaders:",ex);
+        }
 		return responseInfo;
     }
 }

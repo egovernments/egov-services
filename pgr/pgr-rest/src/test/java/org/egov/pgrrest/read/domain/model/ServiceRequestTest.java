@@ -24,6 +24,7 @@ public class ServiceRequestTest {
             .userId("userId")
             .mobile("mobile number")
             .firstName("first name")
+            .email("email@gmail.com")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
@@ -48,6 +49,7 @@ public class ServiceRequestTest {
             .userId("userId")
             .mobile("mobile number")
             .firstName("first name")
+            .email("email@gmail.com")
             .build();
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)

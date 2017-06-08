@@ -229,22 +229,26 @@ $(document).ready(function() {
         renewAgreement[this.id] = this.value;
     });
 
+    $("textarea").on("keyup", function() {
+        fillValueToObject(this);
+    });
+
     //Getting data for user input
     $("select").on("change", function() {
         // console.log(this.value);
         renewAgreement[this.id] = this.value;
 
-        if (($("#approver_department").val() != "" && $("#approver_designation").val() != "") && (this.id == "approver_department" || this.id == "approver_designation")) {
+        if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
             employees = commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,
-                departmentId: $("#approver_department").val(),
-                designationId: $("#approver_designation").val()
+                departmentId: $("#approverDepartment").val(),
+                designationId: $("#approverDesignation").val()
             }).responseJSON["Employee"] || [];
 
 
 
             for (var i = 0; i < employees.length; i++) {
-                $(`#approver_name`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+                $(`#approverPositionId`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
             }
         }
     });
@@ -368,9 +372,9 @@ $(document).ready(function() {
                         designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
                     }
 
-                    $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
+                    $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
                 }
-            });
+            },process.businessKey);
         }
     } else if (getUrlVars()["view"] == "renew") {
         $("#cancel,#evict").remove();
@@ -391,10 +395,10 @@ $(document).ready(function() {
     }
 
     for (var variable in department) {
-        $(`#approver_department`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
+        $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
     }
     /* for (var variable in designation) {
-       $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
+       $(`#approverDesignation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
      }*/
 
     _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name", agreementDetail.asset.assetCategory.id);
@@ -497,13 +501,22 @@ $(document).ready(function() {
         var _agrmntDet = Object.assign({}, agreementDetail);
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
-            "type": "Agreement",
-            "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
+            "type": process.businessKey,
+            "assignee": $("#approverPositionId") && $("#approverPositionId").val() ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };
 
         if (data.action && data.action != "Print Notice") {
+            if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
+                return showError("Comments is mandatory in case of 'Reject'");
+            }
+
+            if(_agrmntDet.wFremarks) {
+                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
+                delete _agrmntDet.wFremarks;
+            }
+
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
@@ -519,7 +532,7 @@ $(document).ready(function() {
                 contentType: 'application/json'
             });
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approver_name").val() ? getNameById(employees, $("#approver_name").val()) : "") + "&ackNo=" + (data.action == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }

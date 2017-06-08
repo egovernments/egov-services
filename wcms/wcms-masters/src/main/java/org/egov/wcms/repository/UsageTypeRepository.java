@@ -67,7 +67,7 @@ public class UsageTypeRepository {
     private UsageTypeQueryBuilder usageTypeQueryBuilder;
 
     @Autowired
-    private UsageTypeRowMapper usageTypeRowMapper; 
+    private UsageTypeRowMapper usageTypeRowMapper;
 
     public UsageTypeRequest persistCreateUsageType(final UsageTypeRequest usageTypeRequest) {
         LOGGER.info("UsageTypeRequest::" + usageTypeRequest);
@@ -96,7 +96,7 @@ public class UsageTypeRepository {
     }
 
     public boolean checkUsageTypeByNameAndCode(final String code, final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
         // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
@@ -116,7 +116,7 @@ public class UsageTypeRepository {
     }
 
     public List<UsageType> findForCriteria(final UsageTypeGetRequest usageTypeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = usageTypeQueryBuilder.getQuery(usageTypeGetRequest, preparedStatementValues);
         final List<UsageType> usageTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), usageTypeRowMapper);
         return usageTypes;

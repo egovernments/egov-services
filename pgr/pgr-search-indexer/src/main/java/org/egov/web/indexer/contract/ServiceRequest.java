@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.common.contract.AttributeValues;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -67,7 +66,7 @@ public class ServiceRequest {
     @JsonProperty("tenantId")
     private String tenantId;
 
-    private List<AttributeEntry> attribValues = new ArrayList<>();
+    private List<AttributeEntry> attribValues;
 
     public String getDynamicSingleValue(String key) {
         return AttributeValues.getAttributeSingleValue(attribValues, key);

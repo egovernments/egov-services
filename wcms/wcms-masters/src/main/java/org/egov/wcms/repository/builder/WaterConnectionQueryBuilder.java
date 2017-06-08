@@ -40,38 +40,52 @@
 
 package org.egov.wcms.repository.builder;
 
-import org.egov.wcms.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WaterConnectionQueryBuilder {
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
     private static final Logger logger = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
-    
+
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(document,name,filestoreid,connectionid,tenantid) values "
                 + "(?,?,?,?,?)";
     }
-        
+
+    public static String insertMeterReadingQuery() {
+        return "INSERT INTO egwtr_meterreading(connectionid,reading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values "
+                + "(?,?,?,?,?,?,?)";
+    }
+
+    public static String insertMeterQuery() {
+
+        return "INSERT INTO egwtr_meter(metermake,connectionid,tenantid,createdby,createdtime) values(?,?,?,?,?)";
+    }
+
     public static String insertConnectionQuery() {
 
         return "INSERT INTO egwtr_waterconnection (tenantid, connectiontype, billingtype, categorytype, hscpipesizetype, supplytype, "
-        		+ "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-        		+ "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress, donationcharge) values"
-        		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
+                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress, donationcharge) values"
+                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
-    
+
     public static String insertLegacyConnectionQuery() {
         return "INSERT INTO egwtr_waterconnection(tenantid, connectiontype, billingtype, categorytype, hscpipesizetype, supplytype, "
-        		+ "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-        		+ "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress,donationcharge,"
-        		+ "legacyconsumernumber,consumernumber) values"
-        		+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
+                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress,donationcharge,"
+                + "legacyconsumernumber,consumernumber) values"
+                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    }
+
+    public static String insertAdditionalConnectionQuery() {
+
+        return "INSERT INTO egwtr_waterconnection(tenantid, connectiontype, billingtype, categorytype, hscpipesizetype, supplytype, "
+                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
+                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress,donationcharge,"
+                + "legacyconsumernumber,consumernumber,parentconnectionid) values"
+                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 }

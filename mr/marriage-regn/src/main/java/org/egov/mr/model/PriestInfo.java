@@ -25,4 +25,10 @@ public class PriestInfo {
 
 	@NotNull
 	private String address;
+	
+	private String aadhaar;
+	
+	private String mobileNo;
+	
+	private String email;
 }

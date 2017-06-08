@@ -18,5 +18,5 @@ CREATE TABLE egmr_marrying_person(
     residenceaddress CHARACTER VARYING(250) NOT NULL,
 	photo CHARACTER VARYING(250) NOT NULL,
 	nationality CHARACTER VARYING(250),
-    tenantid CHARACTER VARYING(250) NOT NULL, 
+    tenantid CHARACTER VARYING(250) NOT NULL
 )

@@ -67,7 +67,7 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Transactional
 	@Override
 	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
-		LOG.debug(processInstanceRequest.toString());
+		LOG.info("ProcessInstance Request Payload"+processInstanceRequest.toString());
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
 				null, null,processInstance.getTenantId());

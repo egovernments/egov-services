@@ -1,9 +1,13 @@
 package org.egov.workflow;
 
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 import org.egov.workflow.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.workflow.web.interceptor.CorrelationIdInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,10 +24,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class EgovWorkflowsApplication {
 
+	@Value("${app.timezone}")
+	private String timeZone;
+
 	public static void main(String[] args) {
 		SpringApplication.run(EgovWorkflowsApplication.class, args);
 	}
-	
+
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
+
 	@Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
 		return new WebMvcConfigurerAdapter() {
@@ -52,6 +64,7 @@ public class EgovWorkflowsApplication {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a"));
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

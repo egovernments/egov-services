@@ -112,6 +112,9 @@ public class LeaveApplicationService {
 
     @Autowired
     private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
             final RequestInfo requestInfo) {
@@ -123,6 +126,7 @@ public class LeaveApplicationService {
         final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
         final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
         final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();
+        leaveApplicationRequest.setType(type);
         for (final LeaveApplication leaveApplication : leaveApplicationsList)
             if (leaveApplication.getErrorMsg().isEmpty())
                 successLeaveApplicationsList.add(leaveApplication);
@@ -140,8 +144,7 @@ public class LeaveApplicationService {
         }
         String leaveApplicationRequestJson = null;
         try {
-            final ObjectMapper mapper = new ObjectMapper();
-            leaveApplicationRequestJson = mapper.writeValueAsString(leaveApplicationRequest);
+            leaveApplicationRequestJson = objectMapper.writeValueAsString(leaveApplicationRequest);
             LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
         } catch (final JsonProcessingException e) {
             LOGGER.error("Error while converting Leave Application to JSON", e);
@@ -214,8 +217,7 @@ public class LeaveApplicationService {
             leaveApplications.get(0).setStateId(oldApplications.get(0).getStateId());
             String leaveApplicationRequestJson = null;
             try {
-                final ObjectMapper mapper = new ObjectMapper();
-                leaveApplicationRequestJson = mapper.writeValueAsString(leaveApplicationRequest);
+                leaveApplicationRequestJson = objectMapper.writeValueAsString(leaveApplicationRequest);
                 LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
             } catch (final JsonProcessingException e) {
                 LOGGER.error("Error while converting Leave Application to JSON", e);

@@ -68,76 +68,75 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/connection")
 public class WaterConnectionController {
-	
+
     private static final Logger logger = LoggerFactory.getLogger(WaterConnectionController.class);
-   
+
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @Autowired
     private ApplicationProperties applicationProperties;
-    
+
     @Autowired
     private NewWaterConnectionValidator newWaterConnectionValidator;
-    
+
     @Autowired
     private WaterConnectionService waterConnectionService;
-    
+
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid  final WaterConnectionReq waterConnectionRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        final List<ErrorResponse> errorResponses = newWaterConnectionValidator.validateWaterConnectionRequest(waterConnectionRequest);
-        if (!errorResponses.isEmpty()){
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-        }
-        
-        //Call to service.
-        Connection connection = waterConnectionService.createWaterConnection(applicationProperties.getCreateNewConnectionTopicName(), 
-        		"newconnection-create", waterConnectionRequest);           
+        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+                .validateWaterConnectionRequest(waterConnectionRequest);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+        // Call to service.
+        final Connection connection = waterConnectionService.createWaterConnection(
+                applicationProperties.getCreateNewConnectionTopicName(),
+                "newconnection-create", waterConnectionRequest);
         return getSuccessResponse(connection, waterConnectionRequest.getRequestInfo());
-        
+
     }
-    
-    
+
     @PostMapping(value = "/legacy/_create")
     @ResponseBody
-    public ResponseEntity<?> legacyConnectionCreate(@RequestBody @Valid  final WaterConnectionReq legacyConnectionRequest,
-                                    final BindingResult errors) {
+    public ResponseEntity<?> legacyConnectionCreate(@RequestBody @Valid final WaterConnectionReq legacyConnectionRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Legacy WaterConnectionRequest::" + legacyConnectionRequest);
-        final List<ErrorResponse> errorResponses = newWaterConnectionValidator.validateWaterConnectionRequest(legacyConnectionRequest);
-        if (!errorResponses.isEmpty()){
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-        }
-        
-        //Call to service.
-        Connection connection = waterConnectionService.createWaterConnection(applicationProperties.getCreateLegacyConnectionTopicName(), 
-        		"legacyconnection-create", legacyConnectionRequest);           
+        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+                .validateWaterConnectionRequest(legacyConnectionRequest);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+        // Call to service.
+        final Connection connection = waterConnectionService.createWaterConnection(
+                applicationProperties.getCreateLegacyConnectionTopicName(),
+                "legacyconnection-create", legacyConnectionRequest);
         return getSuccessResponse(connection, legacyConnectionRequest.getRequestInfo());
-        
+
     }
-    
-    
-    
+
     private ResponseEntity<?> getSuccessResponse(final Connection connection,
             final RequestInfo requestInfo) {
-        final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();;
+        final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();
+        ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         waterConnectionRes.setResponseInfo(responseInfo);
         waterConnectionRes.setConnection(connection);
-        return new ResponseEntity<WaterConnectionRes>(waterConnectionRes, HttpStatus.OK);
+        return new ResponseEntity<>(waterConnectionRes, HttpStatus.OK);
 
     }
-
 
 }

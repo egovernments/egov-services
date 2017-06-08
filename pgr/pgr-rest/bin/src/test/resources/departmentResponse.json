@@ -1,0 +1,13 @@
+{
+ "ResponseInfo" : {
+  "api_id" : "",
+  "ver" : "",
+  "ts" : "",
+  "res_msg_id" : "",
+  "msg_id" : "",
+  "status" : "Successfull message"
+  },
+ "Department" : [{
+    "id" : "1"
+  }]
+}

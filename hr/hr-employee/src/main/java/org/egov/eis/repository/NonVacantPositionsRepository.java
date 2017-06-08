@@ -42,6 +42,7 @@ package org.egov.eis.repository;
 
 import java.util.List;
 
+import org.egov.eis.model.Assignment;
 import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -53,6 +54,12 @@ public class NonVacantPositionsRepository {
 	public static final String SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY = "SELECT DISTINCT positionId"
 			+ " FROM egeis_assignment"
 			+ " WHERE departmentId = ? AND designationId = ? AND ? BETWEEN fromDate AND toDate AND tenantId = ?";
+
+	public static final String CHECK_IF_POSITION_IS_OCCUPIED_QUERY = "SELECT exists(SELECT positionId"
+			+ " FROM egeis_assignment"
+			+ " WHERE positionId = ? AND departmentId = ? AND designationId = ? AND (? BETWEEN fromDate AND toDate"
+            + " OR ? BETWEEN fromDate AND toDate OR fromDate BETWEEN ? AND ? OR toDate BETWEEN ? AND ?)"
+			+ " AND tenantId = ? $employeeIdCheck)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -72,5 +79,19 @@ public class NonVacantPositionsRepository {
 			System.err.println(searchConditions[i]);
 
 		return positionIds;
+	}
+
+	public Boolean checkIfPositionIsOccupied(Assignment assignment, Long employeeId, String tenantId, String requestType) {
+		if(requestType.equals("create")) {
+			return jdbcTemplate.queryForObject(CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(" $employeeIdCheck", ""),
+					new Object[] {assignment.getPosition(), assignment.getDepartment(), assignment.getDesignation(),
+							assignment.getFromDate(), assignment.getToDate(), assignment.getFromDate(), assignment.getToDate(),
+							assignment.getFromDate(), assignment.getToDate(), assignment.getTenantId() }, Boolean.class);
+		} else {
+            return jdbcTemplate.queryForObject(CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(" $employeeIdCheck", " AND employeeId != ?"),
+                    new Object[] {assignment.getPosition(), assignment.getDepartment(), assignment.getDesignation(),
+                            assignment.getFromDate(), assignment.getToDate(), assignment.getFromDate(), assignment.getToDate(),
+							assignment.getFromDate(), assignment.getToDate(), assignment.getTenantId(), employeeId }, Boolean.class);
+        }
 	}
 }

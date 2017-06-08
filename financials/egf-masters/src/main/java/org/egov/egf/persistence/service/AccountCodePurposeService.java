@@ -18,7 +18,6 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.repository.AccountCodePurposeQueueRepository;
 import org.egov.egf.persistence.repository.AccountCodePurposeRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,14 +58,10 @@ public class AccountCodePurposeService {
 		accountCodePurposeContractRequest = accountCodePurposeRepository.create(accountCodePurposeContractRequest);
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
-		ModelMapper modelMapper = new ModelMapper();
-		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
-				.getAccountCodePurposes()) {
-			AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
-			AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
-					AccountCodePurposeContract.class);
-			accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
-		}
+		accountCodePurposeContractResponse.getAccountCodePurposes()
+				.addAll(accountCodePurposeContractRequest.getAccountCodePurposes());
+		accountCodePurposeContractResponse
+				.setAccountCodePurpose(accountCodePurposeContractRequest.getAccountCodePurpose());
 		accountCodePurposeContractResponse
 				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
 		return accountCodePurposeContractResponse;
@@ -80,14 +75,10 @@ public class AccountCodePurposeService {
 		accountCodePurposeContractRequest = accountCodePurposeRepository.update(accountCodePurposeContractRequest);
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
-		ModelMapper modelMapper = new ModelMapper();
-		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest
-				.getAccountCodePurposes()) {
-			AccountCodePurpose accountCodePurposeEntity = new AccountCodePurpose(accountCodePurposeContract);
-			AccountCodePurposeContract resp = modelMapper.map(accountCodePurposeEntity,
-					AccountCodePurposeContract.class);
-			accountCodePurposeContractResponse.getAccountCodePurposes().add(resp);
-		}
+		accountCodePurposeContractResponse.getAccountCodePurposes()
+				.addAll(accountCodePurposeContractRequest.getAccountCodePurposes());
+		accountCodePurposeContractResponse
+				.setAccountCodePurpose(accountCodePurposeContractRequest.getAccountCodePurpose());
 		accountCodePurposeContractResponse
 				.setResponseInfo(getResponseInfo(accountCodePurposeContractRequest.getRequestInfo()));
 		return accountCodePurposeContractResponse;

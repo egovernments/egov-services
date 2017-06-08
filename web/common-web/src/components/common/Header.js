@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
 import CustomMenu from './CustomMenu';
 
 // import {brown500} from 'material-ui/styles/colors';
@@ -31,7 +36,12 @@ const Logo = () => {
 }
 
 const RightIcon = () => {
-  return (<img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>);
+  return (
+    <div>
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
+
+    </div>
+  );
 }
 
 class Header extends Component {
@@ -39,7 +49,7 @@ class Header extends Component {
     super(props);
     this.state = {
       open: false,
-      menuItems:[]
+      menuItems: []
     };
   }
 
@@ -49,64 +59,72 @@ class Header extends Component {
 
   componentDidMount()
   {
-    let menuItems = [{
-        title: 'All Categories',
+    //When api ready asssign api response to menuItems
+    let menuItems = [
+      {
+        title: 'Application',
         id: 'menuID',
-        // icon: 'fa fa-reorder',
+        icon: 'fa fa-reorder',
         items: [
           {
-
-                name: 'Lease And Agreement',
-                id: 'itemID',
+            name: 'Lease And Agreement',
+            id: 'itemID',
+            icon: 'fa fa-laptop',
+            link: '#',
+            items: [
+              {
+                title: 'Land And Lease',
                 icon: 'fa fa-laptop',
-                link: '#',
                 items: [
-                {
-                    title: 'Land And Lease',
-                    icon: 'fa fa-laptop',
-                    items: [{
-                            name: 'Transactions',
-                            icon: 'fa fa-desktop',
-                            link: '#',
-                            items: [{
-                                title: 'Transactions',
-                                icon: 'fa fa-desktop',
-                                link: '#',
-                                items: [{
-                                        name: 'Search Assets',
-                                        icon: 'fa fa-phone',
-                                        link: './app/search-assets/search-asset.html'
-                                    },
-                                    {
-                                        name: 'Search Agreements',
-                                        icon: 'fa fa-phone',
-                                        link: './app/search-agreement/search-agreement.html'
-                                    }
-                                ]
-                            }]
-                        },
-                        {
-                            name: 'Reports',
-                            icon: 'fa fa-desktop',
-                            link: '#',
-                            items: [{
-                                title: 'Reports',
-                                icon: 'fa fa-desktop',
-                                link: '#',
-                                items: [{
-                                    name: 'DCB Drill down reports',
-                                    icon: 'fa fa-phone',
-                                    link: './app/reports/DCB-Drill-down-report.html'
-                                }]
-                            }]
-                        }
+                  {
+                    name: 'Transactions',
+                    icon: 'fa fa-desktop',
+                    link: '#',
+                    items: [
+                      {
+                        title: 'Transactions',
+                        icon: 'fa fa-desktop',
+                        link: '#',
+                        items: [
+                          {
+                            name: 'Search Assets',
+                            icon: 'fa fa-phone',
+                            link: './app/search-assets/search-asset.html'
+                          }, {
+                            name: 'Search Agreements',
+                            icon: 'fa fa-phone',
+                            link: './app/search-agreement/search-agreement.html'
+                          }
+                        ]
+                      }
                     ]
-                }]
-            }]
-          }]
-      this.setState({
-        menuItems
-      })
+                  }, {
+                    name: 'Reports',
+                    icon: 'fa fa-desktop',
+                    link: '#',
+                    items: [
+                      {
+                        title: 'Reports',
+                        icon: 'fa fa-desktop',
+                        link: '#',
+                        items: [
+                          {
+                            name: 'DCB Drill down reports',
+                            icon: 'fa fa-phone',
+                            link: './app/reports/DCB-Drill-down-report.html'
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+    this.setState({menuItems})
   }
 
   render() {
@@ -115,7 +133,7 @@ class Header extends Component {
         <AppBar title={< div > UAT Maharashtra Municipal Corporation < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementRight={< RightIcon />}/>
 
         <Drawer containerClassName="side-bar" open={this.state.open}>
-            <CustomMenu menuItems={this.state.menuItems}/>
+          <CustomMenu menuItems={this.state.menuItems}/>
         </Drawer>
 
         {/*
@@ -141,3 +159,8 @@ class Header extends Component {
 }
 
 export default Header;
+
+// import IconMenu from 'material-ui/IconMenu';
+// import MenuItem from 'material-ui/MenuItem';
+// import IconButton from 'material-ui/IconButton';
+// import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';

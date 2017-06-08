@@ -1,0 +1,28 @@
+{
+    "responseInfo": {
+        "apiId": "1",
+        "ver": "1",
+        "resMsgId": "placeholder",
+        "msgId": "",
+        "status": "placeholder"
+    },
+    "serviceRequests": [
+        {
+            "tenantId": "ap.public",
+            "serviceRequestId": "00292-2017-RZ",
+            "status": null,
+            "serviceName": null,
+            "serviceCode": "PHDMG",
+            "description": "There is a huge problem",
+            "zipcode": null,
+            "lat": 12.9188214,
+            "lng": 77.6699807,
+            "mediaUrls": null,
+            "firstName": "Bake",
+            "lastName": "Jake",
+            "phone": "9999999990",
+            "email": "jake@maildrop.cc",
+            "deviceId": null
+        }
+    ]
+}

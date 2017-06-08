@@ -52,7 +52,6 @@ import org.springframework.core.env.Environment;
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
-
     private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
     public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
     public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
@@ -113,7 +112,7 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.donation.update.name}")
     private String updateDonationTopicName;
-    
+
     @Value("${kafka.topics.sourcetype.create.name}")
     private String createSourceTypeTopicName;
 
@@ -123,12 +122,9 @@ public class ApplicationProperties {
     // topic for water-transaction use case
     @Value("${kafka.topics.newconnection.create.name}")
     private String createNewConnectionTopicName;
-    
+
     @Value("${kafka.topics.legacyconnection.create.name}")
     private String createLegacyConnectionTopicName;
-    
-    
-    
 
     @Autowired
     private Environment environment;
@@ -189,10 +185,6 @@ public class ApplicationProperties {
         return createPropertyPipeSizeTopicName;
     }
 
-    public String getCreateDocumentTypeTopicName() {
-        return createDocumentTypeTopicName;
-    }
-
     public String getUpdateDocumentTypeTopicName() {
 
         return updateDocumentTypeTopicName;
@@ -223,7 +215,7 @@ public class ApplicationProperties {
     public String getUpdateDonationTopicName() {
         return updateDonationTopicName;
     }
-    
+
     public String getCreateSourceTypeTopicName() {
         return createSourceTypeTopicName;
     }
@@ -235,10 +227,12 @@ public class ApplicationProperties {
     public String getCreateNewConnectionTopicName() {
         return createNewConnectionTopicName;
     }
-    
+
     public String getCreateLegacyConnectionTopicName() {
         return createLegacyConnectionTopicName;
     }
 
-
+    public String getCreateDocumentTypeTopicName() {
+        return createDocumentTypeTopicName;
+    }
 }

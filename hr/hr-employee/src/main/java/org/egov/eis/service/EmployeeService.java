@@ -166,6 +166,9 @@ public class EmployeeService {
 
 	@Autowired
 	PropertiesManager propertiesManager;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
 		List<User> usersList = null;
@@ -251,8 +254,7 @@ public class EmployeeService {
 		employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
 		String employeeRequestJson = null;
-		ObjectMapper mapper = new ObjectMapper();
-		employeeRequestJson = mapper.writeValueAsString(employeeRequest);
+		employeeRequestJson = objectMapper.writeValueAsString(employeeRequest);
 		LOGGER.info("employeeJson::" + employeeRequestJson);
 
 		employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
@@ -311,8 +313,7 @@ public class EmployeeService {
 
 		String employeeUpdateRequestJson = null;
 
-		ObjectMapper mapper = new ObjectMapper();
-		employeeUpdateRequestJson = mapper.writeValueAsString(employeeRequest);
+		employeeUpdateRequestJson = objectMapper.writeValueAsString(employeeRequest);
 		LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
 
 		employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),

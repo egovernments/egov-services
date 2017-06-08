@@ -59,9 +59,9 @@ import lombok.ToString;
 @ToString
 @Builder
 public class DocumentType {
-	
-public static final String SEQ_DOCUMENTTYPE = "SEQ_EGWTR_DOCUMENTTYPE";
-    
+
+    public static final String SEQ_DOCUMENTTYPE = "SEQ_EGWTR_DOCUMENTTYPE";
+
     @NotNull
     private Long id;
 
@@ -73,13 +73,12 @@ public static final String SEQ_DOCUMENTTYPE = "SEQ_EGWTR_DOCUMENTTYPE";
     @Length(min = 3, max = 100)
     private String name;
 
-    @Length(max=250)
+    @Length(max = 250)
     private String description;
 
     @NotNull
     private Boolean active;
 
-    
     private AuditDetails auditDetails;
 
     @Length(max = 250)

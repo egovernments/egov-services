@@ -54,16 +54,16 @@ import lombok.Setter;
 @Setter
 public class Attribute {
 
-	private Boolean variable;
+    private Boolean variable;
 
-	private String code;
+    private String code;
 
-	private String datatype;
+    private String datatype;
 
-	private Boolean required;
+    private Boolean required;
 
-	private String datatypeDescription;
+    private String datatypeDescription;
 
-	private List<Value> values;
-	 
+    private List<Value> values;
+
 }

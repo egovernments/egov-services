@@ -86,12 +86,12 @@ public class CategoryTypeService {
             categoryValue = mapper.writeValueAsString(categoryRequest);
             logger.info("categoryValue::" + categoryValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, categoryValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+            logger.error("Exception Encountered : " + ex);
         }
         return categoryRequest.getCategory();
     }
@@ -105,12 +105,12 @@ public class CategoryTypeService {
             categoryValue = mapper.writeValueAsString(categoryRequest);
             logger.info("categoryValue::" + categoryValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, categoryValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+            logger.error("Exception Encountered : " + ex);
         }
         return categoryRequest.getCategory();
     }

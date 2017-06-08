@@ -39,17 +39,18 @@
  */
 package org.egov.wcms.repository;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.io.Serializable;
-import java.sql.SQLException;
 
 @Service
 public class DBCodeSequenceGenerator {
@@ -61,7 +62,7 @@ public class DBCodeSequenceGenerator {
         Query query = entityManager.unwrap(Session.class).createSQLQuery("create sequence " + sequenceName);
         query.executeUpdate();
 
-        String NEXT_SEQ_SQL_QUERY = "SELECT nextval (:sequenceName) as nextval";
+        final String NEXT_SEQ_SQL_QUERY = "SELECT nextval (:sequenceName) as nextval";
         query = entityManager.unwrap(Session.class).createSQLQuery(NEXT_SEQ_SQL_QUERY);
         query.setParameter("sequenceName", sequenceName);
         return (Serializable) query.uniqueResult();

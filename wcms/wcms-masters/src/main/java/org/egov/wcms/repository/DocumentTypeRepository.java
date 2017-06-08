@@ -40,8 +40,6 @@
 package org.egov.wcms.repository;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,29 +74,31 @@ public class DocumentTypeRepository {
         LOGGER.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
         final DocumentType documentType = documentTypeReq.getDocumentType();
-        Object[] obj = new Object[] {documentType.getCode(),documentType.getName(),documentType.getDescription(),documentType.getActive(),Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),documentType.getTenantId() };
+        final Object[] obj = new Object[] { documentType.getCode(), documentType.getName(), documentType.getDescription(),
+                documentType.getActive(), Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), documentType.getTenantId() };
 
         jdbcTemplate.update(documentTypeInsert, obj);
         return documentTypeReq;
     }
 
-
     public DocumentTypeReq persistModifyDocumentType(final DocumentTypeReq documentTypeReq) {
         LOGGER.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
         final DocumentType documentType = documentTypeReq.getDocumentType();
-        Object[] obj = new Object[] {documentType.getName(),documentType.getDescription(),documentType.getActive(),
-                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()), documentType.getCode() };
+        final Object[] obj = new Object[] { documentType.getName(), documentType.getDescription(), documentType.getActive(),
+                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
+                documentType.getCode() };
         jdbcTemplate.update(documentTypeUpdate, obj);
         return documentTypeReq;
 
     }
 
-    public boolean checkDocumentTypeByNameAndCode(final String code,final String name,final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+    public boolean checkDocumentTypeByNameAndCode(final String code, final String name, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
-       // preparedStatementValues.add(id);
+        // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)
@@ -115,30 +115,26 @@ public class DocumentTypeRepository {
         return true;
     }
 
-    public List<DocumentType> findForCriteria(DocumentTypeGetReq documentTypeGetRequest) {
-        List<Object> preparedStatementValues = new ArrayList<Object>();
-        String queryStr = documentTypeQueryBuilder.getQuery(documentTypeGetRequest, preparedStatementValues);
-        List<DocumentType> documentTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), documentTypeRowMapper);
+    public List<DocumentType> findForCriteria(final DocumentTypeGetReq documentTypeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = documentTypeQueryBuilder.getQuery(documentTypeGetRequest, preparedStatementValues);
+        final List<DocumentType> documentTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                documentTypeRowMapper);
         return documentTypes;
     }
-    
-    public List<Long> getMandatoryocs(String applicationType){
-       List<Long> mandatoryDocs = new ArrayList<>();
- 	   String query = documentTypeQueryBuilder.getMandatoryDocsQuery();
- 	   LOGGER.info("Mandatory Doc Query: "+query.toString());
 
- 	   mandatoryDocs =jdbcTemplate.query(query, new Object[] { applicationType}, 
- 			  new RowMapper<Long>() {
-			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return rs.getLong("id");
-			}
- 	   });
- 	   
- 	   LOGGER.info("Mandatory Doc List: "+mandatoryDocs.toString());
- 	   
- 	   return mandatoryDocs;
- 	   
+    public List<Long> getMandatoryocs(final String applicationType) {
+        List<Long> mandatoryDocs = new ArrayList<>();
+        final String query = DocumentTypeQueryBuilder.getMandatoryDocsQuery();
+        LOGGER.info("Mandatory Doc Query: " + query.toString());
+
+        mandatoryDocs = jdbcTemplate.query(query, new Object[] { applicationType },
+                (RowMapper<Long>) (rs, rowNum) -> rs.getLong("id"));
+
+        LOGGER.info("Mandatory Doc List: " + mandatoryDocs.toString());
+
+        return mandatoryDocs;
+
     }
-
 
 }

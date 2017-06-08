@@ -95,7 +95,7 @@ public class SourceTypeRepository {
     }
 
     public boolean checkWaterSourceTypeByNameAndCode(final String code, final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
         preparedStatementValues.add(tenantId);
         final String query;
@@ -114,7 +114,7 @@ public class SourceTypeRepository {
     }
 
     public List<SourceType> findForCriteria(final SourceTypeGetRequest waterSourceGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = waterSourceTypeQueryBuilder.getQuery(waterSourceGetRequest, preparedStatementValues);
         final List<SourceType> waterSourceTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 waterSourceTypeRowMapper);

@@ -13,7 +13,6 @@ import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
-import org.egov.mr.web.validator.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class MarriageDocumentTypeController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(RegistrationUnitController.class);
 
 	@Autowired
-	private RequestValidator requestValidator;
-
-	@Autowired
 	private ErrorHandler errorHandler;
 
 	@Autowired
@@ -53,7 +49,7 @@ public class MarriageDocumentTypeController {
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		// Validation
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrors(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultForRegnDocumentTypeSearchCriteria);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
@@ -63,13 +59,8 @@ public class MarriageDocumentTypeController {
 			marriageDocTypesList = marriageDocumentTypeService.search(marriageDocumentTypeSearchCriteria);
 		} catch (Exception e) {
 			LOGGER.info(" Error While Procssing the Request!");
-			return errorHandler.getRegistrationUnitForUnExpectedErrorResponse(bindingResultsForRequestInfoWrapper,
-					requestInfo, "Encountered : " + e.getMessage());
-		}
-
-		if (marriageDocTypesList.isEmpty()) {
-			return errorHandler.getRegistrationUnitEmptyListErrorResponse(bindingResultsForRequestInfoWrapper,
-					requestInfo);
+			return errorHandler.getUnExpectedErrorResponse(bindingResultsForRequestInfoWrapper, requestInfo,
+					"Encountered : " + e.getMessage());
 		}
 		return getSuccessResponse(marriageDocTypesList, requestInfo);
 	}

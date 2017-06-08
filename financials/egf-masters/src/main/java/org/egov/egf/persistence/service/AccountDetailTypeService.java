@@ -89,7 +89,7 @@ public class AccountDetailTypeService {
 	@Transactional
 	public AccountDetailTypeContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final AccountDetailTypeContractRequest accountDetailTypeContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("AccountDetailTypeCreate"),
+				.convertValue(financialContractRequestMap.get("AccountDetailTypeUpdateAll"),
 						AccountDetailTypeContractRequest.class);
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());

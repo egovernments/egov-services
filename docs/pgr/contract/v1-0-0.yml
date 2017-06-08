@@ -198,94 +198,166 @@ paths:
               error
             schema:
               $ref: '#/definitions/ErrorRes'
+              
+
           
     /seva/_search:         
-        post:
-          summary: Query multiple Seva request
-          description: Return service request for a given tenantid and search params.
-          parameters:
-            - name: requestInfo
-              in: body
-              description: Request header for the service request details.
-              required: true
-              schema:
-                $ref: '#/definitions/SevaRequest'
-            - name: tenantId
-              in: query
-              description: Unique id for city/ulb.
-              required: true
-              type: string
-              format: varchar
-            - name: startDate
-              in: query
-              description: Earliest datetime to include in search.
-              required: false
-              type: string
-              format: varchar
-            - name: endDate
-              in: query
-              description: Latest datetime to include in search.
-              required: false
-              type: string
-              format: varchar
-            - name: status
-              in: query
-              description:
-                Allows one to search for requests which have a specific status. This
-                defaults to all statuses; can be declared multiple times, comma
-                delimited;
-              required: false
-              type: string
-              format: varchar
-            - name: lastModifiedDatetime
-              in: query
-              description: last modified date for the given serviceRequest.
-              required: false
-              type: string
-              format: varchar
-            - name: fields
-              description: Specific fields can be specified per search, can be decalred multiple times, comma delimited like "field1", "field2".... If nothing is passed as Fields, all fields are returned.
-              in: query
-              required: false
-              type: string
-              format: varchar
-            - name: sort
-              description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume seva requestedDatetime in ascending order for default sorting. For example, with a sort string sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.
-              in: query
-              required: false
-              type: string
-              format: varchar
-            - name: totalSize
-              description: Total No of results returned in the Result, by default maximum 1000 number of records will be returned if totalSize parameter is empty.
-              in: query
-              required: false
-              type: string
-              format: integer
-            - name: sizePerPage
-              description: Total No of results needs to be displayed per page. Note that fromIndex + sizePerPage can not be more than the totalSize setting which defaults to 1000.
-              in: query
-              required: false
-              type: string
-              format: integer
-            - name: fromIndex
-              description: The fromIndex parameter defines the offset from the first result you want to fetch. The default value of fromIndex is 0.
-              in: query
-              required: false
-              type: string
-              format: integer
-          tags:
-            - 'Service Request, Seva'
-          responses:
-            '200':
-              description: seva
-              schema:
-                $ref: '#/definitions/SevaResponse'
-            '400':
-              description:
-                serviceRequestId or tenantId was not provided or General
-                service error
-              schema:
-                $ref: '#/definitions/ErrorRes'
+      post:
+        summary: Query multiple Seva request
+        description: Return service request for a given tenantid and search params.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: '#/definitions/SevaRequest'
+          - name: tenantId
+            in: query
+            description: Unique id for city/ulb.
+            required: true
+            type: string
+            format: varchar
+          - name: startDate
+            in: query
+            description: Earliest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: endDate
+            in: query
+            description: Latest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: status
+            in: query
+            description:
+              Allows one to search for requests which have a specific status. This
+              defaults to all statuses; can be declared multiple times, comma
+              delimited;
+            required: false
+            type: string
+            format: varchar
+          - name: lastModifiedDatetime
+            in: query
+            description: last modified date for the given serviceRequest.
+            required: false
+            type: string
+            format: varchar
+          - name: fields
+            description: Specific fields can be specified per search, can be decalred multiple times, comma delimited like "field1", "field2".... If nothing is passed as Fields, all fields are returned.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: sort
+            description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume seva requestedDatetime in ascending order for default sorting. For example, with a sort string sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: totalSize
+            description: Total No of results returned in the Result, by default maximum 1000 number of records will be returned if totalSize parameter is empty.
+            in: query
+            required: false
+            type: string
+            format: integer
+          - name: sizePerPage
+            description: Total No of results needs to be displayed per page. Note that fromIndex + sizePerPage can not be more than the totalSize setting which defaults to 1000.
+            in: query
+            required: false
+            type: string
+            format: integer
+          - name: fromIndex
+            description: The fromIndex parameter defines the offset from the first result you want to fetch. The default value of fromIndex is 0.
+            in: query
+            required: false
+            type: string
+            format: integer
+        tags:
+          - 'Service Request, Seva'
+        responses:
+          '200':
+            description: seva
+            schema:
+              $ref: '#/definitions/SevaResponse'
+          '400':
+            description:
+              serviceRequestId or tenantId was not provided or General
+              service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+                
+    /seva/_count:         
+      post:
+        summary: Returns count of matching service requests
+        description: Return count of service request for a given tenantid and search params.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: '#/definitions/SevaRequest'
+          - name: tenantId
+            in: query
+            description: Unique id for city/ulb.
+            required: true
+            type: string
+            format: varchar
+          - name: startDate
+            in: query
+            description: Earliest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: endDate
+            in: query
+            description: Latest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: status
+            in: query
+            description:
+              Allows one to search for requests which have a specific status. This
+              defaults to all statuses; can be declared multiple times, comma
+              delimited;
+            required: false
+            type: string
+            format: varchar
+          - name: lastModifiedDatetime
+            in: query
+            description: last modified date for the given serviceRequest.
+            required: false
+            type: string
+            format: varchar
+          - name: fields
+            description: Specific fields can be specified per search, can be decalred multiple times, comma delimited like "field1", "field2".... If nothing is passed as Fields, all fields are returned.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: sort
+            description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume seva requestedDatetime in ascending order for default sorting. For example, with a sort string sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.
+            in: query
+            required: false
+            type: string
+            format: varchar
+        tags:
+          - 'Service Request, Seva'
+        responses:
+          '200':
+            description: seva
+            schema:
+              $ref: '#/definitions/SevaResponse'
+          '400':
+            description:
+              serviceRequestId or tenantId was not provided or General
+              service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
             
     /seva/{serviceRequestId}/_update:
       post:
@@ -612,6 +684,13 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Seva'
+    type: object
+  CountResponse:
+    properties:
+      resposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      count:
+        type: number
     type: object
   ErrorRes:
     properties:

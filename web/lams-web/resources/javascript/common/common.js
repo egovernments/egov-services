@@ -214,9 +214,9 @@ function getNameById(object, id, property = "") {
     return "";
 }
 
-function getDesignations(status, cb) {
+function getDesignations(status, cb, businessKey) {
     $.ajax({
-        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=Agreement&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&additionalRule=&pendingAction=&designation=&amountRule=",
+        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + (businessKey || "Agreement") + "&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&additionalRule=&pendingAction=&designation=&amountRule=",
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),
@@ -237,7 +237,7 @@ function showSuccess(message) {
     $("body").append(
         `<div id="success-alert-div" class="alert alert-success alert-dismissible alert-toast" role="alert" style="display:none">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <span id="success-alert-span"></span>
+            <span id="success-alert-span" style="white-space: pre"></span>
         </div>`
     );
 
@@ -245,19 +245,19 @@ function showSuccess(message) {
     $('#success-alert-div').show();
     setTimeout(function() {
         $('#success-alert-div').remove();
-    }, 3000);
+    }, 6000);
 }
 
 function showError(message) {
     $("body").append(
         `<div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none; z-index:100000">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <span id="error-alert-span"></span>
+            <span id="error-alert-span" style="white-space: pre"></span>
         </div>`
     )
     $('#error-alert-span').text(message);
     $('#error-alert-div').show();
     setTimeout(function() {
         $('#error-alert-div').remove();
-    }, 3000);
+    }, 6000);
 }

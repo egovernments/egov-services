@@ -66,5 +66,5 @@ public class DonationRequest {
     private RequestInfo requestInfo;
 
     @JsonProperty("Donation")
-    private Donation donation ;
+    private Donation donation;
 }

@@ -37,7 +37,7 @@ public class AssetIndexService {
 		AssetIndex assetIndex = new AssetIndex();
 		Asset asset = assetRequest.getAsset();
 		Location location = asset.getLocationDetails();
-		assetIndex.setAssetData(asset, assetIndex);
+		assetIndex.setAssetData(asset);
 		Map<Long,Boundary>	locationMap = assetRepository.getlocationsById(asset);	
 		assetIndex.setAssetLocation(location, locationMap);
 		return assetIndex;

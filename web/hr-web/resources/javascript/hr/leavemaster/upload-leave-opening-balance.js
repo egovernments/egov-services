@@ -356,16 +356,18 @@ addOrUpdate(e,mode)
                                    d.successMessage = "Leave Opening balance created successfully";
                                      successList.push(d);
                                  });
-                               }
-                                   var ep1=new ExcelPlus();
-                                   var b=0;
 
-                                     ep1.createFile("Success");
-                                     ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
-                                     for(b=0;b<successList.length;b++){
-                                       ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].departmentName,successList[b].leaveType["name"],successList[b].calendarYear,successList[b].noOfDays,successList[b].successMessage])
-                                     }
-                                     ep1.saveAs("success.xlsx");
+                                 var ep1=new ExcelPlus();
+                                 var b=0;
+
+                                   ep1.createFile("Success");
+                                   ep1.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Success Message"] ] });
+                                   for(b=0;b<successList.length;b++){
+                                     ep1.writeNextRow([successList[b].employeeCode,successList[b].employeeName,successList[b].departmentName,successList[b].leaveType["name"],successList[b].calendarYear,successList[b].noOfDays,successList[b].successMessage])
+                                   }
+                                   ep1.saveAs("success.xlsx");
+                               }
+
 
                                      if(errorList.length!==0){
 
@@ -379,18 +381,19 @@ addOrUpdate(e,mode)
                                             }
                                          }
                                        }
+                                       console.log("errorObject",errorObject);
+                                        var ep2=new ExcelPlus();
+                                        var b=0;
+
+                                        ep2.createFile("Error");
+                                        ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+                                        for(b=0;b<errorObject.length;b++){
+                                          ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
+                                        }
+                                        ep2.saveAs("error.xlsx");
                                      }
 
-                              console.log("errorObject",errorObject);
-                               var ep2=new ExcelPlus();
-                               var b=0;
 
-                               ep2.createFile("Error");
-                               ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
-                               for(b=0;b<errorObject.length;b++){
-                                 ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
-                               }
-                               ep2.saveAs("error.xlsx");
 
                                _this.setState({
                                    ..._this.state.leaveTypeSet,
@@ -404,11 +407,21 @@ addOrUpdate(e,mode)
 
                          },
                          error: function(err) {
-                             showError("Only excel file can be upload");
+                             showError("File could not be uploaded !! Please try again later");
 
                          }
                      });
                    }else{
+                     var ep2=new ExcelPlus();
+                     var b=0;
+
+                     ep2.createFile("Error");
+                     ep2.write({ "content":[ ["Employee Code","Employee Name","Department","Leave type","Calendar Year","Number of days as on 1st Jan 2017","Error Message"] ] });
+                     for(b=0;b<errorObject.length;b++){
+                       ep2.writeNextRow([errorObject[b].employeeCode,errorObject[b].employeeName,errorObject[b].department,errorObject[b].leaveTypeName,errorObject[b].calendarYear,errorObject[b].noOfDays,errorObject[b].errorMsg])
+                     }
+                     ep2.saveAs("error.xlsx");
+                     showError("No valid Data in the uplaod Sheet")
                      showError("No vaild data in the Uploaded Excel");
                    }
              }

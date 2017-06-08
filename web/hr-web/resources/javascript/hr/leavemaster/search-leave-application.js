@@ -6,7 +6,13 @@ class SearchLeaveApplication extends React.Component {
       name:"",
       code:"",
       departmentId:"",
-      designationId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[]}
+      designationId:""
+    },
+      isSearchClicked:false,
+      assignments_department:[],
+      assignments_designation:[],
+      modified: false
+    }
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
@@ -64,10 +70,16 @@ class SearchLeaveApplication extends React.Component {
           flag = 1;
           _this.setState({
             isSearchClicked:true,
-            employees
-          })
+            employees,
+            modified: true
+          });
         }
-    })
+          setTimeout(function() {
+            _this.setState({
+              modified: false
+            })
+          }, 1200);
+    });
   }
 
   handleChange(e, name) {
@@ -97,11 +109,10 @@ class SearchLeaveApplication extends React.Component {
               var code = e.target.value;
                commonApiPost("hr-employee", "employees", "_search", { code, tenantId },function(err,res){
                  if(res){
-                   var obj = res["Employee"][0];
                    _this.setState({
                        searchSet: {
-                           ..._this.state.searchSet,
-                           name: obj.name
+                         ..._this.state.searchSet,
+                          name: res.Employee && res.Employee[0] ? res.Employee[0].name : ""
                        }
                    })
                  }
@@ -126,13 +137,8 @@ class SearchLeaveApplication extends React.Component {
   }
 
 
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.employees.length!=this.state.employees.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.employees.length);
-          // alert(this.state.employees.length);
-          // alert('updated');
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.modified) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -141,7 +147,7 @@ class SearchLeaveApplication extends React.Component {
              ordering: false,
              bDestroy: true,
              language: {
-              "emptyTable": "No Records"
+               "emptyTable": "No Records"
             }
           });
       }
@@ -195,7 +201,7 @@ class SearchLeaveApplication extends React.Component {
                         <th>Employee Name</th>
                         <th>Employee Designation</th>
                         <th>Employee Department</th>
-                        <th>master</th>
+                        <th>Action</th>
 
                     </tr>
                 </thead>

@@ -47,12 +47,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PropertyUsageTypeRowMapper implements RowMapper<PropertyTypeUsageType>  {
+public class PropertyUsageTypeRowMapper implements RowMapper<PropertyTypeUsageType> {
 
     @Override
-    public PropertyTypeUsageType mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public PropertyTypeUsageType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-        PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
+        final PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
         propUsageType.setId(rs.getLong("id"));
         propUsageType.setPropertyTypeId(rs.getLong("property_type"));
         propUsageType.setUsageTypeId(rs.getLong("usage_type"));
@@ -61,6 +61,5 @@ public class PropertyUsageTypeRowMapper implements RowMapper<PropertyTypeUsageTy
 
         return propUsageType;
     }
-
 
 }

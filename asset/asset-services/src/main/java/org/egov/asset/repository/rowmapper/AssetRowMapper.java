@@ -55,6 +55,7 @@ import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -68,7 +69,8 @@ public class AssetRowMapper implements RowMapper<Asset> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AssetRowMapper.class);
 
-	ObjectMapper mapper = new ObjectMapper();
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Override
 	public Asset mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -105,8 +107,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			String properties = rs.getString("properties");
 			Asset asset2 = null;
 
-			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			asset2 = mapper.readValue(properties, Asset.class);
+			asset2 = objectMapper.readValue(properties, Asset.class);
 
 			asset.setAssetAttributes(asset2.getAssetAttributes());
 

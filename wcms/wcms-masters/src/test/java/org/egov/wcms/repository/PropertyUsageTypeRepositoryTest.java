@@ -139,7 +139,7 @@ public class PropertyUsageTypeRepositoryTest {
 
     @Test
     public void test_Should_Find_PropertyUsageType_Valid() {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
         final String queryString = "MyQuery";
         when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(queryString);
@@ -153,7 +153,7 @@ public class PropertyUsageTypeRepositoryTest {
 
     @Test
     public void test_Should_Find_PropertyUsageType_Invalid() {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
         final String queryString = "MyQuery";
         when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(null);

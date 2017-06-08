@@ -87,6 +87,9 @@ public class PositionService {
 
 	@Autowired
 	private PositionProducer positionProducer;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<Position> getPositions(PositionGetRequest positionGetRequest) {
 		return positionRepository.findForCriteria(positionGetRequest);
@@ -96,8 +99,7 @@ public class PositionService {
 		List<Position> positions = positionRequest.getPosition();
 		String positionJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			positionJson = mapper.writeValueAsString(positionRequest);
+			positionJson = objectMapper.writeValueAsString(positionRequest);
 			LOGGER.info("positionJson::" + positionJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting position to JSON", e);
@@ -116,8 +118,7 @@ public class PositionService {
 		List<Position> positions = positionRequest.getPosition();
 		String positionRequestJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			positionRequestJson = mapper.writeValueAsString(positionRequest);
+			positionRequestJson = objectMapper.writeValueAsString(positionRequest);
 			LOGGER.info("positionRequestJson::" + positionRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);

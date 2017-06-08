@@ -20,12 +20,9 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class MarriageCertResponse {
-	@JsonProperty("responseInfo")
-	private ResponseInfo responseInfo = null;
+	private ResponseInfo responseInfo;
 
-	@JsonProperty("marriageCerts")
 	private List<MarriageCertificate> marriageCerts = new ArrayList<MarriageCertificate>();
 
-	@JsonProperty("page")
-	private Page page = null;
+	private Page page;
 }

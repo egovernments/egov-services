@@ -98,39 +98,42 @@ public class ServiceRequest {
 
     private List<AttributeEntry> attribValues = new ArrayList<>();
 
-    public ServiceRequest(org.egov.pgrrest.read.domain.model.ServiceRequest complaint) {
-        crn = complaint.getCrn();
-        status = complaint.isClosed();
-        serviceTypeName = complaint.getServiceRequestType().getName();
-        serviceTypeCode = complaint.getServiceRequestType().getCode();
-        description = complaint.getDescription();
-        createdDate = complaint.getCreatedDate();
-        lastModifiedDate = complaint.getLastModifiedDate();
-        escalationDate = complaint.getEscalationDate();
-        address = complaint.getAddress();
-        crossHierarchyId = complaint.getServiceRequestLocation().getCrossHierarchyId();
-        latitude = complaint.getServiceRequestLocation().getCoordinates().getLatitude();
-        longitude = complaint.getServiceRequestLocation().getCoordinates().getLongitude();
-        firstName = complaint.getRequester().getFirstName();
+    public ServiceRequest(org.egov.pgrrest.read.domain.model.ServiceRequest serviceRequest) {
+        crn = serviceRequest.getCrn();
+        status = serviceRequest.isClosed();
+        serviceTypeName = serviceRequest.getServiceRequestType().getName();
+        serviceTypeCode = serviceRequest.getServiceRequestType().getCode();
+        description = serviceRequest.getDescription();
+        createdDate = serviceRequest.getCreatedDate();
+        lastModifiedDate = serviceRequest.getLastModifiedDate();
+        escalationDate = serviceRequest.getEscalationDate();
+        address = serviceRequest.getAddress();
+        crossHierarchyId = serviceRequest.getServiceRequestLocation().getCrossHierarchyId();
+        latitude = serviceRequest.getServiceRequestLocation().getCoordinates().getLatitude();
+        longitude = serviceRequest.getServiceRequestLocation().getCoordinates().getLongitude();
+        firstName = serviceRequest.getRequester().getFirstName();
         lastName = null;
-        phone = complaint.getRequester().getMobile();
-        email = complaint.getRequester().getEmail();
-        if (!CollectionUtils.isEmpty(complaint.getAttributeEntries())) {
-            attribValues = complaint.getAttributeEntries()
-                .stream()
-                .map(attribute -> new AttributeEntry(attribute.getKey(), attribute.getCode()))
-                .collect(Collectors.toList());
-        }
-        tenantId = complaint.getTenantId();
+        phone = serviceRequest.getRequester().getMobile();
+        email = serviceRequest.getRequester().getEmail();
+        attribValues = mapDomainAttributesToContract(serviceRequest);
+        tenantId = serviceRequest.getTenantId();
     }
 
-    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForCreateRequest(AuthenticatedUser
-                                                                                          authenticatedUser) {
+    private List<AttributeEntry> mapDomainAttributesToContract(
+        org.egov.pgrrest.read.domain.model.ServiceRequest serviceRequest) {
+        return serviceRequest.getAttributeEntries()
+            .stream()
+            .map(attribute -> new AttributeEntry(attribute.getKey(), attribute.getCode()))
+            .collect(Collectors.toList());
+    }
+
+    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForCreateRequest(
+        AuthenticatedUser authenticatedUser) {
         return toDomain(authenticatedUser, false);
     }
 
-    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForUpdateRequest(AuthenticatedUser
-                                                                                          authenticatedUser) {
+    public org.egov.pgrrest.read.domain.model.ServiceRequest toDomainForUpdateRequest(
+        AuthenticatedUser authenticatedUser) {
         return toDomain(authenticatedUser, true);
     }
 

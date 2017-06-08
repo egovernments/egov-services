@@ -115,14 +115,17 @@ class AssetSearch extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-      if (this.state.modify && this.state.list.length) {
+      if (this.state.modify) {
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              ordering: false,
-             bDestroy: true
+             bDestroy: true,
+             language: {
+                "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -205,7 +208,7 @@ class AssetSearch extends React.Component {
           <div className="styled-select">
               <select id="myOptions" onChange={(e)=>{
                 handleSelectChange(e.target.value, item.id, item.assetCategory.name)
-              }}>
+              }} defaultValue="" value="">
                   <option value="">Select Action</option>
                   <option value="create">Create</option>
                   <option value="dataEntry"> Data Entry </option>
@@ -234,12 +237,6 @@ class AssetSearch extends React.Component {
               );
 
         })
-      } else {
-          return (
-              <tr>
-                <td colSpan="6">No records</td>
-              </tr>
-          )
       }
 
 

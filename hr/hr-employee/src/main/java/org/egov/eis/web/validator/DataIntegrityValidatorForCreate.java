@@ -74,6 +74,7 @@ public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator imp
 		Employee employee = (Employee) targetObject;
 		validateEmployee(employee, errors);
 		validateDocuments(employee, errors);
+		validatePrimaryPositions(employee.getAssignments(), employee.getId(), employee.getTenantId(), errors, "create");
 	}
 
 	protected void populateDocumentErrors(List<EmployeeDocument> inputDocuments,

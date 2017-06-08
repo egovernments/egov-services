@@ -41,6 +41,7 @@
 package org.egov.commons;
 
 import org.egov.commons.web.interceptor.CorrelationIdAwareRestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -50,12 +51,31 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class EgovCommonMastersApplication {
+
+	@Value("${app.timezone}")
+	private String timeZone;
+
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
 
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new CorrelationIdAwareRestTemplate();
+	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper() {
+	    final ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+	    objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+	    return objectMapper;
 	}
 
 	public static void main(String[] args) {
@@ -63,12 +83,12 @@ public class EgovCommonMastersApplication {
 	}
 
 	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
+	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		converter.setObjectMapper(mapper);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		converter.setObjectMapper(objectMapper);
 		return converter;
 	}
 }

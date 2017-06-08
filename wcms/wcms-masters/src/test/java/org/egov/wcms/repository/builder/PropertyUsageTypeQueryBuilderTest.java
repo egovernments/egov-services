@@ -40,44 +40,47 @@
 
 package org.egov.wcms.repository.builder;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
+
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.junit.Test;
 
 public class PropertyUsageTypeQueryBuilderTest {
 
-	@Test
-	public void plainQueryCheck() {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
-		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
+    @Test
+    public void plainQueryCheck() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
+        final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
         propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
-		assertEquals("SELECT * FROM egwtr_property_usage_type proUseType", propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
-	}
-	
-	@Test
-	public void queryWithTenantIdCheck(){
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
-		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
-		propUsageTypeGetRequest.setTenantId("DEFAULT");
+        assertEquals("SELECT * FROM egwtr_property_usage_type proUseType",
+                propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
+    }
+
+    @Test
+    public void queryWithTenantIdCheck() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
+        final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
+        propUsageTypeGetRequest.setTenantId("DEFAULT");
         propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
-		assertEquals("SELECT * FROM egwtr_property_usage_type proUseType WHERE proUseType.tenantid = ?", propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
-	}
-	
-	@Test
-	public void queryWithIDWithoutTenantIdCheck(){
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
-		PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
-		List<Long> idList = new ArrayList<>();
-		idList.add(2L);
-		propUsageTypeGetRequest.setId(idList);
+        assertEquals("SELECT * FROM egwtr_property_usage_type proUseType WHERE proUseType.tenantid = ?",
+                propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
+    }
+
+    @Test
+    public void queryWithIDWithoutTenantIdCheck() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder = new PropertyUsageTypeQueryBuilder();
+        final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = new PropertyTypeUsageTypeGetReq();
+        final List<Long> idList = new ArrayList<>();
+        idList.add(2L);
+        propUsageTypeGetRequest.setId(idList);
         propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
-		assertEquals("SELECT * FROM egwtr_property_usage_type proUseType WHERE proUseType.id IN (2)", propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
-	}
+        assertEquals("SELECT * FROM egwtr_property_usage_type proUseType WHERE proUseType.id IN (2)",
+                propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues));
+    }
 }

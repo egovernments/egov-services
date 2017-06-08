@@ -1,0 +1,42 @@
+{
+	"responseInfo": 
+	{
+		"resMsgId": "msgId",
+		"status": "200",
+		"apiId": "123456789",
+		"ver": "159",
+		"ts": null,
+		"key": "key",
+		"tenantId": "KA"
+	},
+
+	"regnUnits": 
+	[
+		{
+			"id": 33,
+			"code": "AP",
+			"name": "hyderabad",
+			"address": 
+			{
+				"locality": 60,
+				"zone": 147896325,
+				"revenueWard": 150,
+				"block": 14788,
+				"street": 159632478,
+				"electionWard": 123456789,
+				"doorNo": "132",
+				"pinCode": 560103
+			},
+
+			"isActive": true,
+			"tenantId": "AP.HYDERABAD",
+			"auditDetails": 
+			{
+				"createdBy": "123",
+				"lastModifiedBy": "159",
+				"createdTime": 156,
+				"lastModifiedTime": 147
+			}
+		}
+	]
+}

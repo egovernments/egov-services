@@ -147,7 +147,7 @@ public class SourceTypeRepositoryTest {
 
     @Test
     public void test_Inavalid_Find_WaterSource() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final List<SourceType> waterSourceTypes = new ArrayList<>();
         final SourceType waterSource = getWaterSourceType();
         waterSourceTypes.add(waterSource);

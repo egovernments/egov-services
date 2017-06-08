@@ -42,7 +42,6 @@ package org.egov.wcms.consumers;
 
 import java.io.IOException;
 
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.service.WaterConnectionService;
@@ -57,30 +56,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TransactionPersistConsumer {
-	
+
     public static final Logger LOGGER = LoggerFactory.getLogger(TransactionPersistConsumer.class);
-    
+
     @Autowired
     private ApplicationProperties applicationProperties;
-    
+
     @Autowired
     private WaterConnectionService waterConnectionService;
-	
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.newconnection.create.name}","${kafka.topics.legacyconnection.create.name}" })
-	
-	 public void listen(final ConsumerRecord<String, String> record) {
+
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.newconnection.create.name}",
+            "${kafka.topics.legacyconnection.create.name}" })
+
+    public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
         final ObjectMapper objectMapper = new ObjectMapper();
         try {
             if (record.topic().equals(applicationProperties.getCreateNewConnectionTopicName()))
-            	waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
+                waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
             if (record.topic().equals(applicationProperties.getCreateLegacyConnectionTopicName()))
-            	waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
+                waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Exception Encountered : " + e);
         }
     }
-	
-	
-	
+
 }

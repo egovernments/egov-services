@@ -67,87 +67,84 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DonationServiceTest {
-	
-	@Mock
-	private DonationRepository donationRepository;
+
+    @Mock
+    private DonationRepository donationRepository;
 
     @Mock
     private WaterMasterProducer waterMasterProducer;
 
     @Mock
     private CodeGeneratorService codeGeneratorService;
-    
+
     @InjectMocks
     private DonationService donationService;
-    
-    @Test 
+
+    @Test
     public void test_Should_Donation_Create() {
-		final Donation donation = getDonation();
-		final List<Donation> donations = new ArrayList<>();
-		donations.add(donation);
-		final DonationRequest donationReq = new DonationRequest();
-		donationReq.setDonation(donation);
-		final DonationResponse donationResponse = new DonationResponse();
-		donationResponse.setResponseInfo(null);
-		donationResponse.setDonations(donations);
+        final Donation donation = getDonation();
+        final List<Donation> donations = new ArrayList<>();
+        donations.add(donation);
+        final DonationRequest donationReq = new DonationRequest();
+        donationReq.setDonation(donation);
+        final DonationResponse donationResponse = new DonationResponse();
+        donationResponse.setResponseInfo(null);
+        donationResponse.setDonations(donations);
 
-		when(donationService.create(any(DonationRequest.class))).thenReturn(donationReq);
-		assertTrue(donationReq.equals(donationService.create(donationReq)));
+        when(donationService.create(any(DonationRequest.class))).thenReturn(donationReq);
+        assertTrue(donationReq.equals(donationService.create(donationReq)));
     }
-    
-    
-    private Donation getDonation(){
 
-		Donation donation = new Donation();
-		AuditDetails auditDetails = new AuditDetails();
+    private Donation getDonation() {
 
-		donation.setActive(true);
-		donation.setCategoryTypeId(12);
-		donation.setPropertyTypeId(23);
-		donation.setUsageTypeId(13);
-		donation.setFromDate(new Date());
-		donation.setToDate(new Date());
-		donation.setMaxHSCPipeSizeId(123);
-		donation.setMinHSCPipeSizeId(234);
-		donation.setAuditDetails(auditDetails);
-		donation.getAuditDetails().setCreatedBy(1L);
+        final Donation donation = new Donation();
+        final AuditDetails auditDetails = new AuditDetails();
 
-		return donation;
+        donation.setActive(true);
+        donation.setCategoryTypeId(12);
+        donation.setPropertyTypeId(23);
+        donation.setUsageTypeId(13);
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
+        donation.setMaxHSCPipeSizeId(123);
+        donation.setMinHSCPipeSizeId(234);
+        donation.setAuditDetails(auditDetails);
+        donation.getAuditDetails().setCreatedBy(1L);
+
+        return donation;
     }
-    
-    
+
     @Test
-    public void test_Search_For_DonationServices(){
-    	List<Donation> donationList = new ArrayList<Donation>();
-    	Donation donation = Mockito.mock(Donation.class);
-    	donationList.add(donation);
-    	when(donationRepository.getDonationList(any(Donation.class))).thenReturn(donationList);
-    	
-    	assertTrue(donationList.equals(donationRepository.getDonationList(any(Donation.class))));
+    public void test_Search_For_DonationServices() {
+        final List<Donation> donationList = new ArrayList<>();
+        final Donation donation = Mockito.mock(Donation.class);
+        donationList.add(donation);
+        when(donationRepository.getDonationList(any(Donation.class))).thenReturn(donationList);
+
+        assertTrue(donationList.equals(donationRepository.getDonationList(any(Donation.class))));
     }
-    
+
     @Test
-    public void test_Search_For_Donation_Notnull(){
-    	List<Donation> donationList = new ArrayList<>();
-    	Donation donation = Mockito.mock(Donation.class);
-    	donationList.add(donation);
-    
-    	when(donationRepository.getDonationList(any(Donation.class))).thenReturn(donationList);
-    	assertNotNull(donationRepository.getDonationList(any(Donation.class)));
+    public void test_Search_For_Donation_Notnull() {
+        final List<Donation> donationList = new ArrayList<>();
+        final Donation donation = Mockito.mock(Donation.class);
+        donationList.add(donation);
+
+        when(donationRepository.getDonationList(any(Donation.class))).thenReturn(donationList);
+        assertNotNull(donationRepository.getDonationList(any(Donation.class)));
     }
-    
+
     @Test
-    public void test_Search_For_Donation_Types_Null(){
-    	List<Donation> donationList = new ArrayList<>();
-    	Donation donation = Mockito.mock(Donation.class);
-    	donationList.add(donation);
-    
-    	when(donationRepository.getDonationList(any(Donation.class))).thenReturn(null);
-    	assertNull(donationRepository.getDonationList(any(Donation.class)));
+    public void test_Search_For_Donation_Types_Null() {
+        final List<Donation> donationList = new ArrayList<>();
+        final Donation donation = Mockito.mock(Donation.class);
+        donationList.add(donation);
+
+        when(donationRepository.getDonationList(any(Donation.class))).thenReturn(null);
+        assertNull(donationRepository.getDonationList(any(Donation.class)));
     }
-    
-    
-    @Test(expected = Exception.class) //Please revisit this test case
+
+    @Test(expected = Exception.class) // Please revisit this test case
     public void test_Should_Update_Donation() throws Exception {
         final DonationRequest donationRequest = new DonationRequest();
         final RequestInfo requestInfo = new RequestInfo();
@@ -155,8 +152,8 @@ public class DonationServiceTest {
         user.setId(1L);
         requestInfo.setUserInfo(user);
         final Donation donation = new Donation();
-        AuditDetails auditDetails = new AuditDetails();
-        
+        final AuditDetails auditDetails = new AuditDetails();
+
         donation.setActive(true);
         donation.getAuditDetails().setCreatedBy(1L);
         donation.setCategoryTypeId(12);

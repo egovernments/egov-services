@@ -152,23 +152,33 @@ class ApplyLeave extends React.Component {
 
               setTimeout(function() {
                 if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
-                   try{
                       var leaveType = _this.state.leaveSet.leaveType.id;
                       var asOnDate = _this.state.leaveSet.toDate;
                       var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
                       commonApiPost("hr-leave","eligibleleaves","_search",{
                         leaveType,tenantId,asOnDate,employeeid
                       }, function(err, res) {
-                        _this.setState({
-                          leaveSet:{
-                            ..._this.state.leaveSet,
-                            availableDays: res["EligibleLeave"][0].noOfDays
+                        if(res) {
+                          var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                          if( _day <=0 || _day =="") {
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: ""
+                              }
+                            });
+                            return (showError("You do not have leave for this leave type."));
                           }
-                        });
+                          else{
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: res["EligibleLeave"][0].noOfDays
+                              }
+                            });
+                          }
+                        }
                       });
-                    } catch (e){
-                      console.log(e);
-                    }
                 }
               }, 200);
             }
@@ -244,18 +254,34 @@ class ApplyLeave extends React.Component {
       var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
       commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}, function(err, res) {
         if(res) {
-            _this.setState({
-              leaveSet:{
-                ..._this.state.leaveSet,
-                availableDays: res["EligibleLeave"][0].noOfDays,
-                [pName]:{
-                    ..._this.state.leaveSet[pName],
-                    [name]: val
+          var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+              if( _day <=0 || _day ==""){
+                _this.setState({
+                  leaveSet:{
+                    ..._this.state.leaveSet,
+                    availableDays:  "",
+                    [pName]:{
+                        ..._this.state.leaveSet[pName],
+                        [name]:""
+                  }
                 }
+              });
+                  return (showError("You do not have leave for this leave type."));
               }
-            })
-        }
-      });
+              else {
+                _this.setState({
+                  leaveSet:{
+                    ..._this.state.leaveSet,
+                    availableDays: res["EligibleLeave"][0].noOfDays,
+                    [pName]:{
+                        ..._this.state.leaveSet[pName],
+                        [name]:val
+                  }
+                }
+              });
+              }
+            }
+        });
 
 
     } else {
@@ -296,9 +322,14 @@ isFourthSat (d) {
 
 addOrUpdate(e, mode) {
         e.preventDefault();
-        console.log(this.state.leaveNumber);
+        var _this = this;
+
+        if(_this.state.availableDays<=0){
+          return (showError("You do not have leave for this leave type."));
+        }
         var employee;
-        var asOnDate = this.state.leaveSet.toDate;
+        var today = new Date();
+        var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
         var departmentId = this.state.departmentId;
         var leaveNumber = this.state.leaveNumber;
         var owner = this.state.owner;
@@ -336,7 +367,7 @@ addOrUpdate(e, mode) {
                         if (err.LeaveApplication && err.LeaveApplication[0] && err.LeaveApplication[0].errorMsg) {
                           showError(err.LeaveApplication[0].errorMsg);
                         } else {
-                          showError("Leave Application already exists for the same date range provided.");
+                          showError("Something went wrong. Please contact Administrator.");
                         }
                       }
                   });

@@ -95,9 +95,8 @@ public class WaterTransactionProducerConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
- /*   @Bean
-    public WaterTransactionProducer sender() {
-        return new WaterTransactionProducer();
-    } */
+    /*
+     * @Bean public WaterTransactionProducer sender() { return new WaterTransactionProducer(); }
+     */
 
 }

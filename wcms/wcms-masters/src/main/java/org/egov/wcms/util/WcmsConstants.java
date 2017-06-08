@@ -51,8 +51,8 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class WcmsConstants {
 
-	public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
-	public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
+    public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
+    public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
@@ -113,20 +113,23 @@ public class WcmsConstants {
     public static final String FROMTO_MANDATORY_CODE = "wcms.0013";
     public static final String FROMTO_MANDATORY_FIELD_NAME = "fromDate";
     public static final String FROMTO_MANDATORY_ERROR_MESSAGE = "From and To Date are required";
-    
+
     public static final String CODE_MANDATORY_CODE = "wcms.0013";
     public static final String CODE_MANDATORY_FIELD_NAME = "code";
     public static final String CODE_MANDATORY_ERROR_MESSAGE = "Code is required";
-    
+
     public static final String NAME_MANDATORY_CODE = "wcms.0014";
     public static final String NAME_MANDATORY_FIELD_NAME = "name";
     public static final String NAME_MANDATORY_ERROR_MESSAGE = "Name is required";
-    
+
     public static final String CODE_TENANT_UNIQUE_CODE = "wcms.0015";
     public static final String CODE_TENANT_UNQ_FIELD_NAME = "code";
     public static final String CODE_TENANT_UNQ_ERROR_MESSAGE = "Entered combination of Document Code and Tenant ID already exists. Please check!";
-    
-    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE = "wcms.0016";
+
+    @Autowired
+    private Environment environment;
+
+    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE = "wcms.0014";
     public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_ERROR_MESSAGE = "propertyType";
     public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_FIELD_NAME = "PropertyType is required";
 
@@ -141,20 +144,19 @@ public class WcmsConstants {
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_CODE = "wcms.0019";
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME = "sizeInMilimeter";
     public static final String PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_ERROR_MESSAGE = "Please provide valid H.S.C Pipe Size(mm)";
-    
+
     public static final String APPLICATION_TYPE_INVALID_CODE = "wcms.0020";
     public static final String APPLICATION_TYPE_INVALID_FIELD_NAME = "applicationType";
     public static final String APPLICATION_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";
 
-    
     public static final String BILLING_TYPE_INVALID_CODE = "wcms.0021";
     public static final String BILLING_TYPE_INVALID_FIELD_NAME = "billingType";
     public static final String BILLING_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Billing Type";
-    
+
     public static final String CONNECTION_TYPE_INVALID_CODE = "wcms.0022";
     public static final String CONNECTION_TYPE_INVALID_FIELD_NAME = "connectionType";
     public static final String CONNECTION_INVALID_ERROR_MESSAGE = "Please provide valid Connection Type";
-    
+
     public static final String DOCUMENTS_INVALID_CODE = "wcms.0023";
     public static final String DOCUMENTS_INVALID_FIELD_NAME = "documents";
     public static final String DOCUMENTS_INVALID_ERROR_MESSAGE = "Please provide valid Documents";
@@ -162,68 +164,67 @@ public class WcmsConstants {
     public static final String NO_OF_TAPS_INVALID_CODE = "wcms.0024";
     public static final String NO_OF_TAPS_INVALID_FIELD_NAME = "numberOfTaps";
     public static final String NO_OF_TAPS_INVALID_ERROR_MESSAGE = "Please provide valid info for Number of Taps";
-    
+
     public static final String SOURCE_TYPE_INVALID_CODE = "wcms.0025";
     public static final String SOURCE_TYPE_INVALID_FIELD_NAME = "sourceType";
     public static final String SOURCE_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Source Type";
-    
+
     public static final String SUMP_CAPACITY_INVALID_CODE = "wcms.0026";
     public static final String SUMP_CAPACITY_INVALID_FIELD_NAME = "sumpCapacity";
     public static final String SUMP_CAPACITY_INVALID_ERROR_MESSAGE = "Please provide valid Sump Capacity";
-    
+
     public static final String SUPPLY_TYPE_INVALID_CODE = "wcms.0027";
     public static final String SUPPLY_TYPE_INVALID_FIELD_NAME = "supplyType";
     public static final String SUPPLY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Supply Type";
-    
+
     public static final String DOCTYPE_MANDATORY_CODE = "wcms.0028";
     public static final String DOCTYPE_MANADATORY_FIELD_NAME = "documentType";
     public static final String DOCTYPE_MANADATORY_ERROR_MESSAGE = "documentType is required";
-    
-    public static final String VALID_APPLICATION_TYPE_MANDATORY_CODE ="wcms.0029";
-    public static final String VALID_APPLICATION_TYPE_MANADATORY_FIELD_NAME ="applicationType";
-    public static final String VALID_APPLICATION_TYPE_ERROR_MESSAGE ="Application type should valid ";
-    
-    
+
+    public static final String VALID_APPLICATION_TYPE_MANDATORY_CODE = "wcms.0029";
+    public static final String VALID_APPLICATION_TYPE_MANADATORY_FIELD_NAME = "applicationType";
+    public static final String VALID_APPLICATION_TYPE_ERROR_MESSAGE = "Application type should valid ";
+
     public static final String APPLICATION_TYPE_MANDATORY_CODE = "wcms.0030";
     public static final String APPLICATION_TYPE_MANADATORY_FIELD_NAME = "applicationType";
     public static final String APPLICATION_TYPE_ERROR_MESSAGE = "applicationType is required";
-    
+
     public static final String DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE = "wcms.0031";
     public static final String DOCTYPE_APPLICATIONTYPE_UNQ_FIELD_NAME = "documentType and applicationType";
     public static final String DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE = "Entered DocumentType and ApplicationType Combination already exist.";
-    
+
     public static final String DOCUMENTTYPE_NAME_MANDATORY_CODE = "wcms.0032";
     public static final String DOCUMENTTYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String DOCUMENTTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Document Type is required";
-    
+
     public static final String DOCUMENTTYPE_NAME_UNIQUE_CODE = "wcms.0033";
     public static final String DOCUMENTTYPE_NAME_UNQ_FIELD_NAME = "name";
     public static final String DOCUMENTTYPE_UNQ_ERROR_MESSAGE = "Entered Document Type already exist";
-    
+
     public static final String PROPERTY_CATEGORY_INVALID_CODE = "wcms.0034";
     public static final String PROPERTY_CATEGORY_INVALID_FIELD_NAME = "propertyType - categoryType";
     public static final String PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE = "Property Type - Category Type values don't match.";
-    
+
     public static final String PROPERTY_USAGE_INVALID_CODE = "wcms.0035";
     public static final String PROPERTY_USAGE_INVALID_FIELD_NAME = "propertyType - usageType";
     public static final String PROPERTY_USAGE_INVALID_ERROR_MESSAGE = "Property Type - Usage Type values don't match.";
-    
+
     public static final String DOCUMENT_APPLICATION_INVALID_CODE = "wcms.0036";
     public static final String DOCUMENT_APPLICATION_INVALID_FIELD_NAME = "documentType - applicationType";
     public static final String DOCUMENT_APPLICATION_INVALID_ERROR_MESSAGE = "Document Type - Application Type values don't match.";
-    
+
     public static final String STATIC_INVALID_CODE = "wcms.0037";
     public static final String STATIC_INVALID_FIELD_NAME = "enums";
     public static final String STATIC_INVALID_ERROR_MESSAGE = "Please check: connection, supply, source or billing type.";
-    
+
     public static final String BPL_INVALID_CODE = "wcms.0038";
     public static final String BPL_INVALID_FIELD_NAME = "bplCardHolderName";
     public static final String BPL_INVALID_ERROR_MESSAGE = "BPL Card Holder Name is invalid!";
-    
+
     public static final String DONATION_INVALID_CODE = "wcms.0039";
     public static final String DONATION_INVALID_FIELD_NAME = "donationAmount";
     public static final String DONATION_INVALID_ERROR_MESSAGE = "Donation Amount couldn't be generated, Please check data";
-    
+
     public static final String WATERSOURCETYPE_NAME_UNIQUE_CODE = "wcms.0034";
     public static final String WATERSOURCETYPE_NAME_UNQ_FIELD_NAME = "name";
     public static final String WATERSOURCETYPE_UNQ_ERROR_MESSAGE = "Entered Water Source Type  already exist";
@@ -231,11 +232,6 @@ public class WcmsConstants {
     public static final String WATERSOURCETYPE_NAME_MANDATORY_CODE = "wcms.0035";
     public static final String WATERSOURCETYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String WATERSOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Water Source Type is required";
-
- 
-
-    @Autowired
-    private Environment environment;
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

@@ -1,7 +1,12 @@
 package org.egov.egf;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.egf.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.egf.web.interceptor.CorrelationIdInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +23,21 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 public class FinancialsApplication {
+	
+	@Value("${app.timezone}")
+ 	private String timeZone;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FinancialsApplication.class, args);
 	}
+		
+
+		@PostConstruct
+		public void initialize() {
+			TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+		}
+		 
+
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
@@ -30,7 +46,7 @@ public class FinancialsApplication {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		// mapper.setDateFormat(std);
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

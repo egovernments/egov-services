@@ -46,28 +46,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ConnectionType {
-PERMANENT("PERMANENT"), TEMPORARY("TEMPORARY");
+    PERMANENT("PERMANENT"), TEMPORARY("TEMPORARY");
 
-private String value;
+    private String value;
 
-ConnectionType(String value) {
-this.value = value;
-}
+    ConnectionType(final String value) {
+        this.value = value;
+    }
 
-@Override
-@JsonValue
-public String toString() {
-return StringUtils.capitalize(name());
-}
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-@JsonCreator
-public static ConnectionType fromValue(String passedValue) {
-for (ConnectionType obj : ConnectionType.values()) {
-if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-return obj;
+    @JsonCreator
+    public static ConnectionType fromValue(final String passedValue) {
+        for (final ConnectionType obj : ConnectionType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }
-}
-return null;
-}
-}
-

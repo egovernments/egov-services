@@ -52,7 +52,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @Service
 public class MeterCostService {
 
@@ -64,30 +63,26 @@ public class MeterCostService {
     @Autowired
     private WaterMasterProducer waterMasterProducer;
 
-    
-    
     public MeterCostRequest create(final MeterCostRequest meterCostRequest) {
         return meterCostRepository.persistCreateMeterCost(meterCostRequest);
     }
-    
-    
-    public MeterCost createMeterCost(final String topic,final String key,final MeterCostRequest meterCostRequest) {
-    //	meterCostRequest.getMeterCost().setCode(codeGeneratorService.generate(meterCostRequest.getMeterCost().SEQ_METERCOST));
+
+    public MeterCost createMeterCost(final String topic, final String key, final MeterCostRequest meterCostRequest) {
+        // meterCostRequest.getMeterCost().setCode(codeGeneratorService.generate(meterCostRequest.getMeterCost().SEQ_METERCOST));
         final ObjectMapper mapper = new ObjectMapper();
-        
-        
+
         String meterCostValue = null;
         try {
             logger.info("createMeterCost service::" + meterCostRequest);
             meterCostValue = mapper.writeValueAsString(meterCostRequest);
             logger.info("meterCostValue::" + meterCostValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Exception Encountered : " + e);
         }
         try {
-        	waterMasterProducer.sendMessage(topic,key,meterCostValue);
+            waterMasterProducer.sendMessage(topic, key, meterCostValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+            logger.error("Exception Encountered : " + ex);
         }
         return meterCostRequest.getMeterCost();
     }

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.mr.model.enums.RegnStatus;
+import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.Source;
 import org.egov.mr.model.enums.Venue;
 import org.springframework.stereotype.Component;
@@ -66,21 +66,31 @@ public class MarriageRegn {
 
 	private String applicationNumber;
 	
-	private String registrationNumber;
+	private String regnNumber;
+	
+	private Long regnDate;
 
-	private RegnStatus status;
+	private ApplicationStatus status;
 
 	private Source source;
 
 	private String stateId;
 
 	private ApprovalDetails approvalDetails;
+	
+	private String rejectionReason;
+	
+	private String remarks;
 
 	private List<MarriageCertificate> certificates = new ArrayList<>();
 	
 	private List<Long> demands = new ArrayList<Long>();
 
 	private List<String> actions = new ArrayList<String>();
+	
+	private AuditDetails auditDetails;
+	
+	private Boolean isActive;
 
 	@NotNull
 	private String tenantId;

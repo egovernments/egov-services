@@ -186,14 +186,16 @@ public class PaymentService {
 			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 			int orderNo = 0;
 			System.out.print("PaymentService- generateBillXml - getting purpose");
-			Map<String, String> purposeMap = billRepository.getPurpose();
+			Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-				if (demandDetail.getTaxReason().equals("Advance Tax")
-						|| demandDetail.getTaxReason().equals("Goodwill Amount")
+				LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
+				if ("ADVANCE TAX".equalsIgnoreCase(demandDetail.getTaxReason())
+						|| "GOODWILL AMOUNT".equalsIgnoreCase(demandDetail.getTaxReason())
 						|| (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
 					orderNo++;
 					totalAmount = totalAmount
 							.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+					LOGGER.info("the amount added to bill : "+totalAmount);
 					billDetailInfos
 							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
 				}
@@ -362,7 +364,7 @@ public class PaymentService {
 		BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
 		BigDecimal arrearAmount = BigDecimal.ZERO;
 		System.out.print("PaymentService- receiptAmountBifurcation - getting purpose");
-		Map<String, String> purposeMap = billRepository.getPurpose();
+		Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
 		final List<BillDetailInfo> billDetails = new ArrayList<>(billInfo.getBillDetailInfos());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - " + rcptAccInfo);

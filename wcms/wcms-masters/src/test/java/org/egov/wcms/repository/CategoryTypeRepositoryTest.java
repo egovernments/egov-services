@@ -116,7 +116,7 @@ public class CategoryTypeRepositoryTest {
 
     @Test
     public void test_Should_Find_ConnectionCategory_Valid() {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final CategoryTypeGetRequest categoryGetRequest = Mockito.mock(CategoryTypeGetRequest.class);
         final String queryString = "MyQuery";
         when(categoryQueryBuilder.getQuery(categoryGetRequest, preparedStatementValues)).thenReturn(queryString);

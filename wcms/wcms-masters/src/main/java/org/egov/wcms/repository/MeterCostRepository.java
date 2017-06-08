@@ -44,7 +44,6 @@ import java.sql.Date;
 
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.builder.MeterCostQueryBuilder;
-import org.egov.wcms.repository.rowmapper.MeterCostRowMapper;
 import org.egov.wcms.web.contract.MeterCostRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,21 +59,17 @@ public class MeterCostRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private MeterCostQueryBuilder meterCostQueryBuilder;
-
-    @Autowired
-    private MeterCostRowMapper meterCostRowMapper;
-
     public MeterCostRequest persistCreateMeterCost(final MeterCostRequest meterCostRequest) {
         LOGGER.info("MeterCostRequest::" + meterCostRequest);
-        final String meterCostInsert = meterCostQueryBuilder.insertMeterCostQuery();
+        final String meterCostInsert = MeterCostQueryBuilder.insertMeterCostQuery();
         final MeterCost meterCost = meterCostRequest.getMeterCost();
-        Object[] obj = new Object[] {meterCost.getPipeSize(),meterCost.getMeterMake(),meterCost.getAmount(),meterCost.getActive(),Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()),meterCost.getTenantId() };
+        final Object[] obj = new Object[] { meterCost.getPipeSize(), meterCost.getMeterMake(), meterCost.getAmount(),
+                meterCost.getActive(), Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), meterCost.getTenantId() };
 
         jdbcTemplate.update(meterCostInsert, obj);
         return meterCostRequest;
     }
-    
+
 }

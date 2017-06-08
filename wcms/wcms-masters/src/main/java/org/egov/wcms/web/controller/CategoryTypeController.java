@@ -99,13 +99,13 @@ public class CategoryTypeController {
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("categoryRequest::" + categoryRequest);
 
         final List<ErrorResponse> errorResponses = validateCategoryRequest(categoryRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final CategoryType category = categoryService.createCategory(applicationProperties.getCreateCategoryTopicName(),
                 "category-create", categoryRequest);
@@ -121,14 +121,14 @@ public class CategoryTypeController {
             final BindingResult errors, @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("categoryRequest::" + categoryRequest);
         categoryRequest.getCategory().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateCategoryRequest(categoryRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final CategoryType category = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),
                 "category-update", categoryRequest);
@@ -259,7 +259,12 @@ public class CategoryTypeController {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         categoryResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<CategoryTypeResponse>(categoryResponse, HttpStatus.OK);
+        try {
+
+        } catch (final Exception e) {
+            logger.error("Exception Encountered : " + e);
+        }
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
 
     }
 

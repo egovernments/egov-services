@@ -21,6 +21,6 @@ public class EscalationJobTest {
 
         escalationJob.escalate();
 
-        verify(escalationService).escalateComplaint();
+        verify(escalationService).escalateComplaintForAllTenants();;
     }
 }

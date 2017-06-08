@@ -70,70 +70,70 @@ public class DonationRepositoryTest {
 
     @Mock
     private DonationRowMapper donationRowMapper;
-    
+
     @InjectMocks
     private DonationRepository donationRepository;
-    
+
     @Test
     public void test_Should_Create_Donation_Valid() {
-    	DonationRequest donationRequest = getDonationRequest();
+        final DonationRequest donationRequest = getDonationRequest();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(donationRequest.equals(donationRepository.persistDonationDetails(donationRequest)));
     }
-    
+
     @Test
     public void test_Should_Create_Donation_Invalid() {
-    	DonationRequest donationRequest = getDonationRequest();
-    	Donation donation = donationRequest.getDonation();
+        final DonationRequest donationRequest = getDonationRequest();
+        final Donation donation = donationRequest.getDonation();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(!donation.equals(donationRepository.persistDonationDetails(donationRequest)));
     }
-    
+
     @Test
-	public void test_Should_Find_Donation_Valid() {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		DonationRequest donationRequest = getDonationRequest();
-    	Donation donation = donationRequest.getDonation();
-		String queryString = "MyQuery" ;
-		List<Donation> donations = new ArrayList<>();
-		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), donationRowMapper))
-				.thenReturn(donations);
+    public void test_Should_Find_Donation_Valid() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final DonationRequest donationRequest = getDonationRequest();
+        final Donation donation = donationRequest.getDonation();
+        final String queryString = "MyQuery";
+        final List<Donation> donations = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), donationRowMapper))
+                .thenReturn(donations);
 
-		assertTrue(
-				donations.equals(donationRepository.getDonationList(donation)));
-	}
-
-    private DonationRequest getDonationRequest(){
-    	DonationRequest donationReq = new DonationRequest();
-    	Donation donation = new Donation();
-    	donation.setCategoryTypeId(1);
-    	donation.setPropertyTypeId(2);
-    	donation.setUsageTypeId(3);
-    	donation.setMaxHSCPipeSizeId(123);
-    	donation.setMinHSCPipeSizeId(12);
-    	donation.setFromDate(new Date());
-    	donation.setToDate(new Date());
-    	
-    	donation.setActive(true);
-    	RequestInfo requestInfo = new RequestInfo();
-    	User newUser = new User();
-    	newUser.setId(2L);
-    	requestInfo.setUserInfo(newUser);
-    	donationReq.setRequestInfo(requestInfo);
-    	donationReq.setDonation(donation);
-    	return donationReq;
+        assertTrue(
+                donations.equals(donationRepository.getDonationList(donation)));
     }
-	
-	@Test
-	public void test_Should_Modify_Donation() throws Exception{
-        DonationRequest donationRequest = new DonationRequest();
-        
-        RequestInfo requestInfo = new RequestInfo();
-        User user = new User();
+
+    private DonationRequest getDonationRequest() {
+        final DonationRequest donationReq = new DonationRequest();
+        final Donation donation = new Donation();
+        donation.setCategoryTypeId(1);
+        donation.setPropertyTypeId(2);
+        donation.setUsageTypeId(3);
+        donation.setMaxHSCPipeSizeId(123);
+        donation.setMinHSCPipeSizeId(12);
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
+
+        donation.setActive(true);
+        final RequestInfo requestInfo = new RequestInfo();
+        final User newUser = new User();
+        newUser.setId(2L);
+        requestInfo.setUserInfo(newUser);
+        donationReq.setRequestInfo(requestInfo);
+        donationReq.setDonation(donation);
+        return donationReq;
+    }
+
+    @Test
+    public void test_Should_Modify_Donation() throws Exception {
+        final DonationRequest donationRequest = new DonationRequest();
+
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        Donation donation = new  Donation();
-        AuditDetails auditDetails = new AuditDetails();
+        final Donation donation = new Donation();
+        final AuditDetails auditDetails = new AuditDetails();
         donation.setAuditDetails(auditDetails);
         donation.setActive(true);
         donation.setCategoryTypeId(12);
@@ -146,16 +146,16 @@ public class DonationRepositoryTest {
         donation.getAuditDetails().setCreatedBy(1L);
         donationRequest.setRequestInfo(requestInfo);
         donationRequest.setDonation(donation);
-        
+
         assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
-        
-	}
-	
-	@Test(expected = Exception.class)
-	public void test_throwException_Modify_Donation() throws Exception{
-        DonationRequest donationRequest = new DonationRequest();
-        RequestInfo requestInfo = new RequestInfo();
-        Donation donation = new Donation();
+
+    }
+
+    @Test(expected = Exception.class)
+    public void test_throwException_Modify_Donation() throws Exception {
+        final DonationRequest donationRequest = new DonationRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final Donation donation = new Donation();
         donation.setActive(true);
         donation.getAuditDetails().setCreatedBy(1L);
         donation.setCategoryTypeId(12);
@@ -165,12 +165,12 @@ public class DonationRepositoryTest {
         donation.setToDate(new Date());
         donation.setMaxHSCPipeSizeId(123);
         donation.setMinHSCPipeSizeId(234);
-        
+
         donationRequest.setRequestInfo(requestInfo);
         donationRequest.setDonation(donation);
-        
+
         assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
-        
-	}
-    
+
+    }
+
 }

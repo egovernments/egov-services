@@ -39,20 +39,19 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
-import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.egov.wcms.model.PropertyTypeCategoryType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PropertyCategoryRowMapper implements RowMapper<PropertyTypeCategoryType> {
     @Override
-    public PropertyTypeCategoryType mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public PropertyTypeCategoryType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-        PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
+        final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
         propertyCategory.setId(rs.getLong("id"));
         propertyCategory.setPropertyTypeId(rs.getLong("property_type_Id"));
         propertyCategory.setCategoryTypeId(rs.getLong("category_type_Id"));

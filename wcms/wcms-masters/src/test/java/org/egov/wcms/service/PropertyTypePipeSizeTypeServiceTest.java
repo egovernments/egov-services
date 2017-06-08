@@ -78,8 +78,10 @@ public class PropertyTypePipeSizeTypeServiceTest {
     public void test_Should_Search_PropertyPipeSize() {
         final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
         propertyPipeSizes.add(getPropertyPipeSize());
-        when(propertyPipeSizeRepository.findForCriteria(any(PropertyTypePipeSizeTypeGetRequest.class))).thenReturn(propertyPipeSizes);
-        assertTrue(propertyPipeSizes.equals(propertyPipeSizeService.getPropertyPipeSizes(any(PropertyTypePipeSizeTypeGetRequest.class))));
+        when(propertyPipeSizeRepository.findForCriteria(any(PropertyTypePipeSizeTypeGetRequest.class)))
+                .thenReturn(propertyPipeSizes);
+        assertTrue(propertyPipeSizes
+                .equals(propertyPipeSizeService.getPropertyPipeSizes(any(PropertyTypePipeSizeTypeGetRequest.class))));
     }
 
     @Test

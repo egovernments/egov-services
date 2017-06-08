@@ -11,6 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import DataTable from '../common/Table';
+import Api from '../../api/financialsApi';
 
 const styles = {
   errorStyle: {
@@ -35,6 +36,13 @@ class ViewFunction extends Component {
   componentDidMount() {
     let {initForm} = this.props;
     initForm();
+
+    Api.commonApiPost("egf-masters", "functionaries", "_search").then(function(response)
+    {
+    console.log(response);
+    },function(err) {
+    console.log(err);
+    });
   }
 
   componentWillUnmount() {

@@ -1,0 +1,96 @@
+{
+	"responseInfo": 
+	{
+		"resMsgId": "msgId",
+		"status": "200",
+		"apiId": "123456789",
+		"ver": "159",
+		"ts": null,
+		"key": "key",
+		"tenantId": "2720"
+	},
+
+	"regnUnits": 
+	[
+		{
+			"id": 26,
+			"code": "KA",
+			"name": "Koramangala",
+			"address": 
+			{
+				"locality": 60,
+				"zone": 147896325,
+				"revenueWard": 150,
+				"block": 14788,
+				"street": 159632478,
+				"electionWard": 123456789,
+				"doorNo": "132",
+				"pinCode": 560103
+			},
+
+			"isActive": true,
+			"tenantId": "KA.BANGALORE",
+			"auditDetails": 
+			{
+				"createdBy": "123",
+				"lastModifiedBy": "159",
+				"createdTime": 156,
+				"lastModifiedTime": 147
+			}
+		},
+
+		{
+			"id": 27,
+			"code": "KA",
+			"name": "JP Nagar",
+			"address": 
+			{
+				"locality": 60,
+				"zone": 147896325,
+				"revenueWard": 150,
+				"block": 14788,
+				"street": 159632478,
+				"electionWard": 123456789,
+				"doorNo": "132",
+				"pinCode": 560103
+			},
+
+			"isActive": true,
+			"tenantId": "KA.BANGALORE",
+			"auditDetails": 
+			{
+				"createdBy": "123",
+				"lastModifiedBy": "159",
+				"createdTime": 156,
+				"lastModifiedTime": 147
+			}
+		},
+
+		{
+			"id": 28,
+			"code": "KA",
+			"name": "Jaya Nagar",
+			"address": 
+			{
+				"locality": 60,
+				"zone": 147896325,
+				"revenueWard": 150,
+				"block": 14788,
+				"street": 159632478,
+				"electionWard": 123456789,
+				"doorNo": "132",
+				"pinCode": 560103
+			},
+
+			"isActive": true,
+			"tenantId": "KA.BANGALORE",
+			"auditDetails": 
+			{
+				"createdBy": "123",
+				"lastModifiedBy": "159",
+				"createdTime": 156,
+				"lastModifiedTime": 147
+			}
+		}
+	]
+}

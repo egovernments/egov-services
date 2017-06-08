@@ -311,17 +311,24 @@ definitions:
         type: boolean
         format: varchar
         description: TRUE for active Document Names and FALSE for inactive Document Names.
+      typeId:
+        type: integer
+        format: varchar
+        description: Document TypeId
+        
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
       tenantId:
         type: string
         readOnly: true
-        description: Unique Identifier of the tenant
+        description: Unique Identifier of the 
+        
     required:
       - id
       - active
       - name
       - description
+      - typeId
       - tenantId
   
   DocumentOwner:

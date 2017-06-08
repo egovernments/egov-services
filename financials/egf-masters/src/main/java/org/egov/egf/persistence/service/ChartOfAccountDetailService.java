@@ -99,7 +99,7 @@ public class ChartOfAccountDetailService {
 	@Transactional
 	public ChartOfAccountDetailContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("ChartOfAccountDetailCreate"),
+				.convertValue(financialContractRequestMap.get("ChartOfAccountDetailUpdateAll"),
 						ChartOfAccountDetailContractRequest.class);
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();
 		chartOfAccountDetailContractResponse.setChartOfAccountDetails(new ArrayList<ChartOfAccountDetailContract>());

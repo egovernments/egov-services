@@ -306,7 +306,7 @@ class CreateAsset extends React.Component {
     $("#relatedAssetsModal").modal("hide");
     setTimeout(function(){
       $("#newRelAssetMdl").modal("show");
-    }, 200);
+    }, 500);
   }
 
   removeReference(e) {
@@ -419,7 +419,7 @@ class CreateAsset extends React.Component {
               'auth-token' :authToken
           },
           success: function(res) {
-            $("newRelAssetMdl").modal("hide");
+            $("#newRelAssetMdl").modal("hide");
             showSuccess("Related asset added successfully.");
           },
           error: function(err) {
@@ -1017,7 +1017,7 @@ class CreateAsset extends React.Component {
           relatedAssets: res["Assets"]
         })
       }
-    })
+    });
 
     $("#relatedAssetsModal").modal('show');
   }
@@ -1654,7 +1654,7 @@ class CreateAsset extends React.Component {
     const showDelBtn = function() {
       if(getUrlVars()["type"] != "view")
         return (
-          <button className="btn btn-danger btn-close" onClick={(e) => {removeReferenceConfirm(e, item)}}>Delete</button>
+          <button type="button" className="btn btn-danger btn-close" onClick={(e) => {removeReferenceConfirm(e, item)}}>Delete</button>
         )
     }
 

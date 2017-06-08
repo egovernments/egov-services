@@ -320,6 +320,10 @@ class CreateAsset extends React.Component {
         Asset: Object.assign({}, this.state.removeAsset)
       };
       body.Asset.assetReference = "";
+      if(body.Asset.dateOfCreation) {
+        var _date = body.Asset.dateOfCreation.split("-");
+        body.Asset.dateOfCreation = _date[2] + "/" + _date[1] + "/" + _date[2];
+      }
 
       $.ajax({
           url: baseUrl + "/asset-services/assets/_update/"+ _this.state.removeAsset.code + "?tenantId=" + tenantId,
@@ -396,6 +400,11 @@ class CreateAsset extends React.Component {
     if($('#newRelAssetMdl').hasClass('in')) {
       var newAsset = Object.assign({}, asset);
       newAsset.assetReference = this.state.assetSet.id;
+      if(newAsset.dateOfCreation) {
+        var _date = newAsset.dateOfCreation.split("-");
+        newAsset.dateOfCreation = _date[2] + "/" + _date[1] + "/" + _date[2];
+      }
+
       var body = {
         RequestInfo: requestInfo,
         Asset: newAsset
@@ -1642,6 +1651,13 @@ class CreateAsset extends React.Component {
       }
     }
 
+    const showDelBtn = function() {
+      if(getUrlVars()["type"] != "view")
+        return (
+          <button className="btn btn-danger btn-close" onClick={(e) => {removeReferenceConfirm(e, item)}}>Delete</button>
+        )
+    }
+
     const renderRelatedBody = function() {
       if (relatedAssets.length > 0) {
         relatedAssets.sort(function(item1, item2) {
@@ -1656,7 +1672,7 @@ class CreateAsset extends React.Component {
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
                         <td>
-                          <button className="btn btn-danger btn-close" onClick={(e) => {removeReferenceConfirm(e, item)}}>Delete</button>
+                          {showDelBtn()}
                         </td>
                       </tr>
               );
@@ -1719,6 +1735,14 @@ class CreateAsset extends React.Component {
         return (
           <button className="btn btn-submit" onClick={(e)=>{openRelatedAssetMdl(e)}}>Related Assets</button>
         );
+      }
+    }
+
+    const showAddNewBtn = function() {
+      if(getUrlVars()["type"] != "view") {
+        return (
+          <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={(e) => openNewRelAssetMdl(e)}>Add New</button>
+        )
       }
     }
 
@@ -2145,7 +2169,7 @@ class CreateAsset extends React.Component {
                 {renderRelatedTable()}
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={(e) => openNewRelAssetMdl(e)}>Add New</button>
+                {showAddNewBtn()}
                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
               </div>
             </div>

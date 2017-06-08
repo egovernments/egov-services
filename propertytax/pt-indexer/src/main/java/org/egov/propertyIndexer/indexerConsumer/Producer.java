@@ -16,6 +16,11 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
 
+/*
+ * This class will use for sending property object to kafka server
+ * 
+ */
+
 @Configuration
 @Service
 public class Producer {
@@ -26,7 +31,9 @@ public class Producer {
 	@Autowired
 	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
 
-
+	/*
+	 * This method will return map object for producer configuration
+	 */
 
 	@Bean
 	public Map<String,Object> producerConfig(){
@@ -37,15 +44,29 @@ public class Producer {
 		return producerProperties;
 	}
 
+	/*
+	 * This method will return producer factory bean based on producer configuration
+	 */
+
 	@Bean
 	public ProducerFactory<String, PropertyRequest> producerFactory(){
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
+	/*
+	 * This method will return kafka template bean based on  producer factory bean
+	 */
+
 	@Bean
 	public KafkaTemplate<String, PropertyRequest> kafkaTemplate(){
 		return new KafkaTemplate<>(producerFactory());
 	}
+
+	/*
+	 * This method will send object to kafka server based on topic name
+	 * topic: name of topic
+	 * propertyRequest:PropertyRequest object
+	 */
 
 	public void send(String topic,PropertyRequest propertyRequest){
 		kafkaTemplate.send(topic, propertyRequest);

@@ -1,7 +1,6 @@
 package org.egov.models;
 
-import java.util.Date;
-
+import org.egov.models.ResponseInfo.StatusEnum;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,10 +16,10 @@ public class ResponseInfoFactory {
 		String ver = requestInfo.getVer();
 		String ts = null;
 		if (requestInfo.getTs() != null)
-			ts =String.valueOf(new Date().getTime());
+			ts = requestInfo.getTs().toString();
 		String resMsgId = "uief87324"; // FIXME : Hard-coded
 		String msgId = requestInfo.getMsgId();
-		String responseStatus = success ? "SUCCESSFUL" :"";
-			return new ResponseInfo(apiId, ver, ts, resMsgId, msgId,responseStatus);
+		String responseStatus = success ? StatusEnum.SUCCESSFUL.toString() : StatusEnum.FAILED.toString();
+			return new ResponseInfo(apiId, ver, Long.valueOf(ts), resMsgId, msgId,responseStatus);
 	}
 }

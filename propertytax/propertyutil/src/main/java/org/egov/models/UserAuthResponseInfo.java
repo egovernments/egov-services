@@ -1,11 +1,14 @@
 package org.egov.models;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * <h1>UserAuthResponseInfo</h1>
+ * @author Narendra
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

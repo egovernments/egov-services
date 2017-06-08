@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component;
 import lombok.Getter;
 import lombok.Setter;
 
-
+/**
+ * This class contains all list of master details
+ * @author Narendra
+ *
+ */
 
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix="masterList",ignoreUnknownFields=true)

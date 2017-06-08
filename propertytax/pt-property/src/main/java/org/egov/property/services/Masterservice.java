@@ -1,5 +1,7 @@
 package org.egov.property.services;
 
+import org.egov.models.DepartmentRequest;
+import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.RequestInfo;
 import org.egov.property.model.MasterModel;
 
@@ -30,6 +32,8 @@ public interface Masterservice {
 	public MasterModel getMutationRateMaster(String tenantId,String code,RequestInfo requestInfo) throws Exception;
 
 	public MasterModel getDocumentTypeMaster(String tenantId,String code,RequestInfo requestInfo) throws Exception;
+
+	public DepartmentResponseInfo createDepartmentMaster(String tenantId, DepartmentRequest departmentRequest);
 	
 	
 }

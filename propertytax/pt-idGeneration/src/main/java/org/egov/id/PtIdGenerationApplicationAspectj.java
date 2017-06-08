@@ -14,6 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * This is aspectj class for idGeneration 
+ * 
+ * @author S Anilkumar
+ * 
+ */
+
 @Aspect
 @Component
 public class PtIdGenerationApplicationAspectj {
@@ -94,7 +101,9 @@ public class PtIdGenerationApplicationAspectj {
 	}
 
 
-
+	/*
+	 * This method for returing string value of object
+	 */
 	private String getValue(Object result) {
 
 		String returnValue = null;

@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.service;
 
+import static org.mockito.Matchers.endsWith;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -87,12 +89,12 @@ public class DonationService {
 
             logger.info("Donation Request Value::" + donationRequestValue);
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Exception Encountered : " + e);
         }
         try {
             waterMasterProducer.sendMessage(topic, key, donationRequestValue);
         } catch (final Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Exception Encountered : " + ex);
         }
         return donationRequest.getDonation();
     }

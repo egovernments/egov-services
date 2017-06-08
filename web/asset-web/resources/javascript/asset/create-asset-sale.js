@@ -440,11 +440,11 @@ class Sale extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Disposal Party Address </label>
+                              <label>Disposal Party Address <span> *</span> </label>
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <input type="text" value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")}/>
+                              <input type="text" value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required/>
                             </div>
                           </div>
                         </div>

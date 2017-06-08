@@ -264,7 +264,8 @@ class CreateAsset extends React.Component {
         readonly: false,
         newRows: {},
         references: [],
-        relatedAssets: []
+        relatedAssets: [],
+        removeAsset: ""
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -278,10 +279,86 @@ class CreateAsset extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.openRelatedAssetMdl = this.openRelatedAssetMdl.bind(this);
+    this.removeReferenceConfirm = this.removeReferenceConfirm.bind(this);
+    this.removeReference = this.removeReference.bind(this);
+    this.openNewRelAssetMdl = this.openNewRelAssetMdl.bind(this);
+
   }
+
   close() {
       // widow.close();
       open(location, '_self').close();
+  }
+
+  removeReferenceConfirm(e, asset) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      ...this.state,
+      removeAsset: Object.assign({}, asset)
+    });
+
+    $("#confirmDeleteMdl").modal("show");
+  }
+
+  openNewRelAssetMdl(e) {
+    e.preventDefault();
+    $("#relatedAssetsModal").modal("hide");
+    setTimeout(function(){
+      $("#newRelAssetMdl").modal("show");
+    }, 200);
+  }
+
+  removeReference(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if(this.state.removeAsset) {
+      $("#confirmDeleteMdl").modal("hide");
+      var _this = this;
+      var body = {
+        RequestInfo: requestInfo,
+        Asset: Object.assign({}, this.state.removeAsset)
+      };
+      body.Asset.assetReference = "";
+
+      $.ajax({
+          url: baseUrl + "/asset-services/assets/_update/"+ _this.state.removeAsset.code + "?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify(body),
+          contentType: 'application/json',
+          headers:{
+              'auth-token': authToken
+          },
+          success: function(res) {
+            var relatedAssets = _this.state.relatedAssets;
+            for(var i=0;i<relatedAssets.length;i++) {
+              if(body.Asset.id == relatedAssets[i].id) {
+                relatedAssets.splice(i, 1);
+                break;
+              }
+            }
+            _this.setState({
+              removeAsset: "",
+              relatedAssets
+            });
+          },
+          error: function(err) {
+            console.log(err);
+            var _err = err["responseJSON"].Error.message || "";
+            if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+              for(var key in err["responseJSON"].Error.fields) {
+                _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+              }
+              showError(_err);
+            } else if(_err) {
+              showError(_err);
+            } else {
+              showError(err["statusText"]);
+            }
+          }
+      })
+    }
   }
 
   handleClick(asset) {
@@ -316,25 +393,62 @@ class CreateAsset extends React.Component {
   selectRef(e, asset) {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({
-      assetSet: {
-        ...this.state.assetSet,
-        assetReference: asset.id,
-        assetReferenceName: asset.name,
-        locationDetails: asset.locationDetails
-      },
-      refSet: {
-        tenantId: tenantId,
-        name: "",
-        department: "",
-        assetCategory: "",
-        status: "",
-        code: ""
-      },
-      references: []
-    });
-    flag = 1;
-    $("#refModal").modal("hide");
+    if($('#newRelAssetMdl').hasClass('in')) {
+      var newAsset = Object.assign({}, asset);
+      newAsset.assetReference = this.state.assetSet.id;
+      var body = {
+        RequestInfo: requestInfo,
+        Asset: newAsset
+      };
+      $.ajax({
+          url: baseUrl + "/asset-services/assets/_update/" + newAsset.code + "?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify(body),
+          contentType: 'application/json',
+          headers:{
+              'auth-token' :authToken
+          },
+          success: function(res) {
+            $("newRelAssetMdl").modal("hide");
+            showSuccess("Related asset added successfully.");
+          },
+          error: function(err) {
+            console.log(err);
+            var _err = err["responseJSON"].Error.message || "";
+            if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+              for(var key in err["responseJSON"].Error.fields) {
+                _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+              }
+              showError(_err);
+            } else if(_err) {
+              showError(_err);
+            } else {
+              showError(err["statusText"]);
+            }
+          }
+      })
+    } else {
+      this.setState({
+        assetSet: {
+          ...this.state.assetSet,
+          assetReference: asset.id,
+          assetReferenceName: asset.name,
+          locationDetails: asset.locationDetails
+        },
+        refSet: {
+          tenantId: tenantId,
+          name: "",
+          department: "",
+          assetCategory: "",
+          status: "",
+          code: ""
+        },
+        references: []
+      });
+      flag = 1;
+      $("#refModal").modal("hide");
+    }
   }
 
   componentWillUpdate() {
@@ -895,6 +1009,7 @@ class CreateAsset extends React.Component {
         })
       }
     })
+
     $("#relatedAssetsModal").modal('show');
   }
 
@@ -917,7 +1032,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
+    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl} = this;
     let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets} = this.state;
     let {
       assetCategory,
@@ -1465,7 +1580,7 @@ class CreateAsset extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="grossValue" name="grossValue" value= {grossValue}
-                          onChange={(e)=>{handleChange(e,"grossValue")}} min="1" maxlength="16" step="0.01" disabled={readonly}/>
+                          onChange={(e)=>{handleChange(e,"grossValue")}} min="1" maxlength="16" disabled={readonly}/>
                     </div>
                   </div>
               </div>
@@ -1476,7 +1591,7 @@ class CreateAsset extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="accumulatedDepreciation" name="accumulatedDepreciation" value= {accumulatedDepreciation}
-                          onChange={(e)=>{handleChange(e, "accumulatedDepreciation")}} min="1" maxlength="16" step="0.01" disabled={readonly}/>
+                          onChange={(e)=>{handleChange(e, "accumulatedDepreciation")}} min="1" maxlength="16" disabled={readonly}/>
                     </div>
                   </div>
               </div>
@@ -1540,6 +1655,9 @@ class CreateAsset extends React.Component {
                         <td>{item.assetCategory.name}</td>
                         <td>{getNameById(departments, item.department.id)}</td>
                         <td>{item.status}</td>
+                        <td>
+                          <button className="btn btn-danger btn-close" onClick={(e) => {removeReferenceConfirm(e, item)}}>Delete</button>
+                        </td>
                       </tr>
               );
         })
@@ -1558,6 +1676,7 @@ class CreateAsset extends React.Component {
                   <th>Asset Category Type</th>
                   <th>Department</th>
                   <th>Status</th>
+                  <th>Action</th>
               </tr>
               </thead>
               <tbody id="tblRef">
@@ -2024,6 +2143,121 @@ class CreateAsset extends React.Component {
               </div>
               <div className="modal-body">
                 {renderRelatedTable()}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={(e) => openNewRelAssetMdl(e)}>Add New</button>
+                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" tabindex="-1" role="dialog" id="confirmDeleteMdl">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title">Confirm</h4>
+              </div>
+              <div className="modal-body">
+                Are you sure you want to continue ?
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary" onClick={(e) => {removeReference(e)}}>Yes</button>
+                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" tabindex="-1" role="dialog" id="newRelAssetMdl">
+          <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title">Add New Related Asset</h4>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={(e) => {handleRefSearch(e)}}>
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.department">Department </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div>
+                              <select id="refSet.department" name="refSet.department" value={refSet.department} onChange={(e) => {handleReferenceChange(e, "department")}}>
+                                    <option value="">Select Department</option>
+                                    {renderOption(this.state.departments)}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.assetCategory">Asset Category </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div>
+                              <select id="refSet.assetCategory" name="refSet.assetCategory" value={refSet.assetCategory} onChange={(e) => {handleReferenceChange(e, "assetCategory")}}>
+                                    <option value="">Select Asset Category</option>
+                                    {renderOption(this.state.assetCategories)}
+                                </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.code">Code </label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input id="refSet.code" name="refSet.code" value={refSet.code} type="text" onChange={(e) => {handleReferenceChange(e, "code")}}/>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.name">Name </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div>
+                              <input id="refSet.name" name="refSet.name" value={refSet.name} type="text" onChange={(e) => {handleReferenceChange(e, "name")}}/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.status">Status </label>
+                            </div>
+                            <div className="col-sm-6">
+                              <select id="refSet.status" name="refSet.status" value={refSet.status} onChange={(e) => {handleReferenceChange(e, "status")}}>
+                                    <option value="">Select Status</option>
+                                    {renderOption(this.state.statusList)}
+                              </select>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row text-center">
+                      <button type="submit" className="btn btn-submit">Search</button>
+                    </div>
+                  </form>
+                    <br/>
+                    {renderRefTable()}
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>

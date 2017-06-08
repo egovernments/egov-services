@@ -145,6 +145,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		Date orderDate = rs.getDate("order_date");
 		String reason=rs.getString("reason");
 		
+		if(action!=null){
 		switch (action) {
 
 		case CANCELATION:
@@ -170,7 +171,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		case OBJECTION:
 			return null;
 		}
-		
+		}
 		return null;
 	}
 }

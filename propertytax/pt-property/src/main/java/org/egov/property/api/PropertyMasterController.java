@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(path="/property")
+@RequestMapping(path="/masters")
 public class PropertyMasterController {
 
 	@Autowired
@@ -39,7 +39,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/propertytype/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/propertytypes/_search",method=RequestMethod.POST)
 	public MasterResponse getPropertyTypes(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 		MasterModel	masterModel=	masterService.getPropertyTypes(tenantId, code,requestInfo.getRequestInfo());
 		MasterResponse masterResponse=new MasterResponse();
@@ -58,7 +58,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/apartmentmaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/apartments/_search",method=RequestMethod.POST)
 	public MasterResponse getApartmentMaster(@RequestParam String tenantId,@RequestParam(required=false)  String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getApartmentMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -79,7 +79,7 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/floortypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/floortypes/_search",method=RequestMethod.POST)
 	public MasterResponse getFloorTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getFloorTypeMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -99,7 +99,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/ocupancymaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/occuapancies/_search",method=RequestMethod.POST)
 	public MasterResponse getOcupancyMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getOcupancyMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -119,7 +119,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/rooftypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/rooftypes/_search",method=RequestMethod.POST)
 	public MasterResponse getRoofTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getRoofTypeMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -160,7 +160,7 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/walltypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/walltypes/_search",method=RequestMethod.POST)
 	public MasterResponse getWallTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getWallTypeMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -181,7 +181,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/woodtypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/woodtypes/_search",method=RequestMethod.POST)
 	public MasterResponse getWoodTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getWoodTypeMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -202,7 +202,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/usagemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/usages/_search",method=RequestMethod.POST)
 	public MasterResponse getUsageMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getUsageMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -223,7 +223,7 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/structuremaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/structureclasses/_search",method=RequestMethod.POST)
 	public MasterResponse getStructureMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getStructureMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -244,7 +244,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/documenttypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/documenttypes/_search",method=RequestMethod.POST)
 	public MasterResponse getDocumentTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getDocumentTypeMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -265,7 +265,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/mutationreasonmaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/mutationreasons/_search",method=RequestMethod.POST)
 	public MasterResponse getMutationReasonMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getMutationReasonMaster(tenantId, code,requestInfo.getRequestInfo());
@@ -285,7 +285,7 @@ public class PropertyMasterController {
 	 * @return masterResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path="/mutationratemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/mutationrates/_search",method=RequestMethod.POST)
 	public MasterResponse getMutationRateMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getMutationRateMaster(tenantId, code,requestInfo.getRequestInfo());

@@ -52,6 +52,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Service
 public class PositionService {
 
@@ -64,10 +66,7 @@ public class PositionService {
 	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
 			RequestInfoWrapper requestInfoWrapper) {
 		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
-		if (!positionGetRequest.getId().isEmpty()) {
-			actualPositionIds.retainAll(positionGetRequest.getId());
-			// FIXME : For not getting any positions, setting actualPositionIds
-			// with value [0]
+		if(isEmpty(actualPositionIds)) {
 			actualPositionIds.add(0L);
 		}
 		positionGetRequest.setId(actualPositionIds);

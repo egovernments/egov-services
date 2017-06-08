@@ -72,9 +72,10 @@ public class BillRepository {
 	}
 
 	public Map getPurpose(String tenantId) {
-		String url = applicationProperties.getHostNameForMonolith(tenantId) + propertiesManager.getPurposeService();
+		
 		Map purpose = null;
 		try {
+			String url = applicationProperties.getHostNameForMonolith(tenantId) + propertiesManager.getPurposeService();
 			System.out.println("url>>>>>>>>>>" + url);
 			purpose = restTemplate.getForObject(url, Map.class);
 		} catch (RestClientException e) {

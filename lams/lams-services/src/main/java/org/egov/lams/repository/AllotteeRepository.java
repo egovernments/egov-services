@@ -71,6 +71,7 @@ public class AllotteeRepository {
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
 		userSearchRequest.setTenantId(allottee.getTenantId());
+		userSearchRequest.setUserName(allottee.getUserName());
 		logger.info("url for allottee api post call :: " + url
 				+ "the request object for isAllotteeExist is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);

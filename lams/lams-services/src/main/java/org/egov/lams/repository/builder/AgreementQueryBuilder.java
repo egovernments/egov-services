@@ -86,11 +86,11 @@ public class AgreementQueryBuilder {
 			preparedStatementValues.add(agreementsModel.getStatus().toString());
 		}else{
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" AGREEMENT.STATUS="+ Status.ACTIVE.toString());
+			selectQuery.append(" AGREEMENT.STATUS="+ "'"+Status.ACTIVE.toString()+"'");
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" AGREEMENT.STATUS="+ Status.WORKFLOW.toString());
+			selectQuery.append(" AGREEMENT.STATUS="+ "'" +Status.WORKFLOW.toString()+"'");
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" AGREEMENT.STATUS="+ Status.RENEWED.toString());
+			selectQuery.append(" AGREEMENT.STATUS="+ "'"+Status.RENEWED.toString()+"'");
 		}
 
 		if (agreementsModel.getTenantId() != null) {

@@ -51,12 +51,13 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					String action = rs.getString("action");
 					agreement.setAction(Action.fromValue(action));
 					Object object = getProcessObject(agreement, agreement.getAction(), rs);
-
+					if(object!=null){
 					if (object instanceof Cancellation)
 						agreement.setCancellation((Cancellation) object);
 					else if (object instanceof Renewal)
 						agreement.setRenewal((Renewal) object);
-
+					}
+					
 					agreement.setId((Long) rs.getObject(AgreementIdRsName));
 					agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 					agreement.setStateId(rs.getString("stateid"));
@@ -127,6 +128,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 				agreement.setDemands(demandIdList);
 			} catch (Exception e) {
 				logger.info("exception in agreementRoqwMapper : " + e);
+				e.printStackTrace();
 				throw new RuntimeException("error while mapping object from reult set : " + e.getCause());
 			}
 		}

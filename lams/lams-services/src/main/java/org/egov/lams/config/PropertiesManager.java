@@ -125,6 +125,15 @@ public class PropertiesManager {
 	@Value("${egov.services.lams.rentincrement_assetcategories}")
 	public String rentIncrementAssetCategoryKey;
 	
+	@Value("${egov.services.lams.securitydeposit_factor}")
+	public String securityDepositFactor;
+	
+	@Value("${egov.services.lams.renewal_time_before_expiry}")
+	public String renewalTimeBeforeExpiry;
+	
+	@Value("${egov.services.lams.renewal_time_after_expiry}")
+	public String renewalTimeAfterExpiry;
+	
 	@Value("${kafka.topics.save.agreement}")
 	private String saveAgreementTopic;
 	
@@ -137,5 +146,10 @@ public class PropertiesManager {
 	@Value("${egov.services.egov-common-workflows_service.historypath}")
 	public String commonWorkFlowServiceHistoryPath;
 	
+	@Value("${egov.services.egov-common-workflows_service.searchpath}")
+	public String commonWorkFlowServiceSearchPath;
+	
+	@Value("${app.timezone}")
+	public String timeZone;
 	
 }

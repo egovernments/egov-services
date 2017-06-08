@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
@@ -15,6 +18,7 @@ import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
 import org.egov.lams.model.WorkflowDetails;
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.AgreementRepository;
@@ -72,8 +76,16 @@ public class AgreementService {
 	 * @return
 	 */
 	public boolean isAgreementExist(String code) {
-
 		return agreementRepository.isAgreementExist(code);
+	}
+	
+	public List<Agreement> getAgreementsForAssetId(Long assetId) {
+
+		AgreementCriteria agreementCriteria = new AgreementCriteria();
+		Set<Long> assets = new HashSet<>();
+		assets.add(assetId);
+		agreementCriteria.setAsset(assets);
+		return agreementRepository.getAgreementForCriteria(agreementCriteria);
 	}
 
 	/**
@@ -95,6 +107,7 @@ public class AgreementService {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
+		calendar.setTimeZone(TimeZone.getTimeZone(propertiesManager.getTimeZone()));
 		calendar.add(Calendar.YEAR, 1);
 		calendar.add(Calendar.DATE, -1);
 		Date expiryDate = calendar.getTime();
@@ -111,7 +124,7 @@ public class AgreementService {
 			agreement.setStatus(Status.WORKFLOW);
 			setInitiatorPosition(agreementRequest);
 	
-			if(agreement.getCancellation() == null){
+			if(agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)){
 			List<Demand> demands = prepareDemands(agreementRequest);
 			
 			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
@@ -164,17 +177,18 @@ public class AgreementService {
 			if (workFlowDetails != null) {
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
+					agreement.setAgreementDate(new Date());
 					if (agreement.getAgreementNumber() == null) {
 						agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
-						agreement.setAgreementDate(new Date());
 					}
-					if (agreement.getCancellation() == null)
+					if (agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)) {
 						updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
 								agreementRequest.getRequestInfo());
+					}
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
-					//no action for print notice
+					// no action for print notice
 				}
 			}
 		}
@@ -268,7 +282,7 @@ public class AgreementService {
 			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
 			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 					.getDemands();
-			if(agreement.getRenewal()!=null){
+			if(agreement.getAction().equals(Action.RENEWAL)){
 				for(DemandDetails demandDetails : demands.get(0).getDemandDetails()){
 					if(!demandDetails.getTaxAmount().equals(demandDetails.getCollectionAmount()))
 						oldDetails.add(demandDetails);

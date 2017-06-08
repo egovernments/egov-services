@@ -35,7 +35,7 @@ public class RentIncrementRepository {
 	
 	public RentIncrementType getRentIncrementById(Long rentID) {
 
-		String rentIncrementTypeqQuery = AgreementQueryBuilder.rentIncrementTypeQuery;
+		String rentIncrementTypeqQuery = AgreementQueryBuilder.RENT_INCREMENT_TYPE_QUERY;
 		Object[] rentObj = new Object[] { rentID };
 		RentIncrementType rentIncrementType = null;
 

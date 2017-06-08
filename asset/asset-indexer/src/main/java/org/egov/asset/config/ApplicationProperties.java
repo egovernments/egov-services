@@ -52,19 +52,52 @@ public class ApplicationProperties {
 
 	@Value("${kafka.topics.save.asset}")
 	private String createAssetTopicName;
-	
+
 	@Value("${kafka.topics.update.asset}")
 	private String updateAssetTopicName;
-	
+
 	@Value("${egov.services.boundary_service.hostname}")
 	private String boundaryServiceHostName;
-	
+
 	@Value("${egov.services.boundary_service.searchpath}")
 	private String boundaryServiceSearchPath;
-	
+
 	@Value("${egov.services.asset.indexer.host}")
 	private String indexerHost;
-	
+
 	@Value("${egov.services.asset.indexer.name}")
 	private String indexName;
+
+	@Value("${kafka.topics.save.revaluation}")
+	private String createAssetRevaluationTopicName;
+
+	@Value("${kafka.topics.update.revaluation}")
+	private String updateAssetRevaluationTopicName;
+
+	@Value("${egov.services.egf_service.hostname}")
+	private String egfServiceHostName;
+
+	@Value("${egov.services.egf_service.functions.searchpath}")
+	private String egfServiceFunctionsSearchPath;
+
+	@Value("${egov.services.egf_service.funds.searchpath}")
+	private String egfServiceFundsSearchPath;
+
+	@Value("${egov.services.egf_service.schemes.searchpath}")
+	private String egfServiceSchemesSearchPath;
+
+	@Value("${egov.services.egf_service.subschemes.searchpath}")
+	private String egfServiceSubSchemesSearchPath;
+
+	@Value("${egov.services.asset_service.hostname}")
+	private String assetServiceHostName;
+
+	@Value("${egov.services.asset_service.searchpath}")
+	private String assetServiceSearchPath;
+
+	@Value("${kafka.topics.save.disposal}")
+	private String createAssetDisposalTopicName;
+
+	@Value("${kafka.topics.update.disposal}")
+	private String updateAssetDisposalTopicName;
 }

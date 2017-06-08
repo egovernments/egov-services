@@ -94,11 +94,11 @@ public class DonationRepository {
 	
 	public List<Donation> getDonationList(Donation donation) {
         List<Object> preparedStatementValues = new ArrayList<Object>();
-        preparedStatementValues.add(8L);
+        preparedStatementValues.add(2L);
+        preparedStatementValues.add(3L);
+        preparedStatementValues.add(3L);
         preparedStatementValues.add(1L);
-        preparedStatementValues.add(7L);
-        preparedStatementValues.add(7L);
-        preparedStatementValues.add(1L);
+        preparedStatementValues.add(2L);
         String queryStr = "SELECT * FROM egwtr_donation WHERE property_type = ? AND usage_type = ? "
         		+ " AND category = ? AND hsc_pipesize_max = ? AND hsc_pipesize_min = ? AND  "
         		+ "  active IS TRUE" ; 

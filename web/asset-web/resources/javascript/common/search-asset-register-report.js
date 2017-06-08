@@ -123,25 +123,7 @@ class CommonReportComponent extends React.Component {
 class AssetRegisterReport extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[
-      {
-          "code": "2",
-          "name":"bharath",
-          "location":"bangalore",
-          "description":"assets",
-          "status":"done",
-          "valueOfAsset":"2500",
-          "assetCategory": "personal"
-        },{
-            "code": "3",
-            "name":"murali",
-            "location":"nagapur",
-            "description":"assets 2",
-            "status":"done",
-            "valueOfAsset":"25000",
-            "assetCategory": "offical"
-        }
-      ],searchSet:{
+    this.state={list:[],searchSet:{
       "code": "",
       "name":"",
       "location":"",
@@ -161,24 +143,28 @@ class AssetRegisterReport extends React.Component {
     e.preventDefault();
     var _this = this;
        flag = 1;
-    _this.setState({
-      isSearchClicked: true
-    // try {
-    //   //call api call
-    //   commonApiPost("asset-services", "assetCategories", "_search", {...this.state.searchSet ,tenantId, pageSize:500}, function(err, res) {
-    //     if(res) {
-    //       var list = res["AssetCategory"];
-    //       flag = 1;
-    //
-    //     }
-    //   })
-    // } catch(e) {
-    //
-    //
-    //   })
 
 
-  })
+       try {
+         //call api call
+         var _this = this;
+         commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
+           if(res) {
+             var list = res["Assets"];
+             list.sort(function(item1, item2) {
+               return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+             })
+             console.log("list",list);
+             flag = 1;
+             _this.setState({
+               isSearchClicked: true,
+               list
+             })
+           }
+         })
+       } catch(e) {
+         console.log(e);
+       }
   }
 
   close(){
@@ -323,7 +309,7 @@ class AssetRegisterReport extends React.Component {
                     <label for="name"> Asset Name</label>
                   </div>
                   <div className="col-sm-6">
-                    <input id="name" name="name" value={code} type="text"
+                    <input id="name" name="name" value={name} type="text"
                       onChange={(e)=>{handleChange(e,"name")}}/>
                   </div>
                 </div>

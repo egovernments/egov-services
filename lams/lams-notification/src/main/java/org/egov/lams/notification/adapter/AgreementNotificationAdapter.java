@@ -34,6 +34,16 @@ public class AgreementNotificationAdapter {
 
 	public void sendSmsNotification(Agreement agreement) {
 
+		if(agreement.getWorkflowDetails().getAction() == null)
+			sendCreateNotification(agreement);
+		else if(agreement.getWorkflowDetails().getAction().equals("Approve"))
+			sendApprovalNotification(agreement);
+		else if(agreement.getWorkflowDetails().getAction().equals("Reject"))
+			sendRejectedNotification(agreement);
+	}
+	
+	public void sendCreateNotification(Agreement agreement) {
+
 		SmsRequest smsRequest = new SmsRequest();
 
 		smsRequest.setMessage(smsNotificationService.getSmsMessage(agreement));

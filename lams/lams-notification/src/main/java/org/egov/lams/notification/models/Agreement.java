@@ -2,14 +2,18 @@ package org.egov.lams.notification.models;
 
 import java.util.Date;
 import java.util.List;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 import org.egov.lams.notification.model.enums.NatureOfAllotment;
 import org.egov.lams.notification.model.enums.PaymentCycle;
 import org.egov.lams.notification.model.enums.Source;
 import org.egov.lams.notification.model.enums.Status;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -99,8 +103,8 @@ public class Agreement {
 	private Date solvencyCertificateDate;
 	private String tinNumber;
 
-	//private List<Document> documents;
 	private List<String> demands;
+	private WorkflowDetails workflowDetails;
 	
 	@Min(0)
 	private Double goodWillAmount;

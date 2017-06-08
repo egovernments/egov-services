@@ -33,7 +33,7 @@ public class AgreementAdaptorService {
 		Agreement agreement = agreementRequest.getAgreement();
 
 		AgreementDetails agreementDetails = new AgreementDetails();
-		Asset asset = assetRepository.getAsset(agreement.getAsset().getId());
+		Asset asset = assetRepository.getAsset(agreement.getAsset().getId(),agreement.getTenantId());
 		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId());
 		
 		agreementDetails.setAsset(asset);

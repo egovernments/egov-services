@@ -194,6 +194,23 @@ public class FinancialMastersListener {
 
 		}
 
+		if (financialContractRequestMap.get("BankBranchCreate") != null) {
+			BankBranchContractResponse bankBranchContractResponse = bankBranchService
+					.create(financialContractRequestMap);
+			HashMap<String, Object> bankBranchContractResponseMap = new HashMap<String, Object>();
+			bankBranchContractResponseMap.put("BankBranch", bankBranchContractResponse);
+			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponseMap);
+		}
+
+		if (financialContractRequestMap.get("BankBranchUpdate") != null) {
+			BankBranchContractResponse bankBranchContractResponse = bankBranchService
+					.update(financialContractRequestMap);
+			HashMap<String, Object> bankBranchContractResponseMap = new HashMap<String, Object>();
+			bankBranchContractResponseMap.put("BankBranch", bankBranchContractResponse);
+			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponseMap);
+		}
+		
+		
 		if (financialContractRequestMap.get("BankCreate") != null) {
 			BankContractResponse bankContractResponse = bankService.create(financialContractRequestMap);
 			HashMap<String, Object> bankContractResponseMap = new HashMap<String, Object>();
@@ -215,29 +232,6 @@ public class FinancialMastersListener {
 			financialProducer.sendMessage(completedTopic, bankCompletedKey, bankContractResponseMap);
 		}
 
-		if (financialContractRequestMap.get("BankBranchCreate") != null) {
-			BankBranchContractResponse bankBranchContractResponse = bankBranchService
-					.create(financialContractRequestMap);
-			HashMap<String, Object> bankBranchContractResponseMap = new HashMap<String, Object>();
-			bankBranchContractResponseMap.put("BankBranch", bankBranchContractResponse);
-			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponseMap);
-		}
-
-		if (financialContractRequestMap.get("BankBranchUpdateAll") != null) {
-			BankBranchContractResponse bankBranchContractResponse = bankBranchService
-					.updateAll(financialContractRequestMap);
-			HashMap<String, Object> bankBranchContractResponseMap = new HashMap<String, Object>();
-			bankBranchContractResponseMap.put("BankBranch", bankBranchContractResponse);
-			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponseMap);
-		}
-
-		if (financialContractRequestMap.get("BankBranchUpdate") != null) {
-			BankBranchContractResponse bankBranchContractResponse = bankBranchService
-					.update(financialContractRequestMap);
-			HashMap<String, Object> bankBranchContractResponseMap = new HashMap<String, Object>();
-			bankBranchContractResponseMap.put("BankBranch", bankBranchContractResponse);
-			financialProducer.sendMessage(completedTopic, bankBranchCompletedKey, bankBranchContractResponseMap);
-		}
 
 		if (financialContractRequestMap.get("BankAccountCreate") != null) {
 			BankAccountContractResponse bankAccountContractResponse = bankAccountService

@@ -42,6 +42,7 @@ package org.egov.asset.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
@@ -50,6 +51,8 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,11 +74,18 @@ public class AssetService {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 
-	public AssetResponse getAssets(AssetCriteria searchAsset) {
+	public AssetResponse getAssets(AssetCriteria searchAsset, RequestInfo requestInfo) {
 		logger.info("AssetService getAssets");
 		List<Asset> assets= assetRepository.findForCriteria(searchAsset);
-		return getAssetResponse(assets);
+		return getAssetResponse(assets,requestInfo);
 	}
 
 	public String getAssetName(String tenantId, String name) {
@@ -87,15 +97,15 @@ public class AssetService {
 		Asset asset = assetRepository.create(assetRequest);
 		List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		return getAssetResponse(assets);
+		return getAssetResponse(assets,assetRequest.getRequestInfo());
 	}
 
 	public AssetResponse createAsync(AssetRequest assetRequest) {
 
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
+		assetRequest.getAsset().setId(Long.valueOf(assetRepository.getNextAssetId().longValue()));
 
 		// TODO validate assetcategory for an asset
-		ObjectMapper objectMapper = new ObjectMapper();
 		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 
@@ -104,12 +114,13 @@ public class AssetService {
 		} catch (JsonProcessingException e) {
 			logger.info("JsonProcessingException assetrequest for kafka : " + e);
 		}
+		logger.info("assetRequest value::" + value);
 
 		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), "save-asset", value);
 
 		List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		return getAssetResponse(assets);
+		return getAssetResponse(assets,assetRequest.getRequestInfo());
 	}
 
 	public AssetResponse update(AssetRequest assetRequest) {
@@ -117,12 +128,11 @@ public class AssetService {
 		Asset asset = assetRepository.update(assetRequest);
 		List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		return getAssetResponse(assets);
+		return getAssetResponse(assets,assetRequest.getRequestInfo());
 	}
 
 	public AssetResponse updateAsync(AssetRequest assetRequest) {
 
-		ObjectMapper objectMapper = new ObjectMapper();
 		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 
@@ -136,12 +146,13 @@ public class AssetService {
 
 		List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		return getAssetResponse(assets);
+		return getAssetResponse(assets,assetRequest.getRequestInfo());
 	}
 
-	private AssetResponse getAssetResponse(List<Asset> assets) {
+	private AssetResponse getAssetResponse(List<Asset> assets, RequestInfo requestInfo) {
 		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
+		assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
 		return assetResponse;
 	}
 }

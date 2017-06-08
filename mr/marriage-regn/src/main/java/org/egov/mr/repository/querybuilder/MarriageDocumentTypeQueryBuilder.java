@@ -12,7 +12,7 @@ public class MarriageDocumentTypeQueryBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarriageDocumentTypeQueryBuilder.class);
 
-	public final String BASEQUERY = "SELECT * FROM marriage_document_type ";
+	public final String BASEQUERY = "SELECT * FROM egmr_marriage_document_type ";
 
 	StringBuilder selectQuery;
 

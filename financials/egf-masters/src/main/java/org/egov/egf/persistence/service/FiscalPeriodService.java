@@ -81,7 +81,7 @@ public class FiscalPeriodService {
 	@Transactional
 	public FiscalPeriodContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final FiscalPeriodContractRequest fiscalPeriodContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("FiscalPeriodCreate"), FiscalPeriodContractRequest.class);
+				.convertValue(financialContractRequestMap.get("FiscalPeriodUpdateAll"), FiscalPeriodContractRequest.class);
 		FiscalPeriodContractResponse fiscalPeriodContractResponse = new FiscalPeriodContractResponse();
 		fiscalPeriodContractResponse.setFiscalPeriods(new ArrayList<FiscalPeriodContract>());
 		ModelMapper modelMapper = new ModelMapper();

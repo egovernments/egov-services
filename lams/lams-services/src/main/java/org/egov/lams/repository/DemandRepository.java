@@ -12,7 +12,9 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandReasonResponse;
@@ -50,21 +52,27 @@ public class DemandRepository {
 		Agreement agreement = agreementRequest.getAgreement();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		calendar.add(Calendar.MONTH, 1);
+		
+		if (agreement.getPaymentCycle().equals(PaymentCycle.MONTH))
+			calendar.add(Calendar.MONTH, 1);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER))
+			calendar.add(Calendar.MONTH, 3);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR))
+			calendar.add(Calendar.MONTH, 6);
+		else
+			calendar.add(Calendar.YEAR, 1);
 		calendar.add(Calendar.DATE, -1);
 		Date date = calendar.getTime();
 		String taxReason = null;
 		LOGGER.info("month plus start date is : " + date);
 		for (int i = 0; i < 3; i++) {
-
-			if (i == 0 && agreement.getSource().equals(Source.SYSTEM) && agreement.getAgreementNumber() == null) {
+			if (i == 0 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
 				taxReason = propertiesManager.getTaxReasonAdvanceTax();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
-			}
-			else if (i == 1 && agreement.getSource().equals(Source.SYSTEM) && agreement.getAgreementNumber() == null) {
+			} else if (i == 1 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
 				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
-			} else if (i == 2 && agreement.getAgreementNumber()!= null ) {
+			} else if (i == 2 && agreement.getStatus().equals(Status.ACTIVE)) {
 				taxReason = propertiesManager.getTaxReasonRent();
 				date = agreementRequest.getAgreement().getExpiryDate();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
@@ -133,18 +141,21 @@ public class DemandRepository {
 		for (DemandReason demandReason : demandReasons) {
 
 			demandDetail = new DemandDetails();
-			LOGGER.info("the demand reason object in the loop : " + demandReason);
-			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
-			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
-			}
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
+			
+			LOGGER.info("the demand reason object in the loop : " + demandReason);
+			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
+				if(agreement .getGoodWillAmount()!=null)
+					demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
+			}
+			if(demandDetail.getTaxAmount()!=null)
 			demandDetails.add(demandDetail);
 		}
 

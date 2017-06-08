@@ -17,6 +17,7 @@ import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.egov.lams.web.errorhandlers.LamsException;
 import org.egov.lams.web.validator.AgreementValidator;
+import org.egov.lams.web.validator.CancelAgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +48,9 @@ public class AgreementController {
 	
 	@Autowired
 	private AgreementValidator agreementValidator;
+	
+	@Autowired
+	private CancelAgreementValidator cancelAgreementValidator;
 	
 	@PostMapping("_search")
 	@ResponseBody
@@ -90,6 +93,60 @@ public class AgreementController {
 		
 		LOGGER.info("agreementRequest::" + agreementRequest);
 		agreementValidator.validateAgreement(agreementRequest,errors);
+		
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		Agreement agreement = agreementService.createAgreement(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = new AgreementResponse();
+		agreementResponse.setAgreement(agreements);
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		LOGGER.info(agreementResponse.toString());
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/_renew")
+	@ResponseBody
+	public ResponseEntity<?> renew(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		LOGGER.info("agreementRequest::" + agreementRequest);
+		agreementValidator.validateAgreement(agreementRequest,errors);
+		
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		Agreement agreement = agreementService.createAgreement(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = new AgreementResponse();
+		agreementResponse.setAgreement(agreements);
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		LOGGER.info(agreementResponse.toString());
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/_cancel")
+	@ResponseBody
+	public ResponseEntity<?> cancel(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
+		cancelAgreementValidator.validateCancel(agreementRequest, errors);		
 		
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);

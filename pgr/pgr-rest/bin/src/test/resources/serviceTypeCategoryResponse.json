@@ -1,0 +1,10 @@
+{
+    "responseInfo": null,
+    "serviceTypeCategories": [
+        {
+            "name": "Administration",
+            "description": "Administration",
+            "tenantId": "ap.public"
+        }
+    ]
+}

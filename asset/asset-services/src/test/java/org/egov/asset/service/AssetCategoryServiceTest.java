@@ -14,6 +14,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertTrue;
@@ -36,8 +39,10 @@ public class AssetCategoryServiceTest {
 	
 	@InjectMocks
 	private AssetCategoryService assetCategoryService;
-
 	
+	@Mock
+	private ObjectMapper objectMapper;
+
 	@Test
 	public void testSearch() {
 		List<AssetCategory> assetCategories = new ArrayList<>();

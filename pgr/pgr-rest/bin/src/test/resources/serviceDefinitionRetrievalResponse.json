@@ -1,0 +1,26 @@
+{
+    "responseInfo": null,
+    "tenantId": "tenantId",
+    "serviceCode": "serviceCode1",
+    "attributes": [
+        {
+            "variable": true,
+            "code": "attribute1",
+            "dataType": "dataType1",
+            "required": true,
+            "dataTypeDescription": "data type description1",
+            "attribValues": [
+                {
+                    "key": "key1",
+                    "name": "name1",
+                    "isActive": true
+                },
+                {
+                    "key": "key2",
+                    "name": "name2",
+                    "isActive": false
+                }
+            ]
+        }
+    ]
+}

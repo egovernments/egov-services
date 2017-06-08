@@ -28,12 +28,15 @@ public class MarriageRegnQueryBuilder {
 	private static final String BASE_QUERY = "SELECT mr.marriagedate as mr_marriagedate, mr.venue as mr_venue,"
 			+ " mr.street as mr_street, mr.placeofmarriage as mr_placeofmarriage, mr.locality as mr_locality, mr.city as mr_city,"
 			+ " mr.marriagephoto as mr_marriagephoto, mr.fee as mr_fee, mr.priestname as mr_priestname, mr.priestreligion as mr_priestreligion,"
-			+ " mr.priestaddress as mr_priestaddress, mr.serialno as mr_serialno, mr.volumeno as mr_volumeno,"
+			+ " mr.priestaddress as mr_priestaddress, mr.priestaadhaar as mr_priestaadhaar, mr.priestmobileno as mr_priestmobileno,"
+			+ " mr.priestemail as mr_priestemail, mr.serialno as mr_serialno, mr.volumeno as mr_volumeno,"
 			+ " mr.applicationnumber as mr_applicationnumber, mr.regnnumber as mr_regnumber, mr.status as mr_status,"
 			+ " mr.source as mr_source, mr.stateid as mr_stateid, mr.tenantid as mr_tenantid, mr.approvaldepartment as mr_approvaldepartment,"
 			+ " mr.approvaldesignation as mr_approvaldesignation, mr.approvalassignee as mr_approvalassignee,"
 			+ " mr.approvalaction as mr_approvalaction, mr.approvalstatus as mr_approvalstatus, mr.approvalcomments as mr_approvalcomments,"
-			+ " ru.id as ru_id, ru.name as ru_name, ru.isactive as ru_isactive, ru.tenantid as ru_tenantid,"
+			+ " mr.createdby as mr_createdby, mr.lastmodifiedby as mr_lastmodifiedby,"
+			+ " mr.lastmodifiedtime as mr_lastmodifiedtime, mr.createdtime as mr_createdtime, mr.isactive as mr_isactive,"
+			+ " ru.id as ru_id, ru.name as ru_name, ru.isactive as ru_isactive, ru.tenantid as ru_tenantid, ru.code as ru_code,"
 			+ " ru.locality as ru_locality, ru.zone as ru_zone, ru.revenueward as ru_revenueward, ru.block as ru_block,"
 			+ " ru.street as ru_street, ru.electionward as ru_electionward, ru.doorno as ru_doorno, ru.pincode as ru_pincode,"
 			+ " mpb.id as mpb_id, mpb.name as mpb_name, mpb.parentname as mpb_parentname, mpb.dob as mpb_dob, mpb.status as mpb_status,"
@@ -46,7 +49,7 @@ public class MarriageRegnQueryBuilder {
 			+ " mpbg.mobileno as mpbg_mobileno, mpbg.email as mpbg_email, mpbg.religionpractice as mpbg_religionpractice, mpbg.religion as mpbg_religion,"
 			+ " mpbg.occupation as mpbg_occupation, mpbg.education as mpbg_education, mpbg.handicapped as mpbg_handicapped,"
 			+ " mpbg.residenceaddress as mpbg_residenceaddress, mpbg.photo as mpbg_photo, mpbg.nationality as mpbg_nationality,"
-			+ " w.name as w_name, w.relation as w_relation, w.age as w_age, w.address as w_address, w.realtionship as w_relationship,"
+			+ " w.witnessno as w_witnessno, w.name as w_name, w.relation as w_relation, w.relatedto as w_relatedto, w.age as w_age, w.address as w_address, w.relationship as w_relationship,"
 			+ " w.occupation as w_occupation, w.aadhaar as w_aadhaar, w.applicationnumber as w_applicationnumber,"
 			+ " mc.certificateno as mc_certificateno, mc.certificatedate as mc_certificatedate, mc.certificatetype as mc_certificatetype,"
 			+ " mc.regnnumber as mc_regnnumber, mc.bridegroomphoto as mc_bridegroomphoto, mc.bridephoto as mc_bridephoto,"
@@ -61,17 +64,6 @@ public class MarriageRegnQueryBuilder {
 	        + " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 	        + " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber AND mr.tenantid = mc.tenantid";
 	
-	public String getQuery(MarriageRegnCriteria marriageRegnCriteria, List<Object> preparedStatementValues,
-			List<String> listOfApplNos) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-
-		addWhereClause(selectQuery, preparedStatementValues, marriageRegnCriteria, listOfApplNos);
-		addOrderByClause(selectQuery, marriageRegnCriteria);
-
-		logger.info(" marriage regn selectQuery : " + selectQuery);
-		return selectQuery.toString();
-	}
-
 	public String getQueryForListOfMarriageRegnIds(MarriageRegnCriteria marriageRegnCriteria,
 			List<Object> preparedStatementValues) {
 		
@@ -84,6 +76,17 @@ public class MarriageRegnQueryBuilder {
 		return selectQuery.toString();
 	}
 
+	public String getQuery(MarriageRegnCriteria marriageRegnCriteria, List<Object> preparedStatementValues,
+			List<String> listOfApplNos) {
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+
+		addWhereClause(selectQuery, preparedStatementValues, marriageRegnCriteria, listOfApplNos);
+		addOrderByClause(selectQuery, marriageRegnCriteria);
+
+		logger.info(" marriage regn selectQuery : " + selectQuery);
+		return selectQuery.toString();
+	}
+	
 	private void addWhereClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
 			MarriageRegnCriteria marriageRegnCriteria, List<String> listOfApplNos) {
 
@@ -173,7 +176,6 @@ public class MarriageRegnQueryBuilder {
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
-
 		return true;
 	}
 	

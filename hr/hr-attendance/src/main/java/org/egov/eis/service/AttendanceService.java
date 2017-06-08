@@ -67,6 +67,9 @@ public class AttendanceService {
 
     @Autowired
     private AttendanceProducer attendanceProducer;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public List<Attendance> getAttendances(final AttendanceGetRequest attendanceGetRequest) throws ParseException {
         return attendanceRepository.findForCriteria(attendanceGetRequest);
@@ -79,11 +82,10 @@ public class AttendanceService {
      */
 
     public List<Attendance> createAsync(final AttendanceRequest attendanceRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
         String attendanceValue = null;
         try {
             logger.info("createAttendance service::" + attendanceRequest);
-            attendanceValue = mapper.writeValueAsString(attendanceRequest);
+            attendanceValue = objectMapper.writeValueAsString(attendanceRequest);
             logger.info("attendanceValue::" + attendanceValue);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();

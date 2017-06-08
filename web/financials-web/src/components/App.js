@@ -7,7 +7,6 @@ import FlatButton from 'material-ui/FlatButton';
 
 import Header from './common/Header';
 import Footer from './common/Footer';
-import PropertyTaxSearch from "./contents/PropertyTaxSearch";
 
 import router from "../router";
 

@@ -142,7 +142,7 @@ public class ServiceRequestWriteRepository {
     }
 
     private void setComplainant(ServiceRequestRecord serviceRequestRecord, Submission submission) {
-        submission.setLoggedInRequester(serviceRequestRecord.getComplainantUserId());
+        submission.setLoggedInRequester(serviceRequestRecord.getLoggedInRequesterUserId());
         submission.setName(serviceRequestRecord.getRequesterName());
         submission.setMobile(serviceRequestRecord.getRequesterMobileNumber());
         submission.setEmail(serviceRequestRecord.getRequesterEmail());

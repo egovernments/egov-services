@@ -229,6 +229,10 @@ $(document).ready(function() {
         renewAgreement[this.id] = this.value;
     });
 
+    $("textarea").on("keyup", function() {
+        fillValueToObject(this);
+    });
+
     //Getting data for user input
     $("select").on("change", function() {
         // console.log(this.value);
@@ -370,7 +374,7 @@ $(document).ready(function() {
 
                     $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
                 }
-            });
+            },process.businessKey);
         }
     } else if (getUrlVars()["view"] == "renew") {
         $("#cancel,#evict").remove();
@@ -497,13 +501,22 @@ $(document).ready(function() {
         var _agrmntDet = Object.assign({}, agreementDetail);
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
-            "type": "Agreement",
+            "type": process.businessKey,
             "assignee": $("#approver_name") && $("#approver_name").val() ? getPositionId($("#approver_name").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };
 
         if (data.action && data.action != "Print Notice") {
+            if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
+                return showError("Comments is mandatory in case of 'Reject'");
+            }
+
+            if(_agrmntDet.wFremarks) {
+                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
+                delete _agrmntDet.wFremarks;
+            }
+
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
@@ -519,7 +532,7 @@ $(document).ready(function() {
                 contentType: 'application/json'
             });
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approver_name").val() ? getNameById(employees, $("#approver_name").val()) : "") + "&ackNo=" + (data.action == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approver_name").val() ? getNameById(employees, $("#approver_name").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }

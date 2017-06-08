@@ -26,8 +26,14 @@ public class PropertiesManager {
 	@Value("${egov.services.workflow_service.taskpath}")
 	private String workflowServiceTaskPAth;
 	
-	@Value("${egov.services.workflow_service.hostname.businesskey}")
-	private String workflowServiceBusinessKey;
+	@Value("${egov.services.workflow_service.hostname.create_businesskey}")
+	private String workflowServiceCreateBusinessKey;
+	
+	@Value("${egov.services.workflow_service.hostname.renew_businesskey}")
+	private String workflowServiceRenewBusinessKey;
+	
+	@Value("${egov.services.workflow_service.hostname.cancel_businesskey}")
+	private String workflowServiceCancelBusinessKey;
 	
 	@Value("${kafka.topics.start.workflow}")
 	private String kafkaStartWorkflowTopic;

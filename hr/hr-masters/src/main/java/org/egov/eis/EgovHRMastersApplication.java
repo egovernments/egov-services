@@ -40,6 +40,7 @@
 
 package org.egov.eis;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -48,20 +49,39 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class EgovHRMastersApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EgovHRMastersApplication.class, args);
-	}
+    @Value("${app.timezone}")
+    private String timeZone;
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
+    @PostConstruct
+    public void initialize() {
+        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+    }
+    
+    @Bean
+    public ObjectMapper getObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return objectMapper;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(EgovHRMastersApplication.class, args);
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        //mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        converter.setObjectMapper(objectMapper);
+        return converter;
+    }
 }

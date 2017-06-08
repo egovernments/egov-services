@@ -103,7 +103,7 @@ class EmployeeSearch extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (this.state.modified && this.state.employees.length) {
+      if (this.state.modified) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [

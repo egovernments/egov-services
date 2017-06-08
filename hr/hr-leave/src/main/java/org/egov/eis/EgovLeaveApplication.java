@@ -40,7 +40,12 @@
 
 package org.egov.eis;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.eis.web.interceptor.CorrelationIdAwareRestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -53,9 +58,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class EgovLeaveApplication {
 
+	@Value("${app.timezone}")
+	private String timeZone;
+
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
+
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new CorrelationIdAwareRestTemplate();
+	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper() {
+	    final ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+	    objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+	    return objectMapper;
 	}
 
 	public static void main(String[] args) {
@@ -63,12 +84,12 @@ public class EgovLeaveApplication {
 	}
 
 	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
+	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		converter.setObjectMapper(mapper);
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		converter.setObjectMapper(objectMapper);
 		return converter;
 	}
 }

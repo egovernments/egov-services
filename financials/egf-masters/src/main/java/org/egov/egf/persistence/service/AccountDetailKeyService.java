@@ -93,7 +93,7 @@ public class AccountDetailKeyService {
 	@Transactional
 	public AccountDetailKeyContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final AccountDetailKeyContractRequest accountDetailKeyContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("AccountDetailKeyCreate"),
+				.convertValue(financialContractRequestMap.get("AccountDetailKeyUpdateAll"),
 						AccountDetailKeyContractRequest.class);
 		AccountDetailKeyContractResponse accountDetailKeyContractResponse = new AccountDetailKeyContractResponse();
 		accountDetailKeyContractResponse.setAccountDetailKeys(new ArrayList<AccountDetailKeyContract>());

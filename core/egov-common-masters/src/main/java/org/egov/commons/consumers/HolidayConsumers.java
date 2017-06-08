@@ -64,12 +64,14 @@ public class HolidayConsumers {
 
 	@Autowired
 	private ElasticSearchRepository elasticSearchRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "egov-common-holiday")
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
 		if (record.topic().equals("egov-common-holiday")) {
-			final ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				LOGGER.info("SaveHolidayConsumer egov-common-holiday holidayService:" + holidayService);
 				final HolidayRequest holidayRequest = holidayService

@@ -67,6 +67,10 @@ $(document).ready(function(){
 });
 
 $(".disabled").attr("disabled", true);
+$("textarea").on("keyup", function() {
+    fillValueToObject(this);
+});
+
 //Getting data for user input
 $("input").on("keyup", function() {
     fillValueToObject(this);
@@ -775,6 +779,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     alert("Agreement is not applicable for selected category");
+    window.open(location, '_self').close();
 }
 
 try {
@@ -962,7 +967,7 @@ getDesignations(null, function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-});
+},"Create Agreement");
 
 // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
 // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
@@ -1029,7 +1034,7 @@ if (assetDetails && Object.keys(assetDetails).length) {
                     $("#shoppingComplexAddress").val(attrs[i].value);
                     break;
 
-            } 
+            }
         }
     }
 }
@@ -1110,10 +1115,12 @@ $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
-        // form.submit();
-        // form.preventDefault();
         agreement["workflowDetails"] = {};
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
+        if(agreement.wFremarks) {
+            agreement["workflowDetails"]["remarks"] = agreement.wFremarks;
+            delete agreement.wFremarks;
+        }
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
         agreement["asset"]["name"] = assetDetails["name"];
@@ -1172,7 +1179,7 @@ $("#createAgreementForm").validate({
                           _key.shift();
                           _key = _key.join(".");
                         }
-                        err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
+                        err += "\n " + _key + "- " + response["responseJSON"].Error.fields[key] + " "; //HERE
                       }
                       showError(err);
                     } else {

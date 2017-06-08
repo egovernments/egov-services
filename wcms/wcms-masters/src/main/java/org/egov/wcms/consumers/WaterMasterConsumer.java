@@ -106,6 +106,7 @@ public class WaterMasterConsumer {
     @Autowired
     private DocumentTypeService documentTypeService;
 
+<<<<<<< HEAD
   
     @Autowired
     private DocumentTypeApplicationTypeService docTypeApplTypeService;
@@ -116,6 +117,8 @@ public class WaterMasterConsumer {
     @Autowired
     private PropertyTypePipeSizeTypeService propertyPipeSizeService;
 
+=======
+>>>>>>> master
     @Autowired
     private SourceTypeService waterSourceTypeService;
     
@@ -126,6 +129,7 @@ public class WaterMasterConsumer {
             
             "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
             "${kafka.topics.pipesize.create.name}", "${kafka.topics.pipesize.update.name}",
+<<<<<<< HEAD
             "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyCategory.update.name}",
             "${kafka.topics.donation.create.name}","${kafka.topics.donation.update.name}",
             "${kafka.topics.documenttype.create.name}","${kafka.topics.documenttype.update.name}",
@@ -134,6 +138,12 @@ public class WaterMasterConsumer {
             "${kafka.topics.propertypipesize.create.name}", "${kafka.topics.propertypipesize.update.name}",
             "${kafka.topics.sourcetype.create.name}", "${kafka.topics.sourcetype.update.name}" })
 
+=======
+            "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyusage.create.name}",
+            "${kafka.topics.donation.create.name}",
+            "${kafka.topics.documenttype.create.name}",
+            "${kafka.topics.propertypipesize.create.name}" })
+>>>>>>> master
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -149,11 +159,18 @@ public class WaterMasterConsumer {
             else if (record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))
                 pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
+<<<<<<< HEAD
                 pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
+=======
+                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeRequest.class));
+            else if(record.topic().equals(applicationProperties.getCreatePropertyCategoryTopicName()))
+            	propertyCategoryService.create(objectMapper.readValue(record.value(), PropertyTypeCategoryTypeReq.class));
+>>>>>>> master
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
             	propUsageTypeService.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
             	donationService.create(objectMapper.readValue(record.value(), DonationRequest.class));
+<<<<<<< HEAD
             else if(record.topic().equals(applicationProperties.getUpdateDonationTopicName()))
             	donationService.update(objectMapper.readValue(record.value(), DonationRequest.class));
             else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
@@ -188,7 +205,15 @@ public class WaterMasterConsumer {
             if (record.topic().equals(applicationProperties.getCreateNewConnectionTopicName()))
             	waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
         } catch (final IOException e) {
+=======
+            else if(record.topic().equals(applicationProperties.getCreateDocumentTypeTopicName()))
+            	documentTypeService.create(objectMapper.readValue(record.value(), DocumentTypeReq.class));
+            else if (record.topic().equals(applicationProperties.getCreatePropertyPipeSizeTopicName()))
+                propertyPipeSizeService.create(objectMapper.readValue(record.value(), PropertyPipeSizeRequest.class));
+            }
+         catch (final IOException e) {
+>>>>>>> master
             e.printStackTrace();
-        }
+         }
     }
 }

@@ -171,6 +171,7 @@ addOrUpdate(e){
             },
             success: function(res) {
                     showSuccess("Position Created successfully.");
+                    localStorage.removeItem("assignments_position");
                     _this.setState({positionSet:{
                         "id": "",
                         "name": "",
@@ -185,7 +186,7 @@ addOrUpdate(e){
                         "isPostOutsourced": "false",
                         "active": "true",
                         "tenantId": tenantId
-                      },designationList:[],departmentsList:[]})
+                      }})
 
             },
             error: function(err) {

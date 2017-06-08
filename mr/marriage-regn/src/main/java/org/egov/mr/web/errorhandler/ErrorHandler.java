@@ -14,10 +14,22 @@ import org.springframework.validation.FieldError;
 
 @Component
 public class ErrorHandler {
+	
+	public ResponseEntity<?> handleBindingErrors(RequestInfo requestInfo, BindingResult bindingResultsForRequestInfo,
+			BindingResult bindingResultsForSearchCriteria) {
+		if (bindingResultsForRequestInfo != null && bindingResultsForRequestInfo.hasErrors()) {
+			return getMissingParameterErrorResponse(bindingResultsForRequestInfo,
+					requestInfo);
+		}
+		if (bindingResultsForSearchCriteria != null && bindingResultsForSearchCriteria.hasErrors()) {
+			return getMissingParameterErrorResponse(bindingResultsForSearchCriteria,
+					requestInfo);
+		}
+		return null;
+	}
 
 	@SuppressWarnings("unchecked")
-	public ResponseEntity<?> getRegistrationUnitMissingParameterErrorResponse(BindingResult bindingResults,
-			RequestInfo requestInfo) {
+	public ResponseEntity<?> getMissingParameterErrorResponse(BindingResult bindingResults, RequestInfo requestInfo) {
 
 		Error error = new Error();
 		// Setting Error
@@ -51,34 +63,8 @@ public class ErrorHandler {
 		return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<?> getRegistrationUnitEmptyListErrorResponse(BindingResult bindingResults,
-			RequestInfo requestInfo) {
-		Error error = new Error();
-		// Setting Error
-		error.setCode(200);
-		error.setMessage("No Record(s) Found!");
-		error.setDescription("Criteria mentioned doesn't match any Record");
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		// Setting ResponseInfo
-		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
-		responseInfo.setResMsgId(requestInfo.getMsgId());
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
-		responseInfo.setTs(requestInfo.getTs());
-		responseInfo.setVer(requestInfo.getVer());
-
-		ErrorResponse errRes = new ErrorResponse();
-		// Setting ErrorResponse
-		errRes.setError(error);
-		errRes.setResponseInfo(responseInfo);
-
-		return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
-	}
-
-	public ResponseEntity<?> getRegistrationUnitForUnExpectedErrorResponse(BindingResult bindingResults,
-			RequestInfo requestInfo, String errorCause) {
+	public ResponseEntity<?> getUnExpectedErrorResponse(BindingResult bindingResults, RequestInfo requestInfo,
+			String errorCause) {
 		Error error = new Error();
 		// Setting Error
 		error.setCode(500);

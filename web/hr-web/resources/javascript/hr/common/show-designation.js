@@ -1,8 +1,9 @@
 class ShowDesignation extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],designationSet:{name:"",
-    code:"",description:"", chartOfAccounts:"",active:""}}
+    this.state={
+      list:[]
+    }
 
   }
 
@@ -44,7 +45,6 @@ class ShowDesignation extends React.Component {
 
   render() {
     let {list}=this.state;
-    let {name,code,description,active}=this.state.designationSet;
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){

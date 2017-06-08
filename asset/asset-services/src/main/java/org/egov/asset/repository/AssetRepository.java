@@ -116,6 +116,12 @@ public class AssetRepository {
 		}
 		return code.toString();
 	}
+	
+	public Integer getNextAssetId() {
+		String query = "SELECT nextval('seq_egasset_asset')";
+		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
+		return result;
+	}
 
 	public Asset create(AssetRequest assetRequest) {
 		RequestInfo requestInfo = assetRequest.getRequestInfo();
@@ -123,11 +129,12 @@ public class AssetRepository {
 
 		String property = null;
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
-			property = objectMapper.writeValueAsString(asset2);
+			property = mapper.writeValueAsString(asset2);
 		} catch (JsonProcessingException e) {
 			logger.info("the exception in insert from parsing attributes : " + e);
 		}
@@ -145,7 +152,7 @@ public class AssetRepository {
 
 		Location location = asset.getLocationDetails();
 
-		Object[] obj = new Object[] { asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),
+		Object[] obj = new Object[] { asset.getId(),asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),
 				asset.getDepartment().getId(), asset.getAssetDetails(), asset.getDescription(),
 				asset.getDateOfCreation(), asset.getRemarks(), asset.getLength(), asset.getWidth(),
 				asset.getTotalArea(), modeOfAcquisition, status, asset.getTenantId(), location.getZone(),
@@ -171,11 +178,11 @@ public class AssetRepository {
 		String property = null;
 		try {
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
-			property = objectMapper.writeValueAsString(asset2);
+			property = mapper.writeValueAsString(asset2);
 
 		} catch (JsonProcessingException e) {
 			logger.info("exception from parsing the assetattributes : " + e);

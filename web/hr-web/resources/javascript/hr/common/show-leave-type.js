@@ -1,17 +1,10 @@
 class ShowLeaveType extends React.Component {
   constructor(props) {
     super(props);
-    this.state={leaveList:[],leaveType:{
-    name:"",
-    payEligible:"",
-    encashable:"",
-    halfdayAllowed:"",
-    accumulative:"",
-    description:"",
-    active:""
-  }}
-  this.handleChange=this.handleChange.bind(this);
-}
+    this.state={
+      leaveList:[]
+    }
+  }
 
 
 
@@ -50,17 +43,7 @@ componentDidUpdate(prevProps, prevState) {
 }
 
 
-handleChange(e,name) {
-    this.setState({
-        leaveType:{
-            ...this.state.leaveType,
-            [name]:e.target.value
-        }
-    })
-}
-
 render() {
-    let  {name,description}=this.state.leaveType;
     let {leaveList}=this.state;
 
     const renderBody=function()

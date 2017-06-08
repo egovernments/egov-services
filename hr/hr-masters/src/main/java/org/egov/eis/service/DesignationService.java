@@ -88,6 +88,9 @@ public class DesignationService {
 	
 	@Autowired
 	private DesignationRepository designationRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<Designation> getDesignations(DesignationGetRequest designationGetRequest) {
 		return designationRepository.findForCriteria(designationGetRequest);
@@ -97,8 +100,7 @@ public class DesignationService {
 		Designation designation = designationRequest.getDesignation();
 		String designationJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			designationJson = mapper.writeValueAsString(designationRequest);
+			designationJson = objectMapper.writeValueAsString(designationRequest);
 			LOGGER.info("designationJson::" + designationJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting designation to JSON", e);
@@ -118,8 +120,7 @@ public class DesignationService {
 		Designation designation = designationRequest.getDesignation();
 		String designationRequestJson = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			designationRequestJson = mapper.writeValueAsString(designationRequest);
+			designationRequestJson = objectMapper.writeValueAsString(designationRequest);
 			LOGGER.info("designationRequestJson::" + designationRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);

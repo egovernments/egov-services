@@ -976,10 +976,14 @@ label.error.custom {
   border-radius: 5px;
   cursor: pointer;
 }
+.page-container .main-content .citizen-screens .msg header div {
+  font-size: 19px;
+  margin: 5px 0;
+}
 .page-container .main-content .citizen-screens .msg header i {
   width: 34px;
   font-size: 18px;
-  padding: 4px 5px;
+  padding: 2px 5px;
   text-align: center;
 }
 .page-container .main-content .citizen-screens .msg header i.read-msg {
@@ -991,8 +995,9 @@ label.error.custom {
 .page-container .main-content .citizen-screens .msg header a {
   color: #333;
   text-decoration: none;
+  font-size: 19px;
+  margin: 5px 0;
 }
-.page-container .main-content .citizen-screens .msg header h3,
 .page-container .main-content .citizen-screens .msg header a {
   margin: 0;
   padding: 0;
@@ -1002,8 +1007,8 @@ label.error.custom {
   /*font-family: semibold;*/
 }
 .page-container .main-content .citizen-screens .msg header span.msg-status {
-  margin: 0 15px;
-  padding: 5px 15px;
+  padding: 2px 15px;
+  margin: 0;
   background: #c9c9c9;
   font-size: 13px;
   color: #fff;
@@ -1014,7 +1019,7 @@ label.error.custom {
 }
 .page-container .main-content .citizen-screens .msg header .msg-info {
   padding-top: 5px;
-  padding-left: 20px;
+  padding-left: 0;
   font-style: italic;
   font-size: 14px;
 }
@@ -1025,18 +1030,19 @@ label.error.custom {
   color: #a7a9ab;
 }
 .page-container .main-content .citizen-screens .msg .msg-content > p {
-  margin: 15px 20px 0px 20px;
+  margin: 15px 0 0 0;
   font-size: 14px;
 }
 .page-container .main-content .citizen-screens section div.msg,
 .page-container .main-content .citizen-screens section div.msg {
-  /* margin-top: 10px; */
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+  padding: 15px;
   overflow: hidden;
   position: relative;
 }
 .page-container .main-content .citizen-screens .content-wrap {
   position: relative;
+  margin-top: 20px;
 }
 .page-container .main-content .citizen-screens .content-wrap section {
   display: none;
@@ -1881,7 +1887,7 @@ label.error.custom {
   color: #f2851f;
 }
 .panel-primary .panel-body.custom-form {
-  padding: 0;
+  padding-bottom: 0;
 }
 .table thead:first-child > tr:first-child th {
   border-bottom: none;

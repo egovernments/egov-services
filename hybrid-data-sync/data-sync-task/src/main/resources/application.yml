@@ -1002,50 +1002,6 @@ sync:
           shouldSync: false
           defaultValue: 0
 
-
-    - sourceTable: eg_crosshierarchy
-      destinationTable: eg_crosshierarchy
-      sourceTimeZone: Asia/Kolkata
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: parent
-          destination: parent
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: child
-          destination: child
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: parenttype
-          destination: parenttype
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: childtype
-          destination: childtype
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: version
-          destination: version
-          type: Integer
-          shouldSource: false
-          shouldSync: false
-          defaultValue: 0
-
-
-
     - sourceTable: eg_role
       destinationTable: eg_role
       sourceTimeZone: Asia/Kolkata

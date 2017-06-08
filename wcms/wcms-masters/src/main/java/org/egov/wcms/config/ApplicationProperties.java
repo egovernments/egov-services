@@ -52,7 +52,6 @@ import org.springframework.core.env.Environment;
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
-
     private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
     public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
     public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
@@ -189,10 +188,6 @@ public class ApplicationProperties {
         return createPropertyPipeSizeTopicName;
     }
 
-    public String getCreateDocumentTypeTopicName() {
-        return createDocumentTypeTopicName;
-    }
-
     public String getUpdateDocumentTypeTopicName() {
 
         return updateDocumentTypeTopicName;
@@ -240,5 +235,7 @@ public class ApplicationProperties {
         return createLegacyConnectionTopicName;
     }
 
-
+    public String getCreateDocumentTypeTopicName(){
+		return createDocumentTypeTopicName;
+	}
 }

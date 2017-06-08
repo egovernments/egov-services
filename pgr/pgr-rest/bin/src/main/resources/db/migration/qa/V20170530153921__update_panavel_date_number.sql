@@ -1,0 +1,9 @@
+update attribute_definition set datatype='number' where code='MCBAG' and tenantid='panavel';
+update attribute_definition set datatype='number' where code='MCGAG' and tenantid='panavel';
+update attribute_definition set datatype='number' where code='MCWAO' and tenantid='panavel';
+update attribute_definition set datatype='number' where code='MCWAT' and tenantid='panavel';
+update attribute_definition set datatype='number' where code='WCMSSC' and tenantid='panavel';
+update attribute_definition set datatype='number' where code='WCMSNOP' and tenantid='panavel';
+update attribute_definition set datatype='number' where code='RDN' and tenantid='panavel';
+update attribute_definition set datatype='date' where code='RDD' and tenantid='panavel';
+update attribute_definition set datatype='date' where code='SDED' and tenantid='panavel';

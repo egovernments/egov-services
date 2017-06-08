@@ -1,12 +1,8 @@
 class ShowGrade extends React.Component {
   constructor(props) {
     super(props);
-    this.state={grades:[],gradeSet:{
-        name:"",
-        description:"",
-        orderNo:"",
-        active:""
-      }
+    this.state={
+      grades:[]
   }
 
   }
@@ -51,7 +47,6 @@ class ShowGrade extends React.Component {
 
   render() {
     let {grades}=this.state;
-    let {name,description,orderNo,active}=this.state.gradeSet;
 
     const renderAction=function(type,id){
       if (type==="update") {

@@ -763,6 +763,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     alert("Agreement is not applicable for selected category");
+    window.open(location, '_self').close();
 }
 
 try {
@@ -933,7 +934,7 @@ getDesignations(null, function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-});
+},"Create Agreement");
 
 if (assetDetails && Object.keys(assetDetails).length) {
     $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
@@ -997,7 +998,7 @@ if (assetDetails && Object.keys(assetDetails).length) {
                     $("#shoppingComplexAddress").val(attrs[i].value);
                     break;
 
-            } 
+            }
         }
     }
 }
@@ -1143,7 +1144,7 @@ $("#createAgreementForm").validate({
                           _key.shift();
                           _key = _key.join(".");
                         }
-                        err += "\n " + _key + " " + response["responseJSON"].Error.fields[key] + " "; //HERE
+                        err += "\n " + _key + "- " + response["responseJSON"].Error.fields[key] + " "; //HERE
                       }
                       showError(err);
                     } else {

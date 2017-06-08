@@ -25,9 +25,8 @@ public class BankBranchQueueRepository {
 
 		if ("create".equalsIgnoreCase(bankBranchContractRequest.getRequestInfo().getAction()))
 			bankBranchContractRequestMap.put("BankBranchCreate", bankBranchContractRequest);
-		else if ("updateAll".equalsIgnoreCase(bankBranchContractRequest.getRequestInfo().getAction()))
-			bankBranchContractRequestMap.put("BankBranchUpdateAll", bankBranchContractRequest);
-		else if ("update".equalsIgnoreCase(bankBranchContractRequest.getRequestInfo().getAction()))
+		else if ("updateAll".equalsIgnoreCase(bankBranchContractRequest.getRequestInfo().getAction())
+				|| "update".equalsIgnoreCase(bankBranchContractRequest.getRequestInfo().getAction()))
 			bankBranchContractRequestMap.put("BankBranchUpdate", bankBranchContractRequest);
 
 		financialProducer.sendMessage(bankBranchValidatedTopic, bankBranchValidatedKey, bankBranchContractRequestMap);

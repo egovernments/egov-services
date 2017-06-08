@@ -17,6 +17,8 @@ import org.egov.egf.persistence.entity.Fund;
 import org.egov.egf.persistence.queue.contract.BankAccountContract;
 import org.egov.egf.persistence.queue.contract.BankAccountContractRequest;
 import org.egov.egf.persistence.queue.contract.BankAccountContractResponse;
+import org.egov.egf.persistence.queue.contract.BankBranchContract;
+import org.egov.egf.persistence.queue.contract.BankBranchGetRequest;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.repository.BankAccountJpaRepository;
@@ -103,8 +105,8 @@ public class BankAccountService {
 
 	@Transactional
 	public BankAccountContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
-		final BankAccountContractRequest bankAccountContractRequest = ObjectMapperFactory.create()
-				.convertValue(financialContractRequestMap.get("BankAccountCreate"), BankAccountContractRequest.class);
+		final BankAccountContractRequest bankAccountContractRequest = ObjectMapperFactory.create().convertValue(
+				financialContractRequestMap.get("BankAccountUpdateAll"), BankAccountContractRequest.class);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		ModelMapper modelMapper = new ModelMapper();
@@ -144,7 +146,15 @@ public class BankAccountService {
 
 	private void setBankAccount(final BankAccount bankAccount) {
 		if (bankAccount.getBankBranch() != null) {
-			final BankBranch bankBranch = bankBranchService.findOne(bankAccount.getBankBranch());
+			BankBranchGetRequest bankBranchGetRequest = new BankBranchGetRequest();
+			bankBranchGetRequest.setId(new ArrayList<Long>());
+			bankBranchGetRequest.getId().add(bankAccount.getBankBranch());
+			List<BankBranchContract> bankBranches = bankBranchService.getBankBranchs(bankBranchGetRequest);
+			BankBranch bankBranch;
+			if (bankBranches != null && !bankBranches.isEmpty())
+				bankBranch = new BankBranch(bankBranches.get(0));
+			else
+				bankBranch = null;
 			if (bankBranch == null)
 				throw new InvalidDataException("bankBranch", "bankBranch.invalid", " Invalid bankBranch");
 			bankAccount.setBankBranch(bankBranch.getId());
@@ -217,7 +227,15 @@ public class BankAccountService {
 		final ModelMapper model = new ModelMapper();
 		for (final BankAccountContract bankAccount : bankAccountContractRequest.getBankAccounts()) {
 			if (bankAccount.getBankBranch() != null) {
-				final BankBranch bankBranch = bankBranchService.findOne(bankAccount.getBankBranch().getId());
+				BankBranchGetRequest bankBranchGetRequest = new BankBranchGetRequest();
+				bankBranchGetRequest.setId(new ArrayList<Long>());
+				bankBranchGetRequest.getId().add(bankAccount.getBankBranch().getId());
+				List<BankBranchContract> bankBranches = bankBranchService.getBankBranchs(bankBranchGetRequest);
+				BankBranch bankBranch;
+				if (bankBranches != null && !bankBranches.isEmpty())
+					bankBranch = new BankBranch(bankBranches.get(0));
+				else
+					bankBranch = null;
 				if (bankBranch == null)
 					throw new InvalidDataException("bankBranch", "bankBranch.invalid", " Invalid bankBranch");
 				model.map(bankBranch, bankAccount.getBankBranch());
@@ -240,7 +258,15 @@ public class BankAccountService {
 		}
 		final BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
 		if (bankAccount.getBankBranch() != null) {
-			final BankBranch bankBranch = bankBranchService.findOne(bankAccount.getBankBranch().getId());
+			BankBranchGetRequest bankBranchGetRequest = new BankBranchGetRequest();
+			bankBranchGetRequest.setId(new ArrayList<Long>());
+			bankBranchGetRequest.getId().add(bankAccount.getBankBranch().getId());
+			List<BankBranchContract> bankBranches = bankBranchService.getBankBranchs(bankBranchGetRequest);
+			BankBranch bankBranch;
+			if (bankBranches != null && !bankBranches.isEmpty())
+				bankBranch = new BankBranch(bankBranches.get(0));
+			else
+				bankBranch = null;
 			if (bankBranch == null)
 				throw new InvalidDataException("bankBranch", "bankBranch.invalid", " Invalid bankBranch");
 			model.map(bankBranch, bankAccount.getBankBranch());

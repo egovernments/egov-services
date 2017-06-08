@@ -64,6 +64,9 @@ public class LeaveTypeService {
 
 	@Autowired
 	private LeaveTypeProducer leaveTypeProducer;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public List<LeaveType> getLeaveTypes(LeaveTypeGetRequest leaveTypeGetRequest) {
 		return leaveTypeRepository.findForCriteria(leaveTypeGetRequest);
@@ -78,11 +81,10 @@ public class LeaveTypeService {
 	}
 
 	public List<LeaveType> createLeaveType(final LeaveTypeRequest leaveTypeRequest) {
-		final ObjectMapper mapper = new ObjectMapper();
 		String leaveTypeValue = null;
 		try {
 			logger.info("createLeaveType service::" + leaveTypeRequest);
-			leaveTypeValue = mapper.writeValueAsString(leaveTypeRequest);
+			leaveTypeValue = objectMapper.writeValueAsString(leaveTypeRequest);
 			logger.info("leaveTypeValue::" + leaveTypeValue);
 		} catch (final JsonProcessingException e) {
 			e.printStackTrace();

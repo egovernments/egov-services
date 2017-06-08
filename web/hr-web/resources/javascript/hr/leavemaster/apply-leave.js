@@ -336,7 +336,7 @@ addOrUpdate(e, mode) {
                         if (err.LeaveApplication && err.LeaveApplication[0] && err.LeaveApplication[0].errorMsg) {
                           showError(err.LeaveApplication[0].errorMsg);
                         } else {
-                          showError("Leave Application already exists for the same date range provided.");
+                          showError("Something went wrong. Please contact Administrator.");
                         }
                       }
                   });

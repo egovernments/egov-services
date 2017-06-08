@@ -142,6 +142,9 @@ public class ErrorHandler {
 				} else if (fieldError.getField().contains("assignments")
 						&& (fieldError.getDefaultMessage().contains("no primary assignment"))) {
 					error.getFields().put(fieldError.getField(), "No Primary Assignment Provided");
+				} else if (fieldError.getField().contains("position")
+						&& (fieldError.getDefaultMessage().contains("primary position(s) concurrent"))) {
+					error.getFields().put(fieldError.getField(), "Primary Position Not Vacant");
 				} else if (fieldError.getField().contains("employee.id")
 						&& (fieldError.getDefaultMessage().contains("provide employee id for update"))) {
 					error.getFields().put(fieldError.getField(), "provide employee id for update");

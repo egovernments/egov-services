@@ -557,19 +557,5 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("assignments_function")));
             }
             break;
-        case 'schemes':
-            if (!localStorage.getItem("schemes") || localStorage.getItem("schemes") == "undefined") {
-                getCommonMaster("egf-masters", "schemes", function(err, res) {
-                    if (res) {
-                        localStorage.setItem("schemes", JSON.stringify(res["schemes"]));
-                        cb(res["schemes"]);
-                    } else {
-                        cb([]);
-                    }
-                })
-            } else {
-                cb(JSON.parse(localStorage.getItem("schemes")));
-            }
-            break;
     }
 }

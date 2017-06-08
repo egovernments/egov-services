@@ -160,7 +160,7 @@ public class ServiceRequestServiceTest {
     public void testShouldFindAllComplaintsBySearchCriteria() {
         final ServiceRequestSearchCriteria searchCriteria = ServiceRequestSearchCriteria.builder().build();
         final ServiceRequest expectedComplaint = getComplaint();
-        when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
+        when(complaintRepository.find(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
 
         final List<ServiceRequest> actualComplaints = serviceRequestService.findAll(searchCriteria);
 
@@ -176,6 +176,7 @@ public class ServiceRequestServiceTest {
             .userId("userId")
             .firstName("first name")
             .mobile("mobile number")
+            .email("email@gmail.com")
             .build();
         return ServiceRequest.builder()
             .requester(complainant)

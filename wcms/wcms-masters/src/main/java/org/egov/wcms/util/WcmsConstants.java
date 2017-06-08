@@ -126,7 +126,10 @@ public class WcmsConstants {
     public static final String CODE_TENANT_UNQ_FIELD_NAME = "code";
     public static final String CODE_TENANT_UNQ_ERROR_MESSAGE = "Entered combination of Document Code and Tenant ID already exists. Please check!";
     
-    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE = "wcms.0016";
+    @Autowired
+        private Environment environment;
+
+    public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE = "wcms.0014";
     public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_ERROR_MESSAGE = "propertyType";
     public static final String PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_FIELD_NAME = "PropertyType is required";
 
@@ -233,9 +236,6 @@ public class WcmsConstants {
     public static final String WATERSOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Water Source Type is required";
 
  
-
-    @Autowired
-    private Environment environment;
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

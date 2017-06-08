@@ -156,6 +156,13 @@ class UpdateLeave extends React.Component {
                 }
               }
 
+              _this.setState({
+                leaveSet: {
+                    ..._this.state.leaveSet,
+                    [_triggerId]: $("#" + _triggerId).val(),
+                    leaveDays: _days
+                }
+              });
 
 
               setTimeout(function() {
@@ -168,14 +175,21 @@ class UpdateLeave extends React.Component {
                       }, function(err, res) {
                         if(res) {
                           var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-                          if(_day <=0 || _day ==""){
-                            return (showError("You Do not have leave for this leave type."));
+                          if(_day <=0 || _day =="") {
+
+                            _this.setState({
+                              leaveSet:{
+                                ..._this.state.leaveSet,
+                                availableDays: ""
+                              }
+                            });
+                            return (showError("You do not have leave for this leave type."));
                           }
                           else{
                             _this.setState({
                               leaveSet:{
                                 ..._this.state.leaveSet,
-                                availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : ""
+                                availableDays: res["EligibleLeave"][0].noOfDays
                               }
                             });
                           }
@@ -243,13 +257,23 @@ class UpdateLeave extends React.Component {
             if(res) {
               var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
                 if(_day <=0 || _day ==""){
-                  return (showError("You Do not have leave for this Leave Type."));
+                  _this.setState({
+                    leaveSet:{
+                      ..._this.state.leaveSet,
+                      availableDays:  "",
+                      [pName]:{
+                          ..._this.state.leaveSet[pName],
+                          [name]:""
+                    }
+                  }
+                });
+                  return (showError("You do not have leave for this Leave Type."));
                 }
                 else {
                   _this.setState({
                   leaveSet:{
                     ..._this.state.leaveSet,
-                    availableDays: res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "",
+                    availableDays: res["EligibleLeave"][0].noOfDays,
                     [pName]:{
                         ..._this.state.leaveSet[pName],
                         [name]:e.target.value
@@ -293,9 +317,11 @@ handleProcess(e) {
     e.preventDefault();
     var ID = e.target.id,_this = this, employee= {}, owner;
     var stateId = getUrlVars()["stateId"];
+    var _this = this;
 
-    //Make your server calls here for these actions/buttons
-    //Please test it, I have only wrote the code, not tested - Sourabh
+    if( _this.state.availableDays<=0) {
+      return (showError("You do not have leave for this leave type."));
+    }
 
             if (ID === "Submit") {
                 var employee;

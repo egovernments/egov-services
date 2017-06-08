@@ -95,7 +95,7 @@ public class AgreementDetails {
 		this.tradeLicenseNumber = agreement.getTradelicenseNumber();
 		this.paymentCycle = agreement.getPaymentCycle().toString();
 		this.rentIncrementMethod = agreement.getRentIncrementMethod().getType();
-		this.orderNumber = agreement.getOrderNo();
+		this.orderNumber = agreement.getOrderNumber();
 		this.orderDate = agreement.getOrderDate();
 		this.rrReadingNumber = agreement.getRrReadingNo();
 		this.remarks = agreement.getRemarks();

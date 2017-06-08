@@ -10,10 +10,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+
 import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
@@ -22,10 +24,12 @@ import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.AgreementRepository;
+import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.util.AcknowledgementNumberUtil;
 import org.egov.lams.util.AgreementNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
@@ -38,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -68,6 +73,9 @@ public class AgreementService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	private AllotteeRepository allotteeRepository;
 
 	/**
 	 * service call to single agreement based on acknowledgementNumber
@@ -317,12 +325,18 @@ public class AgreementService {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
-		String tenantId = requestInfoWrapper.getRequestInfo().getUserInfo().getTenantId();
-
+		String tenantId = requestInfo.getUserInfo().getTenantId();
+		
+		Allottee allottee = new Allottee();
+		allottee.setUserName(requestInfo.getUserInfo().getUserName());
+		allottee.setTenantId(tenantId);
+		AllotteeResponse allotteeResponse = allotteeRepository.getAllottees(allottee,requestInfoWrapper.getRequestInfo());
+		allottee = allotteeResponse.getAllottee().get(0);
+		
 		PositionResponse positionResponse = null;
 		String positionUrl = propertiesManager.getEmployeeServiceHostName() + propertiesManager
 				.getEmployeeServiceSearchPath().replace(propertiesManager.getEmployeeServiceSearchPathVariable(),
-						requestInfo.getUserInfo().getId().toString())
+						allottee.getId().toString())
 				+ "?tenantId=" + tenantId;
 
 		logger.info("the request url to position get call :: " + positionUrl);

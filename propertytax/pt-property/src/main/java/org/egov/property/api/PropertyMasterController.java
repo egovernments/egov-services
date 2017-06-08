@@ -223,7 +223,7 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/structures/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/structureclasses/_search",method=RequestMethod.POST)
 	public MasterResponse getStructureMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 
 		MasterModel	masterModel=	masterService.getStructureMaster(tenantId, code,requestInfo.getRequestInfo());

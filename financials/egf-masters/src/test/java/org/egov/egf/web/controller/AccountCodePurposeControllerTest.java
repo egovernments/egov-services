@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.queue.contract.AccountCodePurposeContractRequest;
+import org.egov.egf.persistence.queue.contract.AccountCodePurposeGetRequest;
 import org.egov.egf.persistence.service.AccountCodePurposeService;
 import org.egov.egf.utils.Resources;
 import org.junit.Test;
@@ -22,8 +23,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,10 +44,10 @@ public class AccountCodePurposeControllerTest {
 	public void testCreate() throws IOException, Exception {
 
 		mockMvc.perform(post("/accountcodepurposes/_create")
-				.content(resources.getFileContents("accountCodePurposeContractCreateRequest.json"))
+				.content(resources.getFileContents("accountcodepurpose/accountCodePurposeContractCreateRequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.getFileContents("accountCodePurposeContractCreateResponse.json")));
+				.andExpect(content().json(resources.getFileContents("accountcodepurpose/accountCodePurposeContractCreateResponse.json")));
 		final ArgumentCaptor<AccountCodePurposeContractRequest> argumentCaptor = ArgumentCaptor
 				.forClass(AccountCodePurposeContractRequest.class);
 
@@ -66,10 +65,10 @@ public class AccountCodePurposeControllerTest {
 	public void testUpdate() throws IOException, Exception {
 
 		mockMvc.perform(post("/accountcodepurposes/1/_update")
-				.content(resources.getFileContents("accountCodePurposeContractUpdateRequest.json"))
+				.content(resources.getFileContents("accountcodepurpose/accountCodePurposeContractUpdateRequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.getFileContents("accountCodePurposeContractUpdateResponse.json")));
+				.andExpect(content().json(resources.getFileContents("accountcodepurpose/accountCodePurposeContractUpdateResponse.json")));
 
 		final ArgumentCaptor<AccountCodePurposeContractRequest> argumentCaptor = ArgumentCaptor
 				.forClass(AccountCodePurposeContractRequest.class);
@@ -84,37 +83,44 @@ public class AccountCodePurposeControllerTest {
 		assertEquals("default", actualRequest.getAccountCodePurpose().getTenantId());
 	}
 
-	/*@Test
+	@Test
 	public void testSearch() throws IOException, Exception {
 
-		final ArgumentCaptor<AccountCodePurposeContractRequest> argumentCaptor = ArgumentCaptor
+		final ArgumentCaptor<AccountCodePurposeGetRequest> argumentCaptor = ArgumentCaptor
+				.forClass(AccountCodePurposeGetRequest.class);
+
+		final ArgumentCaptor<AccountCodePurposeContractRequest> argumentCaptor1 = ArgumentCaptor
 				.forClass(AccountCodePurposeContractRequest.class);
 
-		when(accountCodePurposeService.search(argumentCaptor.capture())).thenReturn(getAccountCodePurpose());
-		mockMvc.perform(post("/accountcodepurposes/_search")
-				.content(resources.getFileContents("accountCodePurposeContractSearchRequest.json"))
+		when(accountCodePurposeService.getAccountCodePurposes(argumentCaptor.capture()))
+				.thenReturn(getAccountCodePurpose());
+		mockMvc.perform(post("/accountcodepurposes/_search?name=test")
+				.content(resources.getFileContents("accountcodepurpose/accountCodePurposeContractSearchRequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
-				.andExpect(content().json(resources.getFileContents("accountCodePurposeContractSearchResponse.json")));
+				.andExpect(content().json(resources.getFileContents("accountcodepurpose/accountCodePurposeContractSearchResponse.json")));
 
-		verify(accountCodePurposeService).validate(argumentCaptor.capture(), any(String.class),
+		verify(accountCodePurposeService).validate(argumentCaptor1.capture(), any(String.class),
 				any(BindingResult.class));
-		verify(accountCodePurposeService).fetchRelatedContracts(argumentCaptor.capture());
+		verify(accountCodePurposeService).fetchRelatedContracts(argumentCaptor1.capture());
 
-		final AccountCodePurposeContractRequest actualRequest = argumentCaptor.getValue();
-		assertEquals("action", actualRequest.getRequestInfo().getAction());
-		assertEquals("did", actualRequest.getRequestInfo().getDid());
-		assertEquals("msgId", actualRequest.getRequestInfo().getMsgId());
-		assertEquals("requesterId", actualRequest.getRequestInfo().getRequesterId());
-	}*/
+		final AccountCodePurposeGetRequest actualRequest = argumentCaptor.getValue();
+		assertEquals("test", actualRequest.getName());
+
+		final AccountCodePurposeContractRequest actualRequest1 = argumentCaptor1.getValue();
+		assertEquals("action", actualRequest1.getRequestInfo().getAction());
+		assertEquals("did", actualRequest1.getRequestInfo().getDid());
+		assertEquals("msgId", actualRequest1.getRequestInfo().getMsgId());
+		assertEquals("requesterId", actualRequest1.getRequestInfo().getRequesterId());
+	}
 
 	@Test
 	public void testUpdateAll() throws IOException, Exception {
 
 		mockMvc.perform(post("/accountcodepurposes/_update")
-				.content(resources.getFileContents("accountCodePurposeContractUpdateAllRequest.json"))
+				.content(resources.getFileContents("accountcodepurpose/accountCodePurposeContractUpdateAllRequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.getFileContents("accountCodePurposeContractUpdateAllResponse.json")));
+						content().json(resources.getFileContents("accountcodepurpose/accountCodePurposeContractUpdateAllResponse.json")));
 		final ArgumentCaptor<AccountCodePurposeContractRequest> argumentCaptor = ArgumentCaptor
 				.forClass(AccountCodePurposeContractRequest.class);
 
@@ -128,12 +134,12 @@ public class AccountCodePurposeControllerTest {
 		assertEquals("default", actualRequest.getAccountCodePurposes().get(0).getTenantId());
 	}
 
-	private Page<AccountCodePurpose> getAccountCodePurpose() {
+	private List<AccountCodePurpose> getAccountCodePurpose() {
 		List<AccountCodePurpose> accountCodePurposeList = new ArrayList<AccountCodePurpose>();
 		AccountCodePurpose accountCodePurpose = new AccountCodePurpose();
 		accountCodePurpose.setName("accountCodePurpose1");
 		accountCodePurposeList.add(accountCodePurpose);
-		return new PageImpl<AccountCodePurpose>(accountCodePurposeList);
+		return accountCodePurposeList;
 	}
 
 }

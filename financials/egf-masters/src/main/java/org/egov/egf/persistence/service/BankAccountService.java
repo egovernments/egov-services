@@ -149,7 +149,7 @@ public class BankAccountService {
 			BankBranchGetRequest bankBranchGetRequest = new BankBranchGetRequest();
 			bankBranchGetRequest.setId(new ArrayList<Long>());
 			bankBranchGetRequest.getId().add(bankAccount.getBankBranch());
-			List<BankBranchContract> bankBranches = bankBranchService.getBankBranchs(bankBranchGetRequest);
+			List<BankBranchContract> bankBranches = bankBranchService.getBankBranches(bankBranchGetRequest);
 			BankBranch bankBranch;
 			if (bankBranches != null && !bankBranches.isEmpty())
 				bankBranch = new BankBranch(bankBranches.get(0));
@@ -230,7 +230,7 @@ public class BankAccountService {
 				BankBranchGetRequest bankBranchGetRequest = new BankBranchGetRequest();
 				bankBranchGetRequest.setId(new ArrayList<Long>());
 				bankBranchGetRequest.getId().add(bankAccount.getBankBranch().getId());
-				List<BankBranchContract> bankBranches = bankBranchService.getBankBranchs(bankBranchGetRequest);
+				List<BankBranchContract> bankBranches = bankBranchService.getBankBranches(bankBranchGetRequest);
 				BankBranch bankBranch;
 				if (bankBranches != null && !bankBranches.isEmpty())
 					bankBranch = new BankBranch(bankBranches.get(0));
@@ -261,7 +261,7 @@ public class BankAccountService {
 			BankBranchGetRequest bankBranchGetRequest = new BankBranchGetRequest();
 			bankBranchGetRequest.setId(new ArrayList<Long>());
 			bankBranchGetRequest.getId().add(bankAccount.getBankBranch().getId());
-			List<BankBranchContract> bankBranches = bankBranchService.getBankBranchs(bankBranchGetRequest);
+			List<BankBranchContract> bankBranches = bankBranchService.getBankBranches(bankBranchGetRequest);
 			BankBranch bankBranch;
 			if (bankBranches != null && !bankBranches.isEmpty())
 				bankBranch = new BankBranch(bankBranches.get(0));

@@ -82,7 +82,7 @@ public class BankBranchService {
 		return bankBranchContractResponse;
 	}
 
-	public List<BankBranchContract> getBankBranchs(BankBranchGetRequest bankBranchGetRequest) {
+	public List<BankBranchContract> getBankBranches(BankBranchGetRequest bankBranchGetRequest) {
 		return bankBranchRepository.findForCriteria(bankBranchGetRequest);
 	}
 

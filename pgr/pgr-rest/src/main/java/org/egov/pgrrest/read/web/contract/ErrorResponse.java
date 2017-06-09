@@ -27,5 +27,9 @@ public class ErrorResponse {
     public List<ErrorField> getErrorFields() {
         return error.getFields();
     }
+
+	public ErrorResponse() {
+		// TODO Auto-generated constructor stub
+	}
 }
 

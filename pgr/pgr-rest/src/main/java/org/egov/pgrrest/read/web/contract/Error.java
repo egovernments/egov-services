@@ -19,7 +19,10 @@ import java.util.List;
 @EqualsAndHashCode
 @Builder
 public class Error {
-    private int code;
+    public Error() {
+		// TODO Auto-generated constructor stub
+	}
+	private int code;
     private String message;
     private String description;
     private List<ErrorField> fields;

@@ -21,8 +21,6 @@ public class UserResponse {
     @JsonProperty("user")
     List<User> users;
     
-    User user;
-
     public boolean isGrievanceOfficer(){
         if (users.size() > 0){
             Set<Role> userRoles = users.get(0).getRoles();

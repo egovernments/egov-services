@@ -37,42 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgrrest.master.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+package org.egov.pgrrest.master.model.enums;
 
-@Configuration
-@PropertySource(value = { "classpath:messages/messages.properties",
-        "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class PgrMasterConstants {
 
-    @Autowired
-    private Environment environment;
-	
-    public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
-    public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
-    
-    public static final String INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE="ReceivingCenter is Invalid.";
+import org.apache.commons.lang3.StringUtils;
 
-    public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
-    public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
-    public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-    public static final String ACTIVE_MANDATORY_CODE = "wcms.0002";
-    public static final String ACTIVE_MANADATORY_FIELD_NAME = "active";
-    public static final String ACTIVE_MANADATORY_ERROR_MESSAGE = "Active is required";
+public enum BoundaryType {
+   CITY("CITY"), CIRCLE("CIRCLE"), ZONE("ZONE"), WARD("WARD"), LOCALITY("LOCALITY"), BLOCK("BLOCK"),STREET("STREET");
 
-    public static final String CATEGORY_NAME_MANDATORY_CODE = "wcms.0003";
-    public static final String CATEGORY_NAME_MANADATORY_FIELD_NAME = "name";
-    public static final String CATEGORY_NAME_MANADATORY_ERROR_MESSAGE = "Category Type is required";
+    private String value;
 
-    public String getErrorMessage(final String property) {
-        return environment.getProperty(property);
+    BoundaryType(final String value) {
+        this.value = value;
     }
 
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
+
+    @JsonCreator
+    public static BoundaryType fromValue(final String passedValue) {
+        for (final BoundaryType obj : BoundaryType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.lams.notification.adapter.AgreementNotificationAdapter;
 import org.egov.lams.notification.models.Agreement;
+import org.egov.lams.notification.web.contract.AgreementRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class AgreementNotificationConsumer {
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				agreementNotificationAdapter
-						.sendSmsNotification(objectMapper.readValue(record.value(), Agreement.class));
+						.sendSmsNotification(objectMapper.readValue(record.value(), AgreementRequest.class));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

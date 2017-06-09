@@ -1,4 +1,4 @@
-package org.egov.lams.notification.types;
+package org.egov.lams.notification.web.contract;
 
 import org.egov.lams.notification.model.enums.Priority;
 import org.egov.lams.notification.models.Sms;

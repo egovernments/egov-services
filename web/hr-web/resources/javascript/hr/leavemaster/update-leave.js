@@ -49,6 +49,7 @@ class UpdateLeave extends React.Component {
     var process = [], employee;
     var  _leaveSet = {};
     var  hrConfigurations = [], allHolidayList = [];
+    $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
     commonApiPost("hr-masters", "hrconfigurations", "_search", {
           tenantId
@@ -175,7 +176,7 @@ class UpdateLeave extends React.Component {
                       }, function(err, res) {
                         if(res) {
                           var _day =  res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-                          if(_day <=0 || _day =="") {
+                          if( _day <=0 || _day =="") {
 
                             _this.setState({
                               leaveSet:{
@@ -189,7 +190,7 @@ class UpdateLeave extends React.Component {
                             _this.setState({
                               leaveSet:{
                                 ..._this.state.leaveSet,
-                                availableDays: res["EligibleLeave"][0].noOfDays
+                                availableDays: _day
                               }
                             });
                           }
@@ -247,10 +248,10 @@ class UpdateLeave extends React.Component {
 
 
     handleChangeThreeLevel(e,pName,name) {
-      var _this = this;
+      var _this = this , val = e.target.value;
       if(pName=="leaveType" && _this.state.leaveSet.toDate){
 
-          var leaveType = e.target.value;
+          var leaveType = val;
           var asOnDate = _this.state.leaveSet.toDate;
           var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
           commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}, function(err, res) {
@@ -273,10 +274,10 @@ class UpdateLeave extends React.Component {
                   _this.setState({
                   leaveSet:{
                     ..._this.state.leaveSet,
-                    availableDays: res["EligibleLeave"][0].noOfDays,
+                    availableDays: _day,
                     [pName]:{
                         ..._this.state.leaveSet[pName],
-                        [name]:e.target.value
+                        [name]:val
                   }
                 }
                 });

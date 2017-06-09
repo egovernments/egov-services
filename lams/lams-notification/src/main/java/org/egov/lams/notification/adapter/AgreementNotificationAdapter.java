@@ -6,7 +6,8 @@ import org.egov.lams.notification.broker.AgreementNotificationProducer;
 import org.egov.lams.notification.config.PropertiesManager;
 import org.egov.lams.notification.models.Agreement;
 import org.egov.lams.notification.service.SmsNotificationService;
-import org.egov.lams.notification.types.SmsRequest;
+import org.egov.lams.notification.web.contract.AgreementRequest;
+import org.egov.lams.notification.web.contract.SmsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,9 @@ public class AgreementNotificationAdapter {
 	@Autowired
 	SmsRequest smsRequest;
 
-	public void sendSmsNotification(Agreement agreement) {
+	public void sendSmsNotification(AgreementRequest agreementRequest) {
 
+		Agreement agreement = agreementRequest.getAgreement();
 		if(!isEmpty(agreement.getWorkflowDetails()))
 		{
 		if(agreement.getWorkflowDetails().getAction() == null)

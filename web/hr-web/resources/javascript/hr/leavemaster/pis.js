@@ -263,9 +263,9 @@ class PersonalInform extends React.Component {
                               noOfLeave: "",
                               calendarYear: new Date().getFullYear()
                           },employees:[],
-                          isSearchClicked: false
+                          isSearchClicked: false,
+                          flag:1
                         });
-                        $('#employeeTable').dataTable().fnDestroy();
                     }
                 })
             } else {
@@ -281,9 +281,9 @@ class PersonalInform extends React.Component {
                       noOfLeave: "",
                       calendarYear: new Date().getFullYear()
                   },employees:[],
-                  isSearchClicked: false
+                  isSearchClicked: false,
+                  flag:1
                 });
-                $('#employeeTable').dataTable().fnDestroy();
             }
         })
     } else {
@@ -461,10 +461,9 @@ class PersonalInform extends React.Component {
       }
 
     }
-    const renderBody = function()
-    {
-      return employees.map((item, index)=>
-      {
+    const renderBody = function() {
+      if(employees.length>0) {
+      return employees.map((item, index)=> {
             return (<tr key={index}>
                     <td data-label="name">{item.name}</td>
                     <td data-label="code">{item.code}</td>
@@ -474,9 +473,10 @@ class PersonalInform extends React.Component {
                     </td>
                 </tr>
             );
-
       })
     }
+  }
+
     const showActionButton = function() {
       if(((!mode) || mode==="update") && employees.length) {
         return (<button type="button" className="btn btn-submit" onClick={(e) => {addOrUpdate(e)}}>{mode?"Update":"Add"}</button>);

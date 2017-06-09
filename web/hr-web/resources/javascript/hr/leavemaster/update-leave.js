@@ -49,6 +49,7 @@ class UpdateLeave extends React.Component {
     var process = [], employee;
     var  _leaveSet = {};
     var  hrConfigurations = [], allHolidayList = [];
+    $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
     commonApiPost("hr-masters", "hrconfigurations", "_search", {
           tenantId
@@ -247,7 +248,7 @@ class UpdateLeave extends React.Component {
 
 
     handleChangeThreeLevel(e,pName,name) {
-      var _this = this val = e.target.value;
+      var _this = this , val = e.target.value;
       if(pName=="leaveType" && _this.state.leaveSet.toDate){
 
           var leaveType = val;

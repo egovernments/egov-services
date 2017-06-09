@@ -334,7 +334,10 @@ public class WorkflowMatrixImpl implements Workflow {
 	public TaskResponse getTasks(TaskRequest taskRequest) {
 		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
 		final List<Task> tasks = new ArrayList<Task>();
-		final Long userId = taskRequest.getRequestInfo().getUserInfo().getId();
+		RequestInfo requestInfo = taskRequest.getRequestInfo();
+                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo.getUserInfo().getUserName(),
+                        requestInfo.getUserInfo().getTenantId());
+		final Long userId = userResponse.getUsers().get(0).getId();
 		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		final List<Long> ownerIds = positionRepository.getByEmployeeId(userId.toString(), taskRequest.getRequestInfo())
 				.parallelStream().map(position -> position.getId()).collect(Collectors.toList());

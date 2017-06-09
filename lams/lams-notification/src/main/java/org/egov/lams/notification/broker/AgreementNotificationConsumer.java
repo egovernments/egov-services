@@ -20,12 +20,10 @@ public class AgreementNotificationConsumer {
 	private AgreementNotificationAdapter agreementNotificationAdapter;
 
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-			"${kafka.topics.notification.agreement.name}", "${kafka.topics.notification.approval.name}",
-			"${kafka.topics.notification.reject.name}" })
+			"${kafka.topics.notification.agreement.create.name}", "${kafka.topics.notification.agreement.update.name}"})
 	public void listen(ConsumerRecord<String, String> record) {
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
 
-		if (record.topic().equals("agreement-save-db")) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				agreementNotificationAdapter
@@ -34,27 +32,5 @@ public class AgreementNotificationConsumer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (record.topic().equals("agreement-workflow")) {
-			ObjectMapper objectMapper = new ObjectMapper();
-			try {
-				agreementNotificationAdapter
-						.sendApprovalNotification(objectMapper.readValue(record.value(), Agreement.class));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		else if (record.topic().equals("agreement-rejected")) {
-			ObjectMapper objectMapper = new ObjectMapper();
-			try {
-				agreementNotificationAdapter
-						.sendRejectedNotification(objectMapper.readValue(record.value(), Agreement.class));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 	}
 }

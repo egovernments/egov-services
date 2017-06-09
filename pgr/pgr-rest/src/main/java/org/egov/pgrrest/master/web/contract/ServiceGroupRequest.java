@@ -42,7 +42,7 @@ package org.egov.pgrrest.master.web.contract;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgrrest.master.model.CategoryType;
+import org.egov.pgrrest.master.model.ServiceGroup;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,12 +59,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class CategoryTypeRequest {
+public class ServiceGroupRequest {
 
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("Category")
-    private CategoryType category;
+    @JsonProperty("ServiceGroup")
+    private ServiceGroup serviceGroup;
 }

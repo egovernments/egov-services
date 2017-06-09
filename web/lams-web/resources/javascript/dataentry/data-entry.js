@@ -309,7 +309,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
 
     //append category text
     $(".categoryType").prepend("Land ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Shop") {
     // validation rules for shop agreement
     validationRules = {
         // shoppingComplexName: {
@@ -773,7 +773,7 @@ try {
 
     if (rentInc && rentInc.constructor == Array) {
         for (var i = 0; i < rentInc.length; i++) {
-            $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['type']}</option>`)
+            $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`)
         }
     }
 } catch (e) {
@@ -1099,6 +1099,7 @@ $("#createAgreementForm").validate({
         agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         agreement["tenantId"] = tenantId;
         agreement["source"] = "DATA_ENTRY";
+        agreement["action"] = "CREATE";
         uploadFiles(agreement, function(err, _agreement) {
             if (err) {
                 //Handle error

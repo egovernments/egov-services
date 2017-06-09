@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * @Model IdResultSet Model
+ * @author Pavan Kumar Kamma
+ */
 @Data
 @Getter
 @Setter

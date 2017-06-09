@@ -2,14 +2,19 @@ package org.egov.lams.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
+import org.egov.lams.model.Cancellation;
 import org.egov.lams.model.Document;
+import org.egov.lams.model.Renewal;
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
@@ -56,7 +61,7 @@ public class AgreementRepository {
 	public boolean isAgreementExist(String code) {
 
 		Long  agreementId = null;
-		String sql = AgreementQueryBuilder.agreementQuery;
+		String sql = AgreementQueryBuilder.AGREEMENT_QUERY;
 		Object[] preparedStatementValues = new Object[] { code ,code };
 
 		try {
@@ -68,6 +73,20 @@ public class AgreementRepository {
 		
 		return (agreementId != null && agreementId != 0);
 	}
+	
+	public List<Agreement> getAgreementForCriteria(AgreementCriteria agreementsModel) {
+
+		List<Agreement> agreements = null;
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String sql = AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, preparedStatementValues);
+		try {
+			agreements = jdbcTemplate.query(sql, preparedStatementValues.toArray(),new AgreementRowMapper());
+		} catch (DataAccessException e) {
+			logger.info("exception in getagreement :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		return agreements;
+	}
 
 	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
 		List<Object> preparedStatementValues = new ArrayList<>();
@@ -75,7 +94,7 @@ public class AgreementRepository {
 
 		List<Allottee> allottees = getAllottees(agreementCriteria,requestInfo);
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdList(allottees));
-		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -104,7 +123,7 @@ public class AgreementRepository {
 		if (assets.size() > 1000) // FIXME
 			throw new RuntimeException("Asset criteria is too big");
 		agreementCriteria.setAsset(assetHelper.getAssetIdList(assets));
-		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -125,7 +144,7 @@ public class AgreementRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -148,7 +167,7 @@ public class AgreementRepository {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementSearchQuery(agreementCriteria, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -170,7 +189,7 @@ public class AgreementRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 
-		String queryStr = AgreementQueryBuilder.agreementSearchQuery(fetchAgreementsModel, preparedStatementValues);
+		String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(fetchAgreementsModel, preparedStatementValues);
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
@@ -220,8 +239,8 @@ public class AgreementRepository {
 	@Transactional
 	public void saveAgreement(AgreementRequest agreementRequest) {
 		
+		Map<String, Object> processMap = getProcessMap(agreementRequest);
 		Agreement agreement = agreementRequest.getAgreement();
-
 		logger.info("AgreementDao agreement::" + agreement);
 		
 		String agreementinsert = AgreementQueryBuilder.INSERT_AGREEMENT_QUERY;
@@ -233,8 +252,8 @@ public class AgreementRepository {
 		Object[] obj = new Object[] { agreement.getId(), agreement.getAgreementDate(), agreement.getAgreementNumber(),
 				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
 				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
-				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), agreement.getOrderDate(),
-				agreement.getOrderDetails(), agreement.getOrderNo(), agreement.getPaymentCycle().toString(),
+				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), processMap.get("orderDate"),
+				agreement.getOrderDetails(), processMap.get("orderNumber"), agreement.getPaymentCycle().toString(),
 				agreement.getRegistrationFee(), agreement.getRemarks(), agreement.getRent(), agreement.getRrReadingNo(),
 				agreement.getSecurityDeposit(), agreement.getSecurityDepositDate(),
 				agreement.getSolvencyCertificateDate(), agreement.getSolvencyCertificateNo(),
@@ -244,7 +263,8 @@ public class AgreementRepository {
 				agreement.getAsset().getId(), rentIncrement, agreement.getAcknowledgementNumber(),
 				agreement.getStateId(), agreement.getTenantId(), agreement.getGoodWillAmount(),
 				agreement.getTimePeriod(), agreement.getCollectedSecurityDeposit(),
-				agreement.getCollectedGoodWillAmount(), agreement.getSource().toString() };
+				agreement.getCollectedGoodWillAmount(), agreement.getSource().toString(),processMap.get("reason"),
+				processMap.get("terminationDate"),processMap.get("courtReferenceNumber"),agreement.getAction().toString() };
 
 		try {
 			jdbcTemplate.update(agreementinsert, obj);
@@ -298,6 +318,7 @@ public class AgreementRepository {
 
 	public void updateAgreement(AgreementRequest agreementRequest) {
 
+		Map<String, Object> processMap = getProcessMap(agreementRequest);
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("AgreementDao agreement::" + agreement);
 
@@ -306,8 +327,8 @@ public class AgreementRepository {
 		Object[] obj = new Object[] { agreement.getId(),agreement.getAgreementDate(), agreement.getAgreementNumber(),
 				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
 				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
-				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), agreement.getOrderDate(),
-				agreement.getOrderDetails(), agreement.getOrderNo(), agreement.getPaymentCycle().toString(),
+				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), processMap.get("orderDate"),
+				agreement.getOrderDetails(),processMap.get("orderNumber"), agreement.getPaymentCycle().toString(),
 				agreement.getRegistrationFee(), agreement.getRemarks(), agreement.getRent(), agreement.getRrReadingNo(),
 				agreement.getSecurityDeposit(), agreement.getSecurityDepositDate(),
 				agreement.getSolvencyCertificateDate(), agreement.getSolvencyCertificateNo(),
@@ -318,13 +339,15 @@ public class AgreementRepository {
 				agreement.getStateId(), agreement.getTenantId(),agreement.getGoodWillAmount(),
 				agreement.getTimePeriod(),agreement.getCollectedSecurityDeposit(),
 				agreement.getCollectedGoodWillAmount(),agreement.getSource().toString(),
+				processMap.get("reason"),processMap.get("terminationDate"),
+				processMap.get("courtReferenceNumber"),agreement.getAction().toString(),
 				
 				agreement.getAcknowledgementNumber(),agreement.getTenantId()};
 
 		try {
 			jdbcTemplate.update(agreementUpdate, obj);
 		} catch (DataAccessException ex) {
-			ex.printStackTrace();
+			logger.error("the exception from update demand in update agreement "+ex);
 			throw new RuntimeException(ex.getMessage());
 		}
 
@@ -347,36 +370,62 @@ public class AgreementRepository {
 			try {
 				jdbcTemplate.batchUpdate(sql, demandBatchArgs);
 			} catch (DataAccessException ex) {
-				ex.printStackTrace();
+				logger.error("the exception from add demand in update agreement "+ex);
 				throw new RuntimeException(ex.getMessage());
 			}
 		}
-		
-		
-	/*	List<Document> documents = agreement.getDocuments();
-		if(documents != null){
-			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";
-			List<Object[]> documentBatchArgs = new ArrayList<>();
-			
-			for (Document document : documents) {
-				Object[] documentRecord = { document.getDocumentType().getId(), agreement.getId(),
-						document.getFileStore(), agreement.getTenantId() };
-				documentBatchArgs.add(documentRecord);
-			}
-		
-			try {
-				jdbcTemplate.batchUpdate(sql, documentBatchArgs);
-			} catch (DataAccessException ex) {
-				ex.printStackTrace();
-				throw new RuntimeException(ex.getMessage());
-			}
-		}*/
-	
 	}
-	public Long getAgreementID(){
+	
+	private Map<String, Object> getProcessMap(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		String orderNumber = null;
+		String reason = null;
+		String courtReferenceNumber = null;
+		Date orderDate = null;
+		Date terminationDate = null;
+		Action action = agreement.getAction();
+
+		if(action!=null){
+		switch (action) {
+
+		case CANCELATION:
+					Cancellation cancellation = agreement.getCancellation();
+					orderNumber = cancellation.getOrderNumber();
+					orderDate = cancellation.getOrderDate();
+					reason = cancellation.getReasonForCancellation().toString();
+					terminationDate = cancellation.getTerminationDate();
+					break;
+		case RENEWAL:
+					Renewal renewal = agreement.getRenewal();
+					orderNumber = renewal.getRenewalOrderNumber();
+					orderDate = renewal.getRenewalOrderDate();
+					reason = renewal.getReasonForRenewal();
+					break;	
+		case EVICTION:
+			break;
+		case CREATE:
+			orderNumber = agreement.getOrderNumber();
+			orderDate = agreement.getOrderDate();
+			break;
+		case OBJECTION:
+			break;
+		}
+		}
+		Map<String, Object> processMap = new HashMap<>();
+		processMap.put("orderNumber", orderNumber);
+		processMap.put("orderDate", orderDate);
+		processMap.put("reason", reason);
+		processMap.put("courtReferenceNumber", courtReferenceNumber);
+		processMap.put("terminationDate", terminationDate);
+
+		return processMap;
+	}
+	
+	public Long getAgreementID() {
 		String agreementIdQuery = "select nextval('seq_eglams_agreement')";
 		try {
-				return jdbcTemplate.queryForObject(agreementIdQuery,Long.class);
+			return jdbcTemplate.queryForObject(agreementIdQuery, Long.class);
 		} catch (DataAccessException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());

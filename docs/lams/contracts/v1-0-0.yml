@@ -198,6 +198,66 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/ErrorRes'
+  
+  /agreements/_renew:
+    post:
+      description: “Renewal of Agreement” implies that the agreement is renewed before the expiry of the current agreement.
+      parameters:
+        - name: renewal
+          in: body
+          description: Details of the existing agreement which needs to be renew.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Renewal
+      responses:
+        '201':
+          description: Agreement renewed successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /agreements/_cancel:
+    post:
+      description: Cancellation of Agreement is a process that is initiated either by the ULB or by the Allottee due to various reasons. Agreement can be cancelled by either party at any given point of time, for the active shop agreement.
+      parameters:
+        - name: cancellation
+          in: body
+          description: Details of the existing agreement which needs to be cancel.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Cancellation
+      responses:
+        '201':
+          description: Agreement canceled successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorRes'
             
   /agreements/_update/{agreementId}:
     post:
@@ -503,6 +563,15 @@ definitions:
         type: integer
         format: int64
         description: unique id of the agreement.
+      action:
+        type: string
+        description: enumeration of action on agreement.
+        enum:
+          - Create
+          - Cancelation
+          - Eviction
+          - Renewal
+          - Objection
       agreementNumber:
         type: string
         description: unique agreement number.
@@ -664,7 +733,11 @@ definitions:
         type: string
         description: Work flow ref id.
       workFlowDetails:
-        $ref: '#/definitions/WorkFlowDetails'   
+        $ref: '#/definitions/WorkFlowDetails'
+      renewal:
+        $ref: '#/definitions/Renewal'
+      cancellation:
+        $ref: '#/definitions/Cancellation'
       tenantId:
         type: string
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
@@ -710,6 +783,46 @@ definitions:
         type: string
         format: double
         description: fixed amount used for increase in rent
+        
+  Renewal:
+    type: object
+    description: This object holds Agreement Renewal Details.
+    properties:
+      renewalOrderNo:
+        type: string
+        description: User should enter Renewal order number which provided by corporation/municipality
+      renewalOrderDate:
+        type: string
+        format: date
+        description: enter renewal order date.
+      reasonForRenewal:
+        type: string
+        format: date
+        description: User should able to enter reason for renewal.
+        
+  Cancellation:
+    type: object
+    description: This object holds Agreements Cancellation details. percentage or flat rates for a given asset category.
+    properties:
+      reasonForCancellation:
+        type: string
+        enum:
+          - Termination
+          - Cancellation
+        description: Termination and cancellation options to be displayed in the drop down. Options may increase in future.
+      terminationDate:
+        type: string
+        format: date
+        description: Date should accept current and future date.
+      orderNo:
+        type: string
+        format: date
+        description: Order number for cancelling agreement issued by the competent authority.
+      orderDate:
+        type: string
+        format: date
+        description: Date on which order was signed for cancelling agreement
+    
 
   WorkFlowDetails:
     type: object

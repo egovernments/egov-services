@@ -59,7 +59,7 @@ public class AllotteeRepository {
 		return allotteeResponse;
 	}
 
-	public AllotteeResponse isAllotteeExist(Allottee allottee, RequestInfo requestInfo) {
+	public AllotteeResponse getAllottees(Allottee allottee, RequestInfo requestInfo) {
 
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceSearchPath();
@@ -71,6 +71,7 @@ public class AllotteeRepository {
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
 		userSearchRequest.setTenantId(allottee.getTenantId());
+		userSearchRequest.setUserName(allottee.getUserName());
 		logger.info("url for allottee api post call :: " + url
 				+ "the request object for isAllotteeExist is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
@@ -127,28 +128,29 @@ public class AllotteeRepository {
 				allotteeResponse = restTemplate.postForObject(url, createUserRequest, AllotteeResponse.class);
 			} catch (HttpClientErrorException e) {
 				String errorResponseBody = e.getResponseBodyAsString();
-				System.err.println("Following exception occurred: " + e.getResponseBodyAsString());
+				logger.error("Following exception occurred: " + e.getResponseBodyAsString());
 				UserErrorResponse userErrorResponse = null;
 				try {
 					ObjectMapper mapper = new ObjectMapper();
 					userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
 				} catch (JsonMappingException jme) {
-					logger.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
+					logger.error("Following Exception Occurred While Mapping JSON Response From User Service : "
 							+ jme.getMessage());
-					jme.printStackTrace();
+					throw new RuntimeException(jme);
 				} catch (JsonProcessingException jpe) {
-					logger.debug("Following Exception Occurred While Processing JSON Response From User Service : "
+					logger.error("Following Exception Occurred While Processing JSON Response From User Service : "
 							+ jpe.getMessage());
-					jpe.printStackTrace();
+					throw new RuntimeException(jpe);
 				} catch (IOException ioe) {
-					logger.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
-					ioe.printStackTrace();
+					logger.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+					throw new RuntimeException(ioe);
 				}
 				 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
 					logger.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
+					throw new RuntimeException(e);
 			} catch (Exception e) {
-				logger.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
-				e.printStackTrace();
+				logger.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
+				throw new RuntimeException(e);
 			}
 		}
 		return allotteeResponse;

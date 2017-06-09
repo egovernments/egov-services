@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.enums.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,16 +12,19 @@ public class AgreementQueryBuilder {
 
 	public static final Logger logger = LoggerFactory.getLogger(AgreementQueryBuilder.class);
 
-	public static final String rentIncrementTypeQuery = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
+	public static final String RENT_INCREMENT_TYPE_QUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
 
-	public static final String agreementQuery = "SELECT id FROM eglams_agreement agreement WHERE "
+	public static final String AGREEMENT_QUERY = "SELECT id FROM eglams_agreement agreement WHERE "
 			+ "agreement.acknowledgementnumber=? OR agreement.agreement_no=?";
 	
-	public static final String baseSearchQuery =  "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
+	public static final String AGREEMENT_BY_ASSET_QUERY = "SELECT *,agreement.id as lamsagreementid  FROM eglams_agreement agreement WHERE "
+			+ "agreement.asset=?";
+	
+	public static final String BASE_SEARCH_QUERY =  "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
 			+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid";
 	
 	public static final String INSERT_AGREEMENT_QUERY = "INSERT INTO eglams_agreement values "
-				+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static String updateAgreementQuery() {
 
@@ -34,14 +38,15 @@ public class AgreementQueryBuilder {
 				+ "created_by=?,last_modified_by=?,created_date=?,last_modified_date=?,"
 				+ "allottee=?,asset=?,Rent_Increment_Method=?,"
 				+ "AcknowledgementNumber=?,stateid=?,Tenant_id=?,goodwillamount=?,timeperiod=?,"
-				+ "collectedsecuritydeposit=?,collectedgoodwillamount=?,source=?"
+				+ "collectedsecuritydeposit=?,collectedgoodwillamount=?,source=?,reason=?,"
+				+ "terminationDate=?,courtReferenceNumber=?,action=?"
 				+ " WHERE acknowledgementNumber=? and Tenant_id=?";
 	}
 
-	public static String agreementSearchQuery(AgreementCriteria agreementsModel,
+	public static String getAgreementSearchQuery(AgreementCriteria agreementsModel,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 
-		StringBuilder selectQuery = new StringBuilder(baseSearchQuery);
+		StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
 
 		if (!(agreementsModel.getAgreementId() == null && agreementsModel.getAgreementNumber() == null
 				&& (agreementsModel.getFromDate() == null && agreementsModel.getToDate() == null)
@@ -79,6 +84,9 @@ public class AgreementQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" AGREEMENT.STATUS=?");
 			preparedStatementValues.add(agreementsModel.getStatus().toString());
+		}else{
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED')");
 		}
 
 		if (agreementsModel.getTenantId() != null) {

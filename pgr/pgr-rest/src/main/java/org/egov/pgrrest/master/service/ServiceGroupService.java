@@ -40,10 +40,10 @@
 package org.egov.pgrrest.master.service;
 
 
-import org.egov.pgrrest.master.model.CategoryType;
+import org.egov.pgrrest.master.model.ServiceGroup;
 import org.egov.pgrrest.master.producers.PGRProducer;
-import org.egov.pgrrest.master.repository.CategoryTypeRepository;
-import org.egov.pgrrest.master.web.contract.CategoryTypeRequest;
+import org.egov.pgrrest.master.repository.ServiceGroupRepository;
+import org.egov.pgrrest.master.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,18 +53,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class CategoryTypeService {
+public class ServiceGroupService {
 
-    public static final Logger logger = LoggerFactory.getLogger(CategoryTypeService.class);
+    public static final Logger logger = LoggerFactory.getLogger(ServiceGroupService.class);
 
     @Autowired
-    private CategoryTypeRepository categoryRepository;
+    private ServiceGroupRepository categoryRepository;
 
     @Autowired
     private PGRProducer pgrProducer;
 
 
-    public CategoryTypeRequest create(final CategoryTypeRequest categoryRequest) {
+    public ServiceGroupRequest create(final ServiceGroupRequest categoryRequest) {
     	logger.info("Persisting category type record");
         return categoryRepository.persistCreateCategory(categoryRequest);
     }
@@ -73,14 +73,14 @@ public class CategoryTypeService {
         return categoryRepository.persistModifyCategory(categoryRequest);
     } */
 
-    public CategoryType createCategory(final CategoryTypeRequest categoryRequest) {
+    public ServiceGroup createCategory(final ServiceGroupRequest serviceGroupRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String categoryValue = null;
         String topic = "egov.pgr.categorytype-create";
         String key = "categorytype-create";
         try {
-            logger.info("createCategory service::" + categoryRequest);
-            categoryValue = mapper.writeValueAsString(categoryRequest);
+            logger.info("ServiceGroupRequest::" + serviceGroupRequest);
+            categoryValue = mapper.writeValueAsString(serviceGroupRequest);
             logger.info("categoryValue::" + categoryValue);
         } catch (final JsonProcessingException e) {
             logger.error("Exception Encountered : " + e);
@@ -90,7 +90,7 @@ public class CategoryTypeService {
         } catch (final Exception ex) {
             logger.error("Exception Encountered : " + ex);
         }
-        return categoryRequest.getCategory();
+        return serviceGroupRequest.getServiceGroup();
     }
 
  /*   public CategoryType updateCategory(final String topic, final String key,

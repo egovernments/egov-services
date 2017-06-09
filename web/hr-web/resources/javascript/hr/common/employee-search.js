@@ -17,14 +17,15 @@ class EmployeeSearch extends React.Component {
         },
         isSearchClicked: false,
         employeeTypeList: [],
-        departmentList: [],
-        designationList: [],
+        assignments_department: [],
+        assignments_designation: [],
         modified: false
     }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.handleClick=this.handleClick.bind(this);
   }
 
   setInitialState(initState) {
@@ -137,10 +138,10 @@ class EmployeeSearch extends React.Component {
     }
 
     getDropdown("assignments_designation", function(res) {
-      checkCountAndCall("designationList", res);
+      checkCountAndCall("assignments_designation", res);
     });
     getDropdown("assignments_department", function(res) {
-      checkCountAndCall("departmentList", res);
+      checkCountAndCall("assignments_department", res);
     });
     getDropdown("assignments_position", function(res) {
       checkCountAndCall("assignments_position", res);
@@ -178,10 +179,18 @@ class EmployeeSearch extends React.Component {
       open(location, '_self').close();
   }
 
+  handleClick(type, id) {
+    if (type === "update") {
+      window.open(`app/hr/employee/create.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }else {
+      window.open(`app/hr/employee/create.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }
+  }
+
   render() {
 
-    let {handleChange,search,handleBlur}=this;
-    let {isSearchClicked,employees, designationList, departmentList ,assignments_position}=this.state;
+    let {handleChange,search,handleBlur,handleClick}=this;
+    let {isSearchClicked,employees, assignments_designation, assignments_department ,assignments_position}=this.state;
     let {
     code,
     departmentId,
@@ -221,8 +230,6 @@ class EmployeeSearch extends React.Component {
                         <th>Employee Department</th>
                         <th>Employee Position</th>
                         <th>Date-Range</th>
-                        <th>Action</th>
-
                     </tr>
                 </thead>
 
@@ -238,43 +245,36 @@ class EmployeeSearch extends React.Component {
       }
     }
 
-
-    const renderAction=function(type,id){
-      if (type==="update") {
-              return (
-                      <a href={`app/hr/employee/create.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
-              );
-      } else {
-            return (
-                    <a href={`app/hr/employee/create.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
-            );
-      }
-}
-
-  //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
     const renderBody = function() {
-      if(employees.length>0)
-      {
-      return employees.map((item,index)=>
-      {
-            var ind = 0;
+      if(employees.length>0){
+      return employees.map((item,index)=> {
+            var ind = 0, sInd = 0;
             for(var i=0; i<item.assignments.length; i++) {
-              if([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+              var _from = item.assignments[i].fromDate;;
+              var _to = item.assignments[i].toDate;
+              var today = new Date().getTime();
+              var dateParts1 = _from.split("/");
+              var newDateStr1 = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+              var date1 = new Date(newDateStr1).getTime();
+              var dateParts2 = _to.split("/");
+              var newDateStr2 = dateParts2[1] + "/" + dateParts2[0] + "/ " + dateParts2[2];
+              var date2 = new Date(newDateStr2).getTime();
+              if(date1<=today && today<=date2 && [true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
                 ind = i;
                 break;
               }
+              sInd = [true, "true"].indexOf(item.assignments[i].isPrimary) > -1 ? i : "";
             }
-            return (<tr key={index}>
+            if(!ind)
+              ind = sInd;
+            return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
 
-                    <td data-label="designation">{getNameById(designationList,item.assignments[ind].designation)}</td>
-                    <td data-label="department">{getNameById(departmentList,item.assignments[ind].department)}</td>
+                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[ind].designation)}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.assignments[ind].department)}</td>
                     <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
                     <td data-label="range">{item.assignments[ind].fromDate}-{item.assignments[ind].toDate}</td>
-                    <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
                 </tr>
             );
 
@@ -305,7 +305,7 @@ class EmployeeSearch extends React.Component {
                             handleChange(e,"departmentId")
                         }}>
                           <option value="">Select department</option>
-                          {renderOption(this.state.departmentList)}
+                          {renderOption(this.state.assignments_department)}
                        </select>
                     </div>
                     </div>
@@ -322,7 +322,7 @@ class EmployeeSearch extends React.Component {
                               handleChange(e,"designationId")
                           }}>
                           <option value="">Select Designation</option>
-                          {renderOption(this.state.designationList)}
+                          {renderOption(this.state.assignments_designation)}
                          </select>
                       </div>
                       </div>

@@ -282,7 +282,7 @@ public class PaymentService {
 
 		// FIXME get the query String from query builder //FIXME do the
 		// jdbctemplate in repository
-		String sql = AgreementQueryBuilder.baseSearchQuery + " where agreement.acknowledgementnumber='" 
+		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='" 
 					+ consumerCode + "' OR agreement.agreement_no='" + consumerCode + "'";
 
 		LOGGER.info("the sql query for fetching agreement using consumercode ::: " + sql);
@@ -364,7 +364,7 @@ public class PaymentService {
 		BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
 		BigDecimal arrearAmount = BigDecimal.ZERO;
 		System.out.print("PaymentService- receiptAmountBifurcation - getting purpose");
-		Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
+		Map<String, String> purposeMap = billRepository.getPurpose(billReceiptInfo.getTenantId());
 		final List<BillDetailInfo> billDetails = new ArrayList<>(billInfo.getBillDetailInfos());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - " + rcptAccInfo);

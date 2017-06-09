@@ -19,13 +19,10 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class CategoryType {
+public class ServiceGroup {
 	
 	@NotNull
 	private long id;
-	
-	@NotNull
-	private String code;
 	
 	@NotNull
 	private String name;

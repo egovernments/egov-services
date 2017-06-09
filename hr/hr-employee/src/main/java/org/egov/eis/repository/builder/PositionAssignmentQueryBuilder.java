@@ -91,7 +91,6 @@ public class PositionAssignmentQueryBuilder {
 		}
 
 		if (positionGetRequest.getId() != null && !positionGetRequest.getId().isEmpty()) {
-			System.out.println("in builder" + positionGetRequest.getId());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" positionId IN  " + getIdQuery(positionGetRequest.getId()));
 		}

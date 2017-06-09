@@ -36,7 +36,7 @@ public class BankBranchController {
 	private BankBranchService bankBranchService;
 
 	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public BankBranchContractResponse create(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
 			BindingResult errors) {
 		bankBranchService.validate(bankBranchContractRequest, "create", errors);
@@ -126,7 +126,7 @@ public class BankBranchController {
 		bankBranchContractResponse.setPage(new Pagination());
 
 		List<BankBranchContract> bankBranchContractList = null;
-		bankBranchContractList = bankBranchService.getBankBranchs(bankBranchGetRequest);
+		bankBranchContractList = bankBranchService.getBankBranches(bankBranchGetRequest);
 		bankBranchContractResponse.getBankBranches().addAll(bankBranchContractList);
 
 		bankBranchContractResponse.getPage().map(new PageImpl<BankBranchContract>(bankBranchContractList));

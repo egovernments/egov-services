@@ -58,14 +58,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class CategoryTypeGetRequest {
+public class ServiceGroupGetRequest {
 
     private List<Long> id;
 
     @Length(min = 3, max = 100)
     private String name;
-
-    private String code;
 
     private String description;
 

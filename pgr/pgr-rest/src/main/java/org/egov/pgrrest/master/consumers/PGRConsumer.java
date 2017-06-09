@@ -44,8 +44,8 @@ package org.egov.pgrrest.master.consumers;
 import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.pgrrest.master.service.CategoryTypeService;
-import org.egov.pgrrest.master.web.contract.CategoryTypeRequest;
+import org.egov.pgrrest.master.service.ServiceGroupService;
+import org.egov.pgrrest.master.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public class PGRConsumer {
     public static final Logger LOGGER = LoggerFactory.getLogger(PGRConsumer.class);
 
     @Autowired
-    private CategoryTypeService categoryService;
+    private ServiceGroupService serviceGroupService;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.categorytype.create.name}" })
 
@@ -68,7 +68,7 @@ public class PGRConsumer {
         try {
         	if (record.topic().equals("${kafka.topics.categorytype.create.name}")){
         		LOGGER.info("Consuming create Category request");
-                categoryService.create(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
+                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
         	}
         } catch (final IOException e) {
             e.printStackTrace();

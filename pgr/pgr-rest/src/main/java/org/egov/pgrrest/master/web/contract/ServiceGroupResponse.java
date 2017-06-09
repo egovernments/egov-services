@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.master.model.CategoryType;
+import org.egov.pgrrest.master.model.ServiceGroup;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -60,11 +60,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class CategoryTypeResponse {
+public class ServiceGroupResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("Category")
-    private List<CategoryType> categories = new ArrayList<>();
+    @JsonProperty("ServiceGroups")
+    private List<ServiceGroup> serviceGroups = new ArrayList<>();
 }

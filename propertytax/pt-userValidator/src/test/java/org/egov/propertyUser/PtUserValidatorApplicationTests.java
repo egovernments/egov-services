@@ -24,34 +24,27 @@
 
 package org.egov.propertyUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.egov.models.Floor;
-import org.egov.models.Property;
-import org.egov.models.PropertyDetail;
-import org.egov.models.PropertyRequest;
-import org.egov.models.RequestInfo;
-import org.egov.models.User;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = { PtUserValidatorApplication.class })
 
 public class PtUserValidatorApplicationTests {
-
+/*
 	@Autowired
 	Environment environment;
+	
+	@Autowired
+	Producer producer;*/
+	
 
 
-	@Test
+/*	@Test
 	public void testCreatingProperty() throws Exception {
 		try {
 			PropertyRequest propertyRequest = new PropertyRequest();
@@ -69,6 +62,7 @@ public class PtUserValidatorApplicationTests {
 			property.setOccupancyDate("12/03/2018");
 			property.setTenantId("default");
 			PropertyDetail propertyDetail = new PropertyDetail();
+			propertyDetail.setTenantId("default");
 			propertyDetail.setChannel("eseva");
 			Floor floor = new Floor();
 			floor.setFloorNo("1");
@@ -82,19 +76,30 @@ public class PtUserValidatorApplicationTests {
 			property.setPropertydetails(propertyDetail);
 			List<User> users = new ArrayList<User>();
 			User user = new User();
-			user.setTenantId("User");
-			user.setUsername("Anilkumar S");
-			// user.getRoles().get(0).setName("testing");
+			user.setTenantId("default");
+			user.setUserName("TestForUserNaren");
+			user.setSalutation("Mr");
+			user.setName("TestNaren");
+			user.setGender("MALE");
+			user.setMobileNumber("9999999999");
+			user.setEmailId("pranav@egovernments.org");
+			user.setActive(true);
+			user.setLocale("en_US");
+			user.setType("CITIZEN");
+			user.setAccountLocked(false);
+			Role role=new Role();
+			role.setCode("CITIZEN");
+			List<Role> roles=new ArrayList<Role>();
+			roles.add(role);
+			user.setRoles(roles);
 			users.add(user);
 			property.setOwners(users);
 			properties.add(property);
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
-
-			//producer.send("userupdate", propertyRequest);
+			producer.send(environment.getProperty("validate.user"), propertyRequest);
 		} catch (Exception e) {
-
 		}
-	}
+	}*/
 
 }

@@ -42,11 +42,9 @@ package org.egov.lams.repository.builder;
 
 import java.util.List;
 
-import org.egov.lams.config.ApplicationProperties;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -54,8 +52,6 @@ public class LamsConfigurationQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(LamsConfigurationQueryBuilder.class);
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
 
 	private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value"
 			+ " FROM eglams_lamsConfiguration ck JOIN eglams_lamsConfigurationValues cv ON ck.id = cv.keyId";
@@ -123,7 +119,9 @@ public class LamsConfigurationQueryBuilder {
 			LamsConfigurationGetRequest lamsConfigurationGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.lamsSearchPageSizeDefault());
+		long pageSize = 500l;
+		//FIXME GET PAGESIZE FROM APPLICATION PROPERTIEs 
+		//Integer.parseInt(applicationProperties.lamsSearchPageSizeDefault());
 		if (lamsConfigurationGetRequest.getPageSize() != null)
 			pageSize = lamsConfigurationGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

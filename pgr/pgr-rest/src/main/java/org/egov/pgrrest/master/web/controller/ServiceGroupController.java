@@ -48,11 +48,11 @@ import javax.validation.Valid;
 //import org.apache.log4j.spi.ErrorHandler;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.master.model.CategoryType;
-import org.egov.pgrrest.master.service.CategoryTypeService;
+import org.egov.pgrrest.master.model.ServiceGroup;
+import org.egov.pgrrest.master.service.ServiceGroupService;
 import org.egov.pgrrest.master.util.PgrMasterConstants;
-import org.egov.pgrrest.master.web.contract.CategoryTypeRequest;
-import org.egov.pgrrest.master.web.contract.CategoryTypeResponse;
+import org.egov.pgrrest.master.web.contract.ServiceGroupRequest;
+import org.egov.pgrrest.master.web.contract.ServiceGroupResponse;
 import org.egov.pgrrest.master.web.contract.factory.ResponseInfoFactory;
 import org.egov.pgrrest.read.web.contract.ErrorResponse;
 import org.egov.pgrrest.read.web.contract.Error;
@@ -72,12 +72,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/categorytype")
-public class CategoryTypeController {
+public class ServiceGroupController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceGroupController.class);
 
     @Autowired
-    private CategoryTypeService categoryService;
+    private ServiceGroupService categoryService;
 
  /*   @Autowired
     private ErrorHandler errHandler; */
@@ -88,7 +88,7 @@ public class CategoryTypeController {
     
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final CategoryTypeRequest categoryRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest categoryRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -100,8 +100,8 @@ public class CategoryTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final CategoryType category = categoryService.createCategory(categoryRequest);
-        final List<CategoryType> categories = new ArrayList<>();
+        final ServiceGroup category = categoryService.createCategory(categoryRequest);
+        final List<ServiceGroup> categories = new ArrayList<>();
         categories.add(category);
         return getSuccessResponse(categories, categoryRequest.getRequestInfo());
 
@@ -157,36 +157,36 @@ public class CategoryTypeController {
 
     } */
 
-    private List<ErrorResponse> validateCategoryRequest(final CategoryTypeRequest categoryRequest) {
+    private List<ErrorResponse> validateCategoryRequest(final ServiceGroupRequest serviceGroupRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(categoryRequest);
+        final Error error = getError(serviceGroupRequest);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
 
-    private Error getError(final CategoryTypeRequest categoryRequest) {
-        categoryRequest.getCategory();
-        final List<ErrorField> errorFields = getErrorFields(categoryRequest);
+    private Error getError(final ServiceGroupRequest serviceGroupRequest) {
+    	serviceGroupRequest.getServiceGroup();
+        final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(PgrMasterConstants.INVALID_CATEGORY_REQUEST_MESSAGE)
                 .fields(errorFields)
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(final CategoryTypeRequest categoryRequest) {
+    private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        addCategoryNameValidationErrors(categoryRequest, errorFields);
-        addTeanantIdValidationErrors(categoryRequest, errorFields);
+        addCategoryNameValidationErrors(serviceGroupRequest, errorFields);
+        addTeanantIdValidationErrors(serviceGroupRequest, errorFields);
         return errorFields;
     }
 
-    private void addCategoryNameValidationErrors(final CategoryTypeRequest categoryRequest,
+    private void addCategoryNameValidationErrors(final ServiceGroupRequest serviceGroupRequest,
             final List<ErrorField> errorFields) {
-        final CategoryType category = categoryRequest.getCategory();
-        if (category.getName() == null || category.getName().isEmpty()) {
+        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+        if (serviceGroup.getName() == null || serviceGroup.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.CATEGORY_NAME_MANDATORY_CODE)
                     .message(PgrMasterConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
@@ -197,10 +197,10 @@ public class CategoryTypeController {
             return;
     }
 
-    private void addTeanantIdValidationErrors(final CategoryTypeRequest categoryRequest,
+    private void addTeanantIdValidationErrors(final ServiceGroupRequest serviceGroupRequest,
             final List<ErrorField> errorFields) {
-        final CategoryType category = categoryRequest.getCategory();
-        if (category.getTenantId() == null || category.getTenantId().isEmpty()) {
+        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+        if (serviceGroup.getTenantId() == null || serviceGroup.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
                     .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
@@ -229,13 +229,13 @@ public class CategoryTypeController {
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(final List<CategoryType> categoryList, final RequestInfo requestInfo) {
-        final CategoryTypeResponse categoryResponse = new CategoryTypeResponse();
-        categoryResponse.setCategories(categoryList);
+    private ResponseEntity<?> getSuccessResponse(final List<ServiceGroup> serviceGroupList, final RequestInfo requestInfo) {
+        final ServiceGroupResponse serviceGroupResponse = new ServiceGroupResponse();
+        serviceGroupResponse.setServiceGroups(serviceGroupList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        categoryResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+        serviceGroupResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(serviceGroupResponse, HttpStatus.OK);
 
     }
 

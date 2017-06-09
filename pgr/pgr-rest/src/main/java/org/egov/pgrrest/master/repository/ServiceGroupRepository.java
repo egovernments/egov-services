@@ -41,10 +41,10 @@ package org.egov.pgrrest.master.repository;
 
 import java.sql.Date;
 
-import org.egov.pgrrest.master.model.CategoryType;
-import org.egov.pgrrest.master.repository.builder.CategoryTypeQueryBuilder;
+import org.egov.pgrrest.master.model.ServiceGroup;
+import org.egov.pgrrest.master.repository.builder.ServiceGroupQueryBuilder;
 //import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
-import org.egov.pgrrest.master.web.contract.CategoryTypeRequest;
+import org.egov.pgrrest.master.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +52,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CategoryTypeRepository {
+public class ServiceGroupRepository {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(CategoryTypeRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -65,17 +65,17 @@ public class CategoryTypeRepository {
     @Autowired
     private CategoryTypeRowMapper categoryRowMapper; */
 
-    public CategoryTypeRequest persistCreateCategory(final CategoryTypeRequest categoryRequest) {
-        LOGGER.info("CategoryRequest::" + categoryRequest);
-        final String categoryInsert = CategoryTypeQueryBuilder.insertCategoryQuery();
-        final CategoryType category = categoryRequest.getCategory();
-        final Object[] obj = new Object[] { category.getCode(), category.getName(),
-                category.getDescription(), Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
+    public ServiceGroupRequest persistCreateCategory(final ServiceGroupRequest serviceGroupRequest) {
+        LOGGER.info("CategoryRequest::" + serviceGroupRequest);
+        final String categoryInsert = ServiceGroupQueryBuilder.insertCategoryQuery();
+        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+        final Object[] obj = new Object[] { serviceGroup.getName(),
+        		serviceGroup.getDescription(), Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                category.getTenantId()};
+                serviceGroup.getTenantId()};
         jdbcTemplate.update(categoryInsert, obj);
-        return categoryRequest;
+        return serviceGroupRequest;
     }
 
  /*   public CategoryTypeRequest persistModifyCategory(final CategoryTypeRequest categoryRequest) {

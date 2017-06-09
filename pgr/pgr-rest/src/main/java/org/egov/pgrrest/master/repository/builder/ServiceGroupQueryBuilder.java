@@ -41,24 +41,24 @@ package org.egov.pgrrest.master.repository.builder;
 
 import java.util.List;
 
-import org.egov.pgrrest.master.web.contract.CategoryTypeGetRequest;
+import org.egov.pgrrest.master.web.contract.ServiceGroupGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryTypeQueryBuilder {
+public class ServiceGroupQueryBuilder {
 
     @Autowired
 
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT id, code, description, tenantId "
             + " FROM egpgr_complainttype_category ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final CategoryTypeGetRequest categoryGetRequest, final List preparedStatementValues) {
+    public String getQuery(final ServiceGroupGetRequest categoryGetRequest, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
         addOrderByClause(selectQuery, categoryGetRequest);
@@ -68,44 +68,38 @@ public class CategoryTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final CategoryTypeGetRequest categoryGetRequest) {
+            final ServiceGroupGetRequest serviceGroupRequest) {
 
-        if (categoryGetRequest.getId() == null && categoryGetRequest.getName() == null
-                && categoryGetRequest.getTenantId() == null)
+        if (serviceGroupRequest.getId() == null && serviceGroupRequest.getName() == null
+                && serviceGroupRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
 
-        if (categoryGetRequest.getTenantId() != null) {
+        if (serviceGroupRequest.getTenantId() != null) {
             isAppendAndClause = true;
             selectQuery.append(" tenantId = ?");
-            preparedStatementValues.add(categoryGetRequest.getTenantId());
+            preparedStatementValues.add(serviceGroupRequest.getTenantId());
         }
 
-        if (categoryGetRequest.getId() != null) {
+        if (serviceGroupRequest.getId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" id IN " + getIdQuery(categoryGetRequest.getId()));
+            selectQuery.append(" id IN " + getIdQuery(serviceGroupRequest.getId()));
         }
 
-        if (categoryGetRequest.getName() != null) {
+        if (serviceGroupRequest.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" name = ?");
-            preparedStatementValues.add(categoryGetRequest.getName());
-        }
-
-        if (categoryGetRequest.getCode() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" code = ?");
-            preparedStatementValues.add(categoryGetRequest.getCode());
+            preparedStatementValues.add(serviceGroupRequest.getName());
         }
 
     }
 
-    private void addOrderByClause(final StringBuilder selectQuery, final CategoryTypeGetRequest categoryGetRequest) {
-        final String sortBy = categoryGetRequest.getSortBy() == null ? "category.code"
-                : "category." + categoryGetRequest.getSortBy();
-        final String sortOrder = categoryGetRequest.getSortOrder() == null ? "DESC" : categoryGetRequest.getSortOrder();
+    private void addOrderByClause(final StringBuilder selectQuery, final ServiceGroupGetRequest serviceGroupRequest) {
+        final String sortBy = serviceGroupRequest.getSortBy() == null ? "category.code"
+                : "category." + serviceGroupRequest.getSortBy();
+        final String sortOrder = serviceGroupRequest.getSortOrder() == null ? "DESC" : serviceGroupRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
@@ -136,8 +130,8 @@ public class CategoryTypeQueryBuilder {
     }
 
     public static String insertCategoryQuery() {
-        return "INSERT INTO egpgr_complainttype_category(code,name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,version) values "
-                + "(?,?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egpgr_complainttype_category(name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,version) values "
+                + "(?,?,?,?,?,?,?,?)";
     }
 
 

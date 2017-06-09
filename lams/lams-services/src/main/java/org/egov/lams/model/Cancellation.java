@@ -19,7 +19,7 @@ public class Cancellation {
 	private Date terminationDate;
 
 	@JsonProperty("orderNo")
-	private String orderNo;
+	private String orderNumber;
 
 	@JsonProperty("orderDate")
 	private Date orderDate;

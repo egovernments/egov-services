@@ -29,6 +29,11 @@ import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Index;
 
 
+/*
+ * Consumer class will use for listing  property object from kafka server to insert data in elastic server
+ * @author:narendra
+ */
+
 @Configuration
 @EnableKafka
 @Service
@@ -43,7 +48,9 @@ public class Consumer {
 
 	//public static final String topic=getTopic();
 
-
+	/*
+	 * This method for getting consumer configuration bean
+	 */
 	@Bean
 	public Map<String,Object> consumerConfig(){
 		Map<String,Object> consumerProperties=new HashMap<String,Object>();
@@ -55,6 +62,10 @@ public class Consumer {
 		return consumerProperties;
 	}
 
+
+	/*
+	 * This method will return the consumer factory bean based on consumer configuration
+	 */
 	@Bean
 	public ConsumerFactory<String, PropertyRequest> consumerFactory(){
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(),new StringDeserializer(),
@@ -62,12 +73,20 @@ public class Consumer {
 
 	}
 
+	/*
+	 * This bean will return kafka listner object based on consumer factory
+	 */
+
 	@Bean
 	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory(){
 		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory=new ConcurrentKafkaListenerContainerFactory<String,PropertyRequest>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
+
+	/*
+	 * This method will build and return jest client bean
+	 */
 
 	@Bean
 	public JestClient getClient() {
@@ -85,16 +104,20 @@ public class Consumer {
 		return this.client;
 	}
 
-	@KafkaListener(topics="#{environment.getProperty('propertyIndexer.create')}")
+	/*
+	 * This method will listen when ever data pushed to indexer topic and insert data in elastic search
+	 */
+
+	@KafkaListener(topics="#{environment.getProperty('property.indexer.create')}")
 	public void receive(PropertyRequest propertyRequest) throws IOException{
 		for(Property property : propertyRequest.getProperties()){
-		String propertyData=	new ObjectMapper().writeValueAsString(property);
-		client.execute(
-				new Index.Builder(propertyData)
-				.index(environment.getProperty("property.index"))
-				.type(environment.getProperty("property.indexType"))
-				.build()
-				);
+			String propertyData=	new ObjectMapper().writeValueAsString(property);
+			client.execute(
+					new Index.Builder(propertyData)
+					.index(environment.getProperty("property.index"))
+					.type(environment.getProperty("property.index.type"))
+					.build()
+					);
 		}
 		client.shutdownClient();
 

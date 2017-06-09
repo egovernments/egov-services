@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
-
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -17,7 +16,6 @@ import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.egov.lams.web.errorhandlers.LamsException;
 import org.egov.lams.web.validator.AgreementValidator;
-import org.egov.lams.web.validator.CancelAgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +46,6 @@ public class AgreementController {
 	
 	@Autowired
 	private AgreementValidator agreementValidator;
-	
-	@Autowired
-	private CancelAgreementValidator cancelAgreementValidator;
 	
 	@PostMapping("_search")
 	@ResponseBody
@@ -92,7 +87,7 @@ public class AgreementController {
 		}
 		
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		agreementValidator.validateAgreement(agreementRequest,errors);
+		agreementValidator.validate(agreementRequest,errors);
 		
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -119,7 +114,7 @@ public class AgreementController {
 		}
 		
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		agreementValidator.validateAgreement(agreementRequest,errors);
+		agreementValidator.validate(agreementRequest,errors);
 		
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -144,10 +139,10 @@ public class AgreementController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
-		cancelAgreementValidator.validateCancel(agreementRequest, errors);		
-		
+		agreementValidator.validate(agreementRequest, errors);
+
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);

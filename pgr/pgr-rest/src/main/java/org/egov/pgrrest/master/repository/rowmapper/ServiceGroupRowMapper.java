@@ -42,23 +42,22 @@ package org.egov.pgrrest.master.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.pgrrest.master.model.CategoryType;
+import org.egov.pgrrest.master.model.ServiceGroup;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryTypeRowMapper implements RowMapper<CategoryType> {
+public class ServiceGroupRowMapper implements RowMapper<ServiceGroup> {
     @Override
-    public CategoryType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final CategoryType category = new CategoryType();
-        category.setId(rs.getLong("id"));
-        category.setCode(rs.getString("code"));
-        category.setName(rs.getString("name"));
-        category.setDescription(rs.getString("description"));
-        category.setTenantId(rs.getString("tenantId"));
-        category.setVersion(rs.getInt("version"));
+    public ServiceGroup mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final ServiceGroup serviceGroup = new ServiceGroup();
+        serviceGroup.setId(rs.getLong("id"));
+        serviceGroup.setName(rs.getString("name"));
+        serviceGroup.setDescription(rs.getString("description"));
+        serviceGroup.setTenantId(rs.getString("tenantId"));
+        serviceGroup.setVersion(rs.getInt("version"));
 
         
-        return category;
+        return serviceGroup;
     }
 }

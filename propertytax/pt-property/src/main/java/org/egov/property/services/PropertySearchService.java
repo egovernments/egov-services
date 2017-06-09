@@ -305,7 +305,7 @@ public class PropertySearchService {
 			// get property details for property
 			//
 
-			String propertyDetailSql = " select * from "+environment.getProperty("property.propertydetail.table")+" where property_id ="+propertyId;
+			String propertyDetailSql = " select * from egpt_propertydetails where property_id ="+propertyId;
 			PropertyDetail propertyDetail = (PropertyDetail)jdbcTemplate.queryForObject( propertyDetailSql,new BeanPropertyRowMapper(PropertyDetail.class));
 			property.setPropertyDetail(propertyDetail);
 
@@ -313,7 +313,7 @@ public class PropertySearchService {
 			// get vacant land for property
 			//
 
-			String VacantLandSql = " select * from "+environment.getProperty("property.vacantland.table")+" where property_id ="+propertyId;
+			String VacantLandSql = " select * from egpt_vacantland where property_id ="+propertyId;
 			VacantLandDetail vacantLandDetail = (VacantLandDetail) jdbcTemplate.queryForObject(VacantLandSql , new BeanPropertyRowMapper(VacantLandDetail.class));
 			property.setVacantLand(vacantLandDetail);
 
@@ -331,7 +331,7 @@ public class PropertySearchService {
 			// get the floors for the property detail
 			//
 
-			String floorSql = " select * from "+environment.getProperty("property.floors.table")+" where property_details_id ="+propertyDetailId;
+			String floorSql = " select * from egpt_floors where property_details_id ="+propertyDetailId;
 			List<Floor> floors = jdbcTemplate.query(floorSql ,new BeanPropertyRowMapper(Floor.class));
 			property.getPropertyDetail().setFloors(floors);
 
@@ -348,7 +348,7 @@ public class PropertySearchService {
 			// Audit details for the property detail 
 			//
 
-			String auditDetailSql = "select createdBy,lastModifiedBy,createdTime,lastModifiedTime from "+environment.getProperty("property.propertydetail.table")+" where property_id ="+propertyId;
+			String auditDetailSql = "select createdBy,lastModifiedBy,createdTime,lastModifiedTime from egpt_propertydetails where property_id ="+propertyId;
 			AuditDetails auditDetails = (AuditDetails)jdbcTemplate.queryForObject(auditDetailSql, new BeanPropertyRowMapper(AuditDetails.class));
 			property.getPropertyDetail().setAuditDetails(auditDetails);
 

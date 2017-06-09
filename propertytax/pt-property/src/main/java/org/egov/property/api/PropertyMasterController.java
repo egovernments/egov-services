@@ -2,13 +2,23 @@ package org.egov.property.api;
 
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.FloorTypeRequest;
+import org.egov.models.FloorTypeResponse;
+import org.egov.models.OccuapancyMasterRequest;
+import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.PropertyTypeRequest;
+import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfoWrapper;
-import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
-import org.egov.property.model.MasterModel;
-import org.egov.property.model.MasterResponse;
+import org.egov.models.RoofTypeRequest;
+import org.egov.models.RoofTypeResponse;
+import org.egov.models.StructureClassRequest;
+import org.egov.models.StructureClassResponse;
+import org.egov.models.WoodTypeRequest;
+import org.egov.models.WoodTypeResponse;
 import org.egov.property.services.Masterservice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,43 +42,34 @@ public class PropertyMasterController {
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
 
-	/**
-	 *Description : This api for getting property types
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
 
-	@RequestMapping(path="/propertytype/_search",method=RequestMethod.POST)
-	public MasterResponse getPropertyTypes(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-		MasterModel	masterModel=	masterService.getPropertyTypes(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
+	@RequestMapping(path="/departments/_create",method=RequestMethod.POST)
+	public DepartmentResponseInfo createDepartmentMaster(@RequestParam String tenantId, @RequestBody DepartmentRequest departmentRequest){
+
+		return	masterService.createDepartmentMaster(tenantId,departmentRequest);
+
 	}
 
-	/**
-	 * Description : This api for getting apartment master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
+	@RequestMapping(path="/departments/{id}/_update",method=RequestMethod.POST)
+	public DepartmentResponseInfo updateDepartmentMaster(@RequestParam String tenantId, @PathVariable Long id,@RequestBody DepartmentRequest departmentRequest){
 
-	@RequestMapping(path="/apartmentmaster/_search",method=RequestMethod.POST)
-	public MasterResponse getApartmentMaster(@RequestParam String tenantId,@RequestParam(required=false)  String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
+		return	masterService.updateDepartmentMaster(tenantId,id,departmentRequest);
 
-		MasterModel	masterModel=	masterService.getApartmentMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
+	}
+
+	@RequestMapping(path="/departments/_search",method=RequestMethod.POST)
+	public DepartmentResponseInfo getDeparmentMaster(@RequestBody RequestInfoWrapper requestInfo ,
+			@RequestParam(required=true) String tenantId,
+			@RequestParam(required=false) Integer[] ids,
+			@RequestParam(required=false) String category,
+			@RequestParam(required=false) String name,
+			@RequestParam(required=false) String code,
+			@RequestParam(required=false) String nameLocal,
+			@RequestParam(required=false) Integer pageSize,
+			@RequestParam(required=false) Integer offSet
+			) throws Exception {
+		return masterService.getDepartmentMaster(requestInfo.getRequestInfo(),tenantId,ids, category, name ,code,nameLocal,pageSize,offSet);
+
 	}
 
 	/**
@@ -81,228 +82,251 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/floortypemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getFloorTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getFloorTypeMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-	/**
-	 * Description : This api for getting floor ocupancy master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/ocupancymaster/_search",method=RequestMethod.POST)
-	public MasterResponse getOcupancyMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getOcupancyMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-	/**
-	 * Description : This api for getting roof type master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/rooftypemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getRoofTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getRoofTypeMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-	/**
-	 * Description : This api for getting tax rate master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/taxratemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getTaxRateMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getTaxRateMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-	/**
-	 * Description : This api for getting wall type master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-
-	@RequestMapping(path="/walltypemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getWallTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getWallTypeMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-
-	/**
-	 * Description : This api for getting wood type master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/woodtypemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getWoodTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getWoodTypeMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-
-	/**
-	 * Description : This api for getting usage type master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/usagemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getUsageMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getUsageMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-	/**
-	 * Description : This api for getting strcture master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-
-	@RequestMapping(path="/structuremaster/_search",method=RequestMethod.POST)
-	public MasterResponse getStructureMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getStructureMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-
-	/**
-	 * Description : This api for getting document type master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/documenttypemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getDocumentTypeMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getDocumentTypeMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=new ResponseInfo();
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-
-	/**
-	 * Description : This api for getting mutation reason master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-
-	@RequestMapping(path="/mutationreasonmaster/_search",method=RequestMethod.POST)
-	public MasterResponse getMutationReasonMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getMutationReasonMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
-	}
-
-
-	/**
-	 * Description : This api for getting mutation master details
-	 * @param tenantId
-	 * @param code
-	 * @param requestInfo
-	 * @return masterResponse
-	 * @throws Exception
-	 */
-	@RequestMapping(path="/mutationratemaster/_search",method=RequestMethod.POST)
-	public MasterResponse getMutationRateMaster(@RequestParam String tenantId,@RequestParam(required=false) String code,@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-
-		MasterModel	masterModel=	masterService.getMutationRateMaster(tenantId, code,requestInfo.getRequestInfo());
-		MasterResponse masterResponse=new MasterResponse();
-		masterResponse.setMasterModel(masterModel);
-		ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(),true);
-		masterResponse.setResonseInfo(responseInfo);
-		return masterResponse;
+	@RequestMapping(path="/floortypes/_search",method=RequestMethod.POST)
+	public FloorTypeResponse getFloorTypeMaster(@RequestBody RequestInfoWrapper requestInfo ,
+			@RequestParam(required=true) String tenantId,
+			@RequestParam(required=false) Integer[] ids,
+			@RequestParam(required=false) String name,
+			@RequestParam(required=false) String code,
+			@RequestParam(required=false) String nameLocal,
+			@RequestParam(required=false) Integer pageSize,
+			@RequestParam(required=false) Integer offSet
+			) throws Exception {
+			return masterService.getFloorTypeMaster(requestInfo.getRequestInfo(),tenantId,ids,name ,code,nameLocal,pageSize,offSet);
+	
 	}
 	
-	@RequestMapping(path="/departments/_create",method=RequestMethod.POST)
-	public DepartmentResponseInfo createDepartmentMaster(@RequestParam String tenantId, @RequestBody DepartmentRequest departmentRequest){
-		
-	return	masterService.createDepartmentMaster(tenantId,departmentRequest);
-		
+	/**
+	 * <p> This API will create the floorType<p>
+	 * @param floorTypeRequest
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(path="/floortypes/_create",method=RequestMethod.POST)
+	public FloorTypeResponse createFloorType (  @RequestBody FloorTypeRequest floorTypeRequest,
+			@RequestParam (required = true) String tenantId) throws Exception{
+		return masterService.createFloorType(floorTypeRequest, tenantId);
 	}
+	
+	/**
+	 * <p> This API will update the floor Type<p>
+	 * @param floorTypeRequest
+	 * @param tenantId
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(path="floortypes/{id}/_update")
+	public FloorTypeResponse updateFloorType( @RequestBody FloorTypeRequest floorTypeRequest ,
+				@RequestParam(required=true) String tenantId ,
+				@PathVariable Integer id) throws Exception{
+		
+		return masterService.updateFloorType(floorTypeRequest, tenantId, id);
+	}
+	
+	/**
+	 * <p> This API will search the wood types</p>
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(path="/woodtypes/_search",method=RequestMethod.POST)
+	public WoodTypeResponse searchWoodType( @RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required=true) String tenantId,
+			@RequestParam(required=false) Integer[] ids,
+			@RequestParam(required=false) String name,
+			@RequestParam(required=false) String code,
+			@RequestParam(required=false) String nameLocal,
+			@RequestParam(required=false) Integer pageSize,
+			@RequestParam(required=false) Integer offSet
+			) throws Exception{
+		
+		
+		
+		return masterService.getWoodTypes(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, pageSize, offSet);
+				
+			}
+	
+	
+	/**
+	 * <p> This API will create the wood type response<p>
+	 * @param woodTypeRequest
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(path="/woodtypes/_create",method=RequestMethod.POST)
+	public WoodTypeResponse createWoodType (  @RequestBody WoodTypeRequest woodTypeRequest,
+			@RequestParam (required = true) String tenantId) throws Exception{
+		
+		return masterService.createWoodType(woodTypeRequest, tenantId);
+	}
+	
+	
+	/**
+	 * <p> This API will update the woodType<p>
+	 * @param woodTypeRequest
+	 * @param tenantId
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(path="/woodtypes/{id}/_update")
+	public WoodTypeResponse updateWoodType( @RequestBody WoodTypeRequest woodTypeRequest ,
+				@RequestParam(required=true) String tenantId ,
+				@PathVariable Integer id) throws Exception{
+		
+		return masterService.updateWoodType(woodTypeRequest, tenantId, id);
+	}
+	
+	
+	// Roof types
+	/**
+	 * <p> This Api 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 * @throws Exception
+	 */
+	
+	@RequestMapping(path="/rooftypes/_search",method=RequestMethod.POST)
+	public RoofTypeResponse searchRoofType( @RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required=true) String tenantId,
+			@RequestParam(required=false) Integer[] ids,
+			@RequestParam(required=false) String name,
+			@RequestParam(required=false) String code,
+			@RequestParam(required=false) String nameLocal,
+			@RequestParam(required=false) Integer pageSize,
+			@RequestParam(required=false) Integer offSet
+			) throws Exception{
+		
+		return masterService.getRoofypes(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, pageSize, offSet);
+		
+				
+			}
+	
+	
+	@RequestMapping(path="/rooftypes/_create",method=RequestMethod.POST)
+	public RoofTypeResponse createRoofType (  @RequestBody RoofTypeRequest roofTypeRequest,
+			@RequestParam (required = true) String tenantId) throws Exception{
+		
+		return masterService.createRoofype(roofTypeRequest, tenantId);
+	}
+	
+	
+	
+	@RequestMapping(path="/rooftypes/{id}/_update",method=RequestMethod.POST)
+	public RoofTypeResponse updateRoofType( @RequestBody RoofTypeRequest roofTypeRequest ,
+				@RequestParam(required=true) String tenantId ,
+				@PathVariable Integer id) throws Exception{
+		
+		return masterService.updateRoofType(roofTypeRequest, tenantId, id);
+	}
+
+	
+	/**
+	* Description : This api for creating strctureClass master
+	* @param tenantId
+	* @param StructureClassRequest
+	* @return structureClassResponse
+	* @throws Exception
+	*/
+
+
+	@RequestMapping(path="structureclasses/_create",method=RequestMethod.POST)
+	public StructureClassResponse craeateStructureClassMaster(@RequestParam String tenantId, @RequestBody  StructureClassRequest structureClassRequest){
+
+	return	masterService.craeateStructureClassMaster(tenantId, structureClassRequest);
+
+	}
+
+
+	/**
+	* Description : This api for updating strctureClass master
+	* @param tenantId
+	* @param StructureClassRequest
+	* @return structureClassResponse
+	* @throws Exception
+	*/
+	@RequestMapping(path="structureclasses/{id}/_update",method=RequestMethod.POST)
+	public StructureClassResponse updateStructureClassMaster(@RequestParam String tenantId, @PathVariable Long id,@RequestBody StructureClassRequest structureClassRequest){
+
+	return	masterService.updateStructureClassMaster(tenantId,id,structureClassRequest);
+
+	}
+
+	@RequestMapping(path="/propertytypes/_create",method=RequestMethod.POST)
+    public PropertyTypeResponse createPropertyTypeMaster(@RequestParam String tenantId, @RequestBody PropertyTypeRequest propertyTypeRequest){
+
+        return  masterService.createPropertyTypeMaster(tenantId,propertyTypeRequest);
+
+    }
+
+    @RequestMapping(path="/propertytypes/{id}/_update",method=RequestMethod.POST)
+    public PropertyTypeResponse updatePropertyTypeMaster(@RequestParam String tenantId, @PathVariable Long id,@RequestBody PropertyTypeRequest propertyTypeRequest){
+
+        return  masterService.updatePropertyTypeMaster(tenantId,id,propertyTypeRequest);
+
+    }
+
+    @RequestMapping(path="/propertytypes/_search",method=RequestMethod.POST)
+    public PropertyTypeResponse getPropertyTypeMaster(@RequestBody RequestInfoWrapper requestInfo ,
+            @RequestParam(required=true) String tenantId,
+            @RequestParam(required=false) Integer[] ids,            
+            @RequestParam(required=false) String name,
+            @RequestParam(required=false) String code,
+            @RequestParam(required=false) String nameLocal,
+            @RequestParam(required=false) Boolean active,
+            @RequestParam(required=false) Integer orderNumber,
+            @RequestParam(required=false) Integer pageSize,
+            @RequestParam(required=false) Integer offSet
+            ) throws Exception {
+        return masterService.getPropertyTypeMaster(requestInfo.getRequestInfo(),tenantId,ids, name ,code,nameLocal,active,orderNumber,pageSize,offSet);
+
+    }
+
+    @RequestMapping(path="/occuapancies/_create",method=RequestMethod.POST)
+    public OccuapancyMasterResponse createOccuapancyMaster(@RequestParam String tenantId, @RequestBody OccuapancyMasterRequest occuapancyMasterRequest){
+
+        return  masterService.createOccuapancyMaster(tenantId,occuapancyMasterRequest);
+
+    }
+
+    @RequestMapping(path="/occuapancies/{id}/_update",method=RequestMethod.POST)
+    public OccuapancyMasterResponse updateOccuapancyMaster(@RequestParam String tenantId, @PathVariable Long id,@RequestBody OccuapancyMasterRequest occuapancyRequest){
+
+        return  masterService.updateOccuapancyMaster(tenantId,id,occuapancyRequest);
+
+    }
+
+    @RequestMapping(path="/occuapancies/_search",method=RequestMethod.POST)
+    public OccuapancyMasterResponse getOccuapancyMaster(@RequestBody RequestInfoWrapper requestInfo ,
+            @RequestParam(required=true) String tenantId,
+            @RequestParam(required=false) Integer[] ids,            
+            @RequestParam(required=false) String name,
+            @RequestParam(required=false) String code,
+            @RequestParam(required=false) String nameLocal,
+            @RequestParam(required=false) Boolean active,
+            @RequestParam(required=false) Integer orderNumber,
+            @RequestParam(required=false) Integer pageSize,
+            @RequestParam(required=false) Integer offSet
+            ) throws Exception {
+        return masterService.getOccuapancyMaster(requestInfo.getRequestInfo(),tenantId,ids, name ,code,nameLocal,active,orderNumber,pageSize,offSet);
+
+    }
 
 }

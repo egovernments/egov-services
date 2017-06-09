@@ -10,7 +10,8 @@ CREATE TABLE egpt_property(
     gisrefno character varying,
     isauthorised boolean,
     isunderworkflow boolean,
-    active boolean default true,
+    active boolean
+    default true,
     channel character varying NOT NULL,
     createdby character varying,
     lastmodifiedby character varying,
@@ -428,11 +429,11 @@ CREATE TABLE egpt_department_master(
     id bigint NOT NULL,
     tenantId character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdBy integer NOT NULL,
-    createdDate bigint NOT NULL,
-    modifiedBy bigint NOT NULL,
-    modifiedDate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
 );
 
 CREATE SEQUENCE seq_egpt_department_master
@@ -452,11 +453,11 @@ CREATE TABLE egpt_floortype_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
 );
 
 
@@ -479,11 +480,12 @@ CREATE TABLE egpt_occuapancy_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 
@@ -506,11 +508,12 @@ CREATE TABLE egpt_propertytypes_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+   data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 
@@ -533,11 +536,12 @@ CREATE TABLE egpt_rooftypes_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 
@@ -559,11 +563,12 @@ CREATE TABLE egpt_structureclasses_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+   data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 
@@ -585,11 +590,12 @@ CREATE TABLE egpt_usage_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 
@@ -612,11 +618,12 @@ CREATE TABLE egpt_walltypes_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 
@@ -638,11 +645,12 @@ CREATE TABLE egpt_woodtypes_master(
     id bigint NOT NULL,
     tenantid character varying NOT NULL,
     code character varying NOT NULL,
-    data character varying NOT NULL,
-    createdby integer NOT NULL,
-    createddate bigint NOT NULL,
-    lastmodifiedby bigint NOT NULL,
-    lastmodifieddate bigint NOT NULL
+    data jsonb NOT NULL,
+    createdBy character varying,
+    lastModifiedBy character varying,
+    createdTime bigint,
+    lastModifiedTime bigint
+
 );
 
 

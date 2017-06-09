@@ -44,16 +44,17 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 		<!-- Added util jar for models -->
-		<dependency>
-			<groupId>org.egov.propertyutil</groupId>
+			<dependency>
+			<groupId>org.egov.services</groupId>
 			<artifactId>propertyutil</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -63,6 +64,16 @@
 			<artifactId>spring-kafka-test</artifactId>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+
 
 	<build>
 		<plugins>

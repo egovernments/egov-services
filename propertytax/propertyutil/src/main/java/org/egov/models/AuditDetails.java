@@ -1,139 +1,119 @@
 package org.egov.models;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
- * Collection of audit related fields used by most models
- * Author : Narendra
+ * Collection of audit related fields used by most models Author : Narendra
  */
 
+public class AuditDetails {
+	@JsonProperty("createdBy")
+	private String createdBy = null;
 
-public class AuditDetails   {
-  @JsonProperty("createdBy")
-  private String createdBy = null;
+	@JsonProperty("lastModifiedBy")
+	private String lastModifiedBy = null;
 
-  @JsonProperty("lastModifiedBy")
-  private String lastModifiedBy = null;
+	@JsonProperty("createdTime")
+	private Long createdTime = null;
 
-  @JsonProperty("createdTime")
-  private BigDecimal createdTime = null;
+	@JsonProperty("lastModifiedTime")
+	private Long lastModifiedTime = null;
 
-  @JsonProperty("lastModifiedTime")
-  private BigDecimal lastModifiedTime = null;
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-  public AuditDetails createdBy(String createdBy) {
-    this.createdBy = createdBy;
-    return this;
-  }
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
-   /**
-   * username (preferred) or userid of the user that created the object
-   * @return createdBy
-  **/
-  public String getCreatedBy() {
-    return createdBy;
-  }
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
 
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
-  }
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
 
-  public AuditDetails lastModifiedBy(String lastModifiedBy) {
-    this.lastModifiedBy = lastModifiedBy;
-    return this;
-  }
+	public Long getCreatedTime() {
+		return createdTime;
+	}
 
-   /**
-   * username (preferred) or userid of the user that last modified the object
-   * @return lastModifiedBy
-  **/
-  public String getLastModifiedBy() {
-    return lastModifiedBy;
-  }
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
+	}
 
-  public void setLastModifiedBy(String lastModifiedBy) {
-    this.lastModifiedBy = lastModifiedBy;
-  }
+	public Long getLastModifiedTime() {
+		return lastModifiedTime;
+	}
 
-  public AuditDetails createdTime(BigDecimal createdTime) {
-    this.createdTime = createdTime;
-    return this;
-  }
+	public void setLastModifiedTime(Long lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
 
-   /**
-   * epoch of the time object is created
-   * @return createdTime
-  **/
-  public BigDecimal getCreatedTime() {
-    return createdTime;
-  }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
+		result = prime * result + ((createdTime == null) ? 0 : createdTime.hashCode());
+		result = prime * result + ((lastModifiedBy == null) ? 0 : lastModifiedBy.hashCode());
+		result = prime * result + ((lastModifiedTime == null) ? 0 : lastModifiedTime.hashCode());
+		return result;
+	}
 
-  public void setCreatedTime(BigDecimal createdTime) {
-    this.createdTime = createdTime;
-  }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AuditDetails other = (AuditDetails) obj;
+		if (createdBy == null) {
+			if (other.createdBy != null)
+				return false;
+		} else if (!createdBy.equals(other.createdBy))
+			return false;
+		if (createdTime == null) {
+			if (other.createdTime != null)
+				return false;
+		} else if (!createdTime.equals(other.createdTime))
+			return false;
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null)
+				return false;
+		} else if (!lastModifiedBy.equals(other.lastModifiedBy))
+			return false;
+		if (lastModifiedTime == null) {
+			if (other.lastModifiedTime != null)
+				return false;
+		} else if (!lastModifiedTime.equals(other.lastModifiedTime))
+			return false;
+		return true;
+	}
 
-  public AuditDetails lastModifiedTime(BigDecimal lastModifiedTime) {
-    this.lastModifiedTime = lastModifiedTime;
-    return this;
-  }
+	@Override
+	public String toString() {
+		return "AuditDetails [createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + ", createdTime="
+				+ createdTime + ", lastModifiedTime=" + lastModifiedTime + ", getCreatedBy()=" + getCreatedBy()
+				+ ", getLastModifiedBy()=" + getLastModifiedBy() + ", getCreatedTime()=" + getCreatedTime()
+				+ ", getLastModifiedTime()=" + getLastModifiedTime() + ", hashCode()=" + hashCode() + ", getClass()="
+				+ getClass() + ", toString()=" + super.toString() + "]";
+	}
 
-   /**
-   * epoch of the time object is last modified
-   * @return lastModifiedTime
-  **/
-   public BigDecimal getLastModifiedTime() {
-    return lastModifiedTime;
-  }
+	public AuditDetails(String createdBy, String lastModifiedBy, Long createdTime, Long lastModifiedTime) {
+		super();
+		this.createdBy = createdBy;
+		this.lastModifiedBy = lastModifiedBy;
+		this.createdTime = createdTime;
+		this.lastModifiedTime = lastModifiedTime;
+	}
 
-  public void setLastModifiedTime(BigDecimal lastModifiedTime) {
-    this.lastModifiedTime = lastModifiedTime;
-  }
+	public AuditDetails() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AuditDetails auditDetails = (AuditDetails) o;
-    return Objects.equals(this.createdBy, auditDetails.createdBy) &&
-        Objects.equals(this.lastModifiedBy, auditDetails.lastModifiedBy) &&
-        Objects.equals(this.createdTime, auditDetails.createdTime) &&
-        Objects.equals(this.lastModifiedTime, auditDetails.lastModifiedTime);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(createdBy, lastModifiedBy, createdTime, lastModifiedTime);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AuditDetails {\n");
-    
-    sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
-    sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
-    sb.append("    createdTime: ").append(toIndentedString(createdTime)).append("\n");
-    sb.append("    lastModifiedTime: ").append(toIndentedString(lastModifiedTime)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 }
-

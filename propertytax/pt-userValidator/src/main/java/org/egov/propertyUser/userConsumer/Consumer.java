@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.egov.propertyUser.model.*;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
@@ -97,58 +98,100 @@ public class Consumer {
 	 *  Search user
 	 *  Create user
 	 */
-	@KafkaListener(topics ="#{environment.getProperty('validate.user')}")
-	public void receive(PropertyRequest propertyRequest) {
-		StringBuffer createUrl=new StringBuffer();
-		createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-		createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-		createUrl.append(environment.getProperty("egov.services.allottee_service.createpath"));
+	@KafkaListener(topics ={"#{environment.getProperty('validate.user')}","#{environment.getProperty('validate.update.user')}"})
+	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) {
+		PropertyRequest propertyRequest=consumerRecord.value();
+		if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("validate.user"))){
+			StringBuffer createUrl=new StringBuffer();
+			createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
+			createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
+			createUrl.append(environment.getProperty("egov.services.allottee_service.createpath"));
 
-		StringBuffer searchUrl=new StringBuffer();
-		searchUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-		searchUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-		searchUrl.append(environment.getProperty("egov.services.allottee_service.searchpath"));
+			StringBuffer searchUrl=new StringBuffer();
+			searchUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
+			searchUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
+			searchUrl.append(environment.getProperty("egov.services.allottee_service.searchpath"));
 
 
-		for(Property property:propertyRequest.getProperties()){
-			for(User user: property.getOwners()){
-				user.setUserName(user.getMobileNumber());
-				if(user.getId() !=null){
+			for(Property property:propertyRequest.getProperties()){
+				for(User user: property.getOwners()){
+					user.setUserName(user.getMobileNumber());
+					if(user.getId() !=null){
 
-					Map<String,Object> userSearchRequestInfo=new HashMap<String,Object >();
-					userSearchRequestInfo.put("username",user.getUserName());
-					userSearchRequestInfo.put("tenantId",user.getTenantId());
-					userSearchRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
-					//search user
-					UserResponseInfo userResponse= restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
+						Map<String,Object> userSearchRequestInfo=new HashMap<String,Object >();
+						userSearchRequestInfo.put("username",user.getUserName());
+						userSearchRequestInfo.put("tenantId",user.getTenantId());
+						userSearchRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
+						//search user
+						UserResponseInfo userResponse= restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
 
-					if(userResponse.getResponseInfo()!=null){
-						if(userResponse.getUser()==null){
-							UserRequestInfo userRequestInfo=new UserRequestInfo();
-							userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-							userRequestInfo.setUser(user);
-							UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
-									userRequestInfo, UserResponseInfo.class);	
+						if(userResponse.getResponseInfo()!=null){
+							if(userResponse.getUser()==null){
+								UserRequestInfo userRequestInfo=new UserRequestInfo();
+								userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
+								userRequestInfo.setUser(user);
+								UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
+										userRequestInfo, UserResponseInfo.class);	
+							}
+							else{
+								user.setId(userResponse.getUser().get(0).getId());
+							}
 						}
-						else{
-							user.setId(userResponse.getUser().get(0).getId());
-						}
+
+					}else{
+						UserRequestInfo userRequestInfo=new UserRequestInfo();
+						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
+						userRequestInfo.setUser(user);
+
+						//create user
+						UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
+								userRequestInfo, UserResponseInfo.class);
+						user.setId(userCreateResponse.getUser().get(0).getId());
 					}
-
-				}else{
-					UserRequestInfo userRequestInfo=new UserRequestInfo();
-					userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-					userRequestInfo.setUser(user);
-
-					//create user
-					UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
-							userRequestInfo, UserResponseInfo.class);
-					user.setId(userCreateResponse.getUser().get(0).getId());
+					producer.kafkaTemplate.send(environment.getProperty("update.user"), propertyRequest);
 				}
-				producer.kafkaTemplate.send(environment.getProperty("update.user"), propertyRequest);
 			}
 		}
 
+		else if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("validate.update.user"))){
+			StringBuffer createUrl=new StringBuffer();
+			createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
+			createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
+			createUrl.append(environment.getProperty("egov.services.allottee_service.createpath"));
+
+			StringBuffer searchUrl=new StringBuffer();
+			searchUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
+			searchUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
+			searchUrl.append(environment.getProperty("egov.services.allottee_service.searchpath"));
+
+
+			for(Property property:propertyRequest.getProperties()){
+				for(User user: property.getOwners()){
+					if(user.getId() !=null){
+						StringBuffer updateUrl=new StringBuffer();
+						updateUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
+						updateUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
+						updateUrl.append(environment.getProperty("egov.services.allottee_service.updatepath"));
+						//update user
+						UserRequestInfo userRequestInfo=new UserRequestInfo();
+						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
+						userRequestInfo.setUser(user);
+						UserResponseInfo userCreateResponse = restTemplate.postForObject(updateUrl.toString(),
+								userRequestInfo, UserResponseInfo.class);
+					}else{
+						user.setUserName(user.getMobileNumber());
+						UserRequestInfo userRequestInfo=new UserRequestInfo();
+						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
+						userRequestInfo.setUser(user);
+						//create user
+						UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
+								userRequestInfo, UserResponseInfo.class);
+						user.setId(userCreateResponse.getUser().get(0).getId());
+					}
+					producer.kafkaTemplate.send(environment.getProperty("update.user"), propertyRequest);
+				}
+			}
+		}
 	}
 
 }

@@ -43,7 +43,7 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -53,12 +53,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.egov.propertyutil</groupId>
+			<groupId>org.egov.services</groupId>
 			<artifactId>propertyutil</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,14 +71,18 @@
 			<artifactId>jest</artifactId>
 		</dependency>
 
-	<!-- https://mvnrepository.com/artifact/org.apache.metamodel/MetaModel-elasticsearch-common -->
-
-
-
-		<!-- <dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-api</artifactId> 
-			<version>2.5</version> </dependency> <dependency> <groupId>org.apache.logging.log4j</groupId> 
-			<artifactId>log4j-core</artifactId> <version>2.5</version> </dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.apache.metamodel/MetaModel-elasticsearch-common -->
 	</dependencies>
+
+
+	<repositories>
+		<repository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
 
 	<build>
 		<plugins>

@@ -370,6 +370,7 @@ public class AgreementService {
 				.get(keyName);
 
 		for (String desginationName : assistantDesignations) {
+			logger.info("desg name"+desginationName);
 			if (positionMap.containsKey(desginationName)) {
 				workFlowDetails.setInitiatorPosition(positionMap.get(desginationName));
 				logger.info(" the initiator name  :: " + desginationName + "the value for key"

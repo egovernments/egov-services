@@ -254,17 +254,7 @@ class PersonalInform extends React.Component {
                         getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
                         setTimeout(function(){
                             _this.setState({
-                              searchSet: {
-                                  name: "",
-                                  employee: "",
-                                  department: "",
-                                  designation: "",
-                                  leaveType: "",
-                                  noOfDay: "",
-                                  noOfLeave: "",
-                                  calendarYear: new Date().getFullYear()
-                              },employees:[],
-                              isSearchClicked: false,
+                              employees:[],
                               modified: true
                             });
 
@@ -280,17 +270,7 @@ class PersonalInform extends React.Component {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
                 setTimeout(function(){
                             _this.setState({
-                              searchSet: {
-                                  name: "",
-                                  employee: "",
-                                  department: "",
-                                  designation: "",
-                                  leaveType: "",
-                                  noOfDay: "",
-                                  noOfLeave: "",
-                                  calendarYear: new Date().getFullYear()
-                              },employees:[],
-                              isSearchClicked: false,
+                              employees:[],
                               modified: true
                             });
 
@@ -310,17 +290,7 @@ class PersonalInform extends React.Component {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
                 setTimeout(function(){
                             _this.setState({
-                              searchSet: {
-                                  name: "",
-                                  employee: "",
-                                  department: "",
-                                  designation: "",
-                                  leaveType: "",
-                                  noOfDay: "",
-                                  noOfLeave: "",
-                                  calendarYear: new Date().getFullYear()
-                              },employees:[],
-                              isSearchClicked: false,
+                              employees:[],
                               modified: true
                             });
 

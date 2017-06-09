@@ -3,7 +3,7 @@ package org.egov.lams.notification.service;
 import java.text.MessageFormat;
 
 import org.egov.lams.notification.config.PropertiesManager;
-import org.egov.lams.notification.models.Agreement;
+import org.egov.lams.notification.model.Agreement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

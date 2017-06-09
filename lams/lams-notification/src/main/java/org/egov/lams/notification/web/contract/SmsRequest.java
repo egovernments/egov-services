@@ -1,7 +1,7 @@
 package org.egov.lams.notification.web.contract;
 
+import org.egov.lams.notification.model.Sms;
 import org.egov.lams.notification.model.enums.Priority;
-import org.egov.lams.notification.models.Sms;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

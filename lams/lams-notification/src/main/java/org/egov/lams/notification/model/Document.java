@@ -1,25 +1,31 @@
-package org.egov.lams.notification.models;
+package org.egov.lams.notification.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-/**
- * Categories defined under asset category type are shown in the drop down.
- */
-@AllArgsConstructor
-@EqualsAndHashCode
+
+@Setter
 @Getter
 @NoArgsConstructor
-@Setter
+@AllArgsConstructor
 @ToString
-public class AssetCategory   {
+@EqualsAndHashCode
+public class Document   {
 	
   @JsonProperty("id")
   private Long id;
+
+  @JsonProperty("documentType")
+  private DocumentType documentType;
+
+  @JsonProperty("agreement")
+  private Long agreement;
+
+  @JsonProperty("fileStore")
+  private String fileStore;
 }
 

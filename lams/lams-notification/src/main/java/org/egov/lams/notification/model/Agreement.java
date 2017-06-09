@@ -1,4 +1,4 @@
-package org.egov.lams.notification.models;
+package org.egov.lams.notification.model;
 
 import java.util.Date;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.egov.lams.notification.model.enums.Action;
 import org.egov.lams.notification.model.enums.NatureOfAllotment;
 import org.egov.lams.notification.model.enums.PaymentCycle;
 import org.egov.lams.notification.model.enums.Source;
@@ -28,6 +29,9 @@ public class Agreement {
 	private String agreementNumber;
 	private String acknowledgementNumber;
 	private String stateId;
+	
+	@NotNull
+	private Action action;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
@@ -91,7 +95,7 @@ public class Agreement {
 	@NotNull
 	private PaymentCycle paymentCycle;
 	private RentIncrementType rentIncrementMethod;
-	private String orderNo;
+	private String orderNumber;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date orderDate;
@@ -103,6 +107,7 @@ public class Agreement {
 	private Date solvencyCertificateDate;
 	private String tinNumber;
 
+	private List<Document> documents;
 	private List<String> demands;
 	private WorkflowDetails workflowDetails;
 	
@@ -114,6 +119,7 @@ public class Agreement {
 
 	@NotNull
 	private Source source;
+	private List<Demand> legacyDemands;
 	private Cancellation cancellation;
 	private Renewal renewal;
 }

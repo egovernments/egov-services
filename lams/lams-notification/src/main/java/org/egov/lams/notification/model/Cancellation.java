@@ -1,11 +1,10 @@
-package org.egov.lams.notification.models;
+package org.egov.lams.notification.model;
 
 import java.util.Date;
 
 import org.egov.lams.notification.model.enums.ReasonForCancellation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class Cancellation {
 	private Date terminationDate;
 
 	@JsonProperty("orderNo")
-	private String orderNo;
+	private String orderNumber;
 
 	@JsonProperty("orderDate")
 	private Date orderDate;

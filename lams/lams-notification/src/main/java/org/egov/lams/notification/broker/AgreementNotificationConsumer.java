@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.lams.notification.adapter.AgreementNotificationAdapter;
-import org.egov.lams.notification.models.Agreement;
+import org.egov.lams.notification.model.Agreement;
 import org.egov.lams.notification.web.contract.AgreementRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

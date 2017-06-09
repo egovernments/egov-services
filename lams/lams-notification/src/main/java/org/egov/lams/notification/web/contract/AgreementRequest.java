@@ -2,7 +2,7 @@ package org.egov.lams.notification.web.contract;
 
 import javax.validation.Valid;
 
-import org.egov.lams.notification.models.Agreement;
+import org.egov.lams.notification.model.Agreement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -4,7 +4,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 import org.egov.lams.notification.broker.AgreementNotificationProducer;
 import org.egov.lams.notification.config.PropertiesManager;
-import org.egov.lams.notification.models.Agreement;
+import org.egov.lams.notification.model.Agreement;
 import org.egov.lams.notification.service.SmsNotificationService;
 import org.egov.lams.notification.web.contract.AgreementRequest;
 import org.egov.lams.notification.web.contract.SmsRequest;

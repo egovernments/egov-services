@@ -1,4 +1,4 @@
-package org.egov.lams.notification.models;
+package org.egov.lams.notification.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

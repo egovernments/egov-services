@@ -140,6 +140,15 @@ class AgreementSearch extends React.Component {
     $(".date-picker").datepicker({
       format: "dd/mm/yyyy",
       autoclose: true
+    });
+
+    $(".date-picker").on("change", function(e) {
+      _this.setState({
+          searchSet: {
+            ..._this.state.searchSet,
+            [e.target.id]: e.target.value
+          }
+      })
     })
   }
 
@@ -544,12 +553,12 @@ class AgreementSearch extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="from_date">Agreement Created from </label>
+                                            <label for="fromDate">Agreement Created from </label>
                                         </div>
                                         <div className="col-sm-6">
                                           <div className="text-no-ui">
                                               <span className="glyphicon glyphicon-calendar"></span>
-                                            <input className="date-picker" type="text" name="from_date" id="from_date" value={fromDate} onChange={(e)=>{
+                                            <input className="date-picker" type="text" name="fromDate" id="fromDate" value={fromDate} onChange={(e)=>{
                                     handleChange(e,"fromDate")
                                 }}/>
                                           </div>
@@ -559,12 +568,12 @@ class AgreementSearch extends React.Component {
                                 <div className="col-sm-6">
                                   <div className="row">
                                       <div className="col-sm-6 label-text">
-                                          <label for="to_date">Agreement Created To </label>
+                                          <label for="toDate">Agreement Created To </label>
                                       </div>
                                       <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
-                                          <input className="date-picker" type="text" name="to_date" id="to_date" value={toDate} onChange={(e)=>{
+                                          <input className="date-picker" type="text" name="toDate" id="toDate" value={toDate} onChange={(e)=>{
                                   handleChange(e,"toDate")
                               }}/>
                                         </div>

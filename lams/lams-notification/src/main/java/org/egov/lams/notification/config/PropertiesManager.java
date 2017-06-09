@@ -27,5 +27,18 @@ public class PropertiesManager {
 
 	@Value("${lams.rejected.sms.msg}")
 	public String rejectMessage;
+	
+	@Value("${egov.services.asset_service.hostname}")
+	 private String assetApiHostUrl;
+	 
+	 @Value("${egov.services.asset_service.searchpath}")
+	 private String assetApiSearchPath;
+	
+	 @Value("${egov.services.allottee_service.hostname}")
+	 private String allotteeApiHostUrl;
+	 
+	 @Value("${egov.services.allottee_service.searchpath}")
+	 private String allotteeApiSearchPath;
+	 
 
 }

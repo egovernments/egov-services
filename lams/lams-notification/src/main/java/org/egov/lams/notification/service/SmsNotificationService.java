@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 
 import org.egov.lams.notification.config.PropertiesManager;
 import org.egov.lams.notification.model.Agreement;
+import org.egov.lams.notification.model.Allottee;
+import org.egov.lams.notification.model.Asset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,35 +15,31 @@ public class SmsNotificationService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public String getSmsMessage(Agreement agreement) {
+	public String getSmsMessage(Agreement agreement, Asset asset, Allottee allottee) {
 
 		Double totalAmount = agreement.getSecurityDeposit() + agreement.getBankGuaranteeAmount();
 		String message = MessageFormat.format(propertiesManager.getNotificationMessage(),
-				agreement.getAllottee().getName(), agreement.getAsset().getCategory(), agreement.getAsset().getName(),
+				allottee.getName(), asset.getCategory(), asset.getName(),
 				agreement.getAcknowledgementNumber(), agreement.getRent(), agreement.getSecurityDeposit(),
 				agreement.getBankGuaranteeAmount(), totalAmount,
-				agreement.getAsset().getLocationDetails().getRevenueWard());
-
+				asset.getLocationDetails().getRevenueWard());
 		return message;
-
 	}
 
-	public String getApprovalMessage(Agreement agreement) {
+	public String getApprovalMessage(Agreement agreement, Asset asset, Allottee allottee) {
 
-		String message = MessageFormat.format(propertiesManager.getApproveMessage(), agreement.getAllottee().getName(),
-				agreement.getAsset().getCategory(), agreement.getAsset().getName(),
+		String message = MessageFormat.format(propertiesManager.getApproveMessage(), allottee.getName(),
+				asset.getCategory(), asset.getName(),
 				agreement.getAcknowledgementNumber(), agreement.getRent(),
-				agreement.getAsset().getLocationDetails().getRevenueWard());
-
+				asset.getLocationDetails().getRevenueWard());
 		return message;
 	}
 
-	public String getRejectedMessage(Agreement agreement) {
+	public String getRejectedMessage(Agreement agreement, Asset asset, Allottee allottee) {
 
-		String message = MessageFormat.format(propertiesManager.getRejectMessage(), agreement.getAllottee().getName(),
-				agreement.getAsset().getCategory(), agreement.getAsset().getName(),
-				agreement.getAcknowledgementNumber(), agreement.getAsset().getLocationDetails().getRevenueWard());
-
+		String message = MessageFormat.format(propertiesManager.getRejectMessage(), allottee.getName(),
+				asset.getCategory(), asset.getName(),
+				agreement.getAcknowledgementNumber(), asset.getLocationDetails().getRevenueWard());
 		return message;
 	}
 }

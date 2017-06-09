@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgrrest.master.consumers;
+package org.egov.pgr.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -112,3 +112,4 @@ public class PGRConsumerConfig {
      @Bean public PGRConsumer listener() { return new PGRConsumer(); }
 
 }
+

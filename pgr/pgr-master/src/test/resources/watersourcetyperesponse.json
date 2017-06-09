@@ -1,0 +1,21 @@
+{
+  "ResponseInfo": {
+    "apiId": "emp",
+    "ver": "1.0",
+    "ts": "Fri Mar 10 00:00:00 IST 2017",
+    "resMsgId": "uief87324",
+    "msgId": "20170310130900",
+    "status": "200"
+  },
+  "waterSourceType": [
+    {
+      "id": 2,
+      "code": "2",
+      "name": "surface watererrr",
+      "description": "water source typeeeee",
+      "active": false,
+      "auditDeatils": null,
+      "tenantId": "default"
+    }
+  ]
+}

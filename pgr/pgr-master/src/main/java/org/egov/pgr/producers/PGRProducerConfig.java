@@ -37,7 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgrrest.master.producers;
+package org.egov.pgr.producers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,3 +100,4 @@ public class PGRProducerConfig {
      */
 
 }
+

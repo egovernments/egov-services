@@ -20,7 +20,7 @@ public class RentIncrementRepository {
 	JdbcTemplate jdbcTemplate;
 
 	public List<RentIncrementType> getRentIncrements() {
-		String query = "select rentincrement.id,rentincrement.type from eglams_rentincrementtype rentincrement";
+		String query = "select * from eglams_rentincrementtype rentincrement";
 		List<RentIncrementType> rentIncrements = null;
 		try {
 			rentIncrements = jdbcTemplate.query(query, new RentIncrementRowMapper());

@@ -9,7 +9,7 @@ class SearchAsset extends React.Component {
       "assetCategory": "",
       "status": "",
       "code": ""
-   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{}}
+   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{}, modify: false}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -43,8 +43,15 @@ class SearchAsset extends React.Component {
           flag = 1;
           _this.setState({
             isSearchClicked: true,
-            list
-          })
+            list,
+            modify: true
+          });
+
+          setTimeout(function(){
+            _this.setState({
+              modify: false
+            });
+          }, 1200);
         }
       })
     } catch(e) {
@@ -60,7 +67,7 @@ class SearchAsset extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.list.length != this.state.list.length) {
+      if (this.state.modify) {
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -244,7 +251,7 @@ class SearchAsset extends React.Component {
                   <select id="department" name="department" value={department} onChange={(e)=>{
                           handleChange(e,"department")
                       }}>
-                        <option>Select Department</option>
+                        <option value="">Select Department</option>
                         {renderOption(this.state.departments)}
                      </select>
                   </div>

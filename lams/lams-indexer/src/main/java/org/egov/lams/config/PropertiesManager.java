@@ -29,10 +29,10 @@ public class PropertiesManager {
 	 @Value("${egov.services.boundary_service.hostname}")
 	 private String boundaryApiHostUrl;
 	 
-	 @Value("${egov.services.boundary_service.citysearchpath}")
+	 @Value("${egov.services.boundary_service.searchpath}")
 	 private String boundaryApiSearchPath;
 	 
-	 @Value("${egov.services.boundary_service.searchpath}")
+	 @Value("${egov.services.boundary_service.citysearchpath}")
 	 private String boundaryApiCitySearchPath;
 	 
 	 

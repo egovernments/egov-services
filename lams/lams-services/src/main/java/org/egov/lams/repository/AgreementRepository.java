@@ -386,6 +386,7 @@ public class AgreementRepository {
 		Date terminationDate = null;
 		Action action = agreement.getAction();
 
+		if(action!=null){
 		switch (action) {
 
 		case CANCELATION:
@@ -410,7 +411,7 @@ public class AgreementRepository {
 		case OBJECTION:
 			break;
 		}
-
+		}
 		Map<String, Object> processMap = new HashMap<>();
 		processMap.put("orderNumber", orderNumber);
 		processMap.put("orderDate", orderDate);

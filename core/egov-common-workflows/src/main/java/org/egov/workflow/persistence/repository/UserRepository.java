@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.egov.workflow.domain.model.AuthenticatedUser;
 import org.egov.workflow.web.contract.RequestInfo;
+import org.egov.workflow.web.contract.UserGetRequest;
 import org.egov.workflow.web.contract.UserRequest;
 import org.egov.workflow.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,16 @@ public class UserRepository {
 
 		return restTemplate.postForObject(url, userRequest, UserResponse.class);
 	}
+	
+	public UserResponse findUserByUserNameAndTenantId(final RequestInfo requestInfo) {
+                String url = String.format("%s%s", userHost, userServiceUrl);
+                UserGetRequest userGetRequest = new UserGetRequest();
+                userGetRequest.setRequestInfo(requestInfo);
+                userGetRequest.setUserName(requestInfo.getUserInfo().getUserName());
+                userGetRequest.setTenantId(requestInfo.getUserInfo().getTenantId());
+    
+                return restTemplate.postForObject(url, userGetRequest, UserResponse.class);
+        }
 
 	
 	public AuthenticatedUser getUser(String token) {

@@ -27,6 +27,9 @@ public class UserSearchRequest {
 
     @JsonProperty("aadhaarNumber")
     private String aadhaarNumber;
+    
+    @JsonProperty("userName")
+	private String userName;
 
     @JsonProperty("pan")
     private String pan;

@@ -2,14 +2,19 @@ package org.egov.lams.model;
 
 import java.util.Date;
 import java.util.List;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,16 +29,22 @@ public class Agreement {
 	private String agreementNumber;
 	private String acknowledgementNumber;
 	private String stateId;
+	private Action action;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
-	
+
 	@NotNull
 	@Max(5)
 	@Min(1)
 	private Long timePeriod;
+	
+	@NotNull
 	private Allottee allottee;
+	
+	@NotNull
 	private Asset asset;
+	
 	private String tenderNumber;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
@@ -42,12 +53,17 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date councilDate;
+
+	@Min(0)
 	private Double bankGuaranteeAmount;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date bankGuaranteeDate;
+
 	@NotNull
+	@Min(0)
 	private Double securityDeposit;
+
 	@Min(0)
 	private Double collectedSecurityDeposit;
 
@@ -57,6 +73,7 @@ public class Agreement {
 
 	@NotNull
 	private NatureOfAllotment natureOfAllotment;
+	@Min(0)
 	private Double registrationFee;
 	private String caseNo;
 
@@ -69,13 +86,14 @@ public class Agreement {
 	private String orderDetails;
 
 	@NotNull
+	@Min(0)
 	private Double rent;
 	private String tradelicenseNumber;
 
 	@NotNull
 	private PaymentCycle paymentCycle;
 	private RentIncrementType rentIncrementMethod;
-	private String orderNo;
+	private String orderNumber;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date orderDate;
@@ -90,9 +108,13 @@ public class Agreement {
 	private List<Document> documents;
 	private List<String> demands;
 	private WorkflowDetails workflowDetails;
+	
+	@Min(0)
 	private Double goodWillAmount;
+
 	@Min(0)
 	private Double collectedGoodWillAmount;
+
 	@NotNull
 	private Source source;
 	private List<Demand> legacyDemands;

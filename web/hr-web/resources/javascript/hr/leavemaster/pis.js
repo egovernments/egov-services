@@ -75,7 +75,8 @@ class PersonalInform extends React.Component {
         departmentsList: [],
         designationList: [],
         leave: [],
-        years: []
+        years: [],
+        modified:false
     }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
@@ -177,8 +178,14 @@ class PersonalInform extends React.Component {
       flag = 1;
       _this.setState({
           isSearchClicked: true,
-          employees: Object.assign([], employees)
-      })
+          employees: Object.assign([], employees),
+          modified:true
+      });
+      setTimeout(function() {
+        _this.setState({
+          modified: false
+        })
+      }, 1200);
     }
 
     //call api call
@@ -245,38 +252,10 @@ class PersonalInform extends React.Component {
                         showError(err);
                     } else {
                         getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                        _this.setState({
-                          searchSet: {
-                              name: "",
-                              employee: "",
-                              department: "",
-                              designation: "",
-                              leaveType: "",
-                              noOfDay: "",
-                              noOfLeave: "",
-                              calendarYear: new Date().getFullYear()
-                          },employees:[],
-                          isSearchClicked: false
-                        });
-                        $('#employeeTable').dataTable().fnDestroy();
                     }
                 })
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                _this.setState({
-                  searchSet: {
-                      name: "",
-                      employee: "",
-                      department: "",
-                      designation: "",
-                      leaveType: "",
-                      noOfDay: "",
-                      noOfLeave: "",
-                      calendarYear: new Date().getFullYear()
-                  },employees:[],
-                  isSearchClicked: false
-                });
-                $('#employeeTable').dataTable().fnDestroy();
             }
         })
     } else {
@@ -285,20 +264,6 @@ class PersonalInform extends React.Component {
                 showError(err);
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                _this.setState({
-                  searchSet: {
-                      name: "",
-                      employee: "",
-                      department: "",
-                      designation: "",
-                      leaveType: "",
-                      noOfDay: "",
-                      noOfLeave: "",
-                      calendarYear: new Date().getFullYear()
-                  }, employees:[],
-                  isSearchClicked: false
-                });
-                $('#employeeTable').dataTable().fnDestroy();
             }
          })
     }
@@ -334,20 +299,19 @@ class PersonalInform extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.employees.length != this.state.employees.length && this.state.employees.length) {
-            $('#employeeTable').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                       'copy', 'csv', 'excel', 'pdf', 'print'
-               ],
-               ordering: false,
-               bDestroy: true,
-               language: {
-                "emptyTable": "No Records"
-              }
-            });
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.modified) {
+          $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false,
+             bDestroy: true,
+             language: {
+               "emptyTable": "No Records"
+            }
+          });
       }
   }
 
@@ -416,8 +380,7 @@ class PersonalInform extends React.Component {
     let mode = getUrlVars()["type"];
 
     const renderOption = function(list, setNameBool) {
-        if(list)
-        {
+        if(list){
             return list.map((item)=>
             {
                 return (<option key={item.id} value={setNameBool ? item.name : item.id}>
@@ -433,44 +396,38 @@ class PersonalInform extends React.Component {
             <table id="employeeTable" className="table table-bordered">
                 <thead>
                     <tr>
-
                         <th>Employee Name</th>
                         <th>Employee Code</th>
                         <th>No. Of Leave Available</th>
-
                     </tr>
                 </thead>
-
                 <tbody id="employeeSearchResultTableBody">
                     {
                         renderBody()
                     }
                 </tbody>
-
             </table>
 
           )
-      } else {
-        return "";
       }
 
     }
-    const renderBody = function()
-    {
-      return employees.map((item, index)=>
-      {
-            return (<tr key={index}>
-                    <td data-label="name">{item.name}</td>
-                    <td data-label="code">{item.code}</td>
-                    <td data-label="noOfDay">
-                    <input type="number" id={item.id} name="noOfDays"  value={item.noOfDays}
-                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} disabled={readonly}/>
-                    </td>
-                </tr>
-            );
-
-      })
+    const renderBody = function() {
+      if(employees.length>0) {
+        return employees.map((item, index)=> {
+              return (<tr key={index}>
+                      <td data-label="name">{item.name}</td>
+                      <td data-label="code">{item.code}</td>
+                      <td data-label="noOfDay">
+                      <input type="number" id={item.id} name="noOfDays"  value={item.noOfDays}
+                        onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} disabled={readonly}/>
+                      </td>
+                  </tr>
+              );
+        })
     }
+  }
+
     const showActionButton = function() {
       if(((!mode) || mode==="update") && employees.length) {
         return (<button type="button" className="btn btn-submit" onClick={(e) => {addOrUpdate(e)}}>{mode?"Update":"Add"}</button>);

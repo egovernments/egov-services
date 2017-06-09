@@ -48,6 +48,8 @@ import org.egov.pgrrest.master.service.ReceivingCenterTypeService;
 import org.egov.pgrrest.master.service.ReceivingModeTypeService;
 import org.egov.pgrrest.master.web.contract.ReceivingCenterTypeReq;
 import org.egov.pgrrest.master.web.contract.ReceivingModeTypeReq;
+import org.egov.pgrrest.master.service.ServiceGroupService;
+import org.egov.pgrrest.master.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +66,13 @@ public class PGRConsumer {
 
 	@Autowired
 	private ReceivingModeTypeService receivingModeTypeService;
+	
+	 @Autowired
+	    private ServiceGroupService serviceGroupService;
 
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.receivingcenter.create.name}", "${kafka.topics.receivingmode.create.name}",
-			"${kafka.topics.receivingcenter.update.name}", "${kafka.topics.receivingmode.update.name}" })
+			"${kafka.topics.receivingcenter.update.name}", "${kafka.topics.receivingmode.update.name}","${kafka.topics.categorytype.create.name}" })
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
@@ -88,7 +93,10 @@ public class PGRConsumer {
 			} else if (record.topic().equals("${kafka.topics.receivingmode.update.name}")) {
 				LOGGER.info("Consuming update ReceivingModeType request");
 				receivingModeTypeService.update(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
-			}
+			} else if (record.topic().equals("${kafka.topics.categorytype.create.name}")){
+        		LOGGER.info("Consuming create Category request");
+                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+        	}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

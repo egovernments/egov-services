@@ -17,6 +17,7 @@ class SearchLeaveApplication extends React.Component {
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
     this.setInitialState=this.setInitialState.bind(this);
+    this.handleClick=this.handleClick.bind(this);
   }
 
 
@@ -128,12 +129,17 @@ class SearchLeaveApplication extends React.Component {
     }
 
 
-
-
-
   close(){
       // widow.close();
       open(location, '_self').close();
+  }
+
+  handleClick(type, id) {
+    if (type==="create") {
+      window.open(`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }else {
+      window.open(`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }
   }
 
 
@@ -154,7 +160,7 @@ class SearchLeaveApplication extends React.Component {
   }
 
   render() {
-    let {handleChange,search,handleBlur}=this;
+    let {handleChange,search,handleBlur,handleClick}=this;
     let {isSearchClicked,employees,assignments_designation,assignments_department}=this.state;
     let {name,
     code,
@@ -174,21 +180,6 @@ class SearchLeaveApplication extends React.Component {
     }
 
 
-    const renderAction=function(type,id){
-      if (type==="create") {
-
-              return (
-                      <a href={`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`}>Apply Leave</a>
-              );
-
-    }else {
-            return (
-                    <a href={`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`}>View</a>
-            );
-        }
-}
-
-
     const showTable=function()
     {
       if(isSearchClicked)
@@ -201,7 +192,6 @@ class SearchLeaveApplication extends React.Component {
                         <th>Employee Name</th>
                         <th>Employee Designation</th>
                         <th>Employee Department</th>
-                        <th>Action</th>
 
                     </tr>
                 </thead>
@@ -226,16 +216,12 @@ class SearchLeaveApplication extends React.Component {
       {
       return employees.map((item,index,id)=>
       {
-            return (<tr key={index}>
+            return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
 
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
                     <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
-                    <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
-
                 </tr>
             );
       })

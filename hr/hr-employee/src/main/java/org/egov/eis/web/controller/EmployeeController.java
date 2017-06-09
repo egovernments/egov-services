@@ -41,15 +41,18 @@
 package org.egov.eis.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.User;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserException;
+import org.egov.eis.service.helper.UserSearchURLHelper;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
@@ -58,6 +61,8 @@ import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.UserGetRequest;
+import org.egov.eis.web.contract.UserResponse;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreate;
@@ -78,6 +83,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/employees")
@@ -105,6 +111,9 @@ public class EmployeeController {
 
 	@Autowired
 	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
+	
+	@Autowired
+        private UserSearchURLHelper userSearchURLHelper;
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
@@ -157,10 +166,25 @@ public class EmployeeController {
                         @RequestParam(value = "tenantId", required = true) String tenantId,
                         BindingResult modelAttributeBindingResult) {
                 RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-                List<Long> ids = new ArrayList<>();
-                ids.add(requestInfo.getUserInfo().getId());
+                UserGetRequest userGetRequest = new UserGetRequest();
+                userGetRequest.setUserName(requestInfo.getUserInfo().getUserName());
+                userGetRequest.setTenantId(tenantId);
+                UserResponse userResponse = null;
+                List<User> users = null;
+                List<Long> userIds = new ArrayList<>();
+                String url = userSearchURLHelper.searchURL(null, tenantId);
+                try {
+                    userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
+                    users = userResponse.getUser();
+                } catch (Exception e) {
+                        LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
+                        e.printStackTrace();
+                }
+                for (final User user : users) {
+                    userIds.add(user.getId());
+                }
                 EmployeeCriteria employeeCriteria = new EmployeeCriteria();
-                employeeCriteria.setId(ids);
+                employeeCriteria.setId(userIds);
                 employeeCriteria.setTenantId(tenantId);
 
                 ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,

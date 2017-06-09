@@ -47,8 +47,10 @@ import java.util.List;
 import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.repository.builder.LeaveAllotmentQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveAllotmentRowMapper;
+import org.egov.eis.service.UserService;
 import org.egov.eis.web.contract.LeaveAllotmentGetRequest;
 import org.egov.eis.web.contract.LeaveAllotmentRequest;
+import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -74,6 +76,9 @@ public class LeaveAllotmentRepository {
 
 	@Autowired
 	private LeaveAllotmentQueryBuilder leaveAllotmentQueryBuilder;
+	
+	@Autowired
+	private UserService userService;
 
 	public List<LeaveAllotment> findForCriteria(LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -85,10 +90,13 @@ public class LeaveAllotmentRepository {
 
 	public void create(LeaveAllotmentRequest leaveAllotmentRequest) {
 		List<Object[]> batchArgs = new ArrayList<>();
+                final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                        leaveAllotmentRequest.getRequestInfo().getUserInfo().getUserName(),
+                        leaveAllotmentRequest.getRequestInfo().getUserInfo().getTenantId());
 		for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
 			Object[] laRecord = { la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
-					leaveAllotmentRequest.getRequestInfo().getUserInfo().getId(), new Date(System.currentTimeMillis()),
-					leaveAllotmentRequest.getRequestInfo().getUserInfo().getId(), new Date(System.currentTimeMillis()),
+			                userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+			                userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
 					la.getTenantId() };
 			batchArgs.add(laRecord);
 		}
@@ -104,9 +112,12 @@ public class LeaveAllotmentRepository {
 
 	public void update(LeaveAllotmentRequest leaveAllotmentRequest) {
 		List<Object[]> batchArgs = new ArrayList<>();
+		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                        leaveAllotmentRequest.getRequestInfo().getUserInfo().getUserName(),
+                        leaveAllotmentRequest.getRequestInfo().getUserInfo().getTenantId());
 		for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
 			Object[] laRecord = { la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
-					leaveAllotmentRequest.getRequestInfo().getUserInfo().getId(), new Date(System.currentTimeMillis()),
+			                userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
 					la.getTenantId(), la.getId(), la.getTenantId() };
 			batchArgs.add(laRecord);
 		}

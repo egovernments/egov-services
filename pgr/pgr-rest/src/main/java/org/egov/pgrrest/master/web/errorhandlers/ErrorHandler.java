@@ -46,6 +46,9 @@ import java.text.SimpleDateFormat;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgrrest.master.web.contract.factory.ResponseInfoFactory;
+import org.egov.pgrrest.read.web.contract.ErrorResponse;
+import org.egov.pgrrest.read.web.contract.Error;
+import org.egov.pgrrest.read.web.contract.ErrorField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,17 +64,22 @@ public class ErrorHandler {
 
     public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(final BindingResult bindingResult,
             final RequestInfo requestInfo) {
-        final Error error = new Error();
+       Error error = new Error();
         error.setCode(400);
         error.setMessage("Missing RequestBody Fields");
         error.setDescription("Error While Binding RequestBody");
         if (bindingResult.hasFieldErrors())
-            for (final FieldError fieldError : bindingResult.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+            for (final FieldError fieldError : bindingResult.getFieldErrors()){
+            	ErrorField errorfield = new ErrorField();
+            	errorfield.setCode(fieldError.getCode());
+            	errorfield.setField(fieldError.getField());
+            	errorfield.setMessage(fieldError.getDefaultMessage());
+                error.getFields().add(errorfield);
+            }
 
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
-        final ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse(responseInfo, null);
         errorResponse.setResponseInfo(responseInfo);
         errorResponse.setError(error);
 
@@ -85,9 +93,13 @@ public class ErrorHandler {
         error.setMessage("Missing Required Query Parameter");
         error.setDescription("Error While Binding ModelAttribute");
         if (bindingResult.hasFieldErrors())
-            for (final FieldError fieldError : bindingResult.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-
+            for (final FieldError fieldError : bindingResult.getFieldErrors()){
+            	ErrorField errorfield = new ErrorField();
+            	errorfield.setCode(fieldError.getCode());
+            	errorfield.setField(fieldError.getField());
+            	errorfield.setMessage(fieldError.getDefaultMessage());
+                error.getFields().add(errorfield);
+            }
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
         final ErrorResponse errorResponse = new ErrorResponse();
@@ -120,13 +132,35 @@ public class ErrorHandler {
         error.setDescription("Error while binding request object");
 
         if (bindingResult.hasFieldErrors())
-            for (final FieldError fieldError : bindingResult.getFieldErrors())
-                if (fieldError.getField().contains("Date")) {
-                    final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    final String errorDate = dateFormat.format(fieldError.getRejectedValue());
-                    error.getFields().put(fieldError.getField(), errorDate);
-                } else
-                    error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+            for (final FieldError fieldError : bindingResult.getFieldErrors()){
+            if (fieldError.getField().contains("Date")) {
+                final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                final String errorDate = dateFormat.format(fieldError.getRejectedValue());
+            	ErrorField errorfield = new ErrorField();
+            	errorfield.setCode(fieldError.getCode());
+            	errorfield.setField(fieldError.getField());
+            	errorfield.setMessage(fieldError.getDefaultMessage() + "Date: " + errorDate);
+                error.getFields().add(errorfield);
+           } else{
+                ErrorField errorfield = new ErrorField();
+            	errorfield.setCode(fieldError.getCode());
+            	errorfield.setField(fieldError.getField());
+            	errorfield.setMessage(fieldError.getDefaultMessage());
+                error.getFields().add(errorfield);   
+               }
+    }
+        
+        
+        if (bindingResult.hasFieldErrors())
+            for (final FieldError fieldError : bindingResult.getFieldErrors()){
+                final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                final String errorDate = dateFormat.format(fieldError.getRejectedValue());
+            	ErrorField errorfield = new ErrorField();
+            	errorfield.setCode(fieldError.getCode());
+            	errorfield.setField(fieldError.getField());
+            	errorfield.setMessage(fieldError.getDefaultMessage() + "Date: " + errorDate);
+                error.getFields().add(errorfield);
+            }
 
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 

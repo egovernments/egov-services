@@ -2,16 +2,26 @@ var flag = 0;
 class SearchLeaveApplication extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],employ:{},searchSet:{
-
-    name:"",
-    code:"",
-    departmentId:"",
-    designationId:"",employeeTypeId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[],employeeType:[]}
+    this.state={
+      employees:[],
+      employ:{},
+      searchSet:{
+        name:"",
+        code:"",
+        departmentId:"",
+        designationId:"",
+        employeeTypeId:""
+      },isSearchClicked:false,
+        assignments_department:[],
+        assignments_designation:[],
+        employeeType:[]
+        modified: false
+    }
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
     this.setInitialState=this.setInitialState.bind(this);
+    this.handleClick=this.handleClick.bind(this);
   }
 
 
@@ -19,15 +29,13 @@ class SearchLeaveApplication extends React.Component {
     this.setState(initState);
   }
 
-  search(e)
-  {
+  search(e) {
     let {
     name,
     code,
     departmentId,
     designationId}=this.state.searchSet;
     e.preventDefault();
-    //call api call
     var employees=[];
     commonApiPost("hr-employee","employees","_search",{...this.state.searchSet, tenantId,
       departmentId: departmentId || null,
@@ -39,19 +47,25 @@ class SearchLeaveApplication extends React.Component {
           flag = 1;
           this.setState({
             isSearchClicked:true,
-            employees
-          })
+            employees,
+            modified: true
+          });
         }
-      })
+          setTimeout(function() {
+            _this.setState({
+              modified: false
+            })
+          }, 1200);
+    });
   }
 
-componentDidMount(){
-  if(window.opener && window.opener.document) {
-     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-     if(logo_ele && logo_ele[0]) {
-       document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-     }
-  }
+  componentDidMount(){
+    if(window.opener && window.opener.document) {
+       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+       if(logo_ele && logo_ele[0]) {
+         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+       }
+    }
 
   var count = 2, _this = this, _state = {};
   var checkCountNCall = function(key, res) {
@@ -118,18 +132,22 @@ componentDidMount(){
       }
     }
 
-
-
-
   close(){
       // widow.close();
       open(location, '_self').close();
   }
 
+  handleClick(type, id) {
+    if (type==="create") {
+      window.open(`app/hr/leavemaster/compensetory-leave.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }else {
+      window.open(`app/hr/leavemaster/view-compensetory.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    }
+  }
 
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.employees.length!=this.state.employees.length) {
+
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.modified) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -138,14 +156,14 @@ componentDidMount(){
              ordering: false,
              bDestroy: true,
              language: {
-              "emptyTable": "No Records"
+               "emptyTable": "No Records"
             }
           });
       }
   }
 
   render() {
-    let {handleChange,search,handleBlur,assignments_designation,assignments_department}=this;
+    let {handleChange,search,handleBlur,assignments_designation,assignments_department,handleClick}=this;
     let {isSearchClicked,employees}=this.state;
     let {name,
     code,
@@ -165,19 +183,7 @@ componentDidMount(){
     }
 
 
-    const renderAction=function(type,id){
-      if (type==="create") {
 
-              return (
-                      <a href={`app/hr/leavemaster/compensetory-leave.html?id=${id}&type=${type}`}>Apply Compensetory Leave</a>
-              );
-
-    }else {
-            return (
-                    <a href={`app/hr/leavemaster/view-compensetory.html?id=${id}&type=${type}`}>View</a>
-            );
-        }
-}
 
 
     const showTable=function()
@@ -193,8 +199,6 @@ componentDidMount(){
                         <th>Employee Name</th>
                         <th>Employee Code</th>
                         <th>Status</th>
-                        <th>master</th>
-
                     </tr>
                 </thead>
 
@@ -218,16 +222,12 @@ componentDidMount(){
       {
       return employees.map((item,index,id)=>
       {
-            return (<tr key={index}>
+            return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
                     <td>{index+1}</td>
                     <td data-label="workedDate">{item.workedDate}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="code">{item.code}</td>
                     <td data-label="status">{item.status}</td>
-                    <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
-
                 </tr>
             );
       })

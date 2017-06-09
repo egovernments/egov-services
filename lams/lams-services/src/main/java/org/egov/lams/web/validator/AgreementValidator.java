@@ -11,6 +11,7 @@ import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
@@ -75,6 +76,9 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			agreementRequest = (AgreementRequest) target;
 		else
 			throw new RuntimeException("invalid datatype for agreement validator");
+		
+		if(agreementRequest.getAgreement().getAction() == null)
+		agreementRequest.getAgreement().setAction(Action.CREATE);
 		
 		switch (agreementRequest.getAgreement().getAction()) {
 

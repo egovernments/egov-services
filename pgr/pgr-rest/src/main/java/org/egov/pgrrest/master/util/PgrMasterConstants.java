@@ -70,10 +70,6 @@ public class PgrMasterConstants {
     public static final String CATEGORY_NAME_MANDATORY_CODE = "wcms.0003";
     public static final String CATEGORY_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String CATEGORY_NAME_MANADATORY_ERROR_MESSAGE = "Category Type is required";
-    
-    
-    
-
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

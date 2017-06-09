@@ -95,7 +95,7 @@ public class AgreementDetails {
 		this.tradeLicenseNumber = agreement.getTradelicenseNumber();
 		this.paymentCycle = agreement.getPaymentCycle().toString();
 		this.rentIncrementMethod = agreement.getRentIncrementMethod().getType();
-		this.orderNumber = agreement.getOrderNo();
+		this.orderNumber = agreement.getOrderNumber();
 		this.orderDate = agreement.getOrderDate();
 		this.rrReadingNumber = agreement.getRrReadingNo();
 		this.remarks = agreement.getRemarks();
@@ -108,16 +108,16 @@ public class AgreementDetails {
 		this.assetName = asset.getName();
 		this.assetCode = asset.getCode();
 		this.assetCategory = asset.getCategory().getName();
+		this.assetDrno = asset.getLocationDetails().getDoorNo();
 
 	}
 
 	public void setBoundaryDetails(Location location, Map<Long, Boundary> boundaryMap) {
-		// FIXME change all ward and zone number to name using boundary calls
-		// this.revZoneName = location.getZone().toString();
-		// this.adminWardName=location.getElectionWard().toString();
-		// this.revenueBlock = location.getBlock().toString();
-		// this.assetDrno = asset.getDoorNo();
-		// this.revenueWard = location.getElectionWard().toString();
+		
+		this.revZoneName = boundaryMap.get(location.getZone()).getName();
+		this.adminWardName= boundaryMap.get(location.getElectionWard()).getName();
+		this.revenueBlock = boundaryMap.get(location.getBlock()).getName();
+		this.revenueWard = boundaryMap.get(location.getRevenueWard()).getName();
 	}
 
 	public void setAllottee(Allottee allottee) {

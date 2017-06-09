@@ -45,9 +45,8 @@ public class BoundaryRepository {
 		return cityResponse.getCity();
 	}
 
-	public Map<Long, Boundary> getBoundariesById(Agreement agreement) {
+	public Map<Long, Boundary> getBoundariesById(Agreement agreement,Asset asset) {
 
-		Asset asset = agreement.getAsset();
 		Location location = asset.getLocationDetails();
 		BoundaryResponse boundaryResponse = null;
 		List<Long> boundaryList = getBoundaryLists(location);

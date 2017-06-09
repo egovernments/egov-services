@@ -40,7 +40,7 @@ public class AgreementAdaptorService {
 		agreementDetails.setAsset(asset);
 		agreementDetails.setAgreement(agreement);
 		agreementDetails.setAllottee(allottee);
-		agreementDetails.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement));
+		agreementDetails.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
 		
 		//boundaryRepository.getBoundary(); FIXME make call to city controller
 		return agreementDetails;

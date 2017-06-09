@@ -38,7 +38,7 @@ public class UserRepository {
 	public UserResponse findUserByUserNameAndTenantId(final String userName, final String tenantId) {
                 String url = String.format("%s%s", userHost, userServiceUrl);
                 UserGetRequest userGetRequest = UserGetRequest.builder().requestInfo(new RequestInfo())
-                                .userName(userName).tenantId(tenantId).build();
+                                .userName(userName).tenantId(tenantId).sort(Collections.singletonList("name")).build();
     
                 return restTemplate.postForObject(url, userGetRequest, UserResponse.class);
         }

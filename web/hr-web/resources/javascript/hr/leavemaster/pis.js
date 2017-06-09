@@ -264,8 +264,14 @@ class PersonalInform extends React.Component {
                               calendarYear: new Date().getFullYear()
                           },employees:[],
                           isSearchClicked: false,
-                          flag:1
+                          modified: true
                         });
+
+                        setTimeout(function(){
+                          _this.setState({
+                            modified: false
+                          });
+                        }, 1200);
                     }
                 })
             } else {
@@ -282,8 +288,13 @@ class PersonalInform extends React.Component {
                       calendarYear: new Date().getFullYear()
                   },employees:[],
                   isSearchClicked: false,
-                  flag:1
+                  modified: true
                 });
+                setTimeout(function(){
+                  _this.setState({
+                    modified: false
+                  });
+                }, 1200);
             }
         })
     } else {
@@ -303,9 +314,15 @@ class PersonalInform extends React.Component {
                       noOfLeave: "",
                       calendarYear: new Date().getFullYear()
                   }, employees:[],
-                  isSearchClicked: false
+                  isSearchClicked: false,
+                  modified: true
                 });
-                $('#employeeTable').dataTable().fnDestroy();
+
+                setTimeout(function(){
+                  _this.setState({
+                    modified: false
+                  });
+                }, 1200);
             }
          })
     }

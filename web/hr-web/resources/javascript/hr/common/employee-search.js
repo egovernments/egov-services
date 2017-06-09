@@ -263,7 +263,7 @@ class EmployeeSearch extends React.Component {
                 ind = i;
                 break;
               }
-              sInd = [true, "true"].indexOf(item.assignments[i].isPrimary) > -1 ? i : "";
+              sInd = [true, "true"].indexOf(item.assignments[i].isPrimary) > -1 ? i : (sInd || 0);
             }
             if(!ind)
               ind = sInd;

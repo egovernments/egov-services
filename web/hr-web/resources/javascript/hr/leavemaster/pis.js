@@ -75,7 +75,8 @@ class PersonalInform extends React.Component {
         departmentsList: [],
         designationList: [],
         leave: [],
-        years: []
+        years: [],
+        modified:false
     }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
@@ -177,8 +178,14 @@ class PersonalInform extends React.Component {
       flag = 1;
       _this.setState({
           isSearchClicked: true,
-          employees: Object.assign([], employees)
-      })
+          employees: Object.assign([], employees),
+          modified:true
+      });
+      setTimeout(function() {
+        _this.setState({
+          modified: false
+        })
+      }, 1200);
     }
 
     //call api call
@@ -334,20 +341,19 @@ class PersonalInform extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.employees.length != this.state.employees.length && this.state.employees.length) {
-            $('#employeeTable').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                       'copy', 'csv', 'excel', 'pdf', 'print'
-               ],
-               ordering: false,
-               bDestroy: true,
-               language: {
-                "emptyTable": "No Records"
-              }
-            });
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.modified) {
+          $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false,
+             bDestroy: true,
+             language: {
+               "emptyTable": "No Records"
+            }
+          });
       }
   }
 

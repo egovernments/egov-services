@@ -22,6 +22,7 @@ import org.egov.workflow.persistence.entity.WorkFlowMatrix;
 import org.egov.workflow.persistence.entity.WorkflowTypes;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
 import org.egov.workflow.persistence.repository.PositionRepository;
+import org.egov.workflow.persistence.repository.UserRepository;
 import org.egov.workflow.persistence.service.StateService;
 import org.egov.workflow.persistence.service.WorkFlowMatrixService;
 import org.egov.workflow.persistence.service.WorkflowTypesService;
@@ -37,6 +38,7 @@ import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
 import org.egov.workflow.web.contract.TaskResponse;
 import org.egov.workflow.web.contract.User;
+import org.egov.workflow.web.contract.UserResponse;
 import org.egov.workflow.web.contract.Value;
 import org.egov.workflow.web.contract.WorkflowBean;
 import org.slf4j.Logger;
@@ -63,6 +65,9 @@ public class WorkflowMatrixImpl implements Workflow {
 	private WorkflowTypesService workflowTypeService;
 	@Autowired
 	private PositionRepository positionRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Transactional
 	@Override
@@ -91,11 +96,13 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 
 		RequestInfo requestInfo = processInstanceRequest.getRequestInfo();
+                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo.getUserInfo().getUserName(),
+                        requestInfo.getUserInfo().getTenantId());
 
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
 		else {
-			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(requestInfo.getUserInfo().getId(),
+			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(userResponse.getUsers().get(0).getId(),
 					requestInfo);
 			if (initiator != null && initiator.getId() != null)
 				state.setInitiatorPosition(initiator.getId());

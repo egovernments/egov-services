@@ -14,9 +14,9 @@ public class RentIncrementRowMapper implements RowMapper<RentIncrementType> {
 		RentIncrementType rentIncrementType = new RentIncrementType();
 		rentIncrementType.setId(rs.getLong("id"));
 		rentIncrementType.setType(rs.getString("type"));
-		rentIncrementType.setPercentage((Double)rs.getObject("percentage"));
+		rentIncrementType.setPercentage(rs.getDouble("percentage"));
 		rentIncrementType.setAssetCategory(rs.getString("asset_category"));
-		rentIncrementType.setFlatAmount((Double)rs.getObject("flat_amount"));
+		rentIncrementType.setFlatAmount(rs.getDouble("flat_amount"));
 		rentIncrementType.setFromDate(rs.getDate("fromdate"));
 		rentIncrementType.setToDate(rs.getDate("todate"));
 		rentIncrementType.setTenantId(rs.getString("tenant_id"));

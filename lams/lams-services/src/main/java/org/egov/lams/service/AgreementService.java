@@ -130,7 +130,7 @@ public class AgreementService {
 		} else {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);
-			//setInitiatorPosition(agreementRequest);
+			setInitiatorPosition(agreementRequest);
 	
 			if(agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)){
 			List<Demand> demands = prepareDemands(agreementRequest);

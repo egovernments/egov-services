@@ -174,7 +174,7 @@ class ApplyLeave extends React.Component {
                             _this.setState({
                               leaveSet:{
                                 ..._this.state.leaveSet,
-                                availableDays: res["EligibleLeave"][0].noOfDays
+                                availableDays: _day
                               }
                             });
                           }
@@ -273,7 +273,7 @@ class ApplyLeave extends React.Component {
                 _this.setState({
                   leaveSet:{
                     ..._this.state.leaveSet,
-                    availableDays: res["EligibleLeave"][0].noOfDays,
+                    availableDays: _day,
                     [pName]:{
                         ..._this.state.leaveSet[pName],
                         [name]:val

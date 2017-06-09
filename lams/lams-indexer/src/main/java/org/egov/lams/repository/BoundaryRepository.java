@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class BoundaryRepository {
@@ -60,9 +66,11 @@ public class BoundaryRepository {
 				boundaryResponse = restTemplate.getForObject(url + id, BoundaryResponse.class);
 				Boundary boundary = boundaryResponse.getBoundarys().get(0);
 				BoundaryMap.put(boundary.getId(), boundary);
+			} catch (HttpClientErrorException e) {
+				LOGGER.info("Following exception occurred: " + e.getResponseBodyAsString());
 			} catch (Exception e) {
-				LOGGER.info("exception caught in asset repo boundary api call ::" + e);
-				e.printStackTrace();
+				LOGGER.error("Exception Occurred While Calling demandReason Service : " + e.getMessage());
+				throw e;
 			}
 		}
 		return BoundaryMap;
@@ -80,6 +88,7 @@ public class BoundaryRepository {
 			BoundaryLists.add(location.getRevenueWard());
 		if (location.getZone() != null)
 			BoundaryLists.add(location.getZone());
+		LOGGER.info("the list of boundaries present "+ BoundaryLists);
 		return BoundaryLists;
 	}
 }

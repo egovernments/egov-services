@@ -360,7 +360,7 @@ public class AgreementService {
 
 		for (Position position : positionList) {
 			positionMap.put(position.getDeptdesig().getDesignation().getName(),
-					position.getDeptdesig().getDesignation().getId());
+					position.getId());
 		}
 
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();

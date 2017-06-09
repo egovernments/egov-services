@@ -1305,14 +1305,9 @@ definitions:
          type: integer
          format: int64
          description : Unique identifier of the entered type, typically defined by system.
-        grievancetype:
-          type: array
-          maximum: 20
-          items:
+        grievancetypetest:
           $ref: "#/definitions/GrievanceIdType"
-        boundary: 
-          type: array
-          items:
+        boundarytest: 
           $ref: "#/definitions/BoundaryIdType"
         position: 
           type: integer
@@ -1327,8 +1322,8 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
-        - grievancetype
-        - boundary
+        - grievancetypetest
+        - boundarytest
         - position
         - tenantId    
     
@@ -1338,7 +1333,7 @@ definitions:
         grievancetype:
           type: integer
           description: grievance id.   
-          
+        
   BoundaryIdType:
       type: object
       properties:

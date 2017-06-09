@@ -168,6 +168,7 @@ public class EmployeeController {
                 RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
                 UserGetRequest userGetRequest = new UserGetRequest();
                 userGetRequest.setUserName(requestInfo.getUserInfo().getUserName());
+                userGetRequest.setTenantId(tenantId);
                 UserResponse userResponse = null;
                 List<User> users = null;
                 List<Long> userIds = new ArrayList<>();

@@ -158,7 +158,10 @@ class AgreementSearch extends React.Component {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              ordering: false,
-             bDestroy: true
+             bDestroy: true,
+             language: {
+                "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -321,11 +324,6 @@ class AgreementSearch extends React.Component {
               );
 
         })
-      }
-      else {
-          return (<tr>
-              <td > </td>
-          </tr>)
       }
 
     }

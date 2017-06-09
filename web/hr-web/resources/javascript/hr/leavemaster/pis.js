@@ -252,49 +252,54 @@ class PersonalInform extends React.Component {
                         showError(err);
                     } else {
                         getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                        _this.setState({
-                          searchSet: {
-                              name: "",
-                              employee: "",
-                              department: "",
-                              designation: "",
-                              leaveType: "",
-                              noOfDay: "",
-                              noOfLeave: "",
-                              calendarYear: new Date().getFullYear()
-                          },employees:[],
-                          isSearchClicked: false,
-                          modified: true
-                        });
-
                         setTimeout(function(){
-                          _this.setState({
-                            modified: false
-                          });
-                        }, 1200);
+                            _this.setState({
+                              searchSet: {
+                                  name: "",
+                                  employee: "",
+                                  department: "",
+                                  designation: "",
+                                  leaveType: "",
+                                  noOfDay: "",
+                                  noOfLeave: "",
+                                  calendarYear: new Date().getFullYear()
+                              },employees:[],
+                              isSearchClicked: false,
+                              modified: true
+                            });
+
+                            setTimeout(function(){
+                              _this.setState({
+                                modified: false
+                              });
+                            }, 1200);
+                        }, 700);
                     }
                 })
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                _this.setState({
-                  searchSet: {
-                      name: "",
-                      employee: "",
-                      department: "",
-                      designation: "",
-                      leaveType: "",
-                      noOfDay: "",
-                      noOfLeave: "",
-                      calendarYear: new Date().getFullYear()
-                  },employees:[],
-                  isSearchClicked: false,
-                  modified: true
-                });
                 setTimeout(function(){
-                  _this.setState({
-                    modified: false
-                  });
-                }, 1200);
+                            _this.setState({
+                              searchSet: {
+                                  name: "",
+                                  employee: "",
+                                  department: "",
+                                  designation: "",
+                                  leaveType: "",
+                                  noOfDay: "",
+                                  noOfLeave: "",
+                                  calendarYear: new Date().getFullYear()
+                              },employees:[],
+                              isSearchClicked: false,
+                              modified: true
+                            });
+
+                            setTimeout(function(){
+                              _this.setState({
+                                modified: false
+                              });
+                            }, 1200);
+                        }, 700);
             }
         })
     } else {
@@ -303,26 +308,28 @@ class PersonalInform extends React.Component {
                 showError(err);
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                _this.setState({
-                  searchSet: {
-                      name: "",
-                      employee: "",
-                      department: "",
-                      designation: "",
-                      leaveType: "",
-                      noOfDay: "",
-                      noOfLeave: "",
-                      calendarYear: new Date().getFullYear()
-                  }, employees:[],
-                  isSearchClicked: false,
-                  modified: true
-                });
-
                 setTimeout(function(){
-                  _this.setState({
-                    modified: false
-                  });
-                }, 1200);
+                            _this.setState({
+                              searchSet: {
+                                  name: "",
+                                  employee: "",
+                                  department: "",
+                                  designation: "",
+                                  leaveType: "",
+                                  noOfDay: "",
+                                  noOfLeave: "",
+                                  calendarYear: new Date().getFullYear()
+                              },employees:[],
+                              isSearchClicked: false,
+                              modified: true
+                            });
+
+                            setTimeout(function(){
+                              _this.setState({
+                                modified: false
+                              });
+                            }, 1200);
+                        }, 700);
             }
          })
     }
@@ -439,8 +446,7 @@ class PersonalInform extends React.Component {
     let mode = getUrlVars()["type"];
 
     const renderOption = function(list, setNameBool) {
-        if(list)
-        {
+        if(list){
             return list.map((item)=>
             {
                 return (<option key={item.id} value={setNameBool ? item.name : item.id}>
@@ -456,41 +462,35 @@ class PersonalInform extends React.Component {
             <table id="employeeTable" className="table table-bordered">
                 <thead>
                     <tr>
-
                         <th>Employee Name</th>
                         <th>Employee Code</th>
                         <th>No. Of Leave Available</th>
-
                     </tr>
                 </thead>
-
                 <tbody id="employeeSearchResultTableBody">
                     {
                         renderBody()
                     }
                 </tbody>
-
             </table>
 
           )
-      } else {
-        return "";
       }
 
     }
     const renderBody = function() {
       if(employees.length>0) {
-      return employees.map((item, index)=> {
-            return (<tr key={index}>
-                    <td data-label="name">{item.name}</td>
-                    <td data-label="code">{item.code}</td>
-                    <td data-label="noOfDay">
-                    <input type="number" id={item.id} name="noOfDays"  value={item.noOfDays}
-                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} disabled={readonly}/>
-                    </td>
-                </tr>
-            );
-      })
+        return employees.map((item, index)=> {
+              return (<tr key={index}>
+                      <td data-label="name">{item.name}</td>
+                      <td data-label="code">{item.code}</td>
+                      <td data-label="noOfDay">
+                      <input type="number" id={item.id} name="noOfDays"  value={item.noOfDays}
+                        onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} disabled={readonly}/>
+                      </td>
+                  </tr>
+              );
+        })
     }
   }
 

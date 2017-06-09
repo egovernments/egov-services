@@ -35,11 +35,12 @@ public class UserRepository {
 		return restTemplate.postForObject(url, userRequest, UserResponse.class);
 	}
 	
-	public UserResponse findUserByUserNameAndTenantId(final String userName, final String tenantId) {
+	public UserResponse findUserByUserNameAndTenantId(final RequestInfo requestInfo) {
                 String url = String.format("%s%s", userHost, userServiceUrl);
-                UserGetRequest userGetRequest = UserGetRequest.builder().requestInfo(new RequestInfo())
-                        .userName(userName).tenantId(tenantId).sort(Collections.singletonList("name"))
-                        .pageSize(20).pageNumber(0).build();
+                UserGetRequest userGetRequest = new UserGetRequest();
+                userGetRequest.setRequestInfo(requestInfo);
+                userGetRequest.setUserName(requestInfo.getUserInfo().getUserName());
+                userGetRequest.setTenantId(requestInfo.getUserInfo().getTenantId());
     
                 return restTemplate.postForObject(url, userGetRequest, UserResponse.class);
         }

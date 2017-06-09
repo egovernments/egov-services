@@ -303,8 +303,12 @@ class CreateAsset extends React.Component {
 
   openNewRelAssetMdl(e) {
     e.preventDefault();
+    var _this = this;
     $("#relatedAssetsModal").modal("hide");
     setTimeout(function(){
+      _this.setState({
+        references: []
+      });
       $("#newRelAssetMdl").modal("show");
     }, 500);
   }
@@ -1010,6 +1014,10 @@ class CreateAsset extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     var _this = this;
+    _this.setState({
+      relatedAssets: []
+    });
+
     commonApiPost("asset-services", "assets", "_search", {tenantId, assetReference: this.state.assetSet.id}, function(err, res) {
       if(res) {
         flag1 = 1;

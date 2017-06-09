@@ -28,5 +28,6 @@ public class RentIncrementType {
 	private Date toDate;
 	private Double percentage;
 	private Double flatAmount;
+	private String tenantId;
 
 }

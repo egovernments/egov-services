@@ -2,31 +2,52 @@ var flag = 0;
 class AgreementSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state={agreements:[],searchSet:{locality:"",
-    agreementNumber:"",
-    doorNo:"",
-    assetCategory:"",
-    mobileNumber:"",
-    name:"",
-    revenueWard:"",
-    electionWard:"",
-    code:"",
-    tenderNumber:"",createdDate:"",endDate:"",
-    tenantId},isSearchClicked:false,assetCategories:[],locality:[],revenueWards:[],electionwards:[]}
-    this.handleChange=this.handleChange.bind(this);
-    this.search=this.search.bind(this);
+    this.state = {
+        agreements: [],
+        searchSet: {
+            locality: "",
+            agreementNumber: "",
+            doorNo: "",
+            assetCategory: "",
+            mobileNumber: "",
+            name: "",
+            revenueWard: "",
+            electionWard: "",
+            code: "",
+            tenderNumber: "",
+            fromDate: "",
+            toDate: "",
+            tenantId
+        },
+        isSearchClicked: false,
+        assetCategories: [],
+        locality: [],
+        revenueWards: [],
+        electionwards: [],
+        modify: false
   }
+  this.handleChange = this.handleChange.bind(this);
+  this.search = this.search.bind(this);
+}
+
 
   search(e) {
     e.preventDefault();
+    var _this = this;
     try {
       //call api call
       var agreements = commonApiPost("lams-services", "agreements", "_search", this.state.searchSet).responseJSON["Agreements"] ||[];
       flag = 1;
-      this.setState({
+      _this.setState({
         isSearchClicked: true,
-        agreements
-      })
+        agreements,
+        modify: true
+      });
+      setTimeout(function() {
+        _this.setState({
+          modify: false
+        })
+      }, 1200);
     } catch(e) {
       console.log(e);
     }
@@ -115,6 +136,11 @@ class AgreementSearch extends React.Component {
             })
       }
     });
+
+    $(".date-picker").datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true
+    })
   }
 
   componentWillUpdate() {
@@ -125,7 +151,7 @@ class AgreementSearch extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.agreements.length != this.state.agreements.length) {
+      if (this.state.modify) {
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -137,7 +163,7 @@ class AgreementSearch extends React.Component {
       }
   }
 
-  handleChange(e,name)
+  handleChange(e, name)
   {
       this.setState({
           searchSet:{
@@ -213,7 +239,7 @@ class AgreementSearch extends React.Component {
     revenueWard,
     electionWard,
     code,
-    tenderNumber,createdDate,endDate,shopComplexNumber}=this.state.searchSet;
+    tenderNumber,fromDate,toDate,shopComplexNumber}=this.state.searchSet;
 
     const getValueByName=function(name,id)
     {
@@ -250,9 +276,9 @@ class AgreementSearch extends React.Component {
                         <th>Allottee contact No </th>
                         <th>Locality </th>
                         <th>Asset Category </th>
-                        <th>Asset Number </th>
-                        <th>Trade license No </th>
+                        <th>Asset Code </th>
                         <th>Agreement Date </th>
+                        <th>Type</th>
                         <th>Action </th>
                     </tr>
                 </thead>
@@ -281,13 +307,11 @@ class AgreementSearch extends React.Component {
                                   <td>{item.agreementNumber} </td>
                                   <td>{item.allottee.name}</td>
                                   <td>{item.allottee.mobileNumber}</td>
-                                  <td>{item.asset.locationDetails.zone}</td>
-
-
-                                  <td>{item.asset.assetCategory.id?category_name:"Null"}</td>
+                                  <td>{item.asset.locationDetails.locality}</td>
+                                  <td>{item.asset.assetCategory.id?category_name:"-"}</td>
                                   <td>{item.asset.code}</td>
-                                  <td>{item.tradelicenseNumber}</td>
                                   <td>{item.agreementDate}</td>
+                                  <td>{item.source == "DATA_ENTRY" ? "Data Entry" : ""}</td>
                                   <td>
                                       <div className="styled-select">
                                         {getOption((category_name == "Land" || category_name == "shop"), item)};
@@ -319,6 +343,12 @@ class AgreementSearch extends React.Component {
       }
     }*/
 
+    const getDemandListing = function(agreement) {
+      if(agreement.source == "DATA_ENTRY") {
+        return (<option value="addeditdemand">Add / Edit Demand </option>);
+      }
+    }
+
     const getOption = function(isShopOrLand, item) {
         if (isShopOrLand) {
           return(
@@ -329,10 +359,9 @@ class AgreementSearch extends React.Component {
                 <option value="view">View</option>
                 <option value="renew">Renew</option>
                 <option value="collTax">Collect Tax</option>
-                <option value="addeditdemand">Add / Edit Demand </option>
+                {getDemandListing(item)}
             </select>
           )
-
         } else {
           return(
             <select id="myOptions" onChange={(e)=>{
@@ -341,7 +370,7 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
-                <option value="addeditdemand">Add / Edit Demand </option>
+                {getDemandListing(item)}
 
             </select>
           )
@@ -522,8 +551,8 @@ class AgreementSearch extends React.Component {
                                         <div className="col-sm-6">
                                           <div className="text-no-ui">
                                               <span className="glyphicon glyphicon-calendar"></span>
-                                            <input type="date" name="from_date" id="from_date" value={createdDate} onChange={(e)=>{
-                                    handleChange(e,"createdDate")
+                                            <input className="date-picker" type="text" name="from_date" id="from_date" value={fromDate} onChange={(e)=>{
+                                    handleChange(e,"fromDate")
                                 }}/>
                                           </div>
                                         </div>
@@ -537,29 +566,14 @@ class AgreementSearch extends React.Component {
                                       <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
-                                          <input type="date" name="to_date" id="to_date" value={endDate} onChange={(e)=>{
-                                  handleChange(e,"endDate")
+                                          <input className="date-picker" type="text" name="to_date" id="to_date" value={toDate} onChange={(e)=>{
+                                  handleChange(e,"toDate")
                               }}/>
                                         </div>
                                       </div>
                                   </div>
                                 </div>
                             </div>
-
-                            <div className="row">
-                                  <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label for="trade_license_number">Trade license </label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <input type="text" id="trade_license_number" name="trade_license_number" value={tenderNumber} onChange={(e)=>{
-                                    handleChange(e,"tenderNumber")
-                                }}/>
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>
                           </div>
                         </div>
                   <div className="text-center">

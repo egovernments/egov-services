@@ -34,13 +34,14 @@ class ApplyLeave extends React.Component {
   }
 
   componentDidMount() {
+
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
-         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-       }
+         document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
+        }
     }
-    $('#availableDays,#leaveDays').prop("disabled", true);
+    $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
     if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
     var type = getUrlVars()["type"], _this = this;
@@ -364,8 +365,8 @@ addOrUpdate(e, mode) {
                         window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
                       },
                       error: function(err) {
-                        if (err.LeaveApplication && err.LeaveApplication[0] && err.LeaveApplication[0].errorMsg) {
-                          showError(err.LeaveApplication[0].errorMsg);
+                        if (err.responseJSON && err.responseJSON.LeaveApplication && err.responseJSON.LeaveApplication[0] && err.responseJSON.LeaveApplication[0].errorMsg) {
+                          showError(err.responseJSON.LeaveApplication[0].errorMsg);
                         } else {
                           showError("Something went wrong. Please contact Administrator.");
                         }

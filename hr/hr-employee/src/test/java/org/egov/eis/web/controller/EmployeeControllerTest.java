@@ -15,6 +15,7 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.helper.EmployeeHelper;
+import org.egov.eis.service.helper.UserSearchURLHelper;
 import org.egov.eis.utils.FileUtils;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeRequest;
@@ -30,6 +31,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -67,9 +69,13 @@ public class EmployeeControllerTest {
 
     @MockBean
 	private EmployeeHelper employeeHelper;
+    
+        @MockBean
+        private UserSearchURLHelper userSearchURLHelper;
 
 	@Before
 	public void setUp() throws Exception {
+	    when(userSearchURLHelper.searchURL(Mockito.anyList(), Mockito.anyString())).thenReturn("");
 	}
 
 	@After

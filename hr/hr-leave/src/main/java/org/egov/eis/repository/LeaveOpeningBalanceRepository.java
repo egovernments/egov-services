@@ -47,8 +47,10 @@ import java.util.List;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.repository.builder.LeaveOpeningBalanceQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveOpeningBalanceRowMapper;
+import org.egov.eis.service.UserService;
 import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
 import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
+import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -74,6 +76,9 @@ public class LeaveOpeningBalanceRepository {
 
 	@Autowired
 	private LeaveOpeningBalanceQueryBuilder leaveOpeningBalanceQueryBuilder;
+	
+	@Autowired
+	private UserService userService;
 
 	public List<LeaveOpeningBalance> findForCriteria(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -87,12 +92,15 @@ public class LeaveOpeningBalanceRepository {
 	public void create(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
 
 		List<Object[]> batchArgs = new ArrayList<>();
+		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+		        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getUserName(),
+		        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getTenantId());
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			Object[] lobRecord = { leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getCalendarYear(),
 					leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getNoOfDays(),
-					leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getId(),
+					userResponse.getUsers().get(0).getId(),
 					new Date(System.currentTimeMillis()),
-					leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getId(),
+					userResponse.getUsers().get(0).getId(),
 					new Date(System.currentTimeMillis()), leaveOpeningBalance.getTenantId() };
 			batchArgs.add(lobRecord);
 		}
@@ -109,10 +117,13 @@ public class LeaveOpeningBalanceRepository {
 	public void update(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
 
 		List<Object[]> batchArgs = new ArrayList<>();
+		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getUserName(),
+                        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getTenantId());
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			Object[] lobRecord = { leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getCalendarYear(),
 					leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getNoOfDays(),
-					leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getId(),
+					userResponse.getUsers().get(0).getId(),
 					new Date(System.currentTimeMillis()), leaveOpeningBalance.getTenantId(),
 					leaveOpeningBalance.getId(), leaveOpeningBalance.getTenantId() };
 			batchArgs.add(lobRecord);

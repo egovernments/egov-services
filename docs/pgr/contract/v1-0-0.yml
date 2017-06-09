@@ -435,7 +435,7 @@ paths:
               $ref: '#/definitions/Error'  
               
      # receiving mode API
-    /receivingmodetype/_create:
+    /receivingmode/_create:
       post:
         summary: creates receiving mode
         description: receiving mode
@@ -462,7 +462,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     
-    /receivingmodetype/_update:
+    /receivingmode/_update:
       post:
         summary: update receiving mode
         description: receiving node
@@ -489,7 +489,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
 
-    /receivingmodetype/_search:
+    /receivingmode/_search:
       post:
         summary: searches existing values
         tags:
@@ -500,6 +500,8 @@ paths:
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/code"
           - $ref: "#/parameters/name"
+          - $ref: "#/parameters/active"
+          - $ref: "#/parameters/visible"
         responses:
           200: 
             description: Successful response
@@ -511,7 +513,7 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
     # receiving center API
-    /receivingcentertype/_create:
+    /receivingcenter/_create:
       post:
         summary: creates receiving center
         description: receiving center
@@ -538,7 +540,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # receiving center API
-    /receivingcentertype/_update:
+    /receivingcenter/_update:
       post:
         summary: creates receiving center
         description: receiving center
@@ -565,7 +567,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /receivingcentertype/_search:
+    /receivingcenter/_search:
       post:
         summary: searches existing values
         tags:
@@ -576,6 +578,8 @@ paths:
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/code"
           - $ref: "#/parameters/name"
+          - $ref: "#/parameters/active"
+          - $ref: "#/parameters/visible"
         responses:
           200: 
             description: Successful response
@@ -587,24 +591,24 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
     # Bulk Router Type API
-    /bulkroutertype/_create:
+    /router/_create:
       post:
-        summary: creates bulk router
-        description: bulk router
+        summary: creates router
+        description: router
         tags:
-          - bulk router
+          - router
         parameters:
-          - name: bulk router
+          - name: router
             in: body
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/BulkRouterTypeReq'
+              $ref: '#/definitions/RouterTypeReq'
         responses:
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/BulkRouterTypeRes"
+              $ref: "#/definitions/RouterTypeRes"
           '400':
             description: Request failed
             schema:
@@ -614,24 +618,24 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Bulk Router Type API
-    /bulkroutertype/_update:
+    /router/_update:
       post:
-        summary: updates bulk router
-        description: updates bulk router
+        summary: updates router
+        description: updates router
         tags:
-          - updates bulk router
+          - updates router
         parameters:
-          - name: Bulk Router
+          - name: Router
             in: body
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/BulkRouterTypeReq'
+              $ref: '#/definitions/RouterTypeReq'
         responses:
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/BulkRouterTypeRes"
+              $ref: "#/definitions/RouterTypeRes"
           '400':
             description: Request failed
             schema:
@@ -641,29 +645,30 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /bulkroutertype/_search:
+    /router/_search:
       post:
         summary: searches existing values
         tags:
-          - Bulk Router
+          - Router
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/boundaryid"
-          - $ref: "#/parameters/grievanceid"
+          - $ref: "#/parameters/service"
+          - $ref: "#/parameters/positionid"
         responses:
           200: 
             description: Successful response
             schema:
-              $ref: '#/definitions/BulkRouterTypeRes'
+              $ref: '#/definitions/RouterTypeRes'
           400:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
      # Escalation Time Type API
-    /escalationtimetype/_create:
+    /escalation/_create:
       post:
         summary: creates escalation time type
         description: escalation time type
@@ -690,7 +695,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Escalation Time Type API
-    /escalationtimetype/_update:
+    /escalation/_update:
       post:
         summary: updates escalation time type
         description: updates escalation time type
@@ -717,7 +722,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /escalationtimetype/_search:
+    /escalation/_search:
       post:
         summary: searches existing values
         tags:
@@ -726,8 +731,8 @@ paths:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/positionid"
-          - $ref: "#/parameters/grievanceid"
+          - $ref: "#/parameters/designationid"
+          - $ref: "#/parameters/service"
         responses:
           200: 
             description: Successful response
@@ -738,23 +743,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /boundary/_search:
-      post:
-        summary: get the available boundaries
-        tags:
-          - Get Boundaries
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/BoundaryTypeRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'           
+    
 parameters:
     id:
       name: id
@@ -782,8 +771,8 @@ parameters:
       minLength: 0
       maxLength: 100
       
-    grievanceid:
-      name: grievanceid
+    service:
+      name: serviceid
       in: query
       type: number
       description: fetch category based on the grievance.
@@ -794,11 +783,29 @@ parameters:
       type: number
       description: fetch the boundary by boundary id. 
    
-    positionid:
-      name: positionid
+    designationid:
+      name: designationid
       in: query
       type: number
-      description: fetch the designation by position id.             
+      description: fetch the designation by position id. 
+      
+    positionid:
+      name: designationid
+      in: query
+      type: number
+      description: fetch the designation by position id.     
+    
+    active:
+      name: active
+      in: query
+      type: boolean
+      description: flag for checking whether it is active
+      
+    visible:
+      name: visible
+      in: query
+      type: boolean
+      description: flag for checking whether it is visible 
           
 ################################################################################
 #                                 Definitions                                  #
@@ -1276,63 +1283,58 @@ definitions:
         - tenantId  
         
     #Bulk Router Definitions
-  BulkRouterTypeReq:
+  RouterTypeReq:
       type: object
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        receivingcenter:
-          $ref: '#/definitions/BulkRouterType'
+        routertype:
+          $ref: '#/definitions/RouterType'
       required:
         - RequestInfo
-        - receivingcenter
+        - routertype
     
-  BulkRouterTypeRes:
+  RouterTypeRes:
       type: object
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        ReceivingCenterTypes:
+        RouterTypes:
           type: array
           maximum: 20
           items:
-            $ref: '#/definitions/BulkRouterType'
+            $ref: '#/definitions/RouterType'
             
-  BulkRouterType:
+  RouterType:
       type: object
       properties:
         id:
          type: integer
          format: int64
          description : Unique identifier of the entered type, typically defined by system.
-        grievancetypetest:
-          $ref: "#/definitions/GrievanceIdType"
-        boundarytest: 
-          $ref: "#/definitions/BoundaryIdType"
+        grievancetype:
+          type: array
+          items:
+           $ref: '#/definitions/Service'
+        boundary:
+          type: array
+          items:
+           $ref: "#/definitions/BoundaryIdType"
         position: 
           type: integer
           description: position id.
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
-        - grievancetypetest
-        - boundarytest
+        - grievancetype
+        - boundary
         - position
         - tenantId    
     
-  GrievanceIdType:
-      type: object
-      properties:
-        grievancetype:
-          type: integer
-          description: grievance id.   
+
         
   BoundaryIdType:
       type: object
@@ -1348,18 +1350,18 @@ definitions:
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        receivingcenter:
+        escalationtimetype:
           $ref: '#/definitions/EscalationTimeType'
       required:
         - RequestInfo
-        - receivingcenter
+        - escalationtimetype
     
   EscalationTimeTypeRes:
       type: object
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        ReceivingCenterTypes:
+        EscalationTimeType:
           type: array
           maximum: 20
           items:
@@ -1373,14 +1375,13 @@ definitions:
          format: int64
          description : Unique identifier of the entered type, typically defined by system.
         grievancetype:
-          type: integer
-          description: grievance id.
+          $ref: '#/definitions/Service'
         noofhours: 
           type: integer
           description: no of hours for the complaint id.
-        position: 
+        designation: 
           type: integer
-          description: position id.
+          description: designation id.
         active:
           type: boolean
           format: varchar
@@ -1393,29 +1394,8 @@ definitions:
       required:
         - grievancetype
         - noofhours
-        - position
+        - designation
         - tenantId      
     
-  BoundaryTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        BoundaryTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/BoundaryType'    
-        
-  BoundaryType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier of the entered type, typically defined by system.
-        code:
-          type: string
-          description: unique code this can be assigned by user.
-          maxLength: 64
-              
+
+            

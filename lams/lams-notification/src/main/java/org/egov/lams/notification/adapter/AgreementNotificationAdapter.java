@@ -1,10 +1,10 @@
 package org.egov.lams.notification.adapter;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import org.egov.lams.notification.broker.AgreementNotificationProducer;
 import org.egov.lams.notification.config.PropertiesManager;
-import org.egov.lams.notification.model.enums.Priority;
 import org.egov.lams.notification.models.Agreement;
-import org.egov.lams.notification.models.Sms;
 import org.egov.lams.notification.service.SmsNotificationService;
 import org.egov.lams.notification.types.SmsRequest;
 import org.slf4j.Logger;
@@ -34,12 +34,15 @@ public class AgreementNotificationAdapter {
 
 	public void sendSmsNotification(Agreement agreement) {
 
+		if(!isEmpty(agreement.getWorkflowDetails()))
+		{
 		if(agreement.getWorkflowDetails().getAction() == null)
 			sendCreateNotification(agreement);
 		else if(agreement.getWorkflowDetails().getAction().equals("Approve"))
 			sendApprovalNotification(agreement);
 		else if(agreement.getWorkflowDetails().getAction().equals("Reject"))
 			sendRejectedNotification(agreement);
+		}
 	}
 	
 	public void sendCreateNotification(Agreement agreement) {

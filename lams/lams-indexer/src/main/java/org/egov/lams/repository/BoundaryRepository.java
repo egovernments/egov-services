@@ -53,7 +53,7 @@ public class BoundaryRepository {
 		Map<Long, Boundary> BoundaryMap = new HashMap<>();
 
 		String url = propertiesManager.getBoundaryApiHostUrl() + propertiesManager.getBoundaryApiSearchPath()
-				+ "Boundary.tenantId=" + agreement.getTenantId() + "&Boundary.id=";
+				+ "?Boundary.tenantId=" + agreement.getTenantId() + "&Boundary.id=";
 		for (Long id : boundaryList) {
 
 			try {

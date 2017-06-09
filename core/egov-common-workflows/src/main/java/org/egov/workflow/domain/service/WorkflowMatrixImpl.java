@@ -96,8 +96,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 
 		RequestInfo requestInfo = processInstanceRequest.getRequestInfo();
-                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo.getUserInfo().getUserName(),
-                        requestInfo.getUserInfo().getTenantId());
+                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
 
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
@@ -335,8 +334,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
 		final List<Task> tasks = new ArrayList<Task>();
 		RequestInfo requestInfo = taskRequest.getRequestInfo();
-                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo.getUserInfo().getUserName(),
-                        requestInfo.getUserInfo().getTenantId());
+                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
 		final Long userId = userResponse.getUsers().get(0).getId();
 		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		final List<Long> ownerIds = positionRepository.getByEmployeeId(userId.toString(), taskRequest.getRequestInfo())

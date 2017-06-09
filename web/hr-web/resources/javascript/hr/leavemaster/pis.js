@@ -252,34 +252,10 @@ class PersonalInform extends React.Component {
                         showError(err);
                     } else {
                         getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                        setTimeout(function(){
-                            _this.setState({
-                              employees:[],
-                              modified: true
-                            });
-
-                            setTimeout(function(){
-                              _this.setState({
-                                modified: false
-                              });
-                            }, 1200);
-                        }, 700);
                     }
                 })
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                setTimeout(function(){
-                            _this.setState({
-                              employees:[],
-                              modified: true
-                            });
-
-                            setTimeout(function(){
-                              _this.setState({
-                                modified: false
-                              });
-                            }, 1200);
-                        }, 700);
             }
         })
     } else {
@@ -288,18 +264,6 @@ class PersonalInform extends React.Component {
                 showError(err);
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
-                setTimeout(function(){
-                            _this.setState({
-                              employees:[],
-                              modified: true
-                            });
-
-                            setTimeout(function(){
-                              _this.setState({
-                                modified: false
-                              });
-                            }, 1200);
-                        }, 700);
             }
          })
     }

@@ -114,7 +114,9 @@ $(document).ready(function() {
         doc.text(15, 110, tenantId.split(".")[1]);
 
         doc.save('Notice.pdf');
-        open(location, '_self').close();
+        setTimeout(function () {
+          open(location, '_self').close();
+        }, 5000);
     }
 
     // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {

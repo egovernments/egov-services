@@ -96,10 +96,9 @@ addOrUpdate(e,mode) {
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
-         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-       }
+         document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
      }
-     
+
     var type = getUrlVars()["type"], _this = this, id = getUrlVars()["id"];
     $('#compensatoryForDate').datepicker({
         format: 'dd/mm/yyyy',

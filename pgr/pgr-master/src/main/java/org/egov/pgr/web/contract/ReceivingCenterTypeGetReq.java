@@ -37,41 +37,56 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.producers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+package org.egov.pgr.web.contract;
 
-@Service
-public class PGRProducer {
+import java.util.List;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRProducer.class);
+import org.hibernate.validator.constraints.Length;
 
-	public void sendMessage(final String topic, final String key, final Object message) {
-		logger.info("Topic: " + topic);
-		logger.info("Key: " + key);
-		logger.info("Request: " + message);
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-			}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class ReceivingCenterTypeGetReq {
 
-			@Override
-			public void onFailure(final Throwable throwable) {
+	private List<Long> id;
 
-			}
-		});
-	}
+	@Length(min = 3, max = 100)
+	private String name;
+
+	private String code;
+
+	private String description;
+
+	private Boolean active;
+
+	private Boolean visible;
+
+	@NotNull
+	private String tenantId;
+
+	private String sortBy;
+
+	private String sortOrder;
+
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
 
 }

@@ -37,41 +37,30 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.producers;
+package org.egov.pgr.repository.rowmapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@Service
-public class PGRProducer {
+import org.egov.pgr.model.ReceivingCenterType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+@Component
+public class ReceivingCenterTypeRowMapper implements RowMapper<ReceivingCenterType> {
+	@Override
+	public ReceivingCenterType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+		final ReceivingCenterType centerType = new ReceivingCenterType();
+		centerType.setId(rs.getLong("id"));
+		centerType.setCode(rs.getString("code"));
+		centerType.setName(rs.getString("name"));
+		centerType.setDescription(rs.getString("description"));
+		centerType.setActive(rs.getBoolean("active"));
+		centerType.setTenantId(rs.getString("tenantId"));
+		centerType.setActive(rs.getBoolean("active"));
+		centerType.setIscrnrequired(rs.getBoolean("iscrnrequired"));
+		centerType.setOrderno(rs.getLong("orderno"));
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRProducer.class);
-
-	public void sendMessage(final String topic, final String key, final Object message) {
-		logger.info("Topic: " + topic);
-		logger.info("Key: " + key);
-		logger.info("Request: " + message);
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
-
-			}
-
-			@Override
-			public void onFailure(final Throwable throwable) {
-
-			}
-		});
+		return centerType;
 	}
-
 }

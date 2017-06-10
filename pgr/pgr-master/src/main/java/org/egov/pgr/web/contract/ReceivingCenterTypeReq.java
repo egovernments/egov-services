@@ -37,41 +37,36 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.producers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+package org.egov.pgr.web.contract;
 
-@Service
-public class PGRProducer {
+import javax.validation.constraints.NotNull;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.model.ReceivingCenterType;
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRProducer.class);
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	public void sendMessage(final String topic, final String key, final Object message) {
-		logger.info("Topic: " + topic);
-		logger.info("Key: " + key);
-		logger.info("Request: " + message);
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-			}
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class ReceivingCenterTypeReq {
 
-			@Override
-			public void onFailure(final Throwable throwable) {
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-			}
-		});
-	}
+	@JsonProperty("ReceivingCenterType")
+	private ReceivingCenterType centerType;
 
 }

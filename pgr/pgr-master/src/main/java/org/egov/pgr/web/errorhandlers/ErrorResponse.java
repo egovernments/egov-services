@@ -62,12 +62,12 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ErrorResponse {
 
-    private ResponseInfo responseInfo;
-    private Error error;
+	private ResponseInfo responseInfo;
+	private Error error;
 
-    @JsonIgnore
-    public List<ErrorField> getErrorFields() {
-        return error.getErrorFields();
-    }
+	@JsonIgnore
+	public List<ErrorField> getErrorFields() {
+		return error.getErrorFields();
+	}
 
 }

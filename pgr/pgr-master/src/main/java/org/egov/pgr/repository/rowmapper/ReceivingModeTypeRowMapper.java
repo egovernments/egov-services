@@ -37,41 +37,30 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.producers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+package org.egov.pgr.repository.rowmapper;
 
-@Service
-public class PGRProducer {
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+import org.egov.pgr.model.ReceivingModeType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRProducer.class);
+@Component
+public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
+	@Override
+	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+		final ReceivingModeType modeType = new ReceivingModeType();
+		modeType.setId(rs.getLong("id"));
+		modeType.setCode(rs.getString("code"));
+		modeType.setName(rs.getString("name"));
+		modeType.setDescription(rs.getString("description"));
+		modeType.setActive(rs.getBoolean("active"));
+		modeType.setTenantId(rs.getString("tenantId"));
+		modeType.setActive(rs.getBoolean("active"));
+		modeType.setVisible(rs.getBoolean("visible"));
 
-	public void sendMessage(final String topic, final String key, final Object message) {
-		logger.info("Topic: " + topic);
-		logger.info("Key: " + key);
-		logger.info("Request: " + message);
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
-
-			}
-
-			@Override
-			public void onFailure(final Throwable throwable) {
-
-			}
-		});
+		return modeType;
 	}
-
 }

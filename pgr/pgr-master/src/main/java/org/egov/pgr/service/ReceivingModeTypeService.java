@@ -37,41 +37,66 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.producers;
 
+package org.egov.pgr.service;
+
+import java.util.List;
+
+import org.egov.pgr.model.ReceivingModeType;
+import org.egov.pgr.producers.PGRProducer;
+import org.egov.pgr.repository.ReceivingModeTypeRepository;
+import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
+import org.egov.pgr.web.contract.ReceivingModeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class PGRProducer {
+public class ReceivingModeTypeService {
+
+	public static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeService.class);
 
 	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+	private ReceivingModeTypeRepository receivingModeRepository;
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRProducer.class);
+	@Autowired
+	private PGRProducer pgrProducer;
 
-	public void sendMessage(final String topic, final String key, final Object message) {
-		logger.info("Topic: " + topic);
-		logger.info("Key: " + key);
-		logger.info("Request: " + message);
-		final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+	public ReceivingModeTypeReq create(final ReceivingModeTypeReq modeTypeReq) {
+		return receivingModeRepository.persistReceivingModeType(modeTypeReq);
+	}
 
-			}
+	public ReceivingModeTypeReq update(final ReceivingModeTypeReq modeTypeReq) {
+		return receivingModeRepository.persistModifyReceivingModeType(modeTypeReq);
+	}
 
-			@Override
-			public void onFailure(final Throwable throwable) {
+	public List<ReceivingModeType> getAllReceivingModeTypes(final ReceivingModeTypeGetReq modeTypeGetRequest) {
+		return receivingModeRepository.getAllReceivingModeTypes(modeTypeGetRequest);
 
-			}
-		});
+	}
+
+	public ReceivingModeType sendMessage(String topic, String key, final ReceivingModeTypeReq modeTypeRequest) {
+
+		final ObjectMapper mapper = new ObjectMapper();
+		String receivingModeValue = null;
+
+		try {
+			logger.info("createReceivingCModeType Request::" + modeTypeRequest);
+			receivingModeValue = mapper.writeValueAsString(modeTypeRequest);
+			logger.info("receivingModeValue::" + receivingModeValue);
+		} catch (final JsonProcessingException e) {
+			logger.error("Exception Encountered : " + e);
+		}
+		try {
+			pgrProducer.sendMessage(topic, key, receivingModeValue);
+		} catch (final Exception ex) {
+			logger.error("Exception Encountered : " + ex);
+		}
+		return modeTypeRequest.getModeType();
 	}
 
 }

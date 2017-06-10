@@ -47,28 +47,36 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySource(value = { "classpath:messages/messages.properties",
-        "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+		"classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class PgrMasterConstants {
 
-    @Autowired
-    private Environment environment;
-	
-    public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
-    public static final String INVALID_SERVICEGROUP_REQUEST_MESSAGE = "Service Group is invalid";
+	@Autowired
+	private Environment environment;
 
-    public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
-    public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
-    public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
+	public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
+	public static final String INVALID_SERVICEGROUP_REQUEST_MESSAGE = "Service Group is invalid";
+	public static final String INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE = "ReceivingCenter is Invalid.";
+	public static final String INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE = "ReceivingMode is Invalid.";
 
+	public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
+	public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
+	public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
 
-    public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "wcms.0002";
-    public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
-    public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
+	public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "wcms.0002";
+	public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
+	public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
 
+	public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "wcms.0002";
+	public static final String RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME = "name";
+	public static final String RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingCenter Name is required";
 
-    public String getErrorMessage(final String property) {
-        return environment.getProperty(property);
-    }
+	public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "wcms.0002";
+	public static final String RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME = "name";
+	public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingMode Type is required";
+
+	public String getErrorMessage(final String property) {
+		return environment.getProperty(property);
+	}
 
 }

@@ -57,6 +57,31 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.servicegroup.create.key}")
     private String createServiceGroupTopicKey;
+    
+    @Value("${kafka.topics.receivingcenter.create.name}")
+    private String createReceivingCenterTopicName;
+    
+    @Value("${kafka.topics.receivingcenter.create.key}")
+    private String createReceivingCenterTopicKey;
+    
+    @Value("${kafka.topics.receivingcenter.update.name}")
+    private String updateReceivingCenterTopicName;
+    
+    @Value("${kafka.topics.receivingcenter.update.key}")
+    private String updateReceivingCenterTopicKey;
+    
+    @Value("${kafka.topics.receivingmode.create.name}")
+    private String createReceivingModeTopicName;
+    
+    @Value("${kafka.topics.receivingmode.create.key}")
+    private String createReceivingModeTopicKey;
+    
+    @Value("${kafka.topics.receivingmode.update.name}")
+    private String updateReceivingModeTopicName;
+    
+    @Value("${kafka.topics.receivingmode.update.key}")
+    private String updateReceivingModeTopicKey;
+    
 
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
@@ -65,6 +90,39 @@ public class ApplicationProperties {
 	public String getCreateServiceGroupTopicName() {
 		return createServiceGroupTopicName;
 	}
+	
+	public String getCreateReceivingCenterTopicKey() {
+		return createReceivingCenterTopicKey;
+	}
+
+	public String getCreateReceivingCenterTopicName() {
+		return createReceivingCenterTopicName;
+	}
+	
+	public String getUpdateReceivingCenterTopicKey() {
+		return updateReceivingCenterTopicKey;
+	}
+
+	public String getUpdateReceivingCenterTopicName() {
+		return updateReceivingCenterTopicName;
+	}
+	
+	public String getCreateReceivingModeTopicKey() {
+		return createReceivingModeTopicKey;
+	}
+
+	public String getCreateReceivingModeTopicName() {
+		return createReceivingModeTopicName;
+	}
+	
+	public String getUpdateReceivingModeTopicKey() {
+		return updateReceivingModeTopicKey;
+	}
+
+	public String getUpdateReceivingModeTopicName() {
+		return updateReceivingModeTopicName;
+	}
+	
 
 
 }

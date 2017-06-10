@@ -45,7 +45,11 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.service.ReceivingCenterTypeService;
+import org.egov.pgr.service.ReceivingModeTypeService;
 import org.egov.pgr.service.ServiceGroupService;
+import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
+import org.egov.pgr.web.contract.ReceivingModeTypeReq;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,30 +63,53 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Service
 public class PGRConsumer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(PGRConsumer.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(PGRConsumer.class);
 
-    @Autowired
-    private ServiceGroupService serviceGroupService;
-    
-    @Autowired
-    private ApplicationProperties applicationProperties;
+	@Autowired
+	private ServiceGroupService serviceGroupService;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", 
-    		topics = { "${kafka.topics.servicegroup.create.name}" })
+	@Autowired
+	private ReceivingCenterTypeService receivingCenterTypeService;
 
-    public void listen(final ConsumerRecord<String, String> record) {
-    	LOGGER.info("RECORD: "+record.toString());
-       LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
-        final ObjectMapper objectMapper = new ObjectMapper();
-        
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        try {
-        	if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())){
-        		LOGGER.info("Consuming create Category request");
-                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
-        	}
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-    }
+	@Autowired
+	private ReceivingModeTypeService receivingModeTypeService;
+
+	@Autowired
+	private ApplicationProperties applicationProperties;
+
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
+			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
+			"${kafka.topics.receivingmode.create.name}", "${kafka.topics.receivingcenter.update.name}",
+			"${kafka.topics.receivingmode.update.name}" })
+
+	public void listen(final ConsumerRecord<String, String> record) {
+		LOGGER.info("RECORD: " + record.toString());
+		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
+		final ObjectMapper objectMapper = new ObjectMapper();
+
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		try {
+			if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())) {
+				LOGGER.info("Consuming create Category request");
+				serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+			} else if (record.topic().equals(applicationProperties.getCreateReceivingCenterTopicName())) {
+				LOGGER.info("Consuming create ReceivingCenterType request");
+				receivingCenterTypeService.create(objectMapper.readValue(record.value(), ReceivingCenterTypeReq.class));
+			} else if (record.topic().equals(applicationProperties.getUpdateReceivingCenterTopicName())) {
+
+				LOGGER.info("Consuming update ReceivingCenterType request");
+				receivingCenterTypeService.update(objectMapper.readValue(record.value(), ReceivingCenterTypeReq.class));
+
+			} else if (record.topic().equals(applicationProperties.getCreateReceivingModeTopicName())) {
+				LOGGER.info("Consuming create ReceivingModeType request");
+				receivingModeTypeService.create(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
+
+			} else if (record.topic().equals(applicationProperties.getUpdateReceivingModeTopicName())) {
+				LOGGER.info("Consuming update ReceivingModeType request");
+				receivingModeTypeService.update(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

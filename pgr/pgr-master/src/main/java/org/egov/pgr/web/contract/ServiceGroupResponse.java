@@ -62,9 +62,9 @@ import lombok.ToString;
 @ToString
 public class ServiceGroupResponse {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-    @JsonProperty("ServiceGroups")
-    private List<ServiceGroup> serviceGroups = new ArrayList<>();
+	@JsonProperty("ServiceGroups")
+	private List<ServiceGroup> serviceGroups = new ArrayList<>();
 }

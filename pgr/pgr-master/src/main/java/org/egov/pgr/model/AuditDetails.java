@@ -62,16 +62,16 @@ import lombok.ToString;
 @Builder
 public class AuditDetails {
 
-    @NotNull
-    private Long createdBy;
+	@NotNull
+	private Long createdBy;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
 
-    @NotNull
-    private Long lastModifiedBy;
+	@NotNull
+	private Long lastModifiedBy;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
 
 }

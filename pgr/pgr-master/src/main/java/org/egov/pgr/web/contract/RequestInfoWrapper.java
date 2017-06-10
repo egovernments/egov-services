@@ -37,26 +37,28 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.repository.rowmapper;
+package org.egov.pgr.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.egov.common.contract.request.RequestInfo;
 
-import org.egov.pgr.model.ServiceGroup;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Component
-public class ServiceGroupRowMapper implements RowMapper<ServiceGroup> {
-	@Override
-	public ServiceGroup mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final ServiceGroup serviceGroup = new ServiceGroup();
-		serviceGroup.setId(rs.getLong("id"));
-		serviceGroup.setName(rs.getString("name"));
-		serviceGroup.setDescription(rs.getString("description"));
-		serviceGroup.setTenantId(rs.getString("tenantId"));
-		serviceGroup.setVersion(rs.getInt("version"));
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-		return serviceGroup;
-	}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class RequestInfoWrapper {
+
+    @JsonProperty("RequestInfo")
+    RequestInfo requestInfo;
+
 }

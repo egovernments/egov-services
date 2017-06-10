@@ -163,9 +163,9 @@ class EditDemand extends React.Component {
 
          var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-         var date = new Date(agreementDetail["commencementDate"].split("/")[2],agreementDetail["commencementDate"].split("/")[1],agreementDetail["commencementDate"].split("/")[0]);
+         var date = new Date(agreementDetail["commencementDate"].split("/")[2],agreementDetail["commencementDate"].split("/")[1]-1,agreementDetail["commencementDate"].split("/")[0]);
          var currentDate=new Date();
-         var endDate = new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1],agreementDetail["expiryDate"].split("/")[0])<currentDate?new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1],agreementDetail["expiryDate"].split("/")[0]):new Date();
+         var endDate = new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1]-1,agreementDetail["expiryDate"].split("/")[0])<currentDate?new Date(agreementDetail["expiryDate"].split("/")[2],agreementDetail["expiryDate"].split("/")[1]-1,agreementDetail["expiryDate"].split("/")[0]):new Date();
 
 
 

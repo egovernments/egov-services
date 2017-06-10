@@ -1,0 +1,15 @@
+title Create Demand Flow
+
+RevenueSvc->+BillingSvc: Create Demand Request
+note over RevenueSvc,BillingSvc
+    Tax Head wise tax data along with
+    period and owner info to be passed 
+    in request body
+end note
+BillingSvc->+BillingSvc: Validate Create Demand Request
+BillingSvc->+KafkaSvc: Queue for further processing
+BillingSvc->+RevenueSvc: Create Demand Response
+note over RevenueSvc,BillingSvc
+    Returns the array of demand ids
+end note
+KafkaSvc->+BillingSvc: Save to database

@@ -7,6 +7,10 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
+import {Grid, Row, Col} from 'react-bootstrap';
+
+
+
 import CustomMenu from './CustomMenu';
 
 // import {brown500} from 'material-ui/styles/colors';
@@ -26,7 +30,7 @@ const styles = {
 
   rightIcon: {
     height: 25,
-    marginTop: 12,
+    marginTop: -15,
     marginRight: 12
   }
 }
@@ -38,8 +42,19 @@ const Logo = () => {
 const RightIcon = () => {
   return (
     <div>
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
 
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
+      <IconMenu
+          iconButtonElement={<IconButton style={{backgroundColor:"white"}}><MoreVertIcon /></IconButton>}
+          anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+        >
+          <MenuItem primaryText="Refresh" />
+          <MenuItem primaryText="Send feedback" />
+          <MenuItem primaryText="Settings" />
+          <MenuItem primaryText="Help" />
+          <MenuItem primaryText="Sign out" />
+    </IconMenu>
     </div>
   );
 }
@@ -133,6 +148,7 @@ class Header extends Component {
         <AppBar title={< div > UAT Maharashtra Municipal Corporation < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementRight={< RightIcon />}/>
 
         <Drawer containerClassName="side-bar" open={this.state.open}>
+          {/*<div id="menu"></div>*/}
           <CustomMenu menuItems={this.state.menuItems}/>
         </Drawer>
 

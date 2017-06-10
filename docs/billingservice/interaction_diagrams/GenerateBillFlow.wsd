@@ -1,0 +1,37 @@
+title Bill Based Collection
+
+Client->+CollectionSvc: Search Due Request
+note over Client,CollectionSvc
+    Search request to get the demand for 
+    multiple bills/across services.
+end note
+CollectionSvc->+BillingSvc: Request for Bill Generation
+note over CollectionSvc,BillingSvc
+    Collection service request for a bill with
+    ConsumerCode or owner details. In case there
+    are multiple revenue services associated then
+    the integrated bill will be returned
+end note
+BillingSvc->+BillingSvc: Validate Bill Generation Request
+BillingSvc->+CollectionSvc: Generates bill with dues and other required details
+BillingSvc->+KafkaSvc: Queue for further processing
+BillingSvc->+CollectionSvc: Response Bill
+KafkaSvc->+BillingSvc: Save to database
+CollectionSvc->BillingSvc: Call for any apportion, timely rebate other and validations from Revenue service
+note over CollectionSvc, BillingSvc
+    Apportion the amount paid by the citizen
+    for the service. BillingSvc in turn invokes
+    individual billing service to apportion, 
+	timely rebate other and validations.
+end note
+BillingSvc->+RevenueSvc: Call to respective Revenue service on Collection request
+BillingSvc->+CollectionSvc: Response with Revenue service response
+CollectionSvc->+BillingSvc: Call back for collection update to Revenue service
+note over CollectionSvc,BillingSvc
+	Collection validates the payment
+	and creates a receipt and calls
+	BillingSvc for demand update
+end note
+BillingSvc->+BillingSvc: Update the collection details
+BillingSvc->+KafkaSvc: Queue for further processing
+KafkaSvc->+BillingSvc: Save to collection details database

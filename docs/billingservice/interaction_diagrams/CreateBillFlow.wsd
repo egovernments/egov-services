@@ -1,0 +1,16 @@
+title Generate Bill Flow
+
+CollectionSvc->+BillingSvc: Request for Bill Generation
+note over CollectionSvc,BillingSvc
+    Collection service request for a bill with
+    ConsumerCode or owner details. In case there
+    are multiple revenue services associated then
+    the integrated bill will be returned
+end note
+BillingSvc->+BillingSvc: Validate Bill Generation Request
+BillingSvc->+BillingSvc: Searched all the demands for criteria
+BillingSvc->+RevenueSvc: Create Demand Response
+note over RevenueSvc,BillingSvc
+    Returns the array of demand ids
+end note
+KafkaSvc->+BillingSvc: Save to database

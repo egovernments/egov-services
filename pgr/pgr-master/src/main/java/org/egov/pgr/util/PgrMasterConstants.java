@@ -58,6 +58,8 @@ public class PgrMasterConstants {
 	public static final String INVALID_SERVICEGROUP_REQUEST_MESSAGE = "Service Group is invalid";
 	public static final String INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE = "ReceivingCenter is Invalid.";
 	public static final String INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE = "ReceivingMode is Invalid.";
+	public static final String INVALID_SERVICETYPE_REQUEST_MESSAGE = "Service Type Message is Invalid";
+	
 
 	public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
 	public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
@@ -75,6 +77,15 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingMode Type is required";
 
+	public static final String GRIEVANCETYPE_NAME_MANDATORY_CODE = "wcms.0003";
+	public static final String GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME = "serviceName";
+	public static final String GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Service Type Name is required";
+	
+	public static final String GRIEVANCETYPE_CODE_MANDATORY_CODE = "wcms.0004";
+	public static final String GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME = "serviceCode";
+	public static final String GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE = "Service Type Code is required";
+
+	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);
 	}

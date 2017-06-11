@@ -82,6 +82,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.receivingmode.update.key}")
     private String updateReceivingModeTopicKey;
     
+    @Value("${kafka.topics.servicetype.create.name}")
+    private String createServiceTypeTopicName;
+    
+    @Value("${kafka.topics.servicetype.create.key}")
+    private String createServiceTypeTopicKey;
+    
 
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
@@ -123,6 +129,12 @@ public class ApplicationProperties {
 		return updateReceivingModeTopicName;
 	}
 	
+	public String getCreateServiceTypeTopicName(){
+		return createServiceTypeTopicName;
+	}
+	public String getCreateServiceTypeTopicKey(){
+		return createServiceTypeTopicKey;
+	}
 
 
 }

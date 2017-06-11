@@ -603,3 +603,7 @@ div#agreementTable_filter input {
 div#relatedTable_filter input {
 	border: solid 1px #ddd;
 }
+
+input[type="search"] {
+	border: solid 1px #ddd;	
+}

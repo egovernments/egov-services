@@ -66,12 +66,16 @@ public class PgrMasterConstants {
 	public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "wcms.0002";
 	public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
+	
+	public static final String SERVICEGROUP_ID_MANDATORY_CODE = "wcms.0003";
+	public static final String SERVICEGROUP_ID_MANADATORY_FIELD_NAME = "id";
+	public static final String SERVICEGROUP_ID_MANADATORY_ERROR_MESSAGE = "Service Group id is required";
 
-	public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "wcms.0002";
+	public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "wcms.0004";
 	public static final String RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingCenter Name is required";
 
-	public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "wcms.0002";
+	public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "wcms.0005";
 	public static final String RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingMode Type is required";
 

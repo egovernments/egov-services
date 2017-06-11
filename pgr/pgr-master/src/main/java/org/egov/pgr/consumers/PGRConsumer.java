@@ -80,7 +80,7 @@ public class PGRConsumer {
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
 			"${kafka.topics.receivingmode.create.name}", "${kafka.topics.receivingcenter.update.name}",
-			"${kafka.topics.receivingmode.update.name}" })
+			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicegroup.update.name}" })
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
@@ -90,13 +90,14 @@ public class PGRConsumer {
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		try {
 			if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())) {
-				LOGGER.info("Consuming create Category request");
+				LOGGER.info("Consuming create ServiceGroup request");
 				serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+				
 			} else if (record.topic().equals(applicationProperties.getCreateReceivingCenterTopicName())) {
 				LOGGER.info("Consuming create ReceivingCenterType request");
 				receivingCenterTypeService.create(objectMapper.readValue(record.value(), ReceivingCenterTypeReq.class));
+				
 			} else if (record.topic().equals(applicationProperties.getUpdateReceivingCenterTopicName())) {
-
 				LOGGER.info("Consuming update ReceivingCenterType request");
 				receivingCenterTypeService.update(objectMapper.readValue(record.value(), ReceivingCenterTypeReq.class));
 
@@ -107,6 +108,11 @@ public class PGRConsumer {
 			} else if (record.topic().equals(applicationProperties.getUpdateReceivingModeTopicName())) {
 				LOGGER.info("Consuming update ReceivingModeType request");
 				receivingModeTypeService.update(objectMapper.readValue(record.value(), ReceivingModeTypeReq.class));
+				
+			} else if (record.topic().equals(applicationProperties.getUpdateServiceGroupTopicName())) {
+				LOGGER.info("Consuming update ServiceGroup request");
+				serviceGroupService.update(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+				
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

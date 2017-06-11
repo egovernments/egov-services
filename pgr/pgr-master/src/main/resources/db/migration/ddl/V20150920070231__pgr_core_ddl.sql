@@ -1,4 +1,5 @@
 ---ReceivingCenter  Master
+
 CREATE TABLE egpgr_receiving_center
 (
   id SERIAL primary key,

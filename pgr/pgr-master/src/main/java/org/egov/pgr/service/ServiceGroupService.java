@@ -63,15 +63,15 @@ public class ServiceGroupService {
 	private PGRProducer pgrProducer;
 
 	public ServiceGroupRequest create(final ServiceGroupRequest serviceGroupRequest) {
-		logger.info("Persisting category type record");
-		return categoryRepository.persistCreateCategory(serviceGroupRequest);
+		logger.info("Persisting service group record");
+		return categoryRepository.persistCreateServiceGroup(serviceGroupRequest);
+	}
+	
+	public ServiceGroupRequest update(final ServiceGroupRequest serviceGroupRequest) {
+		logger.info("Updating service group record");
+		return categoryRepository.persistUpdateServiceGroup(serviceGroupRequest);
 	}
 
-	/*
-	 * public CategoryTypeRequest update(final CategoryTypeRequest
-	 * categoryRequest) { return
-	 * categoryRepository.persistModifyCategory(categoryRequest); }
-	 */
 
 	public ServiceGroup createCategory(final String topic, final String key,
 			final ServiceGroupRequest serviceGroupRequest) {
@@ -93,28 +93,28 @@ public class ServiceGroupService {
 		logger.error("Producer successfully posted the request to Queue");
 		return serviceGroupRequest.getServiceGroup();
 	}
-
-	/*
-	 * public CategoryType updateCategory(final String topic, final String key,
-	 * final CategoryTypeRequest categoryRequest) { final ObjectMapper mapper =
-	 * new ObjectMapper(); String categoryValue = null; try {
-	 * logger.info("updateCategory service::" + categoryRequest); categoryValue
-	 * = mapper.writeValueAsString(categoryRequest);
-	 * logger.info("categoryValue::" + categoryValue); } catch (final
-	 * JsonProcessingException e) { logger.error("Exception Encountered : " +
-	 * e); } try { waterMasterProducer.sendMessage(topic, key, categoryValue); }
-	 * catch (final Exception ex) { logger.error("Exception Encountered : " +
-	 * ex); } return categoryRequest.getCategory(); }
-	 * 
-	 * public boolean getCategoryByNameAndCode(final String code, final String
-	 * name, final String tenantId) { return
-	 * categoryRepository.checkCategoryByNameAndCode(code, name, tenantId); }
-	 * 
-	 * public List<CategoryType> getCategories(final CategoryTypeGetRequest
-	 * categoryGetRequest) { return
-	 * categoryRepository.findForCriteria(categoryGetRequest);
-	 * 
-	 * }
-	 */
+	
+	public ServiceGroup updateCategory(final String topic, final String key,
+			final ServiceGroupRequest serviceGroupRequest) {
+		final ObjectMapper mapper = new ObjectMapper();
+		String serviceGroupValue = null;
+		try {
+			logger.info("ServiceGroupRequest::" + serviceGroupRequest);
+			serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
+			logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
+		} catch (final JsonProcessingException e) {
+			logger.error("Exception Encountered : " + e);
+		}
+		try {
+			pgrProducer.sendMessage(topic, key, serviceGroupValue);
+		} catch (final Exception e) {
+			logger.error("Exception while posting to kafka Queue : " + e);
+			return serviceGroupRequest.getServiceGroup();
+		}
+		logger.error("Producer successfully posted the request to Queue");
+		return serviceGroupRequest.getServiceGroup();
+	}
+	
+	
 
 }

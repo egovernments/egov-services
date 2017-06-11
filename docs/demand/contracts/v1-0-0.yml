@@ -21,18 +21,8 @@ paths:
     post:
       description: Returns a demand reasons
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: moduleName
           in: query
           description: Name of the module for which demand reasons to be returned.
@@ -75,15 +65,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/demandreason/_create:
     post:
@@ -95,12 +85,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/DemandReasonRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Master
       responses:
@@ -111,15 +96,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/demandreason/{id}/_update:
     post:
@@ -137,12 +122,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/DemandReasonRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Master
       responses:
@@ -153,32 +133,23 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
 
   /demand/installment/_search:
     post:
       description: Returns a installments
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: moduleName
           in: query
           description: Name of the module for which installments to be returned.
@@ -214,15 +185,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/installment/_create:
     post:
@@ -234,12 +205,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/InstallmentRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Master
       responses:
@@ -250,15 +216,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/installment/{id}/_update:
     post:
@@ -276,12 +242,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/InstallmentRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Master
       responses:
@@ -292,33 +253,24 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
             
   /demand/_search:
     post:
       description: Returns a demand along with its list of demand details
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
-        - name: dmenadId
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: demandId
           in: query
           description: Primary key of Demand object.
           required: false
@@ -339,15 +291,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/_create:
     post:
@@ -359,12 +311,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/DemandRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Demand
       responses:
@@ -375,15 +322,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/{id}/_update:
     post:
@@ -401,12 +348,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/DemandRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Demand
       responses:
@@ -417,32 +359,23 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
             
   /demanddetail/_search:
     post:
       description: Returns a demand details
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: dmenadId
           in: query
           description: Primary key of Demand object.
@@ -469,32 +402,23 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
             
   /demand/bill/_search:
     post:
       description: Returns a Bill along with its list of bill details. By default non-history and non-cancelled bills will be returned when no value passed for history or cancelled.
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request header for the service request details.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: demandId
           in: query
           description: Primary key of Demand object.
@@ -537,15 +461,15 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /demand/bill/_create:
     post:
@@ -557,12 +481,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/BillRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       tags:
         - Bill
       responses:
@@ -573,15 +492,16 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         '404':
           description: tenantId provided was not found
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+         
             
 definitions:
   Demand:
@@ -990,7 +910,7 @@ definitions:
   DemandRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Demand:
         $ref: '#/definitions/Demand'
     type: object
@@ -998,7 +918,7 @@ definitions:
   DemandResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Demands:
         type: array
         items:
@@ -1008,7 +928,7 @@ definitions:
   DemandDetailResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       DemandDetails:
         type: array
         items:
@@ -1018,7 +938,7 @@ definitions:
   DemandReasonRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Demand:
         $ref: '#/definitions/DemandReason'
     type: object
@@ -1026,7 +946,7 @@ definitions:
   DemandReasonResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Demands:
         type: array
         items:
@@ -1036,7 +956,7 @@ definitions:
   BillRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       BillInfos:
         type: array
         items:
@@ -1046,7 +966,7 @@ definitions:
   BillResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       BillInfos:
         type: array
         items:
@@ -1056,7 +976,7 @@ definitions:
   InstallmentRequest:
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Installment:
         $ref: '#/definitions/Installment'
     type: object
@@ -1064,100 +984,11 @@ definitions:
   InstallmentResponse:
     properties:
       ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Installments:
         type: array
         items:
           $ref: '#/definitions/Installment'
     type: object
       
-  RequestInfo:
-    type: object
-    properties:
-      api_id:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msg_id:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requester_id:
-        type: string
-        description: UserId of the user calling
-      auth_token:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - api_id
-      - ver
-      - ts
       
-  ResponseInfo:
-    type: object
-    properties:
-      api_id:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      res_msg_id:
-        type: string
-        description: unique response message id (UUID)
-      msg_id:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - api_id
-      - ver
-      - ts
-      - status
-      
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      filelds:
-        type: object
-    required:
-      - code
-      - message
-      
-  ErrorRes:
-    properties:
-      ResposneInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
-    type: object
-

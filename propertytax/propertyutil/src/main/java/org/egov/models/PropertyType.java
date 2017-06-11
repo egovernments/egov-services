@@ -3,6 +3,7 @@ package org.egov.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PropertyType {
@@ -38,6 +39,18 @@ public class PropertyType {
 
 	@JsonProperty("orderNumber")
 	private Integer orderNumber = null;
+	
+	@JsonIgnore
+	@JsonProperty("data")
+	private String data;
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

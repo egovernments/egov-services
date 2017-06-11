@@ -29,7 +29,6 @@ basePath: '/property/v1'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
-       
   /_calculateTax:
   ######################################################
   # Will be asynchronous.
@@ -38,11 +37,11 @@ paths:
   ######################################################
     post:
       summary: Calculates a tax.
-      description: API to create new properties.
+      description: API to calculate property tax
       parameters:
         - name: property
           in: body
-          description: Details for the new property + RequestInfo meta data.
+          description: Details for the property + RequestInfo meta data + other conguration params.
           required: true
           schema:
             $ref: '#/definitions/PropertyRequest'
@@ -52,15 +51,15 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         200:
-          description: Property(s) created sucessfully
+          description: returns the detailed calculated tax details.
           schema:
             $ref: '#/definitions/CalculationResponse'
         400:
-          description: Property(s) creation failed
+          description: Invalid Calcualtions data/ failed to get required configuration values.
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Property  
+        - Calculation  
         
 definitions:
 ########################################################
@@ -68,70 +67,10 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
-  Taxcalculation:
+  CommonTaxDetails:
     type: object
+    description: Common tax details object
     properties:
-      upicNumber:
-        type: string
-        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
-      propertyType:
-        type: string
-        description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
-        maxLength: 16
-        minLength: 1
-      annualRentalValue:
-        type: number
-        format: double
-        description: Annual Rental Value for a property
-      boundary:
-        type: string
-        description: The boundary for which this Guidance value is.
-        maxLength: 16
-        minLength: 1
-      unitTaxes:
-        description: Unit Taxes
-        type: array
-        items:
-          $ref: "#/definitions/UnitTax"
-      
-  UnitTax:
-    type: object
-    properties:
-      floorNumber:
-        type: string
-        description: floor no for the floor
-        maxLength: 16
-        minLength: 1
-      unitNo:
-        type: integer
-        format: int32
-        description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
-        maxLength: 8
-        minLength: 1
-      assessableArea:
-        type: number
-        format: double
-        description: The Structure for which this Guidance value is.
-      structureFactor:
-        type: number
-        format: double
-        description: The Structure for which this Guidance value is.
-      usageFactor:
-        type: number
-        format: double
-        description: The usage for which this Guidance value is.
-      subUsageFactor:
-        type: number
-        format: double
-        description: The subUsage for which this Guidance value is.
-      occupancyFactor:
-        type: number
-        format: double
-        description: The occupancy for which this Guidance value is.
-      guidanceValue:
-        type: number
-        format: double
-        description: Guidance Value.
       occupancyDate:
         type: string
         format: date
@@ -168,6 +107,73 @@ definitions:
         type: number
         format: double
         description: Total tax for the unit.
+        
+  Taxcalculation:
+    type: object
+    description: Details of tax calculation
+    properties:
+      upicNumber:
+        type: string
+        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
+      propertyType:
+        type: string
+        description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
+        maxLength: 16
+        minLength: 1
+      annualRentalValue:
+        type: number
+        format: double
+        description: Annual Rental Value for a property
+      boundary:
+        type: string
+        description: The boundary for which this Guidance value is.
+        maxLength: 16
+        minLength: 1
+      propertyTaxes:
+        $ref: "#/definitions/CommonTaxDetails"
+      unitTaxes:
+        description: Unit Taxes
+        type: array
+        items:
+          $ref: "#/definitions/UnitTax"
+      
+  UnitTax:
+    type: object
+    properties:
+      floorNumber:
+        type: string
+        description: floor no for the floor
+        maxLength: 16
+        minLength: 1
+      unitNo:
+        type: integer
+        format: int32
+        description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
+        maxLength: 8
+        minLength: 1
+      assessableArea:
+        type: number
+        format: double
+        description: The Structure for which this Guidance value is.
+      structureFactor:
+        type: number
+        format: double
+        description: The Structure for which this Guidance value is.
+      usageFactor:
+        type: number
+        format: double
+        description: The usage for which this Guidance value is.
+      subUsageFactor:
+        type: number
+        format: double
+        description: The subUsage for which this Guidance value is.
+      unitTaxes:
+        $ref: "#/definitions/CommonTaxDetails"
+      headTaxes:
+        description: Unit Taxes
+        type: array
+        items:
+          $ref: "#/definitions/HeadWiseTax"
         
   HeadWiseTax:
     type: object

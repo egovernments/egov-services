@@ -1133,7 +1133,7 @@ $("#createAgreementForm").validate({
         agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         agreement["tenantId"] = tenantId;
         agreement["source"] = "SYSTEM";
-        agreement["action"] = "CREATE";
+        agreement["action"] = "CREATE";//Different in case of cancel/evict. Please remove
         uploadFiles(agreement, function(err, _agreement) {
             if (err) {
                 //Handle error

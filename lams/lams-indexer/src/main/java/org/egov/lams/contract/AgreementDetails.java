@@ -24,22 +24,37 @@ import lombok.ToString;
 public class AgreementDetails {
 
 	private String agreementNumber;
+	private String agreementId;
 	private String ackNumber;
 	private String cityGrade;
 	private String cityName;
 	private String districtName;
 	private String cityCode;
 	private String regionName;
+
 	private String adminWardName;
+	private String adminWard;
+
+	private String revenueWardName;
 	private String revenueWard;
+
 	private String revZoneName;
+	private String revZone;
+
+	private String revenueBlockName;
 	private String revenueBlock;
+
 	private String locationName;
+	private String location;
+
 	private Date agreementDate;
 	private String status;
+	private String allottee;
 	private String allotteeName;
 	private String allotteeMobile;
 	private String allotteeAadhaarNo;
+	
+	private String asset;
 	private String assetCategory;
 	private String assetCode;
 	private String assetName;
@@ -105,6 +120,8 @@ public class AgreementDetails {
 	}
 
 	public void setAsset(Asset asset) {
+		
+		this.asset = asset.getId().toString();
 		this.assetName = asset.getName();
 		this.assetCode = asset.getCode();
 		this.assetCategory = asset.getCategory().getName();
@@ -113,17 +130,34 @@ public class AgreementDetails {
 	}
 
 	public void setBoundaryDetails(Location location, Map<Long, Boundary> boundaryMap) {
-		
-		this.revZoneName = boundaryMap.get(location.getZone()).getName();
-		this.adminWardName= boundaryMap.get(location.getElectionWard()).getName();
-		this.revenueBlock = boundaryMap.get(location.getBlock()).getName();
-		this.revenueWard = boundaryMap.get(location.getRevenueWard()).getName();
+
+		if (location.getZone() != null) {
+			this.revZone = location.getZone().toString();
+			this.revZoneName = boundaryMap.get(location.getZone()).getName();
+		}
+		if (location.getLocality() != null) {
+			this.location = location.getLocality().toString();
+			this.locationName = boundaryMap.get(location.getLocality()).getLocalName();
+		}
+		if (location.getElectionWard() != null) {
+			this.adminWard = location.getElectionWard().toString();
+			this.adminWardName = boundaryMap.get(location.getElectionWard()).getName();
+		}
+		if (location.getBlock() != null) {
+			this.revenueBlock = location.getBlock().toString();
+			this.revenueBlockName = boundaryMap.get(location.getBlock()).getName();
+		}
+		if (location.getRevenueWard() != null) {
+			this.revenueWard = location.getRevenueWard().toString();
+			this.revenueWardName = boundaryMap.get(location.getRevenueWard()).getName();
+		}
 	}
 
 	public void setAllottee(Allottee allottee) {
-
+		
+		this.allottee = allottee.getId().toString();
 		this.allotteeName = allottee.getName();
-		this.allotteeMobile = allottee.getMobileNumber().toString();
+		this.allotteeMobile = allottee.getMobileNumber();
 		this.allotteeAadhaarNo = allottee.getAadhaarNumber();
 	}
 

@@ -126,9 +126,14 @@ public class ServiceGroupQueryBuilder {
 		return query.append(")").toString();
 	}
 
-	public static String insertCategoryQuery() {
-		return "INSERT INTO egpgr_complainttype_category(name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,version) values "
+	public static String insertServiceGroupQuery() {
+		return "INSERT INTO egpgr_complainttype_category(id,name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
 				+ "(?,?,?,?,?,?,?,?)";
+	}
+	
+	public static String updateServiceGroupQuery() {
+		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?, createdby = ?, lastmodifiedby = ?, "
+				+ "createddate = ?, lastmodifieddate = ?, tenantid = ? where id = ?";
 	}
 
 }

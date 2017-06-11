@@ -58,7 +58,13 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicegroup.create.key}")
     private String createServiceGroupTopicKey;
     
-    @Value("${kafka.topics.receivingcenter.create.name}")
+    @Value("${kafka.topics.servicegroup.update.name}")
+    private String updateServiceGroupTopicName;
+    
+    @Value("${kafka.topics.servicegroup.update.key}")
+    private String updateServiceGroupTopicKey;
+
+	@Value("${kafka.topics.receivingcenter.create.name}")
     private String createReceivingCenterTopicName;
     
     @Value("${kafka.topics.receivingcenter.create.key}")
@@ -135,6 +141,14 @@ public class ApplicationProperties {
 	public String getCreateServiceTypeTopicKey(){
 		return createServiceTypeTopicKey;
 	}
+    public String getUpdateServiceGroupTopicName() {
+		return updateServiceGroupTopicName;
+	}
+
+	public String getUpdateServiceGroupTopicKey() {
+		return updateServiceGroupTopicKey;
+	}
+	
 
 
 }

@@ -692,6 +692,7 @@ input[type="search"] {
 }
 
 input:disabled,
-textarea:disabled {
+textarea:disabled,
+select:disabled {
 	background: #fff !important;
 }

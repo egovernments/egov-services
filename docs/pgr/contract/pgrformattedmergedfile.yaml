@@ -1,0 +1,1401 @@
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: eGov mSeva 
+  description: |
+    ### Public Service API ###
+     eGov mSeva API Provides the resource to create manage and search citizen service category or group, Service Types, Service request. ServiceRequest API provides the resource to work with Grievance/Complaint creation, updation and search in the platform.
+      ## Important
+      
+      ### readonly ###
+      readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities.
+        The readonly fields might be passed to the _search API''s to make use of fields for the search Query API. while calling _search API''s even mandatory fields might not be available, it is mandatory only in the _create API's.
+      ### Error ###
+      All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1/[API endpoint]'
+
+paths:
+    /services/_search:
+      post:
+        summary: get all Services(Complaint Types) available for a given tenantid
+        description:
+          Provides a list of acceptable service request types and their associated
+          service codes. These request types can be unique to each tenant.
+        parameters:
+          - name: serviceReq
+            in: body
+            description: Common Request info for the Services.
+            required: true
+            schema:
+              $ref: '#/definitions/ServiceReq'
+          - name: tenantId
+            in: query
+            description: Unique id for for a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: fields
+            in: query
+            description: Specific fields can be specified per search, can be decalred multiple times comma delimited like field1, field2.... If nothing is passed as Fields, all fields are returned.
+            required: false
+            type: string
+            format: varchar
+          - name: sort
+            description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume service serviceName in ascending order for default sorting. For example, with a sort string **sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.** Apart From available fields in Services **REGISTRATION_FREQUENCY** or **RESOLUTION_FREQUENCY** can be used to get Services in order of Registration frequency and Resolution frequency. sort field can be used in conjunction with totalSize to get desired number of records.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: totalSize
+            description: Total No of results returned in the Result, by default maximum 1000 number of records will be returned if totalSize parameter is empty.
+            in: query
+            required: false
+            type: string
+            format: integer
+        tags:
+          - Service List
+        responses:
+          '200':
+            description: service definition
+            schema:
+              $ref: '#/definitions/ServiceRes'
+          '400':
+            description: tenatId was not provided or General service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+          
+    /services/_create:
+      post:
+        summary: Creates a new Service for a given tenatId
+        description: To add a new Service for a tenant.
+        parameters:
+          - name: service
+            in: body
+            description: Details for the new Service .
+            required: true
+            schema:
+              $ref: '#/definitions/ServiceReq'
+          - name: tenatId
+            in: query
+            description: Unique id for tenant.
+            required: true
+            type: string
+            format: varchar
+        tags:
+            - Service
+        responses:
+            '201':
+              description: service created
+              schema:
+                $ref: '#/definitions/ServiceRes'
+            '400':
+              description: tenantId was not provided or General service error
+              schema:
+                $ref: '#/definitions/ErrorRes'
+            
+    /services/{serviceCode}/_update:
+      post:
+        summary: Updates Service Type and its details.
+        description: To update details of an existing service.
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for ulb.
+            required: true
+            type: string
+            format: varchar
+          - name: serviceCode
+            in: path
+            description: Unique service code for service to be updated .
+            required: true
+            type: string
+            format: varchar
+          - name: service
+            in: body
+            description: Request header for the new Service Request.
+            required: true
+            schema:
+              $ref: '#/definitions/ServiceReq'
+        tags:
+          - Service
+        responses:
+          '200':
+            description: service updated
+            schema:
+              $ref: '#/definitions/ServiceRes'
+          '400':
+            description: serviceCode or tenantId was not provided or General service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+  
+    /seva/_create:
+      post:
+        summary: Create service requests
+        description: To Create new service requests.
+        parameters:
+          - name: seva
+            in: body
+            description: The  service request.
+            required: true
+            schema:
+              $ref: '#/definitions/SevaRequest'
+        tags:
+          - 'Service Request, Seva'
+        responses:
+          '201':
+            description: Service Request Created
+            schema:
+              $ref: '#/definitions/SevaResponse'
+          '400':
+            description:
+              serviceCode or tenantId was not provided or General service
+              error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+          
+    /seva/_search:         
+      post:
+        summary: Query multiple Seva request
+        description: Return service request for a given tenantid and search params.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: '#/definitions/SevaRequest'
+          - name: tenantId
+            in: query
+            description: Unique id for city/ulb.
+            required: true
+            type: string
+            format: varchar
+          - name: startDate
+            in: query
+            description: Earliest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: endDate
+            in: query
+            description: Latest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: status
+            in: query
+            description:
+              Allows one to search for requests which have a specific status. This
+              defaults to all statuses; can be declared multiple times, comma
+              delimited;
+            required: false
+            type: string
+            format: varchar
+          - name: lastModifiedDatetime
+            in: query
+            description: last modified date for the given serviceRequest.
+            required: false
+            type: string
+            format: varchar
+          - name: fields
+            description: Specific fields can be specified per search, can be decalred multiple times, comma delimited like "field1", "field2".... If nothing is passed as Fields, all fields are returned.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: sort
+            description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume seva requestedDatetime in ascending order for default sorting. For example, with a sort string sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: totalSize
+            description: Total No of results returned in the Result, by default maximum 1000 number of records will be returned if totalSize parameter is empty.
+            in: query
+            required: false
+            type: string
+            format: integer
+          - name: sizePerPage
+            description: Total No of results needs to be displayed per page. Note that fromIndex + sizePerPage can not be more than the totalSize setting which defaults to 1000.
+            in: query
+            required: false
+            type: string
+            format: integer
+          - name: fromIndex
+            description: The fromIndex parameter defines the offset from the first result you want to fetch. The default value of fromIndex is 0.
+            in: query
+            required: false
+            type: string
+            format: integer
+        tags:
+          - 'Service Request, Seva'
+        responses:
+          '200':
+            description: seva
+            schema:
+              $ref: '#/definitions/SevaResponse'
+          '400':
+            description:
+              serviceRequestId or tenantId was not provided or General
+              service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+                
+    /seva/_count:         
+      post:
+        summary: Returns count of matching service requests
+        description: Return count of service request for a given tenantid and search params.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: '#/definitions/SevaRequest'
+          - name: tenantId
+            in: query
+            description: Unique id for city/ulb.
+            required: true
+            type: string
+            format: varchar
+          - name: startDate
+            in: query
+            description: Earliest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: endDate
+            in: query
+            description: Latest datetime to include in search.
+            required: false
+            type: string
+            format: varchar
+          - name: status
+            in: query
+            description:
+              Allows one to search for requests which have a specific status. This
+              defaults to all statuses; can be declared multiple times, comma
+              delimited;
+            required: false
+            type: string
+            format: varchar
+          - name: lastModifiedDatetime
+            in: query
+            description: last modified date for the given serviceRequest.
+            required: false
+            type: string
+            format: varchar
+          - name: fields
+            description: Specific fields can be specified per search, can be decalred multiple times, comma delimited like "field1", "field2".... If nothing is passed as Fields, all fields are returned.
+            in: query
+            required: false
+            type: string
+            format: varchar
+          - name: sort
+            description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume seva requestedDatetime in ascending order for default sorting. For example, with a sort string sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.
+            in: query
+            required: false
+            type: string
+            format: varchar
+        tags:
+          - 'Service Request, Seva'
+        responses:
+          '200':
+            description: seva
+            schema:
+              $ref: '#/definitions/SevaResponse'
+          '400':
+            description:
+              serviceRequestId or tenantId was not provided or General
+              service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+            
+    /seva/{serviceRequestId}/_update:
+      post:
+        summary: Update service requests
+        description: To Update new service requests.
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for ulb/city.
+            required: true
+            type: string
+            format: varchar
+          - name: serviceRequestId
+            in: path
+            description: service code value.
+            required: true
+            type: string
+            format: varchar
+          - name: sevaRequest
+            in: body
+            description: The  service request.
+            required: true
+            schema:
+              $ref: '#/definitions/SevaRequest'
+        tags:
+          - 'Service Request,Seva'
+        responses:
+          '201':
+            description: Service Request Updated
+            schema:
+              $ref: '#/definitions/SevaResponse'
+          '400':
+            description:
+              serviceCode or tenantId was not provided or General service
+              error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+          
+    /serviceGroup/_search:
+      post:
+        summary: Get all complaint type category(or Service Group).
+        description: |
+         Returns all the complaint type category(or Service Group).
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for ulb.
+            required: true
+            type: string
+        tags:
+          - Complaint Type Category or Service Group
+        responses:
+          200:
+            description: An array of complaint type category
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/ServiceGroupRes'
+          '400':
+            description: tenantId is not present
+            schema:
+              $ref: '#/definitions/Error'
+              
+    /serviceGroup/_create:
+      post:
+        summary: Create complaint type category(or Service Group).
+        description: |
+         Create the complaint type category(or Service Group).
+        parameters:
+          - name: seva
+            in: body
+            description: The  service request.
+            required: true
+            schema:
+              $ref: '#/definitions/ServiceGroupReq'
+        tags:
+          - Category Type or Service Group Request
+        responses:
+          200:
+            description: An array of complaint type category
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/ServiceGroupRes'
+          '400':
+            description: tenantId is not present
+            schema:
+              $ref: '#/definitions/Error'
+              
+    /serviceGroup/{id}/_update:
+      post:
+        summary: Update complaint type category(or Service Group).
+        description: |
+         Update complaint type category(or Service Group).
+        parameters:
+          - name: seva
+            in: body
+            description: The  service request.
+            required: true
+            schema:
+              $ref: '#/definitions/ServiceGroupReq'
+          - name: id
+            in: path
+            description: service group or category type id.
+            required: true
+            type: number
+            format: int64
+        tags:
+          - Category Type or Service Group Request
+        responses:
+          200:
+            description: An array of complaint type category
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/ServiceGroupRes'
+          '400':
+            description: tenantId is not present
+            schema:
+              $ref: '#/definitions/Error'  
+              
+     # receiving mode API
+    /receivingmode/_create:
+      post:
+        summary: creates receiving mode
+        description: receiving mode
+        tags:
+          - receiving mode
+        parameters:
+          - name: Receiving Mode
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/ReceivingModeTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/ReceivingModeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /receivingmode/_update:
+      post:
+        summary: update receiving mode
+        description: receiving node
+        tags:
+          - Receiving Mode
+        parameters:
+          - name: Receiving Mode
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/ReceivingModeTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/ReceivingModeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+
+    /receivingmode/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Receiving Mode
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/active"
+          - $ref: "#/parameters/visible"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/ReceivingModeTypeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    # receiving center API
+    /receivingcenter/_create:
+      post:
+        summary: creates receiving center
+        description: receiving center
+        tags:
+          - receiving center
+        parameters:
+          - name: Receiving Center
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/ReceivingCenterTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/ReceivingCenterTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+   # receiving center API
+    /receivingcenter/_update:
+      post:
+        summary: creates receiving center
+        description: receiving center
+        tags:
+          - receiving center
+        parameters:
+          - name: Receiving Center
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/ReceivingCenterTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/ReceivingCenterTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /receivingcenter/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Receiving Mode
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/active"
+          - $ref: "#/parameters/visible"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/ReceivingCenterTypeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    # Bulk Router Type API
+    /router/_create:
+      post:
+        summary: creates router
+        description: router
+        tags:
+          - router
+        parameters:
+          - name: router
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/RouterTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/RouterTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+   # Bulk Router Type API
+    /router/_update:
+      post:
+        summary: updates router
+        description: updates router
+        tags:
+          - updates router
+        parameters:
+          - name: Router
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/RouterTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/RouterTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /router/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Router
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/boundaryid"
+          - $ref: "#/parameters/service"
+          - $ref: "#/parameters/positionid"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/RouterTypeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+     # Escalation Time Type API
+    /escalation/_create:
+      post:
+        summary: creates escalation time type
+        description: escalation time type
+        tags:
+          - escalation time
+        parameters:
+          - name: escalation time
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/EscalationTimeTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/EscalationTimeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+   # Escalation Time Type API
+    /escalation/_update:
+      post:
+        summary: updates escalation time type
+        description: updates escalation time type
+        tags:
+          - update escalation
+        parameters:
+          - name: Update Escalation
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/EscalationTimeTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/EscalationTimeTypeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /escalation/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Escalation Time Search
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/designationid"
+          - $ref: "#/parameters/service"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/EscalationTimeTypeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    
+parameters:
+    id:
+      name: id
+      in: query
+      description: unique identifier of object
+      required: false
+      type: integer
+      format: int64
+
+    code:
+      name: code
+      in: query
+      description: human reabable code
+      required: false
+      type: string
+      minLength: 0
+      maxLength: 64
+      
+    name:
+      name: name
+      in: query
+      description: human reabable name
+      required: false
+      type: string
+      minLength: 0
+      maxLength: 100
+      
+    service:
+      name: serviceid
+      in: query
+      type: number
+      description: fetch category based on the grievance.
+    
+    boundaryid:
+      name: boundaryid
+      in: query
+      type: number
+      description: fetch the boundary by boundary id. 
+   
+    designationid:
+      name: designationid
+      in: query
+      type: number
+      description: fetch the designation by position id. 
+      
+    positionid:
+      name: designationid
+      in: query
+      type: number
+      description: fetch the designation by position id.     
+    
+    active:
+      name: active
+      in: query
+      type: boolean
+      description: flag for checking whether it is active
+      
+    visible:
+      name: visible
+      in: query
+      type: boolean
+      description: flag for checking whether it is visible 
+          
+################################################################################
+#                                 Definitions                                  #
+# All Definitions will start with Upper Case and will follow camel case        #
+#
+#
+################################################################################
+definitions:
+  Service:
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: The unique identifier for Service
+      serviceCode:
+        type: string
+        description: The unique identifier for Service
+      serviceName:
+        type: string
+        description: Service name.
+      description:
+        type: string
+        description: Services description.
+      metadata:
+        type: boolean
+        description: Whether service meta data is present
+      type:
+        type: string
+        description: realtime (Currently we only support real time srevices)
+      keywords:
+        type: string
+        description: tags for this service
+      group:
+        type: string
+        description: Group associated to service
+      attributes:
+        type: array
+        items:
+          $ref: '#/definitions/Attribute'
+    required:
+      - tenantId
+      - serviceCode
+      - serviceName
+  Value:
+    type: object
+    properties:
+      key:
+        type: string
+        description:
+          The unique identifier associated with an option for singlevaluelist or
+          multivaluelist.
+      name:
+        type: string
+        description:
+          The human readable title of an option for singlevaluelist or
+          multivaluelist.
+
+  Attribute:
+    type: object
+    properties:
+      variable:
+        type: boolean
+        description: Denotes whether user input is required or not
+      code:
+        type: string
+        description: A unique identifier for the attribute
+      datatype:
+        type: string
+        description: Denotes the type of field used for user input.
+      required:
+        type: boolean
+        description: Indicates if input from user is required.
+      datatypeDescription:
+        type: string
+        description: A description of the datatype which helps the user provide their input
+      attribValues:
+        type: array
+        items:
+            $ref: '#/definitions/Value'
+    required:
+      - code
+
+  Seva:
+    type: object
+    description: Service request raised by the citizen also called Seva in eGov platform
+    required:
+      - tenantId
+      - serviceCode
+      - description
+      - phone
+
+    properties:
+      tenantId:
+        type: string
+        readOnly: true
+        description: The unique ID of the service request created.
+      serviceRequestId:
+        type: string
+        readOnly: true
+        description: The unique ID of the service request created.
+      status:
+        type: boolean
+        description: The current status of the service request.
+      statusNotes:
+        type: string
+        description:
+          Explanation of why status was changed to current state or more details
+          on current status than conveyed with status alone.
+      serviceName:
+        type: string
+        description: The human readable name of the service request type.
+      serviceCode:
+        type: string
+        description: The unique identifier for the service request type.
+      description:
+        type: string
+        description: A full description of the request or report submitted.
+      agencyResponsible:
+        type: string
+        description:
+          The agency responsible for fulfilling or otherwise addressing the
+          service request.
+      serviceNotice:
+        type: string
+        description:
+          Information about the action expected to fulfill the request or
+          otherwise address the information reported.
+      requestedDatetime:
+        type: string
+        description: The date and time when the service request was made.
+      updatedDatetime:
+        type: string
+        description:
+          The date and time when the service request was last modified. For
+          requests with status=closed, this will be the date the request was
+          closed.
+      expectedDatetime:
+        type: string
+        description:
+          The date and time when the service request can be expected to be
+          fulfilled. This may be based on a service-specific service level
+          agreement.
+      address:
+        type: string
+        description: Human readable address or description of location.
+      addressId:
+        type: string
+        description:
+          The internal address ID used by a jurisdictions master address
+          repository or other addressing system.
+      zipcode:
+        type: integer
+        description: The postal code for the location of the service request.
+      lat:
+        type: integer
+        description: Latitude of the location.
+      long:
+        type: integer
+        description: Longitude of location.
+      mediaUrl:
+        description: 'A set of URL''s to media associated with the request, eg an image or video.'
+        type: array
+        items:
+          $ref: '#/definitions/Media'
+      firstName:
+        type: string
+        description: The given name of the person submitting the request.
+      lastName:
+        type: string
+        description: The family name of the person submitting the request.
+      phone:
+        type: string
+        description: The phone number of the person submitting the request.
+      email:
+        type: string
+        description: The email address of the person submitting the request.
+      deviceId:
+        type: string
+        description:
+          The unique device ID of the device submitting the request. This is
+          usually only used for mobile devices.
+      attribValues:
+        description:
+          Below is a list of possible keys and description of what they represent within Seva Request.
+          **locationId:string --location id based on cross hierarchy id or lat/lng,
+          **childLocationId:string--child location id based on cross hierarchy id,
+          **locationName :string--name of the location,
+          **assignmentId:string--Id of the assignee,
+          **stateId:string--workflow id,
+          **receivingMode:string--Originating channel for the request. Mobile, Desktop etc..,
+          **userId:string--user id of the complainant. This can be different than logged in user,
+          **receivingCenter:string--specify receiving-center when officials/employees register complaint on behalf of citizens,
+          **complainantAddress:string--address of complainant in case of anonymous user,
+          **startRating:integer--Feedback rating given by citizens,
+          **complaintStatus:string--Status of the complaint like REGISTERED,FORWARDED,COMPLETED etc.,
+          **escalationDate( date)--Escalation date for the complaint that will be used by indexing
+        type: array
+        items:
+          $ref: '#/definitions/Value'
+  ServiceReq:
+    properties:
+      requestInfo:
+        allOf:
+          - $ref: '#/definitions/RequestInfo'
+      service:
+        $ref: '#/definitions/Service'
+    type: object
+    
+  ServiceRes:
+    properties:
+      resposneInfo:
+       allOf:
+        - $ref: '#/definitions/ResponseInfo'
+      services:
+        type: array
+        items:
+          $ref: '#/definitions/Service'
+    type: object
+  SevaRequest:
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      seva:
+        $ref: '#/definitions/Seva'
+    type: object
+  SevaResponse:
+    properties:
+      resposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      seva:
+        type: array
+        items:
+          $ref: '#/definitions/Seva'
+    type: object
+
+  ErrorRes:
+    properties:
+      resposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      error:
+        $ref: '#/definitions/Error'
+    type: object
+  RequestInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description:
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msgId:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requesterId:
+        type: string
+        description: UserId of the user calling
+      authToken:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - apiId
+      - ver
+      - ts
+  ResponseInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      resMsgId:
+        type: string
+        description: unique response message id (UUID)
+      msgId:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - apiId
+      - ver
+      - ts
+      - status
+  ServiceGroup:
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: unique tenatId or ulbid
+      name:
+        type: string
+        description: Category name of Complaint Type or Service Group.
+      description:
+        type: string
+        description: Category of Complaint type or Service Group.
+  
+  ServiceGroupReq:
+    type: object 
+    properties:
+      requestInfo:
+        $ref: '#/definitions/RequestInfo'
+      serviceGroup:
+        $ref: '#/definitions/ServiceGroup'
+        
+  ServiceGroupRes:
+    type: object 
+    properties:
+      requestInfo:
+        $ref: '#/definitions/ResponseInfo'
+      serviceGroups:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceGroup'
+  Media:
+    type: object
+    properties:
+      url:
+        type: string
+       
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+      
+   #Receiving Code Definitions
+  ReceivingModeTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        receivingmode:
+          $ref: '#/definitions/ReceivingModeType'
+      required:
+        - RequestInfo
+        - receivingmode
+    
+  ReceivingModeTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        ReceivingModeTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/ReceivingModeType'
+            
+  ReceivingModeType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          type: string
+          description: unique code this can be assigned by user.
+          maxLength: 64
+        name: 
+          type: string
+          description: human readable name should be assigned by user.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+        visible:
+          type: boolean
+          description: flag for visibility 
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - name
+        - tenantId
+        
+  #Receiving Code Definitions
+  ReceivingCenterTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        receivingcenter:
+          $ref: '#/definitions/ReceivingCenterType'
+      required:
+        - RequestInfo
+        - receivingcenter
+    
+  ReceivingCenterTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        ReceivingCenterTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/ReceivingCenterType'
+            
+  ReceivingCenterType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          type: string
+          description: unique code this can be assigned by user.
+          maxLength: 64
+        name: 
+          type: string
+          description: human readable name should be assigned by user.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+        visible:
+          type: boolean
+          description: flag for visibility 
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - name
+        - tenantId  
+        
+    #Bulk Router Definitions
+  RouterTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        routertype:
+          $ref: '#/definitions/RouterType'
+      required:
+        - RequestInfo
+        - routertype
+    
+  RouterTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        RouterTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/RouterType'
+            
+  RouterType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        grievancetype:
+          type: array
+          items:
+           $ref: '#/definitions/Service'
+        boundary:
+          type: array
+          items:
+           $ref: "#/definitions/BoundaryIdType"
+        position: 
+          type: integer
+          description: position id.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - grievancetype
+        - boundary
+        - position
+        - tenantId    
+    
+
+        
+  BoundaryIdType:
+      type: object
+      properties:
+        boundarytype:
+          type: integer
+          description: boundary id.  
+    
+    
+    #Escalation Time Definitions
+  EscalationTimeTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        escalationtimetype:
+          $ref: '#/definitions/EscalationTimeType'
+      required:
+        - RequestInfo
+        - escalationtimetype
+    
+  EscalationTimeTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        EscalationTimeType:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/EscalationTimeType'
+            
+  EscalationTimeType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        grievancetype:
+          $ref: '#/definitions/Service'
+        noofhours: 
+          type: integer
+          description: no of hours for the complaint id.
+        designation: 
+          type: integer
+          description: designation id.
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - grievancetype
+        - noofhours
+        - designation
+        - tenantId      
+    
+
+              

@@ -37,54 +37,20 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.repository;
+package org.egov.pgr.repository.rowmapper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import org.egov.pgr.repository.builder.RouterQueryBuilder;
-import org.egov.pgr.repository.rowmapper.RouterRowMapper;
 import org.egov.pgr.web.contract.RouterType;
-import org.egov.pgr.web.contract.RouterTypeGetReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@Repository
-public class RouterRepository {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(RouterRepository.class);
-
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired private RouterQueryBuilder routerQueryBuilder;
-	
-	@Autowired private RouterRowMapper routerRowMapper;
-	
-	/*public ServiceGroupRequest createRouter(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getId(), serviceGroup.getName(), serviceGroup.getDescription(),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId() };
-		jdbcTemplate.update(serviceGroupInsert, obj);
-		return serviceGroupRequest;
-	}*/
-	
-	public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = routerQueryBuilder.getRouterDetail();
-        final List<RouterType> routerTypes = jdbcTemplate.query(queryStr, routerRowMapper);
-        return routerTypes;
-    }
-	
-	
-	
+@Component
+public class RouterRowMapper implements RowMapper<RouterType> {
+	 @Override
+	    public RouterType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+	        return new RouterType();
+	    }
 
 }

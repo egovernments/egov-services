@@ -41,9 +41,13 @@
 package org.egov.pgr.repository;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.pgr.model.EscalationTimeType;
 import org.egov.pgr.repository.builder.EscalationTimeTypeQueryBuilder;
+import org.egov.pgr.repository.rowmapper.EscalationTimeTypeRowMapper;
+import org.egov.pgr.web.contract.EscalationTimeTypeGetReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +58,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class EscalationTimeTypeRepository {
 	
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(EscalationTimeTypeRepository.class);
 
 	@Autowired
@@ -61,6 +66,10 @@ public class EscalationTimeTypeRepository {
 	
 	@Autowired
 	private EscalationTimeTypeQueryBuilder escalationTimeTypeQueryBuilder;
+
+	@Autowired
+	private EscalationTimeTypeRowMapper escalationRowMapper;
+
 
 	public EscalationTimeTypeReq persistCreateEscalationTimeType(final EscalationTimeTypeReq escalationTimeTypeRequest) {
 		LOGGER.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
@@ -73,6 +82,15 @@ public class EscalationTimeTypeRepository {
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
 		jdbcTemplate.update(escalationTimeTypeInsert, obj);
 		return escalationTimeTypeRequest;
+	}
+	
+	public List<EscalationTimeType> getAllEscalationTimeTypes(final EscalationTimeTypeGetReq escalationGetRequest) {
+		LOGGER.info("EscalationTimeType search Request::" + escalationGetRequest);
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final String queryStr = escalationTimeTypeQueryBuilder.getQuery(escalationGetRequest, preparedStatementValues);
+		final List<EscalationTimeType> escalationTypes = jdbcTemplate.query(queryStr,
+				preparedStatementValues.toArray(), escalationRowMapper);
+		return escalationTypes;
 	}
 
 	public EscalationTimeTypeReq persistUpdateEscalationTimeType(final EscalationTimeTypeReq escalationTimeTypeRequest) {

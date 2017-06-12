@@ -40,9 +40,12 @@
 
 package org.egov.pgr.service;
 
+import java.util.List;
+
 import org.egov.pgr.model.EscalationTimeType;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.EscalationTimeTypeRepository;
+import org.egov.pgr.web.contract.EscalationTimeTypeGetReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +62,10 @@ public class EscalationTimeTypeService {
 
 	@Autowired
 	private EscalationTimeTypeRepository escalationTimeTypeRepository;
+	
+	
+	@Autowired
+	private EscalationTimeTypeRepository escalationRepository;
 
 	@Autowired
 	private PGRProducer pgrProducer;
@@ -88,6 +95,11 @@ public class EscalationTimeTypeService {
 		logger.info("Persisting service group record");
 		return escalationTimeTypeRepository.persistCreateEscalationTimeType(escalationTimeTypeReq);
 	}
+    public List<EscalationTimeType> getAllEscalationTimeTypes(final EscalationTimeTypeGetReq escalationGetRequest) {
+        return escalationRepository.getAllEscalationTimeTypes(escalationGetRequest);
+
+    }
+	
 	
 	public EscalationTimeType updateEscalationTimeType(final String topic, final String key,
 			final EscalationTimeTypeReq escalationTimeTypeReq) {

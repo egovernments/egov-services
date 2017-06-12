@@ -1,13 +1,16 @@
 package org.egov.demand.model;
 
 import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-/**
- * Holds the head wise break up of the dues.
- */
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BillDetailInfo   {
+	
   @JsonProperty("billId")
   private Long billId = null;
 
@@ -40,6 +43,5 @@ public class BillDetailInfo   {
 
   @JsonProperty("isActualDemand")
   private BigDecimal isActualDemand = null;
-
 }
 

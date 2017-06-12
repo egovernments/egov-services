@@ -64,7 +64,7 @@ public class RouterTypeRes {
 	@JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("RouterTypes")
+    @JsonProperty("RouterTypRes")
     private List<RouterType> routerTypes= new ArrayList<>();
 
 }

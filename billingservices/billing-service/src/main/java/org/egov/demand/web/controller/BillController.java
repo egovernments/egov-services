@@ -1,17 +1,13 @@
-package org.egov.bill.web.controller;
+package org.egov.demand.web.controller;
 
-import org.egov.bill.model.BillInfo;
-import org.egov.common.contract.response.ErrorResponse;
-import org.egov.common.contract.response.ResponseInfo;
-import org.springframework.http.HttpStatus;
+import org.egov.demand.model.BillInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public class BillController {
 	
-	private Bill 
+
 	
 	public ResponseEntity<?> create(@RequestBody BillInfo billInfo, BindingResult bindingResult){
 		

@@ -157,12 +157,12 @@
                                         <exclude>org.egov.domain.model.NotificationContext</exclude>
                                         <exclude>org.egov.domain.exception.TenantDoesNotExistException</exclude>
                                         <exclude>org.egov.domain.service.SMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintCitizenSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UndefinedSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UndefinedEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.NewDeliverableSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.NewDeliverableCitizenSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusCitizenSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredCitizenSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UpdateDeliverableStatusEmailMessageStrategy</exclude>

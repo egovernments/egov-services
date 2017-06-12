@@ -95,6 +95,22 @@ class SearchAsset extends React.Component {
   }
 }
 
+componentWillMount (){
+
+
+  var count = 1, _this = this, _state = {};
+  var checkCountNCall = function(key, res) {
+    count--;
+    _state[key] = res;
+    if(count == 0)
+      _this.setInitialState(_state);
+  }
+  getDropdown("locality", function(res) {
+    console.log("location",res);
+    checkCountNCall("localityList", res);
+  });
+
+}
   componentWillUpdate() {
     if(flag == 1) {
       flag = 0;
@@ -133,10 +149,7 @@ class SearchAsset extends React.Component {
         _this.setInitialState(_state);
     }
 
-    getDropdown("locality", function(res) {
 
-      checkCountNCall("localityList", res);
-    });
 
     console.log(this.state.localityList);
     getDropdown("assetCategories", function(res) {

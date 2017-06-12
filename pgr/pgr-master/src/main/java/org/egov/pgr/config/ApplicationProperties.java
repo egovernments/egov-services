@@ -94,6 +94,11 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicetype.create.key}")
     private String createServiceTypeTopicKey;
     
+    @Value("${kafka.topics.servicetype.update.key}")
+    private String updateServiceTypeTopickey; 
+    
+    @Value("${kafka.topics.servicetype.update.name}")
+    private String updateServiceTypeTopicName;
 
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
@@ -149,6 +154,13 @@ public class ApplicationProperties {
 		return updateServiceGroupTopicKey;
 	}
 	
+	public String getUpdateServiceTypeTopicName(){
+		return updateServiceTypeTopicName;
+	}
+	
+	public String getUpdateServiceTypeTopicKey(){
+		return updateServiceTypeTopickey;
+	}
 
 
 }

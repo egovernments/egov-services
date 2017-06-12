@@ -122,14 +122,17 @@ public class GrievanceTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Service Request::" + serviceTypeRequest);
-
+        logger.info("Service Request::" + serviceTypeRequest);	
+        if(code==null || code.equals("")){
+        	final ErrorResponse errRes = populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        serviceTypeRequest.getService().setServiceCode(code);
         final List<ErrorResponse> errorResponses = validateCategoryRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final ServiceType service = serviceTypeService.updateServices("",
-                "category-update", serviceTypeRequest);
+        final ServiceType service = serviceTypeService.updateServices(applicationProperties.getUpdateServiceTypeTopicName(),applicationProperties.getUpdateServiceTypeTopicKey(), serviceTypeRequest);
         final List<ServiceType> services = new ArrayList<>();
         services.add(service);
         return getSuccessResponse(services, serviceTypeRequest.getRequestInfo());

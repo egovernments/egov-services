@@ -57,6 +57,12 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.servicegroup.create.key}")
     private String createServiceGroupTopicKey;
+    
+    @Value("${kafka.topics.router.create.name}")
+    private String createRouterTopicName;
+    
+    @Value("${kafka.topics.router.create.key}")
+    private String createRouterTopicKey;
 
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
@@ -64,6 +70,13 @@ public class ApplicationProperties {
 
 	public String getCreateServiceGroupTopicName() {
 		return createServiceGroupTopicName;
+	}
+	public String getCreateRouterTopicKey() {
+		return createRouterTopicKey;
+	}
+
+	public String getCreateRouterTopicName() {
+		return createRouterTopicName;
 	}
 
 

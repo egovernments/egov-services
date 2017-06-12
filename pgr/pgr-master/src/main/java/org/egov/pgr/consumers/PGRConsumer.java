@@ -45,7 +45,9 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.service.RouterService;
 import org.egov.pgr.service.ServiceGroupService;
+import org.egov.pgr.web.contract.RouterReq;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,10 +67,13 @@ public class PGRConsumer {
     private ServiceGroupService serviceGroupService;
     
     @Autowired
+    private RouterService routerService;
+    
+    @Autowired
     private ApplicationProperties applicationProperties;
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", 
-    		topics = { "${kafka.topics.servicegroup.create.name}" })
+    		topics = { "${kafka.topics.servicegroup.create.name}","${kafka.topics.router.create.name}" })
 
     public void listen(final ConsumerRecord<String, String> record) {
     	LOGGER.info("RECORD: "+record.toString());
@@ -80,6 +85,11 @@ public class PGRConsumer {
         	if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())){
         		LOGGER.info("Consuming create Category request");
                 serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+        	}
+        	if (record.topic().equals(applicationProperties.getCreateRouterTopicName())){
+        		LOGGER.info("Consuming create Router request");
+        		
+        		routerService.create(objectMapper.readValue(record.value(), RouterReq.class));
         	}
         } catch (final IOException e) {
             e.printStackTrace();

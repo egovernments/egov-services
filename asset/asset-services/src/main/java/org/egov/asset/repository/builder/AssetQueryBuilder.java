@@ -101,7 +101,7 @@ public class AssetQueryBuilder {
 
 		if (searchAsset.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.name like ?");
+			selectQuery.append(" ASSET.name ilike ?");
 			preparedStatementValues.add("%" + searchAsset.getName() + "%");
 		}
 

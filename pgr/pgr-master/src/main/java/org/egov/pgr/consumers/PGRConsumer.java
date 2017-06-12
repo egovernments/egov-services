@@ -46,9 +46,9 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
 
-import org.egov.pgr.service.RouterService;
+/*import org.egov.pgr.service.RouterService;*/
 import org.egov.pgr.service.ServiceGroupService;
-import org.egov.pgr.web.contract.RouterReq;
+/*import org.egov.pgr.web.contract.RouterReq;*/
 
 import org.egov.pgr.service.ReceivingCenterTypeService;
 import org.egov.pgr.service.ReceivingModeTypeService;
@@ -77,16 +77,10 @@ public class PGRConsumer {
     @Autowired
     private ServiceGroupService serviceGroupService;
     
-    @Autowired
-    private RouterService routerService;
+   /* @Autowired
+    private RouterService routerService;*/
     
     @Autowired
-    private ApplicationProperties applicationProperties;
-    
-    @Autowired
-	private ServiceGroupService serviceGroupService;
-
-	@Autowired
 	private ReceivingCenterTypeService receivingCenterTypeService;
 
 	@Autowired
@@ -98,46 +92,7 @@ public class PGRConsumer {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", 
-    		topics = { "${kafka.topics.servicegroup.create.name}","${kafka.topics.router.create.name}" })
-
-    public void listen(final ConsumerRecord<String, String> record) {
-    	LOGGER.info("RECORD: "+record.toString());
-       LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
-        final ObjectMapper objectMapper = new ObjectMapper();
-        
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        try {
-        	if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())){
-        		LOGGER.info("Consuming create Category request");
-                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
-        	}
-        	if (record.topic().equals(applicationProperties.getCreateRouterTopicName())){
-        		LOGGER.info("Consuming create Router request");
-        		
-        		routerService.create(objectMapper.readValue(record.value(), RouterReq.class));
-        	}
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-    }
-=======
-	@Autowired
-	private ServiceGroupService serviceGroupService;
-
-	@Autowired
-	private ReceivingCenterTypeService receivingCenterTypeService;
-
-	@Autowired
-	private ReceivingModeTypeService receivingModeTypeService;
-	
-	@Autowired
-	private ServiceTypeService serviceTypeService;
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
+   	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
 			"${kafka.topics.receivingmode.create.name}", "${kafka.topics.receivingcenter.update.name}",
 			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicetype.create.name}", 
@@ -173,10 +128,18 @@ public class PGRConsumer {
 			} else if(record.topic().equals(applicationProperties.getUpdateServiceTypeTopicName())) {
 				LOGGER.info("Consuming update ServiceType request");
 				serviceTypeService.update(objectMapper.readValue(record.value(), ServiceRequest.class));
+			} else if(record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())){
+	        		LOGGER.info("Consuming create Category request");
+	                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+	        }
+			else if (record.topic().equals(applicationProperties.getCreateRouterTopicName())){
+	        		LOGGER.info("Consuming create Router request");
+	        		
+	        		//routerService.create(objectMapper.readValue(record.value(), RouterReq.class));
+	        	}
 			}
-		} catch (final IOException e) {
+		 catch (final IOException e) {
 			e.printStackTrace();
 		}
-	}
->>>>>>> master
-}
+		}}
+

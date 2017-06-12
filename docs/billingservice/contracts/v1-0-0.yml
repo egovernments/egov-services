@@ -628,6 +628,41 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
+  /bill/_apportion:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Amount will be apportioned based on whether apportioning is required or not for the business service. Billing service will query the BusinessServiceDetails to fetch the required details
+  ######################################################
+    post:
+      summary: Apportion Paid Amount.
+      description: This API is used to apportion the paid amount. 
+      parameters:
+        - name: billInfo
+          in: body
+          description: Request to update the demand details with the receipt info.
+          required: true
+          schema:
+            $ref: '#/definitions/BillRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Bill  
+      responses:
+        '200':
+          description: Paid Amount Apportioned successfully.
+          schema:
+            $ref: '#/definitions/BillResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
 definitions:
   Demand:
     type: object
@@ -664,6 +699,10 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 4
+      minimumAmountPayable:
+        type: number
+        format: double
+        description: Minimum bill amount to be paid.
     required:
       - installment
       - demandDetails
@@ -728,7 +767,7 @@ definitions:
         maxLength: 64
         minLength: 2
       category:
-        description: Category of tax like tax, fee, rebate, penlaty etc.
+        description: Category of tax like tax, fee, rebate, penalty etc.
         enum:
           - TAX
           - FEE
@@ -748,6 +787,9 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 4
+      isActualDemand:
+        type: boolean
+        description: true for tax/charges/penalty, false for advances(if any).
     required:
       - name
       - category
@@ -861,8 +903,16 @@ definitions:
       status:
         type: string
         description: receipt status
-      demand:
-        $ref: '#/definitions/Demand'
+        enum:
+          - CREATED
+          - CANCELLED
+          - INSTRUMENT_BOUNCED
+      businessService:
+        type: string
+        description: BusinessService code.
+      consumerCode:
+        type: string
+        description: Consumer code of the entity for which the bill is being created.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       tenantId:
@@ -1063,6 +1113,9 @@ definitions:
       callBackForApportioning:
         type: boolean
         description: true if call back for apportioning is required, false if call back for apportioning is not required.
+      partPaymentAllowed:
+        type: boolean
+        description: true if part payment allowed, false if part payment is not allowed.
       billAccountDetails:
         type: array
         items:
@@ -1118,20 +1171,28 @@ definitions:
     required:
       - glcode
       - accountDescription
-    
-  Error:
+      
+  BusinessServiceDetails:
     type: object
+    description: The object holds the configuration details for each business service.
     properties:
-      code:
-        type: integer
-        format: int32
-      message:
+      businessService:
         type: string
-      description:
-        type: string
-      filelds:
-        type: object
-    required:
-      - code
-      - message
+        description: BusinessService code.
+      minimumAmountPayable:
+        type: number
+        format: double
+        description: Minimum bill amount to be paid.
+      collectionModesNotAllowed:
+        type: array
+        items: 
+          type: string
+        description: List of collection modes not allowed.
+      callBackForApportioning:
+        type: boolean
+        description: true if call back for apportioning is required, false if call back for apportioning is not required.
+      partPaymentAllowed:
+        type: boolean
+        description: true if part payment allowed, false if part payment is not allowed.
+    
 

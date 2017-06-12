@@ -18,4 +18,7 @@ public class SevaRequest {
 
     private ServiceRequest serviceRequest;
 
+	public void markEscalated() {
+		serviceRequest.setEscalatedFlag();
+	}
 }

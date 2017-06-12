@@ -27,26 +27,26 @@ public class SMSService {
     }
 
     public void send(NotificationContext context) {
-        final List<SMSRequest> smsRequests = getSMSRequest(context);
+        final List<SMSRequest> smsRequests = getSMSRequests(context);
         smsRequests.forEach(smsRequest -> messageQueueRepository.sendSMS(smsRequest));
     }
 
-    private List<SMSRequest> getSMSRequest(NotificationContext context) {
-        final List<SMSMessageStrategy> strategyList = getSmsMessageStrategy(context);
+    private List<SMSRequest> getSMSRequests(NotificationContext context) {
+        final List<SMSMessageStrategy> strategyList = getSmsMessageStrategies(context);
         return strategyList.stream()
-            .map(strategy -> getSMSRequest(context, strategy))
+            .map(strategy -> getSMSRequests(context, strategy))
             .collect(Collectors.toList());
     }
 
-    private SMSRequest getSMSRequest(NotificationContext notificationContext,
-                                     SMSMessageStrategy strategy) {
+    private SMSRequest getSMSRequests(NotificationContext notificationContext,
+                                      SMSMessageStrategy strategy) {
         final SMSMessageContext messageContext = strategy.getMessageContext(notificationContext);
         final String smsMessage = templateService
             .loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
         return new SMSRequest(smsMessage, messageContext.getMobileNumber());
     }
 
-    private List<SMSMessageStrategy> getSmsMessageStrategy(NotificationContext context) {
+    private List<SMSMessageStrategy> getSmsMessageStrategies(NotificationContext context) {
         final List<SMSMessageStrategy> strategyList = messageStrategyList.stream()
             .filter(strategy -> strategy.matches(context))
             .collect(Collectors.toList());

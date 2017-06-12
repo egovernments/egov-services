@@ -22,6 +22,7 @@ import static org.egov.pgr.common.contract.AttributeValues.createOrUpdateAttribu
 public class ServiceRequest {
 
 	public static final String VALUES_ASSIGNEE_ID = "assignmentId";
+	public static final String VALUES_ESCALATED_FLAG = "isEscalated";
 	public static final String VALUES_STATE_ID = "stateId";
 	public static final String STATE_DETAILS = "stateDetails";
 	private static final String WORKFLOW_TYPE = "Complaint";
@@ -33,6 +34,7 @@ public class ServiceRequest {
 	private static final String VALUES_DESIGNATION_ID = "designationId";
 	private static final String VALUES_DEPARTMENT_ID = "departmentId";
 	private static final String ESCALATION_HOURS = "escalationHours";
+	private static final String TRUE = "true";
 
 	private String tenantId;
 
@@ -126,6 +128,14 @@ public class ServiceRequest {
 
 	public void setAssigneeId(String assigneeId) {
 		createOrUpdateAttributeEntry(attribValues, VALUES_ASSIGNEE_ID, assigneeId);
+	}
+
+	public void setEscalatedFlag() {
+		createOrUpdateAttributeEntry(attribValues, VALUES_ESCALATED_FLAG, TRUE);
+	}
+
+	public boolean isEscalated() {
+		return TRUE.equals(getDynamicSingleValue(VALUES_ESCALATED_FLAG));
 	}
 
 	public void setDesignation(String designationId) {

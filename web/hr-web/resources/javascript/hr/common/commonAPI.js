@@ -579,3 +579,7 @@ function getDropdown(name, cb, params) {
             break;
     }
 }
+
+function getTimestamp() {
+    return new Date().getTime();
+}

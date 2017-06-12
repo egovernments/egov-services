@@ -14,7 +14,7 @@ class SearchLeaveApplication extends React.Component {
       },isSearchClicked:false,
         assignments_department:[],
         assignments_designation:[],
-        employeeType:[]
+        employeeType:[],
         modified: false
     }
     this.handleChange=this.handleChange.bind(this);
@@ -30,11 +30,12 @@ class SearchLeaveApplication extends React.Component {
   }
 
   search(e) {
+    var _this = this;
     let {
     name,
     code,
     departmentId,
-    designationId}=this.state.searchSet;
+    designationId}=_this.state.searchSet;
     e.preventDefault();
     var employees=[];
     commonApiPost("hr-employee","employees","_search",{...this.state.searchSet, tenantId,
@@ -45,7 +46,7 @@ class SearchLeaveApplication extends React.Component {
         if(res){
           employees=res["Employee"];
           flag = 1;
-          this.setState({
+          _this.setState({
             isSearchClicked:true,
             employees,
             modified: true

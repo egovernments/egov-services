@@ -20,6 +20,7 @@ import org.egov.workflow.persistence.entity.State.StateStatus;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.WorkFlowMatrix;
 import org.egov.workflow.persistence.entity.WorkflowTypes;
+import org.egov.workflow.persistence.repository.AssignmentRepository;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
 import org.egov.workflow.persistence.repository.PositionRepository;
 import org.egov.workflow.persistence.repository.UserRepository;
@@ -50,32 +51,35 @@ import org.springframework.stereotype.Service;
 public class WorkflowMatrixImpl implements Workflow {
 
 	private static Logger LOG = LoggerFactory.getLogger(WorkflowMatrixImpl.class);
-	// private List<Object> approverList;
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	// @Autowired
-	// private UserRepository userRepository;
+
 	@Autowired
 	private StateService stateService;
+
 	@Autowired
 	private WorkFlowMatrixService workflowService;
 
 	@Autowired
 	private WorkflowTypesService workflowTypeService;
+
 	@Autowired
 	private PositionRepository positionRepository;
-	
+
+	@Autowired
+	private AssignmentRepository assignmentRepository;
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Transactional
 	@Override
 	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
-		LOG.info("ProcessInstance Request Payload"+processInstanceRequest.toString());
+		LOG.info("ProcessInstance Request Payload" + processInstanceRequest.toString());
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
-				null, null,processInstance.getTenantId());
+				null, null, processInstance.getTenantId());
 		Position owner = processInstance.getAssignee();
 		if (processInstance.getAssignee() != null && processInstance.getAssignee().getId() != null)
 			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()),
@@ -96,13 +100,13 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 
 		RequestInfo requestInfo = processInstanceRequest.getRequestInfo();
-                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
+		UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
 
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
 		else {
-			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(userResponse.getUsers().get(0).getId(),
-					requestInfo);
+			Position initiator = positionRepository
+					.getPrimaryPositionByEmployeeId(userResponse.getUsers().get(0).getId(), requestInfo);
 			if (initiator != null && initiator.getId() != null)
 				state.setInitiatorPosition(initiator.getId());
 		}
@@ -173,7 +177,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (task.getAttributes() != null && task.getAttributes().get("department") != null)
 			dept = task.getAttributes().get("department").getCode();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null,
-				task.getStatus(), null,task.getTenantId());
+				task.getStatus(), null, task.getTenantId());
 
 		String nextState = wfMatrix.getNextState();
 		final State state = stateService.findOne(Long.valueOf(task.getId()));
@@ -248,11 +252,11 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (null != workflowBean && null != workflowBean.getWorkflowId())
 			wfMatrix = workflowService.getWfMatrix(workflowBean.getBusinessKey(), workflowBean.getWorkflowDepartment(),
 					workflowBean.getAmountRule(), workflowBean.getAdditionalRule(), workflowBean.getCurrentState(),
-					workflowBean.getPendingActions(), workflowBean.getCreatedDate(),workflowBean.getTenantId());
+					workflowBean.getPendingActions(), workflowBean.getCreatedDate(), workflowBean.getTenantId());
 		else
 			wfMatrix = workflowService.getWfMatrix(workflowBean.getBusinessKey(), workflowBean.getWorkflowDepartment(),
 					workflowBean.getAmountRule(), workflowBean.getAdditionalRule(), State.DEFAULT_STATE_VALUE_CREATED,
-					workflowBean.getPendingActions(), workflowBean.getCreatedDate(),workflowBean.getTenantId());
+					workflowBean.getPendingActions(), workflowBean.getCreatedDate(), workflowBean.getTenantId());
 		return wfMatrix == null ? "" : wfMatrix.getNextAction();
 	}
 
@@ -284,7 +288,8 @@ public class WorkflowMatrixImpl implements Workflow {
 	}
 
 	@Override
-	public ProcessInstance getProcess(final String jurisdiction, final ProcessInstance processInstance,final RequestInfo requestInfo) {
+	public ProcessInstance getProcess(final String jurisdiction, final ProcessInstance processInstance,
+			final RequestInfo requestInfo) {
 		LOG.debug("Starting getProcess for  " + processInstance.toString() + " for tenant" + jurisdiction);
 		final WorkflowBean wfbean = new WorkflowBean();
 		processInstance.setTenantId(jurisdiction);
@@ -334,14 +339,17 @@ public class WorkflowMatrixImpl implements Workflow {
 		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
 		final List<Task> tasks = new ArrayList<Task>();
 		RequestInfo requestInfo = taskRequest.getRequestInfo();
-                UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
+		UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
 		final Long userId = userResponse.getUsers().get(0).getId();
-		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,taskRequest.getRequestInfo().getUserInfo().getTenantId());
-		final List<Long> ownerIds = positionRepository.getByEmployeeId(userId.toString(), taskRequest.getRequestInfo())
-				.parallelStream().map(position -> position.getId()).collect(Collectors.toList());
+		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,
+				taskRequest.getRequestInfo().getUserInfo().getTenantId());
+		final List<Long> ownerIds = assignmentRepository
+				.getByEmployeeId(userId.toString(), taskRequest.getRequestInfo(), new Date()).parallelStream()
+				.map(assignment -> assignment.getPosition()).collect(Collectors.toList());
 		List<State> states = new ArrayList<State>();
 		if (!types.isEmpty())
-			states = stateService.getStates(ownerIds, types, userId,taskRequest.getRequestInfo().getUserInfo().getTenantId());
+			states = stateService.getStates(ownerIds, types, userId,
+					taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		for (final State s : states)
 			tasks.add(s.map());
 

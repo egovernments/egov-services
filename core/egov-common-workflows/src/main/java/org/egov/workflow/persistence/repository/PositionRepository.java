@@ -4,21 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.PositionResponse;
 import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import org.apache.log4j.Logger;
 
 @Service
 public class PositionRepository {
@@ -28,10 +22,7 @@ public class PositionRepository {
 	private final String positionsForEmployeeCodeUrl;
 	private final String primaryPositionsForEmployeeIdUrl;
 
-private static final Logger LOGGER = Logger.getLogger(PositionRepository.class);
-
-
-
+	private static final Logger LOGGER = Logger.getLogger(PositionRepository.class);
 
 	public PositionRepository(final RestTemplate restTemplate,
 			@Value("${egov.services.hr-employee.host}") final String hrEmployeeServiceHostname,
@@ -39,13 +30,13 @@ private static final Logger LOGGER = Logger.getLogger(PositionRepository.class);
 			@Value("${position_by_id}") final String positionsByIdUrl,
 			@Value("${position_by_employee_code}") final String positionsForEmployeeCodeUrl,
 			@Value("${position_by_employee}") final String primaryPositionsForEmployeeIdUrl,
-			@Value("${position_by_employee_id}") final String positionsForEmployeeIdUrl )
-			{
+			@Value("${position_by_employee_id}") final String positionsForEmployeeIdUrl) {
 		this.restTemplate = restTemplate;
 		this.positionsByIdUrl = hrServiceHostname + positionsByIdUrl;
 		this.positionsForEmployeeCodeUrl = hrEmployeeServiceHostname + positionsForEmployeeIdUrl;
 		this.primaryPositionsForEmployeeIdUrl = hrEmployeeServiceHostname + primaryPositionsForEmployeeIdUrl;
-		//positionsForEmployeeCodeUrl=hrEmployeeServiceHostname + primaryPositionsForEmployeeIdUrl;
+		// positionsForEmployeeCodeUrl=hrEmployeeServiceHostname +
+		// primaryPositionsForEmployeeIdUrl;
 
 	}
 
@@ -56,7 +47,7 @@ private static final Logger LOGGER = Logger.getLogger(PositionRepository.class);
 		if (requestInfo != null) {
 			requestInfoWrapper.setRequestInfo(requestInfo);
 			if (requestInfo.getUserInfo() != null)
-			    tenantId = requestInfo.getUserInfo().getTenantId();
+				tenantId = requestInfo.getUserInfo().getTenantId();
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 
@@ -101,25 +92,21 @@ private static final Logger LOGGER = Logger.getLogger(PositionRepository.class);
 			tenantId = requestInfo.getUserInfo().getTenantId();
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
-	PositionResponse positionResponse=null;
-try{
+		PositionResponse positionResponse = null;
+		try {
 
-	positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl+"?tenantId={tenantId}", requestInfoWrapper,
-				PositionResponse.class, id, tenantId);
-  } catch (HttpClientErrorException e) {
-            String errorResponseBody = e.getResponseBodyAsString();
-            LOGGER.info("Following exception occurred: " + e.getResponseBodyAsString());
-            e.printStackTrace();
-           
-        } catch (Exception e) {
-            LOGGER.error("Exception Occurred While Calling Position service Service : " + e.getMessage());
-            throw e;
-        }
+			positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl + "?tenantId={tenantId}",
+					requestInfoWrapper, PositionResponse.class, id, tenantId);
+		} catch (HttpClientErrorException e) {
+			LOGGER.info("Following exception occurred: " + e.getResponseBodyAsString());
+			e.printStackTrace();
+
+		} catch (Exception e) {
+			LOGGER.error("Exception Occurred While Calling Position service Service : " + e.getMessage());
+			throw e;
+		}
 
 		return positionResponse.getPosition();
 	}
 
-	
-	
-	
 }

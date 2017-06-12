@@ -83,6 +83,14 @@ class Sale extends React.Component {
         this.createDisposal = this.createDisposal.bind(this);
         this.handlePANValidation = this.handlePANValidation.bind(this);
         this.handleAadharValidation = this.handleAadharValidation.bind(this);
+        this.viewAssetDetails = this.viewAssetDetails.bind(this);
+    }
+
+    viewAssetDetails(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if(this.state.assetSet && this.state.assetSet.id)
+        window.open(`app/asset/create-asset.html?id=${this.state.assetSet.id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
     }
 
     setInitialState(initState) {
@@ -104,8 +112,18 @@ class Sale extends React.Component {
       };
 
       getCommonMasterById("asset-services", "assets", id, function(err, res) {
-          if(res) {
+          if(res && res["Assets"] && res["Assets"][0]) {
             checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
+            commonApiPost("asset-services", "assets", "currentValue/_search", {tenantId, assetId: res["Assets"][0].id}, function(er, res) {
+              if(res && res.AssetCurrentValue) {
+                _this.setState({
+                  disposal: {
+                    ..._this.state.disposal,
+                    currentValueOfTheAsset: res.AssetCurrentValue.currentAmmount
+                  }
+                })
+              }
+            });
           } else {
             console.log(err);
           }
@@ -250,7 +268,7 @@ class Sale extends React.Component {
     }
 
   	render() {
-      let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation} = this;
+      let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation, viewAssetDetails} = this;
       let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar} = this.state;
 
       const showOtherDetails = function() {
@@ -295,7 +313,7 @@ class Sale extends React.Component {
                     <h3 className="categoryType">Asset Details </h3>
                   </div>
                   <div className="col-md-4 col-sm-4 text-right">
-                      
+                      <button type="button" className="btn btn-submit" onClick={(e) => viewAssetDetails(e)}>View Details</button>
                   </div>
                 </div>
                 <div className="form-section-inner">
@@ -343,62 +361,6 @@ class Sale extends React.Component {
                         </div>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Asset Status </label>
-                            </div>
-                            <div className="col-sm-6 label-view-text">
-                              <label>{assetSet.status}</label>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Category Name </label>
-                            </div>
-                            <div className="col-sm-6 label-view-text">
-                              <label></label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label> Department </label>
-                            </div>
-                            <div className="col-sm-6 display-span">
-                              <span>{assetSet.department ? getNameById(departments, assetSet.department.id) : ""}</span>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Zone </label>
-                            </div>
-                            <div className="col-sm-6 display-span">
-                              <span>{assetSet.locationDetails ? getNameById(revenueZones, assetSet.locationDetails.zone) : ""}</span>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Ward </label>
-                            </div>
-                            <div className="col-sm-6 display-span">
-                              <span>{assetSet.locationDetails ? getNameById(revenueWards, assetSet.locationDetails.revenueWard) : ""}</span>
-                            </div>
-                        </div>
-                      </div>
-                    </div>  
                 </div>
             </div>
             <div className="form-section">
@@ -515,7 +477,7 @@ class Sale extends React.Component {
                           </div>
                           <div className="col-sm-6">
                             <div>
-                              <input type="text" disabled value=""/>
+                              <input type="text" disabled value={disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}/>
                             </div>
                           </div>
                         </div>

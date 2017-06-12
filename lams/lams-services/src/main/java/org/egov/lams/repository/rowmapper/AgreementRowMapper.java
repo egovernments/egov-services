@@ -148,7 +148,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		if(action!=null){
 		switch (action) {
 
-		case CANCELATION:
+		case CANCELLATION:
 					Cancellation cancellation = new Cancellation();
 					cancellation.setOrderNumber(orderNumber);
 					cancellation.setOrderDate(orderDate);

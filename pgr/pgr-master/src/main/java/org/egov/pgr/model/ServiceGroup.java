@@ -40,9 +40,7 @@
 
 package org.egov.pgr.model;
 
-
 import javax.validation.constraints.NotNull;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,22 +58,22 @@ import lombok.ToString;
 @ToString
 @Builder
 public class ServiceGroup {
-	
+
 	@NotNull
 	private long id;
-	
+
 	@NotNull
 	private String name;
-	
+
 	@NotNull
 	private String description;
-	
+
 	@NotNull
 	private String tenantId;
-	
+
 	@NotNull
 	private int version;
-	
+
 	@NotNull
 	private AuditDetails auditDetails;
 

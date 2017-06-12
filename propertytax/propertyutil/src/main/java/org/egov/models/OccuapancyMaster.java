@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -45,6 +46,20 @@ public class OccuapancyMaster   {
 	@JsonProperty("orderNumber")
 	private Integer orderNumber = null;
 
+	@JsonIgnore
+	@JsonProperty("data")
+	private String data;
+
+	public String getData() {
+		return data;
+	}
+
+
+	public void setData(String data) {
+		this.data = data;
+	}
+
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
@@ -67,7 +82,7 @@ public class OccuapancyMaster   {
 		return this;
 	}
 
-	
+
 	public String getTenantId() {
 		return tenantId;
 	}
@@ -96,7 +111,7 @@ public class OccuapancyMaster   {
 	}
 
 
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -110,7 +125,7 @@ public class OccuapancyMaster   {
 		return this;
 	}
 
-	
+
 	public String getNameLocal() {
 		return nameLocal;
 	}

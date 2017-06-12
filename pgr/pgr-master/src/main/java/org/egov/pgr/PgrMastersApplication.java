@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
-public class WcmsMastersApplication {
+public class PgrMastersApplication {
 
     public static volatile ConcurrentHashMap<Long, String> categoryTypeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<Long, String> pipeSizeMap = new ConcurrentHashMap<>();
@@ -58,7 +58,7 @@ public class WcmsMastersApplication {
     public static volatile ConcurrentHashMap<Long, String> supplyTypeMap = new ConcurrentHashMap<>();
 
     public static void main(final String[] args) {
-        SpringApplication.run(WcmsMastersApplication.class, args);
+        SpringApplication.run(PgrMastersApplication.class, args);
     }
 
     @Bean

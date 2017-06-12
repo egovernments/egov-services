@@ -56,48 +56,48 @@ import org.springframework.kafka.core.ProducerFactory;
 @EnableKafka
 public class PGRProducerConfig {
 
-    @Value("${kafka.config.bootstrap_server_config}")
-    private String serverConfig;
+	@Value("${kafka.config.bootstrap_server_config}")
+	private String serverConfig;
 
-    @Value("${kafka.producer.config.retries_config}")
-    private Integer retriesConfig;
+	@Value("${kafka.producer.config.retries_config}")
+	private Integer retriesConfig;
 
-    @Value("${kafka.producer.config.batch_size_config}")
-    private Integer batchSizeConfig;
+	@Value("${kafka.producer.config.batch_size_config}")
+	private Integer batchSizeConfig;
 
-    @Value("${kafka.producer.config.linger_ms_config}")
-    private Integer lingerMsConfig;
+	@Value("${kafka.producer.config.linger_ms_config}")
+	private Integer lingerMsConfig;
 
-    @Value("${kafka.producer.config.buffer_memory_config}")
-    private Integer bufferMemoryConfig;
+	@Value("${kafka.producer.config.buffer_memory_config}")
+	private Integer bufferMemoryConfig;
 
-    @Bean
-    public ProducerFactory<String, Object> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
-    }
+	@Bean
+	public ProducerFactory<String, Object> producerFactory() {
+		return new DefaultKafkaProducerFactory<>(producerConfigs());
+	}
 
-    @Bean
-    public Map<String, Object> producerConfigs() {
-        final Map<String, Object> props = new HashMap<>();
+	@Bean
+	public Map<String, Object> producerConfigs() {
+		final Map<String, Object> props = new HashMap<>();
 
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
-        props.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSizeConfig);
-        props.put(ProducerConfig.LINGER_MS_CONFIG, lingerMsConfig);
-        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemoryConfig);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        return props;
-    }
+		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
+		props.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
+		props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSizeConfig);
+		props.put(ProducerConfig.LINGER_MS_CONFIG, lingerMsConfig);
+		props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemoryConfig);
+		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		return props;
+	}
 
-    @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
+	@Bean
+	public KafkaTemplate<String, Object> kafkaTemplate() {
+		return new KafkaTemplate<>(producerFactory());
+	}
 
-    /*
-     * @Bean public WaterMasterProducer sender() { return new WaterMasterProducer(); }
-     */
+	/*
+	 * @Bean public WaterMasterProducer sender() { return new
+	 * WaterMasterProducer(); }
+	 */
 
 }
-

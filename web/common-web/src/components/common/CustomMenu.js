@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
 
 // import MenuItem from 'material-ui/MenuItem';
 // import Paper from 'material-ui/Paper';
@@ -73,6 +74,26 @@ class CustomMenu extends Component {
             </Link>
           </MenuItem>
           </Menu>
+
+      {/*  <DropDownMenu value={1}>
+          <MenuItem value={1} primaryText="Never" />
+          <MenuItem value={2} primaryText="Every Night" />
+          <MenuItem value={3} primaryText="Weeknights" />
+          <MenuItem value={4} primaryText="Weekends" />
+          <MenuItem value={5} primaryText="Weekly" />
+
+
+            <DropDownMenu value={1}>
+              <MenuItem value={1} primaryText="Never" />
+              <MenuItem value={2} primaryText="Every Night" />
+              <MenuItem value={3} primaryText="Weeknights" />
+              <MenuItem value={4} primaryText="Weekends" />
+              <MenuItem value={5} primaryText="Weekly" />
+            </DropDownMenu>
+
+
+        </DropDownMenu>
+      */}
 
       </div>
     );

@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-//import org.apache.log4j.spi.ErrorHandler;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
@@ -64,6 +63,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,172 +75,131 @@ import org.egov.pgr.web.errorhandlers.Error;
 @RequestMapping("/serviceGroup")
 public class ServiceGroupController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceGroupController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServiceGroupController.class);
 
-    @Autowired
-    private ServiceGroupService categoryService;
+	@Autowired
+	private ServiceGroupService serviceGroupService;
 
- /*   @Autowired
-    private ErrorHandler errHandler; */
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
-    @Autowired
-    private ResponseInfoFactory responseInfoFactory;
-    
-    @Autowired
-    private ApplicationProperties applicationProperties;
-    
-    
-    @PostMapping(value = "/_create")
-    @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
-            final BindingResult errors) {
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-        }
-        logger.info("serviceGroupRequest::" + serviceGroupRequest);
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
-        final List<ErrorResponse> errorResponses = validateCategoryRequest(serviceGroupRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+	@PostMapping(value = "/_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
+			final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("serviceGroupRequest::" + serviceGroupRequest);
 
-        final ServiceGroup category = categoryService.createCategory(applicationProperties.getCreateServiceGroupTopicName(), 
-        		applicationProperties.getCreateServiceGroupTopicKey(), serviceGroupRequest);
-        final List<ServiceGroup> categories = new ArrayList<>();
-        categories.add(category);
-        return getSuccessResponse(categories, serviceGroupRequest.getRequestInfo());
+		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-    }
+		final ServiceGroup serviceGroup = serviceGroupService.createCategory(
+				applicationProperties.getCreateServiceGroupTopicName(),
+				applicationProperties.getCreateServiceGroupTopicKey(), serviceGroupRequest);
+		final List<ServiceGroup> serviceGroups = new ArrayList<>();
+		serviceGroups.add(serviceGroup);
+		return getSuccessResponse(serviceGroups, serviceGroupRequest.getRequestInfo());
 
- /*   @PostMapping(value = "/_update/{code}")
-    @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final CategoryTypeRequest categoryRequest,
-            final BindingResult errors, @PathVariable("code") final String code) {
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-        }
-        logger.info("categoryRequest::" + categoryRequest);
-        categoryRequest.getCategory().setCode(code);
+	}
+	
+	@PostMapping(value = "/{id}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
+			@PathVariable("id") final long id, final BindingResult errors) {
+		if (errors.hasErrors() || id == 0L) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("serviceGroupRequest::" + serviceGroupRequest);
+		serviceGroupRequest.getServiceGroup().setId(id);
+		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+		
+		final ServiceGroup category = serviceGroupService.updateCategory(
+				applicationProperties.getUpdateServiceGroupTopicName(),
+				applicationProperties.getUpdateServiceGroupTopicKey(), serviceGroupRequest);
+		final List<ServiceGroup> categories = new ArrayList<>();
+		categories.add(category);
+		return getSuccessResponse(categories, serviceGroupRequest.getRequestInfo());
 
-        final List<ErrorResponse> errorResponses = validateCategoryRequest(categoryRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+	}
 
-        final CategoryType category = categoryService.updateCategory(applicationProperties.getUpdateCategoryTopicName(),
-                "category-update", categoryRequest);
-        final List<CategoryType> categories = new ArrayList<>();
-        categories.add(category);
-        return getSuccessResponse(categories, categoryRequest.getRequestInfo());
-    }
+	private List<ErrorResponse> validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest) {
+		final List<ErrorResponse> errorResponses = new ArrayList<>();
+		final ErrorResponse errorResponse = new ErrorResponse();
+		final Error error = getError(serviceGroupRequest);
+		errorResponse.setError(error);
+		if (!errorResponse.getErrorFields().isEmpty())
+			errorResponses.add(errorResponse);
+		return errorResponses;
+	}
 
-    @PostMapping("_search")
-    @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final CategoryTypeGetRequest categoryGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestBodyBindingResult) {
-        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+	private Error getError(final ServiceGroupRequest serviceGroupRequest) {
+		serviceGroupRequest.getServiceGroup();
+		final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest);
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
+	}
 
-        // validate input params
-        if (modelAttributeBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+	private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest) {
+		final List<ErrorField> errorFields = new ArrayList<>();
+		addServiceGroupNameValidationErrors(serviceGroupRequest, errorFields);
+		addTeanantIdValidationErrors(serviceGroupRequest, errorFields);
+		return errorFields;
+	}
 
-        // validate input params
-        if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+	private void addServiceGroupNameValidationErrors(final ServiceGroupRequest serviceGroupRequest,
+			final List<ErrorField> errorFields) {
+		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+		if (serviceGroup.getName() == null || serviceGroup.getName().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_NAME_MANDATORY_CODE)
+					.message(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+	}
+	
+	private void addTeanantIdValidationErrors(final ServiceGroupRequest serviceGroupRequest,
+			final List<ErrorField> errorFields) {
+		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+		if (serviceGroup.getTenantId() == null || serviceGroup.getTenantId().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
+					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else
+			return;
+	}
 
-        // Call service
-        List<CategoryType> categoryList = null;
-        try {
-            categoryList = categoryService.getCategories(categoryGetRequest);
-        } catch (final Exception exception) {
-            logger.error("Error while processing request " + categoryGetRequest, exception);
-            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-        }
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
 
-        return getSuccessResponse(categoryList, requestInfo);
+		final Error error = new Error();
+		error.setCode(1);
+		error.setDescription("Error while binding request. Ensure id is passed if you're updating a record.");
+		if (errors.hasFieldErrors())
+			for (final FieldError fieldError : errors.getFieldErrors())
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+		errRes.setError(error);
+		return errRes;
+	}
 
-    } */
+	private ResponseEntity<?> getSuccessResponse(final List<ServiceGroup> serviceGroupList, final RequestInfo requestInfo) {
+		final ServiceGroupResponse serviceGroupResponse = new ServiceGroupResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		serviceGroupResponse.setResponseInfo(responseInfo);
+		serviceGroupResponse.setServiceGroups(serviceGroupList);
+		return new ResponseEntity<>(serviceGroupResponse, HttpStatus.OK);
 
-    private List<ErrorResponse> validateCategoryRequest(final ServiceGroupRequest serviceGroupRequest) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(serviceGroupRequest);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
-    }
-
-    private Error getError(final ServiceGroupRequest serviceGroupRequest) {
-    	serviceGroupRequest.getServiceGroup();
-        final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE)
-                .errorFields(errorFields)
-                .build();
-    }
-
-    private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        addCategoryNameValidationErrors(serviceGroupRequest, errorFields);
-        addTeanantIdValidationErrors(serviceGroupRequest, errorFields);
-        return errorFields;
-    }
-
-    private void addCategoryNameValidationErrors(final ServiceGroupRequest serviceGroupRequest,
-            final List<ErrorField> errorFields) {
-        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-        if (serviceGroup.getName() == null || serviceGroup.getName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.SERVICEGROUP_NAME_MANDATORY_CODE)
-                    .message(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } 
-    }
-
-    private void addTeanantIdValidationErrors(final ServiceGroupRequest serviceGroupRequest,
-            final List<ErrorField> errorFields) {
-        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-        if (serviceGroup.getTenantId() == null || serviceGroup.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-                    .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
-
-    private ErrorResponse populateErrors(final BindingResult errors) {
-        final ErrorResponse errRes = new ErrorResponse();
-
-        final Error error = new Error();
-        error.setCode(1);
-        error.setDescription("Error while binding request");
-        if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-        errRes.setError(error);
-        return errRes;
-    }
-
-    private ResponseEntity<?> getSuccessResponse(final List<ServiceGroup> categoryList, final RequestInfo requestInfo) {
-        final ServiceGroupResponse categoryResponse = new ServiceGroupResponse();
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        categoryResponse.setResponseInfo(responseInfo);
-        try {
-
-        } catch (final Exception e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
-
-    }
-
+	}
 
 }

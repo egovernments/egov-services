@@ -1,0 +1,483 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Property Tax Calculator
+  description: |
+    APIs for Property Tax calcuation. This modules handles the tax calculation and returns back the detailed tax information.
+  contact:
+    name: Ramki
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/property/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+
+paths:
+  /_calculateTax:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Calculates a tax.
+      description: API to calculate property tax
+      parameters:
+        - name: property
+          in: body
+          description: Details for the property + RequestInfo meta data + other conguration params.
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: returns the detailed calculated tax details.
+          schema:
+            $ref: '#/definitions/CalculationResponse'
+        400:
+          description: Invalid Calcualtions data/ failed to get required configuration values.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Calculation  
+        
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+  CommonTaxDetails:
+    type: object
+    description: Common tax details object
+    properties:
+      occupancyDate:
+        type: string
+        format: date
+        description: The date of occupancy of this unit/floor
+      effectiveDate:
+        type: string
+        format: date
+        description: The tax effective date
+      depreciation:
+        type: number
+        format: double
+        description: depreciation for age of the building.
+      rebateValue:
+        type: number
+        format: double
+        description: The rebate has been given during the tax calculation.
+      calculatedARV:
+        type: number
+        format: double
+        description: Annual Rental Value calcualted
+      manualARV:
+        type: number
+        format: double
+        description: Annual Rental Value entered manually.
+      residentialARV:
+        type: number
+        format: double
+        description: Residential Annual Rental Value.
+      nonResidentialARV:
+        type: number
+        format: double
+        description: Non Residential Annual Rental Value.
+      totalTax:
+        type: number
+        format: double
+        description: Total tax for the unit.
+        
+  Taxcalculation:
+    type: object
+    description: Details of tax calculation
+    properties:
+      upicNumber:
+        type: string
+        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
+      propertyType:
+        type: string
+        description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
+        maxLength: 16
+        minLength: 1
+      annualRentalValue:
+        type: number
+        format: double
+        description: Annual Rental Value for a property
+      boundary:
+        type: string
+        description: The boundary for which this Guidance value is.
+        maxLength: 16
+        minLength: 1
+      propertyTaxes:
+        $ref: "#/definitions/CommonTaxDetails"
+      unitTaxes:
+        description: Unit Taxes
+        type: array
+        items:
+          $ref: "#/definitions/UnitTax"
+      
+  UnitTax:
+    type: object
+    properties:
+      floorNumber:
+        type: string
+        description: floor no for the floor
+        maxLength: 16
+        minLength: 1
+      unitNo:
+        type: integer
+        format: int32
+        description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
+        maxLength: 8
+        minLength: 1
+      assessableArea:
+        type: number
+        format: double
+        description: The Structure for which this Guidance value is.
+      structureFactor:
+        type: number
+        format: double
+        description: The Structure for which this Guidance value is.
+      usageFactor:
+        type: number
+        format: double
+        description: The usage for which this Guidance value is.
+      subUsageFactor:
+        type: number
+        format: double
+        description: The subUsage for which this Guidance value is.
+      unitTaxes:
+        $ref: "#/definitions/CommonTaxDetails"
+      headTaxes:
+        description: Unit Taxes
+        type: array
+        items:
+          $ref: "#/definitions/HeadWiseTax"
+        
+  HeadWiseTax:
+    type: object
+    properties:
+      taxName:
+        type: string
+        description: name of the tax
+      taxDetails:
+        description: Tax details
+        type: array
+        items:
+          $ref: "#/definitions/TaxDetail"
+      
+  TaxDetail:
+    type: object
+    properties:
+      effectiveDate:
+        type: string
+        format: date
+        description: The date from which tax is effective
+      taxDays:
+        type: integer
+        format: int32
+        description: The tax is for these many days.
+      taxValue:
+        type: number
+        format: double
+        description: Tax Value.
+        
+  CalculationResponse:
+    description: Contract class to send response.
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      properties:
+          $ref: '#/definitions/Taxcalculation'
+        
+  OccuapancyFactor:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the OccuapancyFactor
+      tenantId:
+        type: string
+        description: tenant id of the OccuapancyFactor
+        maxLength: 128
+        minLength: 4
+      code:
+        type: string
+        description: code of the OccuapancyFactor
+        maxLength: 16
+        minLength: 4
+      factorValue:
+        type: number
+        format: double
+        description: Factor Value for Occupancy.
+      fromDate:
+        type: string
+        format: date
+        description: Factor value effective date.
+      toDate:
+        type: string
+        format: date
+        description: Factor value end date.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+    - id
+    - tenantId
+    - code
+    - factorValue
+    
+  UsageFactor:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the UsageFactor
+      tenantId:
+        type: string
+        description: tenant id of the UsageFactor
+        maxLength: 128
+        minLength: 4
+      code:
+        type: string
+        description: code of the UsageFactor
+        maxLength: 16
+        minLength: 4
+      factorValue:
+        type: number
+        format: double
+        description: Factor Value for Usage.
+      fromDate:
+        type: string
+        format: date
+        description: Factor value effective date.
+      toDate:
+        type: string
+        format: date
+        description: Factor value end date.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+    - id
+    - tenantId
+    - code
+    - factorValue
+    
+  StructureFactor:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the StructureFactor
+      tenantId:
+        type: string
+        description: tenant id of the StructureFactor
+        maxLength: 128
+        minLength: 4
+      code:
+        type: string
+        description: code of the StructureFactor
+        maxLength: 16
+        minLength: 4
+      factorValue:
+        type: number
+        format: double
+        description: Factor Value for Usage.
+      fromDate:
+        type: string
+        format: date
+        description: Factor value effective date.
+      toDate:
+        type: string
+        format: date
+        description: Factor value end date.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+    - id
+    - tenantId
+    - code
+    - factorValue
+    
+  PropertyTypeFactor:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the PropertyTypeFactor
+      tenantId:
+        type: string
+        description: tenant id of the PropertyTypeFactor
+        maxLength: 128
+        minLength: 4
+      code:
+        type: string
+        description: code of the PropertyTypeFactor
+        maxLength: 16
+        minLength: 4
+      factorValue:
+        type: number
+        format: double
+        description: Factor Value for Usage.
+      fromDate:
+        type: string
+        format: date
+        description: Factor value effective date.
+      toDate:
+        type: string
+        format: date
+        description: Factor value end date.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+    - id
+    - tenantId
+    - code
+    - factorValue
+    
+  AgeFactor:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the AgeFactor
+      tenantId:
+        type: string
+        description: tenant id of the AgeFactor
+        maxLength: 128
+        minLength: 4
+      code:
+        type: string
+        description: code of the AgeFactor
+        maxLength: 16
+        minLength: 4
+      factorValue:
+        type: number
+        format: double
+        description: Factor Value for Usage.
+      fromDate:
+        type: string
+        format: date
+        description: Factor value effective date.
+      toDate:
+        type: string
+        format: date
+        description: Factor value end date.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+    - id
+    - tenantId
+    - code
+    - factorValue
+    
+  GuidanceValue:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the GuidanceValue
+      tenantId:
+        type: string
+        description: tenant id of the GuidanceValue
+        maxLength: 128
+        minLength: 4
+      name:
+        type: string
+        description: name of the GuidanceValue
+        maxLength: 128
+        minLength: 4
+      boundary:
+        type: string
+        description: The boundary for which this Guidance value is.
+        maxLength: 16
+        minLength: 1
+      structure:
+        type: string
+        description: The Structure for which this Guidance value is.
+        maxLength: 16
+        minLength: 1
+      usage:
+        type: string
+        description: The usage for which this Guidance value is.
+        maxLength: 16
+        minLength: 1
+      subUsage:
+        type: string
+        description: The subUsage for which this Guidance value is.
+        maxLength: 16
+        minLength: 1
+      occupancy:
+        type: string
+        description: The occupancy for which this Guidance value is.
+        maxLength: 16
+        minLength: 1        
+      value:
+        type: number
+        format: double
+        description: Guidance Value.
+      fromDate:
+        type: string
+        format: date
+        description: Guidance value effective date.
+      toDate:
+        type: string
+        format: date
+        description: Guidance value end date.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+    - id
+    - tenantId
+    - boundary
+    - value
+    
+  PropertyRequest:
+    description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      property:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/Property'
+      taxEffectiveDate:
+        type: string
+        format: date
+        description: The tax effective date has to be provided in floor/unit info which is part of 'Property'. There will be tax rule changes due to GO across the city, that time this property value is mandatory. If this value is sent calculator will not read from floor/unit otherwise will be taken from floor/unit.
+      calculationType:
+        type: string
+        description: Type of calculation
+        enum:
+         - ARV
+         - CVS
+         - UAS
+    required:
+      - requestInfo
+      - property
+      - calculationType
+

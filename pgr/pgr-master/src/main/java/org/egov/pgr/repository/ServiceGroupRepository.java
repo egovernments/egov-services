@@ -54,68 +54,43 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ServiceGroupRepository {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-  /*  @Autowired
-    private CategoryTypeQueryBuilder categoryQueryBuilder;
+	/*
+	 * @Autowired private CategoryTypeQueryBuilder categoryQueryBuilder;
+	 * 
+	 * @Autowired private CategoryTypeRowMapper categoryRowMapper;
+	 */
 
-    @Autowired
-    private CategoryTypeRowMapper categoryRowMapper; */
-
-    public ServiceGroupRequest persistCreateCategory(final ServiceGroupRequest serviceGroupRequest) {
-        LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-        final String categoryInsert = ServiceGroupQueryBuilder.insertCategoryQuery();
-        final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-        final Object[] obj = new Object[] { serviceGroup.getName(),
-        		serviceGroup.getDescription(), Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                serviceGroup.getTenantId()};
-        jdbcTemplate.update(categoryInsert, obj);
-        return serviceGroupRequest;
-    }
-
- /*   public CategoryTypeRequest persistModifyCategory(final CategoryTypeRequest categoryRequest) {
-        LOGGER.info("ConnectionCategoryRequest::" + categoryRequest);
-        final String categoryUpdate = CategoryTypeQueryBuilder.updateCategoryQuery();
-        final CategoryType category = categoryRequest.getCategory();
-        final Object[] obj = new Object[] { category.getName(), category.getDescription(), category.getActive(),
-                Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), category.getCode() };
-        jdbcTemplate.update(categoryUpdate, obj);
-        return categoryRequest;
-
-    }
-
-    public boolean checkCategoryByNameAndCode(final String code, final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(name);
-        // preparedStatementValues.add(id);
-        preparedStatementValues.add(tenantId);
-        final String query;
-        if (code == null)
-            query = CategoryTypeQueryBuilder.selectCategoryByNameAndCodeQuery();
-        else {
-            preparedStatementValues.add(code);
-            query = CategoryTypeQueryBuilder.selectCategoryByNameAndCodeNotInQuery();
-        }
-        final List<Map<String, Object>> categories = jdbcTemplate.queryForList(query,
-                preparedStatementValues.toArray());
-        if (!categories.isEmpty())
-            return false;
-
-        return true;
-    }
-
-    public List<CategoryType> findForCriteria(final CategoryTypeGetRequest categoryGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = categoryQueryBuilder.getQuery(categoryGetRequest, preparedStatementValues);
-        final List<CategoryType> categories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-                categoryRowMapper);
-        return categories;
-    } */
+	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
+		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
+		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
+		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+		final Object[] obj = new Object[] { serviceGroup.getId(), serviceGroup.getName(), serviceGroup.getDescription(),
+				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+				serviceGroup.getTenantId() };
+		jdbcTemplate.update(serviceGroupInsert, obj);
+		return serviceGroupRequest;
+	}
+	
+	public ServiceGroupRequest persistUpdateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
+		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
+		final String serviceGroupUpdate = ServiceGroupQueryBuilder.updateServiceGroupQuery();
+		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
+				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+				serviceGroup.getTenantId(), serviceGroup.getId()};
+		jdbcTemplate.update(serviceGroupUpdate, obj);
+		return serviceGroupRequest;
+	}
+	
+	
 
 }

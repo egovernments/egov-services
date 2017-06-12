@@ -60,18 +60,18 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ServiceGroupGetRequest {
 
-    private List<Long> id;
+	private List<Long> id;
 
-    @Length(min = 3, max = 100)
-    private String name;
+	@Length(min = 3, max = 100)
+	private String name;
 
-    private String description;
+	private String description;
 
-    @NotNull
-    private String tenantId;
+	@NotNull
+	private String tenantId;
 
-    private String sortBy;
+	private String sortBy;
 
-    private String sortOrder;
+	private String sortOrder;
 
 }

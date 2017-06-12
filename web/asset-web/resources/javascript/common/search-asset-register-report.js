@@ -1,178 +1,120 @@
 var flag = 0;
-class CommonReportComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state={keys:[],list:[]};
-  }
-  componentWillMount(){
-    let list=this.props.ReportResult;
-    this.setState({
-      list
-    });
-  }
-
-  componentDidMount(){
-    console.log($('#table').length);
-    $('#table').DataTable({
-      dom: 'Bfrtip',
-      buttons: [
-               'copy', 'csv', 'excel', 'pdf', 'print'
-       ],
-       ordering: false,
-       bDestroy: true,
-       language: {
-          "emptyTable": "No Records"
-       }
-    });
-  }
-
-  componentWillUpdate() {
-    if(flag == 1) {
-      flag = 0;
-      $('#table').dataTable().fnDestroy();
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log("hi");
-    $('#table').DataTable({
-      dom: 'Bfrtip',
-      buttons: [
-               'copy', 'csv', 'excel', 'pdf', 'print'
-       ],
-       ordering: false,
-       bDestroy: true,
-       language: {
-          "emptyTable": "No Records"
-       }
-    });
-      // if (prevState.list.length!=this.state.list.length) {
-      //     $('#table').DataTable({
-      //       dom: 'Bfrtip',
-      //       buttons: [
-      //                'copy', 'csv', 'excel', 'pdf', 'print'
-      //        ],
-      //        ordering: false,
-      //        bDestroy: true,
-      //        language: {
-      //           "emptyTable": "No Records"
-      //        }
-      //     });
-      // }
-  }
-
-  render(){
-  let {list}=this.state;
-
-  var keys = Object.keys(list[0]);
-
-  const getData=function(item){
-
-    return keys.map((key,index)=>{
-        return (<td key={index}>{item[key]}</td>)
-    })
-  }
-
-    const renderBody=function()
-    {
-      if (true) {
-        return list.map((item,index)=>
-        {
-              return (<tr key={index}>{
-                   getData(item)
-                 }
-                              </tr>  );
-        })
-      }
-      else {
-         return (
-             ""
-         )
-     }
-  }
-
-  const  genrateRow =function(keys) {
-    return keys.map((key,index)=>
-      {
-            return (
-                      <th key={index}>{key}</th>
-                           );
-      })
-    }
-  console.log(keys);
-    return(
-      <div>
-          <table id="table" className="table table-bordered">
-              <thead>
-              <tr>
-                {genrateRow(keys)}
-              </tr>
-              </thead>
-              <tbody id="agreementSearchResultTableBody">
-                      {
-                          renderBody()
-                      }
-                  </tbody>
-         </table>
-      </div>
-    )
-  }
-}
-
-
-class AssetRegisterReport extends React.Component {
+class SearchAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-      "code": "",
-      "name":"",
-      "location":"",
-      "description":"",
-      "status":"",
-      "valueOfAsset":"",
+      "tenantId": tenantId,
+      "name": "",
+      "department": "",
       "assetCategory": "",
-   },isSearchClicked:false,asset_category_type:[], assetCategories: [], assignments_unitOfMeasurement: []}
-    this.handleChange=this.handleChange.bind(this);
-    this.search=this.search.bind(this);
-    this.setInitialState = this.setInitialState.bind(this);
+      "status": "",
+      "location":"",
+      "code": ""
+   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false}
+    this.handleChange = this.handleChange.bind(this);
+    this.search = this.search.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
   }
 
-  search(e) {
-
-    e.preventDefault();
-    var _this = this;
-       flag = 1;
-
-
-       try {
-         //call api call
-         var _this = this;
-         commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
-           if(res) {
-             var list = res["Assets"];
-             list.sort(function(item1, item2) {
-               return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-             })
-             console.log("list",list);
-             flag = 1;
-             _this.setState({
-               isSearchClicked: true,
-               list
-             })
-           }
-         })
-       } catch(e) {
-         console.log(e);
-       }
-  }
-
-  close(){
-      open(location, '_self').close();
+  handleChange(e, name) {
+      this.setState({
+          searchSet:{
+              ...this.state.searchSet,
+              [name]:e.target.value
+          }
+      })
   }
 
   setInitialState(initState) {
     this.setState(initState);
+  }
+
+  search(e) {
+    e.preventDefault();
+
+      //call api call
+      var _this = this;
+      var post = 0;
+      var queryObject = this.state.searchSet;
+      console.log("queryObject",queryObject);
+
+      console.log("Search Set",this.state.searchSet);
+
+      var locationArray = JSON.parse(localStorage.getItem("locality"));
+        for(var i=0;i<locationArray.length;i++){
+            if(this.state.searchSet.location===locationArray[i].name){
+              var location = locationArray[i].id;
+              post=1;
+              break;
+            }
+
+        }
+
+        if(location===undefined){
+
+            queryObject.locality = this.state.searchSet.location;
+            queryObject.location = "";
+
+        }else{
+              queryObject.locality = location;
+              queryObject.location = "";
+        }
+        if(post===1){
+
+        console.log("after",queryObject);
+        commonApiPost("asset-services","assets","_search", {...queryObject, tenantId, pageSize:500}, function(err, res) {
+          if(res) {
+            var list = res["Assets"];
+            list.sort(function(item1, item2) {
+              return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+            })
+              console.log(list);
+            flag = 1;
+            _this.setState({
+              isSearchClicked: true,
+              searchSet : {},
+              list,
+              modify: true
+            });
+            setTimeout(function(){
+              _this.setState({
+                modify: false
+              });
+            }, 1200);
+          }
+        })
+  }else{
+    _this.setState({
+      isSearchClicked: false,
+      list :[]
+
+    });
+
+          showError("Invalid location")
+  }
+}
+
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#agreementTable').dataTable().fnDestroy();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.modify){
+          $('#agreementTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             "ordering": false,
+             language: {
+                "emptyTable": "No Records"
+             }
+          });
+      }
   }
 
   componentDidMount() {
@@ -182,8 +124,7 @@ class AssetRegisterReport extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
-    $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + "Asset Register Report");
-
+    $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
     var count = 3, _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       count--;
@@ -192,101 +133,139 @@ class AssetRegisterReport extends React.Component {
         _this.setInitialState(_state);
     }
 
-    getDropdown("asset_category_type", function(res) {
-      checkCountNCall("asset_category_type", res);
+    getDropdown("locality", function(res) {
+
+      checkCountNCall("localityList", res);
     });
 
+    console.log(this.state.localityList);
     getDropdown("assetCategories", function(res) {
       checkCountNCall("assetCategories", res);
     });
 
-    getDropdown("assignments_unitOfMeasurement", function(res) {
-      checkCountNCall("assignments_unitOfMeasurement", res);
+    getDropdown("statusList", function(res) {
+      checkCountNCall("statusList", res);
     });
+
+    console.log(this.state.localityList);
+    var location;
+    var locationArray = JSON.parse(localStorage.getItem("locality"));
+    var result = locationArray.map(function(a) {return a.name;});
+      console.log("locationArray",locationArray);
+      console.log("result",result);
+
+    $( "#location" ).autocomplete({
+      source: result,
+      minLength: 3,
+      change: function( event, ui ) {
+        if(ui.item && ui.item.value)
+        console.log("ui",ui);
+            _this.setState({
+                searchSet:{
+                    ..._this.state.searchSet,
+                    location: ui.item.value
+                }
+            })
+      }
+
+    });
+
+
   }
 
-
-
-  handleClick(type, id) {
-    if (type === "update") {
-      window.open(`app/asset/create-asset-category.html?id=${id}&type=update`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-    } else if(type) {
-      window.open(`app/asset/create-asset-category.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-    } else {
-      window.open(`app/asset/create-asset-category.html?id=${id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-    }
+  close() {
+      open(location, '_self').close();
   }
 
-
-  handleChange(e,name) {
-      this.setState({
-          searchSet:{
-              ...this.state.searchSet,
-              [name]:e.target.value
-          }
-      })
+  handleClick(type, id, status) {
+    if(type == "sale" && status != "CAPITALIZED")
+      return showError("Asset sale/disposal is only possible for assets with status as 'Capitalized'");
+    window.open(`app/asset/create-asset.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   render() {
     let {handleChange,search,handleClick}=this;
     let {assetCategory,code,description,name,location,status,valueOfAsset}=this.state.searchSet;
-    let {isSearchClicked, list, assignments_unitOfMeasurement, assetCategories}=this.state;
+    let {isSearchClicked, list, assignments_unitOfMeasurement,localityList}=this.state;
 
-    const renderOption=function(list)
-    {
-        if(list)
-        {
-            if (list.length) {
-              return list.map((item)=>
-              {
-                  return (<option key={item.id} value={item.id}>
-                          {item.name}
+      const renderOption = function(list) {
+          if(list) {
+
+              if (list.length) {
+                list.sort(function(item1, item2) {
+                  if(item1.name && item2.name)
+                    return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
+                  else
+                    return 0;
+                });
+
+                return list.map((item)=> {
+                    return (<option key={item.id} value={item.id}>
+                            {item.name}
+                      </option>)
+                })
+
+              } else {
+                return Object.keys(list).map((k, index)=>
+                {
+                  return (<option key={index} value={k}>
+                          {list[k]}
                     </option>)
-              })
 
-            } else {
-              return Object.keys(list).map((k, index)=>
-              {
-                return (<option key={index} value={k}>
-                        {list[k]}
-                  </option>)
+                 })
+              }
 
-               })
-            }
+          }
+      }
 
+      const showTable = function() {
+        if(isSearchClicked)
+        {
+            return (
+              <table id="agreementTable" className="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th>Sr. No.</th>
+                      <th>Code</th>
+                      <th>Asset Name</th>
+                      <th>Status</th>
+                      <th>Asset Category</th>
+                      <th>Location</th>
+                      <th>Current value of asset</th>
+
+                  </tr>
+                  </thead>
+                  <tbody id="agreementSearchResultTableBody">
+                          {
+                              renderBody()
+                          }
+                      </tbody>
+
+             </table>
+            )
         }
     }
 
+    const renderBody = function() {
+      if (list.length>0) {
+        return list.map((item,index)=>
+        {
+              return (<tr key={index}>
+                        <td>{index+1}</td>
+                        <td>{item.code}</td>
+                        <td>{item.name}</td>
+                        <td>{item.status}</td>
+                        <td>{item.assetCategory.name}</td>
+                        <td>{getNameById(localityList,item.locationDetails.locality)}</td>
+                        <td>{item.grossValue}</td>
 
 
-
-    const renderAction=function(type,id){
-      if (type==="update") {
-
-              return (
-                      <a href={`app/asset/create-asset-category.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
-              );
-
-    }else {
-            return (
-                    <a href={`app/asset/create-asset-category.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
-            );
-        }
-}
-    const showTable=function()
-    {
-
-      if(isSearchClicked)
-      {
-        console.log("Inside");
-          return (
-            <CommonReportComponent ReportResult={list} />
-          )
+                  </tr>  );
+        })
       }
-  }
+    }
 
-    return (
-    <div>
+    return (<div>
       <h3>{titleCase(getUrlVars()["type"])} Search Asset Register Report</h3>
       <div className="form-section-inner">
         <form onSubmit={(e)=>{search(e)}}>
@@ -330,27 +309,27 @@ class AssetRegisterReport extends React.Component {
                 </div>
 
                 <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                            <label for="assetCategory">Asset Category</label>
-                        </div>
-                        <div className="col-sm-6">
-                            <div className="styled-select">
-                            <select id="assetCategory" name="assetCategory" value={assetCategory}  onChange={(e)=>{
-                            handleChange(e,"assetCategory")}}>
-                                <option value="">Select Asset Category</option>
-                                {renderOption(this.state.asset_category_type)}
-                              </select>
-                            </div>
-                        </div>
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="assetCategory">Asset Category </label>
+                      </div>
+                    <div className="col-sm-6">
+                       <div className="styled-select">
+                       <select id="assetCategory" name="assetCategory" value={assetCategory} onChange={(e)=>{
+                       handleChange(e,"assetCategory")}}>
+                           <option value="">Select Asset Category</option>
+                           {renderOption(this.state.assetCategories)}
+                         </select>
                     </div>
+                  </div>
                 </div>
+              </div>
               </div>
             <div className="row">
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="description">Location</label>
+                      <label for="location">Location</label>
                     </div>
                     <div className="col-sm-6">
                       <input id="location" name="location" value={location} type="text"
@@ -360,21 +339,22 @@ class AssetRegisterReport extends React.Component {
                 </div>
 
                 <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                            <label for="assetCategory">Status</label>
-                        </div>
-                        <div className="col-sm-6">
-                            <div className="styled-select">
-                            <select id="status" name="status" value={status}  onChange={(e)=>{
-                            handleChange(e,"status")}}>
-                                <option value="">Select Asset Category</option>
-                                {renderOption(this.state.asset_category_type)}
-                              </select>
-                            </div>
-                        </div>
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                            <label for="status">Status  </label>
                     </div>
+                    <div className="col-sm-6">
+                        <div className="styled-select">
+                        <select id="status" name="status" value={status} onChange={(e)=>{
+                                handleChange(e,"status")
+                            }}>
+                              <option>Select Status</option>
+                              {renderOption(this.state.statusList)}
+                           </select>
+                    </div>
+                  </div>
                 </div>
+              </div>
               </div>
               <div className="row">
                   <div className="col-sm-6">
@@ -388,6 +368,7 @@ class AssetRegisterReport extends React.Component {
                       </div>
                     </div>
                   </div>
+
 
                 </div>
 
@@ -403,12 +384,18 @@ class AssetRegisterReport extends React.Component {
             </div>
         </div>
 
+
+
     );
   }
 }
 
 
+
+
+
+
 ReactDOM.render(
-  <AssetRegisterReport />,
+  <SearchAsset />,
   document.getElementById('root')
 );

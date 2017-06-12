@@ -58,11 +58,55 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicegroup.create.key}")
     private String createServiceGroupTopicKey;
     
+
     @Value("${kafka.topics.router.create.name}")
     private String createRouterTopicName;
     
     @Value("${kafka.topics.router.create.key}")
     private String createRouterTopicKey;
+
+    @Value("${kafka.topics.servicegroup.update.name}")
+    private String updateServiceGroupTopicName;
+    
+    @Value("${kafka.topics.servicegroup.update.key}")
+    private String updateServiceGroupTopicKey;
+
+	@Value("${kafka.topics.receivingcenter.create.name}")
+    private String createReceivingCenterTopicName;
+    
+    @Value("${kafka.topics.receivingcenter.create.key}")
+    private String createReceivingCenterTopicKey;
+    
+    @Value("${kafka.topics.receivingcenter.update.name}")
+    private String updateReceivingCenterTopicName;
+    
+    @Value("${kafka.topics.receivingcenter.update.key}")
+    private String updateReceivingCenterTopicKey;
+    
+    @Value("${kafka.topics.receivingmode.create.name}")
+    private String createReceivingModeTopicName;
+    
+    @Value("${kafka.topics.receivingmode.create.key}")
+    private String createReceivingModeTopicKey;
+    
+    @Value("${kafka.topics.receivingmode.update.name}")
+    private String updateReceivingModeTopicName;
+    
+    @Value("${kafka.topics.receivingmode.update.key}")
+    private String updateReceivingModeTopicKey;
+    
+    @Value("${kafka.topics.servicetype.create.name}")
+    private String createServiceTypeTopicName;
+    
+    @Value("${kafka.topics.servicetype.create.key}")
+    private String createServiceTypeTopicKey;
+    
+    @Value("${kafka.topics.servicetype.update.key}")
+    private String updateServiceTypeTopickey; 
+    
+    @Value("${kafka.topics.servicetype.update.name}")
+    private String updateServiceTypeTopicName;
+
 
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
@@ -71,12 +115,68 @@ public class ApplicationProperties {
 	public String getCreateServiceGroupTopicName() {
 		return createServiceGroupTopicName;
 	}
+
 	public String getCreateRouterTopicKey() {
 		return createRouterTopicKey;
 	}
 
 	public String getCreateRouterTopicName() {
 		return createRouterTopicName;
+	}
+	
+	public String getCreateReceivingCenterTopicKey() {
+		return createReceivingCenterTopicKey;
+	}
+
+	public String getCreateReceivingCenterTopicName() {
+		return createReceivingCenterTopicName;
+	}
+	
+	public String getUpdateReceivingCenterTopicKey() {
+		return updateReceivingCenterTopicKey;
+	}
+
+	public String getUpdateReceivingCenterTopicName() {
+		return updateReceivingCenterTopicName;
+	}
+	
+	public String getCreateReceivingModeTopicKey() {
+		return createReceivingModeTopicKey;
+	}
+
+	public String getCreateReceivingModeTopicName() {
+		return createReceivingModeTopicName;
+	}
+	
+	public String getUpdateReceivingModeTopicKey() {
+		return updateReceivingModeTopicKey;
+	}
+
+	public String getUpdateReceivingModeTopicName() {
+		return updateReceivingModeTopicName;
+	}
+	
+	public String getCreateServiceTypeTopicName(){
+		return createServiceTypeTopicName;
+	}
+	public String getCreateServiceTypeTopicKey(){
+		return createServiceTypeTopicKey;
+	}
+    public String getUpdateServiceGroupTopicName() {
+		return updateServiceGroupTopicName;
+	}
+
+	public String getUpdateServiceGroupTopicKey() {
+		return updateServiceGroupTopicKey;
+	}
+	
+	public String getUpdateServiceTypeTopicName(){
+		return updateServiceTypeTopicName;
+	}
+	
+	public String getUpdateServiceTypeTopicKey(){
+		return updateServiceTypeTopickey;
+
 	}
 
 

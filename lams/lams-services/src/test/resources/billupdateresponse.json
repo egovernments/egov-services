@@ -1,0 +1,15 @@
+{
+	"arrearsAmount": null,
+	"penaltyAmount": null,
+	"currentInstallmentAmount": null,
+	"advanceAmount": null,
+	"latePaymentCharges": null,
+	"arrearCess": null,
+	"currentCess": null,
+	"installmentFrom": null,
+	"installmentTo": null,
+	"reductionAmount": null,
+	"revenueWard": null,
+	"conflict": null,
+	"tenantId": null
+}

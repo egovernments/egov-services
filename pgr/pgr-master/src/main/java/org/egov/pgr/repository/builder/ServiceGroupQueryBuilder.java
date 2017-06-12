@@ -49,87 +49,91 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceGroupQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
 
-    private static final String BASE_QUERY = "SELECT id, code, description, tenantId "
-            + " FROM egpgr_complainttype_category ";
+	private static final String BASE_QUERY = "SELECT id, code, description, tenantId "
+			+ " FROM egpgr_complainttype_category ";
 
-    @SuppressWarnings("rawtypes")
-    public String getQuery(final ServiceGroupGetRequest categoryGetRequest, final List preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
-        addOrderByClause(selectQuery, categoryGetRequest);
-        logger.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
+	@SuppressWarnings("rawtypes")
+	public String getQuery(final ServiceGroupGetRequest categoryGetRequest, final List preparedStatementValues) {
+		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
+		addOrderByClause(selectQuery, categoryGetRequest);
+		logger.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final ServiceGroupGetRequest serviceGroupRequest) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final ServiceGroupGetRequest serviceGroupRequest) {
 
-        if (serviceGroupRequest.getId() == null && serviceGroupRequest.getName() == null
-                && serviceGroupRequest.getTenantId() == null)
-            return;
+		if (serviceGroupRequest.getId() == null && serviceGroupRequest.getName() == null
+				&& serviceGroupRequest.getTenantId() == null)
+			return;
 
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
 
-        if (serviceGroupRequest.getTenantId() != null) {
-            isAppendAndClause = true;
-            selectQuery.append(" tenantId = ?");
-            preparedStatementValues.add(serviceGroupRequest.getTenantId());
-        }
+		if (serviceGroupRequest.getTenantId() != null) {
+			isAppendAndClause = true;
+			selectQuery.append(" tenantId = ?");
+			preparedStatementValues.add(serviceGroupRequest.getTenantId());
+		}
 
-        if (serviceGroupRequest.getId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" id IN " + getIdQuery(serviceGroupRequest.getId()));
-        }
+		if (serviceGroupRequest.getId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" id IN " + getIdQuery(serviceGroupRequest.getId()));
+		}
 
-        if (serviceGroupRequest.getName() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" name = ?");
-            preparedStatementValues.add(serviceGroupRequest.getName());
-        }
+		if (serviceGroupRequest.getName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" name = ?");
+			preparedStatementValues.add(serviceGroupRequest.getName());
+		}
 
-    }
+	}
 
-    private void addOrderByClause(final StringBuilder selectQuery, final ServiceGroupGetRequest serviceGroupRequest) {
-        final String sortBy = serviceGroupRequest.getSortBy() == null ? "category.code"
-                : "category." + serviceGroupRequest.getSortBy();
-        final String sortOrder = serviceGroupRequest.getSortOrder() == null ? "DESC" : serviceGroupRequest.getSortOrder();
-        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-    }
+	private void addOrderByClause(final StringBuilder selectQuery, final ServiceGroupGetRequest serviceGroupRequest) {
+		final String sortBy = serviceGroupRequest.getSortBy() == null ? "category.code"
+				: "category." + serviceGroupRequest.getSortBy();
+		final String sortOrder = serviceGroupRequest.getSortOrder() == null ? "DESC"
+				: serviceGroupRequest.getSortOrder();
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+	}
 
+	/**
+	 * This method is always called at the beginning of the method so that and
+	 * is prepended before the field's predicate is handled.
+	 *
+	 * @param appendAndClauseFlag
+	 * @param queryString
+	 * @return boolean indicates if the next predicate should append an "AND"
+	 */
+	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+		if (appendAndClauseFlag)
+			queryString.append(" AND");
 
-    /**
-     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
-     * handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
-    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
+		return true;
+	}
 
-        return true;
-    }
+	private static String getIdQuery(final List<Long> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++)
+				query.append(", " + idList.get(i));
+		}
+		return query.append(")").toString();
+	}
 
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", " + idList.get(i));
-        }
-        return query.append(")").toString();
-    }
-
-    public static String insertCategoryQuery() {
-        return "INSERT INTO egpgr_complainttype_category(name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,version) values "
-                + "(?,?,?,?,?,?,?,?)";
-    }
-
+	public static String insertServiceGroupQuery() {
+		return "INSERT INTO egpgr_complainttype_category(id,name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(?,?,?,?,?,?,?,?)";
+	}
+	
+	public static String updateServiceGroupQuery() {
+		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?, createdby = ?, lastmodifiedby = ?, "
+				+ "createddate = ?, lastmodifieddate = ?, tenantid = ? where id = ?";
+	}
 
 }

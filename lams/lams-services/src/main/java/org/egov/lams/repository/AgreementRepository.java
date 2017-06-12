@@ -389,7 +389,7 @@ public class AgreementRepository {
 		if(action!=null){
 		switch (action) {
 
-		case CANCELATION:
+		case CANCELLATION:
 					Cancellation cancellation = agreement.getCancellation();
 					orderNumber = cancellation.getOrderNumber();
 					orderDate = cancellation.getOrderDate();

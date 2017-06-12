@@ -13,6 +13,10 @@ import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
+import org.egov.models.UsageMasterRequest;
+import org.egov.models.UsageMasterResponse;
+import org.egov.models.WallTypeRequest;
+import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 
@@ -26,7 +30,7 @@ public interface Masterservice {
 
 	public DepartmentResponseInfo getDepartmentMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String category, String name, String code, String nameLocal, Integer pageSize, Integer offSet);
-	
+
 	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId,Integer []ids, String name ,String code,String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
 	public FloorTypeResponse createFloorType(FloorTypeRequest floorTypeRequest,String tenantId) throws Exception;
@@ -54,25 +58,42 @@ public interface Masterservice {
 
 	public StructureClassResponse updateStructureClassMaster(String tenantId, Long id,
 			StructureClassRequest structureClassRequest);
-	
+
+	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name , String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet);
+
 	public PropertyTypeResponse createPropertyTypeMaster(String tenantId, PropertyTypeRequest propertyTypeRequest);
 
 	public PropertyTypeResponse updatePropertyTypeMaster(String tenantId, Long id, PropertyTypeRequest propertyTypeRequest);
 
 
 	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-	    String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-	    Integer offSet);
+			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
+			Integer offSet);
 
 	public OccuapancyMasterResponse createOccuapancyMaster(String tenantId,
-	    OccuapancyMasterRequest occuapancyMasterRequest);
+			OccuapancyMasterRequest occuapancyMasterRequest);
 
 	public OccuapancyMasterResponse updateOccuapancyMaster(String tenantId, Long id,
-	    OccuapancyMasterRequest occuapancyRequest);
+			OccuapancyMasterRequest occuapancyRequest);
 
 	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-	    String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-	    Integer offSet);
+			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
+			Integer offSet);
 
+	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+
+	public WallTypeResponse createWallTypeMaster(String tenantId, WallTypeRequest wallTypeRequest) throws Exception;
+
+	public WallTypeResponse updateWallTypeMaster(String tenantId, Long id, WallTypeRequest wallTypeRequest) throws Exception;
+
+
+	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+
+	public UsageMasterResponse createUsageMaster(String tenantId, UsageMasterRequest usageMasterRequest) throws Exception;
+
+	public UsageMasterResponse updateUsageMaster(String tenantId, Long id, UsageMasterRequest usageMasterRequest) throws Exception;
 
 }
+
+
+

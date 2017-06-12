@@ -98,6 +98,7 @@ public class AllotteeRepository {
 		userRequest.setGender(Gender.FEMALE);
 		userRequest.setType(UserType.CITIZEN);
 		userRequest.setActive(true); 
+		userRequest.setAddress(allottee.getAddress());
 		// FIXME set user name and password using any gen service
 		CreateUserRequest createUserRequest = new CreateUserRequest(requestInfo, userRequest);
 		logger.info("url for allottee api post call : " + url + " : the user request obj is : " + createUserRequest);

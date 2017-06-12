@@ -59,6 +59,8 @@ public class PgrMasterConstants {
 	public static final String INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE = "ReceivingCenter is Invalid.";
 	public static final String INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE = "ReceivingMode is Invalid.";
 	public static final String INVALID_SERVICETYPE_REQUEST_MESSAGE = "Service Type Message is Invalid";
+	public static final String INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE = "Service Group is invalid";
+
 	
 
 	public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
@@ -88,6 +90,14 @@ public class PgrMasterConstants {
 	public static final String GRIEVANCETYPE_CODE_MANDATORY_CODE = "wcms.0004";
 	public static final String GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME = "serviceCode";
 	public static final String GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE = "Service Type Code is required";
+	
+	public static final String GRIEVANCETYPE_ID_MANDATORY_CODE = "wcms.0005";
+	public static final String GRIEVANCETYPE_ID_MANADATORY_FIELD_NAME = "serviceId";
+	public static final String GRIEVANCETYPE_ID_MANADATORY_ERROR_MESSAGE = "Service Type/ Grievance Type Id is required";
+	
+	public static final String NO_0F_HOURS_MANDATORY_CODE = "wcms.0006";
+	public static final String NO_0F_HOURS_MANADATORY_FIELD_NAME = "noOfHours";
+	public static final String NO_0F_HOURS_MANADATORY_ERROR_MESSAGE = "No of hours is required";
 
 	
 	public String getErrorMessage(final String property) {

@@ -49,11 +49,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
-import org.egov.pgr.model.ServiceGroup;
-import org.egov.pgr.service.ServiceGroupService;
+import org.egov.pgr.model.EscalationTimeType;
 import org.egov.pgr.util.PgrMasterConstants;
-import org.egov.pgr.web.contract.ServiceGroupRequest;
-import org.egov.pgr.web.contract.ServiceGroupResponse;
+import org.egov.pgr.web.contract.EscalationTimeTypeReq;
+import org.egov.pgr.web.contract.EscalationTimeTypeRes;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
 import org.egov.pgr.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -63,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,105 +70,85 @@ import org.springframework.web.bind.annotation.RestController;
 import org.egov.pgr.web.errorhandlers.Error;
 
 @RestController
-@RequestMapping("/serviceGroup")
-public class ServiceGroupController {
-
-	private static final Logger logger = LoggerFactory.getLogger(ServiceGroupController.class);
-
-	@Autowired
-	private ServiceGroupService serviceGroupService;
-
+@RequestMapping("/escalation")
+public class EscalationTimeTypeController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EscalationTimeTypeController.class);
+	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
-
+	
 	@PostMapping(value = "/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
+	public ResponseEntity<?> create(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,
 			final BindingResult errors) {
 		if (errors.hasErrors()) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("serviceGroupRequest::" + serviceGroupRequest);
+		logger.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
 
-		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
+		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final ServiceGroup serviceGroup = serviceGroupService.createCategory(
+	/*	final ServiceGroup serviceGroup = serviceGroupService.createCategory(
 				applicationProperties.getCreateServiceGroupTopicName(),
-				applicationProperties.getCreateServiceGroupTopicKey(), serviceGroupRequest);
-		final List<ServiceGroup> serviceGroups = new ArrayList<>();
-		serviceGroups.add(serviceGroup);
-		return getSuccessResponse(serviceGroups, serviceGroupRequest.getRequestInfo());
+				applicationProperties.getCreateServiceGroupTopicKey(), serviceGroupRequest); */
+		
+		final List<EscalationTimeType> escalationTimeTypes = new ArrayList<>();
+	//	escalationTimeTypes.add(serviceGroup);
+		return getSuccessResponse(escalationTimeTypes, escalationTimeTypeRequest.getRequestInfo());
 
 	}
 	
-	@PostMapping(value = "/{id}/_update")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
-			@PathVariable("id") final long id, final BindingResult errors) {
-		if (errors.hasErrors() || id == 0L) {
-			final ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		logger.info("serviceGroupRequest::" + serviceGroupRequest);
-		serviceGroupRequest.getServiceGroup().setId(id);
-		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-		
-		final ServiceGroup category = serviceGroupService.updateCategory(
-				applicationProperties.getUpdateServiceGroupTopicName(),
-				applicationProperties.getUpdateServiceGroupTopicKey(), serviceGroupRequest);
-		final List<ServiceGroup> categories = new ArrayList<>();
-		categories.add(category);
-		return getSuccessResponse(categories, serviceGroupRequest.getRequestInfo());
-
-	}
-
-	private List<ErrorResponse> validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest) {
+	private List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(serviceGroupRequest);
+		final Error error = getError(escalationTimeTypeRequest);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final ServiceGroupRequest serviceGroupRequest) {
-		serviceGroupRequest.getServiceGroup();
-		final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest);
+	private Error getError(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+		final List<ErrorField> errorFields = getErrorFields(escalationTimeTypeRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
+				.message(PgrMasterConstants.INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest) {
+	private List<ErrorField> getErrorFields(final EscalationTimeTypeReq escalationTimeTypeRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addServiceGroupNameValidationErrors(serviceGroupRequest, errorFields);
-		addTeanantIdValidationErrors(serviceGroupRequest, errorFields);
+		addServiceIdValidationErrors(escalationTimeTypeRequest, errorFields);
+		addTeanantIdValidationErrors(escalationTimeTypeRequest, errorFields);
 		return errorFields;
 	}
 
-	private void addServiceGroupNameValidationErrors(final ServiceGroupRequest serviceGroupRequest,
+	private void addServiceIdValidationErrors(final EscalationTimeTypeReq escalationTimeTypeRequest,
 			final List<ErrorField> errorFields) {
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		if (serviceGroup.getName() == null || serviceGroup.getName().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_NAME_MANDATORY_CODE)
-					.message(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME).build();
+		final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
+		if (ecalationTimeType.getGrievanceType().getId() == 0L) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.GRIEVANCETYPE_ID_MANDATORY_CODE)
+					.message(PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+		if (ecalationTimeType.getNoOfHours() == 0L) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.NO_0F_HOURS_MANDATORY_CODE)
+					.message(PgrMasterConstants.NO_0F_HOURS_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.NO_0F_HOURS_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 	}
 	
-	private void addTeanantIdValidationErrors(final ServiceGroupRequest serviceGroupRequest,
-			final List<ErrorField> errorFields) {
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		if (serviceGroup.getTenantId() == null || serviceGroup.getTenantId().isEmpty()) {
+	private void addTeanantIdValidationErrors(final EscalationTimeTypeReq escalationTimeTypeRequest,
+		final List<ErrorField> errorFields) {
+		final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
+		if (ecalationTimeType.getTenantId() == null || ecalationTimeType.getTenantId().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
 					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
@@ -184,7 +162,7 @@ public class ServiceGroupController {
 
 		final Error error = new Error();
 		error.setCode(1);
-		error.setDescription("Error while binding request. Ensure id is passed if you're updating a record.");
+		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors())
 			for (final FieldError fieldError : errors.getFieldErrors())
 				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
@@ -192,13 +170,13 @@ public class ServiceGroupController {
 		return errRes;
 	}
 
-	private ResponseEntity<?> getSuccessResponse(final List<ServiceGroup> serviceGroupList, final RequestInfo requestInfo) {
-		final ServiceGroupResponse serviceGroupResponse = new ServiceGroupResponse();
+	private ResponseEntity<?> getSuccessResponse(final List<EscalationTimeType> escalationTimeTypeList, final RequestInfo requestInfo) {
+		final EscalationTimeTypeRes escalationTimeTypeRes = new EscalationTimeTypeRes();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		serviceGroupResponse.setResponseInfo(responseInfo);
-		serviceGroupResponse.setServiceGroups(serviceGroupList);
-		return new ResponseEntity<>(serviceGroupResponse, HttpStatus.OK);
+		escalationTimeTypeRes.setResponseInfo(responseInfo);
+		escalationTimeTypeRes.setEscalationTimeTypes(escalationTimeTypeList);
+		return new ResponseEntity<>(escalationTimeTypeRes, HttpStatus.OK);
 
 	}
 

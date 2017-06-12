@@ -86,7 +86,7 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			validateCreate(agreementRequest, errors);
 			break;
 
-		case CANCELATION:
+		case CANCELLATION:
 			validateCancel(agreementRequest, errors);
 			break;
 

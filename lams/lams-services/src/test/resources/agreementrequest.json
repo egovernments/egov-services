@@ -1,0 +1,100 @@
+{
+"RequestInfo" : {
+	"apiId" : "emp",
+	"ver" : "1.0",
+	"ts" : null,
+	"action" : "create",
+	"did" : "1",
+	"key" : "abcdkey",
+	"msgId" : "20170310130900",
+	"requesterId" : "rajesh",
+	"authToken" : "6915c6c3-5b5f-4a0b-af99-ba31dc732bea"
+ },
+ "Agreement" :{
+      "tenantId": "1",
+      "agreementNumber": null,
+      "acknowledgementNumber": "00085-2017-RH",
+      "agreementDate": "27/03/2017",
+      "timePeriod": 1,
+      "allottee": {
+        "name": "swamy12345",
+        "permanentAddress": "22/78 this street that home",
+        "mobileNumber": "7708364422",
+        "aadhaarNumber": null,
+        "pan": null,
+        "emailId": "hihowar12ou@gmail.com",
+        "userName": "swamy321",
+        "password": "wd",
+        "active": true,
+        "type": "SYSTEM",
+        "gender": "MALE"
+      },
+      "asset": {
+        "id": 91,
+        "assetCategory": {
+          "id": 31,
+          "name": "Fish Tank",
+          "code": "031"
+        },
+        "name": "shopping mall",
+        "code": "000111",
+        "locationDetails": {
+          "locality": 1,
+          "zone": null,
+          "revenueWard": null,
+          "block": null,
+          "street": null,
+          "electionWard": 2,
+          "doorNo": null,
+          "pinCode": null
+        }
+      },
+      "tenderNumber": "tenderNumber",
+      "tenderDate": "24/03/2017",
+      "councilNumber": "councilNumber",
+      "councilDate": "24/03/2017",
+      "bankGuaranteeAmount": 25000,
+      "bankGuaranteeDate": "23/03/2017",
+      "securityDeposit": 10000,
+      "securityDepositDate": "24/03/2017",
+      "natureOfAllotment": "AUCTION",
+      "registrationFee": 23095,
+      "caseNo": "caseNo",
+      "commencementDate": "24/03/2017",
+      "expiryDate": "24/03/2018",
+      "orderDetails": "orderDetails",
+      "rent": 3000,
+      "tradelicenseNumber": "tradelicenseNumber",
+      "paymentCycle": "ANNUAL",
+      "action" : "CREATE",
+      "rentIncrementMethod": {
+        "id": 1,
+        "type": null,
+        "assetCategory": null,
+        "fromDate": null,
+        "toDate": null,
+        "percentage": null,
+        "flatAmount": null
+      },
+      "orderNo": "orderNo",
+      "orderDate": "24/03/2017",
+      "rrReadingNo": "rrReadingNo",
+      "remarks": "supertyoe is working",
+      "solvencyCertificateNo": "solvencyCertificateNo",
+      "solvencyCertificateDate": "23/03/2017",
+      "tinNumber": "tinNumber",
+      "documents": null,
+      "demands": null,
+    
+      "workflowDetails": {
+      		"businessKey":"Agreement",
+  	"type":"Agreement",
+  	"assignee": 1,
+  	"status":"Application created",
+  	"action":"Forward"
+      },
+      "goodWillAmount": 450,
+      "stateId": "627",
+      "source" : "DATA_ENTRY"
+   }
+}

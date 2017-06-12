@@ -1,0 +1,50 @@
+{
+"ResponseInfo" : {
+	"apiId" : null,
+	"ver" : null,
+	"ts" : null,
+	"resMsgId" : null,
+	"msgId" : null,
+	"status" : null
+	},
+"Agreements" :[
+{
+      "tenantId": "1",
+      "agreementNumber": null,
+      "acknowledgementNumber": "ack",
+      "agreementDate": null,
+      "timePeriod": null,
+      "allottee": null,
+      "asset": null,
+      "tenderNumber": null,
+       "tenderDate": null,
+      "councilNumber": null,
+      "councilDate": null,
+      "bankGuaranteeAmount":null,
+      "bankGuaranteeDate": null,
+      "securityDeposit": null,
+      "securityDepositDate": null,
+      "natureOfAllotment": null,
+      "registrationFee":null,
+      "caseNo": null,
+      "commencementDate":null,
+      "expiryDate":null,
+      "orderDetails": null,
+      "rent":null,
+      "tradelicenseNumber" : null ,
+      "rentIncrementMethod":null,
+      "orderNumber": null,
+      "orderDate": null,
+      "rrReadingNo": null,
+      "remarks": null,
+      "solvencyCertificateNo": null,
+      "solvencyCertificateDate": null,
+      "tinNumber": null,
+      "documents": null,
+      "demands": null,
+      "workflowDetails":null,
+      "goodWillAmount": null,
+      "stateId": null
+    }
+]
+}

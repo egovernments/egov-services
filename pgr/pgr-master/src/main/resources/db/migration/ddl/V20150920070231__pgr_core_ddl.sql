@@ -16,7 +16,7 @@ CREATE TABLE egpgr_receiving_center
   tenantid character varying(250) NOT NULL,
   version numeric DEFAULT 0,
   CONSTRAINT un_receiving_center UNIQUE (id, tenantid),
-  CONSTRAINT un_document_name UNIQUE (name, tenantid)
+  CONSTRAINT un_receivingcenter_name UNIQUE (name, tenantid)
 );
 
 

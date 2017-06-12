@@ -63,42 +63,53 @@ public class PgrMasterConstants {
 
 	
 
-	public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
+	public static final String TENANTID_MANDATORY_CODE = "pgr.0001";
 	public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
 	public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
 
-	public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "wcms.0002";
+	public static final String SERVICEGROUP_NAME_MANDATORY_CODE = "pgr.0002";
 	public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
 	
-	public static final String SERVICEGROUP_ID_MANDATORY_CODE = "wcms.0003";
+	public static final String SERVICEGROUP_ID_MANDATORY_CODE = "pgr.0003";
 	public static final String SERVICEGROUP_ID_MANADATORY_FIELD_NAME = "id";
 	public static final String SERVICEGROUP_ID_MANADATORY_ERROR_MESSAGE = "Service Group id is required";
 
-	public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "wcms.0004";
+	public static final String RECEIVINGCENTER_NAME_MANDATORY_CODE = "pgr.0004";
 	public static final String RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingCenter Name is required";
 
-	public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "wcms.0005";
+	public static final String RECEIVINGMODE_NAME_MANDATORY_CODE = "pgr.0005";
 	public static final String RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME = "name";
-	public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingMode Type is required";
+	public static final String RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE = "ReceivingMode Name is required";
 
-	public static final String GRIEVANCETYPE_NAME_MANDATORY_CODE = "wcms.0003";
+	public static final String GRIEVANCETYPE_NAME_MANDATORY_CODE = "pgr.0006";
 	public static final String GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME = "serviceName";
 	public static final String GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Service Type Name is required";
 	
-	public static final String GRIEVANCETYPE_CODE_MANDATORY_CODE = "wcms.0004";
+	public static final String GRIEVANCETYPE_CODE_MANDATORY_CODE = "pgr.0007";
 	public static final String GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME = "serviceCode";
 	public static final String GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE = "Service Type Code is required";
 	
-	public static final String GRIEVANCETYPE_ID_MANDATORY_CODE = "wcms.0005";
+	public static final String GRIEVANCETYPE_ID_MANDATORY_CODE = "pgr.0008";
 	public static final String GRIEVANCETYPE_ID_MANADATORY_FIELD_NAME = "serviceId";
 	public static final String GRIEVANCETYPE_ID_MANADATORY_ERROR_MESSAGE = "Service Type/ Grievance Type Id is required";
 	
-	public static final String NO_0F_HOURS_MANDATORY_CODE = "wcms.0006";
+	public static final String NO_0F_HOURS_MANDATORY_CODE = "pgr.0009";
 	public static final String NO_0F_HOURS_MANADATORY_FIELD_NAME = "noOfHours";
 	public static final String NO_0F_HOURS_MANADATORY_ERROR_MESSAGE = "No of hours is required";
 
+	public static final String  RECEIVINGCENTER_UNQ_ERROR_MESSAGE="Entered ReceivingCenter Name Already Exist.";
+	public static final String RECEIVINGCENTER_NAME_UNQ_FIELD_NAME="name";
+	
+	public static final String RECEIVINGMODE_CODE_UNIQUE_CODE ="pgr.0010";
+	public static final String RECEIVINGMODE_UNQ_ERROR_MESSAGE="Entered ReceivingMode Code Already Exist.";
+	public static final String RECEIVINGMODE_CODE_UNQ_FIELD_NAME="name";
+	
+	public static final String RECEIVINGMODE_CODE_MANDATORY_CODE = "pgr.0011";
+	public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "name";
+	public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
+	
 	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);

@@ -43,6 +43,7 @@ package org.egov.pgr.repository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.pgr.model.ReceivingCenterType;
 import org.egov.pgr.repository.builder.ReceivingCenterTypeQueryBuilder;
@@ -106,4 +107,29 @@ public class ReceivingCenterTypeRepository {
 		return receivingCenterTypes;
 	}
 
+    public boolean checkReceivingCenterTypeByNameAndCode(final String code,final String name, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+       
+        // preparedStatementValues.add(id);
+        preparedStatementValues.add(tenantId);
+        String query="";
+ /*       if(code!=null && code!=""){
+        	
+        	preparedStatementValues.add(code);
+        	query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();
+        	
+        }*/ 
+          if(name!=null && tenantId!=null){
+        	 preparedStatementValues.add(name);
+             query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
+           }  
+        final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!ceneterTypes.isEmpty())
+            return false;
+
+        return true;
+    }
+	
+	
 }

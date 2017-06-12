@@ -201,21 +201,33 @@ public class ReceivingModeTypeController {
 
 	private List<ErrorField> getErrorFields(final ReceivingModeTypeReq categoryRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addReceivingModeNameValidationErrors(categoryRequest, errorFields);
+		addReceivingModeNameAndCodeValidationErrors(categoryRequest, errorFields);
 		addTeanantIdValidationErrors(categoryRequest, errorFields);
 		return errorFields;
 	}
 
-	private void addReceivingModeNameValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
+	private void addReceivingModeNameAndCodeValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
 			final List<ErrorField> errorFields) {
 		final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
-		if (receivingMode.getName() == null || receivingMode.getName().isEmpty()) {
+		if (receivingMode.getCode() == null || receivingMode.getCode().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder()
-					.code(PgrMasterConstants.RECEIVINGCENTER_NAME_MANDATORY_CODE)
-					.message(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME).build();
+					.code(PgrMasterConstants.RECEIVINGMODE_CODE_MANDATORY_CODE)
+					.message(PgrMasterConstants.RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else
+		}if (receivingMode.getName() == null || receivingMode.getName().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(PgrMasterConstants.RECEIVINGMODE_NAME_MANDATORY_CODE)
+					.message(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (!modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),receivingMode.getName(),receivingMode.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
+                    .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else
 			return;
 	}
 

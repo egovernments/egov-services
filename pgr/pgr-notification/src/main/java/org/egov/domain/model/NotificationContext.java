@@ -11,4 +11,5 @@ public class NotificationContext {
     private ServiceType serviceType;
     private Tenant tenant;
     private Employee employee;
+    private Employee previousEmployee;
 }

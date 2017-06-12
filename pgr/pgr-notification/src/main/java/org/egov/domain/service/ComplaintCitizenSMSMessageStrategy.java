@@ -13,7 +13,7 @@ public class ComplaintCitizenSMSMessageStrategy implements SMSMessageStrategy {
 
     @Override
     public boolean matches(NotificationContext context) {
-        return context.getServiceType().isComplaintType();
+        return context.getServiceType().isComplaintType() && !context.getSevaRequest().isEscalated();
     }
 
     @Override
@@ -27,5 +27,7 @@ public class ComplaintCitizenSMSMessageStrategy implements SMSMessageStrategy {
         return new SMSMessageContext(SMS_COMPLAINT_SERVICE_REQUEST, map, mobileNumber);
     }
 }
+
+
 
 

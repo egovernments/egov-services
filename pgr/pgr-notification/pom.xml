@@ -163,6 +163,9 @@
                                         <exclude>org.egov.domain.service.NewDeliverableCitizenSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UpdateDeliverableStatusCitizenSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ProcessingFeeEnteredCitizenSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEscalatedFromEmployeeSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEscalatedToEmployeeSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintRegisteredEmployeeSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UpdateDeliverableStatusEmailMessageStrategy</exclude>

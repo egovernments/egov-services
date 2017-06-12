@@ -30,18 +30,33 @@ public class NotificationService {
     }
 
     public void notify(SevaRequest sevaRequest) {
+        final NotificationContext context = getNotificationContext(sevaRequest);
+        this.smsService.send(context);
+        this.emailService.send(context);
+    }
+
+    private NotificationContext getNotificationContext(SevaRequest sevaRequest) {
         final ServiceType serviceType = this.serviceTypeRepository
             .getServiceTypeByCode(sevaRequest.getServiceTypeCode(), sevaRequest.getTenantId());
         final Tenant tenant = this.tenantRepository.fetchTenantById(sevaRequest.getTenantId());
         final Employee employee = this.employeeRepository
             .getEmployeeByPosition(sevaRequest.getAssigneeId(), sevaRequest.getTenantId());
-        final NotificationContext context = NotificationContext.builder()
+        final Employee previousEmployee = getPreviousEmployee(sevaRequest);
+
+        return NotificationContext.builder()
             .employee(employee)
+            .previousEmployee(previousEmployee)
             .serviceType(serviceType)
             .tenant(tenant)
             .sevaRequest(sevaRequest)
             .build();
-        this.smsService.send(context);
-        this.emailService.send(context);
+    }
+
+    private Employee getPreviousEmployee(SevaRequest sevaRequest) {
+        if (sevaRequest.getPreviousAssignee() == null) {
+            return null;
+        }
+        return this.employeeRepository
+            .getEmployeeByPosition(sevaRequest.getPreviousAssignee(), sevaRequest.getTenantId());
     }
 }

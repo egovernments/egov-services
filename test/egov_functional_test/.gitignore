@@ -1,0 +1,12 @@
+.gradle
+.iml
+build
+gradle
+.idea
+out/
+.exe
+/src/test/resources/dataFiles/.~lock*
+*.ipr
+*.iws
+classes/
+Thumbs.db

@@ -1,0 +1,180 @@
+import groovyx.gpars.GParsPool
+import net.masterthought.cucumber.ReportBuilder
+import org.apache.commons.io.FilenameUtils
+
+import java.text.DateFormat
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+
+buildscript {
+    repositories {
+        maven {
+            url "http://repo.bodar.com"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.codehaus.gpars:gpars:1.2.1",
+                "net.masterthought:cucumber-reporting:0.4.0"
+    }
+}
+
+repositories {
+    maven {
+        url 'http://repo1.maven.org/maven2'
+    }
+    maven {
+        url "http://repo.bodar.com"
+    }
+}
+
+
+
+
+tasks.withType(JavaExec) {
+    systemProperty "env", System.getProperty("env")
+    systemProperty "browser", System.getProperty("browser")
+    systemProperty "cucumber.options", System.getProperty("cucumber.options")
+}
+
+ext.cukesVersion = '1.2.5'
+
+dependencies {
+
+    compile group: 'net.masterthought', name: 'cucumber-reporting', version: "0.4.0"
+    compile group: 'com.googlecode.totallylazy', name: 'totallylazy', version: '1.20'
+
+    compile group: 'info.cukes', name: 'cucumber-junit', version: "$cukesVersion"
+    compile group: 'info.cukes', name: 'cucumber-core', version: "$cukesVersion"
+    compile group: 'info.cukes', name: 'cucumber-java8', version: "$cukesVersion"
+
+    compile(
+            "org.codehaus.groovy:groovy-all:2.2.0"
+    )
+
+    compile("junit:junit:4.12")
+
+    compile(group: 'com.googlecode.lambdaj', name: 'lambdaj', version: '2.3.3')
+    compile('org.seleniumhq.selenium:selenium-java:3.3.1')
+    compile('org.apache.poi:poi:3.13')
+    compile('org.apache.poi:poi-ooxml:3.13')
+    compile group: 'com.jayway.awaitility', name: 'awaitility', version: '1.7.0'
+}
+
+
+tasks.withType(JavaExec) {
+    systemProperty "env", System.getProperty("env")
+    systemProperty "browser", System.getProperty("browser")
+}
+
+
+task writeNewPom << {
+    pom {
+        project {
+            inceptionYear '2008'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("$buildDir/newpom.xml")
+}
+
+task runInParallel() {
+    doLast {
+        runCucumberTests()
+    }
+}
+
+
+def runCucumberTests() {
+    def features = fileTree(dir: "${project.projectDir}/src/test/resources/features/").include '**/*.feature'
+
+    GParsPool.withPool(4) {
+        features.eachParallel { File file ->
+            javaexec {
+                ignoreExitValue = true
+                main = "cucumber.api.cli.Main"
+                classpath = sourceSets.test.runtimeClasspath
+                args = ["-p", "pretty", "-p", "json:${reporting.baseDir}/cucumber/${file.name}.json", "--glue", "steps", "-t", getTags("$tags"),
+                        "${project.projectDir}/src/test/resources/features/${file.name}"]
+                systemProperties = [
+                        "env"    : System.getProperty("env"),
+                        "browser": System.getProperty("browser")
+                ]
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4' //version required
+}
+
+def getTags(tags) {
+    if (tags.isEmpty()) {
+        return "~@Wip"
+    } else {
+        return tags
+    }
+}
+
+
+task runInSequence() {
+    doLast {
+        def arglist = ["-p", "pretty", "-p", "json:${reporting.baseDir}/cucumber/cucumber.json", "--glue", "steps", "-t", getTags("$tags"),
+                       "${project.projectDir}/src/test/resources/features"]
+
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = sourceSets.test.runtimeClasspath
+            args = arglist
+            systemProperties = [
+                    "env"    : System.getProperty("env"),
+                    "browser": System.getProperty("browser")
+            ]
+        }
+    }
+}
+
+
+
+task generateReport() {
+    doLast {
+        def jsonReports = fileTree(dir: "${reporting.baseDir}/cucumber/").include '**/*.json'.toString()
+        File reportOutputDirectory = new File("${reporting.baseDir}/cucumber")
+
+        List<String> jsonReportFiles = new ArrayList<String>()
+        jsonReports.each { File file ->
+            jsonReportFiles.add("${reporting.baseDir}/cucumber/${file.name}".toString())
+        }
+        ReportBuilder reportBuilder = new ReportBuilder(
+                jsonReportFiles,              // List<String> jsonReports,
+                reportOutputDirectory,        // File reportDirectory
+                "",                           // String pluginUrlPath
+                DateFormat.instance.format(new Date()),                       // String buildNumber
+                "egov-ui-tests",   // String buildProject,
+                false,                        // boolean skippedFails,
+                false,                        // boolean pendingFails,
+                true,                         // boolean undefinedFails,
+                false,                        // boolean missingFails
+                false,                        // boolean flashCharts,
+                true,                         // boolean runWithJenkins,
+                false,                        // boolean artifactsEnabled,
+                "",                           // String artifactConfig
+                true,                         // boolean highCharts
+                true                          // boolean parallelTesting
+        )
+        reportBuilder.generateReports()
+        println("\nReport available on: ${reporting.baseDir}/cucumber/feature-overview.html")
+    }
+}
+runInSequence.finalizedBy(generateReport)

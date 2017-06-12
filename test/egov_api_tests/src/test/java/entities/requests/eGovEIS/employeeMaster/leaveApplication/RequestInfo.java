@@ -1,0 +1,94 @@
+package entities.requests.eGovEIS.employeeMaster.leaveApplication;
+
+public class RequestInfo {
+    private UserInfo userInfo;
+    private String ver;
+    private String requesterId;
+    private Object authToken;
+    private String action;
+    private String msgId;
+    private String apiId;
+    private String did;
+    private String key;
+    private String ts;
+
+    public UserInfo getUserInfo() {
+        return this.userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public String getVer() {
+        return this.ver;
+    }
+
+    public void setVer(String ver) {
+        this.ver = ver;
+    }
+
+    public String getRequesterId() {
+        return this.requesterId;
+    }
+
+    public void setRequesterId(String requesterId) {
+        this.requesterId = requesterId;
+    }
+
+    public Object getAuthToken() {
+        return this.authToken;
+    }
+
+    public void setAuthToken(Object authToken) {
+        this.authToken = authToken;
+    }
+
+    public String getAction() {
+        return this.action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getMsgId() {
+        return this.msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    public String getApiId() {
+        return this.apiId;
+    }
+
+    public void setApiId(String apiId) {
+        this.apiId = apiId;
+    }
+
+    public String getDid() {
+        return this.did;
+    }
+
+    public void setDid(String did) {
+        this.did = did;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getTs() {
+        return this.ts;
+    }
+
+    public void setTs(String ts) {
+        this.ts = ts;
+    }
+}

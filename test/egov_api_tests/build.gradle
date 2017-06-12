@@ -1,0 +1,63 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+configurations.all {
+}
+
+sourceCompatibility = 1.8
+
+
+
+
+repositories {
+    maven {
+        url 'http://repo1.maven.org/maven2'
+    }
+}
+
+jar {
+    from sourceSets.test.output
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile('com.google.inject:guice:3.0')
+    testCompile('org.testng:testng:6.9.10')
+    testCompile('org.uncommons:reportng:1.1.4')
+    testCompile(group: 'com.jayway.restassured', name: 'rest-assured', version: '2.3.3')
+    testCompile(group: 'org.codehaus.jackson', name: 'jackson-jaxrs', version: '1.8.5')
+    testCompile(group: 'com.googlecode.lambdaj', name: 'lambdaj', version: '2.3.3')
+    testCompile(group: 'org.json', name: 'json', version: '20131018')
+    testCompile('com.sun.xml.bind:jaxb-impl:2.2.11')
+    testCompile('com.google.code.gson:gson:2.6.1')
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
+
+}
+
+tasks.withType(Test) {
+    gradle.startParameter.continueOnFailure = true
+    systemProperties = [env: System.getProperty('env', 'local')]
+}
+
+task egov(type: Test) {
+    String tagName = System.getProperty("tags")
+    dependsOn clean, compileTestJava
+    useTestNG {
+        options {
+            reports.html.destination = file("$testReportDir/APITestsResults")
+            useDefaultListeners = false
+            listeners << 'org.uncommons.reportng.HTMLReporter'
+            listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+            includeGroups tagName
+        }
+    }
+}
+
+task packageSources(type: Jar) {
+    from sourceSets.test.allSource
+    classifier = 'sources'
+}
+
+project.version = version

@@ -261,3 +261,8 @@ function showError(message) {
         $('#error-alert-div').remove();
     }, 6000);
 }
+
+
+function getTimestamp() {
+    return new Date().getTime();
+}

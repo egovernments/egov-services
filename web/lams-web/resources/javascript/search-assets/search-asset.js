@@ -229,7 +229,7 @@ class AssetSearch extends React.Component {
                   <td>{item.assetCategory.name}</td>
                   <td>{item.name}</td>
                   <td>{item.code}</td>
-                  <td>{item.locationDetails.electionWard}</td>
+                  <td>{getNameById(item.locationDetails.electionWard)}</td>
                   <td>
                       {showActions(item)}
                   </td>

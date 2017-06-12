@@ -1,9 +1,6 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.EmailMessageContext;
-import org.egov.domain.model.ServiceType;
-import org.egov.domain.model.SevaRequest;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -13,17 +10,17 @@ public class ComplaintEmailMessageStrategy implements EmailMessageStrategy {
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_en";
 
     @Override
-    public boolean matches(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
-        return serviceType.isComplaintType();
+    public boolean matches(NotificationContext context) {
+        return context.getServiceType().isComplaintType();
     }
 
     @Override
-    public EmailMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+    public EmailMessageContext getMessageContext(NotificationContext context) {
         return EmailMessageContext.builder()
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
-            .bodyTemplateValues(getBodyTemplate(sevaRequest))
+            .bodyTemplateValues(getBodyTemplate(context.getSevaRequest()))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
-            .subjectTemplateValues(getSubjectTemplateValues(sevaRequest))
+            .subjectTemplateValues(getSubjectTemplateValues(context.getSevaRequest()))
             .build();
     }
 

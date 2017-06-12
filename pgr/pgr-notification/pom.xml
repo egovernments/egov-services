@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.11.0</version>
+            <version>0.12.0</version>
         </dependency>
 
         <!--Test dependencies-->
@@ -154,6 +154,7 @@
                                         <exclude>org.egov.PgrNotificationApplication</exclude>
                                         <exclude>org.egov.domain.model.SevaRequest</exclude>
                                         <exclude>org.egov.domain.model.Tenant</exclude>
+                                        <exclude>org.egov.domain.model.NotificationContext</exclude>
                                         <exclude>org.egov.domain.exception.TenantDoesNotExistException</exclude>
                                         <exclude>org.egov.domain.service.SMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ComplaintSMSMessageStrategy</exclude>

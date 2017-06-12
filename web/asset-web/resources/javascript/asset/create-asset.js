@@ -265,7 +265,9 @@ class CreateAsset extends React.Component {
         newRows: {},
         references: [],
         relatedAssets: [],
-        removeAsset: ""
+        removeAsset: "",
+        modify1: false,
+        modify2: false
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -307,8 +309,15 @@ class CreateAsset extends React.Component {
     $("#relatedAssetsModal").modal("hide");
     setTimeout(function(){
       _this.setState({
-        references: []
+        references: [],
+        modify2: true
       });
+
+      setTimeout(function(){
+        _this.setState({
+          modify2: false
+        })
+      }, 1200);
       $("#newRelAssetMdl").modal("show");
     }, 500);
   }
@@ -475,7 +484,7 @@ class CreateAsset extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.references.length != this.state.references.length) {
+      if (this.state.modify2) {
           $('#refTable').DataTable({
              dom: 'Bfrtip',
              ordering: false,
@@ -485,7 +494,7 @@ class CreateAsset extends React.Component {
              },
              buttons: []
           });
-      } else if(prevState.relatedAssets.length != this.state.relatedAssets.length) {
+      } else if(this.state.modify1) {
           $('#relatedTable').DataTable({
              dom: 'Bfrtip',
              ordering: false,
@@ -508,13 +517,21 @@ class CreateAsset extends React.Component {
             return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
           });
           _this.setState({
-            references: assets
+            references: assets,
+            modify2: true
           })
       } else {
         _this.setState({
-          references: []
+          references: [],
+          modify2: true
         })
       }
+
+      setTimeout(function(){
+        _this.setState({
+          modify2: false
+        })
+      }, 1200);
     });
 
     flag = 1;
@@ -813,8 +830,15 @@ class CreateAsset extends React.Component {
             status: "",
             code: ""
           },
-          references: []
-        })
+          references: [],
+          modify2: true
+        });
+
+        setTimeout(function(){
+          _this.setState({
+            modify2: false
+          });
+        }, 1200);
       });
 
 			if(getUrlVars()["type"]) 
@@ -1015,16 +1039,24 @@ class CreateAsset extends React.Component {
     e.stopPropagation();
     var _this = this;
     _this.setState({
-      relatedAssets: []
+      relatedAssets: [],
+      modify1: true
     });
 
     commonApiPost("asset-services", "assets", "_search", {tenantId, assetReference: this.state.assetSet.id}, function(err, res) {
       if(res) {
         flag1 = 1;
         _this.setState({
-          relatedAssets: res["Assets"]
+          relatedAssets: res["Assets"],
+          modify1: true
         })
       }
+
+      setTimeout(function(){
+        _this.setState({
+          modify1: false
+        })
+      }, 1200);
     });
 
     $("#relatedAssetsModal").modal('show');

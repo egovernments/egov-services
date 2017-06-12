@@ -31,7 +31,7 @@ const styles = {
   rightIcon: {
     height: 25,
     marginTop: -15,
-    marginRight: 12
+    marginLeft: 12
   }
 }
 
@@ -43,18 +43,24 @@ const RightIcon = () => {
   return (
     <div>
 
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
-      <IconMenu
+    <IconMenu
           iconButtonElement={<IconButton style={{backgroundColor:"white"}}><MoreVertIcon /></IconButton>}
           anchorOrigin={{horizontal: 'left', vertical: 'top'}}
           targetOrigin={{horizontal: 'left', vertical: 'top'}}
         >
-          <MenuItem primaryText="Refresh" />
-          <MenuItem primaryText="Send feedback" />
-          <MenuItem primaryText="Settings" />
-          <MenuItem primaryText="Help" />
-          <MenuItem primaryText="Sign out" />
-    </IconMenu>
+          <MenuItem primaryText="Worklist"  leftIcon={<i className="material-icons">list</i>}></MenuItem>
+          <MenuItem primaryText="Drafts" leftIcon={<i className="material-icons">drafts</i>}></MenuItem>
+          <MenuItem primaryText="Notification" leftIcon={<i className="material-icons">notifications</i>}></MenuItem>
+          <MenuItem primaryText="Edit Profile" leftIcon={<i className="material-icons">mode_edit</i>}></MenuItem>
+          <MenuItem primaryText="Change Password" leftIcon={<i className="material-icons">https</i>}></MenuItem>
+          <MenuItem primaryText="Feedback" leftIcon={<i className="material-icons">chat</i>}></MenuItem>
+          <MenuItem primaryText="Report an issue" leftIcon={<i className="material-icons">bug_report</i>}></MenuItem>
+          <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
+          <MenuItem primaryText="Sign Out" leftIcon={<i className="material-icons">lock</i>}></MenuItem>
+   </IconMenu>
+
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
+
     </div>
   );
 }
@@ -145,7 +151,7 @@ class Header extends Component {
   render() {
     return (
       <div className="Header">
-        <AppBar title={< div > UAT Maharashtra Municipal Corporation < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementRight={< RightIcon />}/>
+        <AppBar title={< div > UAT Maharashtra Municipal Corporation < /div>} onLeftIconButtonTouchTap={this.handleToggle}  iconElementRight={< RightIcon />}/>
 
         <Drawer containerClassName="side-bar" open={this.state.open}>
           {/*<div id="menu"></div>*/}

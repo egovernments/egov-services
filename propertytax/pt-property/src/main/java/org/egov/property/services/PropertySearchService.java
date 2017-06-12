@@ -139,7 +139,7 @@ public class PropertySearchService {
 		}
 
 		searchPropertySql.append("select * from egpt_property prop  JOIN egpt_address Addr"
-				+ " on Addr.property_id =  prop.id JOIN egpt_property_user puser on puser.property_id = prop.id where ");
+				+ " on Addr.property_id =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where ");
 
 		if ( tenantId!=null && !tenantId.isEmpty())
 			searchPropertySql.append("prop.tenantid='"+tenantId.trim()+"'");
@@ -264,20 +264,20 @@ public class PropertySearchService {
 
 			Long propertyId = property.getId(); 
 
-			String addressSql = "select * from egpt_address where property_id ="+propertyId;
+			String addressSql = "select * from egpt_address where property="+propertyId;
 			Address address = (Address) jdbcTemplate.queryForObject(addressSql, new BeanPropertyRowMapper(Address.class));
 			property.setAddress(address);
 
 			List<OwnerInfo> ownerInfos = new ArrayList<>();
 
-			String userIdsSql = " select * from egpt_property_user where property_id ="+propertyId;
+			String userIdsSql = " select * from egpt_property_owner where property ="+propertyId;
 			List<PropertyUser> propertyUsers = jdbcTemplate.query(userIdsSql, new BeanPropertyRowMapper(PropertyUser.class));
 
 			List<Integer> userIds = new ArrayList<>();
 
 			for (PropertyUser propertyUser : propertyUsers ){
 
-				userIds.add(propertyUser.getUserId());
+				userIds.add(propertyUser.getOwner());
 			}
 
 			List<User> userOfProperty = getUserObjectForUserIds(userIds,users);
@@ -288,7 +288,7 @@ public class PropertySearchService {
 			for ( User propertyUser : userOfProperty ){
 
 				Long userId = propertyUser.getId();
-				String propertyUserSql 		= 	"select * from egpt_property_user where user_id ="+userId;
+				String propertyUserSql 		= 	"select * from egpt_property_owner where user="+userId;
 				ModelMapper modelMapper 	= 	new ModelMapper();
 				OwnerInfo owernInfo 		= 	modelMapper.map(propertyUser, OwnerInfo.class);
 				PropertyUser proprtyUser 	= 	(PropertyUser) jdbcTemplate.queryForObject(propertyUserSql, new BeanPropertyRowMapper(PropertyUser.class));
@@ -305,7 +305,7 @@ public class PropertySearchService {
 			// get property details for property
 			//
 
-			String propertyDetailSql = " select * from egpt_propertydetails where property_id ="+propertyId;
+			String propertyDetailSql = " select * from egpt_propertydetails where property ="+propertyId;
 			PropertyDetail propertyDetail = (PropertyDetail)jdbcTemplate.queryForObject( propertyDetailSql,new BeanPropertyRowMapper(PropertyDetail.class));
 			property.setPropertyDetail(propertyDetail);
 
@@ -313,7 +313,7 @@ public class PropertySearchService {
 			// get vacant land for property
 			//
 
-			String VacantLandSql = " select * from egpt_vacantland where property_id ="+propertyId;
+			String VacantLandSql = " select * from egpt_vacantland where property ="+propertyId;
 			VacantLandDetail vacantLandDetail = (VacantLandDetail) jdbcTemplate.queryForObject(VacantLandSql , new BeanPropertyRowMapper(VacantLandDetail.class));
 			property.setVacantLand(vacantLandDetail);
 
@@ -321,7 +321,7 @@ public class PropertySearchService {
 			// get property location for property
 			//
 
-			String propertyLocationSql = "select * from egpt_propertylocation where property_id = ?";
+			String propertyLocationSql = "select * from egpt_propertylocation where property= ?";
 			PropertyLocation propertyLocation = (PropertyLocation)jdbcTemplate.queryForObject(propertyLocationSql, new Object[] { propertyId }, new PropertyLocationRowMapper());
 			property.setBoundary(propertyLocation);
 
@@ -331,7 +331,7 @@ public class PropertySearchService {
 			// get the floors for the property detail
 			//
 
-			String floorSql = " select * from egpt_floors where property_details_id ="+propertyDetailId;
+			String floorSql = " select * from egpt_floors where property_details ="+propertyDetailId;
 			List<Floor> floors = jdbcTemplate.query(floorSql ,new BeanPropertyRowMapper(Floor.class));
 			property.getPropertyDetail().setFloors(floors);
 
@@ -339,7 +339,7 @@ public class PropertySearchService {
 			// get  document for property detail
 			//
 
-			String documnetSql = "select * from egpt_document where property_details_id = "+propertyDetailId;
+			String documnetSql = "select * from egpt_document where property_details = "+propertyDetailId;
 			List<Map<String, Object>> rows  = jdbcTemplate.queryForList(documnetSql);
 			List<Document> documents = getDocumentObject(rows);
 			property.getPropertyDetail().setDocuments(documents);
@@ -348,7 +348,7 @@ public class PropertySearchService {
 			// Audit details for the property detail 
 			//
 
-			String auditDetailSql = "select createdBy,lastModifiedBy,createdTime,lastModifiedTime from egpt_propertydetails where property_id ="+propertyId;
+			String auditDetailSql = "select createdBy,lastModifiedBy,createdTime,lastModifiedTime from egpt_propertydetails where property="+propertyId;
 			AuditDetails auditDetails = (AuditDetails)jdbcTemplate.queryForObject(auditDetailSql, new BeanPropertyRowMapper(AuditDetails.class));
 			property.getPropertyDetail().setAuditDetails(auditDetails);
 
@@ -374,7 +374,7 @@ public class PropertySearchService {
 
 		for (Map<String,Object> documentdata : documentList){
 			Document document = new Document();
-			String documentTypeSQl = "select * from egpt_documenttype where document_id= ?";
+			String documentTypeSQl = "select * from egpt_documenttype where document= ?";
 			int documentId= (int) documentdata.get("id");
 			DocumentType documentType = (DocumentType)jdbcTemplate.queryForObject(documentTypeSQl,  new Object[] { documentId }, new BeanPropertyRowMapper( DocumentType.class));
 			document.setDocumentType(documentType);

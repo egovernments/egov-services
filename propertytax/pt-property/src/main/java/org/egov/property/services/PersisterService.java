@@ -64,7 +64,7 @@ public class PersisterService {
 			// property insertion
 			StringBuffer propertySql=new StringBuffer();
 
-			propertySql.append("INSERT INTO egpt_Property(tenantId, upicNumber, oldUpicNumber, vltUpicNumber,")
+			propertySql.append("INSERT INTO egpt_property(tenantId, upicNumber, oldUpicNumber, vltUpicNumber,")
 			.append("creationReason, assessmentDate, occupancyDate, gisRefNo,")
 			.append("isAuthorised, isUnderWorkflow, channel, createdBy,lastModifiedBy, createdTime, ")
 			.append("lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
@@ -107,7 +107,7 @@ public class PersisterService {
 
 			addressSql.append("INSERT INTO egpt_Address(tenantId, latitude, longitude, addressId, ")
 			.append( "addressNumber, addressLine1, addressLine2, landmark, city, pincode, detail,")
-			.append(" createdBy, lastModifiedBy, createdTime, lastModifiedTime, property_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			.append(" createdBy, lastModifiedBy, createdTime, lastModifiedTime, property) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
 			Object[] addressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
@@ -138,7 +138,7 @@ public class PersisterService {
 			.append("propertyType, category, usage, department, apartment, siteLength, siteBreadth, sitalArea,")
 			.append(" totalBuiltupArea, undividedShare, noOfFloors, isSuperStructure, landOwner, floorType,")
 			.append(" woodType, roofType, wallType, stateId, applicationNo, createdBy, lastModifiedBy, ")
-			.append("createdTime, lastModifiedTime, property_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			.append("createdTime, lastModifiedTime, property) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
 
@@ -194,7 +194,7 @@ public class PersisterService {
 			for (Floor floor : property.getPropertyDetail().getFloors()) {
 
 				//floor insertion
-				String floorSql="INSERT INTO egpt_floors(floorNo,createdBy, lastModifiedBy, createdTime, lastModifiedTime, property_details_id) values (?,?,?,?,?,?)";
+				String floorSql="INSERT INTO egpt_floors(floorNo,createdBy, lastModifiedBy, createdTime, lastModifiedTime, propertydetails) values (?,?,?,?,?,?)";
 
 				final PreparedStatementCreator pscFloor = new PreparedStatementCreator() {
 					@Override
@@ -226,7 +226,7 @@ public class PersisterService {
 					.append("bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,")
 					.append("exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,")
 					.append(" electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,")
-					.append("floor_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+					.append("floor) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 
 
 					Object[] unitArgs = {unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
@@ -251,7 +251,7 @@ public class PersisterService {
 
 				// document insertion
 
-				String documentSql = "INSERT INTO  egpt_document(fileStore, createdBy, lastModifiedBy, createdTime, lastModifiedTime, property_details_id) values (?,?,?,?,?,?)";
+				String documentSql = "INSERT INTO  egpt_document(fileStore, createdBy, lastModifiedBy, createdTime, lastModifiedTime, propertydetails) values (?,?,?,?,?,?)";
 
 				final PreparedStatementCreator pscDocument = new PreparedStatementCreator() {
 					@Override
@@ -279,7 +279,7 @@ public class PersisterService {
 
 				DocumentType documentType = document.getDocumentType();
 
-				String documentTypeSql = "INSERT INTO egpt_documenttype(name,application,createdBy,document_id,lastModifiedBy, createdTime, lastModifiedTime) values (?,?,?,?,?,?,?)";
+				String documentTypeSql = "INSERT INTO egpt_documenttype(name,application,createdBy,document,lastModifiedBy, createdTime, lastModifiedTime) values (?,?,?,?,?,?,?)";
 
 				final PreparedStatementCreator pscDocumentType = new PreparedStatementCreator() {
 					@Override
@@ -310,7 +310,7 @@ public class PersisterService {
 			StringBuffer vaccantLandSql=new StringBuffer();
 			vaccantLandSql.append("insert into egpt_vacantland(surveyNumber,pattaNumber,")
 			.append("marketValue,capitalValue,layoutApprovedAuth,layoutPermissionNo,layoutPermissionDate,")
-			.append("resdPlotArea,nonResdPlotArea,createdBy, lastModifiedBy, createdTime,lastModifiedTime,property_id)")
+			.append("resdPlotArea,nonResdPlotArea,createdBy, lastModifiedBy, createdTime,lastModifiedTime,property)")
 			.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 			Object[] vaccantLandArgs = {vacantLand.getSurveyNumber(),
@@ -328,7 +328,7 @@ public class PersisterService {
 			StringBuffer boundarySql=new StringBuffer();
 			boundarySql.append("insert into egpt_propertylocation(revenueBoundary, locationBoundary,")
 			.append(" adminBoundary, northBoundedBy,eastBoundedBy, westBoundedBy,")
-			.append("southBoundedBy,createdBy, lastModifiedBy, createdTime,lastModifiedTime, property_id) values (?,?,?,?,?,?,?,?,?,?,?,?)");
+			.append("southBoundedBy,createdBy, lastModifiedBy, createdTime,lastModifiedTime, property) values (?,?,?,?,?,?,?,?,?,?,?,?)");
 
 			Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(),boundary.getLocationBoundary().getId(),boundary.getAdminBoundary().getId(),
 					boundary.getNorthBoundedBy(),boundary.getEastBoundedBy(),boundary.getWestBoundedBy(),
@@ -345,7 +345,7 @@ public class PersisterService {
 			//property and user relation table insertion
 			for (OwnerInfo owner : property.getOwners()) {
 				StringBuffer userPropertySql = new StringBuffer();
-				userPropertySql.append("insert into egpt_Property_user(property_Id, user_Id,isPrimaryOwner,")
+				userPropertySql.append("insert into egpt_property_owner(property,owner,isPrimaryOwner,")
 				.append("isSecondaryOwner,ownerShipPercentage, ownerType, createdBy, lastModifiedBy, createdTime,lastModifiedTime)")
 				.append("values (?,?,?,?,?,?,?,?,?,?);");
 				Object[] userPropertyArgs = { propertyId, owner.getId(),
@@ -432,7 +432,7 @@ public class PersisterService {
 			.append(" SET tenantId = ?, latitude = ?, longitude = ?, addressId = ?,")
 			.append(" addressNumber = ?, addressLine1 = ?, addressLine2 = ?,")
 			.append(" landmark = ?, city = ?, pincode = ?, detail = ?, lastModifiedBy = ?,")
-			.append(" lastModifiedTime = ?, property_id = ?" )
+			.append(" lastModifiedTime = ?, property= ?" )
 			.append(" WHERE id = " + address_id);
 
 			Object[] addressArgs = {
@@ -460,7 +460,7 @@ public class PersisterService {
 			.append(" apartment = ?, siteLength = ?, siteBreadth = ?, sitalArea = ?, totalBuiltupArea = ?,")
 			.append(" undividedShare = ?, noOfFloors = ?, isSuperStructure = ?, landOwner = ?,")
 			.append(" floorType = ?, woodType = ?, roofType = ?, wallType = ?, stateId = ?,")
-			.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property_id = ?")
+			.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?")
 			.append(" WHERE id = " + propertyDetails.getId());
 
 			final PreparedStatementCreator details_psc = new PreparedStatementCreator() {
@@ -515,7 +515,7 @@ public class PersisterService {
 			vacantlandUpdateSQL.append("UPDATE egpt_vacantland")
 			.append(" SET surveyNumber = ?, pattaNumber = ?, marketValue = ?, capitalValue = ?, layoutApprovedAuth = ?,")
 			.append(" layoutPermissionNo = ?, layoutPermissionDate = ?, resdPlotArea = ?, ")
-			.append(" nonResdPlotArea = ?, lastModifiedBy = ?, lastModifiedTime = ?, property_id = ?")
+			.append(" nonResdPlotArea = ?, lastModifiedBy = ?, lastModifiedTime = ?, property= ?")
 			.append(" WHERE id = " + vacantland_id);
 
 			Object[] vaccantLandArgs = {
@@ -537,7 +537,7 @@ public class PersisterService {
 
 				//details_id
 				floorUpdateSQL.append("UPDATE egpt_floors")
-				.append(" SET floorNo = ?, lastModifiedBy = ?, lastModifiedTime = ?, property_details_id = ? ")
+				.append(" SET floorNo = ?, lastModifiedBy = ?, lastModifiedTime = ?, propertydetails = ? ")
 				.append(" WHERE id = " + floor_id);
 
 				Object[] floorArgs = { 
@@ -592,7 +592,7 @@ public class PersisterService {
 				StringBuffer documentUpdateSQL=new StringBuffer();
 
 				documentUpdateSQL.append("UPDATE egpt_document")
-				.append(" SET  fileStore = ?, lastModifiedBy = ?, lastModifiedTime = ?, property_details_id = ? ")
+				.append(" SET  fileStore = ?, lastModifiedBy = ?, lastModifiedTime = ?, propertydetails = ? ")
 				.append(" WHERE id = "+ document_id);
 
 				Object[] documentArgs = { 
@@ -609,7 +609,7 @@ public class PersisterService {
 				StringBuffer documentTypeUpdateSQL=new StringBuffer();
 
 				documentTypeUpdateSQL.append("UPDATE egpt_documenttype")
-				.append(" SET name = ?, application = ?, document_id = ?, lastModifiedBy = ?, lastModifiedTime = ?")
+				.append(" SET name = ?, application = ?, document= ?, lastModifiedBy = ?, lastModifiedTime = ?")
 				.append(" WHERE id = " + documenttype_id);
 
 				Object[] documentTypeArgs = { 
@@ -630,8 +630,8 @@ public class PersisterService {
 				//User Query
 				StringBuffer userUpdateSQL=new StringBuffer();
 
-				userUpdateSQL.append("UPDATE egpt_Property_user")
-				.append(" SET property_Id = ?, user_Id = ?, isPrimaryOwner = ?,")
+				userUpdateSQL.append("UPDATE egpt_property_owner")
+				.append(" SET property_Id = ?, owner= ?, isPrimaryOwner = ?,")
 				.append(" isSecondaryOwner = ?, ownerShipPercentage = ?, ownerType = ?,")
 				.append(" lastModifiedBy = ?, lastModifiedTime = ?")
 				.append(" WHERE id = " + user_id);
@@ -658,7 +658,7 @@ public class PersisterService {
 			boundaryUpdateSQL.append("UPDATE egpt_propertylocation")
 			.append(" SET revenueBoundary = ?, locationBoundary = ?, adminBoundary = ?,")
 			.append(" northBoundedBy = ?, eastBoundedBy = ?, westBoundedBy = ?, southBoundedBy = ?,")
-			.append(" lastModifiedBy = ?, lastModifiedTime = ?, property_id = ?")
+			.append(" lastModifiedBy = ?, lastModifiedTime = ?, property= ?")
 			.append(" WHERE id = " + boundary_id);
 
 			Object[] boundaryArgs = { 

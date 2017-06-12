@@ -41,9 +41,13 @@
 package org.egov.pgr.repository;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.pgr.model.EscalationTimeType;
 import org.egov.pgr.repository.builder.EscalationTimeTypeQueryBuilder;
+import org.egov.pgr.repository.rowmapper.EscalationTimeTypeRowMapper;
+import org.egov.pgr.web.contract.EscalationTimeTypeGetReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,17 +58,22 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class EscalationTimeTypeRepository {
 	
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(EscalationTimeTypeRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	private EscalationTimeTypeQueryBuilder escalationTimeTypeQueryBuilder;
+	private EscalationTimeTypeQueryBuilder escalationQueryBuilder;
+
+	@Autowired
+	private EscalationTimeTypeRowMapper escalationRowMapper;
+
 
 	public EscalationTimeTypeReq persistCreateEscalationTimeType(final EscalationTimeTypeReq escalationTimeTypeRequest) {
 		LOGGER.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
-		final String escalationTimeTypeInsert = escalationTimeTypeQueryBuilder.insertEscalationTimeType();
+		final String escalationTimeTypeInsert = escalationQueryBuilder.insertEscalationTimeType();
 		final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
 		final Object[] obj = new Object[] { ecalationTimeType.getGrievanceType().getId(), ecalationTimeType.getNoOfHours(),
 				ecalationTimeType.getDesignation(), ecalationTimeType.getTenantId(),
@@ -73,6 +82,15 @@ public class EscalationTimeTypeRepository {
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
 		jdbcTemplate.update(escalationTimeTypeInsert, obj);
 		return escalationTimeTypeRequest;
+	}
+	
+	public List<EscalationTimeType> getAllEscalationTimeTypes(final EscalationTimeTypeGetReq escalationGetRequest) {
+		LOGGER.info("EscalationTimeType search Request::" + escalationGetRequest);
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final String queryStr = escalationQueryBuilder.getQuery(escalationGetRequest, preparedStatementValues);
+		final List<EscalationTimeType> escalationTypes = jdbcTemplate.query(queryStr,
+				preparedStatementValues.toArray(), escalationRowMapper);
+		return escalationTypes;
 	}
 
 }

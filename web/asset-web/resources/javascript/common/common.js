@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken": authToken
 };
 
-var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "ap.kurnool"// "ap." + window.location.origin.split("-")[0].split("//")[1];
 
 function titleCase(field) {
     if (field) {

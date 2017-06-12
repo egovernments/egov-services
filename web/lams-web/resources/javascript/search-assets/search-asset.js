@@ -157,7 +157,7 @@ class AssetSearch extends React.Component {
 
   render() {
     let {handleChange,search,updateTable,handleSelectChange}=this;
-    let {isSearchClicked,list}=this.state;
+    let {isSearchClicked,list, electionwards}=this.state;
     let {
     locality,
     doorNo,
@@ -229,7 +229,7 @@ class AssetSearch extends React.Component {
                   <td>{item.assetCategory.name}</td>
                   <td>{item.name}</td>
                   <td>{item.code}</td>
-                  <td>{getNameById(item.locationDetails.electionWard)}</td>
+                  <td>{getNameById(electionwards, item.locationDetails.electionWard)}</td>
                   <td>
                       {showActions(item)}
                   </td>

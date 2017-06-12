@@ -235,13 +235,13 @@ var commomFieldsRules = {
         required: true
     },
     collectedGoodWillAmount: {
-      required: true
+      required: false
     },
     collectedSecurityDeposit: {
       required: true
     },
     goodWillAmount: {
-      required: true
+      required: false
     }
 
 };

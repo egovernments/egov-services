@@ -75,5 +75,5 @@ public class Attribute {
     
     private Boolean required;
     
-    private List<Value> attribValues;
+    private List<Value> attributes;
 }

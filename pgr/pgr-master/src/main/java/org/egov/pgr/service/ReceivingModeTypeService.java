@@ -78,6 +78,11 @@ public class ReceivingModeTypeService {
 		return receivingModeRepository.getAllReceivingModeTypes(modeTypeGetRequest);
 
 	}
+	
+    public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId) {
+        return receivingModeRepository.checkReceivingModeTypeByNameAndCode(code,name,tenantId);
+    }
+	
 
 	public ReceivingModeType sendMessage(String topic, String key, final ReceivingModeTypeReq modeTypeRequest) {
 

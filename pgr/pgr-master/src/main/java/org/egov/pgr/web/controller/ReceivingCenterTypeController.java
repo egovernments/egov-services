@@ -56,11 +56,11 @@ import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.ReceivingCenterTypeGetReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeRes;
+import org.egov.pgr.web.contract.RequestInfoWrapper;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
 import org.egov.pgr.web.errorhandlers.Error;
-import org.egov.pgr.web.errorhandlers.ErrorResponse;
 import org.egov.pgr.web.errorhandlers.ErrorHandler;
-import org.egov.pgr.web.contract.RequestInfoWrapper;
+import org.egov.pgr.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,7 +206,13 @@ public class ReceivingCenterTypeController {
 					.message(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else
+		} else if (!receivingCenterService.checkReceivingCenterTypeByNameAndCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
+                    .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else
 			return;
 	}
 

@@ -166,4 +166,14 @@ public class ReceivingModeTypeQueryBuilder {
 				+ "active = ?,visible=?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
 	}
 
+	public static String checkReceivingModeTypeByName(){
+		
+		return "select id from egpgr_receivingmode where name=? and tenantid=?";
+	}
+
+	public static String checkReceivinModeTypeByNameAndCode(){
+		
+		return "select id from egpgr_receivingmode where tenantid=? and code=?";
+		
+	}
 }

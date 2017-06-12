@@ -1,6 +1,7 @@
 package org.egov.persistence.queue;
 
 import org.egov.domain.model.EmailRequest;
+import org.egov.domain.model.SMSRequest;
 import org.egov.persistence.queue.contract.EmailMessage;
 import org.egov.persistence.queue.contract.SmsMessage;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -36,7 +37,7 @@ public class MessageQueueRepositoryTest {
         final SendResult<String, Object> sendResult = new SendResult<>(null, null);
         when(kafkaTemplate.send(SMS_TOPIC, expectedSMSMessage)).thenReturn(sendResult);
 
-        messageQueueRepository.sendSMS(mobileNumber, smsMessage);
+        messageQueueRepository.sendSMS(new SMSRequest(smsMessage, mobileNumber));
 
         verify(kafkaTemplate).send(SMS_TOPIC, expectedSMSMessage);
     }
@@ -48,7 +49,7 @@ public class MessageQueueRepositoryTest {
         final SmsMessage expectedSMSMessage = new SmsMessage(mobileNumber, smsMessage);
         when(kafkaTemplate.send(SMS_TOPIC, expectedSMSMessage)).thenThrow(new RuntimeException());
 
-        messageQueueRepository.sendSMS(mobileNumber, smsMessage);
+        messageQueueRepository.sendSMS(new SMSRequest(smsMessage, mobileNumber));
     }
 
     @Test

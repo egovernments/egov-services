@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-//import org.apache.log4j.spi.ErrorHandler;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
@@ -80,10 +79,6 @@ public class ServiceGroupController {
 
 	@Autowired
 	private ServiceGroupService serviceGroupService;
-
-	/*
-	 * @Autowired private ErrorHandler errHandler;
-	 */
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -189,7 +184,7 @@ public class ServiceGroupController {
 
 		final Error error = new Error();
 		error.setCode(1);
-		error.setDescription("Error while binding request. Ensure id is passed.");
+		error.setDescription("Error while binding request. Ensure id is passed if you're updating a record.");
 		if (errors.hasFieldErrors())
 			for (final FieldError fieldError : errors.getFieldErrors())
 				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());

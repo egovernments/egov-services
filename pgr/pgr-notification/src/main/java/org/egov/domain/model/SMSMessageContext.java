@@ -10,4 +10,5 @@ import java.util.Map;
 public class SMSMessageContext {
     private String templateName;
     private Map<Object, Object> templateValues;
+    private String mobileNumber;
 }

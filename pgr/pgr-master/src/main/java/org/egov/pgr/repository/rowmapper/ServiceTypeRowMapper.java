@@ -41,6 +41,7 @@ package org.egov.pgr.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +62,27 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
     	if(serviceMap.containsKey(rs.getString("code"))){
     		ServiceType serviceType= serviceMap.get(rs.getString("code"));
     		if(serviceAttrib.containsKey(rs.getString("code"))){
-    			List<Attribute> attributeList = serviceAttrib.get(rs.getString("code"));
-    			Attribute attribute = new Attribute();
-    			attribute.setCode(rs.getString("attributecode"));
+    			if(attribValue.containsKey(rs.getString("attributecode"))){
+    				List<Value> innerValueList = attribValue.get(rs.getString("attributecode"));
+    				Value value = new Value();
+    				value.setKey("key");
+    				value.setName("name");
+    				innerValueList.add(value);
+    			} else {
+    				List<Value> innerValueList = new ArrayList<>();
+    				Value value = new Value();
+    				value.setKey("key");
+    				value.setName("name");
+    				innerValueList.add(value);
+    				attribValue.put(rs.getString("attributecode"), innerValueList);
+    			}
     		} else {
+    			List<Value> innerValueList = new ArrayList<>();
+				Value value = new Value();
+				value.setKey("key");
+				value.setName("name");
+				innerValueList.add(value);
+				attribValue.put(rs.getString("attributecode"), innerValueList);
     			
     		}
     	} else {

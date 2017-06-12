@@ -35,6 +35,10 @@ public class SevaRequest {
     private static final String USER_TYPE_KEY = "type";
     private static final String USER_INFO_KEY = "userInfo";
     private static final String IN_PROGRESS_STATUS = "IN PROGRESS";
+    private static final String VALUES_ASSIGNEE_ID = "assignmentId";
+    private static final String VALUES_ESCALATED_FLAG = "isEscalated";
+    private static final String TRUE = "true";
+    private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
 
     private final HashMap<String, Object> serviceRequest;
     private final HashMap<String, Object> sevaRequest;
@@ -119,6 +123,20 @@ public class SevaRequest {
         final Map<String, Object> userInfo = (HashMap<String, Object>) requestInfo
             .getOrDefault(USER_INFO_KEY, new HashMap<String, Object>());
         return EMPLOYEE_TYPE.equals(userInfo.get(USER_TYPE_KEY));
+    }
+
+    public Long getAssigneeId() {
+        final String assigneeId = getDynamicSingleValue(VALUES_ASSIGNEE_ID);
+        return Long.valueOf(assigneeId);
+    }
+
+    public boolean isEscalated() {
+        return TRUE.equals(getDynamicSingleValue(VALUES_ESCALATED_FLAG));
+    }
+
+    public Long getPreviousAssignee() {
+        final String previousAssignee = getDynamicSingleValue(PREVIOUS_ASSIGNEE);
+        return previousAssignee != null ? Long.valueOf(previousAssignee) : null;
     }
 
     @SuppressWarnings("unchecked")

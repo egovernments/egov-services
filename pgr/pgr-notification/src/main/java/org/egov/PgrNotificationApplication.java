@@ -54,10 +54,10 @@ public class PgrNotificationApplication {
     @Bean("smsMessageStrategies")
     public List<SMSMessageStrategy> getSMSMessageStrategies() {
         return Arrays.asList(
-            new ComplaintSMSMessageStrategy(),
-            new NewDeliverableSMSMessageStrategy(),
-            new UpdateDeliverableStatusSMSMessageStrategy(),
-            new ProcessingFeeEnteredSMSMessageStrategy()
+            new ComplaintCitizenSMSMessageStrategy(),
+            new NewDeliverableCitizenSMSMessageStrategy(),
+            new UpdateDeliverableStatusCitizenSMSMessageStrategy(),
+            new ProcessingFeeEnteredCitizenSMSMessageStrategy()
         );
     }
 

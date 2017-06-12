@@ -43,8 +43,10 @@ package org.egov.pgr.repository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.pgr.model.ReceivingModeType;
+import org.egov.pgr.repository.builder.ReceivingCenterTypeQueryBuilder;
 import org.egov.pgr.repository.builder.ReceivingModeTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingModeTypeRowMapper;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
@@ -102,5 +104,28 @@ public class ReceivingModeTypeRepository {
 				preparedStatementValues.toArray(), receivingModeRowMapper);
 		return receivingModeTypes;
 	}
+	
+	
+	
+    public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+      
+        // preparedStatementValues.add(id);
+        preparedStatementValues.add(tenantId);
+        String query="";
+        if(code!=null && code!=""){
+        	
+        	preparedStatementValues.add(code);
+        	query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByNameAndCode();
+        	
+        } 
+        
+        final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!ceneterTypes.isEmpty())
+            return false;
+
+        return true;
+    }
 
 }

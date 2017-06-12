@@ -79,6 +79,11 @@ public class ReceivingCenterTypeService {
 
     }
 	
+    public boolean checkReceivingCenterTypeByNameAndCode(final String code,final String name, final String tenantId) {
+        return receivingCenterRepository.checkReceivingCenterTypeByNameAndCode(code,name,tenantId);
+    }
+    
+    
 
 	public ReceivingCenterType sendMessage(String topic,String key,final ReceivingCenterTypeReq centerTypeRequest) {
 

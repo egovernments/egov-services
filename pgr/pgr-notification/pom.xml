@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.11.0</version>
+            <version>0.12.0</version>
         </dependency>
 
         <!--Test dependencies-->
@@ -154,14 +154,18 @@
                                         <exclude>org.egov.PgrNotificationApplication</exclude>
                                         <exclude>org.egov.domain.model.SevaRequest</exclude>
                                         <exclude>org.egov.domain.model.Tenant</exclude>
+                                        <exclude>org.egov.domain.model.NotificationContext</exclude>
                                         <exclude>org.egov.domain.exception.TenantDoesNotExistException</exclude>
                                         <exclude>org.egov.domain.service.SMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintCitizenSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UndefinedSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UndefinedEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.NewDeliverableSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.NewDeliverableCitizenSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusCitizenSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredCitizenSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEscalatedFromEmployeeSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEscalatedToEmployeeSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintRegisteredEmployeeSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UpdateDeliverableStatusEmailMessageStrategy</exclude>

@@ -16,7 +16,7 @@ class ViewApply extends React.Component {
        "status": "",
        "stateId": "",
        "tenantId" : tenantId
-     }, _status:[]
+     }, _status:[], modified:false
   }
   this.setInitialState=this.setInitialState.bind(this);
 }
@@ -51,6 +51,12 @@ componentDidMount() {
   commonApiPost("hr-leave","leaveapplications","_search",{employee,tenantId},function(err, res) {
       if(res) {
         var leaveApp  = res["LeaveApplication"];
+        if(leaveApp==0){
+          _this.setState({
+            list: leaveApp,
+            modified:true
+          });
+        }
         var empIds = [];
         for(var i=0; i<leaveApp.length; i++) {
           if(empIds.indexOf(leaveApp[i].employee) == -1)
@@ -67,13 +73,18 @@ componentDidMount() {
                 employees.map(function(item, ind) {
                   if(item.id == leaveApp[i].employee) {
                     leaveApp[i].name = item.name;
-                    employees.splice(ind, 1);
                   }
                 })
               }
               _this.setState({
-                list: leaveApp
+                list: leaveApp,
+                modified:true
               });
+              setTimeout(function() {
+                _this.setState({
+                  modified: false
+                })
+              }, 1200);
             }
           })
         }
@@ -81,18 +92,22 @@ componentDidMount() {
   })
 }
 
+
 componentDidUpdate(prevProps, prevState) {
-    if (prevState.list.length!=this.state.list.length) {
-      $('#viewleaveTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-                 'copy', 'csv', 'excel', 'pdf', 'print'
-         ],
-         ordering: false
-      });
+    if (this.state.modified) {
+        $('#viewleaveTable').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+                   'copy', 'csv', 'excel', 'pdf', 'print'
+           ],
+           ordering: false,
+           bDestroy: true,
+           language: {
+             "emptyTable": "No Records"
+          }
+        });
     }
 }
-
 
 
 close() {
@@ -105,6 +120,7 @@ render() {
   let {employee,name,code,leaveType,fromDate,toDate,availableDays,leaveDays,reason}=this.state.leaveSet;
 
 const renderBody=function() {
+  if(list.length>0) {
     return list.map((item,index)=> {
         return (<tr key={index}>
           <td>{index+1}</td>
@@ -121,6 +137,7 @@ const renderBody=function() {
           );
       })
   }
+}
 
 
 return (<div>

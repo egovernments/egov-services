@@ -18,7 +18,6 @@
         - Create, Update and Search for mapping between PropertyType-PipeSizeType
         - Create, Update and Search for mapping between PropertyType-UsageType
         - Create, Update and Search for mapping between DocumentType-ApplicationType
-
     contact:
       name: Rishi
       email: rishi@egovernments.org
@@ -30,12 +29,12 @@
   paths:
     /categorytype/_create:
       post:
-        summary: creates different types of allowed category type
-        description: allowed category type
+        summary: Create new category type.
+        description: API to create new category type
         tags:
           - CategoryType
         parameters:
-          - name: CategoryType
+          - name: Category Type
             in: body
             description: required parameters have to be populated
             required: true
@@ -43,26 +42,24 @@
               $ref: '#/definitions/CategoryTypeReq'
         responses:
           '201':
-            description: Request acknowledged sucessfully
+            description: Category Type created successfully.
             schema:
               $ref: "#/definitions/CategoryTypeRes"
           '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
+            description: Category Type creation failed.
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /categorytype/_update:
+    /categorytype/{code}/_update:
+      parameters:
+       - $ref: "#/parameters/updateCode"
       post:
         summary: updates existing values
         description: updates existing values
         tags:
           - CategoryType
         parameters:
-          - name: CategoryType
+          - name: Category Type
             in: body
             description: required parameters have to be populated
             required: true
@@ -70,15 +67,11 @@
               $ref: '#/definitions/CategoryTypeReq'
         responses:
           '200':
-            description: Request acknowledged sucessfully
+            description: Category Type updated successfully.
             schema:
               $ref: "#/definitions/CategoryTypeRes"
           '400':
             description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -86,7 +79,7 @@
       post:
         summary: searches existing values
         tags:
-          - CategoryType
+          - Category Type
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -106,10 +99,10 @@
   # PipeSize Type API
     /pipesizetype/_create:
       post:
-        summary: creates different types of allowed pipe size type
-        description: allowed pipe size type
+        summary: creates different types of allowed pipe size.
+        description: API to create pipe size.
         tags:
-          - PipeSizeType
+          - Pipe Size
         parameters:
           - name: PipeSizeType
             in: body
@@ -119,19 +112,17 @@
               $ref: '#/definitions/PipeSizeTypeReq'
         responses:
           '201':
-            description: Request acknowledged sucessfully
+            description: Pipe size created sucessfully.
             schema:
               $ref: "#/definitions/PipeSizeTypesRes"
           '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
+            description: Invalid input.
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /pipesizetype/_update:
+    /pipesizetype/{code}/_update:
+      parameters:
+       - $ref: "#/parameters/updateCode"
       post:
         summary: updates existing values
         description: updates existing values
@@ -146,15 +137,11 @@
               $ref: '#/definitions/PipeSizeTypeReq'
         responses:
           '200':
-            description: Request acknowledged sucessfully
+            description: Pipe size updated successfully.
             schema:
               $ref: "#/definitions/PipeSizeTypesRes"
           '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
+            description: Update Pipe Size failed.
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -204,12 +191,10 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /documenttype/_update:
+    /documenttype/{code}/_update:
+      parameters:
+      - $ref: "#/parameters/updateCode"
       post:
         summary: updates existing values
         description: updates existing values
@@ -229,10 +214,6 @@
               $ref: "#/definitions/DocumentTypesRes"
           '400':
             description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -301,12 +282,10 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /sourcetype/_update:
+    /sourcetype/{code}/_update:
+      parameters:
+      - $ref: "#/parameters/updateCode"
       post:
         summary: updates existing values
         description: updates existing values
@@ -328,11 +307,6 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
   
   # Connection Type API
     /connectiontype/_search:
@@ -401,10 +375,6 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     /propertytype-categorytype/_update:
       post:
@@ -426,10 +396,6 @@
               $ref: "#/definitions/PropertyTypeCategoryTypesRes"
           '400':
             description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -477,10 +443,6 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     /propertytype-pipesizetype/_update:
       post:
@@ -502,10 +464,6 @@
               $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
           '400':
             description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -553,10 +511,6 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     /propertytype-usagetype/_update:
       post:
@@ -578,10 +532,6 @@
               $ref: "#/definitions/PropertyTypeUsageTypesRes"
           '400':
             description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -609,8 +559,8 @@
   # Document Type Vs Application Type API
     /documenttype-applicationtype/_create:
       post:
-        summary: creates mapping between property type and application type
-        description: allows mapping between two types.
+        summary: creates mapping between document type and application type
+        description: API to create Application Type and required document mapping.
         tags:
           - DocumentTypeApplicationType
         parameters:
@@ -627,10 +577,6 @@
               $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
             description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -656,10 +602,6 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          '404':
-            description: tenantId provided was not found
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     /documenttype-applicationtype/_search:
       post:
@@ -683,6 +625,16 @@
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
   parameters:
+    updateCode:
+      name: code
+      in: path
+      required: true
+      description: Unique identifier of the master to be updated.
+      type: string
+      minLength: 0
+      maxLength: 20
+      exclusiveMinimum: true
+      exclusiveMaximum: false
     id:
       name: id
       in: query

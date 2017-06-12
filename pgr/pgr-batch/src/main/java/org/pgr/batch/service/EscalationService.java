@@ -80,6 +80,7 @@ public class EscalationService {
 			positionService.enrichRequestWithPosition(serviceRequest);
 			SevaRequest enrichedSevaRequest = new SevaRequest(getRequestInfo(), serviceRequest);
 			escalationDateService.enrichRequestWithEscalationDate(enrichedSevaRequest);
+			enrichedSevaRequest.markEscalated();
 			complaintMessageQueueRepository.save(enrichedSevaRequest);
 		} catch (Exception exception) {
 			final String message = String

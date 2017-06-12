@@ -27,28 +27,26 @@ public class EmailService {
         this.emailMessageStrategyList = emailMessageStrategyList;
     }
 
-    public void send(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
-        if (sevaRequest.isRequesterEmailAbsent()) {
-            log.info("Skipping email notification for CRN {}", sevaRequest.getCrn());
+    public void send(NotificationContext context) {
+        if (context.getSevaRequest().isRequesterEmailAbsent()) {
+            log.info("Skipping email notification for CRN {}", context.getSevaRequest().getCrn());
             return;
         }
-        final List<EmailRequest> emailRequests = getEmailRequests(sevaRequest, serviceType, tenant);
+        final List<EmailRequest> emailRequests = getEmailRequests(context);
         emailRequests.forEach(emailRequest ->
-            messageQueueRepository.sendEmail(sevaRequest.getRequesterEmail(), emailRequest));
+            messageQueueRepository.sendEmail(context.getSevaRequest().getRequesterEmail(), emailRequest));
     }
 
-    private List<EmailRequest> getEmailRequests(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
-        final List<EmailMessageStrategy> strategyList = getEmailMessageStrategy(sevaRequest, serviceType, tenant);
+    private List<EmailRequest> getEmailRequests(NotificationContext context) {
+        final List<EmailMessageStrategy> strategyList = getEmailMessageStrategy(context);
         return strategyList.stream()
-            .map(strategy -> getEmailRequest(sevaRequest, serviceType, tenant, strategy))
+            .map(strategy -> getEmailRequest(context, strategy))
             .collect(Collectors.toList());
     }
 
-    private EmailRequest getEmailRequest(SevaRequest sevaRequest,
-                                         ServiceType serviceType,
-                                         Tenant tenant,
+    private EmailRequest getEmailRequest(NotificationContext notificationContext,
                                          EmailMessageStrategy strategy) {
-        final EmailMessageContext messageContext = strategy.getMessageContext(sevaRequest, serviceType, tenant);
+        final EmailMessageContext messageContext = strategy.getMessageContext(notificationContext);
         return EmailRequest.builder()
 			.subject(getEmailSubject(messageContext))
 			.body(getMailBody(messageContext))
@@ -65,11 +63,9 @@ public class EmailService {
             .loadByName(messageContext.getBodyTemplateName(), messageContext.getBodyTemplateValues());
     }
 
-    private List<EmailMessageStrategy> getEmailMessageStrategy(SevaRequest sevaRequest,
-                                                               ServiceType serviceType,
-                                                               Tenant tenant) {
+    private List<EmailMessageStrategy> getEmailMessageStrategy(NotificationContext context) {
         final List<EmailMessageStrategy> strategyList = emailMessageStrategyList.stream()
-            .filter(strategy -> strategy.matches(sevaRequest, serviceType, tenant))
+            .filter(strategy -> strategy.matches(context))
             .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(strategyList)) {
             return Collections.singletonList(new UndefinedEmailMessageStrategy());

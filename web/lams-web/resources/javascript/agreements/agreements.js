@@ -100,10 +100,10 @@ $("select").on("change", function() {
             departmentId: $("#approverDepartment").val(),
             designationId: $("#approverDesignation").val()
         }).responseJSON["Employee"] || [];
-        $(`#approverName`).html(`<option value=''>Select</option>`)
+        $(`#approverPositionId`).html(`<option value=''>Select</option>`)
 
         for (var i = 0; i < employees.length; i++) {
-            $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+            $(`#approverPositionId`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
         }
     }
 
@@ -242,7 +242,7 @@ var commomFieldsRules = {
     paymentCycle: {
         required: true
     },
-    approverName: {
+    approverPositionId: {
         required: true
     },
     rentIncrementMethod: {
@@ -1116,7 +1116,7 @@ $("#createAgreementForm").validate({
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
         agreement["workflowDetails"] = {};
-        agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
+        agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverPositionId"]);
         if(agreement.remarks) {
             agreement["workflowDetails"]["remarks"] = agreement.remarks;
         }
@@ -1166,7 +1166,7 @@ $("#createAgreementForm").validate({
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
-                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
+                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverPositionId"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
                     }
 
                 } else if(response["responseJSON"] && response["responseJSON"].Error) {

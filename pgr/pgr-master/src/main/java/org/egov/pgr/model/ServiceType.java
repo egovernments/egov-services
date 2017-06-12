@@ -78,11 +78,15 @@ public class ServiceType {
     
     private boolean metadata;
     
+    private boolean active;
+    
     private String type;
     
     private String keywords;
     
     private String group;
+    
+    private int category;
    
     private AuditDetails auditDeatils;
 

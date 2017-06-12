@@ -58,6 +58,13 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicegroup.create.key}")
     private String createServiceGroupTopicKey;
     
+
+    @Value("${kafka.topics.router.create.name}")
+    private String createRouterTopicName;
+    
+    @Value("${kafka.topics.router.create.key}")
+    private String createRouterTopicKey;
+
     @Value("${kafka.topics.servicegroup.update.name}")
     private String updateServiceGroupTopicName;
     
@@ -94,13 +101,32 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicetype.create.key}")
     private String createServiceTypeTopicKey;
     
+    @Value("${kafka.topics.servicetype.update.key}")
+    private String updateServiceTypeTopickey; 
+    
+    @Value("${kafka.topics.servicetype.update.name}")
+    private String updateServiceTypeTopicName;
 
+    @Value("${kafka.topics.escalationtimetype.create.name}")
+    private String createEscalationTimeTypeName;
+    
+	@Value("${kafka.topics.escalationtimetype.create.key}")
+    private String createEscalationTimeTypeKey;
+    
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
 	}
 
 	public String getCreateServiceGroupTopicName() {
 		return createServiceGroupTopicName;
+	}
+
+	public String getCreateRouterTopicKey() {
+		return createRouterTopicKey;
+	}
+
+	public String getCreateRouterTopicName() {
+		return createRouterTopicName;
 	}
 	
 	public String getCreateReceivingCenterTopicKey() {
@@ -149,6 +175,21 @@ public class ApplicationProperties {
 		return updateServiceGroupTopicKey;
 	}
 	
+	public String getUpdateServiceTypeTopicName(){
+		return updateServiceTypeTopicName;
+	}
+	
+	public String getUpdateServiceTypeTopicKey(){
+		return updateServiceTypeTopickey;
+
+	}
+    public String getCreateEscalationTimeTypeName() {
+		return createEscalationTimeTypeName;
+	}
+
+	public String getCreateEscalationTimeTypeKey() {
+		return createEscalationTimeTypeKey;
+	}
 
 
 }

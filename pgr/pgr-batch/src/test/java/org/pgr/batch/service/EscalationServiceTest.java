@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -65,6 +66,8 @@ public class EscalationServiceTest {
 		escalationService.escalateComplaintForAllTenants();
 
 		verify(complaintMessageQueueRepository, times(2)).save(any());
+		assertTrue(serviceRequestList.get(0).isEscalated());
+		assertTrue(serviceRequestList.get(1).isEscalated());
 	}
 
 	@Test

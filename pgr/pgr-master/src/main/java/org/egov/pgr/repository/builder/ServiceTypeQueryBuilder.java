@@ -156,8 +156,8 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String insertComplaintTypeQuery(){
-    	return "INSERT into egpgr_complainttype (id, name, code, isactive, slahours, tenantid, type, createdby) "
-    			+ "values (?,?,?,?,?,?,?,?)"; 
+    	return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category) "
+    			+ "values (?,?,?,?,?,?,?,?,?,?,?)"; 
     	
     }
     public static String insertServiceTypeQuery() {
@@ -167,9 +167,9 @@ public class ServiceTypeQueryBuilder {
 
     
     public static String insertServiceTypeQueryAttribValues() {
-        return "INSERT INTO attribute_definition (code, variable, datatype, datatypedescription, servicecode,  required, "
+        return "INSERT INTO attribute_definition (code, variable, datatype, description, datatypedescription, servicecode,  required, "
         		+ "tenantid, createdby, createddate) values "
-                + "(?,?,?,?,?,?,?,?,?)";
+                + "(?,?,?,?,?,?,?,?,?,?)";
     }
     
     public static String insertValueDefinitionQuery(){
@@ -178,8 +178,16 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String updateServiceTypeQuery() {
-        return "UPDATE egpgr_grievancetype SET name = ?,description = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ? and tenantid = ? ";
+        return "UPDATE egpgr_complainttype SET name = ?, description = ?, category = ?, "
+                + "isactive = ?, lastmodifiedby = ?, lastmodifieddate = ? where code = ? and tenantid = ? ";
+    }
+    
+    public static String removeAttributeQuery() {
+    	return "DELETE from attribute_definition WHERE servicecode = ? " ;
+    }
+    
+    public static String removeValueQuery() {
+    	return "DELETE from value_definition WHERE servicecode = ?  " ;
     }
 
     public static String selectServiceNameAndCodeQuery() {

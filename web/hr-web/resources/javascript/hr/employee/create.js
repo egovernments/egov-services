@@ -2551,7 +2551,7 @@ $(document).ready(function() {
             getDropdown("employeeStatus", function(res) {
                 employeeStatus = res;
                 checkCount();
-            })
+            },{objectName:"Employee Master"})
             getDropdown("group", function(res) {
                 group = res;
                 checkCount();

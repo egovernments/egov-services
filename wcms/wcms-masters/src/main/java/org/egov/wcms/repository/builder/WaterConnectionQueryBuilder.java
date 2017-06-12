@@ -61,7 +61,7 @@ public class WaterConnectionQueryBuilder {
 
     public static String insertMeterQuery() {
 
-        return "INSERT INTO egwtr_meter(metermake,connectionid,tenantid,createdby,createdtime) values(?,?,?,?,?)";
+        return "INSERT INTO egwtr_meter(metermake,connectionid,meterreading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values(?,?,?,?,?,?,?,?)";
     }
 
     public static String insertConnectionQuery() {

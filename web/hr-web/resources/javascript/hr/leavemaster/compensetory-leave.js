@@ -145,6 +145,7 @@ addOrUpdate(e,mode) {
       });
     }
   }
+}
 
   render() {
       let {handleChange,addOrUpdate}=this;

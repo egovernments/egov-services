@@ -2,6 +2,7 @@ package org.egov.domain.service;
 
 import org.egov.domain.model.NotificationContext;
 import org.egov.domain.model.SMSMessageContext;
+import org.egov.domain.model.SMSRequest;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,22 +27,23 @@ public class SMSService {
     }
 
     public void send(NotificationContext context) {
-        final List<String> smsMessages = getSMSMessages(context);
-        final String mobileNumber = context.getSevaRequest().getMobileNumber();
-        smsMessages.forEach(message -> messageQueueRepository.sendSMS(mobileNumber, message));
+        final List<SMSRequest> smsRequests = getSMSRequest(context);
+        smsRequests.forEach(smsRequest -> messageQueueRepository.sendSMS(smsRequest));
     }
 
-    private List<String> getSMSMessages(NotificationContext context) {
+    private List<SMSRequest> getSMSRequest(NotificationContext context) {
         final List<SMSMessageStrategy> strategyList = getSmsMessageStrategy(context);
         return strategyList.stream()
-            .map(strategy -> getSMSMessage(context, strategy))
+            .map(strategy -> getSMSRequest(context, strategy))
             .collect(Collectors.toList());
     }
 
-    private String getSMSMessage(NotificationContext notificationContext,
-                                 SMSMessageStrategy strategy) {
+    private SMSRequest getSMSRequest(NotificationContext notificationContext,
+                                     SMSMessageStrategy strategy) {
         final SMSMessageContext messageContext = strategy.getMessageContext(notificationContext);
-        return templateService.loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
+        final String smsMessage = templateService
+            .loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
+        return new SMSRequest(smsMessage, messageContext.getMobileNumber());
     }
 
     private List<SMSMessageStrategy> getSmsMessageStrategy(NotificationContext context) {

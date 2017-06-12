@@ -1,6 +1,7 @@
 package org.egov.persistence.queue;
 
 import org.egov.domain.model.EmailRequest;
+import org.egov.domain.model.SMSRequest;
 import org.egov.persistence.queue.contract.EmailMessage;
 import org.egov.persistence.queue.contract.SmsMessage;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -23,8 +24,8 @@ public class MessageQueueRepository {
         this.emailTopic = emailTopic;
     }
 
-    public void sendSMS(String mobileNumber, String message) {
-        final SmsMessage smsMessage = new SmsMessage(mobileNumber, message);
+    public void sendSMS(SMSRequest smsRequest) {
+        final SmsMessage smsMessage = new SmsMessage(smsRequest.getMobileNumber(), smsRequest.getMessage());
         sendMessage(smsTopic, smsMessage);
     }
 

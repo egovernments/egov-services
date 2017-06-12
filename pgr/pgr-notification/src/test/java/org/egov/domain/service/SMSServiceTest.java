@@ -60,8 +60,10 @@ public class SMSServiceTest {
         final ServiceType serviceType = new ServiceType("serviceName", keywords);
         when(smsMessageStrategy1.matches(any())).thenReturn(true);
         when(smsMessageStrategy2.matches(any())).thenReturn(true);
-        final SMSMessageContext messageContext1 = new SMSMessageContext("sms_en1", requestMap);
-        final SMSMessageContext messageContext2 = new SMSMessageContext("sms_en2", requestMap);
+        final SMSMessageContext messageContext1 =
+            new SMSMessageContext("sms_en1", requestMap, "mobileNumber");
+        final SMSMessageContext messageContext2 =
+            new SMSMessageContext("sms_en2", requestMap, "mobileNumber");
         final Tenant tenant = new Tenant("name", "grade");
         when(smsMessageStrategy1.getMessageContext(any())).thenReturn(messageContext1);
         when(smsMessageStrategy2.getMessageContext(any())).thenReturn(messageContext2);
@@ -75,8 +77,8 @@ public class SMSServiceTest {
 
         smsService.send(context);
 
-        verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage1");
-        verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage2");
+        verify(messageQueueRepository).sendSMS(new SMSRequest("smsMessage1", "mobileNumber"));
+        verify(messageQueueRepository).sendSMS(new SMSRequest("smsMessage2", "mobileNumber"));
     }
 
     @Test(expected = NotImplementedException.class)
@@ -98,7 +100,7 @@ public class SMSServiceTest {
 
         smsService.send(context);
 
-        verify(messageQueueRepository).sendSMS("mobileNumber", "smsMessage");
+        verify(messageQueueRepository).sendSMS(new SMSRequest("smsMessage", "mobileNumber"));
     }
 
 }

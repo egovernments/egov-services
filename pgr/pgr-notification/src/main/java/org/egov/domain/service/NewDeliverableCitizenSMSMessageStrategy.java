@@ -5,7 +5,7 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
-public class NewDeliverableSMSMessageStrategy implements SMSMessageStrategy {
+public class NewDeliverableCitizenSMSMessageStrategy implements SMSMessageStrategy {
     private static final String NAME = "name";
     private static final String NUMBER = "number";
     private static final String STATUS = "status";
@@ -23,7 +23,8 @@ public class NewDeliverableSMSMessageStrategy implements SMSMessageStrategy {
             NUMBER, context.getSevaRequest().getCrn(),
             STATUS, context.getSevaRequest().getStatusName().toLowerCase()
         );
-        return new SMSMessageContext(SMS_NEW_DELIVERABLE_SERVICE_REQUEST, map);
+        final String mobileNumber = context.getSevaRequest().getMobileNumber();
+        return new SMSMessageContext(SMS_NEW_DELIVERABLE_SERVICE_REQUEST, map, mobileNumber);
     }
 }
 

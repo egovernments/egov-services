@@ -50,10 +50,12 @@ import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.service.ServiceGroupService;
 /*import org.egov.pgr.web.contract.RouterReq;*/
 
+import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.service.ReceivingCenterTypeService;
 import org.egov.pgr.service.ReceivingModeTypeService;
 import org.egov.pgr.service.ServiceGroupService;
 import org.egov.pgr.service.ServiceTypeService;
+import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
 import org.egov.pgr.web.contract.ReceivingModeTypeReq;
 
@@ -88,6 +90,9 @@ public class PGRConsumer {
 	
 	@Autowired
 	private ServiceTypeService serviceTypeService;
+	
+	@Autowired
+	private EscalationTimeTypeService escalationTimeTypeService;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -96,8 +101,10 @@ public class PGRConsumer {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
 			"${kafka.topics.receivingmode.create.name}", "${kafka.topics.receivingcenter.update.name}",
 			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicetype.create.name}", 
-			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.servicetype.update.name}","${kafka.topics.router.create.name}"  })
-	public void listen(final ConsumerRecord<String, String> record) {
+			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.servicetype.update.name}","${kafka.topics.router.create.name}",
+			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}" })
+	
+public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -136,10 +143,14 @@ public class PGRConsumer {
 	        		LOGGER.info("Consuming create Router request");
 	        		
 	        		//routerService.create(objectMapper.readValue(record.value(), RouterReq.class));
-	        	}
+			} else if (record.topic().equals(applicationProperties.getCreateEscalationTimeTypeName())) {
+				LOGGER.info("Consuming update Escalation time type request");
+				escalationTimeTypeService.create(objectMapper.readValue(record.value(), EscalationTimeTypeReq.class));
 			}
-		 catch (final IOException e) {
+			
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		}}
+		}
+   	}
 

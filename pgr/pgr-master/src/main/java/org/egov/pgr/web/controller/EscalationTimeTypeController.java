@@ -50,6 +50,7 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.model.EscalationTimeType;
+import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeRes;
@@ -77,6 +78,9 @@ public class EscalationTimeTypeController {
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private EscalationTimeTypeService escalationTimeTypeService;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -94,13 +98,12 @@ public class EscalationTimeTypeController {
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
-	/*	final ServiceGroup serviceGroup = serviceGroupService.createCategory(
-				applicationProperties.getCreateServiceGroupTopicName(),
-				applicationProperties.getCreateServiceGroupTopicKey(), serviceGroupRequest); */
+		
+		final EscalationTimeType escalationType = escalationTimeTypeService.createEscalationTimeType(applicationProperties.getCreateEscalationTimeTypeName(), 
+				applicationProperties.getCreateEscalationTimeTypeKey(), escalationTimeTypeRequest);
 		
 		final List<EscalationTimeType> escalationTimeTypes = new ArrayList<>();
-	//	escalationTimeTypes.add(serviceGroup);
+		escalationTimeTypes.add(escalationType);
 		return getSuccessResponse(escalationTimeTypes, escalationTimeTypeRequest.getRequestInfo());
 
 	}

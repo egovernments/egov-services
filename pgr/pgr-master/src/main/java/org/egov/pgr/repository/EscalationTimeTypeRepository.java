@@ -37,14 +37,14 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.pgr.repository;
 
 import java.sql.Date;
 
-import org.egov.pgr.model.ServiceGroup;
-import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
-//import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
-import org.egov.pgr.web.contract.ServiceGroupRequest;
+import org.egov.pgr.model.EscalationTimeType;
+import org.egov.pgr.repository.builder.EscalationTimeTypeQueryBuilder;
+import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,39 +52,27 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ServiceGroupRepository {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
+public class EscalationTimeTypeRepository {
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(EscalationTimeTypeRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private EscalationTimeTypeQueryBuilder escalationTimeTypeQueryBuilder;
 
-	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId() };
-		jdbcTemplate.update(serviceGroupInsert, obj);
-		return serviceGroupRequest;
+	public EscalationTimeTypeReq persistCreateEscalationTimeType(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+		LOGGER.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
+		final String escalationTimeTypeInsert = escalationTimeTypeQueryBuilder.insertEscalationTimeType();
+		final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
+		final Object[] obj = new Object[] { ecalationTimeType.getGrievanceType().getId(), ecalationTimeType.getNoOfHours(),
+				ecalationTimeType.getDesignation(), ecalationTimeType.getTenantId(),
+				Long.valueOf(escalationTimeTypeRequest.getRequestInfo().getUserInfo().getId()),
+				Long.valueOf(escalationTimeTypeRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
+		jdbcTemplate.update(escalationTimeTypeInsert, obj);
+		return escalationTimeTypeRequest;
 	}
-	
-	public ServiceGroupRequest persistUpdateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupUpdate = ServiceGroupQueryBuilder.updateServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId(), serviceGroup.getId()};
-		jdbcTemplate.update(serviceGroupUpdate, obj);
-		return serviceGroupRequest;
-	}
-	
-	
 
 }

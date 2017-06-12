@@ -1,3 +1,4 @@
+
 package org.egov.lams.service;
 
 import java.io.UnsupportedEncodingException;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
+import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
@@ -81,6 +83,8 @@ public class PaymentService {
 	public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
 		String collectXML = "";
 		try {
+			
+			Allottee allottee = agreement.getAllottee();
 			LamsConfigurationGetRequest lamsGetRequest = new LamsConfigurationGetRequest();
 			List<BillInfo> billInfos = new ArrayList<>();
 			BillInfo billInfo = new BillInfo();
@@ -90,11 +94,15 @@ public class PaymentService {
 				LOGGER.info("the demand id from agreement object" + agreement.getDemands().get(0));
 				billInfo.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 			}
-			billInfo.setCitizenName(agreement.getAllottee().getName());
+			billInfo.setCitizenName(allottee.getName());
 			billInfo.setTenantId(agreement.getTenantId());
 			// billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
 			// TODO: Fix me after the issue is fixed by user service
-			billInfo.setCitizenAddress("Test");
+			
+			if (allottee.getAddress() != null)
+				billInfo.setCitizenAddress(allottee.getAddress());
+			else
+				billInfo.setCitizenAddress("NA");	
 			billInfo.setBillType("AUTO");
 			billInfo.setIssuedDate(new Date());
 			billInfo.setLastDate(new Date());

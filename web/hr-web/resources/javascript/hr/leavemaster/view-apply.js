@@ -73,7 +73,6 @@ componentDidMount() {
                 employees.map(function(item, ind) {
                   if(item.id == leaveApp[i].employee) {
                     leaveApp[i].name = item.name;
-                    employees.splice(ind, 1);
                   }
                 })
               }

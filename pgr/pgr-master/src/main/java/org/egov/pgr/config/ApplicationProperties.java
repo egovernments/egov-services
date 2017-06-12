@@ -112,7 +112,21 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.escalationtimetype.create.key}")
     private String createEscalationTimeTypeKey;
+	
+    @Value("${kafka.topics.escalationtimetype.update.name}")
+    private String updateEscalationTimeTypeName;
     
+	@Value("${kafka.topics.escalationtimetype.update.key}")
+    private String updateEscalationTimeTypeKey;
+    
+	public String getUpdateEscalationTimeTypeName() {
+		return updateEscalationTimeTypeName;
+	}
+
+	public String getUpdateEscalationTimeTypeKey() {
+		return updateEscalationTimeTypeKey;
+	}
+
 	public String getCreateServiceGroupTopicKey() {
 		return createServiceGroupTopicKey;
 	}

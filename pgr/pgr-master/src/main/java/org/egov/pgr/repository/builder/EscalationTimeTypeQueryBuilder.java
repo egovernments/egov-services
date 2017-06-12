@@ -9,5 +9,10 @@ public class EscalationTimeTypeQueryBuilder {
 		return "INSERT INTO egpgr_escalation(complaint_type_id, no_of_hrs, designation_id, tenantid, createdby"
 				+ ", lastmodifiedby, createddate, lastmodifieddate) VALUES(?,?,?,?,?,?,?,?)";
 	}
+	
+	public String updateEscalationTimeType(){
+		return "UPDATE egpgr_escalation set complaint_type_id = ?, no_of_hrs = ?, designation_id = ?, tenantid = ?, "
+				+ "createdby = ?, lastmodifiedby = ?, createddate = ?, lastmodifieddate = ? where id = ?";
+	}
 
 }

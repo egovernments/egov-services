@@ -63,6 +63,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,6 +102,30 @@ public class EscalationTimeTypeController {
 		
 		final EscalationTimeType escalationType = escalationTimeTypeService.createEscalationTimeType(applicationProperties.getCreateEscalationTimeTypeName(), 
 				applicationProperties.getCreateEscalationTimeTypeKey(), escalationTimeTypeRequest);
+		
+		final List<EscalationTimeType> escalationTimeTypes = new ArrayList<>();
+		escalationTimeTypes.add(escalationType);
+		return getSuccessResponse(escalationTimeTypes, escalationTimeTypeRequest.getRequestInfo());
+
+	}
+	
+	@PostMapping(value = "/_update/{id}")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,
+			@PathVariable("id") final long id, final BindingResult errors) {
+		if (errors.hasErrors() || id == 0L) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		escalationTimeTypeRequest.getEscalationTimeType().setId(id);
+		logger.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
+
+		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+		
+		final EscalationTimeType escalationType = escalationTimeTypeService.updateEscalationTimeType(applicationProperties.getUpdateEscalationTimeTypeName(), 
+				applicationProperties.getUpdateEscalationTimeTypeKey(), escalationTimeTypeRequest);
 		
 		final List<EscalationTimeType> escalationTimeTypes = new ArrayList<>();
 		escalationTimeTypes.add(escalationType);

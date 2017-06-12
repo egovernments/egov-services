@@ -89,5 +89,31 @@ public class EscalationTimeTypeService {
 		return escalationTimeTypeRepository.persistCreateEscalationTimeType(escalationTimeTypeReq);
 	}
 	
+	public EscalationTimeType updateEscalationTimeType(final String topic, final String key,
+			final EscalationTimeTypeReq escalationTimeTypeReq) {
+		final ObjectMapper mapper = new ObjectMapper();
+		String escalationTimeTypeValue = null;
+		try {
+			logger.info("EscalationTimeTypeReq::" + escalationTimeTypeReq);
+			escalationTimeTypeValue = mapper.writeValueAsString(escalationTimeTypeReq);
+			logger.info("Value being pushed on the Queue, EscalationTimeTypeValue::" + escalationTimeTypeValue);
+		} catch (final JsonProcessingException e) {
+			logger.error("Exception Encountered : " + e);
+		}
+		try {
+			pgrProducer.sendMessage(topic, key, escalationTimeTypeValue);
+		} catch (final Exception e) {
+			logger.error("Exception while posting to kafka Queue : " + e);
+			return escalationTimeTypeReq.getEscalationTimeType();
+		}
+		logger.error("Producer successfully posted the request to Queue");
+		return escalationTimeTypeReq.getEscalationTimeType();
+	}
+	
+	public EscalationTimeTypeReq update(EscalationTimeTypeReq escalationTimeTypeReq) {
+		logger.info("Updating service group record");
+		return escalationTimeTypeRepository.persistUpdateEscalationTimeType(escalationTimeTypeReq);
+	}
+	
 
 }

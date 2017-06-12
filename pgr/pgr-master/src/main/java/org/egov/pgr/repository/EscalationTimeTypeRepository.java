@@ -75,4 +75,16 @@ public class EscalationTimeTypeRepository {
 		return escalationTimeTypeRequest;
 	}
 
+	public EscalationTimeTypeReq persistUpdateEscalationTimeType(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+		LOGGER.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
+		final String escalationTimeTypeInsert = escalationTimeTypeQueryBuilder.updateEscalationTimeType();
+		final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
+		final Object[] obj = new Object[] { ecalationTimeType.getGrievanceType().getId(), ecalationTimeType.getNoOfHours(),
+				ecalationTimeType.getDesignation(), ecalationTimeType.getTenantId(),
+				Long.valueOf(escalationTimeTypeRequest.getRequestInfo().getUserInfo().getId()),
+				Long.valueOf(escalationTimeTypeRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), ecalationTimeType.getId()};
+		jdbcTemplate.update(escalationTimeTypeInsert, obj);
+		return escalationTimeTypeRequest;
+	}
 }

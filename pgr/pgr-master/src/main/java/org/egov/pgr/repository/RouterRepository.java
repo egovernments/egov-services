@@ -41,13 +41,18 @@ package org.egov.pgr.repository;
 
 import java.sql.Date;
 
+import org.egov.pgr.model.PersistRouter;
+import org.egov.pgr.model.PersistRouterReq;
 import org.egov.pgr.model.ServiceGroup;
+import org.egov.pgr.repository.builder.RouterQueryBuilder;
 import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
+import org.egov.pgr.repository.rowmapper.PersistRouteRowMapper;
 //import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -59,24 +64,36 @@ public class RouterRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	/*
-	 * @Autowired private CategoryTypeQueryBuilder categoryQueryBuilder;
-	 * 
-	 * @Autowired private CategoryTypeRowMapper categoryRowMapper;
-	 */
+	
 
-	/*public ServiceGroupRequest createRouter(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getId(), serviceGroup.getName(), serviceGroup.getDescription(),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId() };
-		jdbcTemplate.update(serviceGroupInsert, obj);
-		return serviceGroupRequest;
-	}*/
+	public PersistRouterReq createRouter(final PersistRouterReq routerReq) {
+		
+		LOGGER.info("Router Request::" + routerReq);
+		final String routerInsert = RouterQueryBuilder.insertRouter();
+		final PersistRouter persistRouter = routerReq.getRouterType();
+		final Object[] obj = new Object[] {persistRouter.getService(),persistRouter.getPosition(), persistRouter.getBoundary(),0,
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				persistRouter.getTenantId() };
+		
+		jdbcTemplate.update(routerInsert, obj);
+		return routerReq;
+	}
+public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
+		
+		
+		final String validateQuery = RouterQueryBuilder.validateRouter();
+		PersistRouter persistRouter = new PersistRouter();
+		try{
+		persistRouter = (PersistRouter)jdbcTemplate.queryForObject(
+				validateQuery, new Object[] { routerReq.getRouterType().getService(),routerReq.getRouterType().getBoundary()}, new PersistRouteRowMapper());
+		LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
+		}
+		catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		return persistRouter;
+	}
 	
 	
 	

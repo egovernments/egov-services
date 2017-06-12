@@ -1,5 +1,3 @@
-package org.egov.pgr.repository.builder;
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
@@ -39,34 +37,33 @@ package org.egov.pgr.repository.builder;
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.pgr.model;
 
+import javax.validation.constraints.NotNull;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.egov.common.contract.request.RequestInfo;
 
-@Component
-public class RouterQueryBuilder {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	private static final Logger logger = LoggerFactory.getLogger(RouterQueryBuilder.class);
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	private static final String INSERT_ROUTER = "INSERT INTO egpgr_router(complainttypeid, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
-			+ "(?,?,?,?,?,?,?,?,?)";
-	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ?";
-	
-	public static String insertRouter() {
-		return INSERT_ROUTER;
-	}
-	public static String validateRouter() {
-		return CHECK_DUPLICATE;
-	}
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class PersistRouterReq {
 
-	
+	@NotNull
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-	
-	
-	
-
+    @JsonProperty("routertype")
+    private PersistRouter routerType;
 }
-

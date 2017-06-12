@@ -1,4 +1,4 @@
-package org.egov.pgr.repository.builder;
+package org.egov.pgr.model;
 
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
@@ -42,31 +42,43 @@ package org.egov.pgr.repository.builder;
 
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
-public class RouterQueryBuilder {
+import javax.validation.constraints.NotNull;
 
-	private static final Logger logger = LoggerFactory.getLogger(RouterQueryBuilder.class);
+import org.egov.pgr.model.AuditDetails;
+import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.web.contract.BoundaryIdType;
 
-	private static final String INSERT_ROUTER = "INSERT INTO egpgr_router(complainttypeid, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
-			+ "(?,?,?,?,?,?,?,?,?)";
-	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ?";
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class PersistRouter {
+
+	private Long id;
 	
-	public static String insertRouter() {
-		return INSERT_ROUTER;
-	}
-	public static String validateRouter() {
-		return CHECK_DUPLICATE;
-	}
-
+	private Long service;
 	
-
+	private Integer boundary;
 	
+	@NotNull
+	private Integer position;
 	
+	@NotNull
+	private String tenantId;
 	
-
+	private AuditDetails auditDetails;
+	
 }
 

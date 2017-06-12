@@ -1,6 +1,6 @@
-package org.egov.bill.service;
+package org.egov.demand.service;
 
-import org.egov.bill.model.BillInfo;
+import org.egov.demand.model.BillInfo;
 
 public class BillService {
 	

@@ -1,9 +1,6 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.SMSMessageContext;
-import org.egov.domain.model.ServiceType;
-import org.egov.domain.model.SevaRequest;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -15,16 +12,16 @@ public class NewDeliverableSMSMessageStrategy implements SMSMessageStrategy {
     private static final String SMS_NEW_DELIVERABLE_SERVICE_REQUEST = "sms_created_deliverable_service_request";
 
     @Override
-    public boolean matches(SevaRequest sevaRequest, ServiceType serviceType) {
-        return serviceType.isDeliverableType() && sevaRequest.isCreate();
+    public boolean matches(NotificationContext context) {
+        return context.getServiceType().isDeliverableType() && context.getSevaRequest().isCreate();
     }
 
     @Override
-    public SMSMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+    public SMSMessageContext getMessageContext(NotificationContext context) {
         final Map<Object, Object> map = ImmutableMap.of(
-            NAME, serviceType.getName(),
-            NUMBER, sevaRequest.getCrn(),
-            STATUS, sevaRequest.getStatusName().toLowerCase()
+            NAME, context.getServiceType().getName(),
+            NUMBER, context.getSevaRequest().getCrn(),
+            STATUS, context.getSevaRequest().getStatusName().toLowerCase()
         );
         return new SMSMessageContext(SMS_NEW_DELIVERABLE_SERVICE_REQUEST, map);
     }

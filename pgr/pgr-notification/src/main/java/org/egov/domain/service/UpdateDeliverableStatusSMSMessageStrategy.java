@@ -1,9 +1,6 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.SMSMessageContext;
-import org.egov.domain.model.ServiceType;
-import org.egov.domain.model.SevaRequest;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -15,18 +12,18 @@ public class UpdateDeliverableStatusSMSMessageStrategy implements SMSMessageStra
     private static final String TEMPLATE_NAME = "sms_deliverable_service_status_updated";
 
     @Override
-    public boolean matches(SevaRequest sevaRequest, ServiceType serviceType) {
-        return serviceType.isDeliverableType()
-            && sevaRequest.isUpdate()
-            && sevaRequest.isEmployeeLoggedIn();
+    public boolean matches(NotificationContext context) {
+        return context.getServiceType().isDeliverableType()
+            && context.getSevaRequest().isUpdate()
+            && context.getSevaRequest().isEmployeeLoggedIn();
     }
 
     @Override
-    public SMSMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+    public SMSMessageContext getMessageContext(NotificationContext context) {
         final Map<Object, Object> map = ImmutableMap.of(
-            SERVICE_NAME, serviceType.getName(),
-            CRN, sevaRequest.getCrn(),
-            SERVICE_STATUS, sevaRequest.getStatusName().toLowerCase()
+            SERVICE_NAME, context.getServiceType().getName(),
+            CRN, context.getSevaRequest().getCrn(),
+            SERVICE_STATUS, context.getSevaRequest().getStatusName().toLowerCase()
         );
         return new SMSMessageContext(TEMPLATE_NAME, map);
     }

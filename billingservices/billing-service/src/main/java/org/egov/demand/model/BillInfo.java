@@ -1,4 +1,4 @@
-package org.egov.bill.model;
+package org.egov.demand.model;
 
 import java.util.ArrayList;
 import java.util.List;

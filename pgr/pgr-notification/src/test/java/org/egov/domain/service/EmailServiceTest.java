@@ -46,7 +46,13 @@ public class EmailServiceTest {
 
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
-        emailService.send(sevaRequest, serviceType, tenant);
+        final NotificationContext context = NotificationContext.builder()
+            .sevaRequest(sevaRequest)
+            .serviceType(serviceType)
+            .tenant(tenant)
+            .build();
+
+        emailService.send(context);
 
         verify(messageQueueRepository, times(0)).sendEmail(any(), any());
     }
@@ -75,7 +81,7 @@ public class EmailServiceTest {
         final Tenant tenant = new Tenant("tenantName", "ulbGrade");
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
-        when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(true);
+        when(emailMessageStrategy.matches(any())).thenReturn(true);
         final HashMap<Object, Object> bodyTemplateValues = new HashMap<>();
         final HashMap<Object, Object> subjectTemplateValues = new HashMap<>();
         final EmailMessageContext emailMessageContext = EmailMessageContext.builder()
@@ -84,11 +90,16 @@ public class EmailServiceTest {
             .bodyTemplateValues(bodyTemplateValues)
             .subjectTemplateValues(subjectTemplateValues)
             .build();
-        when(emailMessageStrategy.getMessageContext(sevaRequest, serviceType, tenant)).thenReturn(emailMessageContext);
+        when(emailMessageStrategy.getMessageContext(any())).thenReturn(emailMessageContext);
         when(templateService.loadByName("bodyTemplateName", bodyTemplateValues)).thenReturn(body);
         when(templateService.loadByName("subjectTemplateName", subjectTemplateValues)).thenReturn(subject);
+        final NotificationContext context = NotificationContext.builder()
+            .sevaRequest(sevaRequest)
+            .serviceType(serviceType)
+            .tenant(tenant)
+            .build();
 
-        emailService.send(sevaRequest, serviceType, tenant);
+        emailService.send(context);
 
         final EmailRequest expectedEmailRequest = EmailRequest.builder()
             .body(body)
@@ -119,8 +130,13 @@ public class EmailServiceTest {
         final Tenant tenant = new Tenant("tenantName", "ulbGrade");
         final List<String> keywords = Collections.emptyList();
         final ServiceType serviceType = new ServiceType("serviceType", keywords);
-        when(emailMessageStrategy.matches(sevaRequest, serviceType, tenant)).thenReturn(false);
+        when(emailMessageStrategy.matches(any())).thenReturn(false);
+        final NotificationContext context = NotificationContext.builder()
+            .sevaRequest(sevaRequest)
+            .serviceType(serviceType)
+            .tenant(tenant)
+            .build();
 
-        emailService.send(sevaRequest, serviceType, tenant);
+        emailService.send(context);
     }
 }

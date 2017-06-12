@@ -1,9 +1,6 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.SMSMessageContext;
-import org.egov.domain.model.ServiceType;
-import org.egov.domain.model.SevaRequest;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -16,20 +13,20 @@ public class ProcessingFeeEnteredSMSMessageStrategy implements SMSMessageStrateg
     private static final String TEMPLATE_NAME = "sms_deliverable_service_processing_fee_entered";
 
     @Override
-    public boolean matches(SevaRequest sevaRequest, ServiceType serviceType) {
-        return serviceType.isDeliverableType()
-            && sevaRequest.isProcessingFeePresent()
-            && sevaRequest.isInProgress()
-            && sevaRequest.isEmployeeLoggedIn();
+    public boolean matches(NotificationContext context) {
+        return context.getServiceType().isDeliverableType()
+            && context.getSevaRequest().isProcessingFeePresent()
+            && context.getSevaRequest().isInProgress()
+            && context.getSevaRequest().isEmployeeLoggedIn();
     }
 
     @Override
-    public SMSMessageContext getMessageContext(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
+    public SMSMessageContext getMessageContext(NotificationContext context) {
         final Map<Object, Object> map = ImmutableMap.of(
-            SERVICE_NAME, serviceType.getName(),
-            CRN, sevaRequest.getCrn(),
-            FEE, sevaRequest.getProcessingFee(),
-            ULB_GRADE, tenant.getUlbGrade()
+            SERVICE_NAME, context.getServiceType().getName(),
+            CRN, context.getSevaRequest().getCrn(),
+            FEE, context.getSevaRequest().getProcessingFee(),
+            ULB_GRADE, context.getTenant().getUlbGrade()
         );
         return new SMSMessageContext(TEMPLATE_NAME, map);
     }

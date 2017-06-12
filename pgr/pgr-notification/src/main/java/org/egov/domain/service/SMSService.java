@@ -1,9 +1,7 @@
 package org.egov.domain.service;
 
+import org.egov.domain.model.NotificationContext;
 import org.egov.domain.model.SMSMessageContext;
-import org.egov.domain.model.ServiceType;
-import org.egov.domain.model.SevaRequest;
-import org.egov.domain.model.Tenant;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,30 +25,28 @@ public class SMSService {
         this.messageStrategyList = messageStrategyList;
     }
 
-    public void send(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
-        final List<String> smsMessages = getSMSMessages(sevaRequest, serviceType, tenant);
-        final String mobileNumber = sevaRequest.getMobileNumber();
+    public void send(NotificationContext context) {
+        final List<String> smsMessages = getSMSMessages(context);
+        final String mobileNumber = context.getSevaRequest().getMobileNumber();
         smsMessages.forEach(message -> messageQueueRepository.sendSMS(mobileNumber, message));
     }
 
-    private List<String> getSMSMessages(SevaRequest sevaRequest, ServiceType serviceType, Tenant tenant) {
-        final List<SMSMessageStrategy> strategyList = getSmsMessageStrategy(sevaRequest, serviceType);
+    private List<String> getSMSMessages(NotificationContext context) {
+        final List<SMSMessageStrategy> strategyList = getSmsMessageStrategy(context);
         return strategyList.stream()
-            .map(strategy -> getSMSMessage(sevaRequest, serviceType, strategy, tenant))
+            .map(strategy -> getSMSMessage(context, strategy))
             .collect(Collectors.toList());
     }
 
-    private String getSMSMessage(SevaRequest sevaRequest,
-                                 ServiceType serviceType,
-                                 SMSMessageStrategy strategy,
-                                 Tenant tenant) {
-        final SMSMessageContext messageContext = strategy.getMessageContext(sevaRequest, serviceType, tenant);
+    private String getSMSMessage(NotificationContext notificationContext,
+                                 SMSMessageStrategy strategy) {
+        final SMSMessageContext messageContext = strategy.getMessageContext(notificationContext);
         return templateService.loadByName(messageContext.getTemplateName(), messageContext.getTemplateValues());
     }
 
-    private List<SMSMessageStrategy> getSmsMessageStrategy(SevaRequest sevaRequest, ServiceType serviceType) {
+    private List<SMSMessageStrategy> getSmsMessageStrategy(NotificationContext context) {
         final List<SMSMessageStrategy> strategyList = messageStrategyList.stream()
-            .filter(strategy -> strategy.matches(sevaRequest, serviceType))
+            .filter(strategy -> strategy.matches(context))
             .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(strategyList)) {
             return Collections.singletonList(new UndefinedSMSMessageStrategy());

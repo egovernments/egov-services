@@ -149,8 +149,9 @@ public class WaterConnectionRepository {
             final String insertMeterQuery = WaterConnectionQueryBuilder.insertMeterQuery();
             try {
                 final Object[] obj = new Object[] { waterConnectionRequest.getConnection().getMeter().getMeterMake(),
-                        connectionId,
+                        connectionId,waterConnectionRequest.getConnection().getMeter().getMeterReading(),
                         waterConnectionRequest.getConnection().getTenantId(),
+                        waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
                         waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
 
                 jdbcTemplate.update(insertMeterQuery, obj);

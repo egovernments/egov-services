@@ -580,7 +580,7 @@ definitions:
         type: string
         format: date
         description: date of agreement.
-      closeDate:
+      expiryDate:
         type: string
         format: date
         description: End date of agreement.

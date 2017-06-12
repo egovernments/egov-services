@@ -41,16 +41,30 @@ package org.egov.pgr.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.egov.pgr.model.Attribute;
+import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.model.Value;
 import org.egov.pgr.web.contract.RouterType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RouterRowMapper implements RowMapper<RouterType> {
-	 @Override
-	    public RouterType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-	        return new RouterType();
-	    }
+	public static Map<String, List<Value>> attribValue = new HashMap<>();
+	public static Map<String, List<Attribute>> serviceAttrib = new HashMap<>();
+	public static Map<String, ServiceType> serviceMap = new HashMap<>();
+	public static Map<Integer, RouterType> routerMap = new HashMap<>();
+	
+	@Override
+	public RouterType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+		
+		
+
+		return new RouterType();
+	}
 
 }

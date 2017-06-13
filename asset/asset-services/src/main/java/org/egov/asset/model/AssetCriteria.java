@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.asset.model.enums.Status;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class AssetCriteria {
 
 	private List<Long> id;

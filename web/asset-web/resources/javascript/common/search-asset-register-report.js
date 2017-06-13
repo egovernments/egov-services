@@ -10,7 +10,7 @@ class SearchAsset extends React.Component {
       "status": "",
       "location":"",
       "code": ""
-   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false}
+   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false,result:[]}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -84,25 +84,10 @@ class SearchAsset extends React.Component {
             }, 1200);
           }
         })
-  
-}
-
-componentWillMount (){
-
-
-  var count = 1, _this = this, _state = {};
-  var checkCountNCall = function(key, res) {
-    count--;
-    _state[key] = res;
-    if(count == 0)
-      _this.setInitialState(_state);
-  }
-  getDropdown("locality", function(res) {
-    console.log("location",res);
-    checkCountNCall("localityList", res);
-  });
 
 }
+
+
   componentWillUpdate() {
     if(flag == 1) {
       flag = 0;
@@ -133,7 +118,7 @@ componentWillMount (){
       }
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
-    var count = 3, _this = this, _state = {};
+    var count = 3, _this = this, _state = {},result=[];
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -148,32 +133,35 @@ componentWillMount (){
       checkCountNCall("assetCategories", res);
     });
 
+    getDropdown("locality", function(res) {
+      console.log("location",res);
+       result = res.map(function(a) {return a.name;});
+       $( "#location" ).autocomplete({
+         source: result,
+         minLength: 3,
+         change: function( event, ui ) {
+           if(ui.item && ui.item.value)
+           console.log("ui",ui);
+               _this.setState({
+                   searchSet:{
+                       ..._this.state.searchSet,
+                       location: ui.item.value
+                   }
+               })
+         }
+
+       });
+      checkCountNCall("localityList", res);
+    });
+
     getDropdown("statusList", function(res) {
+      console.log("statusList",res);
       checkCountNCall("statusList", res);
     });
 
-    console.log(this.state.localityList);
-    var location;
-    var locationArray = JSON.parse(localStorage.getItem("locality"));
-    var result = locationArray.map(function(a) {return a.name;});
-      console.log("locationArray",locationArray);
-      console.log("result",result);
+  
 
-    $( "#location" ).autocomplete({
-      source: result,
-      minLength: 3,
-      change: function( event, ui ) {
-        if(ui.item && ui.item.value)
-        console.log("ui",ui);
-            _this.setState({
-                searchSet:{
-                    ..._this.state.searchSet,
-                    location: ui.item.value
-                }
-            })
-      }
 
-    });
 
 
   }

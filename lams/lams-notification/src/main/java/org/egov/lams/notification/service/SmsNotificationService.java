@@ -19,7 +19,7 @@ public class SmsNotificationService {
 
 		Double totalAmount = agreement.getSecurityDeposit() + agreement.getBankGuaranteeAmount();
 		String message = MessageFormat.format(propertiesManager.getNotificationMessage(),
-				allottee.getName(), asset.getCategory(), asset.getName(),
+				allottee.getName(), asset.getCategory().getName(), asset.getName(),
 				agreement.getAcknowledgementNumber(), agreement.getRent(), agreement.getSecurityDeposit(),
 				agreement.getBankGuaranteeAmount(), totalAmount,
 				asset.getLocationDetails().getRevenueWard());
@@ -29,7 +29,7 @@ public class SmsNotificationService {
 	public String getApprovalMessage(Agreement agreement, Asset asset, Allottee allottee) {
 
 		String message = MessageFormat.format(propertiesManager.getApproveMessage(), allottee.getName(),
-				asset.getCategory(), asset.getName(),
+				asset.getCategory().getName(), asset.getName(),
 				agreement.getAcknowledgementNumber(), agreement.getRent(),
 				asset.getLocationDetails().getRevenueWard());
 		return message;
@@ -38,7 +38,7 @@ public class SmsNotificationService {
 	public String getRejectedMessage(Agreement agreement, Asset asset, Allottee allottee) {
 
 		String message = MessageFormat.format(propertiesManager.getRejectMessage(), allottee.getName(),
-				asset.getCategory(), asset.getName(),
+				asset.getCategory().getName(), asset.getName(),
 				agreement.getAcknowledgementNumber(), asset.getLocationDetails().getRevenueWard());
 		return message;
 	}

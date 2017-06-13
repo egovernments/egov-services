@@ -30,7 +30,13 @@ public class ServiceRequestService {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return serviceRequestRepository.find(serviceRequestSearchCriteria);
+        List<ServiceRequest> serviceRequestList =  serviceRequestRepository.find(serviceRequestSearchCriteria);
+
+        //To mask citizen's details if it is anonymous request.
+        if(serviceRequestSearchCriteria.isAnonymous())
+            serviceRequestList.forEach(ServiceRequest::maskUserDetails);
+
+        return serviceRequestList;
     }
 
     public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {

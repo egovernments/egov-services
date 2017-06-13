@@ -2,8 +2,11 @@ package org.egov.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class FloorTypeRequest {
 
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	private List<FloorType> floorTypes;

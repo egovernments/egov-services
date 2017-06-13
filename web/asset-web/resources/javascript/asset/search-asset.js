@@ -74,6 +74,7 @@ class SearchAsset extends React.Component {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              "ordering": false,
+             "bDestroy": true,
              language: {
                 "emptyTable": "No Records"
              }
@@ -277,7 +278,7 @@ class SearchAsset extends React.Component {
                       <select id="status" name="status" value={status} onChange={(e)=>{
                               handleChange(e,"status")
                           }}>
-                            <option>Select Status</option>
+                            <option value="">Select Status</option>
                             {renderOption(this.state.statusList)}
                          </select>
                   </div>

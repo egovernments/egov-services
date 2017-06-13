@@ -75,7 +75,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receivingmode")
+@RequestMapping("/source")
 public class ReceivingModeTypeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeController.class);
@@ -113,16 +113,16 @@ public class ReceivingModeTypeController {
 
 	}
 	
-    @PostMapping(value = "/_update/{receivingmodeid}")
+    @PostMapping(value = "/{id}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ReceivingModeTypeReq modeTypeRequest, final BindingResult errors,
-            @PathVariable("receivingmodeid") final long receivingmodeid) {
+            @PathVariable("id") final long id) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("ReceivingCenterTypeRequest::" + modeTypeRequest);
-        modeTypeRequest.getModeType().setId(receivingmodeid);
+        modeTypeRequest.getModeType().setId(id);
 
         final List<ErrorResponse> errorResponses = validateReceivingModeRequest(modeTypeRequest);
         if (!errorResponses.isEmpty())

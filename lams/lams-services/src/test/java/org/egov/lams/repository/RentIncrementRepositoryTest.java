@@ -38,12 +38,15 @@ public class RentIncrementRepositoryTest {
 	@Test
 	public void getRentIncrementByIdTest() {
 
+		List<RentIncrementType> rentIncrements = new ArrayList<>();
 		RentIncrementType rentIncrementType = new RentIncrementType();
 		rentIncrementType.setId(1l);
 		Long rentId = 1l;
+		rentIncrements.add(rentIncrementType);
 
-		when(jdbcTemplate.queryForObject(any(String.class), any(Object[].class), any(RentIncrementRowMapper.class)))
-				.thenReturn(rentIncrementType);
-		assertTrue(rentIncrementType.equals(rentIncrementRepository.getRentIncrementById(rentId)));
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(RentIncrementRowMapper.class)))
+				.thenReturn(rentIncrements);
+		
+		assertTrue(rentIncrements.equals(rentIncrementRepository.getRentIncrementById(rentId)));
 	}
 }

@@ -53,12 +53,13 @@ import org.egov.pgr.service.ServiceGroupService;
 import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.service.ReceivingCenterTypeService;
 import org.egov.pgr.service.ReceivingModeTypeService;
+import org.egov.pgr.service.RouterService;
 import org.egov.pgr.service.ServiceGroupService;
 import org.egov.pgr.service.ServiceTypeService;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
 import org.egov.pgr.web.contract.ReceivingModeTypeReq;
-
+import org.egov.pgr.web.contract.RouterTypeReq;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.egov.pgr.web.contract.ServiceRequest;
 import org.slf4j.Logger;
@@ -79,8 +80,8 @@ public class PGRConsumer {
     @Autowired
     private ServiceGroupService serviceGroupService;
     
-   /* @Autowired
-    private RouterService routerService;*/
+    @Autowired
+    private RouterService routerService;
     
     @Autowired
 	private ReceivingCenterTypeService receivingCenterTypeService;
@@ -137,17 +138,24 @@ public void listen(final ConsumerRecord<String, String> record) {
 				LOGGER.info("Consuming update ServiceType request");
 				serviceTypeService.update(objectMapper.readValue(record.value(), ServiceRequest.class));
 			} else if(record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())){
-	        	LOGGER.info("Consuming create Category request");
-	            serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
-	        }else if (record.topic().equals(applicationProperties.getCreateRouterTopicName())){
-	        	LOGGER.info("Consuming create Router request");		
-	            //routerService.create(objectMapper.readValue(record.value(), RouterReq.class));
-			} else if (record.topic().equals(applicationProperties.getCreateEscalationTimeTypeName())) {
+
+	        		LOGGER.info("Consuming create Category request");
+	                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+	        }
+			else if (record.topic().equals(applicationProperties.getCreateRouterTopicName())){
+	        		LOGGER.info("Consuming create Router request");
+	        		
+	        		routerService.create(objectMapper.readValue(record.value(), RouterTypeReq.class));
+	        	}
+
+	        	
+	        else if (record.topic().equals(applicationProperties.getCreateEscalationTimeTypeName())) {
 				LOGGER.info("Consuming create Escalation time type request");
 				escalationTimeTypeService.create(objectMapper.readValue(record.value(), EscalationTimeTypeReq.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateEscalationTimeTypeName())) {
 				LOGGER.info("Consuming update Escalation time type request");
 				escalationTimeTypeService.update(objectMapper.readValue(record.value(), EscalationTimeTypeReq.class));
+
 			}
 			
 		} catch (final IOException e) {

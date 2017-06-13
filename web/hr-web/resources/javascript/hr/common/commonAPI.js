@@ -2,7 +2,7 @@ var baseUrl = window.location.origin;
 
 
 
-var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "ap.kurnool"//"ap." + window.location.origin.split("-")[0].split("//")[1];
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();
@@ -262,7 +262,10 @@ function getDropdown(name, cb, params) {
             break;
         case 'employeeStatus':
             if (!localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined") {
-                getCommonMaster("hr-masters", "hrstatuses", function(err, res) {
+              var queryString = {tenantId, pageSize:500};
+              if (params && typeof params == "object")
+                  queryString = Object.assign(queryString, params);
+                commonApiPost("hr-masters", "hrstatuses", "_search", queryString, function(err, res) {
                     if (res) {
                         localStorage.setItem("employeeStatus", JSON.stringify(res["HRStatus"]));
                         cb(res["HRStatus"]);

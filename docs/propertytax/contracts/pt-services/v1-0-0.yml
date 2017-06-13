@@ -271,6 +271,11 @@ definitions:
         type: boolean
         description: There are different transactions can be performed on a property and all the transactions goes through the work flow. If one workflow is happening system should not allow other work flow on a same property so, when any work flow starts we flag this field as true and when the same work flow ends we flag this field as false.
         default: false
+      demands:
+        type: array
+        items:
+          type: integer
+          format: int64
       boundary:
         $ref: "#/definitions/PropertyLocation"
       active:
@@ -495,6 +500,9 @@ definitions:
         description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
         maxLength: 64
         minLength: 1
+      taxCalculation:
+        type: string
+        description: all the json return by /property/tax/_calculate API. The object reuturned by this API is "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-calculator/v1-0-0.yml#/definitions/TaxCalculation"
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
     required:

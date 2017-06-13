@@ -1,31 +1,32 @@
 title Bill Based Collection
 
-Client->+ReceiptSvc: Search Due Request
-note over Client,ReceiptSvc
-    Search request to get the demand for 
-    multiple bills/acr
-    oss services.
+Client->+BillingSvc: Search Bill
+note over Client,BillingSvc
+    Validate search request and 
+    prepare bill response
 end note
-ReceiptSvc->ReceiptSvc: Validate search request
-ReceiptSvc->DemandSvc: Query demand system
-DemandSvc->DemandSvc: Validate MIS info and prepare Bill
-DemandSvc->ReceiptSvc: Returns Multiple bills/across services 
-note over ReceiptSvc,DemandSvc
-    Search demand system based on consumer code & 
-    billing system/owner information.
-end note
-ReceiptSvc->-Client: Demand Response and bank list
+BillingSvc->-Client: Demand/Bill Response
 
-Client->+ReceiptSvc: Apportion Amount Paid
-ReceiptSvc->DemandBillSvc: Apportion Amount Paid
-note over Client,DemandBillSvc
-    Apportion the amount paid by the citizen
-    for the service. DemandBillSvc in turn invokes
-    individual billing service to apportion the amount.
+
+Client->+ReceiptSvc: Get collection modes allowed
+note over Client,ReceiptSvc
+    Get the collection modes allowed
+    for the logged in user.
 end note
 ReceiptSvc->-Client: Response apportioned receipt details list.
 
+Client->+FinancialSvc: Get bank list
+note over Client,FinancialSvc
+    Get the list of bank for Cheque/DD
+    payments.
+end note
+FinancialSvc->-Client: Bank list reponse.
+
 Client->+ReceiptSvc: Submit payment request
+note over Client,ReceiptSvc
+    Apportion the paid amount by invoking
+    BillingSvc, create receipt
+end note
 ReceiptSvc->ReceiptSvc: Validate payment request
 ReceiptSvc->IDGenSvc: Generate receipt number
 ReceiptSvc->ReceiptSvc: Persist receipt
@@ -34,6 +35,6 @@ ReceiptSvc->-Client: Create receipt response
 
 KafkaQSvc->WorkflowSvc: Initiate workflow
 KafkaQSvc->VoucherSvc: Post voucher in financials
-KafkaQSvc->DemandBillSvc: Update demand system based on receipt date.
+KafkaQSvc->BillingSvc: Update demand system based on receipt date.
 KafkaQSvc->ESSvc: Push to elastic search
 KafkaQSvc->NotificationSvc: Send email/sms

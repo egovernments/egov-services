@@ -40,15 +40,26 @@
 package org.egov.pgr.repository;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.egov.pgr.model.Attribute;
+import org.egov.pgr.model.PersistRouter;
+import org.egov.pgr.model.PersistRouterReq;
+import org.egov.pgr.model.ServiceType;
+import org.egov.pgr.model.Value;
 import org.egov.pgr.repository.builder.RouterQueryBuilder;
+import org.egov.pgr.repository.rowmapper.PersistRouteRowMapper;
 import org.egov.pgr.repository.rowmapper.RouterRowMapper;
 import org.egov.pgr.web.contract.RouterType;
 import org.egov.pgr.web.contract.RouterTypeGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -60,29 +71,109 @@ public class RouterRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	@Autowired private RouterQueryBuilder routerQueryBuilder;
+    @Autowired 
+    private RouterQueryBuilder routerQueryBuilder;
 	
-	@Autowired private RouterRowMapper routerRowMapper;
+	@Autowired 
+	private RouterRowMapper routerRowMapper;
 	
-	/*public ServiceGroupRequest createRouter(final ServiceGroupRequest serviceGroupRequest) {
-		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
-		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getId(), serviceGroup.getName(), serviceGroup.getDescription(),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId() };
-		jdbcTemplate.update(serviceGroupInsert, obj);
-		return serviceGroupRequest;
-	}*/
+
+	public PersistRouterReq createRouter(final PersistRouterReq routerReq) {
+		
+		LOGGER.info("Router Request::" + routerReq);
+		final String routerInsert = RouterQueryBuilder.insertRouter();
+		final PersistRouter persistRouter = routerReq.getRouterType();
+		final Object[] obj = new Object[] {persistRouter.getService(),persistRouter.getPosition(), persistRouter.getBoundary(),0,
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				persistRouter.getTenantId() };
+		
+		jdbcTemplate.update(routerInsert, obj);
+		return routerReq;
+	}
+public PersistRouterReq updateRouter(final PersistRouterReq routerReq) {
+		
+		LOGGER.info("Update Router Request::" + routerReq);
+		final String routerUpdate = RouterQueryBuilder.updateRouter();
+		final PersistRouter persistRouter = routerReq.getRouterType();
+		final Object[] obj = new Object[] {persistRouter.getPosition(),0,
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				persistRouter.getTenantId(), persistRouter.getBoundary(),persistRouter.getService(),persistRouter.getId() };
+		
+		jdbcTemplate.update(routerUpdate, obj);
+		return routerReq;
+	}
+public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
+		
+		
+		final String validateQuery = RouterQueryBuilder.validateRouter();
+		PersistRouter persistRouter = new PersistRouter();
+		try{
+		persistRouter = (PersistRouter)jdbcTemplate.queryForObject(
+				validateQuery, new Object[] { routerReq.getRouterType().getService(),routerReq.getRouterType().getBoundary()}, new PersistRouteRowMapper());
+		LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
+		}
+		catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		return persistRouter;
+	}
+
+	
+	
+	
+
 	
 	public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = routerQueryBuilder.getRouterDetail();
-        final List<RouterType> routerTypes = jdbcTemplate.query(queryStr, routerRowMapper);
-        return routerTypes;
+		final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = routerQueryBuilder.getQuery(routerTypeGetRequest, preparedStatementValues);
+        jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), routerRowMapper);
+        return prepareRouterTypeList(routerRowMapper);
     }
+	
+	private List<RouterType> prepareRouterTypeList(RouterRowMapper rowMapper){
+		Map<String, List<Value>> attribValue = rowMapper.attribValue;
+		Map<String, Map<String, Attribute>> serviceAttrib = rowMapper.serviceAttrib;
+		Map<Long, Map<String, List<ServiceType>>> serviceMap = rowMapper.serviceMap;
+		Map<Long, RouterType> routerMap = rowMapper.routerMap;
+		RouterType routerType = new RouterType();
+		List<RouterType> routerTypes = new ArrayList<>();
+		List<ServiceType> serviceTypeList = new ArrayList<>();
+		
+		Iterator<Entry<Long, RouterType>> itr = routerMap.entrySet().iterator();
+		while (itr.hasNext()) {
+			Entry<Long, RouterType> routerEntry = itr.next();
+			routerType = routerEntry.getValue();
+			Long routerId = routerEntry.getKey();
+			Map<String, List<ServiceType>> innerServiceMap = serviceMap.get(routerId);
+			Iterator<Entry<String, List<ServiceType>>> innerItr = innerServiceMap.entrySet().iterator();
+			while (innerItr.hasNext()) {
+				Entry<String, List<ServiceType>> innerEntry = innerItr.next();
+				serviceTypeList = innerEntry.getValue();
+				List<ServiceType> finalServiceList = new ArrayList<>();
+				Iterator<ServiceType> serviceItr = serviceTypeList.iterator();
+				while (serviceItr.hasNext()) {
+					ServiceType serviceType = new ServiceType();
+					serviceType = serviceItr.next();
+					Map<String, Attribute> innerAttrMap = serviceAttrib.get(serviceType.getServiceCode());
+					Iterator<Entry<String, Attribute>> innerAttrItr = innerAttrMap.entrySet().iterator();
+					List<Attribute> finalAttributeList = new ArrayList<>();
+					while (innerAttrItr.hasNext()) {
+						Entry<String,Attribute> attrEntry = innerAttrItr.next();
+						List<Value> valueList = attribValue.get(attrEntry.getValue().getCode());
+						attrEntry.getValue().setAttributes(valueList);
+						finalAttributeList.add(attrEntry.getValue());
+					}
+					serviceType.setAttributes(finalAttributeList);
+					finalServiceList.add(serviceType);
+				}
+				routerType.setServices(finalServiceList);
+				routerTypes.add(routerType);
+			}
+		}
+		return routerTypes;
+	}
 	
 	
 	

@@ -40,6 +40,8 @@
 package org.egov.workflow.domain.model;
 
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -88,6 +90,8 @@ public class ServiceType {
     private int category;
    
     private AuditDetails auditDeatils;
+
+    private List<Attribute> attributes;
     
 }
 

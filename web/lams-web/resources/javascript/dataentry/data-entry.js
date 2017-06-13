@@ -1095,8 +1095,10 @@ $("#createAgreementForm").validate({
         agreement["asset"]["assetCategory"]["code"] = assetDetails["assetCategory"]["code"];
         agreement["asset"]["assetCategory"]["name"] = assetDetails["assetCategory"]["name"];
 
-        agreement["rentIncrementMethod"] = {};
-        agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
+        if($("#rentIncrementMethod").val()) {
+            agreement["rentIncrementMethod"] = {};
+            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();    
+        }
         agreement["tenantId"] = tenantId;
         agreement["source"] = "DATA_ENTRY";
         agreement["action"] = "CREATE"; //Different in case of cancel/evict. Please remove

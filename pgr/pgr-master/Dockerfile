@@ -14,7 +14,7 @@ ENV DB_NAME=mydb \
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/wcms-masters-0.0.1-SNAPSHOT.jar /opt/egov/wcms-masters.jar
+COPY /target/pgr-masters-0.0.1-SNAPSHOT.jar /opt/egov/pgr-masters.jar
 
 COPY start.sh /usr/bin/start.sh
 

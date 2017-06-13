@@ -77,7 +77,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receivingcenter")
+@RequestMapping("/channel")
 public class ReceivingCenterTypeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeController.class);

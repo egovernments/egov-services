@@ -115,7 +115,7 @@ public class SourceTypeController {
 
     }
 
-    @PostMapping(value = "/_update/{code}")
+    @PostMapping(value = "/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final SourceTypeRequest waterSourceRequest,
             final BindingResult errors, @PathVariable("code") final String code) {

@@ -82,7 +82,7 @@ public class DonationRepository {
     public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
         LOGGER.info("Donation update Request::" + donationRequest);
         final String donationInsert = "update egwtr_donation set property_type=?,usage_type=?,category=?, hsc_pipesize_max=?, hsc_pipesize_min=?,"
-                + " from_date=?, to_date=?, donation_amount=?, active=?,lastmodifiedby=?, lastmodifieddate=? where id=?) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                + " from_date=?, to_date=?, donation_amount=?, active=?,lastmodifiedby=?, lastmodifieddate=? where id=?)";
         final Object[] obj = new Object[] {
                 donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
                 donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),

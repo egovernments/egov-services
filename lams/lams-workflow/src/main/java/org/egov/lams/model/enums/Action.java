@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Action {
 
-	CREATE("Create"),
+	CREATE("CREATE"),
 
-	CANCELATION("Cancelation"),
+	CANCELLATION("CANCELLATION"),
 
-	EVICTION("Eviction"),
+	EVICTION("EVICTION"),
 
-	RENEWAL("Renewal"),
+	RENEWAL("RENEWAL"),
 
-	OBJECTION("Objection");
+	OBJECTION("OBJECTION");
 
 	private String value;
 
@@ -30,7 +30,7 @@ public enum Action {
 	@JsonCreator
 	public static Action fromValue(String text) {
 		for (Action b : Action.values()) {
-			if (String.valueOf(b.value).equals(text)) {
+			if (String.valueOf(b.value).equalsIgnoreCase(text)) {
 				return b;
 			}
 		}

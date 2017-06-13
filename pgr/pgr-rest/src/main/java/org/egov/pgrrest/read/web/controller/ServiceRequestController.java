@@ -182,7 +182,7 @@ public class ServiceRequestController {
     }
 
     private boolean checkIsAnonymous(RequestInfoBody request){
-        return request.getRequestInfo().getUserInfo() == null ? true : false;
+        return request == null || request.getRequestInfo() == null ||request.getRequestInfo().getUserInfo() == null ? true : false;
     }
 
 }

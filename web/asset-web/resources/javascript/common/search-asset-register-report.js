@@ -10,7 +10,7 @@ class SearchAsset extends React.Component {
       "status": "",
       "location":"",
       "code": ""
-   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false,loactionArrayName:[]}
+   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -35,7 +35,7 @@ class SearchAsset extends React.Component {
 
       //call api call
       var _this = this;
-      var post = 0;
+
       var queryObject = this.state.searchSet;
       console.log("queryObject",queryObject);
 
@@ -45,7 +45,7 @@ class SearchAsset extends React.Component {
         for(var i=0;i<locationArray.length;i++){
             if(this.state.searchSet.location===locationArray[i].name){
               var location = locationArray[i].id;
-              post=1;
+
               break;
             }
 
@@ -60,7 +60,7 @@ class SearchAsset extends React.Component {
               queryObject.locality = location;
               queryObject.location = "";
         }
-        if(post===1){
+
 
         console.log("after",queryObject);
         commonApiPost("asset-services","assets","_search", {...queryObject, tenantId, pageSize:500}, function(err, res) {
@@ -84,20 +84,7 @@ class SearchAsset extends React.Component {
             }, 1200);
           }
         })
-  }else{
-    _this.setState({
-      isSearchClicked: true,
-      list :[],
-      modify: true
-
-    });
-    setTimeout(function(){
-      _this.setState({
-        modify: false
-      });
-    }, 1200);
-
-  }
+  
 }
 
 componentWillMount (){
@@ -110,8 +97,10 @@ componentWillMount (){
     if(count == 0)
       _this.setInitialState(_state);
   }
-
-
+  getDropdown("locality", function(res) {
+    console.log("location",res);
+    checkCountNCall("localityList", res);
+  });
 
 }
   componentWillUpdate() {
@@ -128,8 +117,7 @@ componentWillMount (){
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false,
-             bDestroy: true,
+             "ordering": false,
              language: {
                 "emptyTable": "No Records"
              }
@@ -138,7 +126,6 @@ componentWillMount (){
   }
 
   componentDidMount() {
-    var result = [];
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
       if(logo_ele && logo_ele[0]) {
@@ -165,16 +152,11 @@ componentWillMount (){
       checkCountNCall("statusList", res);
     });
 
-    getDropdown("locality", function(res) {
-      console.log("location1",res);
-        result = res.map(function(a) {return a.name;});
-      checkCountNCall("localityList", res);
-    });
-
-
-
-    console.log("loaction2",this.state.localityList);
-
+    console.log(this.state.localityList);
+    var location;
+    var locationArray = JSON.parse(localStorage.getItem("locality"));
+    var result = locationArray.map(function(a) {return a.name;});
+      console.log("locationArray",locationArray);
       console.log("result",result);
 
     $( "#location" ).autocomplete({
@@ -188,7 +170,6 @@ componentWillMount (){
                     ..._this.state.searchSet,
                     location: ui.item.value
                 }
-
             })
       }
 

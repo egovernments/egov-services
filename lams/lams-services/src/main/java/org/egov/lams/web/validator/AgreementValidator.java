@@ -232,13 +232,13 @@ public class AgreementValidator implements org.springframework.validation.Valida
 					Long rentIncrementId = rentIncrement.getId();
 					List<RentIncrementType> rentIncrements  = rentIncrementService.getRentIncrementById(rentIncrementId);
 					if(rentIncrements.isEmpty()) 
-						errors.rejectValue("Agreement.rentIncrement.Id", "",
+						errors.rejectValue("Agreement.rentIncrementMethod.id", "",
 								"no rentincrement type found for given value");
 					RentIncrementType responseRentIncrement = rentIncrements.get(0);
 					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
 						errors.rejectValue("Agreement.rentIncrement.Id", "", "invalid rentincrement type object");
 				} else {
-					errors.rejectValue("Agreement.rentIncrement.Id", "",
+					errors.rejectValue("Agreement.rentIncrementMethod.id", "",
 							"please enter a rentincrement type value for given agreement");
 				}
 			}

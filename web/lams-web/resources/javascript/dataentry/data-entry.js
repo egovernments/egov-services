@@ -1070,14 +1070,14 @@ $("#createAgreementForm").validate({
 
     var id1 = $('#collectedGoodWillAmount').val();
     var id2 = $('#goodWillAmount').val();
-    if (id1 > id2) {
+    if (id1 && id2 && Number(id1) > Number(id2)) {
         showError("Collected GoodWill Amount should be less than GoodWill Amount");
         return false;
 
     }
     var id3 = $('#collectedSecurityDeposit').val();
     var id4 = $('#securityDeposit').val();
-    if (id3 > id4) {
+    if (Number(id3) > Number(id4)) {
         showError("Collected Security Deposit should be less than Security Deposit");
         return false;
 

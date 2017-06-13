@@ -15,40 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 public class BillingServiceApplication {
-	
-
-	@Value("${app.timezone}")
-	private String timeZone;
-
-	@PostConstruct
-	public void initialize() {
-		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-	}
-
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	}
-
-	@Bean
-	public ObjectMapper getObjectMapper(){
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		return objectMapper;
-	}
-	
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		// mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT,Locale.ENGLISH));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(BillingServiceApplication.class, args);

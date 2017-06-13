@@ -2147,9 +2147,9 @@ class CreateAsset extends React.Component {
                     </div>
                   </div>
                   {renderIfCapitalized(this.state.capitalized)}
-                  {showAttachedFiles()}
               </div>
             </div>
+
             <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;
               <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

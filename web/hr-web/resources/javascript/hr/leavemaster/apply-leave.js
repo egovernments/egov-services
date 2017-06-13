@@ -263,7 +263,7 @@ class ApplyLeave extends React.Component {
                     availableDays:  "",
                     [pName]:{
                         ..._this.state.leaveSet[pName],
-                        [name]:""
+                        [name]:val
                   }
                 }
               });

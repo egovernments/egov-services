@@ -325,7 +325,7 @@ addOrUpdate(e, mode) {
         e.preventDefault();
         var _this = this;
 
-        if(_this.state.availableDays<=0){
+          if(_this.state.leaveSet.availableDays<=0 && _this.state.leaveSet.availableDays==""){
           return (showError("You do not have leave for this leave type."));
         }
         var employee;

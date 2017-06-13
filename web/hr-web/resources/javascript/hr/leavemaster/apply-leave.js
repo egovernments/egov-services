@@ -55,22 +55,26 @@ class ApplyLeave extends React.Component {
 
       if(type === "view") {
         getCommonMasterById("hr-leave","leaveapplications", id, function(err, res) {
-          if(res) {
-            _leaveSet = res.LeaveApplication[0];
+          if(res && res.LeaveApplication && res.LeaveApplication[0]) {
+            _leaveSet = res && res.LeaveApplication && res.LeaveApplication[0];
             commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,
                 id: _leaveSet.employee
             }, function(err, res1)  {
-              if(res1) {
-                employee = res1.Employee[0];
+              if(res1 && res1.Employee && res1.Employee[0]) {
+                employee = res1 && res1.Employee && res1.Employee[0];
                 _leaveSet.name = employee.name;
                 _leaveSet.code = employee.code;
                 _this.setState({
                    leaveSet: _leaveSet,
                    leaveNumber: _leaveSet.applicationNumber
                 })
+              } else {
+                showError("Something went wrong. Please contact Administrator.");
               }
             })
+          } else {
+            showError("Something went wrong. Please contact Administrator.");
           }
         });
       } else {
@@ -196,7 +200,7 @@ class ApplyLeave extends React.Component {
         if(!id) {
           commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId},function(err, res) {
             if(res) {
-              var obj = res.Employee[0];
+              var obj = res && res.Employee && res.Employee[0];
               _this.setState({
                 leaveSet:{
                     ..._this.state.leaveSet,

@@ -28,5 +28,5 @@ public class Bill   {
 
 	  private String tenantId;
 
-	  private InstallmentAuditDetail installmentAuditDetail;
+	  private AuditDetail installmentAuditDetail;
 }

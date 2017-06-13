@@ -12,7 +12,5 @@ public class DemandConsumer {
 	@KafkaListener(topics = "test-sp-kaf")
     public void processMessage(ConsumerRecord<String, HashMap<String, Object>> consumerRecord) {
 		
-		System.out.println("consumerRecord.topic>>>>"+consumerRecord.topic()+","+"consumerRecord.value"+consumerRecord.value());
-       
     }
 }

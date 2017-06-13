@@ -27,7 +27,7 @@ public class Installment {
 
 	  private String financialYear;
 
-	  private InstallmentAuditDetail auditDetails;
+	  private AuditDetail auditDetails;
 
 	  private String tenantId;
 }

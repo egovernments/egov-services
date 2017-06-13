@@ -17,7 +17,7 @@ public class DemandReason {
 
 	private String glCode;
 
-	private InstallmentAuditDetail auditDetails;
+	private AuditDetail auditDetails;
 
 	private String tenantId;
 }

@@ -23,7 +23,7 @@ public class CollectedReceipt {
 
 	private Status status;
 
-	private InstallmentAuditDetail installmentAuditDetail;
+	private AuditDetail installmentAuditDetail;
 
 	private String tenantId;
 }

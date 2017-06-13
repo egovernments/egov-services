@@ -19,7 +19,7 @@ public class ReasonMaster {
 
 	private Boolean isDebit = false;
 
-	private InstallmentAuditDetail auditDetails;
+	private AuditDetail auditDetails;
 
 	private String tenantId;
 

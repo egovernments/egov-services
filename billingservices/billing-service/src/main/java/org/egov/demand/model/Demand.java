@@ -25,7 +25,7 @@ public class Demand {
 
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 
-	private InstallmentAuditDetail auditDetails;
+	private AuditDetail auditDetails;
 
 	private String tenantId;
 

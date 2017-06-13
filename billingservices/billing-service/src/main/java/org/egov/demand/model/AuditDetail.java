@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstallmentAuditDetail {
+public class AuditDetail {
 	
 	  private String createdBy;
 

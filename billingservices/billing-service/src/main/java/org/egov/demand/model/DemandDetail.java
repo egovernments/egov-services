@@ -17,7 +17,7 @@ public class DemandDetail {
 
 	  private DemandReason demandReason;
 
-	  private InstallmentAuditDetail auditDetails;
+	  private AuditDetail auditDetails;
 
 	  private String tenantId;
 }

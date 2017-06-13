@@ -46,5 +46,5 @@ public class Owner   {
 
 	  private OwnerUserDetails userDetails;
 
-	  private InstallmentAuditDetail auditDetails;
+	  private AuditDetail auditDetails;
 }

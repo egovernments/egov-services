@@ -3,11 +3,29 @@ package org.egov.demand.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.web.contract.BillRequest;
+import org.egov.demand.web.contract.BillRequest.BillRequestBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 /**
  * A detailed head wise dues which is payable on a Demand.
  */
 
+
+@Setter
+@Getter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class BillInfo   {
   @JsonProperty("id")
   private Long id = null;

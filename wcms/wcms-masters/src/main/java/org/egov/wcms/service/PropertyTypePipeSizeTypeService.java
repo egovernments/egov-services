@@ -41,6 +41,7 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
+import org.egov.wcms.config.ConfigurationManager;
 import org.egov.wcms.model.PropertyTypePipeSizeType;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
@@ -64,6 +65,7 @@ public class PropertyTypePipeSizeTypeService {
 
     @Autowired
     private WaterMasterProducer waterMasterProducer;
+   
 
     public PropertyTypePipeSizeTypeRequest create(final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistCreatePropertyPipeSize(propertyPipeSizeRequest);

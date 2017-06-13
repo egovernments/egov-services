@@ -9,7 +9,6 @@ import java.util.List;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
-import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
@@ -233,7 +232,7 @@ public class MasterServiceImpl  implements Masterservice{
 		if(name!=null || category!=null || nameLocal!=null)
 			dataSearch.append("}'");
 
-		departmentSearchSql.append( dataSearch.toString());
+		departmentSearchSql.append( dataSearch);
 		if ( pageSize == null )
 			pageSize = 30;
 		if ( offSet ==null)
@@ -284,7 +283,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		StringBuffer floorTypeSearchSql = new StringBuffer();
 
-		floorTypeSearchSql.append("select * from egpt_mstr_floor where tenantid ='"+tenantId+"'");
+		floorTypeSearchSql.append("select * from egpt_mstr_floortype where tenantid ='"+tenantId+"'");
 
 		if (ids!=null && ids.length>0){
 
@@ -324,7 +323,7 @@ public class MasterServiceImpl  implements Masterservice{
 		if(name!=null ||  nameLocal!=null)
 			dataSearch.append("}'");
 
-		floorTypeSearchSql.append( dataSearch.toString());
+		floorTypeSearchSql.append( dataSearch);
 
 		if ( pageSize == null )
 			pageSize = Integer.valueOf( environment.getProperty("default.page.size").trim());
@@ -385,7 +384,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			StringBuffer usageMasterCreateSQL=new StringBuffer();
 
-			usageMasterCreateSQL.append("INSERT INTO egpt_mstr_floor")
+			usageMasterCreateSQL.append("INSERT INTO egpt_mstr_floortype")
 			.append(" ( tenantid,code,data,createdby,lastModifiedBy, createdTime,lastModifiedtime) ")
 			.append(" VALUES( ?, ?, ?, ?, ?, ?,?)");
 
@@ -456,7 +455,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			StringBuffer updateFloorTypeSql=new StringBuffer();
 
-			updateFloorTypeSql.append("UPDATE egpt_mstr_floor ")
+			updateFloorTypeSql.append("UPDATE egpt_mstr_floortype")
 			.append(" SET tenantid = ? code = ?,")
 			.append(" data=?, createdby =?,")
 			.append(" lastModifiedBy =? ,createdTime = ?,lastModifiedtime= ?")
@@ -515,7 +514,7 @@ public class MasterServiceImpl  implements Masterservice{
 			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
 		StringBuffer woodTypeSearchSql = new StringBuffer();
 
-		woodTypeSearchSql.append("select * from egpt_mstr_wood where tenantid ='"+tenantId+"'");
+		woodTypeSearchSql.append("select * from egpt_mstr_woodtype where tenantid ='"+tenantId+"'");
 
 
 
@@ -565,7 +564,7 @@ public class MasterServiceImpl  implements Masterservice{
 		if(name!=null || nameLocal!=null)
 			dataSearch.append("}'");
 
-		woodTypeSearchSql.append(dataSearch.toString());
+		woodTypeSearchSql.append(dataSearch);
 
 		if ( pageSize == null )
 			pageSize = Integer.valueOf( environment.getProperty("default.page.size").trim());
@@ -614,14 +613,14 @@ public class MasterServiceImpl  implements Masterservice{
 
 			long createdTime =new Date().getTime();
 
-			StringBuffer usageMasterCreateSQL=new StringBuffer();
+			StringBuffer woodTypeCreate=new StringBuffer();
 
 
 			Gson gson=new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
 			String data=gson.toJson(woodType);
 
-			usageMasterCreateSQL.append("INSERT INTO egpt_mstr_wood")
+			woodTypeCreate.append("INSERT INTO egpt_mstr_woodtype")
 			.append(" ( tenantid,code,data,createdby,lastModifiedBy, createdTime,lastModifiedTime) ")
 			.append(" VALUES( ?, ?, ?, ?, ?, ?,?)");
 
@@ -630,7 +629,7 @@ public class MasterServiceImpl  implements Masterservice{
 				@Override
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 
-					final PreparedStatement ps = connection.prepareStatement(usageMasterCreateSQL.toString(), new String[] { "id" });
+					final PreparedStatement ps = connection.prepareStatement(woodTypeCreate.toString(), new String[] { "id" });
 
 					PGobject jsonObject = new PGobject();
 					jsonObject.setType("json");
@@ -690,22 +689,22 @@ public class MasterServiceImpl  implements Masterservice{
 
 			long updatedTime =new Date().getTime();
 
-			StringBuffer updateFloorTypeSql=new StringBuffer();
+			StringBuffer updateWoodTypeSql=new StringBuffer();
 
 			Gson gson=new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
 			String data=gson.toJson(woodType);
 
-			updateFloorTypeSql.append("UPDATE egpt_mstr_wood ")
+			updateWoodTypeSql.append("UPDATE egpt_mstr_woodtype")
 			.append(" SET tenantid = ?, code = ?,")
-			.append(" data = ?, createdby =?")
+			.append(" data = ?, createdby =?,")
 			.append(" lastModifiedBy =? ,createdTime = ?,lastModifiedTime= ?")
 			.append(" WHERE id = " + id);
 
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-					final PreparedStatement ps = connection.prepareStatement(updateFloorTypeSql.toString());
+					final PreparedStatement ps = connection.prepareStatement(updateWoodTypeSql.toString());
 					ps.setString(1, woodType.getTenantId());
 					ps.setString(2, woodType.getCode());
 					PGobject jsonObject = new PGobject();
@@ -757,7 +756,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		StringBuffer roofTypeSearchSql = new StringBuffer();
 
-		roofTypeSearchSql.append("select * from egpt_mstr_roof where tenantid ='"+tenantId+"'");
+		roofTypeSearchSql.append("select * from egpt_mstr_rooftype where tenantid ='"+tenantId+"'");
 
 
 
@@ -781,7 +780,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 
 		if (code!=null && !code.isEmpty())
-			roofTypeSearchSql.append(" AND code ="+code);
+			roofTypeSearchSql.append(" AND code ='"+code+"'");
 
 		StringBuffer dataSearch = new StringBuffer();
 
@@ -802,7 +801,7 @@ public class MasterServiceImpl  implements Masterservice{
 		if(name!=null || nameLocal!=null)
 			dataSearch.append("}'");
 
-		roofTypeSearchSql.append(dataSearch.toString());
+		roofTypeSearchSql.append(dataSearch);
 
 
 		if ( pageSize == null )
@@ -860,7 +859,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			StringBuffer usageMasterCreateSQL=new StringBuffer();
 
-			usageMasterCreateSQL.append("INSERT INTO egpt_mstr_roof")
+			usageMasterCreateSQL.append("INSERT INTO egpt_mstr_rooftype")
 			.append(" ( tenantid,code,data,createdby,lastModifiedBy, createdTime,lastModifiedTime) ")
 			.append(" VALUES( ?, ?, ?, ?, ?,?,?)");
 
@@ -926,21 +925,21 @@ public class MasterServiceImpl  implements Masterservice{
 
 			long updatedTime =new Date().getTime();
 
-			StringBuffer updateFloorTypeSql=new StringBuffer();
+			StringBuffer updateRoofTypeSql=new StringBuffer();
 			Gson gson=new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
 			String data=gson.toJson(roofType);
 
-			updateFloorTypeSql.append("UPDATE egpt_mstr_roof ")
+			updateRoofTypeSql.append("UPDATE egpt_mstr_rooftype")
 			.append(" SET tenantid = ?, code = ?,")
-			.append(" data=?, createdby =?")
+			.append(" data=?, createdby =?,")
 			.append(" lastModifiedBy =? ,createdTime = ?,lastModifiedTime= ?")
 			.append(" WHERE id = " + id);
 
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-					final PreparedStatement ps = connection.prepareStatement(updateFloorTypeSql.toString());
+					final PreparedStatement ps = connection.prepareStatement(updateRoofTypeSql.toString());
 					ps.setString(1, roofType.getTenantId());
 					ps.setString(2, roofType.getCode());
 					PGobject jsonObject = new PGobject();
@@ -992,7 +991,7 @@ public class MasterServiceImpl  implements Masterservice{
 			String data=gson.toJson(structureClass);
 
 			StringBuffer structureClassQuery=new StringBuffer();
-			structureClassQuery.append("insert into egpt_mstr_structure(tenantId,code,data,");
+			structureClassQuery.append("insert into egpt_mstr_structureclass(tenantId,code,data,");
 			structureClassQuery.append("createdBy, lastModifiedBy, createdTime,lastModifiedTime)");
 			structureClassQuery.append(" values(?,?,?,?,?,?,?)");
 
@@ -1054,7 +1053,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			String data=gson.toJson(structureClass);
 
-			String departmentTypeUpdate = "UPDATE egpt_mstr_structure set tenantId = ?, code = ?,data = ?, lastModifiedBy = ?, lastModifiedTime = ? where id = " +id;
+			String departmentTypeUpdate = "UPDATE egpt_mstr_structureclass set tenantId = ?, code = ?,data = ?, lastModifiedBy = ?, lastModifiedTime = ? where id = " +id;
 
 
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -1066,7 +1065,7 @@ public class MasterServiceImpl  implements Masterservice{
 					PGobject jsonObject = new PGobject();
 					jsonObject.setType("json");
 					jsonObject.setValue(data);
-					ps.setString(3, data);
+					ps.setObject(3, jsonObject);
 					ps.setString(4, structureClass.getAuditDetails().getLastModifiedBy());
 					ps.setLong(5, modifiedTime);
 					return ps;
@@ -1106,7 +1105,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		StringBuffer structureSearchSql = new StringBuffer();
 
-		structureSearchSql.append("select * from egpt_mstr_structure where tenantid ='"+tenantId+"'");
+		structureSearchSql.append("select * from egpt_mstr_structureclass where tenantid ='"+tenantId+"'");
 
 		if (ids!=null && ids.length>0){
 
@@ -1118,7 +1117,6 @@ public class MasterServiceImpl  implements Masterservice{
 					structureIds = structureIds+id+",";
 				else
 					structureIds = structureIds+id;
-
 				count++;
 			}
 
@@ -1145,21 +1143,22 @@ public class MasterServiceImpl  implements Masterservice{
 		}
 		if ( active!=null ){
 			if( nameLocal!=null && !nameLocal.isEmpty())
-				dataSearch.append(" ,  \"active\":\""+active+"\"");
+				dataSearch.append(" ,  \"active\":"+active);
 			else if( name!=null && !name.isEmpty())
-				dataSearch.append(" ,  \"active\":\""+active+"\"");
+				dataSearch.append(" ,  \"active\":"+active);
 			else
-				dataSearch.append("{\"active\":\""+active+"\"");
+				dataSearch.append("{\"active\":"+active);
 		}	
 		if(orderNumber != null){
 			if(nameLocal==null && name==null && active==null)
-				dataSearch.append("{\"orderNumber\":\""+orderNumber+"\"");
+				dataSearch.append("{\"orderNumber\":"+orderNumber);
 			else
-				dataSearch.append(" ,  \"orderNumber\":\""+orderNumber+"\"");
+				dataSearch.append(" ,  \"orderNumber\":"+orderNumber);
 		}
 
 		if(name!=null || active!=null || nameLocal!=null || orderNumber != null)
 			dataSearch.append("}'");
+		structureSearchSql.append(dataSearch);
 		if ( pageSize == null)
 			pageSize = 30;
 		if ( offSet == null )
@@ -1212,7 +1211,7 @@ public class MasterServiceImpl  implements Masterservice{
 			String data=gson.toJson(propertyType);
 
 			StringBuffer propertyTypeQuery=new StringBuffer();
-			propertyTypeQuery.append("insert into egpt_mstr_property(tenantId,code,data,");
+			propertyTypeQuery.append("insert into egpt_mstr_propertytype(tenantId,code,data,");
 			propertyTypeQuery.append("createdBy, lastModifiedBy, createdTime,lastModifiedTime)");
 			propertyTypeQuery.append(" values(?,?,?,?,?,?,?)");
 
@@ -1274,7 +1273,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			String data=gson.toJson(propertyType);
 
-			String propertyTypeUpdate = "UPDATE egpt_mstr_department set tenantId = ?, code = ?,data = ?, "
+			String propertyTypeUpdate = "UPDATE egpt_mstr_propertytype set tenantId = ?, code = ?,data = ?, "
 					+ "lastModifiedBy = ?, lastModifiedTime = ? where id = " +id;
 
 
@@ -1327,7 +1326,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		StringBuffer propertyTypeSearchSql = new StringBuffer();
 
-		propertyTypeSearchSql.append("select * from egpt_mstr_property where tenantid ='"+tenantId+"'");
+		propertyTypeSearchSql.append("select * from egpt_mstr_propertytype where tenantid ='"+tenantId+"'");
 
 
 
@@ -1374,23 +1373,25 @@ public class MasterServiceImpl  implements Masterservice{
 
 		if ( active!=null){
 			if( nameLocal!=null && !nameLocal.isEmpty())
-				dataSearch.append(" ,\"active\":\""+active+"\"");
+				dataSearch.append(" ,\"active\":"+active);
 			else if( name!=null && !name.isEmpty())
-				dataSearch.append(" ,\"active\":\""+active+"\"");
+				dataSearch.append(" ,\"active\":"+active);
 			else
-				dataSearch.append("{\"active\":\""+active+"\"");
+				dataSearch.append("{\"active\":"+active);
 		}   
 
 		if ( orderNumber!=null){
 			if( name==null  && nameLocal==null && active == null)
-				dataSearch.append("{\"orderNumber\":\""+orderNumber+"\"");
+				dataSearch.append("{\"orderNumber\":"+orderNumber);
 
 			else
-				dataSearch.append(" ,\"orderNumber\":\""+orderNumber+"\"");
+				dataSearch.append(" ,\"orderNumber\":"+orderNumber);
 
 		}   
 		if(name!=null || active!=null || nameLocal!=null || active!=null || orderNumber != null)
 			dataSearch.append("}'");
+
+		propertyTypeSearchSql.append(dataSearch);
 
 		if ( pageSize == null)
 			pageSize = 30;
@@ -1600,23 +1601,25 @@ public class MasterServiceImpl  implements Masterservice{
 
 		if ( active!=null){
 			if( nameLocal!=null && !nameLocal.isEmpty())
-				dataSearch.append(" ,  \"active\":\""+active+"\"");
+				dataSearch.append(" ,  \"active\":"+active);
 			else if( name!=null && !name.isEmpty())
-				dataSearch.append(" ,  \"active\":\""+active+"\"");
+				dataSearch.append(" ,  \"active\":"+active);
 			else
-				dataSearch.append("{\"active\":\""+active+"\"");
+				dataSearch.append("{\"active\":"+active);
 		}   
 
 		if ( orderNumber!=null){
 			if( name==null  && nameLocal==null && active == null)
-				dataSearch.append("{\"orderNumber\":\""+orderNumber+"\"");
+				dataSearch.append("{\"orderNumber\":"+orderNumber);
 
 			else
-				dataSearch.append(" ,\"orderNumber\":\""+orderNumber+"\"");
+				dataSearch.append(" ,\"orderNumber\":"+orderNumber);
 		}   
 
 		if(name!=null || active!=null || nameLocal!=null || active!=null || orderNumber != null)
 			dataSearch.append("}'");
+
+		occuapancySearchSql.append(dataSearch);
 
 		if ( pageSize == null)
 			pageSize = 30;
@@ -1666,7 +1669,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		StringBuffer wallTypeMasterSearchSQL = new StringBuffer();
 
-		wallTypeMasterSearchSQL.append("SELECT * FROM egpt_mstr_wall where tenantid ='"+tenantId+"'");
+		wallTypeMasterSearchSQL.append("SELECT * FROM egpt_mstr_walltype where tenantid ='"+tenantId+"'");
 
 		if (ids!=null && ids.length>0){
 
@@ -1708,7 +1711,7 @@ public class MasterServiceImpl  implements Masterservice{
 		if(name!=null || nameLocal!=null)
 			dataSearch.append("}'");
 
-		wallTypeMasterSearchSQL.append( dataSearch.toString());
+		wallTypeMasterSearchSQL.append( dataSearch);
 
 		if ( pageSize == null )
 			pageSize = Integer.valueOf( environment.getProperty("default.page.size").trim());
@@ -1768,7 +1771,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			StringBuffer wallTypeMasterCreateSQL=new StringBuffer();
 
-			wallTypeMasterCreateSQL.append("INSERT INTO egpt_mstr_wall")
+			wallTypeMasterCreateSQL.append("INSERT INTO egpt_mstr_walltype")
 			.append(" ( tenantid, code, data, createdby,")
 			.append(" createdtime, lastmodifiedby, lastmodifiedtime) ")
 			.append(" VALUES( ?, ?, ?, ?, ?, ?, ? )");
@@ -1842,7 +1845,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 			String data=gson.toJson(wallType);
 
-			wallTypeMasterUpdateSQL.append("UPDATE egpt_mstr_wall")
+			wallTypeMasterUpdateSQL.append("UPDATE egpt_mstr_walltype")
 			.append(" SET tenantid = ?, code = ?, data =? ,")
 			.append(" lastmodifiedby = ?, lastmodifieddate = ?")
 			.append(" WHERE id = " + id );
@@ -1857,12 +1860,10 @@ public class MasterServiceImpl  implements Masterservice{
 					jsonObject.setValue(data);
 
 					ps.setString(1, wallType.getTenantId());
-					ps.setString(3, wallType.getCode());
+					ps.setString(2, wallType.getCode());
 					ps.setObject(3, jsonObject);
 					ps.setString(4, wallType.getAuditDetails().getLastModifiedBy());
 					ps.setLong(5, updatedTime);
-					ps.setString(6, data);
-
 					return ps;
 				}
 			};
@@ -1946,7 +1947,7 @@ public class MasterServiceImpl  implements Masterservice{
 		if(name!=null || nameLocal!=null)
 			dataSearch.append("}'");
 
-		usageMasterSearchSQL.append( dataSearch.toString());
+		usageMasterSearchSQL.append( dataSearch);
 
 		if ( pageSize == null )
 			pageSize = Integer.valueOf( environment.getProperty("default.page.size").trim());
@@ -2023,15 +2024,13 @@ public class MasterServiceImpl  implements Masterservice{
 					PGobject jsonObject = new PGobject();
 					jsonObject.setType("json");
 					jsonObject.setValue(data);
-
 					ps.setString(1, usageMaster.getTenantId());
-					ps.setString(3, usageMaster.getCode());
+					ps.setString(2, usageMaster.getCode());
 					ps.setObject(3, jsonObject);
 					ps.setString(4,usageMaster.getAuditDetails().getCreatedBy());
 					ps.setString(5, usageMaster.getAuditDetails().getLastModifiedBy());
 					ps.setLong(6, createdTime);
 					ps.setLong(7, createdTime);
-
 					return ps;
 				}
 			};
@@ -2097,7 +2096,6 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setObject(3, jsonObject);
 					ps.setString(4, usageMaster.getAuditDetails().getLastModifiedBy());
 					ps.setLong(5, updatedTime);
-
 					return ps;
 				}
 			};

@@ -853,12 +853,6 @@ sync:
           shouldSource: True
           shouldSync: True
 
-        - source: operation
-          destination: issubledger
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
         - source: createdby
           destination: createdby
           type: Integer

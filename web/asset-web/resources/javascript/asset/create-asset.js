@@ -1,3 +1,4 @@
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 // const cutf=[
 //       {
 //         "name": "Description",
@@ -1261,6 +1262,58 @@ class CreateAsset extends React.Component {
         }
     }
 
+
+    const renderFileBody = function(files) {
+      return files.map(function(v, ind) {
+        return v.map(function(file, ind2) {
+          return (
+            <tr key={ind2}>
+              <td>{ind2+1}</td>
+              <td>{v.key}</td>
+              <td>
+                <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                  Download
+                </a>
+              </td>
+              <td></td>
+            </tr>
+          )
+        })
+      }) 
+    }
+
+    const showAttachedFiles = function() {
+      if((getUrlVars()["type"] == "view" || getUrlVars()["type"] == "update") && assetAttributes && assetAttributes.length > 0) {
+        var files = [];
+        for(var i=0; i<assetAttributes.length; i++) {
+          if(type == "File") {
+            files.push(assetAttributes[i]);
+          }
+        }
+
+        if(files.length) {
+          return (
+              <table id="fileTable" className="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th>Sr. No.</th>
+                      <th>Name</th>
+                      <th>File</th>
+                      <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody id="agreementSearchResultTableBody">
+                    {
+                      renderFileBody(files)
+                    }
+                  </tbody>
+
+             </table>
+            )
+        }
+      }
+    }
+
     const checkFields = function(item, index, ifTable) {
 			switch (item.type) {
 				case "Text":
@@ -2094,6 +2147,7 @@ class CreateAsset extends React.Component {
                     </div>
                   </div>
                   {renderIfCapitalized(this.state.capitalized)}
+                  {showAttachedFiles()}
               </div>
             </div>
             <div className="text-center">

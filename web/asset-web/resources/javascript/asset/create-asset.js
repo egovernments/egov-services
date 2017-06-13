@@ -1286,7 +1286,7 @@ class CreateAsset extends React.Component {
       if((getUrlVars()["type"] == "view" || getUrlVars()["type"] == "update") && assetAttributes && assetAttributes.length > 0) {
         var files = [];
         for(var i=0; i<assetAttributes.length; i++) {
-          if(type == "File") {
+          if(assetAttributes[i].type == "File") {
             files.push(assetAttributes[i]);
           }
         }

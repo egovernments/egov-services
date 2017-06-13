@@ -2,8 +2,6 @@ package org.egov.demand.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,20 +9,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Demand   {
-  @JsonProperty("id")
-  private Long id ;
+public class Demand {
 
-  @JsonProperty("installment")
-  private String installment ;
+	private Long id;
 
-  @JsonProperty("moduleName")
-  private String moduleName ;
+	private Installment installment;
 
-  @JsonProperty("demandDetails")
-  private List<DemandDetails> demandDetails = new ArrayList<>();
+	private String consumerCode;
 
-  @JsonProperty("paymentInfo")
-  private List<CollectedReceipts> paymentInfo = new ArrayList<>();
+	private String consumerType;
+
+	private String businessService;
+
+	private Owner owner;
+
+	private List<DemandDetail> demandDetails = new ArrayList<>();
+
+	private InstallmentAuditDetail auditDetails;
+
+	private String tenantId;
+
+	private Double minimumAmountPayable;
 }
-

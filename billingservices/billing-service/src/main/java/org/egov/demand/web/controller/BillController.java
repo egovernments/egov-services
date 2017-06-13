@@ -3,7 +3,7 @@ package org.egov.demand.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.demand.model.BillInfo;
+import org.egov.demand.model.Bill;
 import org.egov.demand.service.BillService;
 import org.egov.demand.web.contract.BillRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +44,9 @@ public class BillController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}*/
-		BillInfo billInfo =new BillInfo();
+		Bill billInfo =new Bill();
 		BillRequest billRequest =new BillRequest();
-		List<BillInfo> billInfos = new ArrayList<>();
+		List<Bill> billInfos = new ArrayList<>();
 		billInfos.add(billInfo);
 		billRequest.setBillInfos(billInfos);
 		System.out.println("billInfo:"+billInfo);

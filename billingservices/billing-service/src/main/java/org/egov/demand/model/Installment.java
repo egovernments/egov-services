@@ -1,8 +1,7 @@
 package org.egov.demand.model;
 
-import java.util.Date;
 import org.egov.demand.model.enums.InstallmentType;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,30 +9,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Installment   {
+public class Installment {
 	
-  @JsonProperty("fromDate")
-  private Date fromDate = null;
+	  private Long id;
 
-  @JsonProperty("toDate")
-  private Date toDate = null;
+	  private Long fromDate;
 
-  @JsonProperty("installmentYear")
-  private Date installmentYear = null;
+	  private Long toDate;
 
-  @JsonProperty("module")
-  private String module = null;
+	  private String module;
 
-  @JsonProperty("installmentNumber")
-  private String installmentNumber = null;
+	  private Long installmentNumber;
 
-  @JsonProperty("description")
-  private String description = null;
+	  private String description;
 
-  @JsonProperty("installmentType")
-  private InstallmentType installmentType = null;
+	  private InstallmentType installmentType;
 
-  @JsonProperty("financialYear")
-  private String financialYear = null;
-  }
+	  private String financialYear;
 
+	  private InstallmentAuditDetail auditDetails;
+
+	  private String tenantId;
+}

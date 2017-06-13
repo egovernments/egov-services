@@ -7,17 +7,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DemandReason {
+public class ReasonMaster {
 
 	private Long id;
 
-	private Installment installment;
+	private String name;
 
-	private ReasonMaster reasonMaster;
+	private String code;
 
-	private String glCode;
+	private String service;
+
+	private Boolean isDebit = false;
 
 	private InstallmentAuditDetail auditDetails;
 
 	private String tenantId;
+
+	private Boolean isActualDemand;
 }

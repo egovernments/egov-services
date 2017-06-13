@@ -126,8 +126,9 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 
 	
 	public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
-        final String queryStr = routerQueryBuilder.getRouterDetail();
-        jdbcTemplate.query(queryStr, routerRowMapper);
+		final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = routerQueryBuilder.getQuery(routerTypeGetRequest, preparedStatementValues);
+        jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), routerRowMapper);
         return prepareRouterTypeList(routerRowMapper);
     }
 	

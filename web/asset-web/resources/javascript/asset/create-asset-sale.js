@@ -237,7 +237,7 @@ class Sale extends React.Component {
         Disposal: tempInfo
       };
 
-      return console.log(JSON.stringify(body));
+      //return console.log(JSON.stringify(body));
        $.ajax({
             url: baseUrl + "/assets/dispose/_create",
             type: 'POST',
@@ -489,7 +489,9 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}></select>
+                              <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
+                                <option value="">Select Account Code</option>
+                              </select>
                             </div>
                           </div>
                         </div>

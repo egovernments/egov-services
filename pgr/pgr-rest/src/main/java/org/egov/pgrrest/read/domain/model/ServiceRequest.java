@@ -121,5 +121,9 @@ public class ServiceRequest {
 	}
 	 public boolean emailValidate(){
 		return requester.isValidEmailAddress();
-	} 
+	}
+
+	public void maskUserDetails(){
+        getRequester().maskMobileAndEmailDetails();
+    }
 }

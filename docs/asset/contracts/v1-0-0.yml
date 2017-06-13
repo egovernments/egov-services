@@ -392,6 +392,93 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
+  /assets/dispose/_search:
+    post:
+      summary: Get list of disposed details of Asset based on below parameter.
+      description: >
+        Provides a list of asset for given different input params.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Request header for the service request details.
+          required: true
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: id
+          in: query
+          description: Pass List of Unique Revaluation id then the API will returns list of disposed asset. Maximum length of the input list is 100.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 100
+        - name: assetId
+          in: query
+          description: Pass List of Unique Asset id then the API will returns list of dispose asset. Maximum length of the input list is 100.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 100
+      tags:
+        - Disposal
+      responses:
+        '200':
+          description: Successful response, returns list Disposal/Sale Details of disposed/sold Asset.
+          schema:
+            $ref: '#/definitions/DisposalResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /assets/currentvalue/_search:
+    post:
+      summary: Get Current value of the asset.
+      description: >
+       provide asset id,that API will return asset current value.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Request header for the service request details.
+          required: true
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: assetId
+          in: query
+          description: pass asset id in query param, the api will return current value of the asset.
+          required: true
+          type: integer
+          format: int64
+         
+      tags:
+        - AssetCurrentValue
+      responses:
+        '200':
+          description: Successful response, Current value of the asset.
+          schema:
+            $ref: '#/definitions/AssetCurrentValueResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+        
+        
+  
 definitions:
   Asset:
     description: Hold the asset specific information.
@@ -480,6 +567,11 @@ definitions:
         type: array
         items:
          $ref: '#/definitions/Attributes'
+      depreciationRate:
+        type: array
+        description: Multiple rows can be specified for each  asset category, but there should not be an overlap in the rates for the same financial year.
+        items:
+          $ref: '#/definitions/DepreciationMetaData'
       
   Attributes:
     type: object
@@ -571,10 +663,8 @@ definitions:
         type: string
         description: version of the asset category.
       depreciationRate:
-        type: array
-        description: Multiple rows can be specified for each  asset category, but there should not be an overlap in the rates for the same financial year.
-        items:
-          $ref: '#/definitions/DepreciationMetaData'
+        type: string
+        description: Depreciation rate for a asset category. That will always define as percentage
       assetFieldsDefination:
         type: array
         items:
@@ -681,7 +771,10 @@ definitions:
       reasonForRevaluation:      
         type: string
         description: Remarks.
-      fixedAssetsWrittenOffAccountCode:
+      voucherReference:
+        type: string
+        description: Voucher Number for the asset.
+      fixedAssetsWrittenOffAccount:
         type: integer
         format: int64
         description: Options are based on account codes for the specified purpose id.
@@ -734,10 +827,10 @@ definitions:
         description: Unique id of asset.
         type: integer
         format: int64
-      disposalPartyName:
+      buyerName:
         type: string
         description: Enter the disposal/Sale party Name.
-      disposalPartyAddress:
+      buyerAddress:
         type: string
         description: Enter the disposal/Sale party address.
       disposalReason:
@@ -753,7 +846,7 @@ definitions:
       aadharCardNumber:
         type: string
         description: Applicable If the value selected is sale.
-      currentValueOfTheAsset:
+      assetcurrentvalue:
         type: integer
         format: double
         description: calculate the current value of the asset as gross value - accumulated depreciation +or- reevaulation value and allow the user to modify this value.
@@ -761,7 +854,19 @@ definitions:
         type: integer
         format: double
         description: Enter the sale value of the Asset.
-      assetSaleAccountCode:
+      transactionType:      
+        type: string
+        description: Transaction type sale or Dispose.
+        enum:
+          - SALE
+          - DISPOSAL
+      profitVoucherReference:
+        type: string
+        description: profit Voucher Number for the asset .
+      lossVoucherReference:
+        type: string
+        description: profit Voucher Number for the asset.
+      assetSaleAccount:
         type: integer
         format: int64
         description: Select the Asset Sale account code- populate it based on purpose code from financials detailed code master.
@@ -801,7 +906,22 @@ definitions:
         description: order of the table column.
       columns:
          $ref: '#/definitions/AttributeDefination'
-        
+  
+  AssetCurrentValue:
+    description: Hold the Asset dynamic fields details as list of json object.
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: Unique id for ulb.
+      assetId:
+        description: Unique id of asset.
+        type: integer
+        format: int64
+      assetcurrentvalue:
+        type: integer
+        format: double
+        description: calculate the current value of the asset as gross value - accumulated depreciation +or- reevaulation value.
 
   AssetRequest:
     properties:
@@ -875,5 +995,16 @@ definitions:
         items:
           $ref: '#/definitions/Disposal'
     type: object
+    
+  AssetCurrentValueResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Revaluations:
+        type: array
+        items:
+          $ref: '#/definitions/AssetCurrentValue'
+    type: object  
+  
     
   

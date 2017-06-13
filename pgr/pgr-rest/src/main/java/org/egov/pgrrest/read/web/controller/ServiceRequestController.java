@@ -101,6 +101,7 @@ public class ServiceRequestController {
             .keyword(keyword)
             .fromIndex(fromIndex)
             .pageSize(pageSize)
+            .isAnonymous(checkIsAnonymous(requestInfoBody))
             .build();
         final List<ServiceRequest> submissions = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(submissions);
@@ -178,6 +179,10 @@ public class ServiceRequestController {
             .resMsgId("placeholder")
             .status("placeholder")
             .build();
+    }
+
+    private boolean checkIsAnonymous(RequestInfoBody request){
+        return request.getRequestInfo().getUserInfo() == null ? true : false;
     }
 
 }

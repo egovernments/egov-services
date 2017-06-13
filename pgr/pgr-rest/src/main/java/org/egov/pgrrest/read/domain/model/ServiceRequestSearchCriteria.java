@@ -32,6 +32,7 @@ public class ServiceRequestSearchCriteria {
 	private String serviceCategory;
     private Integer fromIndex;
     private Integer pageSize;
+    private boolean isAnonymous;
 
     public Date getEndDate() {
         return endDate == null ? new Date() : endDate;

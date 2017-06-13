@@ -30,7 +30,7 @@ public class SmsNotificationService {
 
 		String message = MessageFormat.format(propertiesManager.getApproveMessage(), allottee.getName(),
 				asset.getCategory().getName(), asset.getName(),
-				agreement.getAcknowledgementNumber(), agreement.getRent(),
+				agreement.getAgreementNumber(), agreement.getRent(),
 				asset.getLocationDetails().getRevenueWard());
 		return message;
 	}

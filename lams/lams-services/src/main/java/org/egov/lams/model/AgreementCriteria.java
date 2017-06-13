@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import org.egov.lams.model.enums.Status;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,10 +30,10 @@ public class AgreementCriteria {
 	 private String tenderNumber;
 	 private String acknowledgementNumber;
 	 
-	 @JsonFormat(pattern="dd/MM/yyyy")
+	 @DateTimeFormat(pattern="dd/MM/yyyy")
 	 private Date fromDate;
 	 
-	 @JsonFormat(pattern="dd/MM/yyyy")
+	 @DateTimeFormat(pattern="dd/MM/yyyy")
 	 private Date toDate;
 	 private Status status;
 	 private String tinNumber;

@@ -95,7 +95,6 @@ class SearchAsset extends React.Component {
     }else {
       showError("Invalid Location");
       _this.setState({
-        isSearchClicked: false,
         list :[],
         modify: true
       });
@@ -103,8 +102,9 @@ class SearchAsset extends React.Component {
         _this.setState({
           modify: false
         });
-      }, 1200);
+      }, 5000);
 
+      $('#agreementTable').dataTable().fnDestroy();
       post=0;
     }
 }
@@ -125,6 +125,7 @@ class SearchAsset extends React.Component {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              "ordering": false,
+             "bDestroy": true,
              language: {
                 "emptyTable": "No Records"
              }
@@ -162,7 +163,7 @@ class SearchAsset extends React.Component {
          source: result,
          minLength: 3,
          change: function( event, ui ) {
-           if(ui.item && ui.item.value)
+           if(ui && ui.item && ui.item.value) {
            console.log("ui",ui);
                _this.setState({
                    searchSet:{
@@ -170,6 +171,7 @@ class SearchAsset extends React.Component {
                        location: ui.item.value
                    }
                })
+             }
          }
 
        });

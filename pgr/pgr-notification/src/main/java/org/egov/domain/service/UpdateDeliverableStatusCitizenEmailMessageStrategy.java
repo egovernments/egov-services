@@ -5,7 +5,9 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
-public class UpdateDeliverableStatusEmailMessageStrategy implements EmailMessageStrategy {
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+public class UpdateDeliverableStatusCitizenEmailMessageStrategy implements EmailMessageStrategy {
     private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_deliverable_service_status_updated";
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_deliverable_service_status_updated";
 
@@ -13,12 +15,14 @@ public class UpdateDeliverableStatusEmailMessageStrategy implements EmailMessage
     public boolean matches(NotificationContext context) {
         return context.getServiceType().isDeliverableType()
             && context.getSevaRequest().isUpdate()
-            && context.getSevaRequest().isEmployeeLoggedIn();
+            && context.getSevaRequest().isEmployeeLoggedIn()
+            && isNotEmpty(context.getSevaRequest().getRequesterEmail());
     }
 
     @Override
     public EmailMessageContext getMessageContext(NotificationContext context) {
         return EmailMessageContext.builder()
+            .email(context.getSevaRequest().getRequesterEmail())
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
             .bodyTemplateValues(getBodyTemplate(context))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)

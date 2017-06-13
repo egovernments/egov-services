@@ -5,13 +5,17 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
-public class NewDeliverableEmailMessageStrategy implements EmailMessageStrategy {
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+public class NewDeliverableCitizenEmailMessageStrategy implements EmailMessageStrategy {
     private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_created_deliverable_service";
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_created_deliverable_service";
 
     @Override
     public boolean matches(NotificationContext context) {
-        return context.getServiceType().isDeliverableType() && context.getSevaRequest().isCreate();
+        return context.getServiceType().isDeliverableType()
+            && context.getSevaRequest().isCreate()
+            && isNotEmpty(context.getSevaRequest().getRequesterEmail());
     }
 
     @Override
@@ -21,6 +25,7 @@ public class NewDeliverableEmailMessageStrategy implements EmailMessageStrategy 
             .bodyTemplateValues(getBodyTemplate(context.getSevaRequest(), context.getTenant()))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
             .subjectTemplateValues(getSubjectTemplateValues(context.getSevaRequest()))
+            .email(context.getSevaRequest().getRequesterEmail())
             .build();
     }
 

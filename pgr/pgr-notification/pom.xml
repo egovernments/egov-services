@@ -167,10 +167,10 @@
                                         <exclude>org.egov.domain.service.ComplaintEscalatedToEmployeeSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ComplaintRegisteredEmployeeSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.NewDeliverableCitizenEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusCitizenEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredCitizenEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintCitizenEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NotificationService</exclude>
                                         <exclude>org.egov.consumer.HashMapDeserializer</exclude>
                                         <exclude>org.egov.persistence.dto.*</exclude>

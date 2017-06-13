@@ -5,13 +5,17 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
-public class ComplaintEmailMessageStrategy implements EmailMessageStrategy {
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+public class ComplaintCitizenEmailMessageStrategy implements EmailMessageStrategy {
     private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_en";
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_en";
 
     @Override
     public boolean matches(NotificationContext context) {
-        return context.getServiceType().isComplaintType();
+        return context.getServiceType().isComplaintType()
+            && isNotEmpty(context.getSevaRequest().getRequesterEmail())
+            && !context.getSevaRequest().isEscalated();
     }
 
     @Override
@@ -21,6 +25,7 @@ public class ComplaintEmailMessageStrategy implements EmailMessageStrategy {
             .bodyTemplateValues(getBodyTemplate(context.getSevaRequest()))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
             .subjectTemplateValues(getSubjectTemplateValues(context.getSevaRequest()))
+            .email(context.getSevaRequest().getRequesterEmail())
             .build();
     }
 

@@ -64,10 +64,10 @@ public class PgrNotificationApplication {
     @Bean("emailMessageStrategies")
     public List<EmailMessageStrategy> getEmailMessageStrategies() {
         return Arrays.asList(
-            new ComplaintEmailMessageStrategy(),
-            new NewDeliverableEmailMessageStrategy(),
-            new UpdateDeliverableStatusEmailMessageStrategy(),
-            new ProcessingFeeEnteredEmailMessageStrategy()
+            new ComplaintCitizenEmailMessageStrategy(),
+            new NewDeliverableCitizenEmailMessageStrategy(),
+            new UpdateDeliverableStatusCitizenEmailMessageStrategy(),
+            new ProcessingFeeEnteredCitizenEmailMessageStrategy()
         );
     }
 }

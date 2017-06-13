@@ -1265,7 +1265,7 @@ class CreateAsset extends React.Component {
 
     const renderFileBody = function(files) {
       return files.map(function(v, ind) {
-        return v.map(function(file, ind2) {
+        return v.value.map(function(file, ind2) {
           return (
             <tr key={ind2}>
               <td>{ind2+1}</td>

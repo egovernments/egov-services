@@ -1118,7 +1118,7 @@ $("#createAgreementForm").validate({
         agreement["workflowDetails"] = {};
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverPositionId"]);
         if(agreement.remarks) {
-            agreement["workflowDetails"]["remarks"] = agreement.remarks;
+            agreement["workflowDetails"]["comments"] = agreement.remarks;
         }
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];

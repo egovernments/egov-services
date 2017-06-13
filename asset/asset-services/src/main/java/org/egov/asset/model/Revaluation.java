@@ -1,11 +1,16 @@
 package org.egov.asset.model;
 
+import java.util.List;
+
 import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 /**
@@ -15,6 +20,9 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Revaluation {
 	
   @JsonProperty("tenantId")
@@ -71,6 +79,12 @@ public class Revaluation {
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails;
   
+  public CreateVoucherHelper toVoucher(List<VouchercreateAccountCodeDetails> vouchercreateAccountCodeDetails){
+	 
+	  return CreateVoucherHelper.builder().voucherName("Asset Revalution").voucherType("JOURNALVOUCHER").
+			  voucherDate(revaluationDate).fund(fund).function(function).scheme(scheme).subScheme(subScheme).
+			  accountCodeDetails(vouchercreateAccountCodeDetails).build();
+  }
 
 }
 

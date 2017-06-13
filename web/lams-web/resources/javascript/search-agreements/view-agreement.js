@@ -545,7 +545,7 @@ $(document).ready(function() {
             }
 
             if(_agrmntDet.wFremarks) {
-                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
+                _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
                 delete _agrmntDet.wFremarks;
             }
 

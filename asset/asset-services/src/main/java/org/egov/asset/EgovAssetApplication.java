@@ -49,6 +49,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -64,6 +65,11 @@ public class EgovAssetApplication {
 	@PostConstruct
 	public void initialize() {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
+	
+	@Bean
+	public RestTemplate getRestTemplate(){
+		return new RestTemplate();
 	}
 
 	@Bean

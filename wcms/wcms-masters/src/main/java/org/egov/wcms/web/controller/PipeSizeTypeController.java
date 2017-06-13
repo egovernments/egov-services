@@ -114,7 +114,7 @@ public class PipeSizeTypeController {
 
     }
 
-    @PostMapping(value = "/_update/{code}")
+    @PostMapping(value = "/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeTypeRequest pipeSizeRequest, final BindingResult errors,
             @PathVariable("code") final String code) {

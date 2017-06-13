@@ -117,7 +117,7 @@ public class DocumentTypeApplicationTypeController {
 
     }
 
-    @PostMapping(value = "/_update/{docTypeAppliTypeId}")
+    @PostMapping(value = "/{docTypeAppliTypeId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeApplicationTypeReq documentTypeApplicationTypeReq,
             final BindingResult errors, @PathVariable("docTypeAppliTypeId") final Long docTypeAppliTypeId) {

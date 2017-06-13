@@ -113,7 +113,28 @@ public class RouterController {
 
 	}
 	
-	
+	@PostMapping(value = "/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final RouterTypeReq routerTypeReq,
+			final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("Router Request:" + routerTypeReq);
+
+		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		final RouterType routerType = routerService.createRouter(
+				applicationProperties.getCreateRouterTopicName(),
+				applicationProperties.getCreateRouterTopicKey(), routerTypeReq);
+		final List<RouterType> routerTypes = new ArrayList<>();
+		routerTypes.add(routerType);
+		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
+
+	}
 
 	private List<ErrorResponse> validateRouterRequest(final RouterTypeReq routerTypeReq) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();

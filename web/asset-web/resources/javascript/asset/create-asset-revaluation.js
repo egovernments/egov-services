@@ -123,7 +123,7 @@ class Revaluation extends React.Component {
             })
           }
         })
-      } else if(name == "revaluationAmount" || name == "typeOfChange" && this.assetSet.grossValue) {
+      } else if(name == "revaluationAmount" || name == "typeOfChange" && this.state.assetSet.grossValue) {
         switch(name) {
           case 'revaluationAmount':
             if(this.state.typeOfChange) {
@@ -133,7 +133,7 @@ class Revaluation extends React.Component {
                     _this.setState({
                       revaluationSet: {
                         ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) + Number(e.target.value)
+                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) + Number(e.target.value)
                       }
                     })
                   }, 200);
@@ -143,7 +143,7 @@ class Revaluation extends React.Component {
                     _this.setState({
                       revaluationSet: {
                         ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) - Number(e.target.value)
+                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) - Number(e.target.value)
                       }
                     });
                   }, 200);
@@ -159,7 +159,7 @@ class Revaluation extends React.Component {
                     _this.setState({
                       revaluationSet: {
                         ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) + Number(e.target.value)
+                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) + Number(e.target.value)
                       }
                     })
                   }, 200);
@@ -169,7 +169,7 @@ class Revaluation extends React.Component {
                     _this.setState({
                       revaluationSet: {
                         ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.assetSet.grossValue) - Number(e.target.value)
+                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) - Number(e.target.value)
                       }
                     });
                   }, 200);
@@ -239,7 +239,7 @@ class Revaluation extends React.Component {
       		if(list.constructor == Array) {
       			return list.map((item, ind)=> {
                   if(typeof item == "object") {
-                    return (<option key={ind} data={assetCatBool ? item.version : ""} value={item.id}>
+                    return (<option key={ind} value={item.id}>
                           {item.name}
                     </option>)
                   } else {

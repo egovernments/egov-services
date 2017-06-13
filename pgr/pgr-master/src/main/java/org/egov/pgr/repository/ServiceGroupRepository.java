@@ -59,17 +59,11 @@ public class ServiceGroupRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	/*
-	 * @Autowired private CategoryTypeQueryBuilder categoryQueryBuilder;
-	 * 
-	 * @Autowired private CategoryTypeRowMapper categoryRowMapper;
-	 */
-
 	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
 		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
 		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
 		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
-		final Object[] obj = new Object[] { serviceGroup.getId(), serviceGroup.getName(), serviceGroup.getDescription(),
+		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),

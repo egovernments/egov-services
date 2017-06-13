@@ -88,6 +88,7 @@ public class RouterService {
 		PersistRouter pr = new PersistRouter();
 		prq.setRequestInfo(routerRequests.getRequestInfo());
 	    pr.setPosition(routerRequests.getRouterType().getPosition());
+	    pr.setId(routerRequests.getRouterType().getId());
 	    pr.setTenantId(routerRequests.getRouterType().getTenantId());
 	    
 	    for(int i=0;i<serviceTypes.size();i++){
@@ -101,9 +102,11 @@ public class RouterService {
 	    		prq.setRouterType(pr);
 	    		if(checkforDuplicate(prq)){
 	    		routerRepository.createRouter(prq);
+	    		logger.info("Creating the Router Entry");
 	    		}
 	    		else {
-	    			logger.info("Duplicate Entry");
+	    			routerRepository.updateRouter(prq);
+	    			logger.info("Updating the Router Entry");
 	    		}
 	    	}
 	    }

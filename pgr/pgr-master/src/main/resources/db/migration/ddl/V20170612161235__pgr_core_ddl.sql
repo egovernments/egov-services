@@ -19,7 +19,6 @@ CREATE TABLE egpgr_receiving_center
   CONSTRAINT un_receivingcenter_name UNIQUE (name, tenantid)
 );
 
-
 CREATE SEQUENCE seq_egpgr_receiving_center
     START WITH 1
     INCREMENT BY 1

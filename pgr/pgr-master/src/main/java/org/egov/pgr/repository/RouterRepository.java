@@ -39,7 +39,10 @@
  */
 package org.egov.pgr.repository;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 import org.egov.pgr.model.PersistRouter;
 import org.egov.pgr.model.PersistRouterReq;
@@ -49,6 +52,12 @@ import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
 import org.egov.pgr.repository.rowmapper.PersistRouteRowMapper;
 //import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
+
+import org.egov.pgr.repository.builder.RouterQueryBuilder;
+import org.egov.pgr.repository.rowmapper.RouterRowMapper;
+import org.egov.pgr.web.contract.RouterType;
+import org.egov.pgr.web.contract.RouterTypeGetReq;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +73,11 @@ public class RouterRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+    @Autowired 
+    private RouterQueryBuilder routerQueryBuilder;
+	
+	@Autowired 
+	private RouterRowMapper routerRowMapper;
 	
 
 	public PersistRouterReq createRouter(final PersistRouterReq routerReq) {
@@ -77,6 +91,19 @@ public class RouterRepository {
 				persistRouter.getTenantId() };
 		
 		jdbcTemplate.update(routerInsert, obj);
+		return routerReq;
+	}
+public PersistRouterReq updateRouter(final PersistRouterReq routerReq) {
+		
+		LOGGER.info("Update Router Request::" + routerReq);
+		final String routerUpdate = RouterQueryBuilder.updateRouter();
+		final PersistRouter persistRouter = routerReq.getRouterType();
+		final Object[] obj = new Object[] {persistRouter.getPosition(),0,
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(new java.util.Date().getTime()),
+				persistRouter.getTenantId(), persistRouter.getBoundary(),persistRouter.getService(),persistRouter.getId() };
+		
+		jdbcTemplate.update(routerUpdate, obj);
 		return routerReq;
 	}
 public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
@@ -94,7 +121,29 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 		}
 		return persistRouter;
 	}
+
 	
+	
+	/*public ServiceGroupRequest createRouter(final ServiceGroupRequest serviceGroupRequest) {
+		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
+		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
+		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
+		final Object[] obj = new Object[] { serviceGroup.getId(), serviceGroup.getName(), serviceGroup.getDescription(),
+				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+				serviceGroup.getTenantId() };
+		jdbcTemplate.update(serviceGroupInsert, obj);
+		return serviceGroupRequest;
+	}*/
+
+	
+	public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = routerQueryBuilder.getRouterDetail();
+        final List<RouterType> routerTypes = jdbcTemplate.query(queryStr, routerRowMapper);
+        return routerTypes;
+    }
 	
 	
 	

@@ -115,7 +115,12 @@ class SearchAsset extends React.Component {
   handleClick(type, id, status) {
     if(type == "sale" && status != "CAPITALIZED")
       return showError("Asset sale/disposal is only possible for assets with status as 'Capitalized'");
-    window.open(`app/asset/create-asset.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    if(type == "revaluate")
+      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');  
+    else if(type == "sale")
+      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');  
+    else
+      window.open(`app/asset/create-asset.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   render() {

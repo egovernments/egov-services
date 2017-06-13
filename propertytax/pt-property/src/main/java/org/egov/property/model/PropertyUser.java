@@ -20,7 +20,7 @@ public class PropertyUser {
 
 	private Integer id;
 	private  Integer propertyId;
-	private Integer userId;
+	private Integer owner;
 	private Boolean isPrimaryOwner;
 
 	private Boolean isSecondaryOwner;

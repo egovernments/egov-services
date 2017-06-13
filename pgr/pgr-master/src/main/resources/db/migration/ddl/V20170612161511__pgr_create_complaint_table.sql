@@ -113,9 +113,3 @@ CREATE SEQUENCE SEQ_EGPGR_COMPLAINT
     NO MAXVALUE
     CACHE 1;
     
-    
-ALTER TABLE egpgr_complainttype_category
-ADD createdby bigint DEFAULT NULL,
-ADD createddate timestamp DEFAULT NULL,
-ADD lastmodifiedby bigint DEFAULT NULL,
-ADD lastmodifieddate timestamp DEFAULT NULL

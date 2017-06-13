@@ -1,47 +1,5 @@
 package org.egov.pgr.repository.builder;
 
-/*
- * eGov suite of products aim to improve the internal efficiency,transparency,
- *    accountability and the service delivery of the government  organizations.
- *
- *     Copyright (C) <2015>  eGovernments Foundation
- *
- *     The updated version of eGov suite of products as by eGovernments Foundation
- *     is available at http://www.egovernments.org
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program. If not, see http://www.gnu.org/licenses/ or
- *     http://www.gnu.org/licenses/gpl.html .
- *
- *     In addition to the terms of the GPL license to be adhered to in using this
- *     program, the following additional terms are to be complied with:
- *
- *         1) All versions of this program, verbatim or modified must carry this
- *            Legal Notice.
- *
- *         2) Any misrepresentation of the origin of the material is prohibited. It
- *            is required that all modified versions of this material be marked in
- *            reasonable ways as different from the original version.
- *
- *         3) This license does not grant any rights to any user of the program
- *            with regards to rights under trademark law for use of the trade names
- *            or trademarks of eGovernments Foundation.
- *
- *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
-
-
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -50,17 +8,49 @@ import org.springframework.stereotype.Component;
 public class RouterQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(RouterQueryBuilder.class);
+	
+	private static final String BASE_URL = "SELECT * FROM egpgr_router router LEFT JOIN egpgr_complainttype comp ON router.complainttypeid = comp.id " 
+			+ " LEFT JOIN service_definition sdef ON sdef.code = comp.code " 
+			+ " LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
+			+ " LEFT JOIN value_definition vdef ON vdef.attributecode = adef.code" ; 
 
 	private static final String INSERT_ROUTER = "INSERT INTO egpgr_router(complainttypeid, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
 			+ "(?,?,?,?,?,?,?,?,?)";
+	private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, tenantid=? where bndryid = ? and complainttypeid= ? and id= ?";
+	
 	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ?";
 	
 	public static String insertRouter() {
 		return INSERT_ROUTER;
 	}
+
 	public static String validateRouter() {
 		return CHECK_DUPLICATE;
 	}
+
+	public static String updateRouter() {
+		return UPDATE_ROUTER;
+	}
+	
+	public String getRouterDetail(){
+		return BASE_URL;
+	}
+	
+	
+	/* Query not to be removed till the SEARCH API is complete
+	 * SELECT * FROM egpgr_router router LEFT JOIN egpgr_complainttype comp ON router.complainttypeid = comp.id
+			LEFT JOIN service_definition sdef ON sdef.code = comp.code 
+			LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode
+			LEFT JOIN value_definition vdef ON vdef.attributecode = adef.code
+			WHERE 
+			router.tenantid = ?
+			AND
+			router.boundaryid = ?
+			AND 
+			comp.id = ? 
+			AND 
+			router.position = ? */
+
 
 	
 

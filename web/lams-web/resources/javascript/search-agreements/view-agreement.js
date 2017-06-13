@@ -539,14 +539,14 @@ $(document).ready(function() {
             "action": data.action
         };
 
+        if(_agrmntDet.wFremarks) {
+            _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
+            delete _agrmntDet.wFremarks;
+        }
+            
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
-            }
-
-            if(_agrmntDet.wFremarks) {
-                _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
-                delete _agrmntDet.wFremarks;
             }
 
             var response = $.ajax({

@@ -2,7 +2,7 @@ var baseUrl = window.location.origin;
 
 
 
-var tenantId = "ap.kurnool"//"ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();
@@ -29,27 +29,20 @@ function blockUI() {
       <div class="blockUI" style="z-index: 100011; position: fixed; padding: 15px; margin: 0px; width: 30%; top: 40%; left: 35%; text-align: center; color: rgb(255, 255, 255); border: none; background-color: rgb(0, 0, 0); cursor: wait; border-radius: 5px; opacity: 0.5;"><span>Please wait. . .</span><br/><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP////7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/gAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCwAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7AAAAAAAAAAAA"/></div>`
     );
 }
-
 function unblockUI() {
-
     setTimeout(function() {
         $('body').css('overflow', '');
         $('.blockUI').remove();
     }, 100);
 }
-
 $(document).ready(function() {
     $(document).ajaxStart(function() {
         blockUI();
     });
-
     $(document).ajaxStop(function() {
         unblockUI();
     });
 })
-
-
-
 function getCommonMaster(mainRoute, resource, cb, pageSize) {
     $.ajax({
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + (pageSize || 500),
@@ -69,7 +62,6 @@ function getCommonMaster(mainRoute, resource, cb, pageSize) {
         }
     });
 }
-
 function commonApiPost(context, resource = "", action = "", queryObject = {}, cb) {
     var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
     for (var variable in queryObject) {
@@ -95,7 +87,6 @@ function commonApiPost(context, resource = "", action = "", queryObject = {}, cb
         }
     });
 }
-
 function commonApiGet(context, resource = "", action = "", queryObject = {}, cb) {
     var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
     for (var variable in queryObject) {
@@ -120,8 +111,6 @@ function commonApiGet(context, resource = "", action = "", queryObject = {}, cb)
         }
     });
 }
-
-
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();
@@ -137,8 +126,6 @@ function titleCase(field) {
         return "";
     }
 }
-
-
 function getUrlVars() {
     var vars = [],
         hash;
@@ -150,9 +137,6 @@ function getUrlVars() {
     }
     return vars;
 }
-
-
-
 function getCommonMasterById(mainRoute, resource, id, cb) {
     $.ajax({
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "id=" + id,
@@ -172,10 +156,7 @@ function getCommonMasterById(mainRoute, resource, id, cb) {
         }
     });
 }
-
 // commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})
-
-
 function getNameById(object, id, property = "") {
     if (id == "" || id == null) {
         return "";
@@ -197,7 +178,6 @@ function getNameById(object, id, property = "") {
     }
     return "";
 }
-
 function showSuccess(message) {
     $("body").append(
         `<div id="success-alert-div" class="alert alert-success alert-dismissible alert-toast" role="alert" style="display:none">
@@ -205,14 +185,12 @@ function showSuccess(message) {
             <span id="success-alert-span" style="white-space: pre-line;"></span>
         </div>`
     );
-
     $('#success-alert-span').text(message);
     $('#success-alert-div').show();
     setTimeout(function() {
         $('#success-alert-div').remove();
     }, 6000);
 }
-
 function showError(message) {
     $("body").append(
         `<div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none; z-index:100000;">
@@ -226,7 +204,6 @@ function showError(message) {
         $('#error-alert-div').remove();
     }, 6000);
 }
-
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -242,8 +219,6 @@ function getCookie(cname) {
     }
     return "";
 }
-
-
 function getDropdown(name, cb, params) {
     switch (name) {
         case 'employeeType':
@@ -582,7 +557,6 @@ function getDropdown(name, cb, params) {
             break;
     }
 }
-
 function getTimestamp() {
     return new Date().getTime();
 }

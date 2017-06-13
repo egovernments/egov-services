@@ -12,36 +12,36 @@ import lombok.NoArgsConstructor;
 public class BillDetailInfo   {
 	
   @JsonProperty("billId")
-  private Long billId = null;
+  private Long billId;
 
   @JsonProperty("creditAmount")
-  private Double creditAmount = null;
+  private Double creditAmount;
 
   @JsonProperty("debitAmount")
-  private Double debitAmount = null;
+  private Double debitAmount;
 
   @JsonProperty("amountCollected")
-  private Double amountCollected = null;
+  private Double amountCollected;
 
   @JsonProperty("glCode")
-  private String glCode = null;
+  private String glCode;
 
   @JsonProperty("functionCode")
-  private String functionCode = null;
+  private String functionCode;
 
   @JsonProperty("description")
-  private String description = null;
+  private String description;
 
   @JsonProperty("purpose")
-  private String purpose = null;
+  private String purpose;
 
   @JsonProperty("period")
-  private String period = null;
+  private String period;
 
   @JsonProperty("orderNo")
-  private Integer orderNo = null;
+  private Integer orderNo;
 
   @JsonProperty("isActualDemand")
-  private BigDecimal isActualDemand = null;
+  private BigDecimal isActualDemand;
 }
 

@@ -227,7 +227,7 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		List<String> assetCategoryNames = getConfigurations(propertiesManager.getRentIncrementAssetCategoryKey());
 		logger.info("the asset category names found ::: " + assetCategoryNames);
 		for (String string : assetCategoryNames) {
-			if (string.equals(assetCategory.getName())) {
+			if (string.equalsIgnoreCase(assetCategory.getName())) {
 				if (rentIncrement != null) {
 					Long rentIncrementId = rentIncrement.getId();
 					RentIncrementType responseRentIncrement = rentIncrementService

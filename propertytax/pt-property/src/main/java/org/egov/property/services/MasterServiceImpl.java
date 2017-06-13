@@ -401,10 +401,10 @@ public class MasterServiceImpl  implements Masterservice{
 					jsonObject.setType("json");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
-					ps.setString(6, floorType.getAuditDetails().getCreatedBy());
-					ps.setString(7, floorType.getAuditDetails().getLastModifiedBy());
-					ps.setBigDecimal(8, new BigDecimal(createdTime));
-					ps.setBigDecimal(9, new BigDecimal(createdTime));
+					ps.setString(4, floorType.getAuditDetails().getCreatedBy());
+					ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
+					ps.setBigDecimal(6, new BigDecimal(createdTime));
+					ps.setBigDecimal(7, new BigDecimal(createdTime));
 					return ps;
 				}
 			};

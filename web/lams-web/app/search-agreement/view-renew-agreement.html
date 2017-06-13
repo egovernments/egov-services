@@ -2413,7 +2413,7 @@
                                                             <label for="renew_order_date">Renewal Order Date </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="datetimepicker" id="renew_order_date" />
+                                                            <input type="text" class="datetimepicker" id="renewal.renewalOrderDate" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2423,7 +2423,7 @@
                                                             <label for="renew_order_no">Renewal Order No </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="renew_order_no" value="" maxlength="16" />
+                                                            <input type="text" id="renewal.renewalOrderNo" value="" maxlength="16" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2435,7 +2435,7 @@
                                                             <label for="date_of_expiry">Date Of Expiry </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="datetimepicker" id="date_of_expiry">
+                                                            <input type="text" class="datetimepicker" id="expiryDate">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2446,7 +2446,7 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
-                                                                <select id="renew_period">
+                                                                <select id="timePeriod">
                                                                     <option value="">Choose</option>
                                                                     <option value="1">1 Year</option>
                                                                     <option value="2">2 Years</option>
@@ -2467,7 +2467,7 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
-                                                                <select id="rentIncrementMethod.percentage" name="rentIncrementMethod.percentage" >
+                                                                <select id="rentIncrementMethod.percentage"  name="rentIncrementMethod.percentage" >
                                                                     <option>Choose</option>
                                                                 </select>
                                                             </div>
@@ -2480,7 +2480,7 @@
                                                             <label for="renew_rent">Shop Rent (Rs) </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="renew_rent" value="">
+                                                            <input type="number" id="rent" value="">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2492,44 +2492,44 @@
                                                             <label for="renew_advance_payment">Advance Payment </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="renew_advance_payment">
+                                                            <input type="text" id="securityDeposit">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="renew_file">Attach Document </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="styled-file">
-                                                                <input type="file" id="renew_file">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
                                                             <label for="renew_remarks">Remarks </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <textarea id="renew_remarks" maxlength="256"></textarea>
+                                                            <textarea id="remarks" maxlength="256"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="renew_reason">Reason For Renewal </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <textarea id="renew_reason" maxlength="36"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            </div>
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="renew_reason">Reason For Renewal </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <textarea id="reasonForRenewal" maxlength="36"></textarea>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="renew_file">Attach Document </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-file">
+                                                              <input type="file" id="documents">
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
                                             </div>
                                         </div>
                                 </div>
@@ -2545,7 +2545,7 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
-                                                                <select id="cancel_reason">
+                                                                <select id="cancellation.reasonForCancellation">
                                                                     <option value="">Choose</option>
                                                                 </select>
                                                             </div>
@@ -2558,7 +2558,7 @@
                                                             <label for="cancel_termination_date">Termination Date </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="cancel_termination_date" class="datetimepicker" />
+                                                            <input type="text" id="cancellation.terminationDate" class="datetimepicker" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2570,7 +2570,7 @@
                                                             <label for="cancel_order_no">Order No </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="cancel_order_no" maxlength="15" />
+                                                            <input type="text" id="cancellation.orderNo" maxlength="15" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2580,7 +2580,7 @@
                                                             <label for="cancel_order_date">Order Date </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="cancel_order_date" class="datetimepicker" />
+                                                            <input type="text" id="cancellation.orderDate" class="datetimepicker" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2592,7 +2592,7 @@
                                                             <label for="cancel_remarks">Remarks </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="cancel_remarks" maxlength="50" />
+                                                            <input type="text" id="remarks" maxlength="50" />
                                                         </div>
                                                     </div>
                                                 </div>

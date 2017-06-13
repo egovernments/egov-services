@@ -33,21 +33,20 @@ public class RentIncrementRepository {
 
 	}
 	
-	public RentIncrementType getRentIncrementById(Long rentID) {
+	public List<RentIncrementType> getRentIncrementById(Long rentID) {
 
 		String rentIncrementTypeqQuery = AgreementQueryBuilder.RENT_INCREMENT_TYPE_QUERY;
 		Object[] rentObj = new Object[] { rentID };
-		RentIncrementType rentIncrementType = null;
+		List<RentIncrementType> rentIncrements = null;
 
 		try {
-			rentIncrementType = jdbcTemplate.queryForObject(rentIncrementTypeqQuery, rentObj,
-					new RentIncrementRowMapper());
+			rentIncrements = jdbcTemplate.query(rentIncrementTypeqQuery, rentObj,new RentIncrementRowMapper());
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage());
 			// FIXME put apt exception
 		}
-		return rentIncrementType;
+		return rentIncrements;
 
 	}
 

@@ -228,10 +228,13 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		logger.info("the asset category names found ::: " + assetCategoryNames);
 		for (String string : assetCategoryNames) {
 			if (string.equalsIgnoreCase(assetCategory.getName())) {
-				if (rentIncrement != null) {
+				if (rentIncrement != null && rentIncrement.getId()!=null) {
 					Long rentIncrementId = rentIncrement.getId();
-					RentIncrementType responseRentIncrement = rentIncrementService
-							.getRentIncrementById(rentIncrementId);
+					List<RentIncrementType> rentIncrements  = rentIncrementService.getRentIncrementById(rentIncrementId);
+					if(rentIncrements.isEmpty()) 
+						errors.rejectValue("Agreement.rentIncrement.Id", "",
+								"no rentincrement type found for given value");
+					RentIncrementType responseRentIncrement = rentIncrements.get(0);
 					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
 						errors.rejectValue("Agreement.rentIncrement.Id", "", "invalid rentincrement type object");
 				} else {

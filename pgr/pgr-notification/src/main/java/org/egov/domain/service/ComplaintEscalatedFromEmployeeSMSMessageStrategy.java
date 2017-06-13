@@ -6,6 +6,8 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 public class ComplaintEscalatedFromEmployeeSMSMessageStrategy implements SMSMessageStrategy {
     private static final String NAME = "name";
     private static final String NUMBER = "number";
@@ -16,7 +18,9 @@ public class ComplaintEscalatedFromEmployeeSMSMessageStrategy implements SMSMess
 
     @Override
     public boolean matches(NotificationContext context) {
-        return context.getServiceType().isComplaintType() && context.getSevaRequest().isEscalated();
+        return context.getServiceType().isComplaintType()
+            && context.getSevaRequest().isEscalated()
+            && isNotEmpty(context.getPreviousEmployee().getMobileNumber());
     }
 
     @Override
@@ -30,7 +34,7 @@ public class ComplaintEscalatedFromEmployeeSMSMessageStrategy implements SMSMess
             POSITION, null
         );
 //        TODO: get previous employee mobile number
-        final String mobileNumber = null;
+        final String mobileNumber = context.getPreviousEmployee().getMobileNumber();
         return new SMSMessageContext(TEMPLATE_NAME, map, mobileNumber);
     }
 }

@@ -57,7 +57,10 @@ public class PgrNotificationApplication {
             new ComplaintCitizenSMSMessageStrategy(),
             new NewDeliverableCitizenSMSMessageStrategy(),
             new UpdateDeliverableStatusCitizenSMSMessageStrategy(),
-            new ProcessingFeeEnteredCitizenSMSMessageStrategy()
+            new ProcessingFeeEnteredCitizenSMSMessageStrategy(),
+            new ComplaintRegisteredEmployeeSMSMessageStrategy(),
+            new ComplaintEscalatedFromEmployeeSMSMessageStrategy(),
+            new ComplaintEscalatedToEmployeeSMSMessageStrategy()
         );
     }
 
@@ -67,7 +70,10 @@ public class PgrNotificationApplication {
             new ComplaintCitizenEmailMessageStrategy(),
             new NewDeliverableCitizenEmailMessageStrategy(),
             new UpdateDeliverableStatusCitizenEmailMessageStrategy(),
-            new ProcessingFeeEnteredCitizenEmailMessageStrategy()
+            new ProcessingFeeEnteredCitizenEmailMessageStrategy(),
+            new ComplaintRegisteredEmployeeEmailMessageStrategy(),
+            new ComplaintEscalatedFromEmployeeEmailMessageStrategy(),
+            new ComplaintEscalatedToEmployeeEmailMessageStrategy()
         );
     }
 }

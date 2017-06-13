@@ -166,6 +166,9 @@
                                         <exclude>org.egov.domain.service.ComplaintEscalatedFromEmployeeSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ComplaintEscalatedToEmployeeSMSMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.ComplaintRegisteredEmployeeSMSMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEscalatedFromEmployeeEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintEscalatedToEmployeeEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.ComplaintRegisteredEmployeeEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.NewDeliverableCitizenEmailMessageStrategy</exclude>
                                         <exclude>org.egov.domain.service.UpdateDeliverableStatusCitizenEmailMessageStrategy</exclude>

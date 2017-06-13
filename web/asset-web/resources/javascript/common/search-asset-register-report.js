@@ -10,7 +10,7 @@ class SearchAsset extends React.Component {
       "status": "",
       "location":"",
       "code": ""
-   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false}
+   },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false,loactionArrayName:[]}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -86,12 +86,17 @@ class SearchAsset extends React.Component {
         })
   }else{
     _this.setState({
-      isSearchClicked: false,
-      list :[]
+      isSearchClicked: true,
+      list :[],
+      modify: true
 
     });
+    setTimeout(function(){
+      _this.setState({
+        modify: false
+      });
+    }, 1200);
 
-          showError("Invalid location")
   }
 }
 
@@ -105,10 +110,8 @@ componentWillMount (){
     if(count == 0)
       _this.setInitialState(_state);
   }
-  getDropdown("locality", function(res) {
-    console.log("location",res);
-    checkCountNCall("localityList", res);
-  });
+
+
 
 }
   componentWillUpdate() {
@@ -125,7 +128,8 @@ componentWillMount (){
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             "ordering": false,
+             ordering: false,
+             bDestroy: true,
              language: {
                 "emptyTable": "No Records"
              }
@@ -134,6 +138,7 @@ componentWillMount (){
   }
 
   componentDidMount() {
+    var result = [];
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
       if(logo_ele && logo_ele[0]) {
@@ -160,11 +165,16 @@ componentWillMount (){
       checkCountNCall("statusList", res);
     });
 
-    console.log(this.state.localityList);
-    var location;
-    var locationArray = JSON.parse(localStorage.getItem("locality"));
-    var result = locationArray.map(function(a) {return a.name;});
-      console.log("locationArray",locationArray);
+    getDropdown("locality", function(res) {
+      console.log("location1",res);
+        result = res.map(function(a) {return a.name;});
+      checkCountNCall("localityList", res);
+    });
+
+
+
+    console.log("loaction2",this.state.localityList);
+
       console.log("result",result);
 
     $( "#location" ).autocomplete({
@@ -178,6 +188,7 @@ componentWillMount (){
                     ..._this.state.searchSet,
                     location: ui.item.value
                 }
+
             })
       }
 

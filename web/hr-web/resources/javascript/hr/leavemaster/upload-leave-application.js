@@ -494,7 +494,7 @@ class UploadLeaveApplication extends React.Component{
 
            $.ajax({
 
-                 url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId+"&type=bulkUpload",
+                 url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId+"&type=upload",
                  type: 'POST',
                  dataType: 'json',
                  data:JSON.stringify(body),

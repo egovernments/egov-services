@@ -1,7 +1,7 @@
 
 const defaultState = {
   appName: 'common',
-  token: null,
+  token: true,
   viewChangeCounter: 0,
   route: '',
   complaintsLength: 0,

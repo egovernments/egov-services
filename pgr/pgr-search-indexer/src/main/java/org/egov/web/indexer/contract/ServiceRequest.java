@@ -10,6 +10,8 @@ import org.egov.pgr.common.contract.AttributeValues;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 @Getter
 @Setter
 @Builder
@@ -17,6 +19,7 @@ import java.util.List;
 public class ServiceRequest {
     private static final String SERVICE_STATUS = "status";
     private static final String REGISTERED = "REGISTERED";
+    private static final String CITIZEN_USER_ID = "citizenUserId";
 
     @JsonProperty("serviceRequestId")
     private String crn;
@@ -72,4 +75,8 @@ public class ServiceRequest {
         return AttributeValues.getAttributeSingleValue(attribValues, key);
     }
 
+    public Long getCitizenUserId() {
+        final String userId = getDynamicSingleValue(CITIZEN_USER_ID);
+        return isNotEmpty(userId) ? Long.valueOf(userId) : null;
+    }
 }

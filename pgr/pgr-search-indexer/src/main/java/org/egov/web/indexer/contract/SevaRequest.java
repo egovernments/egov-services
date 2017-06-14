@@ -28,15 +28,4 @@ public class SevaRequest {
         return PUT.equals(requestInfo.getAction());
     }
 
-    public Long getRequesterId() {
-        if (requestInfo.getUserInfo() == null) {
-            return null;
-        }
-        return isAuthenticatedRoleCitizen() ? requestInfo.getUserInfo().getId() : null;
-    }
-
-    private boolean isAuthenticatedRoleCitizen() {
-        return CITIZEN.equals(requestInfo.getUserInfo().getType());
-    }
-
 }

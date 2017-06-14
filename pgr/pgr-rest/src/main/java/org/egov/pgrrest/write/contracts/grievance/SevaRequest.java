@@ -18,7 +18,6 @@ public class SevaRequest {
 
     private static final String SERVICE_REQUEST = "serviceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
-    private static final String CITIZEN = "CITIZEN";
     private static final String VALUES_CITIZENFEEDBACK = "citizenFeedback";
     private static final String ATTRIBUTE_ENTRY_KEY = "key";
     private static final String ATTRIBUTE_ENTRY_NAME = "name";

@@ -180,7 +180,7 @@ public class GrievanceTypeController {
         serviceTypeRequest.getService();
 		final List<ErrorField> errorFields = getErrorFields(serviceTypeRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(PgrMasterConstants.INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE).errorFields(errorFields)
+				.message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
 				.build();
     }
 
@@ -188,7 +188,7 @@ public class GrievanceTypeController {
         final List<ErrorField> errorFields = new ArrayList<>();
         addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
-        /*addActiveValidationErrors(serviceTypeRequest, errorFields);*/
+        checkMetadataExists(serviceTypeRequest,errorFields);
         return errorFields;
     }
 
@@ -202,13 +202,13 @@ public class GrievanceTypeController {
                     .field(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-       /* } else if (!serviceTypeService.getCategoryByNameAndCode(service.getServiceCode(), service.getServiceName(), service.getTenantId())) {
+       } else if (!serviceTypeService.getCategoryByNameAndCode(service.getServiceCode(), service.getServiceName(), service.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.GRIEVANCE_TYPE_MANDATORY_CODE)
-                    .message(PgrMasterConstants.GRIEVANCE_TYPE_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.GRIEVANCE_TYPE_MANADATORY_FIELD_NAME)
+                    .code(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_CODE)
+                    .message(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME)
                     .build();
-            errorFields.add(errorField);*/
+            errorFields.add(errorField);
         } else
             return;
     }
@@ -226,19 +226,20 @@ public class GrievanceTypeController {
         } else
             return;
     }
-
-    /*private void addActiveValidationErrors(final ServiceRequest serviceTypeRequest, final List<ErrorField> errorFields) {
-        final ServiceType service = serviceTypeRequest.getService();
-        if (service.getActive() == null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.ACTIVE_MANDATORY_CODE)
-                    .message(PgrMasterConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.ACTIVE_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }*/
+    
+    private void checkMetadataExists(final ServiceRequest serviceTypeRequest,
+			final List<ErrorField> errorFields) {
+		final ServiceType serviceType = serviceTypeRequest.getService();
+		if (serviceType.isMetadata()) {
+			if (null == serviceType.getAttributes() && serviceType.getAttributes().size() <= 0) {
+				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ATTRIBUTE_DETAILS_MANDATORY_CODE)
+						.message(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE)
+						.field(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+		} else
+			return;
+	}
 
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();

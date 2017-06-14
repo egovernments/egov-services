@@ -191,7 +191,7 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String selectServiceNameAndCodeQuery() {
-        return " select code FROM egpgr_grievancetype where name = ? and tenantId = ?";
+        return " select code FROM egpgr_complainttype where name = ? OR (tenantId = ? and code = ?)";
     }
 
     public static String selectServiceNameAndCodeNotInQuery() {

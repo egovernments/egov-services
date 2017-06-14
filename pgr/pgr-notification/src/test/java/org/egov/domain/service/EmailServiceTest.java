@@ -1,6 +1,7 @@
 package org.egov.domain.service;
 
 import org.egov.domain.model.*;
+import org.egov.domain.service.emailstrategy.EmailMessageStrategy;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,24 +41,6 @@ public class EmailServiceTest {
     }
 
     @Test
-    public void test_should_not_send_email_when_complainant_email_is_absent() {
-        when(sevaRequest.isRequesterEmailAbsent()).thenReturn(true);
-        final Tenant tenant = new Tenant("tenantName", "ulbGrade");
-
-        final List<String> keywords = Collections.emptyList();
-        final ServiceType serviceType = new ServiceType("serviceType", keywords);
-        final NotificationContext context = NotificationContext.builder()
-            .sevaRequest(sevaRequest)
-            .serviceType(serviceType)
-            .tenant(tenant)
-            .build();
-
-        emailService.send(context);
-
-        verify(messageQueueRepository, times(0)).sendEmail(any(), any());
-    }
-
-    @Test
     public void test_should_send_email_message_to_topic() {
         when(sevaRequest.isRequesterEmailAbsent()).thenReturn(false);
         final String emailAddress = "email@email.com";
@@ -85,6 +68,7 @@ public class EmailServiceTest {
         final HashMap<Object, Object> bodyTemplateValues = new HashMap<>();
         final HashMap<Object, Object> subjectTemplateValues = new HashMap<>();
         final EmailMessageContext emailMessageContext = EmailMessageContext.builder()
+            .email(emailAddress)
             .bodyTemplateName("bodyTemplateName")
             .subjectTemplateName("subjectTemplateName")
             .bodyTemplateValues(bodyTemplateValues)
@@ -104,8 +88,9 @@ public class EmailServiceTest {
         final EmailRequest expectedEmailRequest = EmailRequest.builder()
             .body(body)
             .subject(subject)
+            .email(emailAddress)
             .build();
-        verify(messageQueueRepository).sendEmail(emailAddress, expectedEmailRequest);
+        verify(messageQueueRepository).sendEmail(expectedEmailRequest);
     }
 
     @Test(expected = NotImplementedException.class)

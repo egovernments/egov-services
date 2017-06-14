@@ -42,6 +42,9 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
     @Column(name = "description")
     private String description;
 
+    @Column(name = "url")
+    private String url;
+
     public String getCode() {
         return id.getCode();
     }
@@ -55,6 +58,7 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
             .order(order)
             .dataTypeDescription(dataTypeDescription)
             .description(description)
+            .url(url)
             .values(domainValues)
             .build();
     }

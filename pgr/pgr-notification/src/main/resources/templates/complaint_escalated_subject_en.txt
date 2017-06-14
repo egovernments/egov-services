@@ -1,0 +1,1 @@
+Auto escalated after {{slaHours}} SLA hrs

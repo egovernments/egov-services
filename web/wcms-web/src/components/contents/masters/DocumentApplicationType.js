@@ -41,7 +41,7 @@ const styles = {
 };
 
 
-class DocumentApplicationType extends Component {
+class DocumentTypeApplicationType extends Component {
 
   constructor(props) {
        super(props);
@@ -78,8 +78,9 @@ class DocumentApplicationType extends Component {
 
       let response2=Api.commonApiPost("wcms-masters", "master", "_getapplicationtypes", {id},{}).then((res)=>
      {
+
         this.setState({
-          list2: res.getapplicationtypes
+          list2: res
       });
 
   },  (err)=> {
@@ -95,15 +96,15 @@ add(e)
 
   // let mode=getUrlVars()["type"];
 
-    let {changeButtonText,DocumentApplicationType}=this.props;
-    var documentApplicationType = {
-      applicationType:DocumentApplicationType.applicationType,
-      documentType:DocumentApplicationType.documentType,
-      active:DocumentApplicationType.active,
+    let {changeButtonText,DocumentTypeApplicationType}=this.props;
+    var documentTypeApplicationType = {
+      applicationType:DocumentTypeApplicationType.applicationType,
+      documentTypeId:DocumentTypeApplicationType.documentTypeId,
+      active:DocumentTypeApplicationType.active,
       tenantId:'default'
     }
     if(type == "Update"){
-      let response=Api.commonApiPost("wcms-masters", "propertytype-pipesizetype", "_update/"+id, {},{DocumentApplicationType:DocumentApplicationType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_update/"+id, {},{DocumentTypeApplicationType:DocumentTypeApplicationType}).then(function(response)
       {
       console.log(response);
     },function(err) {
@@ -113,7 +114,7 @@ add(e)
     }
 
   else{
-    let response=Api.commonApiPost("wcms-masters", "propertytype-pipesizetype", "_create", {},{DocumentApplicationType}).then(function(response)
+    let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType}).then(function(response)
     {
     // console.log(response);
   },function(err) {
@@ -126,7 +127,7 @@ add(e)
 
     render(){
       let {
-        DocumentApplicationType,
+        DocumentTypeApplicationType,
         propertyType,
         handleChange,
         fieldErrors,
@@ -148,21 +149,34 @@ add(e)
         }
       };
 
-      // console.log(DocumentApplicationType);
 
       const renderOption=function(list)
       {
         // console.log(list);
 
             if(list)
-          {
-              return list.map((item)=>
-              {
-                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name} />)
-              })
-          }
+            {
+              if(list.length){
+                return list.map((item)=>
+                {
+                    return (<MenuItem key={item.id} value={item.id} primaryText={item.name} />)
+                })
+              }
+
+
+              else {
+                return Object.keys(list).map((k,index)=>
+                 {
+                   console.log(list[k]);
+                   return (<MenuItem key={index} value={k} primaryText={list[k]}
+                     />)
+
+                 })
+                }
+              }
+
       }
-      
+
       return(
         <div className="DocumentApplicationType">
             <Card>
@@ -177,7 +191,7 @@ add(e)
                                   <Row>
                                     <Col xs={12} md={6}>
 
-                                      <SelectField  value={DocumentApplicationType.applicationType?DocumentApplicationType.applicationType:""} onChange={(event, index, value) => {
+                                      <SelectField  value={DocumentTypeApplicationType.applicationType?DocumentTypeApplicationType.applicationType:""} onChange={(event, index, value) => {
                                           var e = {
                                             target: {
                                               value: value
@@ -190,13 +204,13 @@ add(e)
                                     </Col>
 
                                     <Col xs={12} md={6}>
-                                      <SelectField value={DocumentApplicationType.documentType?DocumentApplicationType.documentType:""} onChange={(event, index, value) =>{
+                                      <SelectField value={DocumentTypeApplicationType.documentTypeId?DocumentTypeApplicationType.documentTypeId:""} onChange={(event, index, value) =>{
                                           var e = {
                                             target: {
                                               value: value
                                             }
                                           };
-                                          handleChange(e, "documentType", false, "")}
+                                          handleChange(e, "documentTypeId", false, "")}
                                         } floatingLabelText="DocumentType" >
                                          <MenuItem value={1} primaryText=""/>
                                          {renderOption(this.state.list)}
@@ -208,7 +222,7 @@ add(e)
                                                       <Checkbox
                                                        label="Active"
                                                        defaultChecked={true}
-                                                       value={DocumentApplicationType.active?DocumentApplicationType.active:""}
+                                                       value={DocumentTypeApplicationType.active?DocumentTypeApplicationType.active:""}
                                                        onCheck={(event,isInputChecked) => {
                                                          var e={
                                                            "target":{
@@ -239,7 +253,7 @@ add(e)
     }
 
 }
-const mapStateToProps = state => ({DocumentApplicationType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({DocumentTypeApplicationType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -278,4 +292,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentApplicationType);
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentTypeApplicationType);

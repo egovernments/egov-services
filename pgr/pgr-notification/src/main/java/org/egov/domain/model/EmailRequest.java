@@ -11,4 +11,6 @@ public class EmailRequest {
 	private String subject;
     @NonNull
     private String body;
+    @NonNull
+    private String email;
 }

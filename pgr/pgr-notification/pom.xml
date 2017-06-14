@@ -156,21 +156,10 @@
                                         <exclude>org.egov.domain.model.Tenant</exclude>
                                         <exclude>org.egov.domain.model.NotificationContext</exclude>
                                         <exclude>org.egov.domain.exception.TenantDoesNotExistException</exclude>
-                                        <exclude>org.egov.domain.service.SMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintCitizenSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UndefinedSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UndefinedEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.NewDeliverableCitizenSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusCitizenSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredCitizenSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintEscalatedFromEmployeeSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintEscalatedToEmployeeSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintRegisteredEmployeeSMSMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.EmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.NewDeliverableEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.UpdateDeliverableStatusEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ProcessingFeeEnteredEmailMessageStrategy</exclude>
-                                        <exclude>org.egov.domain.service.ComplaintEmailMessageStrategy</exclude>
+                                        <exclude>org.egov.domain.service.smsstrategy.*</exclude>
+                                        <exclude>org.egov.domain.service.emailstrategy.*</exclude>
+                                        <exclude>org.egov.domain.service.contextenricher.*</exclude>
+                                        <exclude>org.egov.domain.service.NotificationContextFactory</exclude>
                                         <exclude>org.egov.domain.service.NotificationService</exclude>
                                         <exclude>org.egov.consumer.HashMapDeserializer</exclude>
                                         <exclude>org.egov.persistence.dto.*</exclude>

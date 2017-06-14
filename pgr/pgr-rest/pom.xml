@@ -231,14 +231,13 @@
                                         <exclude>org.egov.pgrrest.common.model.ReceivingMode</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ReceivingCenter</exclude>
                                         <exclude>org.egov.pgrrest.write.model.ServiceRequestRecord</exclude>
+                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceDefinitionRepository</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <!--minimum>0.90</minimum-->
-                                            <minimum>0.00</minimum> #workaround for sucessful build until test cases are written
-                                            
+                                            <minimum>0.90</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -249,9 +248,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <!-->minimum>0.4</minimum-->
-                                            <minimum>0.00</minimum> #workaround for sucessful build until test cases are written
-                                            
+                                            <minimum>0.4</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -260,7 +257,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

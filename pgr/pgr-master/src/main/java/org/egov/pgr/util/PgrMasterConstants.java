@@ -71,13 +71,13 @@ public class PgrMasterConstants {
 	public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
 	
-	public static final String SERVICEGROUP_ID_MANDATORY_CODE = "pgr.0003";
-	public static final String SERVICEGROUP_ID_MANADATORY_FIELD_NAME = "id";
-	public static final String SERVICEGROUP_ID_MANADATORY_ERROR_MESSAGE = "Service Group id is required";
+	public static final String SERVICEGROUP_CODE_MANDATORY_CODE = "pgr.0003";
+	public static final String SERVICEGROUP_CODE_MANADATORY_FIELD_NAME = "code";
+	public static final String SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE = "Service Group code is required";
 
 
     
-    public static final String ROUTER_SERVICE_MANDATORY_CODE = "wcms.0003";
+    public static final String ROUTER_SERVICE_MANDATORY_CODE = "pgr.0003";
     public static final String ROUTER_SERVICE_MANADATORY_FIELD_NAME = "service";
     public static final String ROUTER_SERVICE_MANADATORY_ERROR_MESSAGE = "Service required";
     
@@ -85,7 +85,7 @@ public class PgrMasterConstants {
     public static final String ROUTER_POSITION_MANADATORY_FIELD_NAME = "position";
     public static final String ROUTER_POSITION_MANADATORY_ERROR_MESSAGE = "Position is required";
     
-    public static final String ROUTER_BOUNDARY_MANDATORY_CODE = "wcms.0005";
+    public static final String ROUTER_BOUNDARY_MANDATORY_CODE = "pgr.0005";
     public static final String ROUTER_BOUNDARY_MANADATORY_FIELD_NAME = "boundary";
     public static final String ROUTER_BOUNDARY_MANADATORY_ERROR_MESSAGE = "Boundary is required";
 

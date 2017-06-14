@@ -194,7 +194,10 @@ public class AgreementService {
 								agreementRequest.getRequestInfo());
 					}
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-					agreement.setStatus(Status.CANCELLED);
+					if (agreement.getStatus().equals(Status.REJECTED))
+						agreement.setStatus(Status.CANCELLED);
+					else
+						agreement.setStatus(Status.REJECTED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					// no action for print notice
 				}

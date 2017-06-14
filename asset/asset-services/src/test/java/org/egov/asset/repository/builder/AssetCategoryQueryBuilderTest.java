@@ -26,14 +26,14 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getQueryWithTenantIdTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder().tenantId("ap.kurnool")
-				.build();
-		String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
+				.tenantId("ap.kurnool").build();
+		final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(500);
 		expectedPreparedStatementValues.add(Long.valueOf(0));
@@ -42,15 +42,15 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getQueryWithIdTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder().tenantId("ap.kurnool")
-				.id(Long.valueOf(20)).build();
-		String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.id = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
+				.tenantId("ap.kurnool").id(Long.valueOf(20)).build();
+		final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.id = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
 
 		assertEquals(queryWithTenantId,
 				assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(20L);
 		expectedPreparedStatementValues.add(500);
@@ -60,16 +60,16 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getQueryWithNameTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder().tenantId("ap.kurnool")
-				.name("Land").build();
-		String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.name = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
+				.tenantId("ap.kurnool").name("Land").build();
+		final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.name ilike ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
-		expectedPreparedStatementValues.add("Land");
+		expectedPreparedStatementValues.add("%Land%");
 		expectedPreparedStatementValues.add(500);
 		expectedPreparedStatementValues.add(Long.valueOf(0));
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
@@ -77,14 +77,14 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getQueryWithCodeTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder().tenantId("ap.kurnool")
-				.code("560042").build();
-		String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.code = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
+				.tenantId("ap.kurnool").code("560042").build();
+		final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.code = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add("560042");
 		expectedPreparedStatementValues.add(500);
@@ -94,17 +94,17 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getQueryWithAssetCategoryTypeTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		List<String> assetCategorytype = new ArrayList<>();
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final List<String> assetCategorytype = new ArrayList<>();
 		assetCategorytype.add("LAND");
 
-		AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder().tenantId("ap.kurnool")
-				.assetCategoryType(assetCategorytype).build();
-		String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.assetcategorytype IN ('LAND') ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+		final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
+				.tenantId("ap.kurnool").assetCategoryType(assetCategorytype).build();
+		final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.assetcategorytype IN ('LAND') ORDER BY assetcategory.name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(500);
 		expectedPreparedStatementValues.add(Long.valueOf(0));
@@ -113,20 +113,21 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getQueryTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		List<String> assetCategorytype = new ArrayList<>();
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final List<String> assetCategorytype = new ArrayList<>();
 		assetCategorytype.add("LAND");
 
-		AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder().tenantId("ap.kurnool")
-				.id(Long.valueOf(20)).name("Land").code("560042").assetCategoryType(assetCategorytype).build();
-		String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.id = ? AND assetcategory.name = ? AND assetcategory.code = ? AND assetcategory.assetcategorytype IN ('LAND') ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+		final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
+				.tenantId("ap.kurnool").id(Long.valueOf(20)).name("Land").code("560042")
+				.assetCategoryType(assetCategorytype).build();
+		final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND assetcategory.id = ? AND assetcategory.name ilike ? AND assetcategory.code = ? AND assetcategory.assetcategorytype IN ('LAND') ORDER BY assetcategory.name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(20L);
-		expectedPreparedStatementValues.add("Land");
+		expectedPreparedStatementValues.add("%Land%");
 		expectedPreparedStatementValues.add("560042");
 		expectedPreparedStatementValues.add(500);
 		expectedPreparedStatementValues.add(Long.valueOf(0));
@@ -135,14 +136,14 @@ public class AssetCategoryQueryBuilderTest {
 
 	@Test
 	public void getInsertQuery() {
-		String insertQuery = "INSERT into egasset_assetcategory (id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate,isassetallow,version)values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String insertQuery = "INSERT into egasset_assetcategory (id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate,isassetallow,version)values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		assertEquals(insertQuery, assetCategoryQueryBuilder.getInsertQuery());
 
 	}
 
 	@Test
 	public void getUpdateQuery() {
-		String updateQuery = "UPDATE egasset_assetcategory SET parentid=?,assetcategorytype=?,depreciationmethod=?,depreciationrate=?,assetaccount=?,accumulateddepreciationaccount=?,revaluationreserveaccount=?,depreciationexpenseaccount=?,unitofmeasurement=?,customfields=?,lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?WHERE code=? and tenantid=?";
+		final String updateQuery = "UPDATE egasset_assetcategory SET parentid=?,assetcategorytype=?,depreciationmethod=?,depreciationrate=?,assetaccount=?,accumulateddepreciationaccount=?,revaluationreserveaccount=?,depreciationexpenseaccount=?,unitofmeasurement=?,customfields=?,lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?WHERE code=? and tenantid=?";
 		assertEquals(updateQuery, assetCategoryQueryBuilder.getUpdateQuery());
 	}
 

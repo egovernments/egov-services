@@ -127,13 +127,13 @@ public class ServiceGroupQueryBuilder {
 	}
 
 	public static String insertServiceGroupQuery() {
-		return "INSERT INTO egpgr_complainttype_category(name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_complainttype_category(code, name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(?,?,?,?,?,?,?,?)";
 	}
 	
 	public static String updateServiceGroupQuery() {
 		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?, createdby = ?, lastmodifiedby = ?, "
-				+ "createddate = ?, lastmodifieddate = ?, tenantid = ? where id = ?";
+				+ "createddate = ?, lastmodifieddate = ?, tenantid = ? where code = ?";
 	}
 
 }

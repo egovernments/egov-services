@@ -764,11 +764,11 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: Factor value effective date.
+        description: Factor value effective date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: Factor value end date.
+        description: Factor value end date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -854,11 +854,11 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: Guidance value effective date.
+        description: Guidance value effective date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: Guidance value end date.
+        description: Guidance value end date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -913,11 +913,11 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: start date from when the tax rate is applicable
+        description: start date from when the tax rate is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: start date from when the tax rate is applicable
+        description: start date from when the tax rate is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       fromValue:
         type: number
         format: double
@@ -982,11 +982,11 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: Start date for tax period
+        description: Start date for tax period. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: End date for tax period
+        description: End date for tax period. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       code:
         type: string
         description: representation of a tax period.

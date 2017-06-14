@@ -69,7 +69,7 @@ public class AgreementQueryBuilderTest {
 		agreementsModel.setToDate(calendar.getTime());
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
-						+ "ON agreement.id=demand.agreementid WHERE AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED') AND"
+						+ "ON agreement.id=demand.agreementid WHERE AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') AND"
 						+ " AGREEMENT.TENANT_ID=?"
 						+ " AND AGREEMENT.AGREEMENT_DATE>=? AND AGREEMENT.AGREEMENT_DATE<=?"
 						+ " ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?",

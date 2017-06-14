@@ -1,5 +1,3 @@
-ALTER TABLE egpgr_complainttype DROP COLUMN keywords;
-
 CREATE TABLE servicetype_keyword (
     id bigint NOT NULL,
     servicecode VARCHAR(20) NOT NULL,

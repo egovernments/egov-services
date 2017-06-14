@@ -164,6 +164,11 @@ public class ServiceGroupController {
 					.message(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
+		} else 	if (serviceGroup.getCode() == null || serviceGroup.getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODE_MANDATORY_CODE)
+					.message(PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
 		}
 	}
 	

@@ -71,9 +71,9 @@ public class PgrMasterConstants {
 	public static final String SERVICEGROUP_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE = "Service Group is required";
 	
-	public static final String SERVICEGROUP_ID_MANDATORY_CODE = "pgr.0003";
-	public static final String SERVICEGROUP_ID_MANADATORY_FIELD_NAME = "id";
-	public static final String SERVICEGROUP_ID_MANADATORY_ERROR_MESSAGE = "Service Group id is required";
+	public static final String SERVICEGROUP_CODE_MANDATORY_CODE = "pgr.0003";
+	public static final String SERVICEGROUP_CODE_MANADATORY_FIELD_NAME = "code";
+	public static final String SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE = "Service Group code is required";
 
 
     

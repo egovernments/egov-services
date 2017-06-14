@@ -37,44 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.web.controller;
+import javax.validation.constraints.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.SupplyType;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.BillingType;
-import org.egov.wcms.model.enums.ConnectionType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
-
-    @RequestMapping(value = "/_getconnectiontypes")
-    public Map<String, ConnectionType> getConnectionTypeEnum() {
-        final Map<String, ConnectionType> connectionType = new HashMap<>();
-        for (final ConnectionType key : ConnectionType.values())
-            connectionType.put(key.name(), key);
-        return connectionType;
-    }
-
-    @RequestMapping(value = "/_getbillingtypes")
-    public Map<String, BillingType> getBillingTypeEnum() {
-        final Map<String, BillingType> billingType = new HashMap<>();
-        for (final BillingType key : BillingType.values())
-            billingType.put(key.name(), key);
-        return billingType;
-    }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class SupplyTypeRequest {
+    
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
+    
+    @JsonProperty("SupplyType")
+    private SupplyType supplyType;
 
 }

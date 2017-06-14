@@ -37,44 +37,51 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.web.controller;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.BillingType;
-import org.egov.wcms.model.enums.ConnectionType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.hibernate.validator.constraints.Length;
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class SupplyTypeGetRequest {
 
-    @RequestMapping(value = "/_getconnectiontypes")
-    public Map<String, ConnectionType> getConnectionTypeEnum() {
-        final Map<String, ConnectionType> connectionType = new HashMap<>();
-        for (final ConnectionType key : ConnectionType.values())
-            connectionType.put(key.name(), key);
-        return connectionType;
-    }
+    private List<Long> id;
 
-    @RequestMapping(value = "/_getbillingtypes")
-    public Map<String, BillingType> getBillingTypeEnum() {
-        final Map<String, BillingType> billingType = new HashMap<>();
-        for (final BillingType key : BillingType.values())
-            billingType.put(key.name(), key);
-        return billingType;
-    }
+    @Length(min = 3, max = 100)
+    private String name;
+
+    private String code;
+
+    private Boolean active;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

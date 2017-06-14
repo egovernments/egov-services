@@ -230,7 +230,7 @@ class Nominee extends React.Component{
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
-        $('#code').prop("disabled", true);
+        $('#code,#name').prop("disabled", true);
 
        if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Nominee");
 
@@ -262,6 +262,7 @@ class Nominee extends React.Component{
 
       getCommonMasterById("hr-employee","employees", id, function(err, res) {
         if(res && res.Employee && res.Employee[0]) {
+          var obj = res.Employee[0];
           _this.setState({
             allNomineeValue: {
              ..._this.state.allNomineeValue,

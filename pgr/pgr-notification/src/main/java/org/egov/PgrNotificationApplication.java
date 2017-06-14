@@ -57,17 +57,23 @@ public class PgrNotificationApplication {
             new ComplaintCitizenSMSMessageStrategy(),
             new NewDeliverableCitizenSMSMessageStrategy(),
             new UpdateDeliverableStatusCitizenSMSMessageStrategy(),
-            new ProcessingFeeEnteredCitizenSMSMessageStrategy()
+            new ProcessingFeeEnteredCitizenSMSMessageStrategy(),
+            new ComplaintRegisteredEmployeeSMSMessageStrategy(),
+            new ComplaintEscalatedFromEmployeeSMSMessageStrategy(),
+            new ComplaintEscalatedToEmployeeSMSMessageStrategy()
         );
     }
 
     @Bean("emailMessageStrategies")
     public List<EmailMessageStrategy> getEmailMessageStrategies() {
         return Arrays.asList(
-            new ComplaintEmailMessageStrategy(),
-            new NewDeliverableEmailMessageStrategy(),
-            new UpdateDeliverableStatusEmailMessageStrategy(),
-            new ProcessingFeeEnteredEmailMessageStrategy()
+            new ComplaintCitizenEmailMessageStrategy(),
+            new NewDeliverableCitizenEmailMessageStrategy(),
+            new UpdateDeliverableStatusCitizenEmailMessageStrategy(),
+            new ProcessingFeeEnteredCitizenEmailMessageStrategy(),
+            new ComplaintRegisteredEmployeeEmailMessageStrategy(),
+            new ComplaintEscalatedFromEmployeeEmailMessageStrategy(),
+            new ComplaintEscalatedToEmployeeEmailMessageStrategy()
         );
     }
 }

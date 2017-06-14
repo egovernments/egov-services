@@ -439,7 +439,7 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/walltypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/walltypes/_search",method=RequestMethod.POST)
 	public WallTypeResponse getWallTypeMaster(@RequestBody RequestInfoWrapper requestInfo ,
 			@RequestParam(required=true) String tenantId,
 			@RequestParam(required=false) Integer[] ids,
@@ -500,7 +500,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/usagemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/usages/_search",method=RequestMethod.POST)
 	public UsageMasterResponse getUsageMaster(@RequestBody RequestInfoWrapper requestInfo ,
 			@RequestParam(required=true) String tenantId,
 			@RequestParam(required=false) Integer[] ids,

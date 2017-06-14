@@ -199,8 +199,8 @@ class ApplyLeave extends React.Component {
 
         if(!id) {
           commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId},function(err, res) {
-            if(res) {
-              var obj = res && res.Employee && res.Employee[0];
+            if(res && res.Employee && res.Employee[0]) {
+              var obj = res.Employee[0];
               _this.setState({
                 leaveSet:{
                     ..._this.state.leaveSet,
@@ -210,6 +210,8 @@ class ApplyLeave extends React.Component {
                   },
                  departmentId: _this.getPrimaryAssigmentDep(obj,"department")
               })
+            } else {
+              showError("Something went wrong. Please contact Administrator.");
             }
           });
         } else {

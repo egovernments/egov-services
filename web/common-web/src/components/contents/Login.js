@@ -131,7 +131,7 @@ class MainPage extends Component {
 
     render(){
       let {
-        MainPage,
+        login,
         handleChange,
         isFormValid,
         fieldErrors,
@@ -164,6 +164,9 @@ class MainPage extends Component {
                               <TextField
                                   floatingLabelText="Mobile Number / Login ID"
                                   style={styles.fullWidth}
+                                  errorText={fieldErrors.username
+                                    ? fieldErrors.username
+                                    : ""} id="username" value={login.username?login.username:""} onChange={(e) => handleChange(e, "username", true, "")} hintText="eg:-8992233223"
                               />
                               </Col>
                               <Col lg={12}>
@@ -171,10 +174,15 @@ class MainPage extends Component {
                                   floatingLabelText="Password"
                                   type="password"
                                   style={styles.fullWidth}
+                                  errorText={fieldErrors.password
+                                    ? fieldErrors.password
+                                    : ""} id="password" value={login.password?login.password:""} onChange={(e) => handleChange(e, "password", true, "")} hintText="eg:-*******"
                               />
                               </Col>
                               <Col lg={12}>
-                                <RaisedButton label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={brown500} labelColor={white}/>
+                                <RaisedButton disabled={!isFormValid}  label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={brown500} labelColor={white} onClick={(e)=>{
+                                  this.props.login(false,true,[])
+                                }}/>
                                 <FlatButton label="Forgot Password?" style={styles.buttonTopMargin} />
                               </Col>
                             </Col>
@@ -259,7 +267,7 @@ class MainPage extends Component {
     }
 }
 
-const mapStateToProps = state => ({MainPage: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({login: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -268,8 +276,8 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: [ ]
-        },
+          required: ["username","password"]
+        }
 
       }
     });
@@ -277,6 +285,12 @@ const mapDispatchToProps = dispatch => ({
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
+  login:(error,token,userRequest)=>{
+    let payload={
+      "access_token":token,"UserRequest":userRequest
+    };
+    dispatch({type:"LOGIN",error,payload})
+  }
 
 
 

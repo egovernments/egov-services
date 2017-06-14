@@ -28,13 +28,9 @@ public class EmailService {
     }
 
     public void send(NotificationContext context) {
-        if (context.getSevaRequest().isRequesterEmailAbsent()) {
-            log.info("Skipping email notification for CRN {}", context.getSevaRequest().getCrn());
-            return;
-        }
         final List<EmailRequest> emailRequests = getEmailRequests(context);
         emailRequests.forEach(emailRequest ->
-            messageQueueRepository.sendEmail(context.getSevaRequest().getRequesterEmail(), emailRequest));
+            messageQueueRepository.sendEmail(emailRequest));
     }
 
     private List<EmailRequest> getEmailRequests(NotificationContext context) {
@@ -50,6 +46,7 @@ public class EmailService {
         return EmailRequest.builder()
 			.subject(getEmailSubject(messageContext))
 			.body(getMailBody(messageContext))
+            .email(messageContext.getEmail())
 			.build();
     }
 

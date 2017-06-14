@@ -1,13 +1,5 @@
 package org.egov.demand.model;
 
-import java.util.Objects;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.slf4j.Logger;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,17 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DemandReason {
-	
-	@JsonProperty("name")
-	private String name = null;
 
-	@JsonProperty("category")
-	private String category = null;
+	private Long id;
 
-	@JsonProperty("taxPeriod")
-	private String taxPeriod = null;
+	private Installment installment;
 
-	@JsonProperty("glCode")
-	private String glCode = null;
-	
+	private ReasonMaster reasonMaster;
+
+	private String glCode;
+
+	private AuditDetail auditDetails;
+
+	private String tenantId;
 }

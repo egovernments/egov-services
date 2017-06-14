@@ -158,7 +158,7 @@ add(e)
           {
               return list.map((item)=>
               {
-                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name || item.sizeInInch} />)
+                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name || item.sizeInMilimeter} />)
               })
           }
       }

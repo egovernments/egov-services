@@ -9,7 +9,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import Api from '../../api/pTAPIS';
+import Api from '../../api/commonAPIS';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -80,7 +80,8 @@ class PropertyTaxSearch extends Component {
 
   }
 
-  componentWillUnmount(){
+  componentWillUnmount()
+  {
      $('#propertyTaxTable')
      .DataTable()
      .destroy(true);

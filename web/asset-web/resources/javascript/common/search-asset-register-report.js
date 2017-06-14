@@ -9,7 +9,8 @@ class SearchAsset extends React.Component {
       "assetCategory": "",
       "status": "",
       "location":"",
-      "code": ""
+      "code": "",
+      "locality":""
    },isSearchClicked:false,assetCategories:[],departments:[],statusList:{},localityList:[],modify: false,result:[]}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
@@ -31,39 +32,46 @@ class SearchAsset extends React.Component {
   }
 
   search(e) {
+    var post = 0;
     e.preventDefault();
-
       //call api call
       var _this = this;
-
-      var queryObject = this.state.searchSet;
-      console.log("queryObject",queryObject);
-
-      console.log("Search Set",this.state.searchSet);
-
       var locationArray = JSON.parse(localStorage.getItem("locality"));
         for(var i=0;i<locationArray.length;i++){
-            if(this.state.searchSet.location===locationArray[i].name){
-              var location = locationArray[i].id;
+            if(_this.state.searchSet.location===locationArray[i].name){
+              var id = locationArray[i].id;
+              console.log("id",id);
+              _this.state.searchSet.locality = id;
 
               break;
-            }
+            }else{
+              if(_this.state.searchSet.location===""){
+                post=0;
+              }else{
+                  post=1;
+              }
+          }
 
         }
 
-        if(location===undefined){
+        console.log("finsi2",this.state.locality);
+        console.log("Final",this.state.searchSet);
+      //
+      //   if(location===undefined){
+      //
+      //       queryObject.locality = this.state.searchSet.location;
+      //       queryObject.location = "";
+      //
+      //   }else{
 
-            queryObject.locality = this.state.searchSet.location;
-            queryObject.location = "";
-
-        }else{
-              queryObject.locality = location;
-              queryObject.location = "";
-        }
-
-
-        console.log("after",queryObject);
-        commonApiPost("asset-services","assets","_search", {...queryObject, tenantId, pageSize:500}, function(err, res) {
+      //         queryObject.locality = location;
+      //         queryObject.location = "";
+      //   }
+      //
+      //
+      //   console.log("after",queryObject);
+      if(post==0){
+        commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
           if(res) {
             var list = res["Assets"];
             list.sort(function(item1, item2) {
@@ -73,7 +81,7 @@ class SearchAsset extends React.Component {
             flag = 1;
             _this.setState({
               isSearchClicked: true,
-              searchSet : {},
+
               list,
               modify: true
             });
@@ -84,7 +92,21 @@ class SearchAsset extends React.Component {
             }, 1200);
           }
         })
+    }else {
+      showError("Invalid Location");
+      _this.setState({
+        list :[],
+        modify: true
+      });
+      setTimeout(function(){
+        _this.setState({
+          modify: false
+        });
+      }, 5000);
 
+      $('#agreementTable').dataTable().fnDestroy();
+      post=0;
+    }
 }
 
 
@@ -103,6 +125,7 @@ class SearchAsset extends React.Component {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              "ordering": false,
+             "bDestroy": true,
              language: {
                 "emptyTable": "No Records"
              }
@@ -118,7 +141,7 @@ class SearchAsset extends React.Component {
       }
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
-    var count = 3, _this = this, _state = {},result=[];
+    var count = 2, _this = this, _state = {},result=[];
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -140,7 +163,7 @@ class SearchAsset extends React.Component {
          source: result,
          minLength: 3,
          change: function( event, ui ) {
-           if(ui.item && ui.item.value)
+           if(ui && ui.item && ui.item.value) {
            console.log("ui",ui);
                _this.setState({
                    searchSet:{
@@ -148,6 +171,7 @@ class SearchAsset extends React.Component {
                        location: ui.item.value
                    }
                })
+             }
          }
 
        });
@@ -159,7 +183,10 @@ class SearchAsset extends React.Component {
       checkCountNCall("statusList", res);
     });
 
-  
+    console.log(this.state.localityList);
+    var location;
+
+      console.log("result",result);
 
 
 

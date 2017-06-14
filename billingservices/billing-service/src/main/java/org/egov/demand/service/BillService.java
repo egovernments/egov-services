@@ -40,7 +40,7 @@
 
 package org.egov.demand.service;
 
-import org.egov.demand.model.BillInfo;
+import org.egov.demand.model.Bill;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

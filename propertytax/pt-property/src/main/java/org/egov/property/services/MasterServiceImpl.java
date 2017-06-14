@@ -108,7 +108,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, department.getTenantId());
 					ps.setString(2, department.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, department.getAuditDetails().getCreatedBy());
@@ -158,7 +158,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, department.getTenantId());	
 					ps.setString(2,department.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, department.getAuditDetails().getLastModifiedBy());
@@ -398,13 +398,13 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, floorType.getTenantId());
 					ps.setString(2, floorType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
-					ps.setString(6, floorType.getAuditDetails().getCreatedBy());
-					ps.setString(7, floorType.getAuditDetails().getLastModifiedBy());
-					ps.setBigDecimal(8, new BigDecimal(createdTime));
-					ps.setBigDecimal(9, new BigDecimal(createdTime));
+					ps.setString(4, floorType.getAuditDetails().getCreatedBy());
+					ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
+					ps.setBigDecimal(6, new BigDecimal(createdTime));
+					ps.setBigDecimal(7, new BigDecimal(createdTime));
 					return ps;
 				}
 			};
@@ -468,7 +468,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, floorType.getTenantId());
 					ps.setString(2, floorType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, floorType.getAuditDetails().getCreatedBy());
@@ -632,7 +632,7 @@ public class MasterServiceImpl  implements Masterservice{
 					final PreparedStatement ps = connection.prepareStatement(woodTypeCreate.toString(), new String[] { "id" });
 
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setString(1, woodType.getTenantId());
 					ps.setString(2, woodType.getCode());
@@ -708,7 +708,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, woodType.getTenantId());
 					ps.setString(2, woodType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject );
 					ps.setString(4, woodType.getAuditDetails().getCreatedBy());
@@ -873,7 +873,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, roofType.getTenantId());
 					ps.setString(2, roofType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, roofType.getAuditDetails().getCreatedBy());
@@ -943,7 +943,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, roofType.getTenantId());
 					ps.setString(2, roofType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3, jsonObject);
 					ps.setString(4, roofType.getAuditDetails().getCreatedBy());
@@ -1003,7 +1003,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, structureClass.getTenantId());
 					ps.setString(2, structureClass.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, structureClass.getAuditDetails().getCreatedBy());
@@ -1063,7 +1063,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, structureClass.getTenantId());	
 					ps.setString(2,structureClass.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3, jsonObject);
 					ps.setString(4, structureClass.getAuditDetails().getLastModifiedBy());
@@ -1222,7 +1222,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, propertyType.getTenantId());
 					ps.setString(2, propertyType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, propertyType.getAuditDetails().getCreatedBy());
@@ -1284,7 +1284,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, propertyType.getTenantId());  
 					ps.setString(2,propertyType.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, propertyType.getAuditDetails().getLastModifiedBy());
@@ -1456,7 +1456,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, occuapancy.getTenantId());
 					ps.setString(2, occuapancy.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, occuapancy.getAuditDetails().getCreatedBy());
@@ -1516,7 +1516,7 @@ public class MasterServiceImpl  implements Masterservice{
 					ps.setString(1, occuapancyMaster.getTenantId());  
 					ps.setString(2,occuapancyMaster.getCode());
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setObject(3,jsonObject);
 					ps.setString(4, occuapancyMaster.getAuditDetails().getLastModifiedBy());
@@ -1784,7 +1784,7 @@ public class MasterServiceImpl  implements Masterservice{
 					final PreparedStatement ps = connection.prepareStatement(wallTypeMasterCreateSQL.toString(), new String[] { "id" });
 
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 
 					ps.setString(1, wallType.getTenantId());
@@ -1856,7 +1856,7 @@ public class MasterServiceImpl  implements Masterservice{
 					final PreparedStatement ps = connection.prepareStatement(wallTypeMasterUpdateSQL.toString());
 
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 
 					ps.setString(1, wallType.getTenantId());
@@ -1938,7 +1938,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		if (nameLocal!=null && !nameLocal.isEmpty()){
 			if(name!=null && !name.isEmpty())
-				dataSearch.append(" , {\"nameLocal\":\""+nameLocal+"\"");
+				dataSearch.append(" , \"nameLocal\":\""+nameLocal+"\"");
 			else
 				dataSearch.append("{\"nameLocal\":\""+nameLocal+"\"");	
 		}
@@ -1960,7 +1960,7 @@ public class MasterServiceImpl  implements Masterservice{
 
 		try {
 
-			List<UsageMaster> usageTypes = jdbcTemplate.query(usageMasterSearchSQL.toString(), new BeanPropertyRowMapper(WallType.class));
+			List<UsageMaster> usageTypes = jdbcTemplate.query(usageMasterSearchSQL.toString(), new BeanPropertyRowMapper(UsageMaster.class));
 
 			ResponseInfo responseInfo=responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true);
 
@@ -2012,7 +2012,7 @@ public class MasterServiceImpl  implements Masterservice{
 			usageMasterCreateSQL.append("INSERT INTO egpt_mstr_usage")
 			.append(" ( tenantid, code,")
 			.append(" data, createdby, lastmodifiedby, createdtime, lastmodifiedtime) ")
-			.append(" VALUES( ?, ?, ?, ?, ?, ?, ?)");
+			.append(" VALUES( ?, ?,?, ?, ?, ?, ?)");
 
 			final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
@@ -2022,7 +2022,7 @@ public class MasterServiceImpl  implements Masterservice{
 					final PreparedStatement ps = connection.prepareStatement(usageMasterCreateSQL.toString(), new String[] { "id" });
 
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setString(1, usageMaster.getTenantId());
 					ps.setString(2, usageMaster.getCode());
@@ -2089,7 +2089,7 @@ public class MasterServiceImpl  implements Masterservice{
 					final PreparedStatement ps = connection.prepareStatement(usageMasterUpdateSQL.toString());
 
 					PGobject jsonObject = new PGobject();
-					jsonObject.setType("json");
+					jsonObject.setType("jsonb");
 					jsonObject.setValue(data);
 					ps.setString(1, tenantId);
 					ps.setString(2, usageMaster.getCode());
@@ -2099,7 +2099,6 @@ public class MasterServiceImpl  implements Masterservice{
 					return ps;
 				}
 			};
-
 			try {
 
 				jdbcTemplate.update(psc);

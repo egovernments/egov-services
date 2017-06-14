@@ -11,14 +11,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class BankBranchQueueRepository {
 
-	@Autowired
 	private FinancialProducer financialProducer;
 
-	@Value("${kafka.topics.egf.masters.validated.topic}")
 	private String bankBranchValidatedTopic;
 
-	@Value("${kafka.topics.egf.masters.bankbranch.validated.key}")
 	private String bankBranchValidatedKey;
+
+	@Autowired
+	public BankBranchQueueRepository(FinancialProducer financialProducer,
+			@Value("${kafka.topics.egf.masters.validated.topic}") String bankBranchValidatedTopic,
+			@Value("${kafka.topics.egf.masters.bankbranch.validated.key}") String bankBranchValidatedKey) {
+		this.financialProducer = financialProducer;
+		this.bankBranchValidatedTopic = bankBranchValidatedTopic;
+		this.bankBranchValidatedKey = bankBranchValidatedKey;
+	}
 
 	public void push(BankBranchContractRequest bankBranchContractRequest) {
 		HashMap<String, Object> bankBranchContractRequestMap = new HashMap<String, Object>();

@@ -40,32 +40,28 @@
 
 package org.egov.commons.web.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-@Builder
+
+import org.egov.commons.model.AuthenticatedUser;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class ResponseInfo {
+public class BusinessCategoryRequest {
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	private String apiId;
+	@JsonProperty("BusinessCategoryInfo")
+	private BusinessCategory businessCategoryInfo;
 
-	private String ver;
-
-	private String ts;
-
-	private String resMsgId;
-
-	private String msgId;
-
-	private String status;
-
+	public AuthenticatedUser toDomain() {
+		UserInfo userInfo=requestInfo.getUserInfo();
+		return AuthenticatedUser.builder().id(userInfo.getId()).anonymousUser(false).emailId(userInfo.getEmailId())
+				.mobileNumber(userInfo.getMobileNumber()).name(userInfo.getName()).build();
+		
+		
+	}
 }

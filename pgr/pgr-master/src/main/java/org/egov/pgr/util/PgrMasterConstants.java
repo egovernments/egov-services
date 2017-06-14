@@ -115,7 +115,7 @@ public class PgrMasterConstants {
 	public static final String NO_0F_HOURS_MANADATORY_ERROR_MESSAGE = "No of hours is required";
 
 	public static final String RECEIVINGCENTER_NAME_UNIQUE_CODE="pgr.0010";
-	public static final String  RECEIVINGCENTER_UNQ_ERROR_MESSAGE="Entered ReceivingCenter Name Already Exist.";
+	public static final String RECEIVINGCENTER_UNQ_ERROR_MESSAGE="Entered ReceivingCenter Name Already Exist.";
 	public static final String RECEIVINGCENTER_NAME_UNQ_FIELD_NAME="name";
 	
 	public static final String RECEIVINGMODE_CODE_UNIQUE_CODE ="pgr.0011";
@@ -126,7 +126,14 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
 	
-	
+	public static final String ATTRIBUTE_DETAILS_MANDATORY_CODE = "pgr.0013";
+	public static final String ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME = "attributes";
+	public static final String ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE = "Attributes are mandatory if Metadata is True";
+
+	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_CODE = "pgr.0014";
+	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME = "code";
+	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Combination of Code and TenantID already exisits. Even the name has to be unique";
+
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);
 	}

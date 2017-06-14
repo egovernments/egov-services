@@ -7,6 +7,8 @@ import org.egov.pgr.employee.enrichment.service.PositionService;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,7 +33,7 @@ public class ComplaintAssignmentListener {
     }
 
     @KafkaListener(topics = "${kafka.topics.pgr.locationpopulated.name}")
-    public void process(HashMap<String, Object> sevaRequestMap) {
+    public void process(HashMap<String, Object> sevaRequestMap, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
         positionService.enrichRequestWithPosition(enrichedSevaRequest);

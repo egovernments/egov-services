@@ -688,11 +688,5 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 }
 
 input[type="search"] {
-	border: solid 1px #ddd;	
-}
-
-input:disabled,
-textarea:disabled,
-select:disabled {
-	background: #fff !important;
+	border: solid 1px #ddd;
 }

@@ -5,7 +5,9 @@ import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
-public class ProcessingFeeEnteredEmailMessageStrategy implements EmailMessageStrategy {
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+public class ProcessingFeeEnteredCitizenEmailMessageStrategy implements EmailMessageStrategy {
     private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_deliverable_service_processing_fee_entered";
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_deliverable_service_processing_fee_entered";
 
@@ -14,12 +16,14 @@ public class ProcessingFeeEnteredEmailMessageStrategy implements EmailMessageStr
         return context.getServiceType().isDeliverableType()
             && context.getSevaRequest().isInProgress()
             && context.getSevaRequest().isEmployeeLoggedIn()
-            && context.getSevaRequest().isProcessingFeePresent();
+            && context.getSevaRequest().isProcessingFeePresent()
+            && isNotEmpty(context.getSevaRequest().getRequesterEmail());
     }
 
     @Override
     public EmailMessageContext getMessageContext(NotificationContext context) {
         return EmailMessageContext.builder()
+            .email(context.getSevaRequest().getRequesterEmail())
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
             .bodyTemplateValues(getBodyTemplate(context.getSevaRequest(), context.getTenant()))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)

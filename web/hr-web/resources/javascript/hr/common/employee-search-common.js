@@ -35,27 +35,35 @@ class EmployeeSearch extends React.Component {
     e.preventDefault();
     //call api call
     var employees = [];
-    commonApiPost("hr-employee","employees","_search", {
-        tenantId, code, departmentId, designationId, name,employeeStatus, pageSize:500
-      }, function(err, res) {
-        if(res) {
-          employees = res.Employee;
-        }
-        flag = 1;
-        _this.setState({
-          isSearchClicked: true,
-          employees,
-          modified: true
-        });
-
-        setTimeout(function() {
+    if(departmentId ||designationId||code||employeeType) {
+      commonApiPost("hr-employee","employees","_search", {
+          tenantId, code, departmentId, designationId, name, employeeType,pageSize:500
+        }, function(err, res) {
+          if(res) {
+            employees = res.Employee;
+          }
+          flag = 1;
           _this.setState({
-            modified: false
-          })
-        }, 1200);
+            isSearchClicked: true,
+            employees,
+            modified: true
+          });
 
-      });
+          setTimeout(function() {
+            _this.setState({
+              modified: false
+            })
+          }, 1200);
+
+        });
+    }
+    else {
+      return(showError("Any one of the search criteria is mandatory."));
+
+    }
+
   }
+
   handleBlur(e) {
     setTimeout(function(){
        if(document.activeElement.id == "sub") {
@@ -84,7 +92,9 @@ class EmployeeSearch extends React.Component {
           name: ""
         }
       })
+
     }
+
   }
 
   componentWillUpdate() {
@@ -217,15 +227,15 @@ class EmployeeSearch extends React.Component {
 
           if (type==="update") {
                   return (
-                          <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>Update Nominee</a>
+                          <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>Update Nominee for Employee</a>
                   );
           } else if (type==="view") {
                 return (
-                        <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>View Nominee</a>
+                        <a href={`app/hr/nomineeMaster/nominee.html?id=${id}&type=${type}`}>View Nominee for Employee</a>
                 );
           } else {
               return (
-                      <a href={`app/hr/nomineeMaster/nominee.html?id=${id}`} >Create Nominee</a>
+                      <a href={`app/hr/nomineeMaster/nominee.html?id=${id}`} >Create Nominee for Employee</a>
               );
           }
       } else if(value==="transfer"){
@@ -260,7 +270,6 @@ class EmployeeSearch extends React.Component {
 
   }
 
-  //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
     const renderBody = function() {
       if(employees.length>0)
       {
@@ -299,6 +308,7 @@ class EmployeeSearch extends React.Component {
     }
     return (
       <div>
+        <h3>Search Employee for {titleCase(getUrlVars()["value"])}</h3>
           <form onSubmit={(e)=>{search(e)}}>
           <fieldset>
           <div className="row">
@@ -380,7 +390,7 @@ class EmployeeSearch extends React.Component {
                     </div>
                 </div>
               </div>
-              <div className="col-sm-6">
+              {/*<div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
                         <label for=""> Status</label>
@@ -396,8 +406,11 @@ class EmployeeSearch extends React.Component {
                       </div>
                       </div>
                   </div>
-                </div>
+                </div>*/}
           </div>
+          <div className="text-right text-danger">
+                          Note: Any one of the search criteria is mandatory.
+                    </div>
             <div className="text-center">
               <button id="sub" type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

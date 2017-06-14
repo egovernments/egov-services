@@ -543,7 +543,7 @@ $(document).ready(function() {
             _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
             delete _agrmntDet.wFremarks;
         }
-            
+
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
@@ -630,7 +630,7 @@ $(document).ready(function() {
               data: JSON.stringify({
                   RequestInfo: requestInfo,
                   Agreement: agreementDetails
-              }), 
+              }),
               async: false,
               headers: {
                   'auth-token': authToken

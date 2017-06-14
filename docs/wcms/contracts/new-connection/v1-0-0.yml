@@ -104,7 +104,9 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'   
               
-  /additionalconnection/_create:
+  /addconnection/{consumerNumber}/_create:
+    parameters:
+       - $ref: "#/parameters/parentConsumerNumber"
     post:
       summary: Creates additional water connection
       description: To create additional water connection is based upon various master data configured for your ULB.
@@ -612,6 +614,17 @@ definitions:
           $ref: '#/definitions/Connection'
          
 parameters:
+  parentConsumerNumber:
+      name: consumerNumber
+      in: path
+      required: true
+      description: HSC consumer number for the parent water connection.
+      type: string
+      minLength: 0
+      maxLength: 64
+      exclusiveMinimum: true
+      exclusiveMaximum: false
+      
   legacyConsumerNumber:
     name: legacyConsumerNumber
     in: query

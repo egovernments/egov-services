@@ -236,8 +236,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <!--minimum>0.90</minimum-->
-                                            <minimum>0.00</minimum> #workaround for sucessful build until test cases are written
+                                            <minimum>0.90</minimum>
                                             
                                         </limit>
                                     </limits>
@@ -249,8 +248,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <!-->minimum>0.4</minimum-->
-                                            <minimum>0.00</minimum> #workaround for sucessful build until test cases are written
+                                            <minimum>0.4</minimum>
                                             
                                         </limit>
                                     </limits>

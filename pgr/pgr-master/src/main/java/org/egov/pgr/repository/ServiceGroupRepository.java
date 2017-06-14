@@ -80,7 +80,7 @@ public class ServiceGroupRepository {
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-				serviceGroup.getTenantId(), serviceGroup.getId()};
+				serviceGroup.getTenantId(), serviceGroup.getCode()};
 		jdbcTemplate.update(serviceGroupUpdate, obj);
 		return serviceGroupRequest;
 	}

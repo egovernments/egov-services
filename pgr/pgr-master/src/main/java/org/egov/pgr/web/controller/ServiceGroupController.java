@@ -109,16 +109,16 @@ public class ServiceGroupController {
 
 	}
 	
-	@PostMapping(value = "/{id}/_update")
+	@PostMapping(value = "/{code}/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
-			@PathVariable("id") final long id, final BindingResult errors) {
-		if (errors.hasErrors() || id == 0L) {
+			@PathVariable("code") final String code, final BindingResult errors) {
+		if (errors.hasErrors() || (null == code || code.isEmpty())) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("serviceGroupRequest::" + serviceGroupRequest);
-		serviceGroupRequest.getServiceGroup().setId(id);
+		serviceGroupRequest.getServiceGroup().setCode(code);
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

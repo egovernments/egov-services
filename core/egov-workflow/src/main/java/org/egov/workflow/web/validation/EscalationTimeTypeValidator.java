@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
 import org.egov.workflow.domain.model.EscalationTimeType;
-import org.egov.workflow.domain.util.PgrMasterConstants;
+import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;
 import org.egov.workflow.web.errorhandlers.Error;
 import org.egov.workflow.web.errorhandlers.ErrorResponse;

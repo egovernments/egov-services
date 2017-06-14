@@ -853,12 +853,6 @@ sync:
           shouldSource: True
           shouldSync: True
 
-        - source: operation
-          destination: issubledger
-          Type: String
-          shouldSource: True
-          shouldSync: True
-
         - source: createdby
           destination: createdby
           type: Integer
@@ -967,65 +961,6 @@ sync:
 
         - source: localname
           destination: localname
-          type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifiedby
-          destination: lastmodifiedby
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: lastmodifieddate
-          destination: lastmodifieddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: createddate
-          destination: createddate
-          Type: TimestampWithoutTimeZone
-          shouldSource: True
-          shouldSync: True
-
-        - source: createdby
-          destination: createdby
-          Type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: version
-          destination: version
-          type: Integer
-          shouldSource: false
-          shouldSync: false
-          defaultValue: 0
-
-    - sourceTable: eg_role
-      destinationTable: eg_role
-      sourceTimeZone: Asia/Kolkata
-      columns:
-        - source: id
-          destination: id
-          type: Integer
-          shouldSource: True
-          shouldSync: True
-
-        - source: name
-          destination: name
-          type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: name
-          destination: code
-          type: String
-          shouldSource: True
-          shouldSync: True
-
-        - source: description
-          destination: description
           type: String
           shouldSource: True
           shouldSync: True

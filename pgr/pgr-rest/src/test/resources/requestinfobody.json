@@ -8,6 +8,15 @@
     "key":"xyz",
     "msg_id": null,
     "requester_id":null,
-    "auth_token": null
+    "auth_token": null,
+    "userInfo":{
+        "id":1,
+        "userName":null,
+        "name":null,
+        "type":"SYSTEM",
+        "mobileNumber":null,
+        "emailId":null,
+        "roles":null
+    }
 }
 }

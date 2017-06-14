@@ -74,6 +74,7 @@ class SearchAsset extends React.Component {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              "ordering": false,
+             "bDestroy": true,
              language: {
                 "emptyTable": "No Records"
              }
@@ -116,9 +117,9 @@ class SearchAsset extends React.Component {
     if(type == "sale" && status != "CAPITALIZED")
       return showError("Asset sale/disposal is only possible for assets with status as 'Capitalized'");
     if(type == "revaluate")
-      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');  
+      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
     else if(type == "sale")
-      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');  
+      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
     else
       window.open(`app/asset/create-asset.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
@@ -277,7 +278,7 @@ class SearchAsset extends React.Component {
                       <select id="status" name="status" value={status} onChange={(e)=>{
                               handleChange(e,"status")
                           }}>
-                            <option>Select Status</option>
+                            <option value="">Select Status</option>
                             {renderOption(this.state.statusList)}
                          </select>
                   </div>

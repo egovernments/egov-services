@@ -1608,6 +1608,7 @@ function showAndPrint(currentEmployee) {
 
 function showAndPrint2(currentEmployee) {
     employee = currentEmployee;
+    $("#code").prop("disabled", true);
     printValue("", currentEmployee);
     displayFiles(employee);
 

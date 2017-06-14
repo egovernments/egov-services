@@ -101,18 +101,12 @@ paths:
     post:
       description: Creates a demand reason
       parameters:
-        - name: demand
+        - name: demandReason
           in: body
           description: Request header for the demand reason.
           required: true
           schema:
             $ref: '#/definitions/DemandReasonRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Master
       responses:
@@ -128,7 +122,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /demandreason/{id}/_update:
+  /demandreason/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -138,24 +132,12 @@ paths:
     post:
       description: Updates a demand reason.
       parameters:
-        - name: id
-          in: path
-          description: Primary key for a Demand Reason to be udpated.
-          required: true
-          type: integer
-          format: int64
         - name: demandreason
           in: body
           description: Request header for the demand reason.
           required: true
           schema:
             $ref: '#/definitions/DemandReasonRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Master
       responses:
@@ -236,12 +218,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/InstallmentRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Master
       responses:
@@ -257,7 +233,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /installment/{id}/_update:
+  /installment/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -267,24 +243,12 @@ paths:
     post:
       description: Updates a Installment.
       parameters:
-        - name: id
-          in: path
-          description: Primary key for a installment to be udpated.
-          required: true
-          type: integer
-          format: int64
         - name: installment
           in: body
           description: Request header for the demand reason.
           required: true
           schema:
             $ref: '#/definitions/InstallmentRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Master
       responses:
@@ -379,12 +343,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/DemandRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Demand
       responses:
@@ -400,7 +358,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /{id}/_update:
+  /_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -410,24 +368,12 @@ paths:
     post:
       description: Updates a demand. This only for DCB back update.
       parameters:
-        - name: id
-          in: path
-          description: Primary key for a demand to be udpated.
-          required: true
-          type: integer
-          format: int64
         - name: demand
           in: body
           description: Request header for the demand.
           required: true
           schema:
             $ref: '#/definitions/DemandRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Demand
       responses:
@@ -601,18 +547,12 @@ paths:
     post:
       description: Creates a bill along with its list of bill details
       parameters:
-        - name: billInfo
+        - name: bill
           in: body
           description: Request header for the bill.
           required: true
           schema:
             $ref: '#/definitions/BillRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Bill
       responses:
@@ -889,6 +829,12 @@ definitions:
     type: object
     description: A object holds a payment information against a demand.
     properties:
+      businessService:
+        type: string
+        description: BusinessService code.
+      consumerCode:
+        type: string
+        description: Consumer code of the entity for which the bill is being created.
       receiptNumber:
         type: string
         description: receipt number.
@@ -907,12 +853,6 @@ definitions:
           - CREATED
           - CANCELLED
           - INSTRUMENT_BOUNCED
-      businessService:
-        type: string
-        description: BusinessService code.
-      consumerCode:
-        type: string
-        description: Consumer code of the entity for which the bill is being created.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       tenantId:

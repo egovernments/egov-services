@@ -47,6 +47,30 @@ try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getIt
     revenueBlock = [];
 }
 
+try {
+    rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+        tenantId
+    }).responseJSON;
+
+    if (rentInc && rentInc.constructor == Array) {
+        for (var i = 0; i < rentInc.length; i++) {
+            console.log(rentInc[i]['id']);
+            $(`#rentIncrementMethod.percentage`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`);
+        }
+    }
+} catch (e) {
+    console.log(e);
+}
+
+
+
+try { reasonForCancellation = !localStorage.getItem("reasonForCancellation") || localStorage.getItem("reasonForCancellation") == "undefined" ? (localStorage.setItem("reasonForCancellation", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("reasonForCancellation"))) : JSON.parse(localStorage.getItem("reasonForCancellation")); } catch (e) {
+    console.log(e);
+    reasonForCancellation = [];
+}
+
+
+
 var _type;
 $(document).ready(function() {
     if (window.opener && window.opener.document) {
@@ -226,7 +250,8 @@ $(document).ready(function() {
     //Getting data for user input
     $("input").on("keyup", function() {
         // console.log(this.value);
-        renewAgreement[this.id] = this.value;
+      //  renewAgreement[this.id] = this.value;
+        fillValueToObject(this);
     });
 
     $("textarea").on("keyup", function() {
@@ -514,14 +539,14 @@ $(document).ready(function() {
             "action": data.action
         };
 
+        if(_agrmntDet.wFremarks) {
+            _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
+            delete _agrmntDet.wFremarks;
+        }
+            
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
-            }
-
-            if(_agrmntDet.wFremarks) {
-                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
-                delete _agrmntDet.wFremarks;
             }
 
             var response = $.ajax({
@@ -538,6 +563,8 @@ $(document).ready(function() {
                 },
                 contentType: 'application/json'
             });
+
+
             if (response["status"] === 201) {
                 window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
@@ -596,6 +623,20 @@ $(document).ready(function() {
     $("#renewAgreementForm").validate({
         rules: final_validatin_rules,
         submitHandler: function(form) {
+          var response = $.ajax({
+              url: baseUrl + `/lams-services/agreements/_renew/?tenantId=` + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data: JSON.stringify({
+                  RequestInfo: requestInfo,
+                  Agreement: agreementDetails
+              }), 
+              async: false,
+              headers: {
+                  'auth-token': authToken
+              },
+              contentType: 'application/json'
+          });
 
         }
     })
@@ -603,7 +644,26 @@ $(document).ready(function() {
     $("#cancelAgreementForm").validate({
         rules: final_validatin_rules,
         submitHandler: function(form) {
+           var response = $.ajax({
+               url: baseUrl + `/lams-services/agreements/_cancel/?tenantId=` + tenantId,
+               type: 'POST',
+               dataType: 'json',
+               data: JSON.stringify({
+                   RequestInfo: requestInfo,
+                   Agreement: agreementDetails
+               }),
+               async: false,
+               headers: {
+                   'auth-token': authToken
+               },
+               contentType: 'application/json'
+           });
 
+           if (response["status"] === 201) {
+               window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+           } else {
+               showError(response["statusText"]);
+           }
         }
     })
 });

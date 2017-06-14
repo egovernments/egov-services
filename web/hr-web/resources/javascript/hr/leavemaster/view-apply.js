@@ -1,22 +1,7 @@
 class ViewApply extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],leaveSet:{
-      "employee": "",
-      "name":"",
-      "code":"",
-       "leaveType": {
-       	"id" : ""
-       },
-       "fromDate" : "",
-       "toDate": "",
-       "availableDays": "",
-       "leaveDays":"",
-       "reason": "",
-       "status": "",
-       "stateId": "",
-       "tenantId" : tenantId
-     }, _status:[], modified:false
+    this.state={list:[], _status:[], modified:false
   }
   this.setInitialState=this.setInitialState.bind(this);
 }
@@ -117,7 +102,7 @@ close() {
 
 render() {
   let {list,_status}=this.state;
-  let {employee,name,code,leaveType,fromDate,toDate,availableDays,leaveDays,reason}=this.state.leaveSet;
+
 
 const renderBody=function() {
   if(list.length>0) {

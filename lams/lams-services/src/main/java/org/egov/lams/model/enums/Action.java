@@ -30,7 +30,7 @@ public enum Action {
 	@JsonCreator
 	public static Action fromValue(String text) {
 		for (Action b : Action.values()) {
-			if (String.valueOf(b.value).equals(text)) {
+			if (String.valueOf(b.value).equalsIgnoreCase(text)) {
 				return b;
 			}
 		}

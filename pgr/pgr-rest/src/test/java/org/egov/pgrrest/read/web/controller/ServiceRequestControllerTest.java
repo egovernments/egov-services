@@ -89,57 +89,13 @@ public class ServiceRequestControllerTest {
             .andExpect(content().json(resources.getFileContents("updateComplaintResponse.json")));
     }
 
+
     @Test
-    public void test_should_return_service_requests_for_given_search_criteria() throws Exception {
-        String crn = "1234";
-        String receivingMode = "MANUAL";
-        String receivingCenter = "Commissioner Office";
-        String stateId = "1";
-        Long assigneeId = 2L;
-        String address = null;
-        List<String> mediaUrls = new ArrayList<>();
-        mediaUrls.add(null);
-        mediaUrls.add(null);
-        String jurisdictionId = "1";
-        String description = null;
-        String mobileNumber = null;
-        String emailId = null;
+    public void test_should_return_masked_userdetails_in_service_requests_for_anonymous_user_search() throws Exception {
+
         String name = "kumar";
-        long id = 67;
-        boolean anonymousUser = false;
-        AuthenticatedUser user = AuthenticatedUser.builder()
-            .mobileNumber(mobileNumber)
-            .email(emailId)
-            .name(name)
-            .id(id)
-            .anonymousUser(anonymousUser)
-            .type(UserType.CITIZEN)
-            .tenantId("tenantId")
-            .build();
-        final Requester domainComplainant =
-            new Requester("kumar", null, null, "mico layout", "user");
-        final Coordinates coordinates = new Coordinates(0.0, 0.0);
-        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(coordinates,
-            null, "34");
-        ServiceRequest complaint = ServiceRequest.builder()
-            .authenticatedUser(user)
-            .crn(crn)
-            .serviceRequestType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
-            .address(address)
-            .mediaUrls(mediaUrls)
-            .serviceRequestLocation(serviceRequestLocation)
-            .requester(domainComplainant)
-            .tenantId(jurisdictionId)
-            .description(description)
-            .state(stateId)
-            .assignee(assigneeId)
-            .receivingCenter(receivingCenter)
-            .receivingMode(receivingMode)
-            .serviceRequestStatus("FORWARDED")
-            .childLocation("Gadu Veedhi")
-            .department(3L)
-            .tenantId("tenantId")
-            .build();
+        ServiceRequest complaint = getServiceRequestForSearch();
+
         ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
             .assignmentId(10L)
             .endDate(null)
@@ -158,6 +114,61 @@ public class ServiceRequestControllerTest {
             .tenantId("tenantId")
             .pageSize(20)
             .fromIndex(2)
+            .isAnonymous(true)
+            .build();
+
+        List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
+        when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
+
+        mockMvc.perform(
+            post("/seva/_search")
+                .param("tenantId", "tenantId")
+                .param("serviceRequestId", "serid_123")
+                .param("serviceCode", "serviceCode_123")
+                .param("status", "REGISTERED")
+                .param("status", "FORWARDED")
+                .param("assignmentId", "10")
+                .param("userId", "10")
+                .param("name", "kumar")
+                .param("emailId", "abc@gmail.com")
+                .param("mobileNumber", "74742487428")
+                .param("receivingMode", "5")
+                .param("locationId", "4")
+                .param("childLocationId", "5")
+                .param("fromIndex", "2")
+                .param("sizePerPage", "20")
+                .content(resources.getFileContents("anonymousrequestinfobody.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(resources.getFileContents("getServiceRequests.json")));
+    }
+
+    @Test
+    public void test_should_return_service_requests_for_given_search_criteria() throws Exception {
+
+        String name = "kumar";
+        ServiceRequest complaint = getServiceRequestForSearch();
+
+        ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
+            .assignmentId(10L)
+            .endDate(null)
+            .escalationDate(null)
+            .lastModifiedDatetime(null)
+            .serviceCode("serviceCode_123")
+            .serviceRequestId("serid_123").startDate(null)
+            .status(Arrays.asList("REGISTERED", "FORWARDED"))
+            .userId(10L)
+            .emailId("abc@gmail.com")
+            .mobileNumber("74742487428")
+            .name(name)
+            .locationId(4L)
+            .childLocationId(5L)
+            .receivingMode(5L)
+            .tenantId("tenantId")
+            .pageSize(20)
+            .fromIndex(2)
+            .isAnonymous(false)
             .build();
 
         List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
@@ -248,6 +259,60 @@ public class ServiceRequestControllerTest {
             .serviceRequestType(new ServiceRequestType(null, "complaintCode", null))
             .attributeEntries(new ArrayList<>())
             .build();
+    }
+
+    private ServiceRequest getServiceRequestForSearch(){
+        String crn = "1234";
+        String receivingMode = "MANUAL";
+        String receivingCenter = "Commissioner Office";
+        String stateId = "1";
+        Long assigneeId = 2L;
+        String address = null;
+        List<String> mediaUrls = new ArrayList<>();
+        mediaUrls.add(null);
+        mediaUrls.add(null);
+        String jurisdictionId = "1";
+        String description = null;
+        String mobileNumber = null;
+        String emailId = null;
+        String name = "kumar";
+        long id = 67;
+        boolean anonymousUser = false;
+        AuthenticatedUser user = AuthenticatedUser.builder()
+            .mobileNumber(mobileNumber)
+            .email(emailId)
+            .name(name)
+            .id(id)
+            .anonymousUser(anonymousUser)
+            .type(UserType.CITIZEN)
+            .tenantId("tenantId")
+            .build();
+        final Requester domainComplainant =
+            new Requester("kumar", null, null, "mico layout", "user");
+        final Coordinates coordinates = new Coordinates(0.0, 0.0);
+        final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(coordinates,
+            null, "34");
+        ServiceRequest complaint = ServiceRequest.builder()
+            .authenticatedUser(user)
+            .crn(crn)
+            .serviceRequestType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
+            .address(address)
+            .mediaUrls(mediaUrls)
+            .serviceRequestLocation(serviceRequestLocation)
+            .requester(domainComplainant)
+            .tenantId(jurisdictionId)
+            .description(description)
+            .state(stateId)
+            .assignee(assigneeId)
+            .receivingCenter(receivingCenter)
+            .receivingMode(receivingMode)
+            .serviceRequestStatus("FORWARDED")
+            .childLocation("Gadu Veedhi")
+            .department(3L)
+            .tenantId("tenantId")
+            .build();
+
+        return complaint;
     }
 
     private AuthenticatedUser getCitizen() {

@@ -2,7 +2,11 @@ package org.egov.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PropertyTypeRequest {
+	
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	private List<PropertyType> propertyTypes;

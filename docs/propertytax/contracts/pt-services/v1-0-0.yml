@@ -27,7 +27,6 @@ schemes:
   - https
 basePath: '/properties/v1'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
-
 paths:
   /_search:
     post:
@@ -255,9 +254,9 @@ definitions:
         format: date
         description: There will be work flow to create a new property in a system. The assessment date is the final approval and UPIC no generation date.
       occupancyDate:
-        type: string
-        format: date
-        description: Property is constructed but the tax will be applicable only from the occupation date. System capture that date here.
+        type: integer
+        format: int64
+        description: Property is constructed but the tax will be applicable only from the occupation date (time in epoch). System capture that date here.
       gisRefNo:
         type: string
         description: Property tax system will be integrated with GIS system. Here we capture the GIS ref. no.
@@ -271,6 +270,11 @@ definitions:
         type: boolean
         description: There are different transactions can be performed on a property and all the transactions goes through the work flow. If one workflow is happening system should not allow other work flow on a same property so, when any work flow starts we flag this field as true and when the same work flow ends we flag this field as false.
         default: false
+      demands:
+        description: Its a array of demand ids.
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
       boundary:
         $ref: "#/definitions/PropertyLocation"
       active:
@@ -495,6 +499,9 @@ definitions:
         description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
         maxLength: 64
         minLength: 1
+      taxCalculations:
+        type: string
+        description: The json (array of 'https://github.com/egovernments/egov-services/blob/master/docs/propertytax/contracts/pt-calculator/v1.0.0.yml#/definitions/TaxCalculation' )returned by tax calculator API
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
     required:
@@ -650,7 +657,7 @@ definitions:
         description: usage of the Unit
         maxLength: 16
         minLength: 1
-      occupancy:
+      occupancyType:
         type: string
         description: occupancy of the Unit
         maxLength: 16
@@ -720,7 +727,7 @@ definitions:
     - unitNo
     - builtupArea
     - usage
-    - occupancy
+    - occupancyType
     - structure
     
   WorkFlowDetails:

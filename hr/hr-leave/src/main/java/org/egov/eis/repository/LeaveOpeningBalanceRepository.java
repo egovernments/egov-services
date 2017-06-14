@@ -93,8 +93,7 @@ public class LeaveOpeningBalanceRepository {
 
 		List<Object[]> batchArgs = new ArrayList<>();
 		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-		        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getUserName(),
-		        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getTenantId());
+		        leaveOpeningBalanceRequest.getRequestInfo());
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			Object[] lobRecord = { leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getCalendarYear(),
 					leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getNoOfDays(),
@@ -118,8 +117,7 @@ public class LeaveOpeningBalanceRepository {
 
 		List<Object[]> batchArgs = new ArrayList<>();
 		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-                        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getUserName(),
-                        leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getTenantId());
+                        leaveOpeningBalanceRequest.getRequestInfo());
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			Object[] lobRecord = { leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getCalendarYear(),
 					leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getNoOfDays(),

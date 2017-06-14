@@ -17,19 +17,19 @@ info:
   # Path must be in small case.
   ######################################################
   
-  title: eGov Property Tax Calculator
+  title: Property Tax Calculator
   description: |
-    APIs for Property Tax calcuation. This modules handles the tax calculation and returns back the detailed tax information.
+    APIs for Property Tax calcuation. This service handles the tax calculation and returns back the detailed tax information.
   contact:
     name: Ramki
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/property/v1'
+basePath: '/properties/taxes/v1'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
-  /_calculateTax:
+  /_calculate:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -44,7 +44,7 @@ paths:
           description: Details for the property + RequestInfo meta data + other conguration params.
           required: true
           schema:
-            $ref: '#/definitions/PropertyRequest'
+            $ref: '#/definitions/CalculationRequest'
       
       responses:
       ####################################################
@@ -60,7 +60,494 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Calculation  
+
+  /factor/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Search the calculation factors in the system based on the criterion specified.
+      description: |
+        Search and get calculation factor(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed calculation factor will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of calculation factors as defined in CalculationFactorResponse model.
         
+        By default results will be sorted by fromdate and factorType and code
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: factorType
+          in: query
+          description: type of the factor for which factor to be returned.
+          required: true
+          type: string
+        - name: validDate
+          in: query
+          description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
+          required: true
+          type: string
+          format: date
+        - name: code
+          in: query
+          description: code for the factor type
+          required: true
+          type: string
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns Calculation Factors.
+          schema:
+            $ref: '#/definitions/CalculationFactorResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /factor/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      description: Creates a Calculation Factor
+      parameters:
+        - name: calculationFactor
+          in: body
+          description: Request header for the Calculation Factor.
+          required: true
+          schema:
+            $ref: '#/definitions/CalculationFactorRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Calculation Factor(s) created sucessfully.
+          schema:
+            $ref: '#/definitions/CalculationFactorResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /factor/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+    post:
+      description: Updates a Calculation Factor.
+      parameters:
+        - name: calculationFactor
+          in: body
+          description: Request header for the Calculation Factor.
+          required: true
+          schema:
+            $ref: '#/definitions/CalculationFactorRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: Update CalculationFactor(s) successful
+          schema:
+            $ref: '#/definitions/CalculationFactorResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /guidancevalue/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Search the Guidance Values in the system based on the criterion specified.
+      description: |
+        Search and get Guidance Value(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed Guidance Value will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of Guidance Values as defined in GuidanceValueResponse model.
+        
+        By default results will be sorted by from date
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: boundary
+          in: query
+          description: boundary for which guidance value to be returned.
+          required: true
+          type: string
+        - name: structure
+          in: query
+          description: Structure code of the property for which guidance value to be returned.
+          required: false
+          type: string
+        - name: usage
+          in: query
+          description: Usage code of the property for which guidance value to be returned.
+          required: false
+          type: string
+        - name: subUsage
+          in: query
+          description: Sub Usage code of the property for which guidance value to be returned.
+          required: false
+          type: string
+        - name: occupancy
+          in: query
+          description: Occupancy code of the property for which guidance value to be returned.
+          required: false
+          type: string
+        - name: validDate
+          in: query
+          description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
+          required: true
+          type: string
+          format: date
+        - name: code
+          in: query
+          description: code for the factor type
+          required: true
+          type: string
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns Guidance Values.
+          schema:
+            $ref: '#/definitions/GuidanceValueResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /guidancevalue/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      description: Creates a Guidance Value
+      parameters:
+        - name: guidanceValue
+          in: body
+          description: Request header for the Guidance Value.
+          required: true
+          schema:
+            $ref: '#/definitions/GuidanceValueRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Guidance Value(s) created sucessfully.
+          schema:
+            $ref: '#/definitions/GuidanceValueResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /guidancevalue/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+    post:
+      description: Updates a Guidance Value.
+      parameters:
+        - name: guidanceValue
+          in: body
+          description: Request header for the Guidance Value.
+          required: true
+          schema:
+            $ref: '#/definitions/GuidanceValueRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: Update guidanceValue(s) successful
+          schema:
+            $ref: '#/definitions/GuidanceValueResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxrates/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Search the Tax Rates in the system based on the criterion specified.
+      description: |
+        Search and get Tax Rate(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed Tax Rate will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of Tax Rates as defined in TaxRatesResponse model.
+        
+        By default results will be sorted by from date
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: taxHead
+          in: query
+          description: Tax head for which Tax Rate to be returned.
+          required: true
+          type: string
+        - name: validDate
+          in: query
+          description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
+          required: true
+          type: string
+          format: date
+        - name: parentTaxHead
+          in: query
+          description: Dependent Tax head for which Tax Rate to be returned.
+          required: false
+          type: string
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns Tax Rates.
+          schema:
+            $ref: '#/definitions/TaxRatesResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxrates/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      description: Creates a Tax Rate
+      parameters:
+        - name: taxRates
+          in: body
+          description: Request header for the Tax Rate.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxRatesRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Tax Rate(s) created sucessfully.
+          schema:
+            $ref: '#/definitions/TaxRatesResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxrates/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+    post:
+      description: Updates a Tax Rate.
+      parameters:
+        - name: taxRates
+          in: body
+          description: Request header for the Tax Rate.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxRatesRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: Update taxRates(s) successful
+          schema:
+            $ref: '#/definitions/TaxRatesResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxperiods/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Search the Tax Periods in the system based on the criterion specified.
+      description: |
+        Search and get Tax Period(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed Tax Period will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of Tax Periods as defined in TaxPeriodResponse model.
+        
+        By default results will be sorted by fromdate
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: validDate
+          in: query
+          description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
+          required: true
+          type: string
+          format: date
+        - name: code
+          in: query
+          description: code for the tax period
+          required: true
+          type: string
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns Tax Periods.
+          schema:
+            $ref: '#/definitions/TaxPeriodResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxperiods/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      description: Creates a Tax Period
+      parameters:
+        - name: taxPeriods
+          in: body
+          description: Request header for the Tax Period.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxPeriodRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Tax Period(s) created sucessfully.
+          schema:
+            $ref: '#/definitions/TaxPeriodResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxperiods/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+    post:
+      description: Updates a Tax Period.
+      parameters:
+        - name: taxPeriods
+          in: body
+          description: Request header for the Tax Period.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxPeriodRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: Update taxPeriods(s) successful
+          schema:
+            $ref: '#/definitions/TaxPeriodResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'            
+            
 definitions:
 ########################################################
 #RequestInfo and ResponseInfo object should be reffered from Common.
@@ -69,7 +556,7 @@ definitions:
 ########################################################
   CommonTaxDetails:
     type: object
-    description: Common tax details object
+    description: Common tax details which are calculated or required for calculation at property and unit level
     properties:
       occupancyDate:
         type: string
@@ -107,28 +594,33 @@ definitions:
         type: number
         format: double
         description: Total tax for the unit.
+      headWiseTaxes:
+        description: Head wise taxes
+        type: array
+        items:
+          $ref: "#/definitions/HeadWiseTax"
+    required:
+    - occupancyDate
+    - effectiveDate
+    - calculatedARV
+    - totalTax
         
-  Taxcalculation:
+  TaxCalculation:
     type: object
     description: Details of tax calculation
     properties:
-      upicNumber:
+      fromDate:
+        description: start date from when the tax is applicable
         type: string
-        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
-      propertyType:
+        format: date
+      toDate:
+        description: end date till when the tax is applicable
         type: string
-        description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
-        maxLength: 16
-        minLength: 1
-      annualRentalValue:
-        type: number
-        format: double
-        description: Annual Rental Value for a property
-      boundary:
+        format: date
+      effectiveDate:
         type: string
-        description: The boundary for which this Guidance value is.
-        maxLength: 16
-        minLength: 1
+        format: date
+        description: The date from which tax is effective
       propertyTaxes:
         $ref: "#/definitions/CommonTaxDetails"
       unitTaxes:
@@ -136,6 +628,12 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/UnitTax"
+    required:
+    - fromDate
+    - toDate
+    - effectiveDate
+    - propertyTaxes
+    - unitTaxes
       
   UnitTax:
     type: object
@@ -169,11 +667,9 @@ definitions:
         description: The subUsage for which this Guidance value is.
       unitTaxes:
         $ref: "#/definitions/CommonTaxDetails"
-      headTaxes:
-        description: Unit Taxes
-        type: array
-        items:
-          $ref: "#/definitions/HeadWiseTax"
+    required:
+    - assessableArea
+    - unitTaxes
         
   HeadWiseTax:
     type: object
@@ -181,19 +677,6 @@ definitions:
       taxName:
         type: string
         description: name of the tax
-      taxDetails:
-        description: Tax details
-        type: array
-        items:
-          $ref: "#/definitions/TaxDetail"
-      
-  TaxDetail:
-    type: object
-    properties:
-      effectiveDate:
-        type: string
-        format: date
-        description: The date from which tax is effective
       taxDays:
         type: integer
         format: int32
@@ -202,32 +685,78 @@ definitions:
         type: number
         format: double
         description: Tax Value.
+    required:
+    - taxName
+    - taxValue
         
+  CalculationRequest:
+    description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      property:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/Property'
+      taxEffectiveDate:
+        type: integer
+        format: int64
+        description: The tax effective date (time in epoch) has to be provided in floor/unit info which is part of 'Property'. There will be tax rule changes due to GO across the city, that time this property value is mandatory. If this value is sent calculator will not read from floor/unit otherwise will be taken from floor/unit.
+      calculationType:
+        type: string
+        description: Type of calculation
+        enum:
+         - ARV
+         - CVS
+         - UAS
+      taxPeriod:
+        type: string
+        description: Tax to be calculated for which type of period
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
+    required:
+      - requestInfo
+      - property
+      - calculationType
+      - taxPeriod
+      
   CalculationResponse:
     description: Contract class to send response.
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      properties:
-          $ref: '#/definitions/Taxcalculation'
+      taxes:
+        type: array
+        items:
+          $ref: '#/definitions/TaxCalculation'
         
-  OccuapancyFactor:
+  CalculationFactor:
     type: object
     properties:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the OccuapancyFactor
+        description: Unique Identifier of the GuidanceValue
       tenantId:
         type: string
-        description: tenant id of the OccuapancyFactor
+        description: tenant id of the CalculationFactor
         maxLength: 128
         minLength: 4
-      code:
+      factorCode:
         type: string
-        description: code of the OccuapancyFactor
+        description: code for the respctive type of the factor from property master.
         maxLength: 16
         minLength: 4
+      factorType:
+        type: string
+        enum:
+          - occupancy
+          - usage
+          - structure
+          - propertytype
+          - age
+        description: Factor Value for Occupancy.
       factorValue:
         type: number
         format: double
@@ -245,159 +774,39 @@ definitions:
     required:
     - id
     - tenantId
-    - code
+    - factorCode
+    - factorType
     - factorValue
+    - fromDate
+    - toDate
+
     
-  UsageFactor:
-    type: object
+  CalculationFactorRequest:
     properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the UsageFactor
-      tenantId:
-        type: string
-        description: tenant id of the UsageFactor
-        maxLength: 128
-        minLength: 4
-      code:
-        type: string
-        description: code of the UsageFactor
-        maxLength: 16
-        minLength: 4
-      factorValue:
-        type: number
-        format: double
-        description: Factor Value for Usage.
-      fromDate:
-        type: string
-        format: date
-        description: Factor value effective date.
-      toDate:
-        type: string
-        format: date
-        description: Factor value end date.
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-    required:
-    - id
-    - tenantId
-    - code
-    - factorValue
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      calculationFactors:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/CalculationFactor'
+    type: object
     
-  StructureFactor:
-    type: object
+  CalculationFactorResponse:
     properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the StructureFactor
-      tenantId:
-        type: string
-        description: tenant id of the StructureFactor
-        maxLength: 128
-        minLength: 4
-      code:
-        type: string
-        description: code of the StructureFactor
-        maxLength: 16
-        minLength: 4
-      factorValue:
-        type: number
-        format: double
-        description: Factor Value for Usage.
-      fromDate:
-        type: string
-        format: date
-        description: Factor value effective date.
-      toDate:
-        type: string
-        format: date
-        description: Factor value end date.
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-    required:
-    - id
-    - tenantId
-    - code
-    - factorValue
-    
-  PropertyTypeFactor:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      calculationFactors:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/CalculationFactor'
     type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the PropertyTypeFactor
-      tenantId:
-        type: string
-        description: tenant id of the PropertyTypeFactor
-        maxLength: 128
-        minLength: 4
-      code:
-        type: string
-        description: code of the PropertyTypeFactor
-        maxLength: 16
-        minLength: 4
-      factorValue:
-        type: number
-        format: double
-        description: Factor Value for Usage.
-      fromDate:
-        type: string
-        format: date
-        description: Factor value effective date.
-      toDate:
-        type: string
-        format: date
-        description: Factor value end date.
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-    required:
-    - id
-    - tenantId
-    - code
-    - factorValue
-    
-  AgeFactor:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the AgeFactor
-      tenantId:
-        type: string
-        description: tenant id of the AgeFactor
-        maxLength: 128
-        minLength: 4
-      code:
-        type: string
-        description: code of the AgeFactor
-        maxLength: 16
-        minLength: 4
-      factorValue:
-        type: number
-        format: double
-        description: Factor Value for Usage.
-      fromDate:
-        type: string
-        format: date
-        description: Factor value effective date.
-      toDate:
-        type: string
-        format: date
-        description: Factor value end date.
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-    required:
-    - id
-    - tenantId
-    - code
-    - factorValue
     
   GuidanceValue:
     type: object
+    description: Guidance Value
     properties:
       id:
         type: integer
@@ -456,28 +865,175 @@ definitions:
     - id
     - tenantId
     - boundary
+    - fromDate
+    - toDate
     - value
     
-  PropertyRequest:
-    description: Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
+  GuidanceValueRequest:
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      property:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/Property'
-      taxEffectiveDate:
+      guidanceValues:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/GuidanceValue'
+    type: object
+    
+  GuidanceValueResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      guidanceValues:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/GuidanceValue'
+    type: object
+    
+  TaxRates:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the TaxRates
+      tenantId:
+        type: string
+        description: tenant id of the GuidanceValue
+        maxLength: 128
+        minLength: 4
+      taxHead:
+        type: string
+        description: The tax head code for which the tax rates are defined.
+      dependentTaxHead:
+        type: string
+        description: The dependent tax head. Some taxes are defined on another tax value like Library cess on General tax.
+      fromDate:
         type: string
         format: date
-        description: The tax effective date has to be provided in floor/unit info which is part of 'Property'. There will be tax rule changes due to GO across the city, that time this property value is mandatory. If this value is sent calculator will not read from floor/unit otherwise will be taken from floor/unit.
-      calculationType:
+        description: start date from when the tax rate is applicable
+      toDate:
         type: string
-        description: Type of calculation
-        enum:
-         - ARV
-         - CVS
-         - UAS
+        format: date
+        description: start date from when the tax rate is applicable
+      fromValue:
+        type: number
+        format: double
+        description: from ARV amount from which the tax rate is applicable
+      toValue:
+        type: number
+        format: double
+        description: to ARV amount to which the tax rate is applicable
+      ratePercentage:
+        type: number
+        format: double
+        description: The tax rate percentage.
+      taxFlatValue:
+        type: number
+        format: double
+        description: for some ARV ranges there might not be percentages, the flat amounts will be defined.
     required:
-      - requestInfo
-      - property
-      - calculationType
+      - id
+      - tenantId
+      - taxHead
+      - fromDate
+      - toDate
+      - fromValue
+      - toValue
+      
+  TaxRatesRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      taxRates:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/TaxRates'
+    type: object
+    
+  TaxRatesResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      taxRates:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/TaxRates'
+    type: object
 
+  TaxPeriod:
+    type: object
+    description: A object holds a tax periods.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the TaxRates
+      tenantId:
+        type: string
+        description: tenant id of the GuidanceValue
+        maxLength: 128
+        minLength: 4
+      fromDate:
+        type: string
+        format: date
+        description: Start date for tax period
+      toDate:
+        type: string
+        format: date
+        description: End date for tax period
+      code:
+        type: string
+        description: representation of a tax period.
+        maxLength: 128
+        minLength: 4
+      periodType:
+        type: string
+        description: type of installment, its for monthly, querterly, halfyearly or yearly.
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
+      financialYear:
+        type: string
+        description: financial year for which this period belongs.
+        maxLength: 64
+        minLength: 4
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - id
+      - fromDate
+      - toDate
+      - code
+      - periodType
+      - tenantId
+    
+  TaxPeriodRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      taxPeriods:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/TaxPeriod'
+    type: object
+    
+  TaxPeriodResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      taxPeriods:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/TaxPeriod'
+    type: object

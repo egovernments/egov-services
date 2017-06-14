@@ -462,13 +462,19 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     
-    /source/_update:
+    /source/{id}/_update:
       post:
         summary: update source
         description: update source
         tags:
           - Source
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
           - name: Receiving Mode
             in: body
             description: required parameters have to be populated
@@ -540,13 +546,19 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # receiving center API
-    /channel/_update:
+    /channel/{id}/_update:
       post:
         summary: update channel
         description: update channel
         tags:
           - channel
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
           - name: Receiving Center
             in: body
             description: required parameters have to be populated
@@ -618,13 +630,20 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Bulk Router Type API
-    /router/_update:
+    /router/{id}/_update:
       post:
         summary: updates router
         description: updates router
         tags:
           - router
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
+            
           - name: Router
             in: body
             description: required parameters have to be populated
@@ -695,13 +714,20 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Escalation Time Type API
-    /escalation/_update:
+    /escalation/{id}/_update:
       post:
         summary: updates escalation time type
         description: updates escalation time type
         tags:
           - escalation
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
+            
           - name: Update Escalation
             in: body
             description: required parameters have to be populated

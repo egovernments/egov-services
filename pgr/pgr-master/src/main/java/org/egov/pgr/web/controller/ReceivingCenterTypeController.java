@@ -77,7 +77,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receivingcenter")
+@RequestMapping("/channel")
 public class ReceivingCenterTypeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingCenterTypeController.class);
@@ -115,16 +115,16 @@ public class ReceivingCenterTypeController {
 
 	}
 	
-    @PostMapping(value = "/_update/{receivingcenterid}")
+    @PostMapping(value = "/{id}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ReceivingCenterTypeReq centerTypeRequest, final BindingResult errors,
-            @PathVariable("receivingcenterid") final long receivingcenterid) {
+            @PathVariable("id") final long id) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("ReceivingCenterTypeRequest::" + centerTypeRequest);
-        centerTypeRequest.getCenterType().setId(receivingcenterid);
+        centerTypeRequest.getCenterType().setId(id);
 
         final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest);
         if (!errorResponses.isEmpty())

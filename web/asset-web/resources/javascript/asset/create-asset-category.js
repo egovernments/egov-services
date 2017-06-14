@@ -387,6 +387,7 @@ class CreateAsset extends React.Component {
               'auth-token': authToken
             },
             success: function(res) {
+              localStorage.removeItem("assetCategories");
               window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
             },
             error: function(err) {

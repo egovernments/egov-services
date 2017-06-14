@@ -114,7 +114,7 @@ public class PopertyTypePipeSizeTypeController {
 
     }
 
-    @PostMapping(value = "/_update/{propertyPipeSizeId}")
+    @PostMapping(value = "/{propertyPipeSizeId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest,
             final BindingResult errors,

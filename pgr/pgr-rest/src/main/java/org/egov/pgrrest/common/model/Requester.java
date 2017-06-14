@@ -39,7 +39,10 @@ public class Requester {
          Matcher m = p.matcher(email);
          return m.matches();
   }
-     
-     
-     
+
+  //This method is used to mask citizens mobile number and email
+  public void maskMobileAndEmailDetails(){
+      this.mobile = null;
+      this.email = null;
+  }
 }

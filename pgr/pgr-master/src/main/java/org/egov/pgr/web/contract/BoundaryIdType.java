@@ -17,6 +17,6 @@ import lombok.ToString;
 @Builder
 public class BoundaryIdType {
 	
-	private Integer boundaryType;
+	private int boundaryType;
 
 }

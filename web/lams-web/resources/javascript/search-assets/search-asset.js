@@ -17,7 +17,8 @@ class AssetSearch extends React.Component {
         assetCategories: [],
         locality: [],
         electionwards: [],
-        modify: false
+        modify: false,
+        categories: ["land", "shop", "market", "kalyana mandapam", "parking space", "slaughter house", "usufruct", "community toilet complex", "fish tanks", "parks"]
     }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
@@ -156,6 +157,7 @@ class AssetSearch extends React.Component {
 
 
   render() {
+    let _this = this;
     let {handleChange,search,updateTable,handleSelectChange}=this;
     let {isSearchClicked,list, electionwards}=this.state;
     let {
@@ -203,7 +205,7 @@ class AssetSearch extends React.Component {
     }
 
     const showActions = function(item) {
-      if(!item.hasAgreement) {
+      if(!item.hasAgreement && _this.state.categories.indexOf(item.assetCategory.name.toLowerCase()) > -1) {
         return (
           <div className="styled-select">
               <select id="myOptions" onChange={(e)=>{

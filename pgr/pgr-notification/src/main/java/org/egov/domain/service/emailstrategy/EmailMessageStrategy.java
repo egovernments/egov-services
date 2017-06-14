@@ -1,6 +1,7 @@
-package org.egov.domain.service;
+package org.egov.domain.service.emailstrategy;
 
-import org.egov.domain.model.*;
+import org.egov.domain.model.EmailMessageContext;
+import org.egov.domain.model.NotificationContext;
 
 public interface EmailMessageStrategy {
     boolean matches(NotificationContext context);

@@ -37,35 +37,51 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.model;
 
-package org.egov.wcms.model.enums;
+import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-public enum SupplyType {
-    REGULAR("REGULAR"), SEMIBULK("SEMI BULK"), BULK("BULK");
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class SupplyType {
 
-    private String value;
+    public static final String SEQ_SUPPLYTYPE="seq_egwtr_supply_type";
+    
+    @NotNull
+    private Long id;
 
-    SupplyType(final String value) {
-        this.value = value;
-    }
+    @NotNull
+    @Length(min = 3, max = 20)
+    private String code;
+    
+    @NotNull
+    @Length(min = 3, max = 100)
+    private String name;
+    
+    @Length(max = 250)
+    private String description;
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    @NotNull
+    private Boolean active;
+    
+    private AuditDetails auditDeatils;
 
-    @JsonCreator
-    public static SupplyType fromValue(final String passedValue) {
-        for (final SupplyType obj : SupplyType.values())
-            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
-                return obj;
-        return null;
-    }
-
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
 }

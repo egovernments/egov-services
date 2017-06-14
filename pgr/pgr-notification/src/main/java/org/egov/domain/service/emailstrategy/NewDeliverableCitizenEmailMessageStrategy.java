@@ -1,33 +1,34 @@
-package org.egov.domain.service;
+package org.egov.domain.service.emailstrategy;
 
-import org.egov.domain.model.*;
+import org.egov.domain.model.EmailMessageContext;
+import org.egov.domain.model.NotificationContext;
+import org.egov.domain.model.SevaRequest;
+import org.egov.domain.model.Tenant;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class ProcessingFeeEnteredCitizenEmailMessageStrategy implements EmailMessageStrategy {
-    private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_deliverable_service_processing_fee_entered";
-    private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_deliverable_service_processing_fee_entered";
+public class NewDeliverableCitizenEmailMessageStrategy implements EmailMessageStrategy {
+    private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_created_deliverable_service";
+    private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_created_deliverable_service";
 
     @Override
     public boolean matches(NotificationContext context) {
         return context.getServiceType().isDeliverableType()
-            && context.getSevaRequest().isInProgress()
-            && context.getSevaRequest().isEmployeeLoggedIn()
-            && context.getSevaRequest().isProcessingFeePresent()
+            && context.getSevaRequest().isCreate()
             && isNotEmpty(context.getSevaRequest().getRequesterEmail());
     }
 
     @Override
     public EmailMessageContext getMessageContext(NotificationContext context) {
         return EmailMessageContext.builder()
-            .email(context.getSevaRequest().getRequesterEmail())
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
             .bodyTemplateValues(getBodyTemplate(context.getSevaRequest(), context.getTenant()))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
             .subjectTemplateValues(getSubjectTemplateValues(context.getSevaRequest()))
+            .email(context.getSevaRequest().getRequesterEmail())
             .build();
     }
 
@@ -35,14 +36,13 @@ public class ProcessingFeeEnteredCitizenEmailMessageStrategy implements EmailMes
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
         builder.put("citizenName", sevaRequest.getRequesterName());
         builder.put("crn", sevaRequest.getCrn());
-        builder.put("fee", sevaRequest.getProcessingFee());
         builder.put("serviceName", sevaRequest.getServiceTypeName());
-        builder.put("ulbGrade", tenant.getUlbGrade());
-        builder.put("ulbName", tenant.getName());
+        builder.put("ULBName", tenant.getName());
         return builder.build();
     }
 
     private Map<Object, Object> getSubjectTemplateValues(SevaRequest sevaRequest) {
-        return ImmutableMap.of("crn", sevaRequest.getCrn());
+        return ImmutableMap.of("crn", sevaRequest.getCrn(),
+            "statusLowerCase",sevaRequest.getStatusName().toLowerCase());
     }
 }

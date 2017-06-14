@@ -1,6 +1,7 @@
 package org.egov.domain.service;
 
 import org.egov.domain.model.*;
+import org.egov.domain.service.emailstrategy.EmailMessageStrategy;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.junit.Before;
 import org.junit.Test;

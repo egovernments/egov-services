@@ -9,7 +9,8 @@ class EmployeePromotion extends React.Component {
       name:"",
       code:"",
       departmentId:"",
-      designationId:""
+      designationId:"",
+      positionId:""
     },
     departmentId:"",
     designationId:"",
@@ -152,7 +153,8 @@ componentWillUpdate() {
               name: obj.name,
               code: obj.code,
               departmentId:obj.assignments[ind].department,
-              designationId:obj.assignments[ind].designation
+              designationId:obj.assignments[ind].designation,
+              positionId:obj.assignments[ind].position
             }
           }
         })
@@ -254,6 +256,24 @@ componentWillUpdate() {
                               onChange={(e)=>{ handleChange(e,"employeeid","designationId")}} >
                             <option value="">Select Designation</option>
                             {renderOption(this.state.designationList)}
+                           </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label htmlFor="">Position  </label>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="styled-select">
+                            <select id="positionId" name="positionId" value={employeeid.positionId}
+                              onChange={(e)=>{ handleChange(e,"employeeid","positionId")}} >
+                            <option value="">Select Position</option>
+                            {renderOption(this.state.positionList)}
                            </select>
                       </div>
                     </div>

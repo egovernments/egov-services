@@ -884,7 +884,7 @@ sync:
           shouldSync: True
           defaultValue: 0
 
-# Migration will not happen when the subledger is unmapped
+# Migration will not happen on removal of account detail type
     - sourceTable: chartofaccountdetail
       destinationTable: egf_chartofaccountdetail
       sourceTimeZone: Asia/Kolkata

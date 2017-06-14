@@ -24,14 +24,19 @@ public class BankBranchRepository {
 	public static final String UPDATE_BANKBRANCH_QUERY = "update egf_bankbranch"
 			+ " set bankid=?,code=?,name=?,address=?,address2=?,city=?,state=?,pincode=?,phone=?,fax=?,contactPerson=?,active=?,description=?,micr=?,tenantId = ? , lastModifiedBy = ?, lastModifiedDate = ? where id = ? and tenantid = ? ";
 
-	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	@Autowired
 	private BankBranchRowMapper bankBranchRowMapper;
 
-	@Autowired
 	private BankBranchQueryBuilder bankBranchQueryBuilder;
+
+	@Autowired
+	public BankBranchRepository(final JdbcTemplate jdbcTemplate, BankBranchRowMapper bankBranchRowMapper,
+			BankBranchQueryBuilder bankBranchQueryBuilder) {
+		this.jdbcTemplate = jdbcTemplate;
+		this.bankBranchRowMapper = bankBranchRowMapper;
+		this.bankBranchQueryBuilder = bankBranchQueryBuilder;
+	}
 
 	public BankBranchContractRequest create(BankBranchContractRequest bankBranchContractRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
@@ -130,7 +135,7 @@ public class BankBranchRepository {
 					bankBranchContractRequest.getBankBranch().getName(),
 					bankBranchContractRequest.getBankBranch().getAddress(),
 					bankBranchContractRequest.getBankBranch().getAddress2(),
-					bankBranchContractRequest.getBankBranch().getCity(),
+					bankBranchContractRequest.getBankBranch().getCity(), 4,
 					bankBranchContractRequest.getBankBranch().getState(),
 					bankBranchContractRequest.getBankBranch().getPincode(),
 					bankBranchContractRequest.getBankBranch().getPhone(),

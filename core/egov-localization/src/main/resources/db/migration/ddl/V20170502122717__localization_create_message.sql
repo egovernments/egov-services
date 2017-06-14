@@ -4,7 +4,6 @@ DROP  SEQUENCE IF EXISTS SEQ_MESSAGE;
 CREATE TABLE message (
 	id bigint not null primary key,
 	locale varchar(255) not null,
-	module varchar(255) null,
 	code varchar(255) not null,
 	message varchar(500) not null,
 	tenantid character varying(256) not null,

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MessageRepositoryQueryBuilder {
-	
-	
 	public String getDeleteQuery(CreateMessagesRequest createMessagesRequest){
 		List<org.egov.web.contract.Message> messageList = createMessagesRequest.getMessages();
 		String deleteQuery = "DELETE FROM message WHERE locale = ? AND tenantid = ? AND code IN  ";
@@ -23,7 +21,6 @@ public class MessageRepositoryQueryBuilder {
 				builder.append(messageList.get(i).getCode()+"','");
 			}
 		}
-    	final Object[] obj = new Object[] {  };
 		return builder.toString();
 	}
 	

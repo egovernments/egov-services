@@ -21,6 +21,8 @@ public class MessageRepository {
 	
     private MessageJpaRepository messageJpaRepository;
     
+    private MessageCacheRepository messageCacheRepository;
+    
     private static final Logger logger = LoggerFactory.getLogger(MessageRepository.class);
     
     @Autowired
@@ -71,7 +73,6 @@ public class MessageRepository {
 							statement.setString(4, createMessagesRequest.getTenantId());
 							statement.setString(5, eachMessage.getModule());
 						}
-
 						@Override
 						public int getBatchSize() {
 							return messageList.size();
@@ -82,6 +83,8 @@ public class MessageRepository {
 		}
 		logger.info("Status of Insert is : " + values.length);
 		if(values.length > 0){
+			Tenant tenant = new Tenant(createMessagesRequest.getTenantId());
+			// messageCacheRepository.bustCacheEntry(createMessagesRequest.getLocale(), tenant);
 			return true;
 		}
     	return false;

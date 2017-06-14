@@ -16,3 +16,5 @@ ALTER TABLE egpgr_complainttype DROP COLUMN keywords;
 
 DROP SEQUENCE SEQ_EGPGR_COMPLAINT;
 DROP SEQUENCE seq_egpgr_complainant;
+
+ALTER TABLE egpgr_complainttype_category ADD CONSTRAINT egpgr_complainttype_category_code_key UNIQUE (code);

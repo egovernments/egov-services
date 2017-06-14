@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import static org.egov.pgrrest.write.contracts.grievance.ServiceRequest.*;
 import static org.hibernate.internal.util.StringHelper.isEmpty;
+import static org.hibernate.internal.util.StringHelper.isNotEmpty;
 
 public class SevaRequest {
 
@@ -45,7 +46,7 @@ public class SevaRequest {
             .requesterMobileNumber(this.getServiceRequest().getPhone())
             .requesterEmail(this.getServiceRequest().getEmail())
             .requesterAddress(this.getServiceRequest().getDynamicSingleValue(VALUES_COMPLAINANT_ADDRESS))
-            .loggedInRequesterUserId(getUserId())
+            .loggedInRequesterUserId(getCitizenUserId())
             .receivingMode(this.getServiceRequest().getDynamicSingleValue(VALUES_RECEIVING_MODE))
             .receivingCenter(getReceivingCenter())
             .serviceRequestTypeCode(this.getServiceRequest().getComplaintTypeCode())
@@ -135,14 +136,9 @@ public class SevaRequest {
         return isEmpty(assigneeId) ? null : Long.valueOf(assigneeId);
     }
 
-    private Long getUserId() {
-        if (getUserInfo() == null) {
-            return null;
-        }
-        return isAuthenticatedRoleCitizen() ? getUserInfo().getId() : null;
+    private Long getCitizenUserId() {
+        final String citizenUserId = this.getServiceRequest().getDynamicSingleValue(VALUES_CITIZEN_USER_ID);
+        return isNotEmpty(citizenUserId) ? Long.valueOf(citizenUserId) : null;
     }
 
-    private boolean isAuthenticatedRoleCitizen() {
-        return CITIZEN.equals(getUserInfo().getType());
-    }
 }

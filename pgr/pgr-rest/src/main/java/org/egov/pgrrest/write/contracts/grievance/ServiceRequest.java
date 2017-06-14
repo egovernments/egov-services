@@ -9,6 +9,7 @@ public class ServiceRequest {
     static final String LOCATION_ID = "locationId";
     static final String CHILD_LOCATION_ID = "childLocationId";
     static final String VALUES_ASSIGNEE_ID = "assignmentId";
+    static final String VALUES_CITIZEN_USER_ID = "citizenUserId";
     static final String VALUES_STATE_ID = "stateId";
     static final String VALUES_STATUS = "status";
     static final String VALUES_DEPARTMENT = "departmentId";

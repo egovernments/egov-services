@@ -1,6 +1,8 @@
-package org.egov.domain.service;
+package org.egov.domain.service.emailstrategy;
 
-import org.egov.domain.model.*;
+import org.egov.domain.model.EmailMessageContext;
+import org.egov.domain.model.NotificationContext;
+import org.egov.domain.model.SevaRequest;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;

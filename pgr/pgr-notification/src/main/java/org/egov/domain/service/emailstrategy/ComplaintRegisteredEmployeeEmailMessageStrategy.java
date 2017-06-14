@@ -1,4 +1,4 @@
-package org.egov.domain.service;
+package org.egov.domain.service.emailstrategy;
 
 import org.egov.domain.model.EmailMessageContext;
 import org.egov.domain.model.NotificationContext;
@@ -8,15 +8,13 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class ComplaintEscalatedToEmployeeEmailMessageStrategy implements EmailMessageStrategy {
-    private static final String EMAIL_BODY_EN_TEMPLATE = "complaint_escalated_to_employee_email_body_en";
-    private static final String EMAIL_SUBJECT_EN_TEMPLATE = "complaint_escalated_subject_en";
-    private static final String LOCATION_NAME = "locationName";
+public class ComplaintRegisteredEmployeeEmailMessageStrategy implements EmailMessageStrategy {
+    private static final String EMAIL_BODY_EN_TEMPLATE = "complaint_registered_employee_email_body_en";
+    private static final String EMAIL_SUBJECT_EN_TEMPLATE = "complaint_registered_employee_email_subject_en";
     private static final String NAME = "name";
-    private static final String NUMBER = "number";
-    private static final String PREVIOUS_ASSIGNEE_NAME = "previousAssigneeName";
-    private static final String DESIGNATION = "designation";
-    private static final String POSITION = "position";
+    private static final String LOCATION_NAME = "locationName";
+    private static final String COMPLAINANT_NAME = "complainantName";
+    private static final String MOBILE_NUMBER = "mobileNumber";
 
     @Override
     public boolean matches(NotificationContext context) {
@@ -38,12 +36,11 @@ public class ComplaintEscalatedToEmployeeEmailMessageStrategy implements EmailMe
 
     private Map<Object, Object> getBodyTemplate(NotificationContext context) {
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
-        //TODO: Fetch employee details
+        //TODO: Populate location name
         builder.put(NAME, context.getServiceType().getName());
-        builder.put(NUMBER, context.getSevaRequest().getCrn());
-        builder.put(PREVIOUS_ASSIGNEE_NAME, null);
-        builder.put(DESIGNATION, null);
-        builder.put(POSITION, null);
+        builder.put(LOCATION_NAME, null);
+        builder.put(COMPLAINANT_NAME, context.getSevaRequest().getRequesterName());
+        builder.put(MOBILE_NUMBER, context.getSevaRequest().getMobileNumber());
         return builder.build();
     }
 

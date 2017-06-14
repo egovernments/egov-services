@@ -1,4 +1,4 @@
-package org.egov.domain.service;
+package org.egov.domain.service.smsstrategy;
 
 import org.egov.domain.model.NotificationContext;
 import org.egov.domain.model.SMSMessageContext;

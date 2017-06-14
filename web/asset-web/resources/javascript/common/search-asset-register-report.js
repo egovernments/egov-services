@@ -368,7 +368,7 @@ class SearchAsset extends React.Component {
                         <select id="status" name="status" value={status} onChange={(e)=>{
                                 handleChange(e,"status")
                             }}>
-                              <option>Select Status</option>
+                              <option value="">Select Status</option>
                               {renderOption(this.state.statusList)}
                            </select>
                     </div>

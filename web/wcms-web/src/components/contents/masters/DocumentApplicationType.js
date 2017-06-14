@@ -41,7 +41,7 @@ const styles = {
 };
 
 
-class PropertyPipeSize extends Component {
+class DocumentApplicationType extends Component {
 
   constructor(props) {
        super(props);
@@ -66,20 +66,20 @@ class PropertyPipeSize extends Component {
         // {
         //     $("input,select,textarea").prop("disabled", true);
         //   }
-        let response=Api.commonApiPost("wcms-masters", "pipesize", "_search", {id},{}).then((res)=>
+        let response=Api.commonApiPost("wcms-masters", "documenttype", "_search", {id},{}).then((res)=>
         {
            this.setState({
-             list: res.PipeSize
+             list: res.documentTypes
          });
 
      },  (err)=> {
          alert(err);
      });
 
-      let response2=Api.commonApiPost("property", "masters/propertytypes", "_search?", {id:id,tenantId:"ap.kurnool"},{},true).then((res)=>
+      let response2=Api.commonApiPost("wcms-masters", "master", "_getapplicationtypes", {id},{}).then((res)=>
      {
         this.setState({
-          list2: res.masterModel
+          list2: res.getapplicationtypes
       });
 
   },  (err)=> {
@@ -95,15 +95,15 @@ add(e)
 
   // let mode=getUrlVars()["type"];
 
-    let {changeButtonText,PropertyPipeSize}=this.props;
-    var propertyPipeSize = {
-      propertyTypeName:PropertyPipeSize.propertyTypeName,
-      pipeSizeType:PropertyPipeSize.pipeSizeType,
-      active:PropertyPipeSize.active,
+    let {changeButtonText,DocumentApplicationType}=this.props;
+    var documentApplicationType = {
+      applicationType:DocumentApplicationType.applicationType,
+      documentType:DocumentApplicationType.documentType,
+      active:DocumentApplicationType.active,
       tenantId:'default'
     }
     if(type == "Update"){
-      let response=Api.commonApiPost("wcms-masters", "propertytype-pipesizetype", "_update/"+id, {},{PropertyPipeSize:PropertyPipeSize}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "propertytype-pipesizetype", "_update/"+id, {},{DocumentApplicationType:DocumentApplicationType}).then(function(response)
       {
       console.log(response);
     },function(err) {
@@ -113,7 +113,7 @@ add(e)
     }
 
   else{
-    let response=Api.commonApiPost("wcms-masters", "propertytype-pipesizetype", "_create", {},{PropertyPipeSize}).then(function(response)
+    let response=Api.commonApiPost("wcms-masters", "propertytype-pipesizetype", "_create", {},{DocumentApplicationType}).then(function(response)
     {
     // console.log(response);
   },function(err) {
@@ -126,7 +126,7 @@ add(e)
 
     render(){
       let {
-        PropertyPipeSize,
+        DocumentApplicationType,
         propertyType,
         handleChange,
         fieldErrors,
@@ -143,12 +143,12 @@ add(e)
         {
           // console.log(mode);
           return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
-                               add("propertyTypeName","pipeSizeType","active")}} />
+                               add("applicationType","documentType","active")}} />
           )
         }
       };
 
-      // console.log(PropertyPipeSize);
+      // console.log(DocumentApplicationType);
 
       const renderOption=function(list)
       {
@@ -158,15 +158,16 @@ add(e)
           {
               return list.map((item)=>
               {
-                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name || item.sizeInMilimeter} />)
+                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name} />)
               })
           }
       }
+      
       return(
-        <div className="PropertyPipeSize">
+        <div className="DocumentApplicationType">
             <Card>
                 <CardHeader
-                    title={<strong style={{color:brown500}}>Create Property Pipe Size </strong>}
+                    title={<strong style={{color:brown500}}>Create Document-Application Type </strong>}
                 />
                 <CardText>
                       <Card>
@@ -176,27 +177,27 @@ add(e)
                                   <Row>
                                     <Col xs={12} md={6}>
 
-                                      <SelectField  value={PropertyPipeSize.propertyTypeName?PropertyPipeSize.propertyTypeName:""} onChange={(event, index, value) => {
+                                      <SelectField  value={DocumentApplicationType.applicationType?DocumentApplicationType.applicationType:""} onChange={(event, index, value) => {
                                           var e = {
                                             target: {
                                               value: value
                                             }
                                           };
-                                          handleChange(e, "propertyTypeName", false, "")}} floatingLabelText="Property Type" >
+                                          handleChange(e, "applicationType", false, "")}} floatingLabelText="Application Type" >
                                         <MenuItem value={1} primaryText=""/>
                                         {renderOption(this.state.list2)}
                                       </SelectField>
                                     </Col>
 
                                     <Col xs={12} md={6}>
-                                      <SelectField value={PropertyPipeSize.pipeSizeType?PropertyPipeSize.pipeSizeType:""} onChange={(event, index, value) =>{
+                                      <SelectField value={DocumentApplicationType.documentType?DocumentApplicationType.documentType:""} onChange={(event, index, value) =>{
                                           var e = {
                                             target: {
                                               value: value
                                             }
                                           };
-                                          handleChange(e, "pipeSizeType", false, "")}
-                                        } floatingLabelText="Pipe Size" >
+                                          handleChange(e, "documentType", false, "")}
+                                        } floatingLabelText="DocumentType" >
                                          <MenuItem value={1} primaryText=""/>
                                          {renderOption(this.state.list)}
                                       </SelectField>
@@ -207,7 +208,7 @@ add(e)
                                                       <Checkbox
                                                        label="Active"
                                                        defaultChecked={true}
-                                                       value={PropertyPipeSize.active?PropertyPipeSize.active:""}
+                                                       value={DocumentApplicationType.active?DocumentApplicationType.active:""}
                                                        onCheck={(event,isInputChecked) => {
                                                          var e={
                                                            "target":{
@@ -238,7 +239,7 @@ add(e)
     }
 
 }
-const mapStateToProps = state => ({PropertyPipeSize: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({DocumentApplicationType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -277,4 +278,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PropertyPipeSize);
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentApplicationType);

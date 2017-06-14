@@ -78,8 +78,9 @@ class DocumentApplicationType extends Component {
 
       let response2=Api.commonApiPost("wcms-masters", "master", "_getapplicationtypes", {id},{}).then((res)=>
      {
+      //  console.log(res.DocumentTypeApplicationType);
         this.setState({
-          list2: res.getapplicationtypes
+          list2: res
       });
 
   },  (err)=> {
@@ -148,21 +149,33 @@ add(e)
         }
       };
 
-      // console.log(DocumentApplicationType);
 
       const renderOption=function(list)
       {
         // console.log(list);
 
             if(list)
-          {
-              return list.map((item)=>
-              {
-                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name} />)
-              })
-          }
+            {
+              if(list.length){
+                return list.map((item)=>
+                {
+                    return (<MenuItem key={item.id} value={item.id} primaryText={item.name} />)
+                })
+              }
+
+
+              else {
+                return Object.keys(list).map((k,index)=>
+                 {
+                   return (<MenuItem key={index} value={k}> {list[k]}
+                     </MenuItem>)
+
+                 })
+                }
+              }
+
       }
-      
+
       return(
         <div className="DocumentApplicationType">
             <Card>

@@ -40,8 +40,12 @@
 
 package org.egov.commons.web.errorhandlers;
 
+import java.util.List;
+
+import org.egov.common.contract.response.ErrorField;
 import org.egov.commons.web.contract.ResponseInfo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -64,5 +68,12 @@ public class ErrorResponse {
 
 	@JsonProperty("Error")
 	private Error error;
+	
+	
+	  @JsonIgnore
+	    public List<ErrorField> getErrorFields() {
+	        return error.getErrorFields();
+	    }
+
 
 }

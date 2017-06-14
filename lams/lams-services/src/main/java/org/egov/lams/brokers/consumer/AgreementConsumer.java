@@ -12,6 +12,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AgreementConsumer {
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(AgreementConsumer.class);
 	
@@ -25,7 +28,6 @@ public class AgreementConsumer {
 	public void listen(ConsumerRecord<String, String> record) {
 		LOGGER.info("key:"+ record.key() +":"+ "value:" +record.value());
 		
-		ObjectMapper objectMapper = new ObjectMapper();
 		AgreementRequest agreementRequest = null;
 		
 		try{

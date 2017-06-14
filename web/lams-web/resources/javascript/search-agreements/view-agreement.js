@@ -441,7 +441,7 @@ $(document).ready(function() {
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
 
-    } else if (_type.toLowerCase() == "shopping complex") {
+    } else if (_type.toLowerCase() == "shop") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();

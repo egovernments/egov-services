@@ -247,7 +247,7 @@ class AgreementSearch extends React.Component {
     doorNo,
     assetCategory,
     mobileNumber,
-    name,
+    allotteeName,
     revenueWard,
     electionWard,
     code,

@@ -89,7 +89,7 @@ public class ServiceRequestDocument {
     private String wardNo;
 
     @JsonProperty("wardGeo")
-    private GeoPoint wardGeo;
+    private String wardGeo;
 
     @JsonProperty("localityName")
     private String localityName;
@@ -98,10 +98,10 @@ public class ServiceRequestDocument {
     private String localityNo;
 
     @JsonProperty("localityGeo")
-    private GeoPoint localityGeo;
+    private String localityGeo;
 
     @JsonProperty("serviceGeo")
-    private GeoPoint serviceGeo;
+    private String serviceGeo;
 
     @JsonProperty("satisfactionIndex")
     private double satisfactionIndex;

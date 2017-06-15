@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 public class GeoPoint {
     private double lat;
     private double lon;
+
+    @Override
+    public String toString() {
+        return String.format("%s,%s", lat, lon);
+    }
 }
 
 

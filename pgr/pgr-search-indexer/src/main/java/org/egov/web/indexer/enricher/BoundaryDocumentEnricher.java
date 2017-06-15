@@ -46,8 +46,10 @@ public class BoundaryDocumentEnricher implements ServiceRequestDocumentEnricher 
         }
         document.setLocalityName(boundary.getName());
         document.setLocalityNo(boundary.getBoundaryNum().toString());
-        if (boundary.getLongitude() != null && boundary.getLatitude() != null)
-			document.setLocalityGeo(new GeoPoint(boundary.getLatitude(), boundary.getLongitude()));
+        if (boundary.getLongitude() != null && boundary.getLatitude() != null) {
+            final GeoPoint geoPoint = new GeoPoint(boundary.getLatitude(), boundary.getLongitude());
+            document.setLocalityGeo(geoPoint.toString());
+        }
     }
 
     private void setWardFields(ServiceRequestDocument document, ServiceRequest serviceRequest) {
@@ -62,8 +64,10 @@ public class BoundaryDocumentEnricher implements ServiceRequestDocumentEnricher 
         }
         document.setWardName(boundary.getName());
         document.setWardNo(boundary.getBoundaryNum().toString());
-        if (boundary.getLongitude() != null && boundary.getLatitude() != null)
-			document.setWardGeo(new GeoPoint(boundary.getLatitude(), boundary.getLongitude()));
+        if (boundary.getLongitude() != null && boundary.getLatitude() != null) {
+            final GeoPoint geoPoint = new GeoPoint(boundary.getLatitude(), boundary.getLongitude());
+            document.setWardGeo(geoPoint.toString());
+        }
     }
 
 }

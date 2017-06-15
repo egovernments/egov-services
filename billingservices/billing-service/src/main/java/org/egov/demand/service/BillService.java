@@ -40,34 +40,50 @@
 
 package org.egov.demand.service;
 
+import java.util.List;
+
+import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Bill;
 import org.egov.demand.web.contract.BillRequest;
+import org.egov.demand.web.contract.BillResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class BillService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(BillService.class);
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
-	 
-	public void createAsync(BillRequest billRequest){
-		System.out.println("createAsync: "+billRequest);
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
+	public BillResponse createAsync(BillRequest billRequest){
 		
 		try {
-			kafkaTemplate.send("test-sp-kaf","key", objectMapper.writeValueAsString(billRequest));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),
+								objectMapper.writeValueAsString(billRequest));
+		} catch (Exception e) {
+			logger.info("BillService createAsync:"+e);
+			throw new RuntimeException(e);
 		}
+		return getBillResponse(billRequest.getBillInfos());
+	}
+	
+	public BillResponse getBillResponse(List<Bill> bills){
+		BillResponse billResponse = new BillResponse();
+		billResponse.setBillInfos(bills);
+		return billResponse;
 	}
 
 }

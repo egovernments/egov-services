@@ -13,8 +13,6 @@ public class DemandConsumer {
 	@KafkaListener(topics = {"${kafka.topics.save.bill}","${kafka.topics.update.bill}"})
     public void processMessage(HashMap<String, Object> consumerRecord,
     		@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-
-		System.out.println("consumerRecord.topic>>>>"+topic+","+"consumerRecord.value"+consumerRecord);
-       
+		//TODO
     }
 }

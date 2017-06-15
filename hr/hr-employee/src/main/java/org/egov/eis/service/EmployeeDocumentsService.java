@@ -1,23 +1,15 @@
 package org.egov.eis.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeDocumentsService {
@@ -117,6 +109,17 @@ public class EmployeeDocumentsService {
 		}
 	}
 
+	public void updateDocumentsForNominee(List<Nominee> nominees) {
+		nominees.forEach(nominee -> {
+			if (isEmpty(nominee.getDocuments()))
+				nominee.setDocuments(new ArrayList<>());
+			List<EmployeeDocument> employeeDocuments = employeeDocumentsRepository.findByEmployeeId(
+					nominee.getEmployee().getId(), nominee.getTenantId());
+			updateDocuments(nominee.getDocuments(), EntityType.NOMINEE, nominee.getId(), employeeDocuments,
+					nominee.getEmployee().getId(), nominee.getTenantId());
+		});
+	}
+
 	private boolean documentPresentInDB(List<EmployeeDocument> documentsFromDb, String docUrl, EntityType entityType,
 			Long referenceId) {
 		boolean foundDocInDb = false;
@@ -181,9 +184,14 @@ public class EmployeeDocumentsService {
 		}
 	}
 
+	public List<EmployeeDocument> getDocumentsForReferenceType(Long employeeId, Long referenceId,
+															   String entityType, String tenantId) {
+		return employeeDocumentsRepository.findByEntityType(employeeId, referenceId, entityType, tenantId);
+	}
+
 	/**
 	 * Added for junit testing
-	 * 
+	 *
 	 * @return
 	 */
 	public EmployeeDocumentsRepository getEmployeeDocumentsRepository() {
@@ -192,7 +200,7 @@ public class EmployeeDocumentsService {
 
 	/**
 	 * Added for junit testing
-	 * 
+	 *
 	 * @return
 	 */
 	public void setEmployeeDocumentsRepository(EmployeeDocumentsRepository employeeDocumentsRepository) {

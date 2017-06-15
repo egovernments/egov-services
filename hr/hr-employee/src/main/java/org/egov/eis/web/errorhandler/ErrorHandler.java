@@ -74,8 +74,6 @@ public class ErrorHandler {
 				if (fieldError.getCode().equals("invalid")) {
 					error.getFields().put(fieldError.getField(), fieldError.getDefaultMessage());
 				} else {
-					System.err.println(fieldError.getField() + " :: " + fieldError.getCode()
-							+ " :: " + fieldError.getDefaultMessage() + " :: " + fieldError.getRejectedValue());
 					String field = getErrorFieldName(fieldError.getField());
 					error.getFields().put(fieldError.getField(), field + " Can't Be Left Empty. Please Provide A Valid " + field);
 				}
@@ -163,7 +161,7 @@ public class ErrorHandler {
 				actualField.append(Character.toUpperCase(f.charAt(i)));
 			} else if (f.charAt(i) >= 65 && f.charAt(i) <= 90) {
 				actualField.append(" " + f.charAt(i));
-			} else {
+			} else if (f.charAt(i) >= 97 && f.charAt(i) <= 122) {
 				actualField.append(f.charAt(i));
 			}
 		}

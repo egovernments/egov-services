@@ -40,15 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
@@ -66,6 +57,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @Transactional
@@ -94,7 +94,7 @@ public class AssignmentRepository {
 	public static final String ASSIGNMENTS_OPERLAPPING_CHECK_QUERY = "SELECT exists(SELECT FROM egeis_assignment"
 			+ " WHERE ((:fromDate BETWEEN fromDate AND toDate) OR (:toDate BETWEEN fromDate AND toDate)"
 			+ " OR (fromDate BETWEEN :fromDate AND :toDate) OR (toDate BETWEEN :fromDate AND :toDate))"
-			+ " AND isPrimary = true AND employeeId = :employeeId AND tenantId = :tenantId)";
+			+ " AND id != :id AND isPrimary = true AND employeeId = :employeeId AND tenantId = :tenantId)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -216,6 +216,7 @@ public class AssignmentRepository {
 
     public Boolean assignmentsOverlapping(Assignment assignment, Long employeeId, String tenantId) {
 		Map<String, Object> psValuesMap = new HashMap<>();
+		psValuesMap.put("id", assignment.getId());
 		psValuesMap.put("fromDate", assignment.getFromDate());
 		psValuesMap.put("toDate", assignment.getToDate());
 		psValuesMap.put("employeeId", employeeId);

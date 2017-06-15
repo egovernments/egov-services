@@ -40,14 +40,14 @@
 
 package org.egov.eis.service.helper;
 
+import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.User;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.User;
-import org.springframework.stereotype.Component;
 
 @Component
 public class EmployeeUserMapper {

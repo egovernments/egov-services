@@ -43,13 +43,15 @@ package org.egov.eis.web.validator;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.enums.EntityType;
-import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.NonVacantPositionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -104,11 +106,15 @@ public abstract class EmployeeCommonValidator {
 
     void validatePrimaryPositions(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors,
                                          String requestType) {
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMMM, yyyy");
         for(int i = 0; i < assignments.size(); i++) {
             if (assignments.get(i).getIsPrimary()) {
                 if (nonVacantPositionsRepository.checkIfPositionIsOccupied(assignments.get(i), employeeId, tenantId, requestType)) {
+                    Date fromDate = assignments.get(i).getFromDate();
+                    Date toDate = assignments.get(i).getToDate();
                     errors.rejectValue("employee.assignments[" + i + "].position", "invalid",
-                            "Primary Position Already Assigned Between The Dates. Please Send The Different Position.");
+                            "Primary Position Already Assigned Between The Given Dates " + dateFormat.format(fromDate)
+                                    + " & " + dateFormat.format(toDate) + ". Please Send The Correct Data.");
                 }
             }
         }

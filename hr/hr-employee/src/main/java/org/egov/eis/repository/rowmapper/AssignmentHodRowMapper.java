@@ -40,13 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.egov.eis.model.HODDepartment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Component
 public class AssignmentHodRowMapper implements RowMapper<HODDepartment> {

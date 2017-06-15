@@ -40,12 +40,6 @@
 
 package org.egov.eis.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.HODDepartment;
@@ -56,6 +50,12 @@ import org.egov.eis.repository.HODDepartmentRepository;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class AssignmentService {

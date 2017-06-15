@@ -10,7 +10,7 @@ class AgreementSearch extends React.Component {
             doorNo: "",
             assetCategory: "",
             mobileNumber: "",
-            name: "",
+            allotteeName: "",
             revenueWard: "",
             electionWard: "",
             code: "",
@@ -468,8 +468,8 @@ class AgreementSearch extends React.Component {
                                           <label for="name">Allottee Name </label>
                                       </div>
                                       <div className="col-sm-6">
-                                          <input  type="text" id="name" name="name" value={name} onChange={(e)=>{
-                                  handleChange(e,"name")
+                                          <input  type="text" id="name" name="name" value={allotteeName} onChange={(e)=>{
+                                  handleChange(e,"allotteeName")
                               }}/>
                                       </div>
                                   </div>

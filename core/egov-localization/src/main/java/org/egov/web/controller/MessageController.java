@@ -79,6 +79,19 @@ public class MessageController {
 		return getSuccessResponse(messages);
 	}
     
+    @PostMapping(value = "/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final CreateMessagesRequest messagesRequest,
+			final BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidCreateMessageRequest(bindingResult.getFieldErrors());
+		}
+		logger.info("Update Message Request:" + messagesRequest);
+		messageService.createMessage(messagesRequest);
+		final List<Message> messages = messagesRequest.getMessages();
+		return getSuccessResponse(messages);
+	}
+    
     private ResponseEntity<?> getSuccessResponse(final List<Message> messages) {
 		final MessagesResponse messageResponse = new MessagesResponse(messages); 
 		return new ResponseEntity<>(messageResponse, HttpStatus.OK);

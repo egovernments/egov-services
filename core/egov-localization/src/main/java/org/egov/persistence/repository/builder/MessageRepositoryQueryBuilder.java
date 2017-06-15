@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class MessageRepositoryQueryBuilder {
 	public String getDeleteQuery(CreateMessagesRequest createMessagesRequest){
 		List<org.egov.web.contract.Message> messageList = createMessagesRequest.getMessages();
-		String deleteQuery = "DELETE FROM message WHERE locale = ? AND tenantid = ? AND code IN  ";
+		String deleteQuery = "DELETE FROM message WHERE locale = ? AND tenantid = ? AND code IN ";
 		StringBuilder builder = new StringBuilder(deleteQuery);
 		for(int i=0; i<messageList.size();i++){
 			if(i==0){

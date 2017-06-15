@@ -1,25 +1,28 @@
 package org.egov.domain.service;
 
 
-import org.egov.domain.model.Message;
-import org.egov.domain.model.Tenant;
-import org.egov.persistence.repository.MessageCacheRepository;
-import org.egov.persistence.repository.MessageRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.egov.domain.model.AuditDetails;
+import org.egov.domain.model.Message;
+import org.egov.domain.model.Tenant;
+import org.egov.persistence.repository.MessageCacheRepository;
+import org.egov.persistence.repository.MessageRepository;
+import org.egov.web.contract.CreateMessagesRequest;
+import org.egov.web.contract.RequestInfo;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MessageServiceTest {
@@ -263,6 +266,15 @@ public class MessageServiceTest {
 
         verify(messageRepository).save(modelMessages);
     }
+    
+    @Test
+    public void test_should_create_messages() {
+    	List<org.egov.web.contract.Message> myMessages = getMyMessages();
+    	CreateMessagesRequest messageRequest = new CreateMessagesRequest(new RequestInfo(), "LOCALE", myMessages, "TenantId");
+    	messageService.createMessage(messageRequest);
+    	verify(messageRepository).deleteMessages(messageRequest);
+    	verify(messageRepository).createMessage(messageRequest);
+    }
 
     private List<Message> getMessages() {
         Message message1 = Message.builder()
@@ -291,6 +303,22 @@ public class MessageServiceTest {
             .build();
 
         return (Arrays.asList(message1, message2, message3, message4));
+    }
+    
+    private List<org.egov.web.contract.Message> getMyMessages(){
+    	org.egov.web.contract.Message msg1 = org.egov.web.contract.Message.builder()
+    			.code("codeOne")
+    			.message("messageOne")
+    			.module("moduleOne")
+    			.tenantId("tenantOne")
+    			.auditDetails(new AuditDetails()).build();
+    	org.egov.web.contract.Message msg2 = org.egov.web.contract.Message.builder()
+    			.code("codeTwo")
+    			.message("messageTwo")
+    			.module("moduleTwo")
+    			.tenantId("tenantTwo")
+    			.auditDetails(new AuditDetails()).build();
+    	return (Arrays.asList(msg1,msg2));
     }
 
 

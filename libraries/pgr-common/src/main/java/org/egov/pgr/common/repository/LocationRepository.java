@@ -11,7 +11,7 @@ public class LocationRepository {
 
     private final RestTemplate restTemplate;
     private final String url;
-    private final static String BOUNDARY_BY_ID = "/boundarys?Boundary.id={id}&tenantId={tenantId}";
+    private final static String BOUNDARY_BY_ID = "boundarys?Boundary.id={id}&tenantId={tenantId}";
 
     public LocationRepository(RestTemplate restTemplate,
                               @Value("${location.host}") final String locationServiceHostname) {

@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 public class PositionRepository {
     private final RestTemplate restTemplate;
     private final String url;
-    private final static String POSITION_BY_ID = "/hr-masters/positions/_search?id={id}&tenantId={tenantId}";
+    private final static String POSITION_BY_ID = "hr-masters/positions/_search?id={id}&tenantId={tenantId}";
 
     public PositionRepository(RestTemplate restTemplate,
                               @Value("${hrmaster.host}") final String hrMasterServiceHostname) {

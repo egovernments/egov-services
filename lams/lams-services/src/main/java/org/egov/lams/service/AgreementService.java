@@ -128,6 +128,7 @@ public class AgreementService {
 			kafkaTopic = propertiesManager.getSaveAgreementTopic();
 			agreement.setStatus(Status.ACTIVE);
 			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+			agreement.setAgreementDate(agreement.getCommencementDate());
 		} else {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);

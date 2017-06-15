@@ -28,4 +28,5 @@ public class Bill {
 	private String tenantId;
 	
 	private AuditDetail auditDetail;
+
 }

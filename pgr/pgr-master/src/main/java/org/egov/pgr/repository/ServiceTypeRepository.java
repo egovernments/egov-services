@@ -75,9 +75,8 @@ public class ServiceTypeRepository {
 		LOGGER.info("Service Type Request::" + serviceRequest);
 		final String complaintInsert = ServiceTypeQueryBuilder.insertComplaintTypeQuery();
 		boolean active = true;
-		Long slaHours = 25L;
-		final Object[] object = new Object[] { serviceRequest.getService().getId(), serviceRequest.getService().getServiceName(),
-				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, slaHours,
+		final Object[] object = new Object[] { serviceRequest.getService().getServiceName(),
+				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
 				serviceRequest.getService().getTenantId(), serviceRequest.getService().getType(),
 				serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), serviceRequest.getService().getCategory()
 				};

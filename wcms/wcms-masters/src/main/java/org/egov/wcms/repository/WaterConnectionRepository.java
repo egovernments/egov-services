@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.egov.wcms.model.DocumentOwner;
 import org.egov.wcms.model.MeterReading;
+import org.egov.wcms.model.enums.BillingType;
 import org.egov.wcms.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -144,7 +145,7 @@ public class WaterConnectionRepository {
             } catch (final Exception e) {
                 LOGGER.error("Inserting documents failed!", e);
             }
-        } else if (connectionId > 0) {
+        } else if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() !=null && waterConnectionRequest.getConnection().getBillingType().equals(BillingType.METERED)) {
 
             final String insertMeterQuery = WaterConnectionQueryBuilder.insertMeterQuery();
             try {

@@ -40,11 +40,6 @@
 
 package org.egov.eis.web.errorhandler;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
@@ -56,126 +51,33 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class ErrorHandler {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(BindingResult bindingResult,
-			RequestInfo requestInfo) {
+	public ResponseEntity<ErrorResponse> getErrorResponseEntityForInvalidRequest(BindingResult bindingResult,
+				RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(400);
-		error.setMessage("Missing RequestBody Fields");
-		error.setDescription("Error While Binding RequestBody");
+		error.setMessage("Sorry System Can't Process Your Request");
+		error.setDescription("Request Data Is Not Valid");
+
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-			}
-		}
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
-
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
-
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
-
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingParameters(BindingResult bindingResult,
-			RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(400);
-		error.setMessage("Missing Required Query Parameter");
-		error.setDescription("Error While Binding ModelAttribute");
-		if (bindingResult.hasFieldErrors()) {
-			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-			}
-		}
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
-
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setResponseInfo(responseInfo);
-		errorResponse.setError(error);
-
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
-
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(BindingResult bindingResult,
-			RequestInfo requestInfo) {
-		Error error = new Error();
-		error.setCode(400);
-		error.setMessage("Binding Error");
-		error.setDescription("Error while binding request object");
-
-		// FIXME : not able to get fieldError error messages. Remove conditions
-		// when fixed
-		if (bindingResult.hasFieldErrors()) {
-			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				if (fieldError.getField().contains("Date")
-						&& !(fieldError.getField().contains("fromDate") || fieldError.getField().contains("toDate"))) {
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					String errorDate = dateFormat.format(fieldError.getRejectedValue());
-					error.getFields().put(fieldError.getField(), errorDate);
-				} else if (fieldError.getField().contains("code") && fieldError.getRejectedValue() == null) {
-					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-				} else if (fieldError.getField().contains("Pincode")
-						&& (((String) fieldError.getRejectedValue()).length() > 6)) {
-					error.getFields().put(fieldError.getField(),
-							"pincode : " + fieldError.getRejectedValue() + " contains more than 6 characters");
-				} else if (fieldError.getField().contains("retirementAge")
-						|| fieldError.getField().contains("dateOf")) {
-					error.getFields().put(fieldError.getField(),
-							"Invalid " + fieldError.getField() + " - " + fieldError.getRejectedValue());
-				} else if (fieldError.getField().contains("code") || fieldError.getField().contains("passportNo")
-						|| fieldError.getField().contains("gpfNo") || fieldError.getField().contains("department")
-						|| fieldError.getField().contains("documents")) {
-					error.getFields().put(fieldError.getField(), "Duplicate Value - " + fieldError.getField() + " = "
-							+ fieldError.getRejectedValue() + " Already Exists");
-				} else if (fieldError.getField().contains("fromDate") || fieldError.getField().contains("toDate")) {
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					String errorDate = dateFormat.format(fieldError.getRejectedValue());
-					error.getFields().put(fieldError.getField(), "Primary Assignments Overlapping : " + errorDate);
-				} else if (fieldError.getField().contains("assignments")
-						&& (fieldError.getDefaultMessage().contains("no primary assignment"))) {
-					error.getFields().put(fieldError.getField(), "No Primary Assignment Provided");
-				} else if (fieldError.getField().contains("position")
-						&& (fieldError.getDefaultMessage().contains("primary position(s) concurrent"))) {
-					error.getFields().put(fieldError.getField(), "Primary Position Not Vacant");
-				} else if (fieldError.getField().contains("employee.id")
-						&& (fieldError.getDefaultMessage().contains("provide employee id for update"))) {
-					error.getFields().put(fieldError.getField(), "provide employee id for update");
-				} else if (fieldError.getField().contains("employee.id")
-						&& (fieldError.getDefaultMessage().contains("employee id doesn't exist"))) {
-					error.getFields().put(fieldError.getField(), "employee id doesn't exist");
-				} else if (fieldError.getField().contains("employee.assignment")
-						&& (fieldError.getDefaultMessage().contains("assignment doesn't exist"))) {
-					error.getFields().put(fieldError.getField(), "assignments doesn't exist for this employee");
-				} else if (fieldError.getField().contains("employee.test")
-						&& (fieldError.getDefaultMessage().contains("test doesn't exist"))) {
-					error.getFields().put(fieldError.getField(), "Departmental test doesn't exist for this employee");
-				} else if (fieldError.getField().contains("employee.educationalQualification")
-						&& (fieldError.getDefaultMessage().contains("educational doesn't exist"))) {
-					error.getFields().put(fieldError.getField(),
-							"educationalQualification doesn't exist for this employee");
-				} else if (fieldError.getField().contains("employee.probation")
-						&& (fieldError.getDefaultMessage().contains("probation test doesn't exist"))) {
-					error.getFields().put(fieldError.getField(), "probation doesn't exist for this employee");
-				} else if (fieldError.getField().contains("employee.regularisation")
-						&& (fieldError.getDefaultMessage().contains("regularisation test doesn't exist"))) {
-					error.getFields().put(fieldError.getField(), "regularisation doesn't exist for this employee");
-				} else if (fieldError.getField().contains("employee.serviceHistory")
-						&& (fieldError.getDefaultMessage().contains("service test doesn't exist"))) {
-					error.getFields().put(fieldError.getField(), "serviceHistory doesn't exist for this employee");
-				} else if (fieldError.getField().contains("employee.technicalQualification")
-						&& (fieldError.getDefaultMessage().contains("technical test doesn't exist"))) {
-					error.getFields().put(fieldError.getField(),
-							"technicalQualification doesn't exist for this employee");
+				if (fieldError.getCode().equals("invalid")) {
+					error.getFields().put(fieldError.getField(), fieldError.getDefaultMessage());
 				} else {
-					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+					System.err.println(fieldError.getField() + " :: " + fieldError.getCode()
+							+ " :: " + fieldError.getDefaultMessage() + " :: " + fieldError.getRejectedValue());
+					String field = getErrorFieldName(fieldError.getField());
+					error.getFields().put(fieldError.getField(), field + " Can't Be Left Empty. Please Provide A Valid " + field);
 				}
 			}
 		}
@@ -186,7 +88,7 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<ErrorResponse> getResponseEntityForUnexpectedErrors(RequestInfo requestInfo) {
@@ -201,28 +103,28 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<?> getResponseEntityForInvalidEmployeeId(BindingResult modelAttributeBindingResult,
-			RequestInfo requestInfo) {
+	public ResponseEntity<?> getResponseEntityForInvalidEmployeeId(RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(400);
-		error.setMessage("Employee id does not exist");
-		error.setDescription("Employee id does not exist");
+		error.setMessage("Sorry System Can't Process Your Request");
+		error.setDescription("Employee Id Does Not Exist");
+		error.getFields().put("employee.id", "Employee Id Does Not Exist In System. Please Provide The Correct Id.");
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<?> getResponseEntityForUserErrors(UserException userException) {
 		UserErrorResponse userErrorResponse = userException.getUserErrorResponse();
 
-		ResponseInfo responseInfo = null;
+		ResponseInfo responseInfo;
 		Error error = new Error();
 		Map<String, Object> fields = new HashMap<>();
 		error.setCode(400);
@@ -250,6 +152,21 @@ public class ErrorHandler {
 		errorResponse.setError(error);
 		errorResponse.setResponseInfo(responseInfo);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	private String getErrorFieldName(String field) {
+		String f = field.substring(field.lastIndexOf('.') + 1, field.length());
+		StringBuilder actualField = new StringBuilder("");
+		for (int i = 0; i < f.length(); i++) {
+			if (i == 0) {
+				actualField.append(Character.toUpperCase(f.charAt(i)));
+			} else if (f.charAt(i) >= 65 && f.charAt(i) <= 90) {
+				actualField.append(" " + f.charAt(i));
+			} else {
+				actualField.append(f.charAt(i));
+			}
+		}
+		return actualField.toString();
 	}
 }

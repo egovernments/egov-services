@@ -40,11 +40,16 @@
 
 package org.egov.eis.web.validator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
+import org.egov.eis.repository.AssignmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -52,66 +57,94 @@ import org.springframework.validation.Validator;
 @Component
 public class EmployeeAssignmentValidator implements Validator {
 
-	/**
-	 * This Validator validates *just* Employee instances
-	 */
-	@Override
-	public boolean supports(Class<?> paramClass) {
-		return Employee.class.equals(paramClass);
-	}
+    @Autowired
+    private AssignmentRepository assignmentRepository;
 
-	@Override
-	public void validate(Object targetObject, Errors errors) {
-		if (!(targetObject instanceof Employee))
-			return;
+    /**
+     * This Validator validates *just* Employee instances
+     */
+    @Override
+    public boolean supports(Class<?> paramClass) {
+        return Employee.class.equals(paramClass);
+    }
 
-		Employee employee = (Employee) targetObject;
-		List<Assignment> assignments = employee.getAssignments();
+    @Override
+    public void validate(Object targetObject, Errors errors) {
+        if (!(targetObject instanceof Employee)) {
+            return;
+        }
 
-		List<Assignment> primaryAssignments = new ArrayList<>();
+        Employee employee = (Employee) targetObject;
+        List<Assignment> assignments = employee.getAssignments();
 
-		// Used to mark primary assignments for conveying the index of assignment with errors
-		List<Integer> primaryMarker = new ArrayList<>();
-		for(int index = 0; index < assignments.size(); index++) {
-			// get a list of primary assignments
-			if (assignments.get(index).getIsPrimary() != null && assignments.get(index).getIsPrimary()) {
-				primaryAssignments.add(assignments.get(index));
-				primaryMarker.add(index);
-			}
-			// check if fromDates are less than toDate
-			if (assignments.get(index).getFromDate().compareTo(assignments.get(index).getToDate()) > 0) {
-				// FIXME : the message can be fromDate cannot be greater than toDate
-				errors.rejectValue("employee.assignments[" + index + "].fromDate", "invalid", "Invalid fromDate");
-				errors.rejectValue("employee.assignments[" + index + "].toDate", "invalid", "Invalid toDate");
-			}
-		};
+        List<Assignment> primaryAssignments = new ArrayList<>();
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMMM, yyyy");
 
-		// check for atleast 1 primary assignment
-		if(primaryAssignments.size() == 0) {
-			errors.rejectValue("employee.assignments", "incorrect", "no primary assignment");
-		}
+        // Used to mark primary assignments for conveying the index of assignment with errors
+        List<Integer> primaryMarker = new ArrayList<>();
+        for (int index = 0; index < assignments.size(); index++) {
+            // get a list of primary assignments
+            if (assignments.get(index).getIsPrimary() != null && assignments.get(index).getIsPrimary()) {
+                primaryAssignments.add(assignments.get(index));
+                primaryMarker.add(index);
+            }
+            // check if fromDates are less than toDate
+            if (assignments.get(index).getFromDate().compareTo(assignments.get(index).getToDate()) > 0) {
+                // FIXME : the message can be fromDate cannot be greater than toDate
+                errors.rejectValue("employee.assignments[" + index + "]", "invalid",
+                        "Assignment's From Date " + dateFormat.format(assignments.get(index).getFromDate())
+                                + " Can Not Be Greater Than To Date " + dateFormat.format(assignments.get(index).getToDate())
+                                + ". Please Send Correct Dates");
+            }
+        }
+        ;
 
-		// check if assignmentDates are overlapping for primary assignments
-		for (int i = 0; i < primaryAssignments.size(); i++) {
-			for (int j = i + 1; j < primaryAssignments.size(); j++) {
-				if ((((primaryAssignments.get(i).getFromDate().compareTo(primaryAssignments.get(j).getFromDate()) >= 0)
-						&& (primaryAssignments.get(i).getFromDate().compareTo(primaryAssignments.get(j).getToDate()) <= 0))
-					|| ((primaryAssignments.get(i).getToDate().compareTo(primaryAssignments.get(j).getFromDate()) >= 0)
-						&& (primaryAssignments.get(i).getToDate().compareTo(primaryAssignments.get(j).getToDate()) <= 0)))
-					|| (((primaryAssignments.get(j).getFromDate().compareTo(primaryAssignments.get(i).getFromDate()) >= 0)
-						&& (primaryAssignments.get(j).getFromDate().compareTo(primaryAssignments.get(i).getToDate()) <= 0))
-					|| ((primaryAssignments.get(j).getToDate().compareTo(primaryAssignments.get(i).getFromDate()) >= 0)
-						&& (primaryAssignments.get(j).getToDate().compareTo(primaryAssignments.get(i).getToDate()) <= 0)))) {
-					errors.rejectValue("employee.assignments[" + primaryMarker.get(i) + "].fromDate", "overlapping",
-						"Assignment Dates Overlapping");
-					errors.rejectValue("employee.assignments[" + primaryMarker.get(i) + "].toDate", "overlapping",
-						"Assignment Dates Overlapping");
-					errors.rejectValue("employee.assignments[" + primaryMarker.get(j) + "].fromDate", "overlapping",
-						"Assignment Dates Overlapping");
-					errors.rejectValue("employee.assignments[" + primaryMarker.get(j) + "].toDate", "overlapping",
-						"Assignment Dates Overlapping");
-				}
-			}
-		}
-	}
+        // check for atleast 1 primary assignment
+        if (primaryAssignments.size() == 0) {
+            errors.rejectValue("employee.assignments", "invalid",
+                    "No Primary Assignment Found In Request. Please Send At Least One Primary Assignment");
+        }
+
+        // check if assignmentDates are overlapping for primary assignments
+        for (int i = 0; i < primaryAssignments.size(); i++) {
+            for (int j = i + 1; j < primaryAssignments.size(); j++) {
+                Long ith_fromDate = primaryAssignments.get(i).getFromDate().getTime();
+                Long jth_fromDate = primaryAssignments.get(j).getFromDate().getTime();
+                Long ith_toDate = primaryAssignments.get(i).getToDate().getTime();
+                Long jth_toDate = primaryAssignments.get(j).getToDate().getTime();
+
+                if (ith_fromDate >= jth_fromDate && ith_fromDate <= jth_toDate) {
+                    errors.rejectValue("employee.assignments[" + primaryMarker.get(i) + "].fromDate", "invalid",
+                            "Primary Assignment From Date " + dateFormat.format(new Date(ith_fromDate))
+                                    + " Is Overlapping With Dates " + dateFormat.format(new Date(jth_fromDate)) + " & "
+                                    + dateFormat.format(new Date(jth_toDate)) + " Of Other Primary Assignment."
+                                    + " Please Send Correct Dates");
+                }
+
+                if (ith_toDate >= jth_fromDate && ith_toDate <= jth_toDate) {
+                    errors.rejectValue("employee.assignments[" + primaryMarker.get(i) + "].toDate", "invalid",
+                            "Primary Assignment To Date " + dateFormat.format(new Date(ith_toDate))
+                                    + " Is Overlapping With Dates " + dateFormat.format(new Date(jth_fromDate)) + " & "
+                                    + dateFormat.format(new Date(jth_toDate)) + " Of Other Primary Assignment."
+                                    + " Please Send Correct Dates");
+                }
+
+                if (jth_fromDate >= ith_fromDate && jth_fromDate <= ith_toDate) {
+                    errors.rejectValue("employee.assignments[" + primaryMarker.get(j) + "].fromDate", "invalid",
+                            "Primary Assignment From Date " + dateFormat.format(new Date(jth_fromDate))
+                                    + " Is Overlapping With Dates " + dateFormat.format(new Date(ith_fromDate)) + " & "
+                                    + dateFormat.format(new Date(ith_toDate)) + " Of Other Primary Assignment."
+                                    + " Please Send Correct Dates");
+                }
+
+                if (jth_toDate >= ith_fromDate && jth_toDate <= ith_toDate) {
+                    errors.rejectValue("employee.assignments[" + primaryMarker.get(j) + "].toDate", "invalid",
+                            "Primary Assignment To Date " + dateFormat.format(new Date(jth_toDate))
+                                    + " Is Overlapping With Dates " + dateFormat.format(new Date(ith_fromDate)) + " & "
+                                    + dateFormat.format(new Date(ith_toDate)) + " Of Other Primary Assignment."
+                                    + " Please Send Correct Dates");
+                }
+            }
+        }
+    }
 }

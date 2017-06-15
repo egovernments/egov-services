@@ -40,16 +40,8 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.eis.service.NonVacantPositionsService;
-import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
-import org.egov.eis.web.contract.NonVacantPositionsResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.RequestValidator;
@@ -59,12 +51,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/nonvacantpositions")
@@ -88,10 +78,10 @@ public class NonVacantPositionsController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * NonVacantPositionsResponse type or ErrorResponse type
 	 * 
-	 * @param NonVacantPositionsGetRequest,
-	 * @param BindingResult
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
+	 * @param nonVacantPositionsGetRequest
+	 * @param modelAttributeBindingResult
+	 * @param requestInfoWrapper
+	 * @param requestBodyBindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("_search")
@@ -125,8 +115,8 @@ public class NonVacantPositionsController {
 	 * type NonVacantPositionsResponse containing ResponseInfo & List of
 	 * NonVacantPositionIds
 	 * 
-	 * @param List<Long>
-	 * @param RequestInfo
+	 * @param nonVacantPositionsList
+	 * @param requestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponse(List<Long> nonVacantPositionsList, RequestInfo requestInfo) {

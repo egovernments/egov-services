@@ -91,6 +91,11 @@ public class AssignmentRepository {
 	public static final String DELETE_QUERY = "DELETE FROM egeis_assignment"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 
+	public static final String ASSIGNMENTS_OPERLAPPING_CHECK_QUERY = "SELECT exists(SELECT FROM egeis_assignment"
+			+ " WHERE ((:fromDate BETWEEN fromDate AND toDate) OR (:toDate BETWEEN fromDate AND toDate)"
+			+ " OR (fromDate BETWEEN :fromDate AND :toDate) OR (toDate BETWEEN :fromDate AND :toDate))"
+			+ " AND isPrimary = true AND employeeId = :employeeId AND tenantId = :tenantId)";
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -209,4 +214,12 @@ public class AssignmentRepository {
 		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 
+    public Boolean assignmentsOverlapping(Assignment assignment, Long employeeId, String tenantId) {
+		Map<String, Object> psValuesMap = new HashMap<>();
+		psValuesMap.put("fromDate", assignment.getFromDate());
+		psValuesMap.put("toDate", assignment.getToDate());
+		psValuesMap.put("employeeId", employeeId);
+		psValuesMap.put("tenantId", tenantId);
+		return namedParameterJdbcTemplate.queryForObject(ASSIGNMENTS_OPERLAPPING_CHECK_QUERY, psValuesMap, Boolean.class);
+    }
 }

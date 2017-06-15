@@ -14,7 +14,7 @@ public class EmployeeGetRequest {
 	Long id;
 	
 	@NotNull
-	@Size(max=256)
+	@Size(min=1, max=256)
 	String tenantId;
 
 }

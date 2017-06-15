@@ -40,18 +40,9 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.MaritalStatus;
-import org.egov.eis.web.contract.BloodGroupResponse;
-import org.egov.eis.web.contract.MaritalStatusResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
@@ -64,6 +55,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EnumsController {
@@ -80,8 +75,8 @@ public class EnumsController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * BloodGroupResponse type or ErrorResponse type
 	 * 
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
+	 * @param requestInfoWrapper
+	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("/bloodgroups/_search")
@@ -107,8 +102,8 @@ public class EnumsController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * MaritalStatusResponse type or ErrorResponse type
 	 * 
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
+	 * @param requestInfoWrapper
+	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("/maritalstatuses/_search")
@@ -135,8 +130,8 @@ public class EnumsController {
 	 * Populate BloodGroupResponse object & returns ResponseEntity of type
 	 * BloodGroupResponse containing ResponseInfo & List of BloodGroup
 	 * 
-	 * @param List<BloodGroup>
-	 * @param RequestInfo
+	 * @param bloodGroups
+	 * @param requestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponseForSearchBloodGroup(List<Map<String, String>> bloodGroups,
@@ -153,8 +148,8 @@ public class EnumsController {
 	 * Populate MaritalStatusResponse object & returns ResponseEntity of type
 	 * MaritalStatusResponse containing ResponseInfo & List of MaritalStatus
 	 * 
-	 * @param List<MaritalStatus>
-	 * @param RequestInfo
+	 * @param maritalStatuses
+	 * @param requestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponseForSearchMaritalStatus(List<String> maritalStatuses,

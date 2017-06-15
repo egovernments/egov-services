@@ -49,6 +49,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -57,6 +59,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class RequestInfoWrapper {
 
+	@NotNull
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 

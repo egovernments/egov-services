@@ -91,7 +91,7 @@ public class UserGetRequest {
 
     private List<String> sort = Collections.singletonList("name");
 
-	@Size(max=256)
+	@Size(min=1, max=256)
 	private String tenantId;
 
 }

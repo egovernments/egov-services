@@ -40,33 +40,31 @@
 
 package org.egov.eis.web.validator;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
+import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator implements Validator {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
 
     @Override
     public boolean supports(Class<?> paramClass) {
@@ -85,18 +83,19 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         // FIXME employee.getId == null or empty then throw error employee id is
         // required
         if (isEmpty(employeeId)) {
-            errors.rejectValue("employee.id", "no value", "provide employee id for update");
+            errors.rejectValue("employee.id", "invalid",
+                    "Employee Id Is Not Provided For Update. Please Send The Employee ID");
             return;
         }
 
         if (!employeeRepository.checkIfEmployeeExists(employeeId, tenantId)) {
             // FIXME throw error employee id does not exist
-            errors.rejectValue("employee.id", "no value present", "employee id doesn't exist");
+            errors.rejectValue("employee.id", "invalid",
+                    "Employee With Given Id Does Not Exist In The System. Please Send The Correct Id");
             return;
         }
 
         validateEmployee(employee, errors);
-        validateDocuments(employee, errors);
         validateAssignments(employee.getAssignments(), employeeId, tenantId, errors);
         validateDepartmentalTest(employee.getTest(), employeeId, tenantId, errors);
         validateEducationalQualification(employee.getEducation(), employeeId, tenantId, errors);
@@ -106,7 +105,7 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         validateTechnicalQualification(employee.getTechnical(), employeeId, tenantId, errors);
     }
 
-    // FIXME
+    // TODO
     private void validateExternalAPIData() {
     }
 
@@ -115,45 +114,22 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         super.validateEmployee(employee, errors);
 
         // FIXME : check only for different employees
-
         if (checkIfColumnValueIsSameInDB("egeis_employee", "code",
                 employee.getCode(), employee.getId(), employee.getTenantId())) {
-            errors.rejectValue("employee.code", "invalid", "Employee Code cannot be changed.");
+            errors.rejectValue("employee.code", "invalid",
+                    "Employee Code Can't Be Changed. Please Send The Same Employee Code.");
         }
 
         if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
                 employee.getPassportNo(), employee.getId(), employee.getTenantId())) {
-            errors.rejectValue("employee.passportNo", "concurrent", "passportNo already exists");
+            errors.rejectValue("employee.passportNo", "invalid",
+                    "Passport Number Already Exists In System. Please Send The Correct Passport Number.");
         }
 
         if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo", employee.getGpfNo(),
                 employee.getId(), employee.getTenantId())) {
-            errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
-        }
-    }
-
-    protected void populateDocumentErrors(List<EmployeeDocument> inputDocuments,
-                                          List<EmployeeDocument> employeeDocumentsFromDb, Employee employee, Errors errors) {
-        for (EmployeeDocument inputDocument : inputDocuments) {
-            for (EmployeeDocument documentInDb : employeeDocumentsFromDb) {
-                boolean duplicateDocumentExists = false;
-                if (inputDocument.getDocument().equals(documentInDb.getDocument())
-                        && !employee.getId().equals(documentInDb.getEmployeeId())) duplicateDocumentExists = true;
-                else if (inputDocument.getDocument().equals(documentInDb.getDocument())
-                        && employee.getId().equals(documentInDb.getEmployeeId())
-                        && !inputDocument.getReferenceType().equals(documentInDb.getReferenceType()))
-                    duplicateDocumentExists = true;
-                else if (inputDocument.getDocument().equals(documentInDb.getDocument())
-                        && employee.getId().equals(documentInDb.getEmployeeId())
-                        && inputDocument.getReferenceType().equals(documentInDb.getReferenceType())
-                        && (inputDocument.getReferenceId() == null || (!inputDocument.getReferenceId().equals(documentInDb.getReferenceId()))))
-                    duplicateDocumentExists = true;
-                if (duplicateDocumentExists) {
-                    List<Integer> index = getIndex(employee, EntityType.valueOf(inputDocument.getReferenceType()), inputDocument.getDocument());
-                    System.out.println("index=" + index);
-                    errors.rejectValue(getDocErrorMsg(index, EntityType.valueOf(inputDocument.getReferenceType())), "concurrent", "document(s) already exists");
-                }
-            }
+            errors.rejectValue("employee.gpfNo", "invalid",
+                    "GPF Number Already Exists In System. Please Send The Correct GPF Number.");
         }
     }
 
@@ -162,6 +138,15 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         validatePrimaryPositions(assignments, employeeId, tenantId, errors, "update");
         for (int index = 0; index < assignments.size(); index++) {
             // validateDocumentsForNewAssignment(assignments.get(index), errors, index);
+            if (assignments.get(index).getIsPrimary()
+                    && assignmentRepository.assignmentsOverlapping(assignments.get(index), employeeId, tenantId)) {
+                DateFormat dateFormat = new SimpleDateFormat("dd MMMMM, yyyy");
+                String fromDate = dateFormat.format(assignments.get(index).getFromDate());
+                String toDate = dateFormat.format(assignments.get(index).getToDate());
+                errors.rejectValue("employee.assignments[" + index + "]", "invalid",
+                        "Employee Is Already Having A Primary Assignment Between "
+                                + fromDate + " & " + toDate + ". Please Send The Different Dates.");
+            }
         }
     }
 
@@ -281,10 +266,6 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         }
         if (!idsMap.isEmpty())
             validateEntityId(idsMap, EntityType.TECHNICAL, employeeId, tenantId, errors);
-    }
-
-    private String getDocumentsAsCSVs(List<String> documents) {
-        return "'" + String.join("','", documents) + "'";
     }
 
     /**

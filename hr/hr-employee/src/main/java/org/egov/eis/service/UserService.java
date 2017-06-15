@@ -195,12 +195,14 @@ public class UserService {
 		UserGetRequest userGetRequest = new UserGetRequest();
 
 		userGetRequest.setId(employeeCriteria.getId());
-		userGetRequest.setPageSize(employeeCriteria.getId().size());
 		userGetRequest.setRoleCodes(employeeCriteria.getRoleCodes());
 		userGetRequest.setTenantId(employeeCriteria.getTenantId());
 		userGetRequest.setPageNumber(employeeCriteria.getPageNumber());
 		userGetRequest.setRequestInfo(requestInfo);
 
+		if(!isEmpty(employeeCriteria.getId())) {
+			userGetRequest.setPageSize(employeeCriteria.getId().size());
+		}
 		if (!isEmpty(userGetRequest.getRoleCodes())) {
 			userGetRequest.getRoleCodes().add("EMPLOYEE");
 			userGetRequest.setPageSize(500);

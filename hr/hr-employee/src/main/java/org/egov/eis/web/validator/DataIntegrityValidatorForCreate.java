@@ -40,11 +40,7 @@
 
 package org.egov.eis.web.validator;
 
-import java.util.List;
-
 import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,7 +61,6 @@ public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator imp
 		return Employee.class.equals(paramClass);
 	}
 
-	// FIXME Table names and column names are hard-coded
 	@Override
 	public void validate(Object targetObject, Errors errors) {
 		if (!(targetObject instanceof Employee))
@@ -73,27 +68,11 @@ public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator imp
 
 		Employee employee = (Employee) targetObject;
 		validateEmployee(employee, errors);
-		validateDocuments(employee, errors);
 		validatePrimaryPositions(employee.getAssignments(), employee.getId(), employee.getTenantId(), errors, "create");
 	}
 
-	protected void populateDocumentErrors(List<EmployeeDocument> inputDocuments,
-			List<EmployeeDocument> employeeDocumentsFromDb, Employee employee, Errors errors) {
-		for (EmployeeDocument inputDocument : inputDocuments) {
-			for (EmployeeDocument documentInDb : employeeDocumentsFromDb) {
-				if (inputDocument.getDocument().equals(documentInDb.getDocument())) {
-					List<Integer> index = getIndex(employee, EntityType.valueOf(inputDocument.getReferenceType()), inputDocument.getDocument());
-					System.out.println("index=" + index);
-					errors.rejectValue(getDocErrorMsg(index, EntityType.valueOf(inputDocument.getReferenceType())), "concurrent", "document(s) already exists");
-				}
-			}
-		}	
-	}
-
-	// FIXME Validate data existence of Religion, Languages etc. for every data
-	// in separate methods
+	// FIXME Validate data existence of Religion, Languages etc. for every data in separate methods
 	private void validateExternalAPIData() {
-
 	}
 
 	protected void validateEmployee(Employee employee, Errors errors) {
@@ -101,39 +80,27 @@ public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator imp
 
 		if ((employee.getCode() != null) && duplicateExists("egeis_employee", "code",
 				employee.getCode(), employee.getTenantId())) {
-			errors.rejectValue("employee.code", "concurrent", "employee code already exists");
+			errors.rejectValue("employee.code", "invalid",
+					"Employee Code Already Exists In System. Please Send The Different Employee Code.");
 		}
 
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getTenantId())) {
-			errors.rejectValue("employee.passportNo", "concurrent", "passportNo already exists");
+			errors.rejectValue("employee.passportNo", "invalid",
+					"Passport Number Already Exists In System. Please Send The Correct Passport Number.");
 		}
 
 		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo",
 				employee.getGpfNo(), employee.getTenantId())) {
-			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
+			errors.rejectValue("employee.gpfNo", "invalid",
+					"GPF Number Already Exists In System. Please Send The Correct GPF Number.");
 		}
-
 	}
 
-	/*private void validateDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
-			Errors errors) {
-		if (isEmpty(tests))
-			return;
-		for (int index = 0; index < tests.size(); index++) {
-			employeeCommonValidator.validateDocumentsForNewEntity(tests.get(index).getDocuments(), 
-					EntityType.TEST, tenantId, errors, index);
-		}
-	}*/
-	
-	/*private String getDocumentsAsCSVs(List<String> documents) {
-		return "'" + String.join("','", documents) + "'";
-	}*/
-	
 	/**
 	 * Checks if the given string is present in db for the given column and given table.
 	 */
-	public Boolean duplicateExists(String table, String column, String value, String tenantId) {
+	Boolean duplicateExists(String table, String column, String value, String tenantId) {
 		return employeeRepository.duplicateExists(table, column, value, tenantId);
 	}
 }

@@ -59,7 +59,7 @@ public class NonVacantPositionsRepository {
 			+ " FROM egeis_assignment"
 			+ " WHERE positionId = ? AND departmentId = ? AND designationId = ? AND (? BETWEEN fromDate AND toDate"
             + " OR ? BETWEEN fromDate AND toDate OR fromDate BETWEEN ? AND ? OR toDate BETWEEN ? AND ?)"
-			+ " AND tenantId = ? $employeeIdCheck)";
+			+ " AND isPrimary = true AND tenantId = ? $employeeIdCheck)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

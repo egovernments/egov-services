@@ -46,27 +46,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EntityType {
-	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee","employee"), 
-	ASSIGNMENT("ASSIGNMENT", "egeis_assignment", "assignments"), 
-	JURISDICTION("JURISDICTION", "egeis_employeejurisdiction", "jurisdictions"),
-	SERVICE("SERVICE", "egeis_servicehistory", "serviceHistory"), 
-	TECHNICAL("TECHNICAL", "egeis_technicalqualification", "technical"), 
-	EDUCATION("EDUCATION", "egeis_educationalqualification", "education"),
-	TEST("TEST", "egeis_departmentaltest", "test"), 
-	REGULARISATION("REGULARISATION", "egeis_regularisation", "regularisation"), 
-	PROBATION("PROBATION", "egeis_probation", "probation");
+	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee","employee", "Employee"),
+	ASSIGNMENT("ASSIGNMENT", "egeis_assignment", "assignments", "Assignment"),
+	JURISDICTION("JURISDICTION", "egeis_employeejurisdiction", "jurisdictions", "Jurisdiction"),
+	SERVICE("SERVICE", "egeis_servicehistory", "serviceHistory", "Service History"),
+	TECHNICAL("TECHNICAL", "egeis_technicalqualification", "technical", "Technical Qualification"),
+	EDUCATION("EDUCATION", "egeis_educationalqualification", "education", "Educational Qualification"),
+	TEST("TEST", "egeis_departmentaltest", "test", "Departmental Test"),
+	REGULARISATION("REGULARISATION", "egeis_regularisation", "regularisation", "Regularisation"),
+	PROBATION("PROBATION", "egeis_probation", "probation", "Probation"),
+	NOMINEE("NOMINEE", "egeis_nominee", "nominee", "Nominee");
 
 	private String value;
 	private String dbTable;
-	/**
-	 * 
-	 */
 	private String contractFieldName;
+	private String entityName;
 
-	EntityType(String value, String dbTable, String contractFieldName) {
+	EntityType(String value, String dbTable, String contractFieldName, String entityName) {
 		this.value = value;
 		this.dbTable = dbTable;
 		this.contractFieldName = contractFieldName;
+		this.entityName = entityName;
 	}
 
 	@Override
@@ -86,17 +86,13 @@ public enum EntityType {
 	public void setValue(String value){
 		this.value = value;
 	}
-	
-	public void setDbTable(String dbTable){
-		this.dbTable = dbTable;
-	}
-
-	public void setContractFieldName(String contractFieldName) {
-		this.contractFieldName = contractFieldName;
-	}
 
 	public String getContractFieldName() {
 		return contractFieldName;
+	}
+
+	public String getEntityName() {
+		return entityName;
 	}
 
 	@JsonCreator

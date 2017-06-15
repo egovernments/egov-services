@@ -80,7 +80,7 @@ public class HODEmployeeCriteria {
 	private String sortOrder;
 
 	@NotNull
-	@Size(max=256)
+	@Size(min=1, max=256)
 	private String tenantId;
 
 	@Min(1)

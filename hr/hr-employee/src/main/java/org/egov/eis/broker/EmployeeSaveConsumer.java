@@ -67,7 +67,8 @@ public class EmployeeSaveConsumer {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}" })
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory",
+			topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}" })
 	public void listen(ConsumerRecord<String, String> record) {
 		LOGGER.info("key : "+ record.key() + "\t\t" + "value : " +record.value());
 		
@@ -80,9 +81,7 @@ public class EmployeeSaveConsumer {
 	}
 		else if (record.topic().equals(propertiesManager.getUpdateEmployeeTopic())){
 			try {
-				LOGGER.info("entering updateemp consumer");
 				employeeService.update(objectMapper.readValue(record.value(), EmployeeRequest.class));
-				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

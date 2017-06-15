@@ -61,7 +61,13 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.usagetype.update.name}")
     private String updateUsageTypeTopicName;
-
+    
+    @Value("${kafka.topics.supplytype.create.name}")
+    private String createSupplyTypeTopicName;
+    
+    @Value("${kafka.topics.supplytype.update.name}")
+    private String updateSupplyTypeTopicName;
+    
     @Value("${kafka.topics.category.create.name}")
     private String createCategoryTopicName;
 
@@ -234,5 +240,12 @@ public class ApplicationProperties {
 
     public String getCreateDocumentTypeTopicName() {
         return createDocumentTypeTopicName;
+    }
+    public String getCreateSupplyTypeTopicName()
+    {
+    	return createSupplyTypeTopicName;
+    }
+    public String getUpdateSupplyTypeTopicName() {
+        return updateSupplyTypeTopicName;
     }
 }

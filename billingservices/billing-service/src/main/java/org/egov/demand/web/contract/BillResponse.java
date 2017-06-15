@@ -3,7 +3,7 @@ package org.egov.demand.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.demand.model.BillInfo;
+import org.egov.demand.model.Bill;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 /**
@@ -15,7 +15,7 @@ public class BillResponse   {
   private ResponseInfo resposneInfo = null;
 
   @JsonProperty("BillInfos")
-  private List<BillInfo> billInfos = new ArrayList<BillInfo>();
+  private List<Bill> billInfos = new ArrayList<Bill>();
   
 }
 

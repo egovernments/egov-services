@@ -209,7 +209,7 @@ $(document).ready(function() {
                                         _obj = revenueBlock;
                                         break;
                                 }
-                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey) || "NA");
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, values[key][ckey]) || "NA");
                             } else
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
@@ -441,7 +441,7 @@ $(document).ready(function() {
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
 
-    } else if (_type.toLowerCase() == "shopping complex") {
+    } else if (_type.toLowerCase() == "shop") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
@@ -481,6 +481,7 @@ $(document).ready(function() {
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        $("#rrReadingNo").remove();
     } else if (_type.toLowerCase() == "community toilet complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -539,14 +540,14 @@ $(document).ready(function() {
             "action": data.action
         };
 
+        if(_agrmntDet.wFremarks) {
+            _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
+            delete _agrmntDet.wFremarks;
+        }
+
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
-            }
-
-            if(_agrmntDet.wFremarks) {
-                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
-                delete _agrmntDet.wFremarks;
             }
 
             var response = $.ajax({
@@ -566,6 +567,8 @@ $(document).ready(function() {
 
 
             if (response["status"] === 201) {
+                if(window.opener)
+                    window.opener.location.reload();
                 window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
@@ -608,6 +611,9 @@ $(document).ready(function() {
                 });
 
                 if (response["status"] === 201) {
+                    if(window.opener)
+                        window.opener.location.reload();
+
                     printNotice(response["responseJSON"].Notices[0]);
                     // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
                 } else {
@@ -630,7 +636,7 @@ $(document).ready(function() {
               data: JSON.stringify({
                   RequestInfo: requestInfo,
                   Agreement: agreementDetails
-              }), 
+              }),
               async: false,
               headers: {
                   'auth-token': authToken

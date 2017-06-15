@@ -1,11 +1,13 @@
 package org.egov.domain.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.egov.pgr.common.model.Employee;
 
 @Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationContext {
     private SevaRequest sevaRequest;
     private ServiceType serviceType;

@@ -55,6 +55,7 @@ import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
+import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.service.WaterConnectionService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
@@ -67,6 +68,7 @@ import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
+import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.egov.wcms.web.contract.UsageTypeRequest;
 import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -90,6 +92,9 @@ public class WaterMasterConsumer {
 
     @Autowired
     private CategoryTypeService categoryService;
+
+    @Autowired
+    private SupplyTypeService supplyTypeService;
 
     @Autowired
     private PropertyUsageTypeService propUsageTypeService;
@@ -132,7 +137,9 @@ public class WaterMasterConsumer {
             "${kafka.topics.documenttype.applicationtype.create.name}","${kafka.topics.documenttype.applicationtype.update.name}",
             "${kafka.topics.propertyusage.create.name}","${kafka.topics.propertyusage.update.name}",
             "${kafka.topics.propertypipesize.create.name}", "${kafka.topics.propertypipesize.update.name}",
-            "${kafka.topics.sourcetype.create.name}", "${kafka.topics.sourcetype.update.name}" })
+            "${kafka.topics.sourcetype.create.name}", "${kafka.topics.sourcetype.update.name}",
+            "${kafka.topics.supplytype.create.name}",
+            "${kafka.topics.supplytype.update.name}"})
 
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
@@ -144,6 +151,10 @@ public class WaterMasterConsumer {
                 usageTypeService.update(objectMapper.readValue(record.value(), UsageTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreateCategoryTopicName()))
                 categoryService.create(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getCreateSupplyTypeTopicName()))
+                supplyTypeService.createSupplyType(objectMapper.readValue(record.value(), SupplyTypeRequest.class));
+            else if (record.topic().equals(applicationProperties.getUpdateSupplyTypeTopicName()))
+                supplyTypeService.updateSupplyType(objectMapper.readValue(record.value(), SupplyTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdateCategoryTopicName()))
                 categoryService.update(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))

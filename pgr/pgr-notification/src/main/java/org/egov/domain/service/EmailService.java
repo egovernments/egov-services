@@ -2,6 +2,8 @@ package org.egov.domain.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.domain.model.*;
+import org.egov.domain.service.emailstrategy.EmailMessageStrategy;
+import org.egov.domain.service.emailstrategy.UndefinedEmailMessageStrategy;
 import org.egov.persistence.queue.MessageQueueRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -28,13 +30,9 @@ public class EmailService {
     }
 
     public void send(NotificationContext context) {
-        if (context.getSevaRequest().isRequesterEmailAbsent()) {
-            log.info("Skipping email notification for CRN {}", context.getSevaRequest().getCrn());
-            return;
-        }
         final List<EmailRequest> emailRequests = getEmailRequests(context);
         emailRequests.forEach(emailRequest ->
-            messageQueueRepository.sendEmail(context.getSevaRequest().getRequesterEmail(), emailRequest));
+            messageQueueRepository.sendEmail(emailRequest));
     }
 
     private List<EmailRequest> getEmailRequests(NotificationContext context) {
@@ -50,6 +48,7 @@ public class EmailService {
         return EmailRequest.builder()
 			.subject(getEmailSubject(messageContext))
 			.body(getMailBody(messageContext))
+            .email(messageContext.getEmail())
 			.build();
     }
 

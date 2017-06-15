@@ -39,6 +39,7 @@
  */
 package org.egov.workflow.domain.model;
 
+
 import java.util.List;
 
 import javax.validation.constraints.NotNull;

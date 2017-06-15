@@ -144,25 +144,18 @@ public class ServiceTypeRepository {
 
     }
 
-    public boolean checkServiceByNameAndCode(final String code, final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(name);
-        // preparedStatementValues.add(id);
-        preparedStatementValues.add(tenantId);
-        final String query;
-        if (code == null)
-            query = ServiceTypeQueryBuilder.selectServiceNameAndCodeQuery();
-        else {
-            preparedStatementValues.add(code);
-            query = ServiceTypeQueryBuilder.selectServiceNameAndCodeNotInQuery();
-        }
-        final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
-                preparedStatementValues.toArray());
-        if (!serviceTypes.isEmpty())
-            return false;
-
-        return true;
-    }
+	public boolean checkServiceByNameAndCode(final String code, final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(tenantId);
+		preparedStatementValues.add(code);
+		final String query = ServiceTypeQueryBuilder.selectServiceNameAndCodeQuery();
+		final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!serviceTypes.isEmpty())
+			return false;
+		return true;
+	}
 
     public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();

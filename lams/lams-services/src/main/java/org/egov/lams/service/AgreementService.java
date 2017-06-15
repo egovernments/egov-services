@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-
 import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
@@ -49,6 +48,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class AgreementService {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementService.class);
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private AgreementRepository agreementRepository;
@@ -110,7 +112,6 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("createAgreement service::" + agreement);
 		String kafkaTopic = null;
-		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 
 		Calendar calendar = Calendar.getInstance();
@@ -146,7 +147,7 @@ public class AgreementService {
 		agreement.setId(agreementRepository.getAgreementID());
 		try {
 
-			agreementValue = mapper.writeValueAsString(agreementRequest);
+			agreementValue = objectMapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException JsonProcessingException) {
 			logger.info("AgreementService : " + JsonProcessingException.getMessage(), JsonProcessingException);
@@ -172,7 +173,6 @@ public class AgreementService {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
 
@@ -194,14 +194,17 @@ public class AgreementService {
 								agreementRequest.getRequestInfo());
 					}
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-					agreement.setStatus(Status.CANCELLED);
+					if (agreement.getStatus().equals(Status.REJECTED))
+						agreement.setStatus(Status.CANCELLED);
+					else
+						agreement.setStatus(Status.REJECTED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					// no action for print notice
 				}
 			}
 		}
 		try {
-			agreementValue = mapper.writeValueAsString(agreementRequest);
+			agreementValue = objectMapper.writeValueAsString(agreementRequest);
 			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
 		} catch (JsonProcessingException jsonProcessingException) {
 			logger.error("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);

@@ -1,7 +1,7 @@
-INSERT into egpgr_complainttype_category (id,name,description,version,tenantid) values (nextval('seq_egpgr_complainttype_category'),'Property Tax','Property Tax',0,'default');
+INSERT into egpgr_complainttype_category (id,code,name,description,version,tenantid) values (nextval('seq_egpgr_complainttype_category'),'PT','Property Tax','Property Tax',0,'default');
 
-INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby, slahours, hasfinancialimpact, category, metadata, type, keywords,tenantid)
-VALUES (nextval('SEQ_EGPGR_COMPLAINTTYPE'), 'Assessment certificate', NULL, 0, 'PTAC', true, NULL, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 24, false, (select id from egpgr_complainttype_category where name='Property Tax'), true, 'realtime','','default');
+INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby, slahours, hasfinancialimpact, category, metadata, type, tenantid)
+VALUES (nextval('SEQ_EGPGR_COMPLAINTTYPE'), 'Assessment certificate', NULL, 0, 'PTAC', true, NULL, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 24, false, (select id from egpgr_complainttype_category where name='Property Tax'), true, 'realtime','default');
 
 INSERT INTO service_definition(code, tenantid, createddate, createdby) VALUES ('PTAC', 'default', now(), 0);
 
@@ -26,8 +26,8 @@ servicecode, tenantid, createddate, createdby) VALUES ('PTACAF', 'N', 'number', 
 INSERT INTO value_definition(servicecode, attributecode, key, name, tenantid, createddate, createdby) VALUES
 ('PTAC', 'PTACAF', 'ACAF', 'core.application.fee', 'default', now(), 0);
 
-INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby, slahours, hasfinancialimpact, category, metadata, type, keywords,tenantid)
-VALUES (nextval('SEQ_EGPGR_COMPLAINTTYPE'), 'No Due certificate', NULL, 0, 'PTNDC', true, NULL, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 24, false, (select id from egpgr_complainttype_category where name='Property Tax'), true, 'realtime','','default');
+INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby, slahours, hasfinancialimpact, category, metadata, type,tenantid)
+VALUES (nextval('SEQ_EGPGR_COMPLAINTTYPE'), 'No Due certificate', NULL, 0, 'PTNDC', true, NULL, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 24, false, (select id from egpgr_complainttype_category where name='Property Tax'), true, 'realtime','default');
 
 INSERT INTO service_definition(code, tenantid, createddate, createdby) VALUES ('PTNDC', 'default', now(), 0);
 
@@ -53,8 +53,8 @@ INSERT INTO value_definition(servicecode, attributecode, key, name, tenantid, cr
 ('PTNDC', 'PTNDAF', 'NDAF', 'core.application.fee', 'default', now(), 0);
 
 
-INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby, slahours, hasfinancialimpact, category, metadata, type, keywords,tenantid)
-VALUES (nextval('SEQ_EGPGR_COMPLAINTTYPE'), 'Transfer of property Heredity', NULL, 0, 'PTPH', true, NULL, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 24, false, (select id from egpgr_complainttype_category where name='Property Tax'), true, 'realtime','','default');
+INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby, slahours, hasfinancialimpact, category, metadata, type,tenantid)
+VALUES (nextval('SEQ_EGPGR_COMPLAINTTYPE'), 'Transfer of property Heredity', NULL, 0, 'PTPH', true, NULL, '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1, 1, 24, false, (select id from egpgr_complainttype_category where name='Property Tax'), true, 'realtime','default');
 
 INSERT INTO service_definition(code, tenantid, createddate, createdby) VALUES ('PTPH', 'default', now(), 0);
 

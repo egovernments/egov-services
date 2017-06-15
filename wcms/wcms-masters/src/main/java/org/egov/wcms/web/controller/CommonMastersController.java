@@ -46,21 +46,12 @@ import java.util.Map;
 import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.model.enums.BillingType;
 import org.egov.wcms.model.enums.ConnectionType;
-import org.egov.wcms.model.enums.SupplyType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/master")
 public class CommonMastersController {
-
-    @RequestMapping(value = "/_getsupplytypes")
-    public Map<String, SupplyType> getAllSupplyTypes() {
-        final Map<String, SupplyType> supplyType = new HashMap<>();
-        for (final SupplyType key : SupplyType.values())
-            supplyType.put(key.name(), key);
-        return supplyType;
-    }
 
     @RequestMapping(value = "/_getapplicationtypes")
     public Map<String, ApplicationType> getApplicationTypeEnum() {

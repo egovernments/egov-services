@@ -151,7 +151,7 @@ public class AgreementRepository {
 			throw new RuntimeException(e.getMessage());
 		}
 		if (agreements.isEmpty())
-			throw new RuntimeException("The criteria provided did not match any agreements");
+			return agreements;
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Asset> assets = getAssets(agreementCriteria,requestInfo);
@@ -174,7 +174,7 @@ public class AgreementRepository {
 			throw new RuntimeException(e.getMessage());
 		}
 		if (agreements.isEmpty())
-			throw new RuntimeException("The criteria provided did not match any agreements");
+			return agreements;
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Allottee> allottees = getAllottees(agreementCriteria,requestInfo);
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
@@ -196,7 +196,7 @@ public class AgreementRepository {
 			throw new RuntimeException(e.getMessage());
 		}
 		if (agreements.isEmpty())
-			throw new RuntimeException("The criteria provided did not match any agreements");
+			return agreements;
 		fetchAgreementsModel.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
 		List<Asset> assets = getAssets(fetchAgreementsModel,requestInfo);
 		fetchAgreementsModel.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));

@@ -101,7 +101,7 @@ paths:
     post:
       description: Creates a demand reason
       parameters:
-        - name: demand
+        - name: demandReason
           in: body
           description: Request header for the demand reason.
           required: true

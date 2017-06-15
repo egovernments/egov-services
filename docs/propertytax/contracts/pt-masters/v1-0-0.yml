@@ -9,7 +9,9 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/masters/v1'
+basePath: '/property/masters/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+
 paths:
     /departments/_search:
       post:
@@ -921,7 +923,6 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
-
     Department:
       type: object
       properties:
@@ -1338,6 +1339,10 @@ definitions:
           description: name local of the UsageMaster
           maxLength: 256
           minLength: 8
+        parent:
+          type: integer
+          format: int64
+          description: The parent usage. Eg:- Under Non-Residential there can be sub usages shop, hotel, lodge etc. In this case Non-Residential is parent for shop, hotel, lodge
         description:
           type: string
           description: description of the UsageMaster

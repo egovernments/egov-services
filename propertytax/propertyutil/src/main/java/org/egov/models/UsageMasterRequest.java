@@ -2,7 +2,10 @@ package org.egov.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UsageMasterRequest {
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	private List<UsageMaster> usageMasters;

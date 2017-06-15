@@ -3,7 +3,8 @@ package org.egov;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.egov.domain.service.*;
+import org.egov.domain.service.emailstrategy.*;
+import org.egov.domain.service.smsstrategy.*;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -57,17 +58,23 @@ public class PgrNotificationApplication {
             new ComplaintCitizenSMSMessageStrategy(),
             new NewDeliverableCitizenSMSMessageStrategy(),
             new UpdateDeliverableStatusCitizenSMSMessageStrategy(),
-            new ProcessingFeeEnteredCitizenSMSMessageStrategy()
+            new ProcessingFeeEnteredCitizenSMSMessageStrategy(),
+            new ComplaintRegisteredEmployeeSMSMessageStrategy(),
+            new ComplaintEscalatedFromEmployeeSMSMessageStrategy(),
+            new ComplaintEscalatedToEmployeeSMSMessageStrategy()
         );
     }
 
     @Bean("emailMessageStrategies")
     public List<EmailMessageStrategy> getEmailMessageStrategies() {
         return Arrays.asList(
-            new ComplaintEmailMessageStrategy(),
-            new NewDeliverableEmailMessageStrategy(),
-            new UpdateDeliverableStatusEmailMessageStrategy(),
-            new ProcessingFeeEnteredEmailMessageStrategy()
+            new ComplaintCitizenEmailMessageStrategy(),
+            new NewDeliverableCitizenEmailMessageStrategy(),
+            new UpdateDeliverableStatusCitizenEmailMessageStrategy(),
+            new ProcessingFeeEnteredCitizenEmailMessageStrategy(),
+            new ComplaintRegisteredEmployeeEmailMessageStrategy(),
+            new ComplaintEscalatedFromEmployeeEmailMessageStrategy(),
+            new ComplaintEscalatedToEmployeeEmailMessageStrategy()
         );
     }
 }

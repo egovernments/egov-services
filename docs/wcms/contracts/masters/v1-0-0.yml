@@ -8,10 +8,11 @@
     description: |
       APIs available for WCMS Masters and mapping between two masters
         - Create, Update and Search for CategoryType
-        - Create, Update and Search for PipeSizeType
+        - Create, Update and Search for PipeSize
         - Create, Update and Search for DonationType (NOT SUPPORTED YET)
         - Create, Update and Search for DocumentType
         - Create, Update and Search for SourceType
+        - Create, Update and Search for SupplyType
         - Search for ConnectionType
         - Search for ApplicationType
         - Create, Update and Search for mapping between PropertyType-CategoryType
@@ -32,7 +33,7 @@
         summary: Create new category type.
         description: API to create new category type
         tags:
-          - CategoryType
+          - Category Type
         parameters:
           - name: Category Type
             in: body
@@ -57,7 +58,7 @@
         summary: updates existing values
         description: updates existing values
         tags:
-          - CategoryType
+          - Category Type
         parameters:
           - name: Category Type
             in: body
@@ -104,7 +105,7 @@
         tags:
           - Pipe Size
         parameters:
-          - name: PipeSizeType
+          - name: Pipe Size
             in: body
             description: required parameters have to be populated
             required: true
@@ -127,9 +128,9 @@
         summary: updates existing values
         description: updates existing values
         tags:
-          - PipeSizeType
+          - Pipe Size
         parameters:
-          - name: PipeSizeType
+          - name: Pipe Size
             in: body
             description: required parameters have to be populated
             required: true
@@ -149,7 +150,7 @@
       post:
         summary: searches existing values
         tags:
-          - PipeSizeType
+          - Pipe Size
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -275,7 +276,7 @@
               $ref: '#/definitions/SourceTypeReq'
         responses:
           '201':
-            description: Request acknowledged sucessfully
+            description: SupplyType created sucessfully
             schema:
               $ref: "#/definitions/SourceTypesRes"
           '400':
@@ -300,9 +301,79 @@
               $ref: '#/definitions/SourceTypeReq'
         responses:
           '200':
-            description: Request acknowledged sucessfully
+            description: SupplyType Updated sucessfully
             schema:
               $ref: "#/definitions/SourceTypesRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    # Supply Type API
+    /supplytype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - SupplyType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+          - $ref: "#/parameters/name"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/SupplyTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /supplytype/_create:
+      post:
+        summary: creates different types of allowed supply Type
+        description: allowed water supply type
+        tags:
+          - SupplyType
+        parameters:
+          - name: SupplyType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/SupplyTypeReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/SupplyTypesRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /supplytype/{code}/_update:
+      parameters:
+      - $ref: "#/parameters/updateCode"
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - SupplyType
+        parameters:
+          - name: SupplyType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/SupplyTypeReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/SupplyTypesRes"
           '400':
             description: Request failed
             schema:
@@ -376,7 +447,9 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /propertytype-categorytype/_update:
+    /propertytype-categorytype/{id}/_update:
+      parameters:
+      - $ref: "#/parameters/updateId"
       post:
         summary: updates existing values
         description: updates existing values
@@ -444,7 +517,9 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /propertytype-pipesizetype/_update:
+    /propertytype-pipesizetype/{id}/_update:
+      parameters:
+      - $ref: "#/parameters/updateId"
       post:
         summary: updates existing values
         description: updates existing values
@@ -512,7 +587,9 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /propertytype-usagetype/_update:
+    /propertytype-usagetype/{id}/_update:
+      parameters:
+      - $ref: "#/parameters/updateId"
       post:
         summary: updates existing values
         description: updates existing values
@@ -580,7 +657,9 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /documenttype-applicationtype/_update:
+    /documenttype-applicationtype/{id}/_update:
+      parameters:
+      - $ref: "#/parameters/updateId"
       post:
         summary: updates existing values
         description: updates existing values
@@ -633,6 +712,15 @@
       type: string
       minLength: 0
       maxLength: 20
+      exclusiveMinimum: true
+      exclusiveMaximum: false
+    updateId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier of the master to be updated.
+      type: integer
+      format: int64
       exclusiveMinimum: true
       exclusiveMaximum: false
     id:
@@ -1056,7 +1144,58 @@
         - code
         - name
         - tenantId    
+
+  # Water Supply Type definitions
+    SupplyTypesRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        SupplyTypes:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/SupplyType'
+            
+    SupplyTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        SupplyType:
+          $ref: '#/definitions/SupplyType'
+      required:
+        - RequestInfo
+        - SupplyType
     
+    SupplyType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          type: string
+          description: unique code this should be assigned by system.
+          maxLength: 64
+        name: 
+          type: string
+          description: human readable name should be assigned by user.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - code
+        - tenantId
+
   # Document Type definitions
     DocumentTypeReq:
       type: object

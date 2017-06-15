@@ -23,13 +23,13 @@ public class MessageRepository {
     
     private MessageCacheRepository messageCacheRepository;
     
+    @Autowired
+    private MessageRepositoryQueryBuilder messageQueryBuilder;
+    
     private static final Logger logger = LoggerFactory.getLogger(MessageRepository.class);
     
     @Autowired
 	private JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    private MessageRepositoryQueryBuilder messageQueryBuilder;
     
     public MessageRepository(MessageJpaRepository messageJpaRepository) {
         this.messageJpaRepository = messageJpaRepository;
@@ -60,9 +60,10 @@ public class MessageRepository {
     
     public boolean createMessage(CreateMessagesRequest createMessagesRequest){
     	List<org.egov.web.contract.Message> messageList = createMessagesRequest.getMessages();
-    	int[] values = null;
+    	String batchInsertQuery = messageQueryBuilder.getQueryForBatchInsert();
+    	int[] values = {};
 		try {
-			values = jdbcTemplate.batchUpdate(messageQueryBuilder.getQueryForBatchInsert(),
+			values = jdbcTemplate.batchUpdate(batchInsertQuery,
 					new BatchPreparedStatementSetter() {
 						@Override
 						public void setValues(java.sql.PreparedStatement statement, int i) throws SQLException {

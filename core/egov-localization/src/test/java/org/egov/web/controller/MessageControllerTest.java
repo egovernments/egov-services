@@ -1,15 +1,29 @@
 package org.egov.web.controller;
 
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.egov.TestConfiguration;
+import org.egov.domain.model.AuditDetails;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
-
-
-
+import org.egov.web.contract.CreateMessagesRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,18 +31,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MessageController.class)
@@ -91,6 +93,16 @@ public class MessageControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("mandatoryFieldsMissingErrorResponse.json")));
     }
+    
+    @Test
+    public void test_should_create_messages() throws Exception{
+    	List<org.egov.web.contract.Message> messages  = new ArrayList<>();
+    	messages.add(getMessageObject());
+    	CreateMessagesRequest messagesRequest = Mockito.mock(CreateMessagesRequest.class);
+    	when(messageService.createMessage(messagesRequest)).thenReturn(false);
+    	assertFalse(messageService.createMessage(any(CreateMessagesRequest.class)));
+    }
+    
 
     private String getFileContents(String fileName) {
         try {
@@ -115,5 +127,12 @@ public class MessageControllerTest {
             .locale(LOCALE)
             .build();
         return Arrays.asList(message1, message2);
+    }
+    
+    private org.egov.web.contract.Message getMessageObject(){
+    	AuditDetails auditDetails = new AuditDetails();
+    	auditDetails.setCreatedBy(1L);
+    	org.egov.web.contract.Message message = new org.egov.web.contract.Message("CODE", "MESSAGE", "TENANTID", "MODULE", auditDetails);
+    	return message;
     }
 }

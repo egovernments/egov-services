@@ -538,7 +538,7 @@ $(document).ready(function() {
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
             "type": process.businessKey,
-            "assignee": $("#approverPositionId") && $("#approverPositionId").val() ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
+            "assignee": $("#approverPositionId") && $("#approverPositionId").val() && data.action && data.action.toLowerCase() != "reject" ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };
@@ -572,7 +572,7 @@ $(document).ready(function() {
             if (response["status"] === 201) {
                 if(window.opener)
                     window.opener.location.reload();
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : (data.action && data.action.toLowerCase() == "reject" ? (rejectedSenderName || "") : "")) + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + (data.action && data.action.toLowerCase() == "reject" ? (rejectedSenderName || "") : ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "")) + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }

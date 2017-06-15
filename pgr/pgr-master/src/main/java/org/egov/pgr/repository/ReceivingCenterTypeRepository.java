@@ -76,7 +76,7 @@ public class ReceivingCenterTypeRepository {
 		final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
 
 		final Object[] obj = new Object[] { centerType.getCode(), centerType.getName(), centerType.getDescription(),
-				centerType.getIscrnrequired(),centerType.getOrderno(),centerType.getActive(), 
+				centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
 				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
 				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
@@ -90,9 +90,10 @@ public class ReceivingCenterTypeRepository {
 		LOGGER.info("ReceivingCenterType Update Request::" + centerTypeRequest);
 		final String receivingCenterTypeUpdate = ReceivingCenterTypeQueryBuilder.updateReceivingCenterTypeQuery();
 		final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
-		final Object[] obj = new Object[] { centerType.getCode(),centerType.getName(), centerType.getDescription(),centerType.getIscrnrequired(),centerType.getOrderno(),
-				centerType.getActive(),Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), centerType.getId() };
+		final Object[] obj = new Object[] { centerType.getName(), centerType.getDescription(),
+				centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
+				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), centerType.getCode() };
 		jdbcTemplate.update(receivingCenterTypeUpdate, obj);
 		return centerTypeRequest;
 
@@ -107,29 +108,29 @@ public class ReceivingCenterTypeRepository {
 		return receivingCenterTypes;
 	}
 
-    public boolean checkReceivingCenterTypeByNameAndCode(final String code,final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-       
-        // preparedStatementValues.add(id);
-        preparedStatementValues.add(tenantId);
-        String query="";
- /*       if(code!=null && code!=""){
-        	
-        	preparedStatementValues.add(code);
-        	query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();
-        	
-        }*/ 
-          if(name!=null && tenantId!=null){
-        	 preparedStatementValues.add(name);
-             query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
-           }  
-        final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
-                preparedStatementValues.toArray());
-        if (!ceneterTypes.isEmpty())
-            return false;
+	public boolean checkReceivingCenterTypeByCode(final String code, final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
 
-        return true;
-    }
-	
-	
+		// preparedStatementValues.add(id);
+		preparedStatementValues.add(tenantId);
+		String query = "";
+		if (code != null && code != "") {
+
+			preparedStatementValues.add(code);
+			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();
+
+		}
+		/*
+		 * if(name!=null && tenantId!=null){ preparedStatementValues.add(name);
+		 * query =
+		 * ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName(); }
+		 */
+		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!ceneterTypes.isEmpty())
+			return false;
+
+		return true;
+	}
+
 }

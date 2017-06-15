@@ -79,7 +79,7 @@ public class ReceivingModeType {
 
 	@NotNull
 	private Boolean active;
-
+	
 	@NotNull
 	private Boolean visible;
 

@@ -74,8 +74,6 @@ public class ReceivingModeTypeGetReq {
 
 	private Boolean active;
 
-	private Boolean visible;
-
 	@NotNull
 	private String tenantId;
 

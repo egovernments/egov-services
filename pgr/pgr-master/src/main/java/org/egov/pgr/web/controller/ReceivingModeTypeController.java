@@ -102,7 +102,7 @@ public class ReceivingModeTypeController {
 		}
 		logger.info("Receiving ModeType Request::" + ModeTypeRequest);
 
-		final List<ErrorResponse> errorResponses = validateReceivingModeRequest(ModeTypeRequest);
+		final List<ErrorResponse> errorResponses = validateReceivingModeRequest(ModeTypeRequest,true);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -113,18 +113,18 @@ public class ReceivingModeTypeController {
 
 	}
 	
-    @PostMapping(value = "/{id}/_update")
+    @PostMapping(value = "/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ReceivingModeTypeReq modeTypeRequest, final BindingResult errors,
-            @PathVariable("id") final long id) {
+            @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("ReceivingCenterTypeRequest::" + modeTypeRequest);
-        modeTypeRequest.getModeType().setId(id);
+        modeTypeRequest.getModeType().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validateReceivingModeRequest(modeTypeRequest);
+        final List<ErrorResponse> errorResponses = validateReceivingModeRequest(modeTypeRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -176,10 +176,10 @@ public class ReceivingModeTypeController {
 	}
 
 
-	private List<ErrorResponse> validateReceivingModeRequest(final ReceivingModeTypeReq receivingModeRequest) {
+	private List<ErrorResponse> validateReceivingModeRequest(final ReceivingModeTypeReq receivingModeRequest,boolean flag) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(receivingModeRequest);
+		final Error error = getError(receivingModeRequest,flag);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
@@ -199,15 +199,15 @@ public class ReceivingModeTypeController {
 		return errRes;
 	}
 
-	private List<ErrorField> getErrorFields(final ReceivingModeTypeReq categoryRequest) {
+	private List<ErrorField> getErrorFields(final ReceivingModeTypeReq categoryRequest,boolean flag) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addReceivingModeNameAndCodeValidationErrors(categoryRequest, errorFields);
+		addReceivingModeNameAndCodeValidationErrors(categoryRequest, errorFields,flag);
 		addTeanantIdValidationErrors(categoryRequest, errorFields);
 		return errorFields;
 	}
 
 	private void addReceivingModeNameAndCodeValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
-			final List<ErrorField> errorFields) {
+			final List<ErrorField> errorFields,boolean flag) {
 		final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
 		if (receivingMode.getCode() == null || receivingMode.getCode().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder()
@@ -221,7 +221,7 @@ public class ReceivingModeTypeController {
 					.message(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.RECEIVINGMODE_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (!modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),receivingMode.getName(),receivingMode.getTenantId())) {
+		} else if (flag && !modeTypeService.checkReceivingModeTypeByNameAndCode(receivingMode.getCode(),receivingMode.getName(),receivingMode.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
                     .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
@@ -243,9 +243,9 @@ public class ReceivingModeTypeController {
 			return;
 	}
 
-	private Error getError(final ReceivingModeTypeReq ModeTypeRequest) {
+	private Error getError(final ReceivingModeTypeReq ModeTypeRequest,boolean flag) {
 		ModeTypeRequest.getModeType();
-		final List<ErrorField> errorFields = getErrorFields(ModeTypeRequest);
+		final List<ErrorField> errorFields = getErrorFields(ModeTypeRequest,flag);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE).errorFields(errorFields)
 				.build();

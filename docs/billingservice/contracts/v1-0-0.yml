@@ -644,8 +644,6 @@ definitions:
         type: integer
         format: int64
         description: primary key of a DemandDetails.
-      demand:
-        $ref: '#/definitions/Demand'
       taxHeadCode:
         type: string
         description: Tax Head code for this tax applicable
@@ -669,7 +667,6 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - demand
       - taxHeadCode
       - taxAmount
       - collectionAmount
@@ -690,6 +687,7 @@ definitions:
         maxLength: 128
         minLength: 4
       category:
+        type: string
         description: Category of demand like tax, fee, rebate, penalty etc.
         enum:
           - TAX

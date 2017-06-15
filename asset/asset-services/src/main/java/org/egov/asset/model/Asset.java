@@ -44,15 +44,12 @@ package org.egov.asset.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -72,27 +69,26 @@ public class Asset {
 	@NotNull
 	private String tenantId;
 	private Long id;
-	
+
 	@NotNull
 	private String name;
 	private String code;
-	
+
 	private Department department;
-	
+
 	@Valid
 	private AssetCategory assetCategory;
 	private String assetDetails;
 	private ModeOfAcquisition modeOfAcquisition;
-	
+
 	@NotNull
 	private Status status;
 	private String description;
-	
-	@JsonFormat(pattern = "dd/MM/yyyy")
+
 	private Date dateOfCreation;
-	
+
 	private Location locationDetails;
-	
+
 	private String remarks;
 	private String length;
 	private String width;
@@ -101,7 +97,6 @@ public class Asset {
 	private Double accumulatedDepreciation;
 	private Long assetReference = null;
 	private String version;
-    private List<Attributes> assetAttributes = new ArrayList<>();
-    
-	
+	private List<Attributes> assetAttributes = new ArrayList<>();
+
 }

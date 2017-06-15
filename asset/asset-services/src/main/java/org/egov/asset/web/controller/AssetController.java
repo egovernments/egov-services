@@ -42,7 +42,6 @@ package org.egov.asset.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
@@ -88,171 +87,169 @@ public class AssetController {
 	private AssetService assetService;
 
 	@Autowired
-	private ApplicationProperties applicationProperties;
+	private AssetValidator assetValidator;
 
 	@Autowired
-	private AssetValidator assetValidator;
-	
-	@Autowired
 	private RevaluationService revaluationService;
-	
+
 	@Autowired
-	private AssetCurrentAmountService  assetCurrentAmountService;
-	
+	private AssetCurrentAmountService assetCurrentAmountService;
+
 	@Autowired
 	private DisposalService disposalService;
 
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid AssetCriteria assetCriteria, BindingResult bindingResult) {
+	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid final AssetCriteria assetCriteria, final BindingResult bindingResult) {
 		logger.info("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		AssetResponse assetResponse = assetService.getAssets(assetCriteria,requestInfoWrapper.getRequestInfo());
+		final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid AssetRequest assetRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
+			final BindingResult bindingResult) {
 
 		logger.info("create asset:" + assetRequest);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		// TODO Input field validation, it will be a part of phase-2
 		assetValidator.validateAsset(assetRequest);
 
-		AssetResponse assetResponse = assetService.createAsync(assetRequest);
+		final AssetResponse assetResponse = assetService.createAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
 	}
 
 	@PostMapping("_update/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AssetRequest assetRequest,
-			BindingResult bindingResult) {
+	public ResponseEntity<?> update(@PathVariable("code") final String code,
+			@RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
-		if (!code.equals(assetRequest.getAsset().getCode())) {
+		if (!code.equals(assetRequest.getAsset().getCode()))
 			throw new RuntimeException("Invalid asset code");
-		}
-		// TODO Input field validation, it will be a part of phash-2
 
-		AssetResponse assetResponse = assetService.updateAsync(assetRequest);
+		final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
 	@PostMapping("reevaluate/_create")
 	@ResponseBody
-	public ResponseEntity<?> reevaluate(@RequestBody @Valid RevaluationRequest revaluationRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> reevaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
+			final BindingResult bindingResult) {
 
 		logger.info("create reevaluate:" + revaluationRequest);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		// TODO Input field validation, need to be done.
-		
-		RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
-		
+
+		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
+
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("reevaluate/_search")
 	@ResponseBody
-	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute RevaluationCriteria revaluationCriteria,BindingResult bindingResult) {
+	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
 
 		logger.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		// TODO Input field validation, need to be done.
-		
-		RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
-		
+
+		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
+
 		return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("dispose/_create")
 	@ResponseBody
-	public ResponseEntity<?> dispose(@RequestBody @Valid DisposalRequest disposalRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
+			final BindingResult bindingResult) {
 
 		logger.info("create dispose:" + disposalRequest);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		// TODO Input field validation, need to be done.
-		
-		DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
+
+		assetValidator.validateAssetForDispose(disposalRequest.getDisposal());
+
+		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
 		logger.info("dispose disposalResponse:" + disposalResponse);
-		
+
 		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("dispose/_search")
 	@ResponseBody
-	public ResponseEntity<?> disposalSearch(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute @Valid DisposalCriteria disposalCriteria,BindingResult bindingResult) {
+	public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
 
-		logger.info("disposalSearch disposalCriteria:" +disposalCriteria);
+		logger.info("disposalSearch disposalCriteria:" + disposalCriteria);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		// TODO Input field validation, need to be done.
-		
-		DisposalResponse disposalResponse = disposalService.search(disposalCriteria, requestInfoWrapper.getRequestInfo());
-		
+
+		final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
+				requestInfoWrapper.getRequestInfo());
+
 		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("currentvalue/_search")
 	@ResponseBody
-	public ResponseEntity<?> getAssetCurrentValue(@RequestParam(name = "assetId",required = true) Long assetId,
-			@RequestParam(name = "tenantId", required = true) String tenantId,
-			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
-		
-		logger.info("getAssetCurrentValue assetId:" + assetId +",tenantId:"+tenantId);
+	public ResponseEntity<?> getAssetCurrentValue(@RequestParam(name = "assetId", required = true) final Long assetId,
+			@RequestParam(name = "tenantId", required = true) final String tenantId,
+			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
+
+		logger.info("getAssetCurrentValue assetId:" + assetId + ",tenantId:" + tenantId);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
-		AssetCurrentValueResponse assetCurrentValueResponse = 
-				assetCurrentAmountService.getCurrentAmount(assetId, tenantId, requestInfoWrapper.getRequestInfo());
+
+		final AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentAmount(assetId,
+				tenantId, requestInfoWrapper.getRequestInfo());
 
 		logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
 		return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
 	}
-		
-	private ErrorResponse populateErrors(BindingResult errors) {
-		ErrorResponse errRes = new ErrorResponse();
 
-		ResponseInfo responseInfo = new ResponseInfo();
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
+
+		final ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		errRes.setResponseInfo(responseInfo);
 
-		Error error = new Error();
+		final Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors()) {
-			for (FieldError errs : errors.getFieldErrors()) {
+		if (errors.hasFieldErrors())
+			for (final FieldError errs : errors.getFieldErrors())
 				error.getFields().put(errs.getField(), errs.getRejectedValue());
-			}
-		}
 		errRes.setError(error);
 		return errRes;
 	}

@@ -216,7 +216,7 @@ class AgreementSearch extends React.Component {
         });
         break;
       case "view":
-        window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes");
+        window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+ (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) +"&assetId="+id, "fs", "fullscreen=yes");
         break;
       case "cancel":
         window.open("app/search-agreement/view-renew-agreement.html?view=cancel&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
@@ -364,7 +364,7 @@ class AgreementSearch extends React.Component {
             }}>
                 <option value="">Select Action</option>
                 <option value="view">View</option>
-                <option value="renew">Renew</option>
+                {/*<option value="renew">Renew</option>*/}
                 <option value="collTax">Collect Tax</option>
                 {getDemandListing(item)}
             </select>

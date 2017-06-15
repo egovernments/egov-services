@@ -2,7 +2,6 @@ package org.egov.demand.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,23 +9,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Bill   {
-	
-	  private Long id;
+public class Bill {
 
-	  private String payeeName;
+	private Long id;
 
-	  private String payeeAddress;
+	private String payeeName;
 
-	  private String payeeEmail;
+	private String payeeAddress;
 
-	  private Boolean isActive;
+	private String payeeEmail;
 
-	  private Boolean isCancelled;
+	private Boolean isActive;
 
-	  private List<BillDetail> billDetails = new ArrayList<>();
+	private Boolean isCancelled;
 
-	  private String tenantId;
+	private List<BillDetail> billDetails = new ArrayList<>();
 
-	  private AuditDetail installmentAuditDetail;
+	private String tenantId;
+
+	private AuditDetail auditDetail;
 }

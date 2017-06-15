@@ -1650,52 +1650,55 @@ function printValue(object = "", values) {
 
     } else {
         for (var key in values) {
-            if (key == "documents") continue;
-            if (typeof values[key] === "object" && key == "user") {
-                for (ckey in values[key]) {
-                    if (values[key][ckey]) {
-                        if (["signature", "photo"].indexOf(ckey) > -1) continue;
-                        //Get description
-                        if (ckey == "dob") {
-                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
+            (function(key) {
+                if (key == "documents") return;
+                if (typeof values[key] === "object" && key == "user") {
+                    for (ckey in values[key]) {
+                        if (values[key][ckey]) {
+                            if (["signature", "photo"].indexOf(ckey) > -1) continue;
+                            //Get description
+                            if (ckey == "dob") {
+                                $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
 
-                        } else if (ckey == "active") {
-                            if ([true, "true"].indexOf(values[key][ckey]) > -1) {
-                                $('[data-active="yes"]').prop("checked", true);
+                            } else if (ckey == "active") {
+                                if ([true, "true"].indexOf(values[key][ckey]) > -1) {
+                                    $('[data-active="yes"]').prop("checked", true);
+                                } else {
+                                    $('[data-active="no"]').prop("checked", false);
+                                }
                             } else {
-                                $('[data-active="no"]').prop("checked", false);
+                                $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
+
                             }
-                        } else {
-                            $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
-
                         }
                     }
-                }
-            } else if (key == "physicallyDisabled") {
-                if ([true, "true"].indexOf(values[key]) > -1) {
-                    $('[data-ph="yes"]').prop("checked", true);
+                } else if (key == "physicallyDisabled") {
+                    if ([true, "true"].indexOf(values[key]) > -1) {
+                        $('[data-ph="yes"]').prop("checked", true);
+                    } else {
+                        $('[data-ph="no"]').prop("checked", true);
+                    }
+                } else if (key == "bank" && values[key]) {
+                    commonApiPost("egf-masters", "bankbranches", "_search", {
+                        tenantId,
+                        "bank": values[key]
+                    }, function(err, res) {
+                        if (res) {
+                            commonObject["bankbranches"] = res["bankBranches"];
+                            $(`#bankBranch`).html(`<option value=''>Select</option>`)
+                            for (var i = 0; i < commonObject["bankbranches"].length; i++) {
+                                $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
+                            }
+                            $("[name='" + key + "']").val(values[key] ? values[key] : "");
+                            $("[name='bankBranch']").val(values["bankBranch"] || "");
+                        }
+                    })
+                } else if (values[key]) {
+                    $("[name='" + key + "']").val(values[key] ? values[key] : "");
                 } else {
-                    $('[data-ph="no"]').prop("checked", true);
-                }
-            } else if (key == "bank" && values[key]) {
-                commonApiPost("egf-masters", "bankbranches", "_search", {
-                    tenantId,
-                    "bank.id": values[key]
-                }, function(err, res) {
-                    if (res) {
-                        commonObject["bankbranches"] = res["bankBranches"];
-                        $(`#bankBranch`).html(`<option value=''>Select</option>`)
-                        for (var i = 0; i < commonObject["bankbranches"].length; i++) {
-                            $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
-                        }
-                        $("[name='" + key + "']").val(values[key] ? values[key] : "");
-                    }
-                })
-            } else if (values[key]) {
-                $("[name='" + key + "']").val(values[key] ? values[key] : "");
-            } else {
 
-            }
+                }
+            })(key);
         }
     }
 }
@@ -2198,7 +2201,7 @@ function loadUI() {
                     if (_this.id == "bank") {
                         commonApiPost("egf-masters", "bankbranches", "_search", {
                             tenantId,
-                            "bank.id": _this.value
+                            "bank": _this.value
                         }, function(err, res) {
                             if (res) {
                                 commonObject["bankbranches"] = res["bankBranches"];

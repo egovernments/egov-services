@@ -115,16 +115,16 @@ public class ReceivingCenterTypeController {
 
 	}
 	
-    @PostMapping(value = "/{id}/_update")
+    @PostMapping(value = "/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ReceivingCenterTypeReq centerTypeRequest, final BindingResult errors,
-            @PathVariable("id") final long id) {
+            @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("ReceivingCenterTypeRequest::" + centerTypeRequest);
-        centerTypeRequest.getCenterType().setId(id);
+        centerTypeRequest.getCenterType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest);
         if (!errorResponses.isEmpty())
@@ -192,12 +192,12 @@ public class ReceivingCenterTypeController {
 
 	private List<ErrorField> getErrorFields(final ReceivingCenterTypeReq categoryRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addReceivingCenterNameValidationErrors(categoryRequest, errorFields);
+		addReceivingCenterNameAndCodeValidationErrors(categoryRequest, errorFields);
 		addTeanantIdValidationErrors(categoryRequest, errorFields);
 		return errorFields;
 	}
 
-	private void addReceivingCenterNameValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest,
+	private void addReceivingCenterNameAndCodeValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest,
 			final List<ErrorField> errorFields) {
 		final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
 		if (receivingCenter.getName() == null || receivingCenter.getName().isEmpty()) {
@@ -206,11 +206,18 @@ public class ReceivingCenterTypeController {
 					.message(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.RECEIVINGCENTER_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (!receivingCenterService.checkReceivingCenterTypeByNameAndCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
+		} if (receivingCenter.getCode() == null || receivingCenter.getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(PgrMasterConstants.RECEIVINGCENTER_CODE_MANDATORY_CODE)
+					.message(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} 
+		else if (!receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
+                    .code(PgrMasterConstants.RECEIVINGCENTER_CODE_UNIQUE_CODE)
                     .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
+                    .field(PgrMasterConstants.RECEIVINGCENTER_CODE_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
         } else
 			return;

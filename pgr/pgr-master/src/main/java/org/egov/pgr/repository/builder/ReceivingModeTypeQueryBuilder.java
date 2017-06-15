@@ -52,7 +52,7 @@ public class ReceivingModeTypeQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.active,modeType.tenantId,modeType.visible from egpgr_receivingmode modeType";
+	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,modeType.visible from egpgr_receivingmode modeType";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final ReceivingModeTypeGetReq modeTypeRequest, final List preparedStatementValues) {
@@ -100,7 +100,7 @@ public class ReceivingModeTypeQueryBuilder {
 
 		if (modeTypeRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.active = ?");
+			selectQuery.append(" modeType.visible = ?");
 			preparedStatementValues.add(modeTypeRequest.getActive());
 		}
 	}
@@ -162,8 +162,8 @@ public class ReceivingModeTypeQueryBuilder {
 	}
 
 	public static String updateReceivingModeTypeQuery() {
-		return "UPDATE egpgr_receivingmode SET code=?,name = ?,description = ?,"
-				+ "active = ?,visible=?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+		return "UPDATE egpgr_receivingmode SET name = ?,description = ?,"
+				+ "visible=?,active=?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
 	}
 
 	public static String checkReceivingModeTypeByName(){

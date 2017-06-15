@@ -1,9 +1,11 @@
 package org.egov.web.contract;
 
+import org.egov.domain.model.AuditDetails;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Builder
 @Getter
@@ -13,8 +15,10 @@ public class Message {
     private String code;
     @NotEmpty
     private String message;
-    @NotEmpty
+    
     private String tenantId;
+    private String module;
+    private AuditDetails auditDetails;
 
     public Message(org.egov.domain.model.Message domainMessage) {
         this.code = domainMessage.getCode();

@@ -40,12 +40,12 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.egov.eis.model.EmployeeDocument;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Component
 public class EmployeeDocumentsRowMapper implements RowMapper<EmployeeDocument> {

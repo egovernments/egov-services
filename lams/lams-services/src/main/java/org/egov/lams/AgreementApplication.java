@@ -40,6 +40,7 @@ public class AgreementApplication {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		return objectMapper;
 	}
 

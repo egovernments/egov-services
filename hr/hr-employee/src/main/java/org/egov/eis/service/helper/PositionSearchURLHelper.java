@@ -40,13 +40,13 @@
 
 package org.egov.eis.service.helper;
 
-import java.util.List;
-
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class PositionSearchURLHelper {

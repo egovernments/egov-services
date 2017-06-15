@@ -40,23 +40,19 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.HODDepartment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>> {
@@ -65,10 +61,10 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 	public List<Assignment> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		Map<String, Assignment> assignmentMap = new HashMap<String, Assignment>();
+		Map<Long, Assignment> assignmentMap = new HashMap<>();
 
 		while (rs.next()) {
-			String assignmentId = rs.getString("a_id");
+			Long assignmentId = (Long) rs.getObject("a_id");
 
 			Assignment assignment = assignmentMap.get(assignmentId);
 
@@ -109,7 +105,7 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 
 			List<HODDepartment> hodDepartmentsList = assignment.getHod();
 			if (hodDepartmentsList == null) {
-				hodDepartmentsList = new ArrayList<HODDepartment>();
+				hodDepartmentsList = new ArrayList<>();
 				assignment.setHod(hodDepartmentsList);
 			}
 			if ((Long) rs.getObject("hod_id") != null) {
@@ -120,6 +116,6 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				hodDepartmentsList.add(hodDepartment);
 			}
 		}
-		return new ArrayList<Assignment>(assignmentMap.values());
+		return new ArrayList<>(assignmentMap.values());
 	}
 }

@@ -40,52 +40,69 @@
 
 package org.egov.eis.broker;
 
-
-import java.io.IOException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.NomineeService;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.NomineeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 
 public class EmployeeSaveConsumer {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeSaveConsumer.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeSaveConsumer.class);
 
-	@Autowired
-	PropertiesManager propertiesManager;
-	
-	@Autowired
-	private EmployeeService employeeService;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
-	
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}" })
-	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key : "+ record.key() + "\t\t" + "value : " +record.value());
-		
-		if (record.topic().equals(propertiesManager.getSaveEmployeeTopic())){
-		try {
-			employeeService.create(objectMapper.readValue(record.value(), EmployeeRequest.class));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-		else if (record.topic().equals(propertiesManager.getUpdateEmployeeTopic())){
-			try {
-				LOGGER.info("entering updateemp consumer");
-				employeeService.update(objectMapper.readValue(record.value(), EmployeeRequest.class));
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @Autowired
+    PropertiesManager propertiesManager;
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    private NomineeService nomineeService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory",
+            topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}",
+                    "${kafka.topics.nominee.savedb.name}", "${kafka.topics.nominee.updatedb.name}"})
+    public void listen(ConsumerRecord<String, String> record) {
+        LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
+
+        if (record.topic().equals(propertiesManager.getSaveEmployeeTopic())) {
+            try {
+                employeeService.create(objectMapper.readValue(record.value(), EmployeeRequest.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (record.topic().equals(propertiesManager.getUpdateEmployeeTopic())) {
+            try {
+                LOGGER.info("entering updateemp consumer");
+                employeeService.update(objectMapper.readValue(record.value(), EmployeeRequest.class));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (record.topic().equals(propertiesManager.getSaveNomineeTopic())) {
+            try {
+                nomineeService.create(objectMapper.readValue(record.value(), NomineeRequest.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (record.topic().equals(propertiesManager.getUpdateNomineeTopic())) {
+            try {
+                LOGGER.info("entering update nominee consumer");
+                nomineeService.update(objectMapper.readValue(record.value(), NomineeRequest.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -40,17 +40,9 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.eis.model.Position;
 import org.egov.eis.service.PositionService;
-import org.egov.eis.web.contract.PositionGetRequest;
-import org.egov.eis.web.contract.PositionResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.RequestValidator;
@@ -60,13 +52,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/employees/{employeeId}/positions")
@@ -90,11 +79,11 @@ public class PositionController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * PositionResponse type or ErrorResponse type
 	 * 
-	 * @param PositionGetRequest,
-	 * @param BindingResult
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
-	 * @param Long
+	 * @param positionGetRequest,
+	 * @param modelAttributeBindingResult
+	 * @param requestInfoWrapper
+	 * @param requestBodyBindingResult
+	 * @param employeeId
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("_search")
@@ -126,8 +115,8 @@ public class PositionController {
 	 * Populate PositionResponse object & returns ResponseEntity of type
 	 * PositionResponse containing ResponseInfo & List of Positions
 	 * 
-	 * @param List<Position>
-	 * @param RequestInfo
+	 * @param positionsList
+	 * @param requestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList, RequestInfo requestInfo) {

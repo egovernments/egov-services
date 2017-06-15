@@ -40,14 +40,9 @@
 
 package org.egov.eis.web.errorhandler;
 
-import javax.validation.constraints.NotNull;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter

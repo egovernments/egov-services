@@ -47,6 +47,11 @@ public class MessageCacheRepository {
     }
 
     public void bustCacheEntry(String locale, Tenant tenant) {
+        /*
+        TODO:
+            1. If the tenant is default then bust the entire cache.
+            2. If the tenant is of the form A.B then bust cache entries for all derivatives of A.B e.g A.B, A.B.C, A.B.C.D
+        */
         String messageKey = getKey(locale, tenant.getTenantId());
         stringRedisTemplate.opsForHash().delete(MESSAGES_HASH_KEY, messageKey);
         stringRedisTemplate.opsForHash().delete(COMPUTED_MESSAGES_HASH_KEY, messageKey);

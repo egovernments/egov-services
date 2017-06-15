@@ -15,7 +15,7 @@ public class EmployeeRepository {
     private final RestTemplate restTemplate;
     private final String url;
     private final static String EMPLOYEE_BY_POSITION =
-        "/hr-employee/employees/_search?positionId={positionId}&tenantId={tenantId}";
+        "hr-employee/employees/_search?positionId={positionId}&tenantId={tenantId}";
 
     @Autowired
     public EmployeeRepository(final RestTemplate restTemplate,

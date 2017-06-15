@@ -119,7 +119,7 @@ paths:
     /vouchers/_create:
       post:
         summary: Create  new  vouchers
-        description: Create  new vouchers
+        description: Create  new vouchers. Mandatory fields are considered from application configuration "Default transactoin Attributes" . Fields marked mandatory are validated at the time of voucher createion . 
         tags: 
           - Voucher
         parameters:
@@ -178,10 +178,6 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the Voucher
-        name:
-          type: string
-          description: name of the Voucher
-          maxLength: 16
         type:
           type: string
           description: Voucher Type
@@ -189,9 +185,12 @@ definitions:
             - Journal Voucher
             - Payment
             - Receipt
+        name:
+          $ref: "#/definitions/VoucherName"
+    
         description:
           type: string
-          description: description of the Voucher
+          description: A detailed description of the voucher being created.
           maxLength: 256
         voucherNumber:
           type: string
@@ -202,7 +201,7 @@ definitions:
         voucherDate:
           type: string
           format: date
-          description: voucher date of the Voucher
+          description: Date on which voucher is created. Post dates are not allowed. If the financial year is closed then those dates are not allowed to create.
         fund:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Fund"
         fiscalPeriod:
@@ -212,18 +211,15 @@ definitions:
         originalVhId:
           type: integer
           format: int64
-          description: original vh id of the Voucher
+          description: id of the main voucher when voucher is reversed.
         refVhId:
           type: integer
           format: int64
-          description: ref vh id of the Voucher
-        cgvn:
-          type: string
-          description: cgvn of the Voucher
+          description: id of the reversal voucher when voucher is reversed .
         moduleId:
           type: integer
           format: int64
-          description: module id of the Voucher
+          description: id of the external module which is calling voucher creation.
         ledgers:
           type:  array
           description:  ledgers of the Voucher
@@ -377,5 +373,27 @@ definitions:
       - id
       - moduleType
       - code
-      - description          
+      - description    
+    VoucherName:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the EgfStatus
+        name:
+          type: string
+          description: name of the voucher
+        validUpto :
+          type: string
+          format: date
+          description:  This date will be used in the system to validate till when this kind of vouchers needs to be allowed from the Journal Voucher screen. This date can be left blank(non-mandatory)
+        exclude:
+          type: boolean
+          description: Values can be Y or N. If value is Y , then this item will be listed in the Journal voucher screen. If the value is N, then this item will not list in the Journal voucher option.
+      required:
+      - name
+      - exclude
+        
+
 

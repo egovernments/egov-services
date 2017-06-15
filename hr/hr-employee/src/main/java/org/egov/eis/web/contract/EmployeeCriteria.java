@@ -40,25 +40,16 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @Getter
@@ -96,7 +87,7 @@ public class EmployeeCriteria implements Cloneable {
 	private String sortOrder;
 
 	@NotNull
-	@Size(max=256)
+	@Size(min=1, max=256)
 	private String tenantId;
 
 	@Min(1)

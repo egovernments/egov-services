@@ -21,6 +21,8 @@ public class Assignment {
 
     private Long position;
 
+    private Long designation;
+
     private Boolean isPrimary;
 
 }

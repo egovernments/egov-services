@@ -81,7 +81,7 @@ public class WcmsConstants {
     public static final String CATEGORY_NAME_UNIQUE_CODE = "wcms.0005";
     public static final String CATEGORY_NAME_UNQ_FIELD_NAME = "name";
     public static final String CATEGORY_UNQ_ERROR_MESSAGE = "Entered Category Type already exist";
-
+    
     public static final String CATEGORY_NAME_MANDATORY_CODE = "wcms.0006";
     public static final String CATEGORY_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String CATEGORY_NAME_MANADATORY_ERROR_MESSAGE = "Category Type is required";
@@ -232,6 +232,14 @@ public class WcmsConstants {
     public static final String WATERSOURCETYPE_NAME_MANDATORY_CODE = "wcms.0035";
     public static final String WATERSOURCETYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String WATERSOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Water Source Type is required";
+    
+    public static final String SUPPLYTYPE_NAME_UNIQUE_CODE = "wcms.0036";
+    public static final String SUPPLYTYPE_NAME_UNQ_FIELD_NAME = "name";
+    public static final String SUPPLYTYPE_UNQ_ERROR_MESSAGE = "Entered Supply Type already exist";
+    
+    public static final String SUPPLYTYPE_NAME_MANDATORY_CODE = "wcms.0037";
+    public static final String SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME = "name";
+    public static final String SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Supply Type is required";
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

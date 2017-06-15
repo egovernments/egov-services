@@ -1,12 +1,12 @@
 package org.egov.domain.model;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.common.date.DateFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class SevaRequest {
 
@@ -39,6 +39,9 @@ public class SevaRequest {
     private static final String VALUES_ESCALATED_FLAG = "isEscalated";
     private static final String TRUE = "true";
     private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
+    private static final String LOCATION_ID = "locationId";
+    private static final String CHILD_LOCATION_ID = "childLocationId";
+
 
     private final HashMap<String, Object> serviceRequest;
     private final HashMap<String, Object> sevaRequest;
@@ -110,7 +113,7 @@ public class SevaRequest {
     }
 
     public boolean isProcessingFeePresent() {
-        return StringUtils.isNotEmpty(getProcessingFee());
+        return isNotEmpty(getProcessingFee());
     }
 
     public boolean isInProgress() {
@@ -137,6 +140,12 @@ public class SevaRequest {
     public Long getPreviousAssignee() {
         final String previousAssignee = getDynamicSingleValue(PREVIOUS_ASSIGNEE);
         return previousAssignee != null ? Long.valueOf(previousAssignee) : null;
+    }
+
+    public String  getLocationId() {
+        final String childLocationId = getDynamicSingleValue(CHILD_LOCATION_ID);
+        final String locationId = getDynamicSingleValue(LOCATION_ID);
+        return isNotEmpty(childLocationId) ? childLocationId : locationId;
     }
 
     @SuppressWarnings("unchecked")

@@ -1,6 +1,7 @@
 package org.egov.demand.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Status {
 
@@ -17,6 +18,7 @@ public enum Status {
 	}
 
 	@Override
+	@JsonValue
 	public String toString() {
 		return String.valueOf(value);
 	}

@@ -6,6 +6,7 @@ function getValueByName(name, id) {
     }
 }
 
+var rejectedSenderName;
 try {
     var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
 } catch (e) {
@@ -209,7 +210,7 @@ $(document).ready(function() {
                                         _obj = revenueBlock;
                                         break;
                                 }
-                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey) || "NA");
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, values[key][ckey]) || "NA");
                             } else
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
@@ -349,7 +350,7 @@ $(document).ready(function() {
     //remove renew part and related buttons from dom
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
-        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict").remove();
+        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict,#wFremarksDetails").remove();
     } else if (getUrlVars()["view"] == "inbox") {
         $("#historyTable").show();
         $("#cancel,#evict,#renew,#renewBtn").remove();
@@ -367,6 +368,8 @@ $(document).ready(function() {
         if (workflow && workflow.length) {
             workflow = workflow.sort();
             for (var i = 0; i < workflow.length; i++) {
+                if(workflow[i].status == "Assistant Approved")
+                    rejectedSenderName = workflow[i].senderName;
                 $("#historyTable tbody").append(`<tr>
                     <td data-label="createdDate">${workflow[i].createdDate}</td>
                     <td data-label="updatedBy">${workflow[i].senderName}</td>
@@ -441,7 +444,7 @@ $(document).ready(function() {
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
 
-    } else if (_type.toLowerCase() == "shopping complex") {
+    } else if (_type.toLowerCase() == "shop") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
@@ -481,6 +484,7 @@ $(document).ready(function() {
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        $("#rrReadingNo").remove();
     } else if (_type.toLowerCase() == "community toilet complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -534,7 +538,7 @@ $(document).ready(function() {
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
             "type": process.businessKey,
-            "assignee": $("#approverPositionId") && $("#approverPositionId").val() ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
+            "assignee": $("#approverPositionId") && $("#approverPositionId").val() && (!data.action || (data.action && data.action.toLowerCase() != "reject")) ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };
@@ -543,7 +547,7 @@ $(document).ready(function() {
             _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
             delete _agrmntDet.wFremarks;
         }
-            
+
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
@@ -566,7 +570,9 @@ $(document).ready(function() {
 
 
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                if(window.opener)
+                    window.opener.location.reload();
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + (data.action && data.action.toLowerCase() == "reject" ? (rejectedSenderName || "") : ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "")) + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }
@@ -608,6 +614,9 @@ $(document).ready(function() {
                 });
 
                 if (response["status"] === 201) {
+                    if(window.opener)
+                        window.opener.location.reload();
+
                     printNotice(response["responseJSON"].Notices[0]);
                     // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
                 } else {
@@ -630,7 +639,7 @@ $(document).ready(function() {
               data: JSON.stringify({
                   RequestInfo: requestInfo,
                   Agreement: agreementDetails
-              }), 
+              }),
               async: false,
               headers: {
                   'auth-token': authToken

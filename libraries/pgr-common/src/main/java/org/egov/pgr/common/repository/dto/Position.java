@@ -1,0 +1,10 @@
+package org.egov.pgr.common.repository.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public class Position {
+	private String name;
+}

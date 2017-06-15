@@ -40,7 +40,11 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.enums.MaritalStatus;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,11 +52,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.enums.MaritalStatus;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {

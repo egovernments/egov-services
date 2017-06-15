@@ -40,18 +40,8 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.HODDepartment;
@@ -59,8 +49,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeInfo>> {

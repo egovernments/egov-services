@@ -34,7 +34,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setRequesterName(serviceRequest.getFirstName());
         document.setRequesterMobile(serviceRequest.getPhone());
         document.setRequesterEmail(serviceRequest.getEmail());
-        document.setRequesterId(sevaRequest.getRequesterId());
+        document.setRequesterId(serviceRequest.getCitizenUserId());
         document.setServiceTypeName(serviceRequest.getServiceName());
         document.setServiceTypeCode(serviceRequest.getServiceCode());
         document.setServiceStatusCode(serviceRequest.getDynamicSingleValue(SERVICE_STATUS));
@@ -46,7 +46,8 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
 
     private void setServiceLatitudeAndLongitude(ServiceRequestDocument document, ServiceRequest serviceRequest) {
         if (serviceRequest.getLat() != null && serviceRequest.getLng() != null) {
-            document.setServiceGeo(new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng()));
+            final GeoPoint geoPoint = new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng());
+            document.setServiceGeo(geoPoint.toString());
         }
     }
 }

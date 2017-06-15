@@ -24,31 +24,30 @@ public class EmployeeRepository {
 
     @Autowired
     public EmployeeRepository(final RestTemplate restTemplate,
-            @Value("${egov.services.hremployee.host}") final String hrEmployeeServiceHostname,
-            @Value("${egov.services.hr.employee_by_userid}") final String hrEmployeesByUserIdUrl,
-            @Value("${egov.services.hr.employee_by_position}") final String hrEmployeesByPositionIdurl,
-            @Value("${egov.services.hr_employee_by_role}") final String hrEmployeesByRoleCodeurl) {
+                              @Value("${egov.services.hremployee.host}") final String hrEmployeeServiceHostname,
+                              @Value("${egov.services.hr.employee_by_userid}") final String hrEmployeesByUserIdUrl,
+                              @Value("${egov.services.hr.employee_by_position}") final String hrEmployeesByPositionIdurl,
+                              @Value("${egov.services.hr_employee_by_role}") final String hrEmployeesByRoleCodeurl) {
 
         this.restTemplate = restTemplate;
         this.employeesByUserIdUrl = hrEmployeeServiceHostname + hrEmployeesByUserIdUrl;
         this.employeesByPositionIdurl = hrEmployeeServiceHostname + hrEmployeesByPositionIdurl;
-        //this.employeesByRoleCodeurl = hrEmployeeServiceHostname + hrEmployeesByRoleCodeurl;
-        this.employeesByRoleCodeurl =  hrEmployeesByRoleCodeurl;
+        this.employeesByRoleCodeurl = hrEmployeeServiceHostname + hrEmployeesByRoleCodeurl;
     }
 
     public List<Employee> getByRoleCode(final String roleCode, final String tenantId) {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
-        final EmployeeRes employeeRes = restTemplate.postForObject(employeesByRoleCodeurl,wrapper,EmployeeRes.class,roleCode,tenantId);
+        final EmployeeRes employeeRes = restTemplate.postForObject(employeesByRoleCodeurl, wrapper, EmployeeRes.class, roleCode, tenantId);
         return employeeRes.getEmployees();
     }
 
     public EmployeeRes getEmployeeForPositionAndTenantId(final Long posId, final LocalDate asOnDate, final String tenantId) {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
-        return restTemplate.postForObject(employeesByPositionIdurl,wrapper,EmployeeRes.class, tenantId, posId, asOnDate.toString("dd/MM/yyyy"));
+        return restTemplate.postForObject(employeesByPositionIdurl, wrapper, EmployeeRes.class, tenantId, posId, asOnDate.toString("dd/MM/yyyy"));
     }
 
-    public EmployeeRes getEmployeeForUserIdAndTenantId(final Long userId,final String tenantId) {
+    public EmployeeRes getEmployeeForUserIdAndTenantId(final Long userId, final String tenantId) {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
-       return restTemplate.postForObject(employeesByUserIdUrl,wrapper,EmployeeRes.class, userId, tenantId);
+        return restTemplate.postForObject(employeesByUserIdUrl, wrapper, EmployeeRes.class, userId, tenantId);
     }
 }

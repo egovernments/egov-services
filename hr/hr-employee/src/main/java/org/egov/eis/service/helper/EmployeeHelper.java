@@ -40,30 +40,15 @@
 
 package org.egov.eis.service.helper;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
-import org.egov.eis.model.User;
+import org.egov.eis.model.*;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
 public class EmployeeHelper {

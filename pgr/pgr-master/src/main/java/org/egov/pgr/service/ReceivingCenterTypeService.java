@@ -79,8 +79,8 @@ public class ReceivingCenterTypeService {
 
     }
 	
-    public boolean checkReceivingCenterTypeByNameAndCode(final String code,final String name, final String tenantId) {
-        return receivingCenterRepository.checkReceivingCenterTypeByNameAndCode(code,name,tenantId);
+    public boolean checkReceivingCenterTypeByCode(final String code,final String name, final String tenantId) {
+        return receivingCenterRepository.checkReceivingCenterTypeByCode(code,name,tenantId);
     }
     
     

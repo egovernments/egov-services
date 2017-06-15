@@ -188,7 +188,6 @@
                                         <exclude>org.egov.workflow.domain.model.KeywordStatusMappingSearchCriteria.KeywordStatusMappingSearchCriteriaBuilder</exclude>
                                         <exclude>org.egov.workflow.domain.model.KeywordStatusMapping</exclude>
                                         <exclude>org.egov.workflow.domain.model.KeywordStatusMapping.KeywordStatusMappingBuilder</exclude>
-                                        <exclude>org.egov.workflow.persistence.repository.EmployeeRepository</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

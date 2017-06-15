@@ -11,23 +11,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Demand {
 
-	private Long id;
+	private Long id = null;
 
-	private Installment installment;
+	private String tenantId = null;
 
-	private String consumerCode;
+	private String consumerCode = null;
 
-	private String consumerType;
+	private String consumerType = null;
 
-	private String businessService;
+	private String businessService = null;
 
-	private Owner owner;
+	private Owner owner = null;
+
+	private Long taxPeriodFrom = null;
+
+	private Long taxPeriodTo = null;
 
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 
-	private AuditDetail auditDetails;
+	private AuditDetail auditDetails = null;
 
-	private String tenantId;
-
-	private Double minimumAmountPayable;
+	private Double minimumAmountPayable = null;
 }

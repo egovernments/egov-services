@@ -10,7 +10,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.workflow.domain.model.EscalationHoursSearchCriteria;
 import org.egov.workflow.domain.model.EscalationTimeType;
 import org.egov.workflow.domain.service.EscalationService;
-import org.egov.workflow.domain.util.PgrMasterConstants;
+import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.EscalationHoursRequest;
 import org.egov.workflow.web.contract.EscalationHoursResponse;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;

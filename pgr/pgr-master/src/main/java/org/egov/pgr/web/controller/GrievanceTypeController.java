@@ -189,6 +189,7 @@ public class GrievanceTypeController {
         addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
         checkMetadataExists(serviceTypeRequest,errorFields);
+        checkCategorySLAValues(serviceTypeRequest, errorFields);
         return errorFields;
     }
 
@@ -240,6 +241,27 @@ public class GrievanceTypeController {
 		} else
 			return;
 	}
+    
+    private void checkCategorySLAValues(final ServiceRequest serviceTypeRequest,
+            final List<ErrorField> errorFields) {
+        final ServiceType serviceType = serviceTypeRequest.getService();
+        if (null == serviceType.getCategory()) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(PgrMasterConstants.CATEGORY_ID_MANDATORY_CODE)
+                    .message(PgrMasterConstants.CATEGORY_ID_MANDATORY_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.CATEGORY_ID_MANDATORY_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+        } else if(null == serviceType.getSlaHours()){
+        	final ErrorField errorField = ErrorField.builder()
+                    .code(PgrMasterConstants.SLA_HOURS_MANDATORY_CODE)
+                    .message(PgrMasterConstants.SLA_HOURS_MANDATORY_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.SLA_HOURS_MANDATORY_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+        }
+            return;
+    }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();

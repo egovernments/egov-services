@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DemandDetail {
-	
-	  private Long id;
 
-	  private Double taxAmount;
+	private Long id;
 
-	  private Double collectionAmount = 0.0d;
+	private String taxHeadCode;
 
-	  private DemandReason demandReason;
+	private Double taxAmount;
 
-	  private AuditDetail auditDetails;
+	private Double collectionAmount = 0.0d;
 
-	  private String tenantId;
+	private AuditDetail auditDetails;
+
+	private String tenantId;
 }

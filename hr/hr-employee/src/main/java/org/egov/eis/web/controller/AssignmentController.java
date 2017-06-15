@@ -40,17 +40,9 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.service.AssignmentService;
-import org.egov.eis.web.contract.AssignmentGetRequest;
-import org.egov.eis.web.contract.AssignmentResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.RequestValidator;
@@ -60,13 +52,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/employees/{id}/assignments")
@@ -90,11 +79,11 @@ public class AssignmentController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * AssignmentResponse type or ErrorResponse type
 	 * 
-	 * @param AssignmentGetRequest,
-	 * @param BindingResult
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
-	 * @param Long
+	 * @param assignmentGetRequest
+	 * @param modelAttributeBindingResult
+	 * @param requestInfoWrapper
+	 * @param requestBodyBindingResult
+	 * @param id
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("_search")
@@ -126,8 +115,8 @@ public class AssignmentController {
 	 * Populate AssignmentResponse object & returns ResponseEntity of type
 	 * AssignmentResponse containing ResponseInfo & List of Assignments
 	 * 
-	 * @param List<Assignment>
-	 * @param RequestInfo
+	 * @param assignmentsList
+	 * @param requestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponse(List<Assignment> assignmentsList, RequestInfo requestInfo) {

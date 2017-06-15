@@ -56,64 +56,83 @@ public class ApplicationProperties {
 	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
 	public static final String SEARCH_PAGENO_MAX = "search.pageno.max";
 	public static final String SEARCH_PAGESIZE_MAX = "search.pagesize.max";
-	
+
 	@Value("${egov.assetcategory.async}")
 	private Boolean assetCategoryAsync;
-	
+
 	@Value("${kafka.topics.save.asset}")
 	private String createAssetTopicName;
-	
+
 	@Value("${kafka.topics.update.asset}")
 	private String updateAssetTopicName;
-	
+
 	@Value("${kafka.topics.save.assetcategory}")
 	private String createAssetCategoryTopicName;
-	
+
 	@Value("${kafka.topics.update.assetcategory}")
 	private String updateAssetCategoryTopicName;
-	
+
 	@Value("${kafka.topics.save.revaluation}")
 	private String createAssetRevaluationTopicName;
-	
+
 	@Value("${kafka.topics.save.disposal}")
 	private String createAssetDisposalTopicName;
-	
-	
+
+	@Value("${egov.services.asset_service.hostname}")
+	private String assetServiceHostName;
+
+	@Value("${egov.services.asset_service.searchpath}")
+	private String assetServiceSearchPath;
+
 	@Autowired
 	private Environment environment;
 
 	public String commonsSearchPageSizeDefault() {
-		return this.environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
+		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}
 
 	public String commonsSearchPageNumberMax() {
-		return this.environment.getProperty(SEARCH_PAGENO_MAX);
+		return environment.getProperty(SEARCH_PAGENO_MAX);
 	}
 
 	public String commonsSearchPageSizeMax() {
-		return this.environment.getProperty(SEARCH_PAGESIZE_MAX);
+		return environment.getProperty(SEARCH_PAGESIZE_MAX);
 	}
-	
+
 	public Boolean getAssetCategoryAsync() {
 		return assetCategoryAsync;
 	}
+
 	public String getCreateAssetCategoryTopicName() {
 		return createAssetCategoryTopicName;
 	}
+
 	public String getCreateAssetTopicName() {
 		return createAssetTopicName;
 	}
+
 	public String getUpdateAssetTopicName() {
 		return updateAssetTopicName;
 	}
+
 	public String getUpdateAssetCategoryTopicName() {
 		return updateAssetCategoryTopicName;
 	}
+
 	public String getCreateAssetRevaluationTopicName() {
 		return createAssetRevaluationTopicName;
 	}
+
 	public String getCreateAssetDisposalTopicName() {
 		return createAssetDisposalTopicName;
+	}
+
+	public String getAssetServiceHostName() {
+		return assetServiceHostName;
+	}
+
+	public String getAssetServiceSearchPath() {
+		return assetServiceSearchPath;
 	}
 
 }

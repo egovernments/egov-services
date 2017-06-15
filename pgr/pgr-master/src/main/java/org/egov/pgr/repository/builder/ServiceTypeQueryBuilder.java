@@ -157,7 +157,7 @@ public class ServiceTypeQueryBuilder {
 
     public static String insertComplaintTypeQuery(){
     	return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category) "
-    			+ "values (?,?,?,?,?,?,?,?,?,?,?)"; 
+    			+ "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?)"; 
     	
     }
     public static String insertServiceTypeQuery() {

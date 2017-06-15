@@ -155,8 +155,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsConstants.SUMP_CAPACITY_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUMP_CAPACITY_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getSupplyType() == null
-                || waterConnectionRequest.getConnection().getSupplyType().isEmpty()) {
+        } else if (waterConnectionRequest.getConnection().getSupplyType() == null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUPPLY_TYPE_INVALID_CODE)
                     .message(WcmsConstants.SUPPLY_TYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUPPLY_TYPE_INVALID_FIELD_NAME).build();
@@ -356,12 +355,7 @@ public class NewWaterConnectionValidator {
                 waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED"))) {
             LOGGER.info("BillingType is INVALID");
             return isRequestValid;
-        } else if (!(waterConnectionRequest.getConnection().getSupplyType().equals("REGULAR") ||
-                waterConnectionRequest.getConnection().getSupplyType().equals("BULK") ||
-                waterConnectionRequest.getConnection().getSupplyType().equals("SEMIBULK"))) {
-            LOGGER.info("SupplyType is INVALID");
-            return isRequestValid;
-        } else if (!(waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") ||
+        }  else if (!(waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") ||
                 waterConnectionRequest.getConnection().getSourceType().equals("SURFACEWATER"))) {
             LOGGER.info("SourceType is INVALID");
             return isRequestValid;

@@ -538,7 +538,7 @@ $(document).ready(function() {
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
             "type": process.businessKey,
-            "assignee": $("#approverPositionId") && $("#approverPositionId").val() && data.action && data.action.toLowerCase() != "reject" ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
+            "assignee": $("#approverPositionId") && $("#approverPositionId").val() && (!data.action || (data.action && data.action.toLowerCase() != "reject")) ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };

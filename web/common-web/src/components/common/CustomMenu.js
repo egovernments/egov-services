@@ -38,16 +38,16 @@ class CustomMenu extends Component {
       if (items) {
         for (var i=0;i<items.length;i++) {
           if (items[i].hasOwnProperty("items")) {
-            console.log("if :");
-            console.log(items[i]);
+            // console.log("if :");
+            // console.log(items[i]);
             menu.push(<MenuItem
               primaryText={items[i].name}
               rightIcon={<ArrowDropRight />}
               menuItems={constructMenu(items[i].items.length>0?items[i].items[0].items:[])} />)
           }
           else {
-            console.log("else :");
-            console.log(items[i]);
+            // console.log("else :");
+            // console.log(items[i]);
             menu.push(<MenuItem primaryText={items[i].name} />)
           }
         }

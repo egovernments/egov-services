@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+// import PropTypes from 'prop-types'
+import { withRouter } from 'react-router'
+// import {history} from 'react-router-dom'
 
-import {Grid, Row, Col} from 'react-bootstrap';
+// import {Grid, Row, Col} from 'react-bootstrap';
 
 
 
@@ -30,20 +33,22 @@ const styles = {
   },
 
   rightIcon: {
-    marginLeft: "5px",
+    marginRight: "10px",
     marginBottom: "10px"
   }
 }
 
 const Logo = () => {
 
-  return (<img src={require("../../images/main_logo.jpg")} style={styles.mainLogo}/>);
+  return (<img src={require("../../images/main_logo.jpg")} style={styles.mainLogo} alt="logo"/>);
 }
 
 const RightIcon = (props) => {
+  // console.log(props);
   if (props.token) {
     return (
       <div>
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
 
       <IconMenu
             iconButtonElement={<IconButton style={{backgroundColor:"white"}}><MoreVertIcon /></IconButton>}
@@ -54,20 +59,22 @@ const RightIcon = (props) => {
             <MenuItem primaryText="Drafts" leftIcon={<i className="material-icons">drafts</i>}></MenuItem>
             <MenuItem primaryText="Notification" leftIcon={<i className="material-icons">notifications</i>}></MenuItem>
             <MenuItem primaryText="Edit Profile" leftIcon={<i className="material-icons">mode_edit</i>}></MenuItem>
-            <MenuItem primaryText="Change Password" leftIcon={<i className="material-icons">https</i>}></MenuItem>
+            <MenuItem primaryText="Change Password" leftIcon={<i className="material-icons">fingerprint</i>}></MenuItem>
             <MenuItem primaryText="Feedback" leftIcon={<i className="material-icons">chat</i>}></MenuItem>
             <MenuItem primaryText="Report an issue" leftIcon={<i className="material-icons">bug_report</i>}></MenuItem>
             <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
-            <MenuItem primaryText="Sign Out" leftIcon={<i className="material-icons">lock</i>}></MenuItem>
+            <MenuItem primaryText="Sign Out" onClick={(e)=>{
+                props.logout();
+                // props.history.push("/");
+            }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
 
-        <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
 
       </div>
     );
   } else {
     return(
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon}/>
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
     )
 
   }
@@ -158,9 +165,11 @@ class Header extends Component {
   }
 
   render() {
+    // console.log(this);
+
     return (
       <div className="Header">
-        <AppBar title={< div ><Logo/> UAT Maharashtra Municipal Corporation < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementLeft={this.props.token?<IconButton><i className="material-icons">menu</i></IconButton>:<div></div>} iconElementRight={< RightIcon token={this.props.token}/>}/>
+        <AppBar title={< div ><Logo/> eGov < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementLeft={this.props.token?<IconButton><i className="material-icons">menu</i></IconButton>:<div></div>} iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>
 
         <Drawer containerClassName="side-bar" open={this.state.open}>
           {/*<div id="menu"></div>*/}
@@ -194,19 +203,20 @@ const mapStateToProps = state => ({
     appLoaded: state.common.appLoaded,
     appName: state.common.appName,
     currentUser: state.common.currentUser,
-    redirectTo: state.common.redirectTo,
+    // redirectTo: state.common.redirectTo,
     token:state.common.token,
     pleaseWait: state.common.pleaseWait,
-    isDialogOpen: state.form.dialogOpen,
-    msg: state.form.msg
+    // isDialogOpen: state.form.dialogOpen,
+    // msg: state.form.msg
 });
 
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
-    onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
-    onRedirect: () => dispatch({type: 'REDIRECT'}),
+    // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
+    // onRedirect: () => dispatch({type: 'REDIRECT'}),
     setLabels: payload => dispatch({type: 'LABELS', payload}),
+    logout:()=>dispatch({type:'LOGOUT'}),
     // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),
     // onLogin: (username, password) => {
     //     dispatch({
@@ -214,19 +224,19 @@ const mapDispatchToProps = dispatch => ({
     //         payload: []//agent.Auth.login(username, password)
     //     })
     // },
-    updateError: (error) =>
-        dispatch({
-            type: 'UPDATE_ERROR',
-            error
-        }),
-    setPleaseWait: (pleaseWait) =>
-        dispatch({
-            type: 'PLEASE_WAIT',
-            pleaseWait
-        }),
-   toggleDailogAndSetText: (dailogState,msg) => {
-          dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
-        }
+  //   updateError: (error) =>
+  //       dispatch({
+  //           type: 'UPDATE_ERROR',
+  //           error
+  //       }),
+  //   setPleaseWait: (pleaseWait) =>
+  //       dispatch({
+  //           type: 'PLEASE_WAIT',
+  //           pleaseWait
+  //       }),
+  //  toggleDailogAndSetText: (dailogState,msg) => {
+  //         dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
+  //       }
 });
 
 

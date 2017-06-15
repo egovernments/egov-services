@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-// import {Switch,Route} from 'react-router-dom';
+// import {
+//   Redirect,
+//   withRouter
+// } from 'react-router-dom';
+import { withRouter } from 'react-router'
 
 import Header from './common/Header';
 import Footer from './common/Footer';
@@ -13,26 +17,28 @@ import Footer from './common/Footer';
 import router from "../router";
 
 //api import
-import api from "../api/commonAPIS"
+// import api from "../api/commonAPIS"
 
 
 class App extends Component {
 
-  constructor(props) {
-      super(props);
-      // this.getOtp = this.getOtp.bind(this);
-      // this.validateOtp = this.validateOtp.bind(this);
-      // this.callLogin = this.callLogin.bind(this);
-  }
+  // constructor(props) {
+  //     super(props);
+  //     // this.getOtp = this.getOtp.bind(this);
+  //     // this.validateOtp = this.validateOtp.bind(this);
+  //     // this.callLogin = this.callLogin.bind(this);
+  // }
 
   componentWillReceiveProps(nextProps) {
       if (nextProps.redirectTo) {
-          this.context.router.replace(nextProps.redirectTo);
+          this.props.history.replace(nextProps.redirectTo);
           this.props.onRedirect();
       }
   }
 
   componentWillMount() {
+
+
       // this.props.setLabels(agent.labels.getLabels());
       // const token = window.localStorage.getItem('jwt');
       // const userId = window.localStorage.getItem('userId');
@@ -67,8 +73,22 @@ class App extends Component {
       //     : {UserRequest: currentUser}, token);
   }
 
+  componentDidMount()
+  {
+    let {token,history}=this.props;
+    if (token) {
+        history.push("/dashboard");
+    } else {
+        history.push("/");
+    }
+
+  }
+
   render() {
-    var {toggleDailogAndSetText,isDialogOpen,msg}=this.props;
+    // console.log(this);
+
+    var {toggleDailogAndSetText,isDialogOpen,msg,token,history}=this.props;
+
     const actions = [
       <FlatButton
         label="Ok"
@@ -100,13 +120,14 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-    labels: state.labels,
-    appLoaded: state.common.appLoaded,
-    appName: state.common.appName,
-    currentUser: state.common.currentUser,
+    // labels: state.labels,
+    // appLoaded: state.common.appLoaded,
+    // appName: state.common.appName,
+    // currentUser: state.common.currentUser,
     redirectTo: state.common.redirectTo,
-    auth:state.common.token,
-    pleaseWait: state.common.pleaseWait,
+    token:state.common.token,
+    // pleaseWait: state.common.pleaseWait,
+    // token:state.common.token,
     isDialogOpen: state.form.dialogOpen,
     msg: state.form.msg
 });
@@ -114,9 +135,9 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
-    onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
+    // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     onRedirect: () => dispatch({type: 'REDIRECT'}),
-    setLabels: payload => dispatch({type: 'LABELS', payload}),
+    // setLabels: payload => dispatch({type: 'LABELS', payload}),
     // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),
     // onLogin: (username, password) => {
     //     dispatch({
@@ -124,27 +145,27 @@ const mapDispatchToProps = dispatch => ({
     //         payload: []//agent.Auth.login(username, password)
     //     })
     // },
-    updateError: (error) =>
-        dispatch({
-            type: 'UPDATE_ERROR',
-            error
-        }),
-    setPleaseWait: (pleaseWait) =>
-        dispatch({
-            type: 'PLEASE_WAIT',
-            pleaseWait
-        }),
+    // updateError: (error) =>
+    //     dispatch({
+    //         type: 'UPDATE_ERROR',
+    //         error
+    //     }),
+    // setPleaseWait: (pleaseWait) =>
+    //     dispatch({
+    //         type: 'PLEASE_WAIT',
+    //         pleaseWait
+    //     }),
    toggleDailogAndSetText: (dailogState,msg) => {
           dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
         }
 });
 
 
-App.contextTypes = {
-    router: React.PropTypes.object.isRequired
-};
+// App.contextTypes = {
+//     router: React.PropTypes.object.isRequired
+// };
 
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

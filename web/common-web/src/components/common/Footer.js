@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Grid, Row, Col, Table} from 'react-bootstrap';
+import { Row, Col} from 'react-bootstrap';
 // import {Card, CardHeader, CardText} from 'material-ui/Card';
 // import {brown500, red500,white} from 'material-ui/styles/colors';
 // import Paper from 'material-ui/Paper';
@@ -18,6 +18,10 @@ const styles = {
       fontSize:12,
       paddingTop:16,
       paddingBottom:16,
+      position: "fixed",
+      right: 0,
+      bottom: 0,
+      left: 0
     },
 
     putDown : {

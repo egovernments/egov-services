@@ -3,17 +3,26 @@ package org.egov.demand.model.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum Status {
+/**
+ * Category of demand like tax, fee, rebate, penalty etc.
+ */
+public enum Category {
 
-	CREATED("CREATED"),
+	TAX("TAX"),
 
-	CANCELLED("CANCELLED"),
+	FEE("FEE"),
 
-	INSTRUMENT_BOUNCED("INSTRUMENT_BOUNCED");
+	REBATE("REBATE"),
+
+	ADVANCE_COLLECTION("ADVANCE_COLLECTION"),
+
+	PENALTY("PENALTY"),
+
+	FINES("FINES");
 
 	private String value;
 
-	Status(String value) {
+	Category(String value) {
 		this.value = value;
 	}
 
@@ -24,8 +33,8 @@ public enum Status {
 	}
 
 	@JsonCreator
-	public static Status fromValue(String text) {
-		for (Status b : Status.values()) {
+	public static Category fromValue(String text) {
+		for (Category b : Category.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

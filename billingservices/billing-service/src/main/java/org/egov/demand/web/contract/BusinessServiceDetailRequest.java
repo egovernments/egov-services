@@ -2,14 +2,13 @@ package org.egov.demand.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.Bill;
-
+import org.egov.demand.model.BusinessServiceDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 /**
  * BillRequest
  */
@@ -17,10 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BillRequest   {
-	
-  private RequestInfo requestInfo;
+public class BusinessServiceDetailRequest {
 
-  private List<Bill> billInfos = new ArrayList<>();
+	private RequestInfo requestInfo;
+
+	private List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
 }
-

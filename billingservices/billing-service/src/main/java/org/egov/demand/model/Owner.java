@@ -3,6 +3,7 @@ package org.egov.demand.model;
 import java.util.ArrayList;
 import java.util.List;
 import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,41 +11,41 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Owner   {
-	
-	  private String tenantId;
+public class Owner {
 
-	  private Long id;
+	private String tenantId;
 
-	  private String userName;
+	private Long id;
 
-	  private String authToken;
+	private String userName;
 
-	  private String salutation;
+	private String authToken;
 
-	  private String name;
+	private String salutation;
 
-	  private String gender;
+	private String name;
 
-	  private String mobileNumber;
+	private String gender;
 
-	  private String emailId;
+	private String mobileNumber;
 
-	  private String aadhaarNumber;
+	private String emailId;
 
-	  private Boolean active;
+	private String aadhaarNumber;
 
-	  private Long pwdExpiryDate;
+	private Boolean active;
 
-	  private String locale;
+	private Long pwdExpiryDate;
 
-	  private String type;
+	private String locale;
 
-	  private Boolean accountLocked = false;
+	private String type;
 
-	  private List<Role> roles = new ArrayList<>();
+	private Boolean accountLocked = false;
 
-	  private OwnerUserDetails userDetails;
+	private List<Role> roles = new ArrayList<>();
 
-	  private AuditDetail auditDetails;
+	private User userDetail;
+
+	private AuditDetail auditDetail;
 }

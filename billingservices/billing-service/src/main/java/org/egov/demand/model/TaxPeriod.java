@@ -7,13 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuditDetail {
+public class TaxPeriod {
 
-	private String createdBy;
+	private Long fromDate;
 
-	private String lastModifiedBy;
+	private Long toDate;
 
-	private Long createdTime;
+	private String module;
 
-	private Long lastModifiedTime;
+	private String description;
+
+	private String financialYear;
 }

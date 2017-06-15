@@ -10,15 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BusinessServiceDetail {
-	
-	  private String businessService;
 
-	  private Double minimumAmountPayable;
+	private String businessService;
 
-	  private List<String> collectionModesNotAllowed = new ArrayList<>();
+	private Double minimumAmountPayable;
 
-	  private Boolean callBackForApportioning;
+	private List<String> collectionModesNotAllowed = new ArrayList<>();
 
-	  private Boolean partPaymentAllowed;
+	private Boolean callBackForApportioning;
 
+	private Boolean partPaymentAllowed;
 }

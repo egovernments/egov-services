@@ -2,25 +2,20 @@ package org.egov.demand.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.demand.model.Bill;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.TaxPeriod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * BillResponse
- */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BillResponse {
+public class TaxPeriodRequest {
 
-	private ResponseInfo resposneInfo = null;
+	private RequestInfo requestInfo;
 
-	private List<Bill> billInfos = new ArrayList<>();
-
+	List<TaxPeriod> taxPeriods = new ArrayList<>();;
 }

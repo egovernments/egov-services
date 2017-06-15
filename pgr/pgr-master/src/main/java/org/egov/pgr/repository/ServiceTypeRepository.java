@@ -74,7 +74,6 @@ public class ServiceTypeRepository {
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
 		final String complaintInsert = ServiceTypeQueryBuilder.insertComplaintTypeQuery();
-		//name, code, active, slahours, tenantid, type
 		boolean active = true;
 		Long slaHours = 25L;
 		final Object[] object = new Object[] { serviceRequest.getService().getId(), serviceRequest.getService().getServiceName(),

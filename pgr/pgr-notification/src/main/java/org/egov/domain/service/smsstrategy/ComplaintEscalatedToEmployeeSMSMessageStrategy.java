@@ -28,10 +28,9 @@ public class ComplaintEscalatedToEmployeeSMSMessageStrategy implements SMSMessag
         final Map<Object, Object> map = ImmutableMap.of(
             NAME, context.getServiceType().getName(),
             NUMBER, context.getSevaRequest().getCrn(),
-            //TODO: Fetch employee details
-            PREVIOUS_ASSIGNEE_NAME, null,
-            DESIGNATION, null,
-            POSITION, null
+            PREVIOUS_ASSIGNEE_NAME, context.getPreviousEmployee().getName(),
+            DESIGNATION, context.getPreviousEmployeeDesignation(),
+            POSITION, context.getPreviousEmployeePosition()
         );
         final String mobileNumber = context.getEmployee().getMobileNumber();
         return new SMSMessageContext(TEMPLATE_NAME, map, mobileNumber);

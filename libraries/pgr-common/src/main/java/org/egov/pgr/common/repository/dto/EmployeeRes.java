@@ -30,6 +30,7 @@ public class EmployeeRes {
         return org.egov.pgr.common.model.Employee.builder()
             .email(firstEmployee.getEmailId())
             .mobileNumber(firstEmployee.getMobileNumber())
+            .name(firstEmployee.getName())
             .primaryDesignation(getPrimaryDesignation())
             .primaryPosition(getPrimaryPosition())
             .build();

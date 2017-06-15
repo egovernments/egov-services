@@ -1,11 +1,15 @@
 package org.egov.pgr.common.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Employee {
     private String email;
     private String mobileNumber;
+    private Long primaryPosition;
+    private Long primaryDesignation;
 }

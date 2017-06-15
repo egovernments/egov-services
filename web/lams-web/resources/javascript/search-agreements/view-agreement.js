@@ -6,6 +6,7 @@ function getValueByName(name, id) {
     }
 }
 
+var rejectedSenderName;
 try {
     var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
 } catch (e) {
@@ -367,6 +368,8 @@ $(document).ready(function() {
         if (workflow && workflow.length) {
             workflow = workflow.sort();
             for (var i = 0; i < workflow.length; i++) {
+                if(workflow[i].status == "Assistant Approved")
+                    rejectedSenderName = workflow[i].senderName;
                 $("#historyTable tbody").append(`<tr>
                     <td data-label="createdDate">${workflow[i].createdDate}</td>
                     <td data-label="updatedBy">${workflow[i].senderName}</td>
@@ -569,7 +572,7 @@ $(document).ready(function() {
             if (response["status"] === 201) {
                 if(window.opener)
                     window.opener.location.reload();
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : (data.action && data.action.toLowerCase() == "reject" ? (rejectedSenderName || "") : "")) + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }

@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -38,36 +39,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.demand.service;
+package org.egov.demand.config;
 
-import org.egov.demand.model.Bill;
-import org.egov.demand.web.contract.BillRequest;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.ToString;
 
-@Service
-public class BillService {
+@Configuration
+@Getter
+@ToString
+public class ApplicationProperties {
+
+	@Value("${kafka.topics.save.bill}")
+	private String createBillTopic;
 	
+	@Value("${kafka.topics.update.bill}")
+	private String updateBillTopic;
 	
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	@Value("${kafka.topics.save.bill.key}")
+	private String createBillTopicKey;
 	
-	@Autowired
-	private ObjectMapper objectMapper;
-	 
-	public void createAsync(BillRequest billRequest){
-		System.out.println("createAsync: "+billRequest);
-		
-		try {
-			kafkaTemplate.send("test-sp-kaf","key", objectMapper.writeValueAsString(billRequest));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	@Value("${kafka.topics.update.bill.key}")
+	private String updatekBillTopicKey;
 
 }

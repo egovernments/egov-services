@@ -1680,7 +1680,7 @@ function printValue(object = "", values) {
             } else if (key == "bank" && values[key]) {
                 commonApiPost("egf-masters", "bankbranches", "_search", {
                     tenantId,
-                    "bank.id": values[key]
+                    "bank": values[key]
                 }, function(err, res) {
                     if (res) {
                         commonObject["bankbranches"] = res["bankBranches"];
@@ -2198,7 +2198,7 @@ function loadUI() {
                     if (_this.id == "bank") {
                         commonApiPost("egf-masters", "bankbranches", "_search", {
                             tenantId,
-                            "bank.id": _this.value
+                            "bank": _this.value
                         }, function(err, res) {
                             if (res) {
                                 commonObject["bankbranches"] = res["bankBranches"];

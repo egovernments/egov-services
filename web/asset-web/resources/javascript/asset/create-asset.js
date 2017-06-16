@@ -27,6 +27,15 @@ const makeAjaxUpload = function(file, cb) {
     }
 }
 
+const hasValues = function(files) {
+  for(var i=0; i< files.length; i++) {
+    if(files[i] && files[i].value && files[i].value.constructor == Array && files[i].value.length)
+      return true;
+  }
+
+  return false;
+}
+
 const uploadFiles = function(body, cb) {
     if(body.Asset.assetAttributes && body.Asset.assetAttributes.length) {
         var counter1 = body.Asset.assetAttributes.length;
@@ -35,24 +44,31 @@ const uploadFiles = function(body, cb) {
           if(body.Asset.assetAttributes[i].type == "File") {
             var counter = body.Asset.assetAttributes[i].value.length;
             var docs = [];
-            for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
-                makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
-                    if (breakout == 1)
-                        return;
-                    else if (err) {
-                        cb(err);
-                        breakout = 1;
-                    } else {
-                        counter--;
-                        docs.push(res.files[0].fileStoreId);
-                        if(counter == 0) {
-                            body.Asset.assetAttributes[i].value = docs;
-                            counter1--;
-                            if(counter1 == 0 && breakout == 0)
-                                cb(null, body);
-                        }
-                    }
-                })
+            if(counter > 0) {
+              for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
+                  makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
+                      if (breakout == 1)
+                          return;
+                      else if (err) {
+                          cb(err);
+                          breakout = 1;
+                      } else {
+                          counter--;
+                          docs.push(res.files[0].fileStoreId);
+                          if(counter == 0) {
+                              body.Asset.assetAttributes[i].value = docs;
+                              counter1--;
+                              if(counter1 == 0 && breakout == 0)
+                                  cb(null, body);
+                          }
+                      }
+                  })
+              }
+            } else {
+              counter1--;
+              if(counter1 == 0 && breakout == 0) {
+                  cb(null, body);
+              }
             }
           } else {
             counter1--;
@@ -355,7 +371,7 @@ class CreateAsset extends React.Component {
   componentWillUpdate() {
     if(flag == 1) {
       flag = 0;
-      $('.refTable').dataTable().fnDestroy();
+      $('#refTable').dataTable().fnDestroy();
     } else if(flag1 == 1) {
       flag1 = 0;
       $('#relatedTable').dataTable().fnDestroy();
@@ -364,7 +380,7 @@ class CreateAsset extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
       if (this.state.modify2) {
-          $('.refTable').DataTable({
+          $('#refTable').DataTable({
              dom: 'Bfrtip',
              ordering: false,
              bDestroy: true,
@@ -1208,7 +1224,7 @@ class CreateAsset extends React.Component {
     }
 
     const showAttachedFiles = function() {
-      if(allFiles.length) {
+      if(allFiles.length && hasValues(allFiles)) {
           return (
               <table id="fileTable" className="table table-bordered">
                   <thead>
@@ -1717,7 +1733,7 @@ class CreateAsset extends React.Component {
     const renderRefTable = function() {
       if(references) {
         return (
-          <table id="refTable" className="table table-bordered refTable">
+          <table id="refTable" className="table table-bordered">
               <thead>
               <tr>
                   <th>Sr. No.</th>

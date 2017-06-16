@@ -1,0 +1,20 @@
+{
+    "responseInfo": {
+       
+    },
+    "woodTypes": [
+        {
+            "tenantId": "1237",
+            "name": "Maple Wood Type",
+            "code": "MWT",
+            "nameLocal": "Maple",
+            "description": "Imported from USA",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

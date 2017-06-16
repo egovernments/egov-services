@@ -88,11 +88,6 @@ public class User   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public User tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
-
 	/**
 	 * Unique Identifier of the tenant to which user primarily belongs
 	 * @return tenantId
@@ -103,11 +98,6 @@ public class User   {
 
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	public User id(Long id) {
-		this.id = id;
-		return this;
 	}
 
 	/**
@@ -122,11 +112,6 @@ public class User   {
 		this.id = id;
 	}
 
-	public User userName(String userName) {
-		this.userName = userName;
-		return this;
-	}
-
 	/**
 	 * The unique username used of the user - this will be used for user login. This needs to be unique within the tenant.
 	 * @return userName
@@ -139,11 +124,6 @@ public class User   {
 		this.userName = userName;
 	}
 
-	public User authToken(String authToken) {
-		this.authToken = authToken;
-		return this;
-	}
-
 	/**
 	 * Authentication token for the user that may be -  1. Password in case of basic auth 2. OTP in case of OTP based verification 3. OAuth auth token for OAuth based auth 
 	 * @return authToken
@@ -154,11 +134,6 @@ public class User   {
 
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
-	}
-
-	public User salutation(String salutation) {
-		this.salutation = salutation;
-		return this;
 	}
 
 	/**
@@ -174,11 +149,6 @@ public class User   {
 		this.salutation = salutation;
 	}
 
-	public User name(String name) {
-		this.name = name;
-		return this;
-	}
-
 	/**
 	 * The full name of the user.
 	 * @return name
@@ -190,11 +160,6 @@ public class User   {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public User gender(String gender) {
-		this.gender = gender;
-		return this;
 	}
 
 	/**
@@ -209,11 +174,6 @@ public class User   {
 		this.gender = gender;
 	}
 
-	public User mobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-		return this;
-	}
-
 	/**
 	 * Mobile number of the user
 	 * @return mobileNumber
@@ -224,11 +184,6 @@ public class User   {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
-	}
-
-	public User emailId(String emailId) {
-		this.emailId = emailId;
-		return this;
 	}
 
 	/**
@@ -243,11 +198,6 @@ public class User   {
 		this.emailId = emailId;
 	}
 
-	public User aadhaarNumber(String aadhaarNumber) {
-		this.aadhaarNumber = aadhaarNumber;
-		return this;
-	}
-
 	/**
 	 * Aadhaar number of the user
 	 * @return aadhaarNumber
@@ -260,10 +210,6 @@ public class User   {
 		this.aadhaarNumber = aadhaarNumber;
 	}
 
-	public User active(Boolean active) {
-		this.active = active;
-		return this;
-	}
 
 	/**
 	 * True if the user is active and False if the user is inactive.
@@ -275,11 +221,6 @@ public class User   {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public User pwdExpiryDate(Long pwdExpiryDate) {
-		this.pwdExpiryDate = pwdExpiryDate;
-		return this;
 	}
 
 	/**
@@ -295,11 +236,6 @@ public class User   {
 		this.pwdExpiryDate = pwdExpiryDate;
 	}
 
-	public User locale(String locale) {
-		this.locale = locale;
-		return this;
-	}
-
 	/**
 	 * Value will be set to \"en_IN\".
 	 * @return locale
@@ -310,11 +246,6 @@ public class User   {
 
 	public void setLocale(String locale) {
 		this.locale = locale;
-	}
-
-	public User type(String type) {
-		this.type = type;
-		return this;
 	}
 
 	/**
@@ -329,11 +260,6 @@ public class User   {
 		this.type = type;
 	}
 
-	public User accountLocked(Boolean accountLocked) {
-		this.accountLocked = accountLocked;
-		return this;
-	}
-
 	/**
 	 * Set to True if account is locked after several incorrect password attempt. False if account is not locked.
 	 * @return accountLocked
@@ -346,15 +272,6 @@ public class User   {
 		this.accountLocked = accountLocked;
 	}
 
-	public User roles(List<Role> roles) {
-		this.roles = roles;
-		return this;
-	}
-
-	public User addRolesItem(Role rolesItem) {
-		this.roles.add(rolesItem);
-		return this;
-	}
 
 	/**
 	 * List of roles that are attached to the user.
@@ -366,11 +283,6 @@ public class User   {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
-	}
-
-	public User userDetails(UserDetails userDetails) {
-		this.userDetails = userDetails;
-		return this;
 	}
 
 	/**
@@ -385,10 +297,6 @@ public class User   {
 		this.userDetails = userDetails;
 	}
 
-	public User auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
 
 	/**
 	 * Get auditDetails

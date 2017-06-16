@@ -1,0 +1,29 @@
+{
+  "requestInfo": {
+      "apiId" : "emp",
+"ver" : "1.0",
+"ts" : "122366",
+"action" : "create",
+"did" : "1",
+"key" : "abcdkey",
+"msgId" : "20170310130900",
+"requesterId" : "rajesh",
+"authToken" : "b5da31a4-b400-4d6e-aa46-9ebf33cce933"
+   }
+    ,"woodTypes": [
+    {
+      "tenantId": "1237",
+      "name": "Maple Wood Type",
+      "code": "MWT",
+      "nameLocal": "Maple",
+      "description": "Imported from USA",
+      "auditDetails": {
+        "createdBy": null,
+        "lastModifiedBy": null,
+        "createdTime": null,
+        "lastModifiedTime": null
+      }
+    }
+  ]
+}
+

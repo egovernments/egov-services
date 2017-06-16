@@ -60,11 +60,6 @@ public class StructureClass   {
 		this.data = data;
 	}
 
-	public StructureClass id(Long id) {
-		this.id = id;
-		return this;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -73,10 +68,6 @@ public class StructureClass   {
 		this.id = id;
 	}
 
-	public StructureClass tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
 
 	public String getTenantId() {
 		return tenantId;
@@ -84,11 +75,6 @@ public class StructureClass   {
 
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	public StructureClass name(String name) {
-		this.name = name;
-		return this;
 	}
 
 
@@ -100,22 +86,12 @@ public class StructureClass   {
 		this.name = name;
 	}
 
-	public StructureClass code(String code) {
-		this.code = code;
-		return this;
-	}
-
 	public String getCode() {
 		return code;
 	}
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public StructureClass nameLocal(String nameLocal) {
-		this.nameLocal = nameLocal;
-		return this;
 	}
 
 	public String getNameLocal() {
@@ -126,22 +102,12 @@ public class StructureClass   {
 		this.nameLocal = nameLocal;
 	}
 
-	public StructureClass description(String description) {
-		this.description = description;
-		return this;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public StructureClass active(Boolean active) {
-		this.active = active;
-		return this;
 	}
 
 
@@ -153,11 +119,6 @@ public class StructureClass   {
 		this.active = active;
 	}
 
-	public StructureClass orderNumber(Integer orderNumber) {
-		this.orderNumber = orderNumber;
-		return this;
-	}
-
 
 	public Integer getOrderNumber() {
 		return orderNumber;
@@ -165,11 +126,6 @@ public class StructureClass   {
 
 	public void setOrderNumber(Integer orderNumber) {
 		this.orderNumber = orderNumber;
-	}
-
-	public StructureClass auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
 	}
 
 

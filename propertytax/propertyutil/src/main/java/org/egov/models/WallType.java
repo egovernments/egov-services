@@ -56,10 +56,6 @@ public class WallType   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public WallType id(Long id) {
-		this.id = id;
-		return this;
-	}
 
 	public Long getId() {
 		return id;
@@ -67,11 +63,6 @@ public class WallType   {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public WallType tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
 	}
 
 	public String getTenantId() {
@@ -82,10 +73,6 @@ public class WallType   {
 		this.tenantId = tenantId;
 	}
 
-	public WallType name(String name) {
-		this.name = name;
-		return this;
-	}
 
 	public String getName() {
 		return name;
@@ -93,11 +80,6 @@ public class WallType   {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public WallType code(String code) {
-		this.code = code;
-		return this;
 	}
 
 
@@ -109,11 +91,6 @@ public class WallType   {
 		this.code = code;
 	}
 
-	public WallType nameLocal(String nameLocal) {
-		this.nameLocal = nameLocal;
-		return this;
-	}
-
 	public String getNameLocal() {
 		return nameLocal;
 	}
@@ -122,22 +99,12 @@ public class WallType   {
 		this.nameLocal = nameLocal;
 	}
 
-	public WallType description(String description) {
-		this.description = description;
-		return this;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public WallType auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
 	}
 
 	public AuditDetails getAuditDetails() {

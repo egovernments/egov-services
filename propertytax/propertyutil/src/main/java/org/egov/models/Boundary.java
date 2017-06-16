@@ -17,10 +17,6 @@ public class Boundary   {
 	@JsonProperty("name")
 	private String name = null;
 
-	public Boundary id(Long id) {
-		this.id = id;
-		return this;
-	}
 
 	/**
 	 * unique id of the Boundary.
@@ -32,11 +28,6 @@ public class Boundary   {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Boundary name(String name) {
-		this.name = name;
-		return this;
 	}
 
 	/**

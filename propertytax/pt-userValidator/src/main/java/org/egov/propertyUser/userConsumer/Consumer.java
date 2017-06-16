@@ -177,7 +177,7 @@ public class Consumer {
 						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
 						userRequestInfo.setUser(user);
 						UserResponseInfo userCreateResponse = restTemplate.postForObject(updateUrl.toString(),
-								userRequestInfo, UserResponseInfo.class);
+								userRequestInfo, UserResponseInfo.class,user.getId());
 					}else{
 						user.setUserName(user.getMobileNumber());
 						UserRequestInfo userRequestInfo=new UserRequestInfo();

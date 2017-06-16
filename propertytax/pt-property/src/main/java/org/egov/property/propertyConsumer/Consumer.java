@@ -1,7 +1,6 @@
 
 package org.egov.property.propertyConsumer;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,7 +89,7 @@ public class Consumer {
 	 * This method is listened whenever property is created and updated
 	 */
 	@KafkaListener(topics= {"#{environment.getProperty('property.create')}","#{environment.getProperty('property.update')}"})
-	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws SQLException {
+	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(env.getProperty("property.create"))) {
 			persisterService.addProperty(consumerRecord.value().getProperties());

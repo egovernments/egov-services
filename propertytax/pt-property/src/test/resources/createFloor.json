@@ -1,0 +1,29 @@
+{
+  "RequestInfo": {
+      "apiId" : "emp",
+"ver" : "1.0",
+"ts" : "122366",
+"action" : "create",
+"did" : "1",
+"key" : "abcdkey",
+"msgId" : "20170310130900",
+"requesterId" : "rajesh",
+"authToken" : "b5da31a4-b400-4d6e-aa46-9ebf33cce933"
+   }
+    ,"floorTypes": [
+    {
+      "tenantId": "1234",
+      "name": "Prasad",
+      "code": "Khan",
+      "nameLocal": "Hydeabad",
+      "description": "Salim bhai",
+      "auditDetails": {
+        "createdBy": null,
+        "lastModifiedBy": null,
+        "createdTime": null,
+        "lastModifiedTime": null
+      }
+    }
+  ]
+}
+

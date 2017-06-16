@@ -56,10 +56,6 @@ public class ResponseInfo   {
 	@NotNull
 	private StatusEnum status = null;
 
-	public ResponseInfo apiId(String apiId) {
-		this.apiId = apiId;
-		return this;
-	}
 
 	/**
 	 * unique API ID
@@ -71,11 +67,6 @@ public class ResponseInfo   {
 
 	public void setApiId(String apiId) {
 		this.apiId = apiId;
-	}
-
-	public ResponseInfo ver(String ver) {
-		this.ver = ver;
-		return this;
 	}
 
 	/**
@@ -90,11 +81,6 @@ public class ResponseInfo   {
 		this.ver = ver;
 	}
 
-	public ResponseInfo ts(Long ts) {
-		this.ts = ts;
-		return this;
-	}
-
 	/**
 	 * response time in epoch
 	 * @return ts
@@ -107,11 +93,6 @@ public class ResponseInfo   {
 		this.ts = ts;
 	}
 
-	public ResponseInfo resMsgId(String resMsgId) {
-		this.resMsgId = resMsgId;
-		return this;
-	}
-
 	/**
 	 * unique response message id (UUID) - will usually be the correlation id from the server
 	 * @return resMsgId
@@ -122,11 +103,6 @@ public class ResponseInfo   {
 
 	public void setResMsgId(String resMsgId) {
 		this.resMsgId = resMsgId;
-	}
-
-	public ResponseInfo msgId(String msgId) {
-		this.msgId = msgId;
-		return this;
 	}
 
 	/**

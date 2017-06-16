@@ -63,11 +63,6 @@ public class OccuapancyMaster   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public OccuapancyMaster id(Long id) {
-		this.id = id;
-		return this;
-	}
-
 
 	public Long getId() {
 		return id;
@@ -75,11 +70,6 @@ public class OccuapancyMaster   {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public OccuapancyMaster tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
 	}
 
 
@@ -91,11 +81,6 @@ public class OccuapancyMaster   {
 		this.tenantId = tenantId;
 	}
 
-	public OccuapancyMaster name(String name) {
-		this.name = name;
-		return this;
-	}
-
 
 	public String getName() {
 		return name;
@@ -104,12 +89,6 @@ public class OccuapancyMaster   {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public OccuapancyMaster code(String code) {
-		this.code = code;
-		return this;
-	}
-
 
 
 	public String getCode() {
@@ -120,23 +99,12 @@ public class OccuapancyMaster   {
 		this.code = code;
 	}
 
-	public OccuapancyMaster nameLocal(String nameLocal) {
-		this.nameLocal = nameLocal;
-		return this;
-	}
-
-
 	public String getNameLocal() {
 		return nameLocal;
 	}
 
 	public void setNameLocal(String nameLocal) {
 		this.nameLocal = nameLocal;
-	}
-
-	public OccuapancyMaster description(String description) {
-		this.description = description;
-		return this;
 	}
 
 
@@ -148,12 +116,6 @@ public class OccuapancyMaster   {
 		this.description = description;
 	}
 
-	public OccuapancyMaster active(Boolean active) {
-		this.active = active;
-		return this;
-	}
-
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -162,23 +124,12 @@ public class OccuapancyMaster   {
 		this.active = active;
 	}
 
-	public OccuapancyMaster orderNumber(Integer orderNumber) {
-		this.orderNumber = orderNumber;
-		return this;
-	}
-
-
 	public Integer getOrderNumber() {
 		return orderNumber;
 	}
 
 	public void setOrderNumber(Integer orderNumber) {
 		this.orderNumber = orderNumber;
-	}
-
-	public OccuapancyMaster auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
 	}
 
 

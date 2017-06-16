@@ -50,22 +50,12 @@ public class FloorType   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public FloorType id(Long id) {
-		this.id = id;
-		return this;
-	}
-
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public FloorType tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
 	}
 
 	public String getTenantId() {
@@ -75,13 +65,6 @@ public class FloorType   {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-
-	public FloorType name(String name) {
-		this.name = name;
-		return this;
-	}
-
-
 	
 	public String getName() {
 		return name;
@@ -89,11 +72,6 @@ public class FloorType   {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public FloorType code(String code) {
-		this.code = code;
-		return this;
 	}
 
 	
@@ -105,12 +83,6 @@ public class FloorType   {
 		this.code = code;
 	}
 
-	public FloorType nameLocal(String nameLocal) {
-		this.nameLocal = nameLocal;
-		return this;
-	}
-
-
 	
 	public String getNameLocal() {
 		return nameLocal;
@@ -120,11 +92,6 @@ public class FloorType   {
 		this.nameLocal = nameLocal;
 	}
 
-	public FloorType description(String description) {
-		this.description = description;
-		return this;
-	}
-
 
 	public String getDescription() {
 		return description;
@@ -132,11 +99,6 @@ public class FloorType   {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public FloorType auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
 	}
 
 

@@ -20,11 +20,6 @@ public class Role   {
   @JsonProperty("description")
   private String description = null;
 
-  public Role name(String name) {
-    this.name = name;
-    return this;
-  }
-
    /**
    * Unique name of the role
    * @return name
@@ -35,11 +30,6 @@ public class Role   {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public Role description(String description) {
-    this.description = description;
-    return this;
   }
 
    /**

@@ -208,7 +208,7 @@ public class WcmsConstants {
     public static final String PROPERTY_USAGE_INVALID_CODE = "wcms.0035";
     public static final String PROPERTY_USAGE_INVALID_FIELD_NAME = "propertyType - usageType";
     public static final String PROPERTY_USAGE_INVALID_ERROR_MESSAGE = "Property Type - Usage Type values don't match.";
-
+    
     public static final String DOCUMENT_APPLICATION_INVALID_CODE = "wcms.0036";
     public static final String DOCUMENT_APPLICATION_INVALID_FIELD_NAME = "documentType - applicationType";
     public static final String DOCUMENT_APPLICATION_INVALID_ERROR_MESSAGE = "Document Type - Application Type values don't match.";
@@ -241,6 +241,26 @@ public class WcmsConstants {
     public static final String SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Supply Type is required";
 
+    public static final String CATEGORY_INVALID_CODE = "wcms.0038";
+    public static final String CATEGORY_INVALID_FIELD_NAME = "CategoryType";
+    public static final String CATEGORY_INVALID_ERROR_MESSAGE = "CategoryType name doesn't Exist";
+    
+    
+    public static final String PIPESIZE_INVALID_CODE = "wcms.0039";
+    public static final String PIPESIZE_INVALID_FIELD_NAME = "hscPipeSizeType.sizeininch";
+    public static final String PIPESIZE_INVALID_ERROR_MESSAGE = "Pipesize InInch doesn't Exist";
+    
+    
+    
+    public static final String SOURCETYPE_INVALID_CODE = "wcms.0040";
+    public static final String SOURCETYPE_INVALID_FIELD_NAME = "sourceType.name";
+    public static final String SOURCETYPE_INVALID_ERROR_MESSAGE = "SourceType name doesn't Exist";
+    
+    
+    
+    public static final String SUPPLYTYPE_INVALID_CODE = "wcms.0041";
+    public static final String SUPPLYTYPE_INVALID_FIELD_NAME = "supplyType.name";
+    public static final String SUPPLYTYPE_INVALID_ERROR_MESSAGE = "SupplyType name doesn't Exist";
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

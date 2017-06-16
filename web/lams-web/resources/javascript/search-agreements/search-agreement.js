@@ -25,7 +25,8 @@ class AgreementSearch extends React.Component {
         revenueWards: [],
         electionwards: [],
         modify: false,
-        users: []
+        users: [],
+        hideCollectTaxOption: false
   }
   this.handleChange = this.handleChange.bind(this);
   this.search = this.search.bind(this);
@@ -89,12 +90,24 @@ class AgreementSearch extends React.Component {
         var assetCategories = [];
     }
 
+    var res = commonApiPost("hr-employee", "employees", "_loggedinemployee", {tenantId});
+    var bool = false;
+    if(res && res.Employee && res.Employee[0] && res.Employee[0].user && res.Employee[0].user.roles) {
+      for(var i=0;i<res.Employee[0].user.roles.length; i++) {
+        if(res.Employee[0].user.roles[i].name == "Collection Operator") {
+          bool = true;
+          break;
+        }
+      }
+    }
+
     this.setState({
       assetCategories,
       locality,
       electionwards,
-      revenueWards
-    })
+      revenueWards,
+      hideCollectTaxOption: bool
+    });
 
   }
 
@@ -119,7 +132,8 @@ class AgreementSearch extends React.Component {
           data: JSON.stringify({
               RequestInfo: requestInfo,
               name: request.term,
-              fuzzyLogic: true
+              fuzzyLogic: true,
+              tenantId: tenantId
           }),
           contentType: 'application/json',
           success: function( data ) {
@@ -272,7 +286,7 @@ class AgreementSearch extends React.Component {
   render() {
     //console.log(this.state.searchSet);
     let {handleChange,search,updateTable,handleSelectChange}=this;
-    let {isSearchClicked,agreements,assetCategories}=this.state;
+    let {isSearchClicked,agreements,assetCategories, hideCollectTaxOption}=this.state;
     let {locality,
     agreementNumber,
     doorNo,
@@ -283,6 +297,12 @@ class AgreementSearch extends React.Component {
     electionWard,
     code,
     tenderNumber,fromDate,toDate,shopComplexNumber}=this.state.searchSet;
+
+    const showCollectTaxOption = function() {
+      if(!hideCollectTaxOption) {
+        return (<option value="collTax">Collect Tax</option>);
+      }
+    }
 
     const getValueByName=function(name,id)
     {
@@ -396,7 +416,7 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 {/*<option value="renew">Renew</option>*/}
-                <option value="collTax">Collect Tax</option>
+                {showCollectTaxOption()}
                 {getDemandListing(item)}
             </select>
           )
@@ -407,7 +427,7 @@ class AgreementSearch extends React.Component {
             }}>
                 <option value="">Select Action</option>
                 <option value="view">View</option>
-                <option value="collTax">Collect Tax</option>
+                {showCollectTaxOption()}
                 {getDemandListing(item)}
 
             </select>

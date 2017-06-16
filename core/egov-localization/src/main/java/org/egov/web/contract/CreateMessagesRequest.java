@@ -24,8 +24,6 @@ public class CreateMessagesRequest {
     @Size(min = 1)
     @Valid
     private List<Message> messages;
-    @NotEmpty
-    private String tenantId;
 
     public List<org.egov.domain.model.Message> toDomainMessages() {
         return messages.stream()

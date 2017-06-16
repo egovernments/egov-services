@@ -27,6 +27,15 @@ const makeAjaxUpload = function(file, cb) {
     }
 }
 
+const hasValues = function(files) {
+  for(var i=0; i< files.length; i++) {
+    if(files[i] && files[i].value && files[i].value.constructor == Array && files[i].value.length)
+      return true;
+  }
+
+  return false;
+}
+
 const uploadFiles = function(body, cb) {
     if(body.Asset.assetAttributes && body.Asset.assetAttributes.length) {
         var counter1 = body.Asset.assetAttributes.length;
@@ -1215,7 +1224,7 @@ class CreateAsset extends React.Component {
     }
 
     const showAttachedFiles = function() {
-      if(allFiles.length) {
+      if(allFiles.length && hasValues(allFiles)) {
           return (
               <table id="fileTable" className="table table-bordered">
                   <thead>

@@ -104,7 +104,7 @@ public class ReceivingCenterTypeQueryBuilder {
 
 		if (centerTypeRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" centerType.visible = ?");
+			selectQuery.append(" centerType.active = ?");
 			preparedStatementValues.add(centerTypeRequest.getActive());
 		}
 
@@ -165,8 +165,8 @@ public class ReceivingCenterTypeQueryBuilder {
 
 	public static String insertReceivingCenterTypeQuery() {
 
-		return "INSERT INTO egpgr_receiving_center(code,name,description,iscrnrequired,orderno,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_receiving_center(id,code,name,description,iscrnrequired,orderno,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egpgr_receiving_center'),?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public static String updateReceivingCenterTypeQuery() {

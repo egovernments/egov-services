@@ -75,7 +75,7 @@ public class ReceivingCenterTypeRepository {
 		final String receivingCenterTypeInsert = ReceivingCenterTypeQueryBuilder.insertReceivingCenterTypeQuery();
 		final ReceivingCenterType centerType = centerTypeRequest.getCenterType();
 
-		final Object[] obj = new Object[] { centerType.getCode(), centerType.getName(), centerType.getDescription(),
+		final Object[] obj = new Object[] {centerType.getCode(), centerType.getName(), centerType.getDescription(),
 				centerType.getIscrnrequired(), centerType.getOrderno(), centerType.getActive(),
 				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),
 				Long.valueOf(centerTypeRequest.getRequestInfo().getUserInfo().getId()),

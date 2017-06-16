@@ -131,7 +131,7 @@ class AgreementSearch extends React.Component {
             _this.setState({
                 searchSet:{
                     ..._this.state.searchSet,
-                    name: ui.item.value
+                    allotteeName: ui.item.value
                 }
             })
       }

@@ -112,7 +112,7 @@ class AddNewDetailedCode extends Component {
                                   <Col xs={12} md={6}>
                                   <TextField errorText={fieldErrors.code
                                     ? fieldErrors.code
-                                    : ""} value={AddNewDetailedCode.code?AddNewDetailedCode.code:""} onChange={(e) => handleChange(e, "code", false, "")} hintText="Code " floatingLabelText="Code" />
+                                    : ""} value={AddNewDetailedCode.code?AddNewDetailedCode.code:""} onChange={(e) => handleChange(e, "code", false, "")} hintText="Account Code " floatingLabelText="Account Code" />
                                   </Col>
                                 </Row>
                                 <Row>
@@ -146,9 +146,21 @@ class AddNewDetailedCode extends Component {
                                     </SelectField>
                                   </Col>
                                   <Col xs={12} md={6}>
-                                  <TextField errorText={fieldErrors.description
-                                    ? fieldErrors.description
-                                    : ""} value={AddNewDetailedCode.description?AddNewDetailedCode.description:""} onChange={(e) => handleChange(e, "description", false, "")} hintText="Description " floatingLabelText="Description" />
+                                    <SelectField multiple={true} errorText={fieldErrors.purpose
+                                      ? fieldErrors.purpose
+                                      : ""} value={AddNewDetailedCode.purpose?AddNewDetailedCode.purpose:""} onChange={(event, index, value) => {
+                                        var e = {
+                                          target: {
+                                            value: value
+                                          }
+                                        };
+                                        handleChange(e, "purpose", false, "")}} floatingLabelText="Purpose " >
+                                      <MenuItem value={1} primaryText="Accumulated Depreciation"/>
+                                      <MenuItem value={2} primaryText="Bank Account Codes"/>
+                                      <MenuItem value={3} primaryText="Bank Charges"/>
+                                      <MenuItem value={4} primaryText="BPA Deposit CWIP Account Code"/>
+                                      <MenuItem value={5} primaryText="Cash In Hand"/>
+                                    </SelectField>
                                   </Col>
                                 </Row>
                                   <Row>

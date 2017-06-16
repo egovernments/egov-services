@@ -26,6 +26,7 @@ public class Bill {
 	private List<BillDetail> billDetails = new ArrayList<>();
 
 	private String tenantId;
-
+	
 	private AuditDetail auditDetail;
+
 }

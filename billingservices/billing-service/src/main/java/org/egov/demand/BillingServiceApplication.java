@@ -19,14 +19,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class BillingServiceApplication {
 	
 
-	@Value("${app.timezone}")
-	private String timeZone;
+	/*@Value("${app.timezone}")
+	private String timeZone;*/
 
-	@PostConstruct
+	/*@PostConstruct
 	public void initialize() {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
 	}
-
+*/
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
@@ -36,7 +36,7 @@ public class BillingServiceApplication {
 	public ObjectMapper getObjectMapper(){
 		
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+	//	objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		return objectMapper;
 	}
 	
@@ -47,7 +47,7 @@ public class BillingServiceApplication {
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		// mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT,Locale.ENGLISH));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+	//	mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

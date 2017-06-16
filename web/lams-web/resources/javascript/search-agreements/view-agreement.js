@@ -350,7 +350,7 @@ $(document).ready(function() {
     //remove renew part and related buttons from dom
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
-        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict,#wFremarksDetails").remove();
+        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict").remove();
     } else if (getUrlVars()["view"] == "inbox") {
         $("#historyTable").show();
         $("#cancel,#evict,#renew,#renewBtn").remove();
@@ -386,15 +386,15 @@ $(document).ready(function() {
                 if (process.attributes.validActions.values[i].key)
                     $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "approve" || process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
-                    $("#workFlowDetails").remove();
+                    $(".workFlowDetails").remove();
                 }
                 if(process.attributes.validActions.values[i].key.toLowerCase() == "forward") {
                     flg = 1;
                 }
             }
 
-            if(flg == 0 && $("#workFlowDetails"))
-                $("#workFlowDetails").remove();
+            if(flg == 0 && $(".workFlowDetails"))
+                $(".workFlowDetails").remove();
         } else {
             $("#workFlowDetails").remove();
         }

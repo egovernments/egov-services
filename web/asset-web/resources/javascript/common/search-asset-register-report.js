@@ -40,7 +40,7 @@ class SearchAsset extends React.Component {
         for(var i=0;i<locationArray.length;i++){
             if(_this.state.searchSet.location===locationArray[i].name){
               var id = locationArray[i].id;
-              console.log("id",id);
+              //console.log("id",id);
               _this.state.searchSet.locality = id;
 
               break;
@@ -54,8 +54,8 @@ class SearchAsset extends React.Component {
 
         }
 
-        console.log("finsi2",this.state.locality);
-        console.log("Final",this.state.searchSet);
+        //console.log("finsi2",this.state.locality);
+        //console.log("Final",this.state.searchSet);
       //
       //   if(location===undefined){
       //
@@ -69,7 +69,7 @@ class SearchAsset extends React.Component {
       //   }
       //
       //
-      //   console.log("after",queryObject);
+      //   //console.log("after",queryObject);
       if(post==0){
         commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
           if(res) {
@@ -77,7 +77,7 @@ class SearchAsset extends React.Component {
             list.sort(function(item1, item2) {
               return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
             })
-              console.log(list);
+              //console.log(list);
             flag = 1;
             _this.setState({
               isSearchClicked: true,
@@ -118,11 +118,29 @@ class SearchAsset extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    var _this = this;
       if (this.state.modify){
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
+            buttons: [ {
+            text: 'Pdf',
+                      action: function ( e, dt, node, config ) {
+                        console.log(e, dt, node, config);
+                          var date = new Date();
+                          console.log(date);
+                          console.log(_this.state);
+
+                          var doc = new jsPDF();
+                          doc.setFontType("bold");
+                          doc.text(15, 20, tenantId.split(".")[1] + ' Municipal Corporation');
+                          doc.text(15, 30, tenantId.split(".")[1] + ' District');
+                          doc.text(15, 40, 'Asset Register Report');
+
+
+                          doc.save('Asset-register-report.pdf');
+                      }
+                  },
+                     'copy', 'csv', 'excel', 'print'
              ],
              "ordering": false,
              "bDestroy": true,
@@ -151,20 +169,21 @@ class SearchAsset extends React.Component {
 
 
 
-    console.log(this.state.localityList);
+    //console.log(this.state.localityList);
     getDropdown("assetCategories", function(res) {
       checkCountNCall("assetCategories", res);
     });
 
     getDropdown("locality", function(res) {
-      console.log("location",res);
+      //console.log("location",res);
        result = res.map(function(a) {return a.name;});
        $( "#location" ).autocomplete({
          source: result,
          minLength: 3,
          change: function( event, ui ) {
+           console.log("HERE");
            if(ui && ui.item && ui.item.value) {
-           console.log("ui",ui);
+           //console.log("ui",ui);
                _this.setState({
                    searchSet:{
                        ..._this.state.searchSet,
@@ -179,14 +198,14 @@ class SearchAsset extends React.Component {
     });
 
     getDropdown("statusList", function(res) {
-      console.log("statusList",res);
+      //console.log("statusList",res);
       checkCountNCall("statusList", res);
     });
 
-    console.log(this.state.localityList);
+    //console.log(this.state.localityList);
     var location;
 
-      console.log("result",result);
+      //console.log("result",result);
 
 
 
@@ -204,6 +223,7 @@ class SearchAsset extends React.Component {
   }
 
   render() {
+    // console.log(this.state);
     let {handleChange,search,handleClick}=this;
     let {assetCategory,code,description,name,location,status,valueOfAsset}=this.state.searchSet;
     let {isSearchClicked, list, assignments_unitOfMeasurement,localityList}=this.state;
@@ -268,9 +288,10 @@ class SearchAsset extends React.Component {
 
     const renderBody = function() {
       if (list.length>0) {
+        // console.log("list",list);
         return list.map((item,index)=>
         {
-              return (<tr key={index}>
+              return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id, item.status)}}>
                         <td>{index+1}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>

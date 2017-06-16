@@ -8,4 +8,3 @@ insert into egpgr_receivingmode (id, name, code, visible, tenantid) values
 
 
 
-

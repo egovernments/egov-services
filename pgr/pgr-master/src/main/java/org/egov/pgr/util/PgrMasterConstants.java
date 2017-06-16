@@ -133,6 +133,7 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
 	
+
 	public static final String ATTRIBUTE_DETAILS_MANDATORY_CODE = "pgr.0013";
 	public static final String ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME = "attributes";
 	public static final String ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE = "Attributes are mandatory if Metadata is True";
@@ -149,6 +150,15 @@ public class PgrMasterConstants {
 	public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "category";
 	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 
+	public static final String RECEIVINGMODE_CHANNEL_VALID_CODE = "pgr.0012";
+	public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channel";
+	public static final String RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE = "Channel should be WEB or MOBILE.";
+	
+	public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0012";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "channel";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "Channel is required.";
+	
+	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);
 	}

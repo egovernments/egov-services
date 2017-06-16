@@ -104,7 +104,7 @@ public class ReceivingCenterTypeController {
 		}
 		logger.info("Receiving CenterType Request::" + centerTypeRequest);
 
-		final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest);
+		final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest,true);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -126,7 +126,7 @@ public class ReceivingCenterTypeController {
         logger.info("ReceivingCenterTypeRequest::" + centerTypeRequest);
         centerTypeRequest.getCenterType().setCode(code);
 
-        final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest);
+        final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -167,10 +167,10 @@ public class ReceivingCenterTypeController {
     
     
 
-	private List<ErrorResponse> validateReceivingCenterRequest(final ReceivingCenterTypeReq receivingCenterRequest) {
+	private List<ErrorResponse> validateReceivingCenterRequest(final ReceivingCenterTypeReq receivingCenterRequest,boolean flag) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(receivingCenterRequest);
+		final Error error = getError(receivingCenterRequest,flag);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
@@ -190,15 +190,15 @@ public class ReceivingCenterTypeController {
 		return errRes;
 	}
 
-	private List<ErrorField> getErrorFields(final ReceivingCenterTypeReq categoryRequest) {
+	private List<ErrorField> getErrorFields(final ReceivingCenterTypeReq categoryRequest,boolean flag) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addReceivingCenterNameAndCodeValidationErrors(categoryRequest, errorFields);
+		addReceivingCenterNameAndCodeValidationErrors(categoryRequest, errorFields,flag);
 		addTeanantIdValidationErrors(categoryRequest, errorFields);
 		return errorFields;
 	}
 
 	private void addReceivingCenterNameAndCodeValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest,
-			final List<ErrorField> errorFields) {
+			final List<ErrorField> errorFields,boolean flag) {
 		final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
 		if (receivingCenter.getName() == null || receivingCenter.getName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder()
@@ -213,7 +213,7 @@ public class ReceivingCenterTypeController {
 					.field(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} 
-		else if (!receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
+		else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.RECEIVINGCENTER_CODE_UNIQUE_CODE)
                     .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
@@ -235,9 +235,9 @@ public class ReceivingCenterTypeController {
 			return;
 	}
 
-	private Error getError(final ReceivingCenterTypeReq centerTypeRequest) {
+	private Error getError(final ReceivingCenterTypeReq centerTypeRequest,boolean flag) {
 		centerTypeRequest.getCenterType();
-		final List<ErrorField> errorFields = getErrorFields(centerTypeRequest);
+		final List<ErrorField> errorFields = getErrorFields(centerTypeRequest,flag);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE).errorFields(errorFields)
 				.build();

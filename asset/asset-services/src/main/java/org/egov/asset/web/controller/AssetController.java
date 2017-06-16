@@ -192,7 +192,7 @@ public class AssetController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
-		assetValidator.validateAssetForDispose(disposalRequest.getDisposal());
+		assetValidator.validateDisposal(disposalRequest);
 
 		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
 		logger.info("dispose disposalResponse:" + disposalResponse);

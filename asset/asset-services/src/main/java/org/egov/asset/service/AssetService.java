@@ -42,7 +42,6 @@ package org.egov.asset.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
@@ -74,33 +73,32 @@ public class AssetService {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
 
-	public AssetResponse getAssets(AssetCriteria searchAsset, RequestInfo requestInfo) {
+	public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
 		logger.info("AssetService getAssets");
-		List<Asset> assets= assetRepository.findForCriteria(searchAsset);
-		return getAssetResponse(assets,requestInfo);
+		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+		return getAssetResponse(assets, requestInfo);
 	}
 
-	public String getAssetName(String tenantId, String name) {
+	public String getAssetName(final String tenantId, final String name) {
 		logger.info("AssetService getAssetName");
 		return assetRepository.findAssetName(tenantId, name);
 	}
 
-	public AssetResponse create(AssetRequest assetRequest) {
-		Asset asset = assetRepository.create(assetRequest);
-		List<Asset> assets = new ArrayList<>();
+	public AssetResponse create(final AssetRequest assetRequest) {
+		final Asset asset = assetRepository.create(assetRequest);
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		return getAssetResponse(assets,assetRequest.getRequestInfo());
+		return getAssetResponse(assets, assetRequest.getRequestInfo());
 	}
 
-	public AssetResponse createAsync(AssetRequest assetRequest) {
+	public AssetResponse createAsync(final AssetRequest assetRequest) {
 
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
 		assetRequest.getAsset().setId(Long.valueOf(assetRepository.getNextAssetId().longValue()));
@@ -111,46 +109,46 @@ public class AssetService {
 
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			logger.info("JsonProcessingException assetrequest for kafka : " + e);
 		}
 		logger.info("assetRequest value::" + value);
 
 		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(), "save-asset", value);
 
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		return getAssetResponse(assets,assetRequest.getRequestInfo());
+		return getAssetResponse(assets, assetRequest.getRequestInfo());
 	}
 
-	public AssetResponse update(AssetRequest assetRequest) {
+	public AssetResponse update(final AssetRequest assetRequest) {
 
-		Asset asset = assetRepository.update(assetRequest);
-		List<Asset> assets = new ArrayList<>();
+		final Asset asset = assetRepository.update(assetRequest);
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		return getAssetResponse(assets,assetRequest.getRequestInfo());
+		return getAssetResponse(assets, assetRequest.getRequestInfo());
 	}
 
-	public AssetResponse updateAsync(AssetRequest assetRequest) {
+	public AssetResponse updateAsync(final AssetRequest assetRequest) {
 
 		logger.info("assetRequest createAsync::" + assetRequest);
 		String value = null;
 
 		try {
 			value = objectMapper.writeValueAsString(assetRequest);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			logger.info("JsonProcessingException assetrequest for update for kafka : " + e);
 		}
 
 		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(), "update-asset", value);
 
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(assetRequest.getAsset());
-		return getAssetResponse(assets,assetRequest.getRequestInfo());
+		return getAssetResponse(assets, assetRequest.getRequestInfo());
 	}
 
-	private AssetResponse getAssetResponse(List<Asset> assets, RequestInfo requestInfo) {
-		AssetResponse assetResponse = new AssetResponse();
+	private AssetResponse getAssetResponse(final List<Asset> assets, final RequestInfo requestInfo) {
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
 		return assetResponse;

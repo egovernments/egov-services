@@ -196,8 +196,18 @@ class AgreementSearch extends React.Component {
       }
   }
 
-  handleChange(e, name)
-  {
+  handleChange(e, name) {
+    if(name == "mobileNumber") {
+      if(/[^0-9]/.test(e.target.value)) {
+        return this.setState({
+                  searchSet:{
+                      ...this.state.searchSet,
+                      [name]: e.target.value.substring(0, e.target.value.length-1)
+                  }
+              });
+      }
+    }
+
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -260,7 +270,7 @@ class AgreementSearch extends React.Component {
 
 
   render() {
-    console.log(this.state.searchSet);
+    //console.log(this.state.searchSet);
     let {handleChange,search,updateTable,handleSelectChange}=this;
     let {isSearchClicked,agreements,assetCategories}=this.state;
     let {locality,
@@ -475,7 +485,7 @@ class AgreementSearch extends React.Component {
                                       <div className="col-sm-6">
                                           <div className="text-no-ui">
                                               <span>+91</span>
-                                              <input type="text" id="contact_no" name="contact_no" value={mobileNumber} onChange={(e)=>{
+                                              <input type="text" id="contact_no" name="contact_no" value={mobileNumber} maxLength="10" onChange={(e)=>{
                                   handleChange(e,"mobileNumber")
                               }}/>
                                           </div>

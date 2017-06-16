@@ -92,11 +92,14 @@ class AgreementSearch extends React.Component {
 
     var res = commonApiPost("hr-employee", "employees", "_loggedinemployee", {tenantId});
     var bool = false;
-    if(res && res.Employee && res.Employee[0] && res.Employee[0].user && res.Employee[0].user.roles) {
-      for(var i=0;i<res.Employee[0].user.roles.length; i++) {
-        if(res.Employee[0].user.roles[i].name == "Collection Operator") {
-          bool = true;
-          break;
+    if(res && res.Employee && res.Employee[0]) {
+      var res2 = commonApiPost("hr-employee", "employees/" + res.Employee[0].id, "_search", {tenantId});
+      if(res2 && res2.Employee && res2.Employee.user && res2.Employee.user.roles) {
+        for(var i=0; i<res2.Employee.user.roles.length; i++) {
+          if(res2.Employee.user.roles[i].name == "Collection Operator") {
+            bool = true;
+            break;
+          }
         }
       }
     }
@@ -214,7 +217,7 @@ class AgreementSearch extends React.Component {
     if(name == "mobileNumber") {
       if(/[^0-9]/.test(e.target.value)) {
         return this.setState({
-                  searchSet:{
+                  searchSet: {
                       ...this.state.searchSet,
                       [name]: e.target.value.substring(0, e.target.value.length-1)
                   }
@@ -222,12 +225,22 @@ class AgreementSearch extends React.Component {
       }
     }
 
-      this.setState({
-          searchSet:{
-              ...this.state.searchSet,
-              [name]:e.target.value
-          }
-      })
+    if(name == "allotteeName") {
+      return this.setState({
+        searchSet: {
+            ...this.state.searchSet,
+            [name]: e.target.value,
+            allottee: ""
+        }
+    })
+    }
+
+    this.setState({
+        searchSet: {
+            ...this.state.searchSet,
+            [name]:e.target.value
+        }
+    })
   }
 
   handleSelectChange(type, id, number, assetCategory, acknowledgementNumber) {

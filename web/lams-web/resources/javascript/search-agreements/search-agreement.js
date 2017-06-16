@@ -24,7 +24,8 @@ class AgreementSearch extends React.Component {
         locality: [],
         revenueWards: [],
         electionwards: [],
-        modify: false
+        modify: false,
+        users: []
   }
   this.handleChange = this.handleChange.bind(this);
   this.search = this.search.bind(this);
@@ -35,8 +36,14 @@ class AgreementSearch extends React.Component {
     e.preventDefault();
     var _this = this;
     try {
+      var searchSet = Object.assign({}, this.state.searchSet);
+      if(searchSet.allottee)
+        delete searchSet.allotteeName;
+      else 
+        delete searchSet.allottee;
+
       //call api call
-      var agreements = commonApiPost("lams-services", "agreements", "_search", this.state.searchSet).responseJSON["Agreements"] ||[];
+      var agreements = commonApiPost("lams-services", "agreements", "_search", searchSet).responseJSON["Agreements"] ||[];
       flag = 1;
       _this.setState({
         isSearchClicked: true,
@@ -121,19 +128,33 @@ class AgreementSearch extends React.Component {
                 for(let i=0;i<data.user.length;i++)
                     users.push(data.user[i].name);
                 response(users);
+                _this.setState({
+                  users: data.user
+                })
             }
           }
         });
       },
       minLength: 3,
       change: function( event, ui ) {
-        if(ui.item && ui.item.value)
+        if(ui.item && ui.item.value) {
+            var id;
+            if(_this.state.users && _this.state.users.constructor == Array) {
+              for(var i=0; i<_this.state.users.length; i++) {
+                if(_this.state.users[i].name == ui.item.value) {
+                  id = _this.state.users[i].id;
+                }
+              }  
+            }
+            
             _this.setState({
                 searchSet:{
                     ..._this.state.searchSet,
-                    allotteeName: ui.item.value
+                    allotteeName: ui.item.value,
+                    allottee: id || ""
                 }
             })
+        }
       }
     });
 

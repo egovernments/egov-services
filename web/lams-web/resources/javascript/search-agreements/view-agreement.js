@@ -350,7 +350,7 @@ $(document).ready(function() {
     //remove renew part and related buttons from dom
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
-        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict,#wFremarksDetails").remove();
+        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict").remove();
     } else if (getUrlVars()["view"] == "inbox") {
         $("#historyTable").show();
         $("#cancel,#evict,#renew,#renewBtn").remove();

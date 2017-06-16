@@ -246,7 +246,7 @@ public class AgreementService {
 		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
 				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
 				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
-				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorno() == null;
+				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorNo() == null;
 
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");

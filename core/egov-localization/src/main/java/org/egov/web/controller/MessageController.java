@@ -8,8 +8,10 @@ import javax.validation.Valid;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 import org.egov.web.contract.CreateMessagesRequest;
+import org.egov.web.contract.DeleteMessagesRequest;
 import org.egov.web.contract.Message;
 import org.egov.web.contract.MessagesResponse;
+import org.egov.web.contract.NewMessagesRequest;
 import org.egov.web.exception.InvalidCreateMessageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +70,7 @@ public class MessageController {
     
     @PostMapping(value = "/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final CreateMessagesRequest messagesRequest,
+	public ResponseEntity<?> create(@RequestBody @Valid final NewMessagesRequest messagesRequest,
 			final BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidCreateMessageRequest(bindingResult.getFieldErrors());
@@ -81,7 +83,7 @@ public class MessageController {
     
     @PostMapping(value = "/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid final CreateMessagesRequest messagesRequest,
+	public ResponseEntity<?> update(@RequestBody @Valid final NewMessagesRequest messagesRequest,
 			final BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidCreateMessageRequest(bindingResult.getFieldErrors());
@@ -92,9 +94,22 @@ public class MessageController {
 		return getSuccessResponse(messages);
 	}
     
+    @PostMapping(value = "/_delete")
+	@ResponseBody
+	public ResponseEntity<?> delete(@RequestBody @Valid final DeleteMessagesRequest deleteMessagesRequest,
+			final BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidCreateMessageRequest(bindingResult.getFieldErrors());
+		}
+		logger.info("Delete Message Request:" + deleteMessagesRequest);
+		messageService.deleteMessage(deleteMessagesRequest);
+		final List<Message> messages = deleteMessagesRequest.getMessages();
+		return getSuccessResponse(messages);
+	}
+    
     private ResponseEntity<?> getSuccessResponse(final List<Message> messages) {
 		final MessagesResponse messageResponse = new MessagesResponse(messages); 
-		return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+		return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
 	}
 
 }

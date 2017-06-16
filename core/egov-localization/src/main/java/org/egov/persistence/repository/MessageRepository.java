@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.builder.MessageRepositoryQueryBuilder;
-import org.egov.web.contract.CreateMessagesRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class MessageRepository {
 	
     private MessageJpaRepository messageJpaRepository;
     
-    private MessageCacheRepository messageCacheRepository;
+    // private MessageCacheRepository messageCacheRepository;
     
     @Autowired
     private MessageRepositoryQueryBuilder messageQueryBuilder;
@@ -47,9 +46,9 @@ public class MessageRepository {
         messageJpaRepository.save(entityMessages);
     }
     
-    public boolean deleteMessages(CreateMessagesRequest createMessagesRequest){
-    	String deleteQuery = messageQueryBuilder.getDeleteQuery(createMessagesRequest);
-    	final Object[] obj = new Object[] { createMessagesRequest.getLocale(), createMessagesRequest.getTenantId() };
+    public boolean deleteMessages(String locale, String tenantId, List<Message> messageList){
+    	String deleteQuery = messageQueryBuilder.getDeleteQuery(messageList);
+    	final Object[] obj = new Object[] { locale, tenantId };
 		int deleteStatus = jdbcTemplate.update(deleteQuery, obj);
 		logger.info("Status of Delete is : " + deleteStatus);
 		if(deleteStatus > 0){
@@ -58,8 +57,7 @@ public class MessageRepository {
 		return false; 
     }
     
-    public boolean createMessage(CreateMessagesRequest createMessagesRequest){
-    	List<org.egov.web.contract.Message> messageList = createMessagesRequest.getMessages();
+    public boolean createMessage(String locale, String tenantId, List<Message> messageList){
     	String batchInsertQuery = messageQueryBuilder.getQueryForBatchInsert();
     	int[] values = {};
 		try {
@@ -67,11 +65,11 @@ public class MessageRepository {
 					new BatchPreparedStatementSetter() {
 						@Override
 						public void setValues(java.sql.PreparedStatement statement, int i) throws SQLException {
-							org.egov.web.contract.Message eachMessage = messageList.get(i);
-							statement.setString(1, createMessagesRequest.getLocale());
+							Message eachMessage = messageList.get(i);
+							statement.setString(1, locale);
 							statement.setString(2, eachMessage.getCode());
 							statement.setString(3, eachMessage.getMessage());
-							statement.setString(4, createMessagesRequest.getTenantId());
+							statement.setString(4, tenantId);
 							statement.setString(5, eachMessage.getModule());
 						}
 						@Override
@@ -84,7 +82,7 @@ public class MessageRepository {
 		}
 		logger.info("Status of Insert is : " + values.length);
 		if(values.length > 0){
-			Tenant tenant = new Tenant(createMessagesRequest.getTenantId());
+			// Tenant tenant = new Tenant(tenantId);
 			// messageCacheRepository.bustCacheEntry(createMessagesRequest.getLocale(), tenant);
 			return true;
 		}

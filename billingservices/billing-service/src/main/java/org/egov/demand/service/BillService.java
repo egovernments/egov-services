@@ -44,6 +44,8 @@ import java.util.List;
 
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillDetail;
+import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -68,7 +70,28 @@ public class BillService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
+	@Autowired
+	private BillRepository billRepository;
+	
 	public BillResponse createAsync(BillRequest billRequest){
+		
+		List<Bill> bills = billRequest.getBillInfos();
+		
+		int billIndex = 0;
+		/*for(Bill bill:bills){
+			bill.setId(billRepository.getNextValue(applicationProperties.getBillSeqName()));
+			bills.set(billIndex, bill);
+
+			List<BillDetail> billDetails = bill.getBillDetails();
+			int billDetailIndex = 0;
+			for(BillDetail billDetail:billDetails){
+				billDetail.setId(billRepository.getNextValue(applicationProperties.getBillDetailSeqName()));
+				billDetails.set(billDetailIndex, billDetail);
+				billDetailIndex++;
+			}
+			
+			billIndex++;
+		}*/
 		
 		try {
 			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),
@@ -80,6 +103,9 @@ public class BillService {
 		return getBillResponse(billRequest.getBillInfos());
 	}
 	
+	public void create(BillRequest billRequest){		
+		billRepository.saveBill(billRequest);
+	}
 	public BillResponse getBillResponse(List<Bill> bills){
 		BillResponse billResponse = new BillResponse();
 		billResponse.setBillInfos(bills);

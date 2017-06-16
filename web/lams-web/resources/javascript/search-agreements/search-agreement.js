@@ -117,7 +117,7 @@ class AgreementSearch extends React.Component {
           type: 'POST',
           dataType: "json",
           data: JSON.stringify({
-              ...requestInfo,
+              RequestInfo: requestInfo,
               name: request.term,
               fuzzyLogic: true
           }),

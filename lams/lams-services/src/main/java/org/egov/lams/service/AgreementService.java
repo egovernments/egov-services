@@ -223,6 +223,16 @@ public class AgreementService {
 		 * isAllotteeNull declared to indicate whether criteria arguments for
 		 * each of the Agreement,Asset and Allottee objects are given or not.
 		 */
+		
+		if(agreementCriteria.getFromDate() != null)
+		{
+			setFromTime(agreementCriteria.getFromDate());
+		}
+		if(agreementCriteria.getToDate() != null)
+		{
+			setToTime(agreementCriteria.getFromDate());
+		}
+		
 		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
 				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
@@ -268,6 +278,24 @@ public class AgreementService {
 			logger.info("agreementRepository.findByAgreement : all values null");
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		}
+	}
+
+	private void setFromTime(Date fromDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY,00);
+		cal.set(Calendar.MINUTE,00);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		fromDate = cal.getTime();	
+	}
+
+	private void setToTime(Date toDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.SECOND,59);
+		cal.set(Calendar.MILLISECOND,999);
+		toDate = cal.getTime();	
 	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {

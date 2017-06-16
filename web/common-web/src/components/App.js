@@ -37,7 +37,14 @@ class App extends Component {
   }
 
   componentWillMount() {
-
+    let {history}=this.props;
+    let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
+    console.log(commonState);
+    if (commonState.token) {
+        history.push("/dashboard");
+    } else {
+        history.push("/");
+    }
 
       // this.props.setLabels(agent.labels.getLabels());
       // const token = window.localStorage.getItem('jwt');
@@ -75,12 +82,7 @@ class App extends Component {
 
   componentDidMount()
   {
-    let {token,history}=this.props;
-    if (token) {
-        history.push("/dashboard");
-    } else {
-        history.push("/");
-    }
+
 
   }
 

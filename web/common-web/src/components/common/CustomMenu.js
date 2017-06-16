@@ -73,6 +73,16 @@ class CustomMenu extends Component {
                 Favourites
             </Link>
           </MenuItem>
+          <MenuItem>
+            <Link to="/propertyTaxSearch">
+                Property Search
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to="/propertyCreate">
+                Property Create
+            </Link>
+          </MenuItem>
           </Menu>
 
       {/*  <DropDownMenu value={1}>

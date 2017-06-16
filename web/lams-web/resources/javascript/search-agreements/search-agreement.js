@@ -92,11 +92,11 @@ class AgreementSearch extends React.Component {
 
     var res = commonApiPost("hr-employee", "employees", "_loggedinemployee", {tenantId});
     var bool = false;
-    if(res && res.Employee && res.Employee[0]) {
-      var res2 = commonApiPost("hr-employee", "employees/" + res.Employee[0].id, "_search", {tenantId});
-      if(res2 && res2.Employee && res2.Employee.user && res2.Employee.user.roles) {
-        for(var i=0; i<res2.Employee.user.roles.length; i++) {
-          if(res2.Employee.user.roles[i].name == "Collection Operator") {
+    if(res && res.responseJSON && res.responseJSON.Employee && res.responseJSON.Employee[0]) {
+      var res2 = commonApiPost("hr-employee", "employees/" + res.responseJSON.Employee[0].id, "_search", {tenantId});
+      if(res2 && res2.responseJSON && res2.responseJSON.Employee && res2.responseJSON.Employee.user && res2.responseJSON.Employee.user.roles) {
+        for(var i=0; i<res2.responseJSON.Employee.user.roles.length; i++) {
+          if(res2.responseJSON.Employee.user.roles[i].name == "Collection Operator") {
             bool = true;
             break;
           }

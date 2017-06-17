@@ -38,9 +38,9 @@ class App extends Component {
 
   componentWillMount() {
     let {history}=this.props;
-    let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
-    console.log(commonState);
-    if (commonState.token) {
+    // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
+    // console.log(commonState);
+    if (window.localStorage.getItem("token")) {
         history.push("/dashboard");
     } else {
         history.push("/");

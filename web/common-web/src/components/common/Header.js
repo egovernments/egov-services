@@ -65,6 +65,7 @@ const RightIcon = (props) => {
             <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
                 props.logout();
+                window.localStorage.setItem("token","");
                 // props.history.push("/");
             }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
      </IconMenu>

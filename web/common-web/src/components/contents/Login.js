@@ -193,6 +193,7 @@ class Login extends Component {
                                 <Col lg={12}>
                                   <RaisedButton disabled={!isFormValid}  label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={brown500} labelColor={white} onClick={(e)=>{
                                     login(e,false,"adasdsa3435",[]);
+                                    window.localStorage.setItem("token","adasdsa3435");
                                   }}/>
                                   <FlatButton label="Forgot Password?" style={styles.buttonTopMargin} />
                                 </Col>

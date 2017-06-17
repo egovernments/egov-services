@@ -1,0 +1,20 @@
+{
+    "responseInfo": {
+       
+    },
+    "roofTypes": [
+        {
+            "tenantId": "1234",
+            "name": "Mansard Roof Type",
+            "code": "MRT",
+            "nameLocal": "Mansard",
+            "description": "Imported from USA",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

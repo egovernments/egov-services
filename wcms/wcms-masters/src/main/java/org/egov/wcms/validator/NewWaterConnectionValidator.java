@@ -72,6 +72,9 @@ public class NewWaterConnectionValidator {
 
     @Autowired
     private DonationService donationService;
+    
+    @Autowired
+    private ConnectionMasterValidator connectionMasterValidator;
 
     @Autowired
     private PropertyUsageTypeService propertyUsageTypeService;
@@ -115,8 +118,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsConstants.BILLING_TYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.BILLING_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getCategoryType() == null
-                || waterConnectionRequest.getConnection().getCategoryType().isEmpty()) {
+        } else if (waterConnectionRequest.getConnection().getCategoryType().getName() == null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
@@ -127,7 +129,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getHscPipeSizeType() == 0L) {
+        } else if (waterConnectionRequest.getConnection().getHscPipeSizeType().getCode() ==null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
                     .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
@@ -144,8 +146,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getSourceType() == null
-                || waterConnectionRequest.getConnection().getSourceType().isEmpty()) {
+        } else if (waterConnectionRequest.getConnection().getSourceType().getName() == null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCE_TYPE_INVALID_CODE)
                     .message(WcmsConstants.SOURCE_TYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SOURCE_TYPE_INVALID_FIELD_NAME).build();
@@ -155,7 +156,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsConstants.SUMP_CAPACITY_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUMP_CAPACITY_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getSupplyType() == null) {
+        } else if (waterConnectionRequest.getConnection().getSupplyType().getName() == null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUPPLY_TYPE_INVALID_CODE)
                     .message(WcmsConstants.SUPPLY_TYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUPPLY_TYPE_INVALID_FIELD_NAME).build();
@@ -191,6 +192,9 @@ public class NewWaterConnectionValidator {
 
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
+        
+        final List<ErrorField> masterfielderrorList = connectionMasterValidator.getMasterValidation(waterConnectionRequest);
+        errorFields.addAll(masterfielderrorList);
 
         return Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(WcmsConstants.INVALID_REQUEST_MESSAGE)
                 .errorFields(errorFields).build();
@@ -311,7 +315,7 @@ public class NewWaterConnectionValidator {
         try {
             result = propertyCategoryService.checkIfMappingExists(
                     waterConnectionRequest.getConnection().getProperty().getPropertyType(),
-                    waterConnectionRequest.getConnection().getCategoryType(),
+                    waterConnectionRequest.getConnection().getCategoryType().getName(),
                     waterConnectionRequest.getConnection().getTenantId());
         } catch (final Exception e) {
             LOGGER.info("Validating Property - Category Mapping FAILED!");
@@ -355,11 +359,7 @@ public class NewWaterConnectionValidator {
                 waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED"))) {
             LOGGER.info("BillingType is INVALID");
             return isRequestValid;
-        }  else if (!(waterConnectionRequest.getConnection().getSourceType().equals("GROUNDWATER") ||
-                waterConnectionRequest.getConnection().getSourceType().equals("SURFACEWATER"))) {
-            LOGGER.info("SourceType is INVALID");
-            return isRequestValid;
-        }
+        }  
 
         isRequestValid = true;
         return isRequestValid;
@@ -375,9 +375,9 @@ public class NewWaterConnectionValidator {
         final DonationGetRequest donationGetRequest = new DonationGetRequest();
         donationGetRequest.setPropertyType(waterConnectionRequest.getConnection().getProperty().getPropertyType());
         donationGetRequest.setUsageType(waterConnectionRequest.getConnection().getProperty().getUsageType());
-        donationGetRequest.setCategoryType(waterConnectionRequest.getConnection().getCategoryType());
-        donationGetRequest.setMaxHSCPipeSize(waterConnectionRequest.getConnection().getHscPipeSizeType());
-        donationGetRequest.setMinHSCPipeSize(waterConnectionRequest.getConnection().getHscPipeSizeType());
+        donationGetRequest.setCategoryType(waterConnectionRequest.getConnection().getCategoryType().getName());
+        donationGetRequest.setMaxHSCPipeSize(waterConnectionRequest.getConnection().getHscPipeSizeType().getSizeInInch());
+        donationGetRequest.setMinHSCPipeSize(waterConnectionRequest.getConnection().getHscPipeSizeType().getSizeInInch());
         donationGetRequest.setTenantId(waterConnectionRequest.getConnection().getTenantId());
         return donationGetRequest;
     }

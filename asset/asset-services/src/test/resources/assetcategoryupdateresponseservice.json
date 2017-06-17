@@ -1,5 +1,11 @@
 {
-	"ResponseInfo": null,
+	"ResponseInfo": {
+        "apiId": null,
+        "ver": "v1",
+        "resMsgId": null,
+        "msgId": null,
+        "status": null
+    },
 	"AssetCategory": 
 	[
 		{

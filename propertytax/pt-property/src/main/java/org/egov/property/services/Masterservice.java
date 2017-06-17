@@ -87,7 +87,7 @@ public interface Masterservice {
 	public WallTypeResponse updateWallTypeMaster(String tenantId, Long id, WallTypeRequest wallTypeRequest) throws Exception;
 
 
-	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize, Integer offSet) throws Exception;
 
 	public UsageMasterResponse createUsageMaster(String tenantId, UsageMasterRequest usageMasterRequest) throws Exception;
 

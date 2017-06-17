@@ -70,17 +70,16 @@ public class Connection {
     private String billingType;
 
     @NotNull
-    private String categoryType;
-    private long categoryTypeId;
+    private CategoryType categoryType;
 
     @NotNull
-    private double hscPipeSizeType;
+    private PipeSizeType hscPipeSizeType;
 
     @NotNull
-    private String supplyType;
+    private SupplyType supplyType;
 
     @NotNull
-    private String sourceType;
+    private SourceType sourceType;
 
     @NotNull
     private String connectionStatus;

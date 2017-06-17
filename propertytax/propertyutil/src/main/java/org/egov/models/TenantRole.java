@@ -22,10 +22,6 @@ public class TenantRole   {
   @NotNull
   private List<Role> roles = new ArrayList<Role>();
 
-  public TenantRole tenantId(String tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
 
    /**
    * tenantid for the tenant
@@ -39,15 +35,6 @@ public class TenantRole   {
     this.tenantId = tenantId;
   }
 
-  public TenantRole roles(List<Role> roles) {
-    this.roles = roles;
-    return this;
-  }
-
-  public TenantRole addRolesItem(Role rolesItem) {
-    this.roles.add(rolesItem);
-    return this;
-  }
 
    /**
    * Roles assigned for a particular tenant - array of role codes/names

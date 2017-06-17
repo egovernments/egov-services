@@ -20,10 +20,6 @@ public class ErrorRes   {
 	@JsonProperty("Errors")
 	private List<Error> errors = new ArrayList<Error>();
 
-	public ErrorRes responseInfo(ResponseInfo responseInfo) {
-		this.responseInfo = responseInfo;
-		return this;
-	}
 
 	public ErrorRes(ResponseInfo responseInfo, List<Error> errors) {
 		super();
@@ -45,16 +41,6 @@ public class ErrorRes   {
 
 	public void setResponseInfo(ResponseInfo responseInfo) {
 		this.responseInfo = responseInfo;
-	}
-
-	public ErrorRes errors(List<Error> errors) {
-		this.errors = errors;
-		return this;
-	}
-
-	public ErrorRes addErrorsItem(Error errorsItem) {
-		this.errors.add(errorsItem);
-		return this;
 	}
 
 	/**

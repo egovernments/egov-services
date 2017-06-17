@@ -1,0 +1,20 @@
+{
+    "floorTypes": [
+        {
+            "tenantId": "1234",
+            "name": "Stone Flooring",
+            "code": "256",
+            "nameLocal": "Stone",
+            "description": "Stone Flooring",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ],
+    "responseInfo": {
+      
+    }
+}

@@ -77,10 +77,6 @@ public class UserDetails   {
 	@JsonProperty("photo")
 	private String photo = null;
 
-	public UserDetails firstName(String firstName) {
-		this.firstName = firstName;
-		return this;
-	}
 
 	/**
 	 * The full name of the user.
@@ -94,10 +90,6 @@ public class UserDetails   {
 		this.firstName = firstName;
 	}
 
-	public UserDetails middleName(String middleName) {
-		this.middleName = middleName;
-		return this;
-	}
 
 	/**
 	 * The full name of the user.
@@ -109,11 +101,6 @@ public class UserDetails   {
 
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
-	}
-
-	public UserDetails lastName(String lastName) {
-		this.lastName = lastName;
-		return this;
 	}
 
 	/**
@@ -128,11 +115,6 @@ public class UserDetails   {
 		this.lastName = lastName;
 	}
 
-	public UserDetails dob(String dob) {
-		this.dob = dob;
-		return this;
-	}
-
 	/**
 	 * Date of birth of the user in dd/mm/yyyy format.
 	 * @return dob
@@ -143,11 +125,6 @@ public class UserDetails   {
 
 	public void setDob(String dob) {
 		this.dob = dob;
-	}
-
-	public UserDetails altContactNumber(String altContactNumber) {
-		this.altContactNumber = altContactNumber;
-		return this;
 	}
 
 	/**
@@ -162,11 +139,6 @@ public class UserDetails   {
 		this.altContactNumber = altContactNumber;
 	}
 
-	public UserDetails fatherName(String fatherName) {
-		this.fatherName = fatherName;
-		return this;
-	}
-
 	/**
 	 * User's father's name if available
 	 * @return fatherName
@@ -177,11 +149,6 @@ public class UserDetails   {
 
 	public void setFatherName(String fatherName) {
 		this.fatherName = fatherName;
-	}
-
-	public UserDetails husbandName(String husbandName) {
-		this.husbandName = husbandName;
-		return this;
 	}
 
 	/**
@@ -196,11 +163,6 @@ public class UserDetails   {
 		this.husbandName = husbandName;
 	}
 
-	public UserDetails bloodGroup(String bloodGroup) {
-		this.bloodGroup = bloodGroup;
-		return this;
-	}
-
 	/**
 	 * Blood group of the user.
 	 * @return bloodGroup
@@ -211,11 +173,6 @@ public class UserDetails   {
 
 	public void setBloodGroup(String bloodGroup) {
 		this.bloodGroup = bloodGroup;
-	}
-
-	public UserDetails pan(String pan) {
-		this.pan = pan;
-		return this;
 	}
 
 	/**
@@ -230,11 +187,6 @@ public class UserDetails   {
 		this.pan = pan;
 	}
 
-	public UserDetails permanentAddress(String permanentAddress) {
-		this.permanentAddress = permanentAddress;
-		return this;
-	}
-
 	/**
 	 * Permanent address of the user.
 	 * @return permanentAddress
@@ -245,11 +197,6 @@ public class UserDetails   {
 
 	public void setPermanentAddress(String permanentAddress) {
 		this.permanentAddress = permanentAddress;
-	}
-
-	public UserDetails permanentCity(String permanentCity) {
-		this.permanentCity = permanentCity;
-		return this;
 	}
 
 	/**
@@ -264,11 +211,6 @@ public class UserDetails   {
 		this.permanentCity = permanentCity;
 	}
 
-	public UserDetails permanentPincode(String permanentPincode) {
-		this.permanentPincode = permanentPincode;
-		return this;
-	}
-
 	/**
 	 * Permanent address pincode.
 	 * @return permanentPincode
@@ -279,11 +221,6 @@ public class UserDetails   {
 
 	public void setPermanentPincode(String permanentPincode) {
 		this.permanentPincode = permanentPincode;
-	}
-
-	public UserDetails correspondenceCity(String correspondenceCity) {
-		this.correspondenceCity = correspondenceCity;
-		return this;
 	}
 
 	/**
@@ -298,11 +235,6 @@ public class UserDetails   {
 		this.correspondenceCity = correspondenceCity;
 	}
 
-	public UserDetails correspondencePincode(String correspondencePincode) {
-		this.correspondencePincode = correspondencePincode;
-		return this;
-	}
-
 	/**
 	 * Permanent address pincode.
 	 * @return correspondencePincode
@@ -315,10 +247,6 @@ public class UserDetails   {
 		this.correspondencePincode = correspondencePincode;
 	}
 
-	public UserDetails correspondenceAddress(String correspondenceAddress) {
-		this.correspondenceAddress = correspondenceAddress;
-		return this;
-	}
 
 	/**
 	 * Correspondence address of the user.
@@ -332,10 +260,6 @@ public class UserDetails   {
 		this.correspondenceAddress = correspondenceAddress;
 	}
 
-	public UserDetails signature(String signature) {
-		this.signature = signature;
-		return this;
-	}
 
 	/**
 	 * Image to be loaded for the signature of the employee
@@ -349,11 +273,6 @@ public class UserDetails   {
 		this.signature = signature;
 	}
 
-	public UserDetails identificationMark(String identificationMark) {
-		this.identificationMark = identificationMark;
-		return this;
-	}
-
 	/**
 	 * Any identification mark of the person.
 	 * @return identificationMark
@@ -365,11 +284,6 @@ public class UserDetails   {
 
 	public void setIdentificationMark(String identificationMark) {
 		this.identificationMark = identificationMark;
-	}
-
-	public UserDetails photo(String photo) {
-		this.photo = photo;
-		return this;
 	}
 
 	/**

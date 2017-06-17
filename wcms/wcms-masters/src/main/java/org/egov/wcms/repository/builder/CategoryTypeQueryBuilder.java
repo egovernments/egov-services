@@ -175,6 +175,13 @@ public class CategoryTypeQueryBuilder {
     public static String selectCategoryByNameAndCodeQuery() {
         return " select code FROM egwtr_category where name = ? and tenantId = ?";
     }
+    
+    public static String selectCategoryByNameQuery() {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        selectQuery.append(" Where category.name = ?");
+        selectQuery.append(" AND category.tenantId = ?");
+        return selectQuery.toString();
+    }
 
     public static String selectCategoryByNameAndCodeNotInQuery() {
         return " select code from egwtr_category where name = ? and tenantId = ? and code != ? ";

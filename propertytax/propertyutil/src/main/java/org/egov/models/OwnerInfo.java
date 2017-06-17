@@ -24,11 +24,6 @@ public class OwnerInfo extends User  {
   @Size(min=4,max=32)
   private String ownerType = null;
 
-  public OwnerInfo isPrimaryOwner(Boolean isPrimaryOwner) {
-    this.isPrimaryOwner = isPrimaryOwner;
-    return this;
-  }
-
    /**
    * The owner is primary or not
    * @return isPrimaryOwner
@@ -39,11 +34,6 @@ public class OwnerInfo extends User  {
 
   public void setIsPrimaryOwner(Boolean isPrimaryOwner) {
     this.isPrimaryOwner = isPrimaryOwner;
-  }
-
-  public OwnerInfo isSecondaryOwner(Boolean isSecondaryOwner) {
-    this.isSecondaryOwner = isSecondaryOwner;
-    return this;
   }
 
    /**
@@ -58,11 +48,6 @@ public class OwnerInfo extends User  {
     this.isSecondaryOwner = isSecondaryOwner;
   }
 
-  public OwnerInfo ownerShipPercentage(Double ownerShipPercentage) {
-    this.ownerShipPercentage = ownerShipPercentage;
-    return this;
-  }
-
    /**
    * Ownership percentage.
    * @return ownerShipPercentage
@@ -75,10 +60,6 @@ public class OwnerInfo extends User  {
     this.ownerShipPercentage = ownerShipPercentage;
   }
 
-  public OwnerInfo ownerType(String ownerType) {
-    this.ownerType = ownerType;
-    return this;
-  }
 
    /**
    * Type of owner, based on this option rebate will be calculated.

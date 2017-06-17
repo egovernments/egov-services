@@ -1,0 +1,23 @@
+{
+    "responseInfo": {
+        
+    },
+    "usageMasters": [
+        {
+            "tenantId": "default",
+            "name": "test_search",
+            "code": "1234",
+            "description": "test search_description",
+            "nameLocal": "12212",
+            "active": null,
+            "isResidential": null,
+            "orderNumber": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

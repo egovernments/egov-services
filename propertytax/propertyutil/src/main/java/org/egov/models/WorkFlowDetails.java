@@ -24,11 +24,6 @@ public class WorkFlowDetails   {
 	@JsonProperty("status")
 	private String status = null;
 
-	public WorkFlowDetails department(String department) {
-		this.department = department;
-		return this;
-	}
-
 	/**
 	 * Selected department.
 	 * @return department
@@ -39,11 +34,6 @@ public class WorkFlowDetails   {
 
 	public void setDepartment(String department) {
 		this.department = department;
-	}
-
-	public WorkFlowDetails designation(String designation) {
-		this.designation = designation;
-		return this;
 	}
 
 	/**
@@ -58,11 +48,6 @@ public class WorkFlowDetails   {
 		this.designation = designation;
 	}
 
-	public WorkFlowDetails assignee(Long assignee) {
-		this.assignee = assignee;
-		return this;
-	}
-
 	/**
 	 * Selected assignee.
 	 * @return assignee
@@ -75,11 +60,6 @@ public class WorkFlowDetails   {
 		this.assignee = assignee;
 	}
 
-	public WorkFlowDetails action(String action) {
-		this.action = action;
-		return this;
-	}
-
 	/**
 	 * chosen action.
 	 * @return action
@@ -90,11 +70,6 @@ public class WorkFlowDetails   {
 
 	public void setAction(String action) {
 		this.action = action;
-	}
-
-	public WorkFlowDetails status(String status) {
-		this.status = status;
-		return this;
 	}
 
 	/**

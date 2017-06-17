@@ -77,7 +77,7 @@ public class WaterConnectionRepository {
             insertQuery = WaterConnectionQueryBuilder.insertConnectionQuery();
 
         final String query = insertQuery;
-
+      
         long connectionId = 0L;
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -88,10 +88,10 @@ public class WaterConnectionRepository {
                 statement.setString(1, waterConnectionRequest.getConnection().getTenantId());
                 statement.setString(2, waterConnectionRequest.getConnection().getConnectionType());
                 statement.setString(3, waterConnectionRequest.getConnection().getBillingType());
-                statement.setLong(4, 3L); // waterConnectionRequest.getConnection().getCategoryType());
-                statement.setLong(5, 1L); // waterConnectionRequest.getConnection().getHscPipeSizeType());
-                statement.setString(6, waterConnectionRequest.getConnection().getSupplyType());
-                statement.setLong(7, 1L);  // waterConnectionRequest.getConnection().getSourceType());
+                statement.setLong(4,  waterConnectionRequest.getConnection().getCategoryType().getId());
+                statement.setLong(5, waterConnectionRequest.getConnection().getHscPipeSizeType().getId());
+                statement.setLong(6, waterConnectionRequest.getConnection().getSupplyType().getId());
+                statement.setLong(7,  waterConnectionRequest.getConnection().getSourceType().getId());
                 statement.setString(8, waterConnectionRequest.getConnection().getConnectionStatus());
                 statement.setDouble(9, waterConnectionRequest.getConnection().getSumpCapacity());
                 statement.setInt(10, waterConnectionRequest.getConnection().getNumberOfTaps());

@@ -57,10 +57,6 @@ public class RequestInfo   {
   @JsonProperty("correlationId")
   private String correlationId = null;
 
-  public RequestInfo apiId(String apiId) {
-    this.apiId = apiId;
-    return this;
-  }
 
    /**
    * unique API ID
@@ -72,11 +68,6 @@ public class RequestInfo   {
 
   public void setApiId(String apiId) {
     this.apiId = apiId;
-  }
-
-  public RequestInfo ver(String ver) {
-    this.ver = ver;
-    return this;
   }
 
    /**
@@ -92,11 +83,6 @@ public class RequestInfo   {
     this.ver = ver;
   }
 
-  public RequestInfo ts(Long ts) {
-    this.ts = ts;
-    return this;
-  }
-
    /**
    * time in epoch
    * @return ts
@@ -108,11 +94,6 @@ public class RequestInfo   {
 
   public void setTs(Long ts) {
     this.ts = ts;
-  }
-
-  public RequestInfo action(String action) {
-    this.action = action;
-    return this;
   }
 
    /**
@@ -128,11 +109,6 @@ public class RequestInfo   {
     this.action = action;
   }
 
-  public RequestInfo did(String did) {
-    this.did = did;
-    return this;
-  }
-
    /**
    * Device ID from which the API is called
    * @return did
@@ -143,11 +119,6 @@ public class RequestInfo   {
 
   public void setDid(String did) {
     this.did = did;
-  }
-
-  public RequestInfo key(String key) {
-    this.key = key;
-    return this;
   }
 
    /**
@@ -163,11 +134,6 @@ public class RequestInfo   {
     this.key = key;
   }
 
-  public RequestInfo msgId(String msgId) {
-    this.msgId = msgId;
-    return this;
-  }
-
    /**
    * Unique request message id from the caller
    * @return msgId
@@ -178,11 +144,6 @@ public class RequestInfo   {
 
   public void setMsgId(String msgId) {
     this.msgId = msgId;
-  }
-
-  public RequestInfo requesterId(String requesterId) {
-    this.requesterId = requesterId;
-    return this;
   }
 
    /**
@@ -198,11 +159,6 @@ public class RequestInfo   {
     this.requesterId = requesterId;
   }
 
-  public RequestInfo authToken(String authToken) {
-    this.authToken = authToken;
-    return this;
-  }
-
    /**
    * //session/jwt/saml token/oauth token - the usual value that would go into HTTP bearer token
    * @return authToken
@@ -213,11 +169,6 @@ public class RequestInfo   {
 
   public void setAuthToken(String authToken) {
     this.authToken = authToken;
-  }
-
-  public RequestInfo userInfo(UserInfo userInfo) {
-    this.userInfo = userInfo;
-    return this;
   }
 
    /**
@@ -231,11 +182,6 @@ public class RequestInfo   {
 
   public void setUserInfo(UserInfo userInfo) {
     this.userInfo = userInfo;
-  }
-
-  public RequestInfo correlationId(String correlationId) {
-    this.correlationId = correlationId;
-    return this;
   }
 
    /**

@@ -1,0 +1,18 @@
+{
+    "responseInfo": {
+       
+    },
+    "occuapancyMasters": [
+        {
+            "tenantId": "default",
+            "name": "testing",
+            "code": "testing",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

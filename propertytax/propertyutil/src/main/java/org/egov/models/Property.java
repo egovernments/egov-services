@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -155,11 +156,6 @@ public class Property   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public Property id(Long id) {
-		this.id = id;
-		return this;
-	}
-
 	/**
 	 * Unique Identifier of the Property
 	 * @return id
@@ -172,10 +168,6 @@ public class Property   {
 		this.id = id;
 	}
 
-	public Property tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
 
 	/**
 	 * tenant id of the Property
@@ -190,10 +182,6 @@ public class Property   {
 		this.tenantId = tenantId;
 	}
 
-	public Property upicNumber(String upicNumber) {
-		this.upicNumber = upicNumber;
-		return this;
-	}
 
 	/**
 	 * UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
@@ -207,10 +195,6 @@ public class Property   {
 		this.upicNumber = upicNumber;
 	}
 
-	public Property oldUpicNumber(String oldUpicNumber) {
-		this.oldUpicNumber = oldUpicNumber;
-		return this;
-	}
 
 	/**
 	 * Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
@@ -224,10 +208,6 @@ public class Property   {
 		this.oldUpicNumber = oldUpicNumber;
 	}
 
-	public Property vltUpicNumber(String vltUpicNumber) {
-		this.vltUpicNumber = vltUpicNumber;
-		return this;
-	}
 
 	/**
 	 * Vacant lands also be assessed in system. If building constructed in the same vacant land. The Vacant land upicno will be captured here for a the new building.
@@ -240,11 +220,6 @@ public class Property   {
 
 	public void setVltUpicNumber(String vltUpicNumber) {
 		this.vltUpicNumber = vltUpicNumber;
-	}
-
-	public Property creationReason(CreationReasonEnum creationReason) {
-		this.creationReason = creationReason;
-		return this;
 	}
 
 	/**
@@ -260,11 +235,6 @@ public class Property   {
 		this.creationReason = creationReason;
 	}
 
-	public Property address(Address address) {
-		this.address = address;
-		return this;
-	}
-
 	/**
 	 * Get address
 	 * @return address
@@ -275,16 +245,6 @@ public class Property   {
 
 	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	public Property owners(List<OwnerInfo> owners) {
-		this.owners = owners;
-		return this;
-	}
-
-	public Property addOwnersItem(OwnerInfo ownersItem) {
-		this.owners.add(ownersItem);
-		return this;
 	}
 
 	/**
@@ -299,11 +259,6 @@ public class Property   {
 		this.owners = owners;
 	}
 
-	public Property propertyDetail(PropertyDetail propertyDetail) {
-		this.propertyDetail = propertyDetail;
-		return this;
-	}
-
 	/**
 	 * Get propertyDetail
 	 * @return propertyDetail
@@ -314,11 +269,6 @@ public class Property   {
 
 	public void setPropertyDetail(PropertyDetail propertyDetail) {
 		this.propertyDetail = propertyDetail;
-	}
-
-	public Property vacantLand(VacantLandDetail vacantLand) {
-		this.vacantLand = vacantLand;
-		return this;
 	}
 
 	/**
@@ -333,26 +283,17 @@ public class Property   {
 		this.vacantLand = vacantLand;
 	}
 
-	public Property assessmentDate(String assessmentDate) {
-		this.assessmentDate = assessmentDate;
-		return this;
-	}
-
 	/**
 	 * There will be work flow to create a new property in a system. The assessment date is the final approval and UPIC no generation date.
 	 * @return assessmentDate
 	 **/
+
 	public String getAssessmentDate() {
 		return assessmentDate;
 	}
 
 	public void setAssessmentDate(String assessmentDate) {
 		this.assessmentDate = assessmentDate;
-	}
-
-	public Property occupancyDate(String occupancyDate) {
-		this.occupancyDate = occupancyDate;
-		return this;
 	}
 
 	/**
@@ -367,11 +308,6 @@ public class Property   {
 		this.occupancyDate = occupancyDate;
 	}
 
-	public Property gisRefNo(String gisRefNo) {
-		this.gisRefNo = gisRefNo;
-		return this;
-	}
-
 	/**
 	 * Property tax system will be integrated with GIS system. Here we capture the GIS ref. no.
 	 * @return gisRefNo
@@ -382,11 +318,6 @@ public class Property   {
 
 	public void setGisRefNo(String gisRefNo) {
 		this.gisRefNo = gisRefNo;
-	}
-
-	public Property isAuthorised(Boolean isAuthorised) {
-		this.isAuthorised = isAuthorised;
-		return this;
 	}
 
 	/**
@@ -402,11 +333,6 @@ public class Property   {
 		this.isAuthorised = isAuthorised;
 	}
 
-	public Property isUnderWorkflow(Boolean isUnderWorkflow) {
-		this.isUnderWorkflow = isUnderWorkflow;
-		return this;
-	}
-
 	/**
 	 * There are different transactions can be performed on a property and all the transactions goes through the work flow. If one workflow is happening system should not allow other work flow on a same property so, when any work flow starts we flag this field as true and when the same work flow ends we flag this field as false.
 	 * @return isUnderWorkflow
@@ -418,11 +344,6 @@ public class Property   {
 
 	public void setIsUnderWorkflow(Boolean isUnderWorkflow) {
 		this.isUnderWorkflow = isUnderWorkflow;
-	}
-
-	public Property boundary(PropertyLocation boundary) {
-		this.boundary = boundary;
-		return this;
 	}
 
 	/**
@@ -437,11 +358,6 @@ public class Property   {
 		this.boundary = boundary;
 	}
 
-	public Property active(Boolean active) {
-		this.active = active;
-		return this;
-	}
-
 	/**
 	 * True if the property is active and False if the property is inactive.
 	 * @return active
@@ -452,11 +368,6 @@ public class Property   {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public Property channel(ChannelEnum channel) {
-		this.channel = channel;
-		return this;
 	}
 
 	/**
@@ -471,11 +382,6 @@ public class Property   {
 
 	public void setChannel(ChannelEnum channel) {
 		this.channel = channel;
-	}
-
-	public Property auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
 	}
 
 	/**

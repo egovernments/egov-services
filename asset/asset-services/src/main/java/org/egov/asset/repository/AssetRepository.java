@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
@@ -57,6 +58,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,71 +77,71 @@ public class AssetRepository {
 	@Autowired
 	private AssetQueryBuilder assetQueryBuilder;
 
-	public List<Asset> findForCriteria(AssetCriteria assetCriteria) {
+	public List<Asset> findForCriteria(final AssetCriteria assetCriteria) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
-		String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
 		List<Asset> assets = null;
 		try {
 			logger.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 			assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
 			logger.info("AssetRepository::" + assets);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception from findforcriteria : " + ex);
 		}
 		return assets;
 	}
 
-	public String findAssetName(String tenantId, String name) {
+	public String findAssetName(final String tenantId, final String name) {
 
-		String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
+		final String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
 		logger.info("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
 		String assetName = null;
 		try {
 			assetName = jdbcTemplate.queryForObject(queryStr, new Object[] { name, tenantId }, String.class);
 			logger.info("AssetRepository::" + assetName);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception from findbyname method indicates no duplicate assets available : " + ex);
 		}
 		return assetName;
 	}
 
 	public String getAssetCode() {
-		String query = "SELECT nextval('seq_egasset_assetcode')";
-		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
+		final String query = "SELECT nextval('seq_egasset_assetcode')";
+		final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
 		logger.info("result:" + result);
 		StringBuilder code = null;
 		try {
 			code = new StringBuilder(String.format("%06d", result));
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception from seq number gen for code : " + ex);
 		}
 		return code.toString();
 	}
-	
+
 	public Integer getNextAssetId() {
-		String query = "SELECT nextval('seq_egasset_asset')";
-		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
+		final String query = "SELECT nextval('seq_egasset_asset')";
+		final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
 		return result;
 	}
 
-	public Asset create(AssetRequest assetRequest) {
-		RequestInfo requestInfo = assetRequest.getRequestInfo();
-		Asset asset = assetRequest.getAsset();
+	public Asset create(final AssetRequest assetRequest) {
+		final RequestInfo requestInfo = assetRequest.getRequestInfo();
+		final Asset asset = assetRequest.getAsset();
 
 		String property = null;
 		try {
-			
-			ObjectMapper mapper = new ObjectMapper();
+
+			final ObjectMapper mapper = new ObjectMapper();
 			mapper.setSerializationInclusion(Include.NON_NULL);
-			Asset asset2 = new Asset();
+			final Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
 			property = mapper.writeValueAsString(asset2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			logger.info("the exception in insert from parsing attributes : " + e);
 		}
 
-		String query = assetQueryBuilder.getInsertQuery();
+		final String query = assetQueryBuilder.getInsertQuery();
 
 		String modeOfAcquisition = null;
 		String status = null;
@@ -150,10 +152,10 @@ public class AssetRepository {
 		if (asset.getStatus() != null)
 			status = asset.getStatus().toString();
 
-		Location location = asset.getLocationDetails();
+		final Location location = asset.getLocationDetails();
 
-		Object[] obj = new Object[] { asset.getId(),asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),
-				asset.getDepartment().getId(), asset.getAssetDetails(), asset.getDescription(),
+		final Object[] obj = new Object[] { asset.getId(), asset.getAssetCategory().getId(), asset.getName(),
+				asset.getCode(), asset.getDepartment().getId(), asset.getAssetDetails(), asset.getDescription(),
 				asset.getDateOfCreation(), asset.getRemarks(), asset.getLength(), asset.getWidth(),
 				asset.getTotalArea(), modeOfAcquisition, status, asset.getTenantId(), location.getZone(),
 				location.getRevenueWard(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
@@ -163,32 +165,32 @@ public class AssetRepository {
 				asset.getVersion() };
 		try {
 			jdbcTemplate.update(query, obj);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception from insert query : " + ex);
 		}
 
 		return asset;
 	}
 
-	public Asset update(AssetRequest assetRequest) {
+	public Asset update(final AssetRequest assetRequest) {
 
-		RequestInfo requestInfo = assetRequest.getRequestInfo();
-		Asset asset = assetRequest.getAsset();
+		final RequestInfo requestInfo = assetRequest.getRequestInfo();
+		final Asset asset = assetRequest.getAsset();
 
 		String property = null;
 		try {
 
-			ObjectMapper mapper = new ObjectMapper();
+			final ObjectMapper mapper = new ObjectMapper();
 			mapper.setSerializationInclusion(Include.NON_NULL);
-			Asset asset2 = new Asset();
+			final Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
 			property = mapper.writeValueAsString(asset2);
 
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			logger.info("exception from parsing the assetattributes : " + e);
 		}
 
-		String query = assetQueryBuilder.getUpdateQuery();
+		final String query = assetQueryBuilder.getUpdateQuery();
 
 		logger.info("query::" + query);
 
@@ -201,20 +203,21 @@ public class AssetRepository {
 		if (asset.getStatus() != null)
 			status = asset.getStatus().toString();
 
-		Location location = asset.getLocationDetails();
+		final Location location = asset.getLocationDetails();
 
-		Object[] obj = new Object[] { asset.getAssetCategory().getId(), asset.getName(), asset.getDepartment().getId(),
-				asset.getAssetDetails(), asset.getDescription(), asset.getRemarks(), asset.getLength(),
-				asset.getWidth(), asset.getTotalArea(), modeOfAcquisition, status, location.getZone(),
-				location.getRevenueWard(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
-				location.getPinCode(), location.getLocality(), location.getBlock(), property, requestInfo.getMsgId(),
-				new Date(), asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
-				asset.getVersion(), asset.getCode(), asset.getTenantId() };
+		final Object[] obj = new Object[] { asset.getAssetCategory().getId(), asset.getName(),
+				asset.getDepartment().getId(), asset.getAssetDetails(), asset.getDescription(), asset.getRemarks(),
+				asset.getLength(), asset.getWidth(), asset.getTotalArea(), modeOfAcquisition, status,
+				location.getZone(), location.getRevenueWard(), location.getStreet(), location.getElectionWard(),
+				location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
+				requestInfo.getUserInfo().getId(), new Date(), asset.getGrossValue(),
+				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getCode(),
+				asset.getTenantId() };
 		try {
 			logger.info("query1::" + query + "," + Arrays.toString(obj));
-			int i = jdbcTemplate.update(query, obj);
+			final int i = jdbcTemplate.update(query, obj);
 			logger.info("output of update query : " + i);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception from update asset : " + ex);
 		}
 		return asset;

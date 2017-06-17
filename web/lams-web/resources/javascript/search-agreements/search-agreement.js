@@ -13,7 +13,7 @@ class AgreementSearch extends React.Component {
             allotteeName: "",
             revenueWard: "",
             electionWard: "",
-            code: "",
+            assetCode: "",
             tenderNumber: "",
             fromDate: "",
             toDate: "",
@@ -25,7 +25,8 @@ class AgreementSearch extends React.Component {
         revenueWards: [],
         electionwards: [],
         modify: false,
-        users: []
+        users: [],
+        hideCollectTaxOption: false
   }
   this.handleChange = this.handleChange.bind(this);
   this.search = this.search.bind(this);
@@ -89,12 +90,43 @@ class AgreementSearch extends React.Component {
         var assetCategories = [];
     }
 
+    var res = commonApiPost("hr-employee", "employees", "_loggedinemployee", {tenantId}), _this = this;
+    if(res && res.responseJSON && res.responseJSON.Employee && res.responseJSON.Employee[0]) {
+      $.ajax({
+          url: baseUrl + "/user/_search?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify({
+              RequestInfo: requestInfo,
+              userName: res.responseJSON.Employee[0].userName,
+              fuzzyLogic: true,
+              tenantId: tenantId
+          }),
+          headers: {
+              'auth-token': authToken
+          },
+          contentType: 'application/json',
+          success: function(res2) {
+            if(res2 && res2.user && res2.user[0] && res2.user[0].roles) {
+              for(var i=0; i<res2.user[0].roles.length; i++) {
+                if(res2.user[0].roles[i].name == "Collection Operator") {
+                  _this.setState({
+                    hideCollectTaxOption: true
+                  });
+                  break;
+                }
+              }
+            }
+          }
+      });
+    }
+
     this.setState({
       assetCategories,
       locality,
       electionwards,
       revenueWards
-    })
+    });
 
   }
 
@@ -117,9 +149,10 @@ class AgreementSearch extends React.Component {
           type: 'POST',
           dataType: "json",
           data: JSON.stringify({
-              ...requestInfo,
+              RequestInfo: requestInfo,
               name: request.term,
-              fuzzyLogic: true
+              fuzzyLogic: true,
+              tenantId: tenantId
           }),
           contentType: 'application/json',
           success: function( data ) {
@@ -196,14 +229,34 @@ class AgreementSearch extends React.Component {
       }
   }
 
-  handleChange(e, name)
-  {
-      this.setState({
-          searchSet:{
-              ...this.state.searchSet,
-              [name]:e.target.value
-          }
-      })
+  handleChange(e, name) {
+    if(name == "mobileNumber") {
+      if(/[^0-9]/.test(e.target.value)) {
+        return this.setState({
+                  searchSet: {
+                      ...this.state.searchSet,
+                      [name]: e.target.value.substring(0, e.target.value.length-1)
+                  }
+              });
+      }
+    }
+
+    if(name == "allotteeName") {
+      return this.setState({
+        searchSet: {
+            ...this.state.searchSet,
+            [name]: e.target.value,
+            allottee: ""
+        }
+    })
+    }
+
+    this.setState({
+        searchSet: {
+            ...this.state.searchSet,
+            [name]:e.target.value
+        }
+    })
   }
 
   handleSelectChange(type, id, number, assetCategory, acknowledgementNumber) {
@@ -260,9 +313,9 @@ class AgreementSearch extends React.Component {
 
 
   render() {
-    console.log(this.state.searchSet);
+    //console.log(this.state.searchSet);
     let {handleChange,search,updateTable,handleSelectChange}=this;
-    let {isSearchClicked,agreements,assetCategories}=this.state;
+    let {isSearchClicked,agreements,assetCategories, hideCollectTaxOption}=this.state;
     let {locality,
     agreementNumber,
     doorNo,
@@ -273,6 +326,12 @@ class AgreementSearch extends React.Component {
     electionWard,
     code,
     tenderNumber,fromDate,toDate,shopComplexNumber}=this.state.searchSet;
+
+    const showCollectTaxOption = function() {
+      if(!hideCollectTaxOption) {
+        return (<option value="collTax">Collect Tax</option>);
+      }
+    }
 
     const getValueByName=function(name,id)
     {
@@ -386,7 +445,7 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 {/*<option value="renew">Renew</option>*/}
-                <option value="collTax">Collect Tax</option>
+                {showCollectTaxOption()}
                 {getDemandListing(item)}
             </select>
           )
@@ -397,7 +456,7 @@ class AgreementSearch extends React.Component {
             }}>
                 <option value="">Select Action</option>
                 <option value="view">View</option>
-                <option value="collTax">Collect Tax</option>
+                {showCollectTaxOption()}
                 {getDemandListing(item)}
 
             </select>
@@ -475,7 +534,7 @@ class AgreementSearch extends React.Component {
                                       <div className="col-sm-6">
                                           <div className="text-no-ui">
                                               <span>+91</span>
-                                              <input type="text" id="contact_no" name="contact_no" value={mobileNumber} onChange={(e)=>{
+                                              <input type="text" id="contact_no" name="contact_no" value={mobileNumber} maxLength="10" onChange={(e)=>{
                                   handleChange(e,"mobileNumber")
                               }}/>
                                           </div>
@@ -562,7 +621,7 @@ class AgreementSearch extends React.Component {
                                       <div className="col-sm-6">
                                           <div className="search-ui">
                                               <input type="text" name="code" id="code" value={code} onChange={(e)=>{
-                                      handleChange(e,"code")
+                                      handleChange(e,"assetCode")
                                   }}/>
 
                                           </div>

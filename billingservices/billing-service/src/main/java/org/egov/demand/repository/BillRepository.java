@@ -10,13 +10,18 @@ import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillDetail;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
 import org.egov.demand.web.contract.BillRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class BillRepository {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(BillRepository.class);
 
 	@Autowired
 	private BillQueryBuilder billQueryBuilder;
@@ -24,6 +29,7 @@ public class BillRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	@Transactional
 	public void saveBill(BillRequest billRequest){
 		
 		RequestInfo requestInfo = billRequest.getRequestInfo();
@@ -97,9 +103,22 @@ public class BillRepository {
 				}
 			});
 		}
-			
 	}
 	
+	/*public Long getNextValue(String seqName){
+		String query = "SELECT nextval('"+seqName+"')";
+		Integer result = null;
+		try {
+			result= jdbcTemplate.querforl(query, Integer.class);
+			jdbcTemplate.
+		}catch(Exception ex) {
+			LOGGER.info("BillRepository getNextValue"+ex);
+			throw new RuntimeException(ex);
+		}
+				
+		return Long.valueOf(result.longValue());
+	}
+	*/
 	//TODO
 	public void saveBillAccountDetail(BillRequest billRequest){
 		 final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail "

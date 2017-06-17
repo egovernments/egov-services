@@ -1,0 +1,19 @@
+{
+    "responseInfo": {
+      
+    },
+    "departments": [
+        {
+            "tenantId": "default",
+            "category": "testing",
+            "name": "kumar",
+            "code": "009",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

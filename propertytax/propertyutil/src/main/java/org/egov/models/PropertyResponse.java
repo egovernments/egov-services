@@ -18,11 +18,6 @@ public class PropertyResponse   {
   @JsonProperty("properties")
   private List<Property> properties = new ArrayList<Property>();
 
-  public PropertyResponse responseInfo(ResponseInfo responseInfo) {
-    this.responseInfo = responseInfo;
-    return this;
-  }
-
    /**
    * Get responseInfo
    * @return responseInfo
@@ -33,16 +28,6 @@ public class PropertyResponse   {
 
   public void setResponseInfo(ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
-  }
-
-  public PropertyResponse properties(List<Property> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public PropertyResponse addPropertiesItem(Property propertiesItem) {
-    this.properties.add(propertiesItem);
-    return this;
   }
 
    /**

@@ -78,12 +78,6 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.disposal}")
 	private String createAssetDisposalTopicName;
 
-	@Value("${egov.services.asset_service.hostname}")
-	private String assetServiceHostName;
-
-	@Value("${egov.services.asset_service.searchpath}")
-	private String assetServiceSearchPath;
-
 	@Autowired
 	private Environment environment;
 
@@ -125,14 +119,6 @@ public class ApplicationProperties {
 
 	public String getCreateAssetDisposalTopicName() {
 		return createAssetDisposalTopicName;
-	}
-
-	public String getAssetServiceHostName() {
-		return assetServiceHostName;
-	}
-
-	public String getAssetServiceSearchPath() {
-		return assetServiceSearchPath;
 	}
 
 }

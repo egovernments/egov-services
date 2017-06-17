@@ -16,11 +16,6 @@ public class PropertyRequest   {
 	@JsonProperty("properties")
 	private List<Property> properties = new ArrayList<Property>();
 
-	public PropertyRequest requestInfo(RequestInfo requestInfo) {
-		this.requestInfo = requestInfo;
-		return this;
-	}
-
 	/**
 	 * Get requestInfo
 	 * @return requestInfo
@@ -31,16 +26,6 @@ public class PropertyRequest   {
 
 	public void setRequestInfo(RequestInfo requestInfo) {
 		this.requestInfo = requestInfo;
-	}
-
-	public PropertyRequest properties(List<Property> properties) {
-		this.properties = properties;
-		return this;
-	}
-
-	public PropertyRequest addPropertiesItem(Property propertiesItem) {
-		this.properties.add(propertiesItem);
-		return this;
 	}
 
 	/**

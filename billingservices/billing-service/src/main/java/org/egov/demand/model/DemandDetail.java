@@ -17,7 +17,7 @@ public class DemandDetail {
 
 	private Double collectionAmount = 0.0d;
 
-	private AuditDetail auditDetails;
+	private AuditDetail auditDetail;
 
 	private String tenantId;
 }

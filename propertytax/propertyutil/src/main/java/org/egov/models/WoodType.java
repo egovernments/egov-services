@@ -57,22 +57,12 @@ public class WoodType   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public WoodType id(Long id) {
-		this.id = id;
-		return this;
-	}
-
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public WoodType tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
 	}
 
 	public String getTenantId() {
@@ -83,22 +73,12 @@ public class WoodType   {
 		this.tenantId = tenantId;
 	}
 
-	public WoodType name(String name) {
-		this.name = name;
-		return this;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public WoodType code(String code) {
-		this.code = code;
-		return this;
 	}
 
 	public String getCode() {
@@ -109,22 +89,12 @@ public class WoodType   {
 		this.code = code;
 	}
 
-	public WoodType nameLocal(String nameLocal) {
-		this.nameLocal = nameLocal;
-		return this;
-	}
-
 	public String getNameLocal() {
 		return nameLocal;
 	}
 
 	public void setNameLocal(String nameLocal) {
 		this.nameLocal = nameLocal;
-	}
-
-	public WoodType description(String description) {
-		this.description = description;
-		return this;
 	}
 
 	public String getDescription() {
@@ -134,12 +104,6 @@ public class WoodType   {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public WoodType auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
-
 
 	public AuditDetails getAuditDetails() {
 		return auditDetails;

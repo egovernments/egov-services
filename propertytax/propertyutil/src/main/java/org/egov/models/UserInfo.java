@@ -37,11 +37,6 @@ public class UserInfo   {
   @JsonProperty("additionalroles")
   private List<TenantRole> additionalroles = new ArrayList<TenantRole>();
 
-  public UserInfo tenantId(String tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
-
    /**
    * Unique Identifier of the tenant to which user primarily belongs
    * @return tenantId
@@ -52,11 +47,6 @@ public class UserInfo   {
 
   public void setTenantId(String tenantId) {
     this.tenantId = tenantId;
-  }
-
-  public UserInfo id(Integer id) {
-    this.id = id;
-    return this;
   }
 
    /**
@@ -71,10 +61,6 @@ public class UserInfo   {
     this.id = id;
   }
 
-  public UserInfo username(String username) {
-    this.username = username;
-    return this;
-  }
 
    /**
    * Unique user name of the authenticated user
@@ -88,10 +74,6 @@ public class UserInfo   {
     this.username = username;
   }
 
-  public UserInfo mobile(String mobile) {
-    this.mobile = mobile;
-    return this;
-  }
 
    /**
    * mobile number of the autheticated user
@@ -105,10 +87,6 @@ public class UserInfo   {
     this.mobile = mobile;
   }
 
-  public UserInfo email(String email) {
-    this.email = email;
-    return this;
-  }
 
    /**
    * email address of the authenticated user
@@ -122,15 +100,7 @@ public class UserInfo   {
     this.email = email;
   }
 
-  public UserInfo primaryrole(List<Role> primaryrole) {
-    this.primaryrole = primaryrole;
-    return this;
-  }
 
-  public UserInfo addPrimaryroleItem(Role primaryroleItem) {
-    this.primaryrole.add(primaryroleItem);
-    return this;
-  }
 
    /**
    * List of all the roles for the primary tenant
@@ -144,15 +114,6 @@ public class UserInfo   {
     this.primaryrole = primaryrole;
   }
 
-  public UserInfo additionalroles(List<TenantRole> additionalroles) {
-    this.additionalroles = additionalroles;
-    return this;
-  }
-
-  public UserInfo addAdditionalrolesItem(TenantRole additionalrolesItem) {
-    this.additionalroles.add(additionalrolesItem);
-    return this;
-  }
 
    /**
    * array of additional tenantids authorized for the authenticated user

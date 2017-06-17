@@ -63,11 +63,6 @@ public class UsageMaster   {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	public UsageMaster id(Long id) {
-		this.id = id;
-		return this;
-	}
-
 	/**
 	 * Unique Identifier of the UsageMaster
 	 * @return id
@@ -78,11 +73,6 @@ public class UsageMaster   {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public UsageMaster tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
 	}
 
 	/**
@@ -98,11 +88,6 @@ public class UsageMaster   {
 		this.tenantId = tenantId;
 	}
 
-	public UsageMaster name(String name) {
-		this.name = name;
-		return this;
-	}
-
 	/**
 	 * name of the UsageMaster
 	 * @return name
@@ -113,11 +98,6 @@ public class UsageMaster   {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public UsageMaster code(String code) {
-		this.code = code;
-		return this;
 	}
 
 	/**
@@ -133,11 +113,6 @@ public class UsageMaster   {
 		this.code = code;
 	}
 
-	public UsageMaster nameLocal(String nameLocal) {
-		this.nameLocal = nameLocal;
-		return this;
-	}
-
 	/**
 	 * name local of the UsageMaster
 	 * @return nameLocal
@@ -149,11 +124,6 @@ public class UsageMaster   {
 
 	public void setNameLocal(String nameLocal) {
 		this.nameLocal = nameLocal;
-	}
-
-	public UsageMaster description(String description) {
-		this.description = description;
-		return this;
 	}
 
 	/**
@@ -169,11 +139,6 @@ public class UsageMaster   {
 		this.description = description;
 	}
 
-	public UsageMaster active(Boolean active) {
-		this.active = active;
-		return this;
-	}
-
 	/**
 	 * Whether UsageMaster is Active or not. If the value is TRUE, then UsageMaster is active, if the value is FALSE then UsageMaster is inactive, default value is TRUE
 	 * @return active
@@ -185,11 +150,6 @@ public class UsageMaster   {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public UsageMaster isResidential(Boolean isResidential) {
-		this.isResidential = isResidential;
-		return this;
 	}
 
 	/**
@@ -205,11 +165,6 @@ public class UsageMaster   {
 		this.isResidential = isResidential;
 	}
 
-	public UsageMaster orderNumber(Integer orderNumber) {
-		this.orderNumber = orderNumber;
-		return this;
-	}
-
 	/**
 	 * order number of the UsageMaster
 	 * @return orderNumber
@@ -221,11 +176,6 @@ public class UsageMaster   {
 
 	public void setOrderNumber(Integer orderNumber) {
 		this.orderNumber = orderNumber;
-	}
-
-	public UsageMaster auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
 	}
 
 	/**

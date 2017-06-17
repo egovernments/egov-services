@@ -64,4 +64,16 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.update.bill.key}")
 	private String updatekBillTopicKey;
 
+	@Value("${bs.bill.seq.name}")
+	private String billSeqName;
+	
+	@Value("${bs.billdetail.seq.name}")
+	private String billDetailSeqName;
+	
+	@Value("${bs.billaccountdetail.seq.name}")
+	private String billAccDetailSeqName;
+	
+	
+	
+
 }

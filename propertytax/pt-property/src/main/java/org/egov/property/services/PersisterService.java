@@ -3,6 +3,10 @@ package org.egov.property.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -14,9 +18,11 @@ import org.egov.models.OwnerInfo;
 import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
+import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
 import org.egov.models.VacantLandDetail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,13 +43,21 @@ public class PersisterService {
 	private JdbcTemplate jdbcTemplate;
 
 
+	@Autowired
+	Environment environment;
+
+	@Autowired
+	ResponseInfoFactory responseInfoFactory;
+
+
+
 	/**
 	 * 
 	 * @param properties
 	 * @throws SQLException
 	 */
 	@Transactional
-	public void addProperty(List<Property> properties) throws SQLException {
+	public void addProperty(List<Property> properties) throws Exception {
 
 		createProperty(properties);
 
@@ -53,7 +67,7 @@ public class PersisterService {
 	 * Description : This method will use for insert property related data in database
 	 * @param properties
 	 */
-	public void createProperty(List<Property> properties) {
+	public void createProperty(List<Property> properties) throws Exception{
 
 		//iterating property from properties
 		for (Property property : properties) {
@@ -79,8 +93,12 @@ public class PersisterService {
 					ps.setString(3, property.getOldUpicNumber());
 					ps.setString(4, property.getVltUpicNumber());
 					ps.setString(5, property.getCreationReason().toString());
-					ps.setString(6, property.getAssessmentDate());
-					ps.setString(7, property.getOccupancyDate());
+
+
+					ps.setTimestamp(6,getTimeStamp(property.getAssessmentDate()));
+
+					ps.setObject(7, getTimeStamp(property.getOccupancyDate()));
+
 					ps.setString(8, property.getGisRefNo());
 					ps.setBoolean(9, property.getIsAuthorised());
 					ps.setBoolean(10, property.getIsUnderWorkflow());
@@ -110,6 +128,7 @@ public class PersisterService {
 			.append(" createdBy, lastModifiedBy, createdTime, lastModifiedTime, property) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
+
 			Object[] addressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
 					address.getAddressId(),
 					address.getAddressNumber(),
@@ -131,7 +150,8 @@ public class PersisterService {
 			//property detail insertion
 			PropertyDetail propertyDetails = property.getPropertyDetail();
 
-			StringBuffer propertyDetailsSql=new StringBuffer();
+			StringBuffer propertyDetailsSql=new StringBuffer();			
+
 
 			propertyDetailsSql.append("INSERT INTO egpt_propertydetails(source, regdDocNo, regdDocDate,")
 			.append("reason, status, isVerified, verificationDate, isExempted, exemptionReason,")
@@ -148,11 +168,11 @@ public class PersisterService {
 					final PreparedStatement ps = connection.prepareStatement(propertyDetailsSql.toString(), new String[] { "id" });
 					ps.setString(1, propertyDetails.getSource().toString());
 					ps.setString(2, propertyDetails.getRegdDocNo());
-					ps.setString(3, propertyDetails.getRegdDocDate());
+					ps.setObject(3, getTimeStamp(propertyDetails.getRegdDocDate()));
 					ps.setString(4, propertyDetails.getReason());
 					ps.setString(5, propertyDetails.getStatus().toString());
 					ps.setBoolean(6, propertyDetails.getIsVerified());
-					ps.setString(7, propertyDetails.getVerificationDate());
+					ps.setObject(7, getTimeStamp(propertyDetails.getVerificationDate()));
 					ps.setBoolean(8, propertyDetails.getIsExempted());
 					ps.setString(9, propertyDetails.getExemptionReason());
 					ps.setString(10, propertyDetails.getPropertyType());
@@ -231,9 +251,9 @@ public class PersisterService {
 
 					Object[] unitArgs = {unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
 							unit.getBuiltupArea(), unit.getAssessableArea(), unit.getBpaBuiltupArea(), unit.getBpaNo(),
-							unit.getBpaDate(),unit.getUsage(),unit.getOccupancy(),unit.getOccupierName(), unit.getFirmName(),
+							getTimeStamp(unit.getBpaDate()),unit.getUsage(),unit.getOccupancy(),unit.getOccupierName(), unit.getFirmName(),
 							unit.getRentCollected(),unit.getStructure(), unit.getAge(), unit.getExemptionReason(),
-							unit.getIsStructured(), unit.getOccupancyDate(), unit.getConstCompletionDate(), unit.getManualArv(),
+							unit.getIsStructured(), getTimeStamp(unit.getOccupancyDate()), getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(),
 							unit.getArv(), unit.getElectricMeterNo(), unit.getWaterMeterNo(),
 							unit.getAuditDetails().getCreatedBy(), unit.getAuditDetails().getLastModifiedBy(),
 							createdTime, createdTime,
@@ -316,7 +336,7 @@ public class PersisterService {
 			Object[] vaccantLandArgs = {vacantLand.getSurveyNumber(),
 					vacantLand.getPattaNumber(), vacantLand.getMarketValue(), vacantLand.getCapitalValue(),
 					vacantLand.getLayoutApprovedAuth(), vacantLand.getLayoutPermissionNo(),
-					vacantLand.getLayoutPermissionDate(), vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
+					getTimeStamp(vacantLand.getLayoutPermissionDate()), vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
 					vacantLand.getAuditDetails().getCreatedBy(), 
 					vacantLand.getAuditDetails().getLastModifiedBy(),
 					createdTime,createdTime, propertyId };
@@ -407,8 +427,8 @@ public class PersisterService {
 					ps.setString(3, property.getOldUpicNumber());
 					ps.setString(4, property.getVltUpicNumber());
 					ps.setString(5, property.getCreationReason().name());
-					ps.setString(6, property.getAssessmentDate());
-					ps.setString(7, property.getOccupancyDate());
+					ps.setTimestamp(6, getTimeStamp(property.getAssessmentDate()));
+					ps.setTimestamp(7, getTimeStamp(property.getOccupancyDate()));
 					ps.setString(8, property.getGisRefNo());
 					ps.setBoolean(9, property.getIsAuthorised());
 					ps.setBoolean(10, property.getIsUnderWorkflow());
@@ -469,11 +489,11 @@ public class PersisterService {
 					final PreparedStatement ps = connection.prepareStatement(propertyDetailUpdateSQL.toString());
 					ps.setString(1, propertyDetails.getSource().toString());
 					ps.setString(2, propertyDetails.getRegdDocNo());
-					ps.setString(3, propertyDetails.getRegdDocDate());
+					ps.setTimestamp(3, getTimeStamp(propertyDetails.getRegdDocDate()));
 					ps.setString(4, propertyDetails.getReason());
 					ps.setString(5, propertyDetails.getStatus().toString());
 					ps.setBoolean(6, propertyDetails.getIsVerified());
-					ps.setString(7, propertyDetails.getVerificationDate());
+					ps.setTimestamp(7, getTimeStamp(propertyDetails.getVerificationDate()));
 					ps.setBoolean(8, propertyDetails.getIsExempted());
 					ps.setString(9, propertyDetails.getExemptionReason());
 					ps.setString(10, propertyDetails.getPropertyType());
@@ -521,7 +541,7 @@ public class PersisterService {
 			Object[] vaccantLandArgs = {
 					vacantLand.getSurveyNumber(), vacantLand.getPattaNumber(), vacantLand.getMarketValue(), 
 					vacantLand.getCapitalValue(),vacantLand.getLayoutApprovedAuth(), vacantLand.getLayoutPermissionNo(),
-					vacantLand.getLayoutPermissionDate(), vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
+					getTimeStamp(vacantLand.getLayoutPermissionDate()), vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
 					vacantLand.getAuditDetails().getLastModifiedBy(),updatedTime,property.getId() 
 			};
 
@@ -569,11 +589,11 @@ public class PersisterService {
 							unit.getLength(), unit.getWidth(),
 							unit.getBuiltupArea(), unit.getAssessableArea(),
 							unit.getBpaBuiltupArea(), unit.getBpaNo(),
-							unit.getBpaDate(),unit.getUsage(),
+							getTimeStamp(unit.getBpaDate()),unit.getUsage(),
 							unit.getOccupancy(),unit.getOccupierName(), 
 							unit.getFirmName(),unit.getRentCollected(),
 							unit.getStructure(), unit.getAge(), unit.getExemptionReason(),
-							unit.getIsStructured(), unit.getOccupancyDate(), unit.getConstCompletionDate(), unit.getManualArv(),
+							unit.getIsStructured(), getTimeStamp(unit.getOccupancyDate()), getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(),
 							unit.getArv(), unit.getElectricMeterNo(), unit.getWaterMeterNo(),
 							unit.getAuditDetails().getLastModifiedBy(),
 							updatedTime
@@ -676,6 +696,14 @@ public class PersisterService {
 			jdbcTemplate.update(boundaryUpdateSQL.toString(), boundaryArgs);
 
 		}
+	}
+
+	public Timestamp getTimeStamp(String date){
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter).atStartOfDay());
+		Timestamp timestamp= Timestamp.valueOf(time);
+		return timestamp;
+
 	}
 
 }

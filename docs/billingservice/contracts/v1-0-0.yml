@@ -708,13 +708,13 @@ definitions:
       owner:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
       taxPeriodFrom:
-        type: string
-        format: date
-        description: start date from when the tax is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        type: integer
+        format: int64
+        description: Time in epoch, start date from when the tax is applicable. Date is including timestamp, dd/MM/yyyy hh24:mi:ss
       taxPeriodTo:
-        type: string
-        format: date
-        description: end date till when the tax is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        type: integer
+        format: int64
+        description: Time in epoch, end date till when the tax is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       demandDetails:
         type: array
         items:
@@ -837,19 +837,19 @@ definitions:
     description: An object which holds the tax period info
     properties:
       fromDate:
-        type: string
-        format: date
-        description: Start date for tax period
+        type: integer
+        format: int64
+        description: Time in epoch, Start date for tax period
       toDate:
-        type: string
-        format: date
-        description: End date for tax period
+        type: integer
+        format: int64
+        description: Time in epoch, End date for tax period
       module:
         type: string
         description: Name of the module this period belongs to.
       description:
         type: string
-        description: description of a tax period.
+        description: Description of a tax period.
       financialYear:
         type: string
         description: financial year for which this period belongs.
@@ -910,9 +910,9 @@ definitions:
         type: string
         description: Bill number.
       billDate:
-        type: string
-        format: date
-        description: Bill date.
+        type: integer
+        format: int64
+        description: Time in epoch, Bill date.
       consumerCode:
         type: string
         description: Consumer code of the entity for which the bill is being created.
@@ -1041,9 +1041,9 @@ definitions:
         format: double
         description: receipt amount.
       receiptDate:
-        type: string
-        format: date
-        description: discount against taxAmount.
+        type: integer
+        format: int64
+        description: Time in epoch, receipt date.
       status:
         type: string
         description: receipt status

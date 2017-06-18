@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class DemandDetail {
 
 	private Long id;
+	
+	private Long demandId;	
 
 	private String taxHeadCode;
 

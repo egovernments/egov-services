@@ -68,7 +68,8 @@ public class PersisterService {
 	 * @param properties
 	 */
 	public void createProperty(List<Property> properties) throws Exception{
-
+	/*TODO Lets follow different layers like rowmappers, persist etc, do not mix the things.
+	Never have lenghty methods, have smaller logical methods then its easy to unit test also*/
 		//iterating property from properties
 		for (Property property : properties) {
 

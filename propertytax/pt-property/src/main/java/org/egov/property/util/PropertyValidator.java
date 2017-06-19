@@ -44,7 +44,7 @@ public class PropertyValidator {
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
-
+	//TODO why validator needs to push data to kofka?
 	@Autowired
 	Producer producer;
 	
@@ -195,6 +195,7 @@ public class PropertyValidator {
 	            idRequests.add(idrequest);
 	            idGeneration.setIdRequests(idRequests); 
 	            idGeneration.setRequestInfo(propertyRequest.getRequestInfo());
+				//TODO why validator generating id?
 	            IdGenerationResponse idResponse=restTemplate.patchForObject(idGenerationUrl.toString(), idGeneration, IdGenerationResponse.class);
 	            if(idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase(environment.getProperty("success"))){
 	                if(idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase(environment.getProperty("failed"))){
@@ -208,6 +209,7 @@ public class PropertyValidator {
 	            List<Property> propertyList=new ArrayList<Property>();
 	            propertyList.add(property);
 	            propertyRequestInfo.setProperties(propertyList);
+				//TODO why validator putting data onto kafka?
 	            producer.send(environment.getProperty("user.create"), propertyRequestInfo);
 	        }
 

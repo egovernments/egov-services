@@ -28,7 +28,7 @@ public class PropertyController {
 
 	@Autowired
 	PropertyValidator propertyValidator;
-
+	//TODO this is unsed variable, please do not declare/create unused variable
 	@Autowired
 	Producer producer;
 
@@ -52,6 +52,7 @@ public class PropertyController {
 
 	@RequestMapping(method=RequestMethod.POST,path="_create")
 	public PropertyResponse createProperty(@Valid @RequestBody PropertyRequest propertyRequest){
+		//TODO how we are communicating back with errors in case of validation failure? as per yml we need to send back the error codes
 		return  propertyValidator.createProperty(propertyRequest);
 	}
 
@@ -62,6 +63,7 @@ public class PropertyController {
 	 * */
 	@RequestMapping(method=RequestMethod.POST,path="_update")
 	public PropertyResponse updateProperty(@Valid @RequestBody PropertyRequest propertyRequest) {
+		//TODO how we are communicating back with errors in case of validation failure? as per yml we need to send back the error codes
 		return propertyValidator.updateProperty(propertyRequest);
 	}
 

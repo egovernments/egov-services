@@ -126,7 +126,7 @@ class WaterSourceType extends Component {
       {
       // console.log(response);
     },function(err) {
-        alert(err);
+        alert("Entered Water Source Type already exist");
     });
 }
     }
@@ -154,15 +154,16 @@ class WaterSourceType extends Component {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}   onClick={()=> {
                              add("name","description","active")}} />
+
         )
       }
     };
         return (
           <div className="WaterSourceType">
           <Card>
-            <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Create Water Source Type< /strong>}/>
+            <CardHeader title={< strong style = {{color:"#5a3e1b"}} >  Water Source Type< /strong>}/>
 
             <CardText>
               <Card>
@@ -170,9 +171,7 @@ class WaterSourceType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.ownerName
-                        ? fieldErrors.ownerName
-                        : ""} value={WaterSourceType.ownerName?WaterSourceType.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="name" floatingLabelText="name" />
+                      <TextField errorText="This field is required." value={WaterSourceType.ownerName?WaterSourceType.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="name" floatingLabelText="Water Source Type" />
                     </Col>
 
                     <Col xs={12} md={6}>
@@ -210,7 +209,7 @@ class WaterSourceType extends Component {
 
 
               <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
 
                {showActionButton()}

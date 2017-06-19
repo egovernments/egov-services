@@ -117,7 +117,7 @@ add(e)
     {
     // console.log(response);
   },function(err) {
-      alert(err);
+      alert("Selected Property type and Category type already exists");
   });
 }
 }
@@ -142,7 +142,7 @@ add(e)
         if((!mode) ||mode==="Update")
         {
           // console.log(mode);
-          return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+          return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                                add("propertyTypeName","categoryTypeName","active")}} />
           )
         }
@@ -227,7 +227,7 @@ add(e)
                             </Card>
 
 
-                      <div style={{float:"center"}}>
+                      <div style={{textAlign:"center"}}>
                       {showActionButton()}
                       <RaisedButton type="button" label="Close" />
                       </div>

@@ -30,13 +30,13 @@ import DocumentType from './components/contents/masters/DocumentType';
 const Main = () => (
   <main>
     <Switch>
-    <Route exact path='/' component={WaterSourceType}/>
+    <Route exact path='/' component={CategoryType}/>
     <Route exact path='/masters/DocumentTypeApplicationType' component={DocumentTypeApplicationType}/>
     <Route exact path='/masters/PropertyPipeSize' component={PropertyPipeSize}/>
-    <Route exact path='/masters/PipeSize' component={PipeSize}/>
+    <Route exact path='/masters/CategoryType' component={CategoryType}/>
     <Route exact path='/ShowCategoryType' component={ShowCategoryType}/>
     <Route exact path='/ShowDocumentTypeApplicationType' component={ShowDocumentTypeApplicationType}/>
-    <Route exact path='/CategoryType' component={CategoryType}/>
+    <Route exact path='/PipeSize' component={PipeSize}/>
     <Route exact path='/ShowPropertyUsage' component={ShowPropertyUsage}/>
     <Route exact path='/ShowPropertyCategory' component={ShowPropertyCategory}/>
     <Route exact path='/ShowPropertyPipeSize' component={ShowPropertyPipeSize}/>
@@ -52,7 +52,7 @@ const Main = () => (
       <Route exact path='/masters/UsageType' component={UsageType}/>
       <Route exact path='/masters/PipeSize' component={PipeSize}/>
       <Route exact path='/ShowPipeSize' component={ShowPipeSize}/>
-      <Route exact path='/masters/CategoryType' component={CategoryType}/>
+      <Route exact path='/masters/WaterSourceType' component={WaterSourceType}/>
       </Switch>
   </main>
 )

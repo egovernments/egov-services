@@ -112,7 +112,7 @@ class CategoryType extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{Category:Category}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "category/"+id, "_update", {},{Category:Category}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -125,8 +125,9 @@ class CategoryType extends Component {
       let response=Api.commonApiPost("wcms-masters", "category", "_create", {},{Category}).then(function(response)
       {
       // console.log(response);
+      alert("Category Type Created successfully")
     },function(err) {
-        alert(err);
+        alert("Entered Category Type already exist");
     });
 }
     }
@@ -154,7 +155,7 @@ class CategoryType extends Component {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                              add("name","description","active")}} />
         )
       }
@@ -162,7 +163,7 @@ class CategoryType extends Component {
         return (
           <div className="categoryType">
           <Card>
-            <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Create Type Master< /strong>}/>
+            <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Category Type < /strong>}/>
 
             <CardText>
               <Card>
@@ -170,9 +171,7 @@ class CategoryType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.ownerName
-                        ? fieldErrors.ownerName
-                        : ""} value={categoryType.ownerName?categoryType.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="Name" floatingLabelText="Name" />
+                      <TextField errorText="This field is required." value={categoryType.ownerName?categoryType.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="Category Type" floatingLabelText="Category Type" />
                     </Col>
 
                     <Col xs={12} md={6}>
@@ -210,7 +209,7 @@ class CategoryType extends Component {
 
 
               <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
 
                {showActionButton()}

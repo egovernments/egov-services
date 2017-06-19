@@ -126,7 +126,7 @@ class DocumentType extends Component {
       {
       // console.log(response);
     },function(err) {
-        alert(err);
+        alert("Entered Document type already exists");
     });
 }
     }
@@ -210,7 +210,7 @@ class DocumentType extends Component {
 
 
               <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
 
                {showActionButton()}

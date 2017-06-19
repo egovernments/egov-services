@@ -117,7 +117,7 @@ add(e)
     {
     // console.log(response);
   },function(err) {
-      alert(err);
+      alert("Selected Property type and Pipe size already exists ");
   });
 }
 }
@@ -166,7 +166,7 @@ add(e)
         <div className="PropertyPipeSize">
             <Card>
                 <CardHeader
-                    title={<strong style={{color:brown500}}>Create Property Pipe Size </strong>}
+                    title={<strong style={{color:brown500}}> Property Pipe Size </strong>}
                 />
                 <CardText>
                       <Card>
@@ -227,7 +227,7 @@ add(e)
                             </Card>
 
 
-                      <div style={{float:"center"}}>
+                      <div style={{textAlign:"center"}}>
                       {showActionButton()}
                       <RaisedButton type="button" label="Close" />
                       </div>

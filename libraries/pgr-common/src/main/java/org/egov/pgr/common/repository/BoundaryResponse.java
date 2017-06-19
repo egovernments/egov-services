@@ -1,4 +1,4 @@
-package org.egov.pgr.common.repository.dto;
+package org.egov.pgr.common.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoundaryResponse {
+class BoundaryResponse {
     private static final String BOUNDARY_NOT_FOUND_MESSAGE = "Boundary not found";
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;

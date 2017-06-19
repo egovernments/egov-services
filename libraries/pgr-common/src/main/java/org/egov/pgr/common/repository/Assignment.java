@@ -1,4 +1,4 @@
-package org.egov.pgr.common.repository.dto;
+package org.egov.pgr.common.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Assignment {
+class Assignment {
 
     @JsonProperty("id")
     private Long id;

@@ -1,4 +1,4 @@
-package org.egov.pgr.common.repository.dto;
+package org.egov.pgr.common.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class DesignationResponse {
+class DesignationResponse {
 
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;

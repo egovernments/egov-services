@@ -1,4 +1,4 @@
-package org.egov.pgr.common.repository.dto;
+package org.egov.pgr.common.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Employee {
+class Employee {
 
 	@JsonProperty("id")
 	private Long id;

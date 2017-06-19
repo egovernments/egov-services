@@ -1,7 +1,10 @@
-package org.egov.pgr.common.repository.dto;
+package org.egov.pgr.common.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.util.CollectionUtils;
 
@@ -11,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PositionResponse {
+class PositionResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;

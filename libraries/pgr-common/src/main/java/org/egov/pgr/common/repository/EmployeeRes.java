@@ -1,4 +1,4 @@
-package org.egov.pgr.common.repository.dto;
+package org.egov.pgr.common.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeRes {
+class EmployeeRes {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;

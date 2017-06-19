@@ -2,8 +2,6 @@ package org.egov.pgr.common.repository;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.model.Employee;
-import org.egov.pgr.common.repository.dto.EmployeeRes;
-import org.egov.pgr.common.repository.dto.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

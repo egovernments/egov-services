@@ -1,7 +1,6 @@
 package org.egov.pgr.common.repository;
 
 import org.egov.pgr.common.model.Location;
-import org.egov.pgr.common.repository.dto.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

@@ -76,7 +76,7 @@
 		</dependency>
 
 		<!-- GIS START -->
-
+        
 		<dependency>
 			<groupId>org.opengis</groupId>
 			<artifactId>geoapi</artifactId>
@@ -160,6 +160,7 @@
             <name>eGov ERP Releases Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
         </repository>
+         
     </repositories>
 
 	<build>

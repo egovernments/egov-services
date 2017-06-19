@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BusinessServiceDetailResponse {
 
-	private ResponseInfo responseInfo;
+	private ResponseInfo ResponseInfo;
 
-	private List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+	private List<BusinessServiceDetail> BusinessServiceDetails = new ArrayList<>();
 }

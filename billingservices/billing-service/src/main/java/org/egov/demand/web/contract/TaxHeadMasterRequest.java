@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TaxHeadMasterRequest {
 
-	private RequestInfo requestInfo;
+	private RequestInfo RequestInfo;
 	
-	List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();;
+	List<TaxHeadMaster> TaxHeadMasters = new ArrayList<>();;
 }

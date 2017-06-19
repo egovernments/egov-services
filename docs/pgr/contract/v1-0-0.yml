@@ -1239,14 +1239,18 @@ definitions:
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-        visible:
-          type: boolean
-          description: flag for visibility 
+        channel:
+          type: string
+          description: channel for identification to show in ui. 
+          enum:
+            - WEB
+            - MOBILE
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
         - name
+        - channel
         - tenantId
         
   #Receiving Code Definitions
@@ -1291,16 +1295,21 @@ definitions:
           type: string
           description: human readable description should be assigned by user.
           maxLength: 100
+        orderno: 
+          type: integer
+          format: int64
+          description: orderno for sorting purpous..
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
+        iscrnrequired:
+          type: boolean
+          format: varchar
+          description: TRUE for to generate the crn number and FALSE for not generate the crn number.  
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-        visible:
-          type: boolean
-          description: flag for visibility 
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

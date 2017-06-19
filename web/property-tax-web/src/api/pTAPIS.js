@@ -19,27 +19,23 @@ var authToken = localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {
-  "apiId": "org.egov.pt",
+  "apiId": "org.egov.ptis",
   "ver": "1.0",
-  "ts": "01-04-2017 01:01:01",
+  "ts": "20934234234234",
   "action": "asd",
   "did": "4354648646",
   "key": "xyz",
   "msgId": "654654",
   "requesterId": "61",
-  "authToken": authToken
+  "authToken": "6617773d-bffe-4809-ab18-51f8fea4d13f"
 };
 //uncomment for ap
 // var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 var tenantId = "ap.kurnool";
 
 module.exports = {
-  commonApiPost: (context, resource = "", action = "", queryObject = {}, body = {}) => {
-    var url = "/" + context + (resource
-      ? "/" + resource
-      : "") + (action
-      ? "/" + action
-      : "");
+  commonApiPost: (context, queryObject = {}, body = {}) => {
+    var url = "/" + context;
     url += "?tenantId=" + tenantId;
     for (var variable in queryObject) {
       if (queryObject[variable]) {
@@ -48,18 +44,24 @@ module.exports = {
     }
     body["RequestInfo"] = requestInfo;
     console.log(body);
-    return instance.post(url, body).then(function(response) {
-      return response.data;
-    }).catch(function(response) {
-      throw new Error(response.data.message);
-    });
+    if (authToken) {
+      return instance.post(url, body).then(function(response) {
+        return response.data;
+      }).catch(function(response) {
+        throw new Error(response.data.message);
+      });
+    }
+    else {
+      return instance.post(url, body).then(function(response) {
+        return response.data;
+      }).catch(function(response) {
+        throw new Error(response.data.message);
+      });
+    }
+
   },
-  commonApiGet: (context, resource = "", action = "", queryObject = {}) => {
-    var url = "/" + context + (resource
-      ? "/" + resource
-      : "") + (action
-      ? "/" + action
-      : "");
+  commonApiGet: (context, queryObject = {}) => {
+    var url = "/" + context;
     url += "?tenantId=" + tenantId;
     for (var variable in queryObject) {
       if (queryObject[variable]) {

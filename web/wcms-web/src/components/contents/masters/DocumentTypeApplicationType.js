@@ -104,7 +104,7 @@ add(e)
       tenantId:'default'
     }
     if(type == "Update"){
-      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_update/"+id, {},{DocumentTypeApplicationType:DocumentTypeApplicationType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_update/"+id, {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
       {
       console.log(response);
     },function(err) {
@@ -114,9 +114,9 @@ add(e)
     }
 
   else{
-    let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType}).then(function(response)
+    let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
     {
-    // console.log(response);
+    console.log(response);
   },function(err) {
       alert(err);
   });
@@ -128,7 +128,6 @@ add(e)
     render(){
       let {
         DocumentTypeApplicationType,
-        propertyType,
         handleChange,
         fieldErrors,
       }=this.props;
@@ -144,11 +143,12 @@ add(e)
         {
           // console.log(mode);
           return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
-                               add("applicationType","documentType","active")}} />
+                               add("applicationType","documentTypeId","active")}} />
           )
         }
       };
 
+      // console.log(DocumentTypeApplicationType);
 
       const renderOption=function(list)
       {
@@ -167,7 +167,7 @@ add(e)
               else {
                 return Object.keys(list).map((k,index)=>
                  {
-                   console.log(list[k]);
+                  //  console.log(list[k]);
                    return (<MenuItem key={index} value={k} primaryText={list[k]}
                      />)
 
@@ -178,10 +178,10 @@ add(e)
       }
 
       return(
-        <div className="DocumentApplicationType">
+        <div className="DocumentTypeApplicationType">
             <Card>
                 <CardHeader
-                    title={<strong style={{color:brown500}}>Create Document-Application Type </strong>}
+                    title={<strong style={{color:brown500}}>Create DocumentType Application Type </strong>}
                 />
                 <CardText>
                       <Card>
@@ -211,7 +211,7 @@ add(e)
                                             }
                                           };
                                           handleChange(e, "documentTypeId", false, "")}
-                                        } floatingLabelText="DocumentType" >
+                                        } floatingLabelText="Document Type" >
                                          <MenuItem value={1} primaryText=""/>
                                          {renderOption(this.state.list)}
                                       </SelectField>

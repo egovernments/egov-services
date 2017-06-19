@@ -7,6 +7,7 @@ class Revaluation extends React.Component {
         	funds: [],
           schemes: [],
           subSchemes: [],
+          fixedAssetAccount: [],
           "revaluationSet": {
             "tenantId": tenantId,
             "id": "",
@@ -46,7 +47,7 @@ class Revaluation extends React.Component {
         }
       }
 
-      let id = getUrlVars()["id"], _this = this, count = 3, _state = {};
+      let id = getUrlVars()["id"], _this = this, count = 4, _state = {};
     	$("#revaluationDate").datepicker({
     		format: "dd/mm/yyyy",
     		autoclose: true
@@ -67,8 +68,7 @@ class Revaluation extends React.Component {
           _this.setState({
             revaluationSet: {
               ..._this.revaluationSet,
-              assetId: res.id,
-              currentCapitalizedValue: res.grossValue || 0
+              assetId: res.id
             }
           })
         }
@@ -80,6 +80,16 @@ class Revaluation extends React.Component {
     	getCommonMasterById("asset-services", "assets", id, function(err, res) {
           if(res) {
           	checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
+            commonApiPost("asset-services", "assets", "currentValue/_search", {tenantId, assetId: res["Assets"][0].id}, function(er, res) {
+              if(res && res.AssetCurrentValue) {
+                _this.setState({
+                  revaluationSet: {
+                    ..._this.state.revaluationSet,
+                    currentCapitalizedValue: res.AssetCurrentValue.currentAmmount
+                  }
+                })
+              }
+            });
           } else {
           	console.log(err);
           }
@@ -92,6 +102,19 @@ class Revaluation extends React.Component {
       getDropdown("assignments_function", function(res) {
       	checkCountAndCall("functions", res);
       });
+
+      commonApiPost("egf-masters", "accountcodepurposes", "_search", {tenantId, name:"Fixed Assets"}, function(err, res2){
+        if(res2){
+          getDropdown("fixedAssetAccount", function(res) {
+            for(var i= 0; i<res.length; i++) {
+              res[i].name = res[i].glcode + "-" + res[i].name;
+            }
+            checkCountNCall("fixedAssetAccount", res);
+          }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+        } else {
+          checkCountNCall("fixedAssetAccount", []);
+        }
+      })
 
       commonApiPost("hr-employee", "employees", "_loggedinemployee", {tenantId}, function(err, res) {
         if(res && res.Employee && res.Employee[0] && res.Employee[0].user && res.Employee[0].user.userName) {
@@ -194,13 +217,13 @@ class Revaluation extends React.Component {
 
     createRevaluation(e) {
       e.preventDefault();
-      var tempInfo = Object.assign({}, this.state.revaluationSet);
+      var tempInfo = Object.assign({}, this.state.revaluationSet), _this = this;
       var body = {
         RequestInfo: requestInfo,
         Revaluation: tempInfo
       };
 
-      return console.log(JSON.stringify(body));
+      //return console.log(JSON.stringify(body));
        $.ajax({
             url: baseUrl + "/assets/reevaluate/_create",
             type: 'POST',
@@ -211,7 +234,7 @@ class Revaluation extends React.Component {
                 'auth-token': authToken
             },
             success: function(res) {
-            
+                  window.location.href=`app/asset/create-asset-ack.html?name=${_this.state.assetSet.name}&type=&value=revaluate&code=${_this.state.assetSet.code}`;
             },
             error: function(err) {
               console.log(err);
@@ -232,7 +255,7 @@ class Revaluation extends React.Component {
 
   	render() {
       let {handleChange, close} = this;
-      let {assetSet, functions, funds, revaluationSet, schemes, subSchemes} = this.state;
+      let {assetSet, functions, funds, revaluationSet, schemes, subSchemes, fixedAssetAccount} = this.state;
 
       const renderOptions = function(list) {
       	if(list) {
@@ -301,7 +324,7 @@ class Revaluation extends React.Component {
 	                          <label>Current Capitalized Value </label>
 	                        </div>
 	                        <div className="col-sm-6 label-view-text">
-	                          <label>{assetSet.grossValue}</label>
+	                          <label>{revaluationSet.currentCapitalizedValue}</label>
 	                        </div>
 	                    </div>
 	                  </div>
@@ -440,6 +463,7 @@ class Revaluation extends React.Component {
                             <div>
                               <select value={revaluationSet.fixedAssetsWrittenOffAccount} onChange={(e) => handleChange(e, "fixedAssetsWrittenOffAccount")}>
                                 <option value="">Select Account Code</option>
+                                {renderOptions(fixedAssetAccount)}
                               </select>
                             </div>
                           </div>

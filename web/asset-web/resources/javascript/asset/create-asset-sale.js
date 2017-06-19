@@ -75,7 +75,8 @@ class Sale extends React.Component {
           departments: [],
           revenueZones: [],
           revenueWards: [],
-          showPANNAadhar: false
+          showPANNAadhar: false,
+          saleAssetAccount: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.close = this.close.bind(this);
@@ -103,7 +104,7 @@ class Sale extends React.Component {
         autoclose: true
       });
 
-      let id = getUrlVars()["id"], _this = this, count = 4, _state = {};
+      let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         count--;
@@ -140,6 +141,19 @@ class Sale extends React.Component {
       getDropdown("revenueZone", function(res) {
         checkCountAndCall("revenueZones", res);
       });
+
+      commonApiPost("egf-masters", "accountcodepurposes", "_search", {tenantId, name:"Fixed Assets"}, function(err, res2){
+        if(res2){
+          getDropdown("saleAssetAccount", function(res) {
+            for(var i= 0; i<res.length; i++) {
+              res[i].name = res[i].glcode + "-" + res[i].name;
+            }
+            checkCountNCall("saleAssetAccount", res);
+          }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+        } else {
+          checkCountNCall("saleAssetAccount", []);
+        }
+      })
 
       $("#disposalDate").datepicker({
         format: "dd/mm/yyyy",
@@ -269,7 +283,31 @@ class Sale extends React.Component {
 
   	render() {
       let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation, viewAssetDetails} = this;
-      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar} = this.state;
+      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, saleAssetAccount} = this.state;
+
+      const renderOptions = function(list) {
+        if(list) {
+          if(list.constructor == Array) {
+            return list.map((item, ind)=> {
+                  if(typeof item == "object") {
+                    return (<option key={ind} value={item.id}>
+                          {item.name}
+                    </option>)
+                  } else {
+                    return (<option key={ind} value={item}>
+                          {item}
+                    </option>)
+                  }
+                })
+          } else {
+            return Object.keys(list).map((k, index)=> {
+                  return (<option key={index} value={k}>
+                          {list[k]}
+                    </option>)
+                })
+          }
+        }
+      }
 
       const showOtherDetails = function() {
         if(showPANNAadhar) {
@@ -491,6 +529,7 @@ class Sale extends React.Component {
                             <div>
                               <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
                                 <option value="">Select Account Code</option>
+                                {renderOptions(saleAssetAccount)}
                               </select>
                             </div>
                           </div>

@@ -50,7 +50,7 @@ class PropertyUsage extends Component {
         <div className="PropertyUsage">
             <Card>
                 <CardHeader
-                    title={<strong style={{color:brown500}}>Create Property Usage</strong>}
+                    title={<strong style={{color:brown500}}>Property Usage</strong>}
                 />
                 <CardText>
                       <Card>
@@ -124,7 +124,7 @@ class PropertyUsage extends Component {
                             </Card>
 
 
-                      <div style={{float:"center"}}>
+                      <div style={{textAlign:"center"}}>
                       <RaisedButton type="submit" label="Create" backgroundColor={brown500} labelColor={white}/>
                       <RaisedButton type="button" label="Close" />
                       </div>

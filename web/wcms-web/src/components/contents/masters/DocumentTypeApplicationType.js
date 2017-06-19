@@ -116,7 +116,7 @@ add(e)
     let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
     {
   },function(err) {
-      alert(err);
+      alert("Selected Document type and Application type already exist");
   });
 }
 }
@@ -235,7 +235,7 @@ add(e)
                             </Card>
 
 
-                      <div style={{float:"center"}}>
+                      <div style={{textAlign:"center"}}>
                       {showActionButton()}
                       <RaisedButton type="button" label="Close" />
                       </div>

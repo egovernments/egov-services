@@ -5,7 +5,7 @@
 
     <groupId>org.egov.services</groupId>
     <artifactId>pgr-common</artifactId>
-    <version>0.14.0</version>
+    <version>0.15.0</version>
     <packaging>jar</packaging>
 
     <name>pgr-common</name>
@@ -42,6 +42,12 @@
             <artifactId>lombok</artifactId>
             <version>1.16.14</version>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>0.14.0</version>
         </dependency>
 
         <dependency>

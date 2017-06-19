@@ -49,7 +49,7 @@ const styles = {
   }
 };
 
-class DocumentType extends Component {
+class WaterSourceType extends Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -104,15 +104,15 @@ class DocumentType extends Component {
 
     // let mode=getUrlVars()["type"];
 
-      let {changeButtonText,documenttype}=this.props;
-      var DocumentType = {
-        name:documenttype.ownerName,
-        description:documenttype.Description,
-        active:documenttype.active,
+      let {changeButtonText,WaterSourceType}=this.props;
+      var sourceType = {
+        name:WaterSourceType.ownerName,
+        description:WaterSourceType.Description,
+        active:WaterSourceType.active,
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "documenttype", "_update/"+id, {},{DocumentType:DocumentType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "sourcetype", "_update/"+id, {},{sourceType:sourceType}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -122,11 +122,11 @@ class DocumentType extends Component {
       }
 
     else{
-      let response=Api.commonApiPost("wcms-masters", "documenttype", "_create", {},{DocumentType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "sourcetype", "_create", {},{sourceType}).then(function(response)
       {
       // console.log(response);
     },function(err) {
-        alert("Entered Document type already exists");
+        alert("Entered Water Source Type already exist");
     });
 }
     }
@@ -137,7 +137,7 @@ class DocumentType extends Component {
 
   render() {
     let {
-      documenttype,
+      WaterSourceType,
       fieldErrors,
       isFormValid,
       handleChange,
@@ -154,15 +154,16 @@ class DocumentType extends Component {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}   onClick={()=> {
                              add("name","description","active")}} />
+
         )
       }
     };
         return (
-          <div className="documenttype">
+          <div className="WaterSourceType">
           <Card>
-            <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Create Document Type< /strong>}/>
+            <CardHeader title={< strong style = {{color:"#5a3e1b"}} >  Water Source Type< /strong>}/>
 
             <CardText>
               <Card>
@@ -170,15 +171,13 @@ class DocumentType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.ownerName
-                        ? fieldErrors.ownerName
-                        : ""} value={documenttype.ownerName?documenttype.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="Name" floatingLabelText="Name" />
+                      <TextField errorText="This field is required." value={WaterSourceType.ownerName?WaterSourceType.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="name" floatingLabelText="Water Source Type" />
                     </Col>
 
                     <Col xs={12} md={6}>
                       <TextField errorText={fieldErrors.Descrption
                         ? fieldErrors.Description
-                        : ""} value={documenttype.Description?documenttype.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
+                        : ""} value={WaterSourceType.Description?WaterSourceType.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
                     </Col>
                     </Row>
                     <Row>
@@ -186,7 +185,7 @@ class DocumentType extends Component {
                                         <Checkbox
                                          label="Active"
                                          defaultChecked={true}
-                                         value={documenttype.active?documenttype.active:""}
+                                         value={WaterSourceType.active?WaterSourceType.active:""}
                                          onCheck={(event,isInputChecked) => {
                                            var e={
                                              "target":{
@@ -223,7 +222,7 @@ class DocumentType extends Component {
   }
 }
 
-const mapStateToProps = state => ({documenttype: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({WaterSourceType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -257,4 +256,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentType);
+export default connect(mapStateToProps, mapDispatchToProps)(WaterSourceType);

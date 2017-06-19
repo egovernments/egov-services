@@ -353,7 +353,7 @@ class AgreementSearch extends React.Component {
                         <th>Locality </th>
                         <th>Asset Category </th>
                         <th>Asset Code </th>
-                        <th>Agreement Date </th>
+                        <th>Agreement Created Date </th>
                         <th>Type</th>
                         <th>Action </th>
                     </tr>
@@ -386,7 +386,7 @@ class AgreementSearch extends React.Component {
                                   <td>{item.asset.locationDetails.locality}</td>
                                   <td>{item.asset.assetCategory.id?category_name:"-"}</td>
                                   <td>{item.asset.code}</td>
-                                  <td>{item.agreementDate}</td>
+                                  <td>{item.createdDate}</td>
                                   <td>{item.source == "DATA_ENTRY" ? "Data Entry" : "System"}</td>
                                   <td>
                                       <div className="styled-select">

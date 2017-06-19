@@ -1,43 +1,60 @@
-delete from egpgr_receivingmode where id=1;
-delete from egpgr_receivingmode where id=2;
-delete from egpgr_receivingmode where id=3;
-delete from egpgr_receivingmode where id=4;
-delete from egpgr_receivingmode where id=5;
-delete from egpgr_receivingmode where id=6;
 
-delete from egpgr_receiving_center where id=1;
-delete from egpgr_receiving_center where id=2;
-delete from egpgr_receiving_center where id=3;
-delete from egpgr_receiving_center where id=4;
-delete from egpgr_receiving_center where id=5;
-delete from egpgr_receiving_center where id=6;
-delete from egpgr_receiving_center where id=7;
-delete from egpgr_receiving_center where id=8;
-delete from egpgr_receiving_center where id=9;
-delete from egpgr_receiving_center where id=10;
+DROP TABLE egpgr_receiving_center;
+DROP TABLE egpgr_receivingmode;
+
+DROP sequence seq_egpgr_receiving_center;
+DROP sequence seq_egpgr_receivingmode; 
 
 
+CREATE TABLE egpgr_receiving_center (
+    id bigint NOT NULL,
+    name character varying(100),
+    iscrnrequired boolean DEFAULT false,
+    orderno bigint DEFAULT 0,
+    version bigint DEFAULT 0,
+    tenantid character varying(256) not null,
+    code character varying(100) NOT NULL,
+    description character varying(250) NULL,
+    active boolean DEFAULT true,
+    createdby bigint,
+    createddate timestamp without time zone,
+ 	lastmodifiedby bigint,
+ 	lastmodifieddate timestamp without time zone,
+ 	CONSTRAINT egpgr_receivingcenter_pkey PRIMARY KEY (id),
+ 	CONSTRAINT egpgr_receivingcenter_un UNIQUE (code, tenantid)
+ 
+);
 
-ALTER TABLE egpgr_receiving_center DROP CONSTRAINT uk_receivingcenter_name_tenant;
+CREATE SEQUENCE seq_egpgr_receiving_center
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
-ALTER TABLE egpgr_receiving_center 
-ADD code character varying(100) NOT NULL,
-ADD description character varying(250) NULL,
-ADD active boolean DEFAULT true,
-ADD createdby bigint,
-ADD createddate timestamp without time zone,
-ADD lastmodifiedby bigint,
-ADD lastmodifieddate timestamp without time zone,
-ADD CONSTRAINT un_receivingcenter_code UNIQUE (code, tenantid);
+create table egpgr_receivingmode(
+id bigint NOT NULL,
+name varchar(150),
+code varchar(50) not null,
+version bigint default 0,
+tenantid character varying(256) not null,
+description character varying(250) NULL,
+active boolean DEFAULT true,
+createdby bigint,
+createddate timestamp without time zone,
+lastmodifiedby bigint,
+lastmodifieddate timestamp without time zone,
+channel varchar(255) NOT NULL,
+CONSTRAINT egpgr_receivingmode_pkey PRIMARY KEY (id),
+CONSTRAINT egpgr_receivingMode_check CHECK (channel IN ('WEB', 'MOBILE','WEB,MOBILE','MOBILE,WEB')),
+constraint egpgr_receivingmode_un unique (code,tenantid)
 
-ALTER TABLE egpgr_receivingmode drop column visible;
+);
 
-ALTER TABLE egpgr_receivingmode 
-ADD description character varying(250) NULL,
-ADD active boolean DEFAULT true,
-ADD createdby bigint,
-ADD createddate timestamp without time zone,
-ADD lastmodifiedby bigint,
-ADD lastmodifieddate timestamp without time zone,
-ADD channel varchar(255) NOT NULL,
-ADD CONSTRAINT chk_receivingMode CHECK (channel IN ('WEB', 'MOBILE','WEB,MOBILE','MOBILE,WEB'));
+CREATE SEQUENCE seq_egpgr_receivingmode
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+

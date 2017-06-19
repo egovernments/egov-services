@@ -105,7 +105,7 @@ class EmployeeSearch extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-        if (this.state.modified && this.state.employees.length) {
+        if (this.state.modified) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -127,7 +127,7 @@ class EmployeeSearch extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Search Employee for " + titleCase(getUrlVars()["value"]));
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
     var count = 5, _state = {}, _this = this;
@@ -360,7 +360,7 @@ class EmployeeSearch extends React.Component {
                     </div>
                 </div>
               </div>
-              {<div className="col-sm-6">
+              <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
                         <label for=""> Employee Name  </label>
@@ -371,9 +371,9 @@ class EmployeeSearch extends React.Component {
                           }} disabled/>
                       </div>
                   </div>
-                </div>}
-          </div>
-        <div className="row">
+                </div>
+            </div>
+        {/*<div className="row">
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
@@ -390,7 +390,7 @@ class EmployeeSearch extends React.Component {
                     </div>
                 </div>
               </div>
-              {/*<div className="col-sm-6">
+              <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
                         <label for=""> Status</label>
@@ -406,8 +406,8 @@ class EmployeeSearch extends React.Component {
                       </div>
                       </div>
                   </div>
-                </div>*/}
-          </div>
+                </div>
+          </div>*/}
           <div className="text-right text-danger">
                           Note: Any one of the search criteria is mandatory.
                     </div>

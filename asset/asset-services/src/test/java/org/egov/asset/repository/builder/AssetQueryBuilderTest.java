@@ -54,6 +54,61 @@ public class AssetQueryBuilderTest {
 	}
 
 	@Test
+	public void getQueryWithTenantId_GrossValueTest() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
+				.grossValue(Double.valueOf("15.0")).build();
+		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		assertEquals(queryWithTenantId,
+				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add("ap.kurnool");
+		expectedPreparedStatementValues.add(Double.valueOf("15.0"));
+		expectedPreparedStatementValues.add(Long.valueOf("500"));
+		expectedPreparedStatementValues.add(Long.valueOf("0"));
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+
+	@Test
+	public void getQueryWithTenantId_ToCapitalizedValueTest() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
+				.toCapitalizedValue(Double.valueOf("15.0")).build();
+		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN 1 AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		assertEquals(queryWithTenantId,
+				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add("ap.kurnool");
+		expectedPreparedStatementValues.add(Double.valueOf("15.0"));
+		expectedPreparedStatementValues.add(Long.valueOf("500"));
+		expectedPreparedStatementValues.add(Long.valueOf("0"));
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+
+	@Test
+	public void getQueryWithTenantId_FromCapitalizedValueAndToCapitalizedValueTest() {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
+				.fromCapitalizedValue(Double.valueOf("15")).toCapitalizedValue(Double.valueOf("150")).build();
+		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN ? AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		assertEquals(queryWithTenantId,
+				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
+
+		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add("ap.kurnool");
+		expectedPreparedStatementValues.add(Double.valueOf("15"));
+		expectedPreparedStatementValues.add(Double.valueOf("150"));
+		expectedPreparedStatementValues.add(Long.valueOf("500"));
+		expectedPreparedStatementValues.add(Long.valueOf("0"));
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+	
+	@Test
 	public void getQueryWithParametersSet1Test() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Long> ids = new ArrayList<>();
@@ -83,7 +138,7 @@ public class AssetQueryBuilderTest {
 	public void getQueryWithParametersSet2Test() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").doorNo("10")
-				.electionWard(Long.valueOf(20)).grossValue(Long.valueOf(30)).locality(Long.valueOf(40)).name("Land")
+				.electionWard(Long.valueOf(20)).grossValue(Double.valueOf(30)).locality(Long.valueOf(40)).name("Land")
 				.offset(Long.valueOf(50)).pinCode(Long.valueOf(60)).revenueWard(Long.valueOf(70)).size(Long.valueOf(80))
 				.status(Status.CREATED).street(Long.valueOf(90)).zone(Long.valueOf(100)).build();
 		Mockito.doReturn("80").when(applicationProperties).commonsSearchPageSizeDefault();
@@ -102,7 +157,7 @@ public class AssetQueryBuilderTest {
 		expectedPreparedStatementValues.add(20L);
 		expectedPreparedStatementValues.add(60L);
 		expectedPreparedStatementValues.add("10");
-		expectedPreparedStatementValues.add(30L);
+		expectedPreparedStatementValues.add(30.0);
 		expectedPreparedStatementValues.add(80L);
 		expectedPreparedStatementValues.add(3920L);
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));

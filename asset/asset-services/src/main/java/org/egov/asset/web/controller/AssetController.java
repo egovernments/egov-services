@@ -108,6 +108,12 @@ public class AssetController {
 			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
+
+		if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
+				&& assetCriteria.getToCapitalizedValue() != null)
+			throw new RuntimeException(
+					"Gross Value should not be present with from capitalized value and to capitalized value");
+
 		final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}

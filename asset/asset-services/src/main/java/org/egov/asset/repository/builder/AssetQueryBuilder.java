@@ -189,12 +189,25 @@ public class AssetQueryBuilder {
 			preparedStatementValues.add("%" + searchAsset.getDescription() + "%");
 		}
 
-		if (searchAsset.getGrossValue() != null) {
+		if (searchAsset.getGrossValue() != null && searchAsset.getFromCapitalizedValue() == null
+				&& searchAsset.getToCapitalizedValue() == null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.grossvalue = ?");
 			preparedStatementValues.add(searchAsset.getGrossValue());
 		}
-
+		if (searchAsset.getGrossValue() == null && searchAsset.getFromCapitalizedValue() == null
+				&& searchAsset.getToCapitalizedValue() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ASSET.grossvalue BETWEEN 1 AND ?");
+			preparedStatementValues.add(searchAsset.getToCapitalizedValue());
+		}
+		if (searchAsset.getGrossValue() == null && searchAsset.getFromCapitalizedValue() != null
+				&& searchAsset.getToCapitalizedValue() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ASSET.grossvalue BETWEEN ? AND ?");
+			preparedStatementValues.add(searchAsset.getFromCapitalizedValue());
+			preparedStatementValues.add(searchAsset.getToCapitalizedValue());
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

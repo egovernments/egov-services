@@ -17,6 +17,7 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
+import org.egov.asset.exception.Error;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
@@ -91,6 +92,25 @@ public class AssetControllerTest {
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("assetsearchresponse.json")));
+	}
+
+	@Test
+	public void test_Should_ThrowException_OnSearchAsset() throws Exception {
+		List<Asset> assets = new ArrayList<>();
+		assets.add(getAsset());
+
+		AssetResponse assetResponse = new AssetResponse();
+		assetResponse.setAssets(assets);
+		assetResponse.setResponseInfo(new ResponseInfo());
+
+		when(assetService.getAssets(Matchers.any(AssetCriteria.class), Matchers.any(RequestInfo.class)))
+				.thenReturn(assetResponse);
+
+		mockMvc.perform(post("/assets/_search").param("grossValue", Double.valueOf("15").toString())
+				.param("fromCapitalizedValue", Double.valueOf("15").toString())
+				.param("toCapitalizedValue", Double.valueOf("20").toString()).param("tenantId", "ap.kurnool")
+				.param("assetCategory", "1").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().is4xxClientError());
 	}
 
 	@Test

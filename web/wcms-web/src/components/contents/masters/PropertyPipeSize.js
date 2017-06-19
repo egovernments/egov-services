@@ -76,7 +76,7 @@ class PropertyPipeSize extends Component {
          alert(err);
      });
 
-      let response2=Api.commonApiPost("property", "masters/propertytypes", "_search?", {id:id,tenantId:"ap.kurnool"},{},true).then((res)=>
+      let response2=Api.commonApiPost("property", "propertytypes", "_search?", {id:id,tenantId:"ap.kurnool"},{},true).then((res)=>
      {
         this.setState({
           list2: res.masterModel

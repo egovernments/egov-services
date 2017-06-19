@@ -122,4 +122,10 @@ public class Agreement {
 	private List<Demand> legacyDemands;
 	private Cancellation cancellation;
 	private Renewal renewal;
+	
+	private Date createdDate;
+	private String createdBy;
+	private Date lastmodifiedDate;
+	private String lastmodifiedBy;
+	
 }

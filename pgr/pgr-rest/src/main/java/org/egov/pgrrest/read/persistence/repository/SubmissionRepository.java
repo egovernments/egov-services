@@ -44,11 +44,6 @@ public class SubmissionRepository {
             .collect(Collectors.toList());
     }
 
-    public Long count(ServiceRequestSearchCriteria searchCriteria) {
-        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
-        return this.submissionJpaRepository.count(specification);
-    }
-
     public List<ServiceRequest> findBy(List<String> serviceRequestIdList, String tenantId) {
         final List<Submission> submissions = submissionJpaRepository.findCRNList(serviceRequestIdList, tenantId);
         enrichSubmissionsWithAttributeEntries(tenantId, submissions);

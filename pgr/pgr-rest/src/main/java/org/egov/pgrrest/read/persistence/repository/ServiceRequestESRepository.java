@@ -56,9 +56,7 @@ public class ServiceRequestESRepository {
     }
 
     private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {
-        log.info("Total hits: " + searchResponse.getHits().getTotalHits());
-        if(searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
-            log.info("No matches found.");
+        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
             return Collections.emptyList();
         }
         return Stream.of(searchResponse.getHits().getHits())
@@ -68,15 +66,12 @@ public class ServiceRequestESRepository {
     }
 
     private String getFieldValue(SearchHit hit) {
-        log.info("Source: " + hit.getSourceAsString());
         return (String) hit.getSource().get(SERVICE_REQUEST_ID_FIELD_NAME);
     }
 
     private SearchRequestBuilder getSearchRequest(ServiceRequestSearchCriteria criteria) {
         final BoolQueryBuilder boolQueryBuilder = queryFactory.create(criteria);
-        final SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
-            .fetchSource(true)
-            .fetchSource(SERVICE_REQUEST_ID_FIELD_NAME, null);
+        final SearchSourceBuilder sourceBuilder = getSearchSourceBuilder(criteria);
         final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
             .setTypes(documentType)
             .setSource(sourceBuilder)
@@ -84,6 +79,16 @@ public class ServiceRequestESRepository {
             .setQuery(boolQueryBuilder);
         setResponseCount(criteria, searchRequestBuilder);
         return searchRequestBuilder;
+    }
+
+    private SearchSourceBuilder getSearchSourceBuilder(ServiceRequestSearchCriteria criteria) {
+        final SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+            .fetchSource(true)
+            .fetchSource(SERVICE_REQUEST_ID_FIELD_NAME, null);
+        if (criteria.isPaginationCriteriaPresent()) {
+            sourceBuilder.from(criteria.getFromIndex()).size(criteria.getPageSize());
+        }
+        return sourceBuilder;
     }
 
     private void setResponseCount(ServiceRequestSearchCriteria criteria, SearchRequestBuilder searchRequestBuilder) {

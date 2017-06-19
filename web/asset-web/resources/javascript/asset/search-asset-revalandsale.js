@@ -14,7 +14,8 @@ class SearchAsset extends React.Component {
       locality: [],
       isSearchClicked: false,
       modify: false,
-      action: ""
+      action: "",
+      assetList: []
     }
 
     this.search = this.search.bind(this);
@@ -76,14 +77,14 @@ class SearchAsset extends React.Component {
 
       commonApiPost("asset-services","assets","_search", {...tempInfo, tenantId, pageSize:500}, function(err, res) {
         if(res) {
-          var list = res["Assets"];
-          list.sort(function(item1, item2) {
+          var assetList = res["Assets"];
+          assetList.sort(function(item1, item2) {
             return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
           })
           flag = 1;
           _this.setState({
             isSearchClicked: true,
-            list,
+            assetList,
             modify: true
           });
 
@@ -168,9 +169,9 @@ class SearchAsset extends React.Component {
 
   render() {
 
-      let {handleChange, search} = this;
+      let {handleChange, search, handleClick, handleAction} = this;
       let {assetCategory, name, code, location} = this.state.searchSet;
-      let {isSearchClicked, locality, assetCategories, action} = this.state;
+      let {isSearchClicked, locality, assetCategories, action, assetList} = this.state;
 
       const renderOption = function(list) {
           if(list) {
@@ -240,7 +241,7 @@ class SearchAsset extends React.Component {
                     <td>{item.locationDetails.locality ? getNameById(locality, item.locationDetails.locality) : ""}</td>
                     <td>{item.grossValue}</td>
                     <td>
-                      <select onChange={(e) => handleAction(e, item.id)} value={action}>
+                      <select onChange={(e) => handleAction(e, item.id)} value={action} onClick={(e) => {e.stopPropagation()}}>
                         <option value="">Select Action</option>
                         <option value="revaluate">Revaluate</option>
                         <option value="sale">Dispose/Sale</option>
@@ -318,8 +319,8 @@ class SearchAsset extends React.Component {
                   <div className="col-sm-6 label-text">
                     <label for="status">Status  </label>
                   </div>
-                  <div className="col-sm-6">
-                    <input type="text" disabled value="CAPITALIZED"/>
+                  <div className="col-sm-6 label-view-text">
+                    CAPITALIZED
                   </div>
               </div>
             </div>

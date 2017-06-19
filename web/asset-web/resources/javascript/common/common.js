@@ -581,23 +581,6 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("fixedAssetAccount")));
             }
             break;
-        case 'saleAssetAccount':
-            if (!localStorage.getItem("saleAssetAccount") || localStorage.getItem("saleAssetAccount") == "undefined") {
-                var queryString = { tenantId, classification: 4 };
-                if (params && typeof params == "object")
-                    queryString = Object.assign(queryString, params);
-                commonApiPost("egf-masters", "chartofaccounts", "_search", queryString, function(err, res) {
-                    if (res) {
-                        localStorage.setItem("saleAssetAccount", JSON.stringify(res["chartOfAccounts"]));
-                        cb(res["chartOfAccounts"]);
-                    } else {
-                        cb([]);
-                    }
-                })
-            } else {
-                cb(JSON.parse(localStorage.getItem("saleAssetAccount")));
-            }
-            break;
     }
 }
 

@@ -76,7 +76,7 @@ class Sale extends React.Component {
           revenueZones: [],
           revenueWards: [],
           showPANNAadhar: false,
-          saleAssetAccount: []
+          assetAccount: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.close = this.close.bind(this);
@@ -99,6 +99,13 @@ class Sale extends React.Component {
     }
 
     componentDidMount() {
+      if(window.opener && window.opener.document) {
+        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+        if(logo_ele && logo_ele[0]) {
+          document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
+        }
+      }
+
       $(".datepicker").datepicker({
         format: "dd/mm/yyyy",
         autoclose: true
@@ -144,14 +151,14 @@ class Sale extends React.Component {
 
       commonApiPost("egf-masters", "accountcodepurposes", "_search", {tenantId, name:"Fixed Assets"}, function(err, res2){
         if(res2){
-          getDropdown("saleAssetAccount", function(res) {
+          getDropdown("assetAccount", function(res) {
             for(var i= 0; i<res.length; i++) {
               res[i].name = res[i].glcode + "-" + res[i].name;
             }
-            checkCountNCall("saleAssetAccount", res);
+            checkCountAndCall("assetAccount", res);
           }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
         } else {
-          checkCountNCall("saleAssetAccount", []);
+          checkCountAndCall("assetAccount", []);
         }
       })
 
@@ -160,7 +167,7 @@ class Sale extends React.Component {
         autoclose: true
       });
 
-      $("#disposalDate").on("change", function(e) {
+      $("#disposalDate").on("changeDate", function(e) {
         _this.setState({
           disposal: {
             ..._this.state.disposal,
@@ -218,7 +225,7 @@ class Sale extends React.Component {
         }
       })
     }
-
+    
     handlePANValidation(e) {
       if(!e.target.value) {
         e.target.setCustomValidity("Please fill out this field.");
@@ -283,7 +290,7 @@ class Sale extends React.Component {
 
   	render() {
       let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation, viewAssetDetails} = this;
-      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, saleAssetAccount} = this.state;
+      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, assetAccount} = this.state;
 
       const renderOptions = function(list) {
         if(list) {
@@ -529,7 +536,7 @@ class Sale extends React.Component {
                             <div>
                               <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
                                 <option value="">Select Account Code</option>
-                                {renderOptions(saleAssetAccount)}
+                                {renderOptions(assetAccount)}
                               </select>
                             </div>
                           </div>

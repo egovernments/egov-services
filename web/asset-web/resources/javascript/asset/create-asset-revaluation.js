@@ -103,16 +103,16 @@ class Revaluation extends React.Component {
       	checkCountAndCall("functions", res);
       });
 
-      commonApiPost("egf-masters", "accountcodepurposes", "_search", {tenantId, name:"Fixed Assets"}, function(err, res2){
+      commonApiPost("egf-masters", "accountcodepurposes", "_search", {tenantId, name:"Fixed Assets Written off"}, function(err, res2){
         if(res2){
           getDropdown("fixedAssetAccount", function(res) {
             for(var i= 0; i<res.length; i++) {
               res[i].name = res[i].glcode + "-" + res[i].name;
             }
-            checkCountNCall("fixedAssetAccount", res);
+            checkCountAndCall("fixedAssetAccount", res);
           }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
         } else {
-          checkCountNCall("fixedAssetAccount", []);
+          checkCountAndCall("fixedAssetAccount", []);
         }
       })
 
@@ -457,7 +457,7 @@ class Revaluation extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Fixed assets written off account code </label>
+                              <label>Fixed Assets Written Off Account Code </label>
                             </div>
                             <div className="col-sm-6">
                             <div>

@@ -434,7 +434,7 @@ paths:
             schema:
               $ref: '#/definitions/Error'  
               
-     # receiving mode API
+    # OTP Configuration API
     /receivingmode/_create:
       post:
         summary: create receiving mode
@@ -764,6 +764,84 @@ paths:
             description: Successful response
             schema:
               $ref: '#/definitions/EscalationTimeTypeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+         # receiving mode API
+    /OTPConfig/_create:
+      post:
+        summary: create OTP Configuration entry
+        description: create OTP Configuration
+        tags:
+          - OTPConfig
+        parameters:
+          - name: OTPConfig
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/OTPConfigReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/OTPConfigRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /OTPConfig/{tenantid}/_update:
+      post:
+        summary: update OTP Configuration entry
+        description: update OTP Configuration
+        tags:
+          - OTPConfig
+        parameters:
+          - name: tenantid
+            in: path
+            description: Tenant's ID.
+            required: true
+            type: string
+          - name: OTPConfig
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/OTPConfigReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/OTPConfigRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+
+    /OTPConfig/_search:
+      post:
+        summary: searches OTP Configurations
+        tags:
+          - OTPConfig
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/OTPConfigRes'
           400:
             description: Invalid input
             schema:
@@ -1367,17 +1445,50 @@ definitions:
         - grievancetype
         - boundary
         - position
-        - tenantId    
-    
-
+        - tenantId 
+        
+  OTPConfig:
+      type: object
+      properties:
+        tenantId:
+         type: string 
+         description : Unique Identifier of the tenant.
+        otpConfigEnabled:
+          type: boolean
+          description : Boolean identifier to confirm the enabled status.
+      required:
+        - tenantId
+        - otpConfigEnabled
         
   BoundaryIdType:
       type: object
       properties:
         boundarytype:
           type: integer
-          description: boundary id.  
+          description: boundary id. 
+          
+  OTPConfigReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        otpConfig:
+          $ref: '#/definitions/OTPConfig'
+      required:
+        - RequestInfo
+        - otpConfig
     
+  OTPConfigRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        otgConfigs:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/OTPConfig'
+  
     
     #Escalation Time Definitions
   EscalationTimeTypeReq:

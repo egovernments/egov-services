@@ -1,1 +1,0 @@
-DELETE FROM egpgr_receiving_center;

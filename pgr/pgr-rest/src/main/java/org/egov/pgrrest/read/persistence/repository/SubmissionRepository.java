@@ -7,10 +7,6 @@ import org.egov.pgrrest.common.repository.ServiceRequestTypeJpaRepository;
 import org.egov.pgrrest.common.repository.SubmissionAttributeJpaRepository;
 import org.egov.pgrrest.common.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
-import org.egov.pgrrest.read.persistence.specification.SubmissionSpecification;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -22,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class SubmissionRepository {
-    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
     private ServiceRequestTypeJpaRepository serviceTypeJpaRepository;
@@ -33,15 +28,6 @@ public class SubmissionRepository {
         this.submissionJpaRepository = submissionJpaRepository;
         this.submissionAttributeJpaRepository = submissionAttributeJpaRepository;
         this.serviceTypeJpaRepository = serviceTypeJpaRepository;
-    }
-
-    public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
-        final List<Submission> submissions = getSubmissions(searchCriteria);
-        enrichSubmissionsWithAttributeEntries(searchCriteria.getTenantId(), submissions);
-        enrichSubmissionsWithServiceTypes(searchCriteria.getTenantId(), submissions);
-        return submissions.stream()
-            .map(Submission::toDomain)
-            .collect(Collectors.toList());
     }
 
     public List<ServiceRequest> findBy(List<String> serviceRequestIdList, String tenantId) {
@@ -75,29 +61,6 @@ public class SubmissionRepository {
             .map(Submission::getServiceCode)
             .distinct()
             .collect(Collectors.toList());
-    }
-
-    private List<Submission> getSubmissions(ServiceRequestSearchCriteria searchCriteria) {
-        if (searchCriteria.isPaginationCriteriaPresent()) {
-            return getPagedSubmissions(searchCriteria);
-        }
-        return getNonPagedSubmissions(searchCriteria);
-    }
-
-    private List<Submission> getNonPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
-        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
-        return this.submissionJpaRepository.findAll(specification, getDefaultSort());
-    }
-
-    private List<Submission> getPagedSubmissions(ServiceRequestSearchCriteria searchCriteria) {
-        final SubmissionSpecification specification = new SubmissionSpecification(searchCriteria);
-        final PageRequest pageRequest =
-            new PageRequest(searchCriteria.getFromIndex(), searchCriteria.getPageSize(), getDefaultSort());
-        return this.submissionJpaRepository.findAll(specification, pageRequest).getContent();
-    }
-
-    private Sort getDefaultSort() {
-        return new Sort(Sort.Direction.DESC, DEFAULT_SORT_FIELD);
     }
 
     private void enrichSubmissionsWithAttributeEntries(String tenantId,

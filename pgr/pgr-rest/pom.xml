@@ -213,7 +213,6 @@
                                         <exclude>org.egov.pgrrest.write.contracts.*</exclude>
                                         <exclude>org.egov.pgrrest.write.repository.ServiceRequestWriteRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.specification.SubmissionSpecification</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.QueryFactory</exclude>

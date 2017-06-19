@@ -1,0 +1,58 @@
+{
+  "RequestInfo": {
+    "apiId": "string",
+    "ver": "string",
+    "ts": 0,
+    "action": "string",
+    "did": "string",
+    "key": "string",
+    "msgId": "string",
+    "requesterId": "string",
+    "authToken": "null",
+    "userInfo": {
+    	"id" : "1"
+    	
+    }
+    },
+  "routertype": {
+    "id": 24,
+    "services": [
+      {
+        "tenantId": "testing",
+        "id" : 107,
+        "serviceCode": "104",
+        "serviceName": "string",
+        "description": "string",
+        "metadata": false,
+        "type": "string",
+        "keywords": "string",
+        "group": "string",
+        "attributes": [
+          {
+            "variable": true,
+            "code": "string",
+            "datatype": "string",
+            "required": true,
+            "datatypeDescription": "string",
+            "attribValues": [
+              {
+                "key": "string",
+                "name": "string"
+              }
+            ]
+          }
+        ]
+      }
+     
+    ],
+    "boundary": [
+      {
+        "boundaryType": 10
+        
+      }
+     
+    ],
+    "position": 100,
+    "tenantId": "testing updqate with url change"
+  }
+}

@@ -1,0 +1,50 @@
+{
+    "ResponseInfo": {
+        "apiId": "string",
+        "ver": "string",
+        "ts": "Thu Jan 01 00:00:00 UTC 1970",
+        "resMsgId": "uief87324",
+        "msgId": "string",
+        "status": "200"
+    },
+    "RouterTypRes": [
+        {
+            "id": 24,
+            "services": [
+                {
+                    "id": 107,
+                    "tenantId": "testing",
+                    "serviceCode": "104",
+                    "serviceName": "string",
+                    "description": "string",
+                    "metadata": false,
+                    "active": false,
+                    "type": "string",
+                    "keywords": "string",
+                    "group": "string",
+                    "category": 0,
+                    "auditDeatils": null,
+                    "attributes": [
+                        {
+                            "code": "string",
+                            "datatype": "string",
+                            "datatypeDescription": "string",
+                            "description": null,
+                            "variable": true,
+                            "required": true,
+                            "attributes": null
+                        }
+                    ]
+                }
+            ],
+            "boundary": [
+                {
+                    "boundaryType": 10
+                }
+            ],
+            "position": 100,
+            "tenantId": "testing updqate with url change",
+            "auditDetails": null
+        }
+    ]
+}

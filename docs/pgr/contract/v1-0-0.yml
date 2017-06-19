@@ -435,12 +435,12 @@ paths:
               $ref: '#/definitions/Error'  
               
      # receiving mode API
-    /source/_create:
+    /receivingmode/_create:
       post:
-        summary: create source
-        description: create source
+        summary: create receiving mode
+        description: create receiving mode
         tags:
-          - Source
+          - ReceivingMode
         parameters:
           - name: Receiving Mode
             in: body
@@ -462,12 +462,12 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     
-    /source/{id}/_update:
+    /receivingmode/{id}/_update:
       post:
-        summary: update source
-        description: update source
+        summary: update receiving mode
+        description: update receiving mode
         tags:
-          - Source
+          - ReceivingMode
         parameters:
           - name: id
             in: path
@@ -495,11 +495,11 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
 
-    /source/_search:
+    /receivingmode/_search:
       post:
-        summary: searches sources
+        summary: searches receving mode
         tags:
-          - Source
+          - ReceivingMode
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -519,12 +519,12 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
     # receiving center API
-    /channel/_create:
+    /receivingcenter/_create:
       post:
-        summary: creates channel
-        description: creates channel
+        summary: creates receiving center
+        description: creates receiving center
         tags:
-          - channel
+          - ReceivingCenter
         parameters:
           - name: Receiving Center
             in: body
@@ -546,12 +546,12 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # receiving center API
-    /channel/{id}/_update:
+    /receivingcenter/{id}/_update:
       post:
-        summary: update channel
-        description: update channel
+        summary: update receiving center
+        description: update receiving center
         tags:
-          - channel
+          - ReceivingCenter
         parameters:
           - name: id
             in: path
@@ -579,11 +579,11 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /channel/_search:
+    /receivingcenter/_search:
       post:
-        summary: searches channels
+        summary: searches receiving center
         tags:
-          - channel
+          - ReceivingCenter
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"

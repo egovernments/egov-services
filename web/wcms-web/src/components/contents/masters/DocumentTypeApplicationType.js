@@ -106,7 +106,6 @@ add(e)
     if(type == "Update"){
       let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_update/"+id, {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
       {
-      console.log(response);
     },function(err) {
         alert(err);
     });
@@ -116,7 +115,6 @@ add(e)
   else{
     let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
     {
-    console.log(response);
   },function(err) {
       alert(err);
   });
@@ -136,23 +134,19 @@ add(e)
       let {search} = this;
       let mode=getUrlVars()["type"];
 
-        //  console.log(mode);
 
       const showActionButton=function() {
         if((!mode) ||mode==="Update")
         {
-          // console.log(mode);
           return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                                add("applicationType","documentTypeId","active")}} />
           )
         }
       };
 
-      // console.log(DocumentTypeApplicationType);
 
       const renderOption=function(list)
       {
-        // console.log(list);
 
             if(list)
             {
@@ -167,7 +161,6 @@ add(e)
               else {
                 return Object.keys(list).map((k,index)=>
                  {
-                  //  console.log(list[k]);
                    return (<MenuItem key={index} value={k} primaryText={list[k]}
                      />)
 

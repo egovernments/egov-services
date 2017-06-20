@@ -12,6 +12,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -60,6 +61,7 @@ public class PgrRestSpringBootApplication {
 
 	private TransportClient client;
 
+	@Autowired
 	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
 	@PostConstruct

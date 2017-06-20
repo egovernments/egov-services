@@ -10,7 +10,7 @@ const defaultState = {
   showTable: false,
   buttonText: "Search",
   editIndex: -1,
-
+  addRoom: false
 };
 
 export default(state = defaultState, action) => {
@@ -38,9 +38,12 @@ export default(state = defaultState, action) => {
     if (!state.form.hasOwnProperty(action.formObject)) {
           state.form[action.formObject] = {};
           state.form[action.formObject][action.formArray] = [];
-    } else if(!state.form[action.formObject]) {
+    } else if(!state.form[action.formObject]) { alert('Boom2');
       state.form[action.formObject] = {};
       state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject][action.formArray]) {
+      state.form[action.formObject][action.formArray] = [];
+      console.log(state.form[action.formObject]);
     }
 
     return {
@@ -107,6 +110,12 @@ export default(state = defaultState, action) => {
       return {
         ...state,
         editIndex: action.index
+      }
+
+    case "ADD_ROOM":
+      return {
+        ...state,
+        addRoom: action.room
       }
 
     case "DELETE_OBJECT":

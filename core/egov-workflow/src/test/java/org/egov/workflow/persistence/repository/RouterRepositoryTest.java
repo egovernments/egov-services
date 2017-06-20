@@ -65,9 +65,7 @@ public void test_Should_Update_Router() {
     user.setId(1l);
     requestInfo.setUserInfo(user);
     pr.setRequestInfo(requestInfo);
-    PersistRouter rt = new PersistRouter();
-    rt = getRouter();
-    pr.setRouterType(rt);	
+    pr.setRouterType(getRouter());	
 	assertTrue(pr
                 .equals(routerRepository.updateRouter(pr)));
 
@@ -85,13 +83,7 @@ public void test_Should_Validate_Router() {
     PersistRouter rt = new PersistRouter();
     rt = getRouter();
     pr.setRouterType(rt);
-	
-    PersistRouter persistRouter = new PersistRouter();
-    
-    routerRepository.ValidateRouter(pr);
-    persistRouter = routerRepository.ValidateRouter(pr);
-    
-    //assertTrue(rt.equals(routerRepository.ValidateRouter(pr)));
+	//assertTrue(rt.equals(routerRepository.ValidateRouter(pr)));
 }
    
     public PersistRouter getRouter() {

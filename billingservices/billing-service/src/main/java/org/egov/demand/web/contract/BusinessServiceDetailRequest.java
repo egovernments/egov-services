@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BusinessServiceDetailRequest {
 
-	private RequestInfo requestInfo;
+	private RequestInfo RequestInfo;
 
-	private List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+	private List<BusinessServiceDetail> BusinessServiceDetails = new ArrayList<>();
 }

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TaxPeriodResponse {
 
-	private ResponseInfo responseInfo;
+	private ResponseInfo ResponseInfo;
 
-	List<TaxPeriod> taxPeriods = new ArrayList<>();;
+	List<TaxPeriod> TaxPeriods = new ArrayList<>();;
 }

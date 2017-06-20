@@ -1,4 +1,4 @@
-package com.egov.demand.billingservice;
+package org.egov.demand.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

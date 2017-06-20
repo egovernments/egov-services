@@ -80,7 +80,7 @@ class WaterSupplyType extends Component {
             let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{}).then((res)=>
            {
               this.setState({
-                list: res.SupplyType
+                list: res.SupplyTypes
             });
 
         },  (err)=> {

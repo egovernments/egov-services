@@ -337,6 +337,7 @@ class CruProperty extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
           className="fullWidth"
+          maxLength={12}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -353,6 +354,7 @@ class CruProperty extends Component {
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
+          maxLength={10}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -360,7 +362,7 @@ class CruProperty extends Component {
           hintText="eg- Joe Doe"
           floatingLabelText="Owner Name"
           errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
-          value={cruProperty.name ? cruProperty.owner.name:""}
+          value={cruProperty.owner ? cruProperty.owner.name:""}
           onChange={(e) => {
             handleChangeNextOne(e,"owner" ,"name", true, "");
 
@@ -368,6 +370,7 @@ class CruProperty extends Component {
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
+          maxLength={32}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -406,6 +409,7 @@ class CruProperty extends Component {
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
+          maxLength={32}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -444,6 +448,7 @@ class CruProperty extends Component {
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
+          maxLength={32}
         />
     </Col>
 
@@ -482,6 +487,7 @@ class CruProperty extends Component {
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
+            maxLength={3}
           />
     </Col>
 
@@ -593,6 +599,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    maxLength={3}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -919,6 +926,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={3}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -991,6 +999,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={20}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1022,6 +1031,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={32}
                 />
             </Col>
             <div className="clearfix"></div>
@@ -1034,6 +1044,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={9}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1045,6 +1056,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={9}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1113,6 +1125,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={6}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1124,6 +1137,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={6}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1135,6 +1149,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={6}
                 />
             </Col>
             <div className="clearfix"></div>
@@ -1147,6 +1162,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={10}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1158,6 +1174,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={15}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1187,6 +1204,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  maxLength={6}
                 />
             </Col>
         </div>
@@ -1457,6 +1475,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  maxLength={15}
                                               />
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1628,6 +1647,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  maxLength={12}
                                               />
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1654,7 +1674,7 @@ class CruProperty extends Component {
                                                   }
                                                   handleChange(e, "cAddressDiffPAddress", false, '')
                                                 }}
-
+                                                maxLength={6}
                                               />
                                           </Col>
                                           {cruProperty.cAddressDiffPAddress &&
@@ -1671,6 +1691,7 @@ class CruProperty extends Component {
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
+                                                        maxLength={12}
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -1685,6 +1706,7 @@ class CruProperty extends Component {
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
+                                                        maxLength={128}
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -1696,6 +1718,7 @@ class CruProperty extends Component {
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
+                                                        maxLength={6}
                                                     />
                                                 </Col>
                                             </div>
@@ -1864,6 +1887,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   id="upicNumber"
+                                                  maxLength={15}
                                               />
                                           </Col>}
                                           <Col xs={12} md={3} sm={6}>
@@ -1935,6 +1959,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  maxLength={8}
                                               />
                                           </Col>
 
@@ -2120,7 +2145,7 @@ class CruProperty extends Component {
                                           </tbody>
                                           </Table>
 
-                                        
+
                                                 </div>}
                                           </Row>
                                       </Col>

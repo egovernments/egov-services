@@ -20,10 +20,12 @@ public class DemandDetail {
 
 	@NotNull
 	private Double taxAmount;
-
+	
+	@NotNull
 	private Double collectionAmount = 0.0d;
 
 	private AuditDetail auditDetail;
 
+	@NotNull
 	private String tenantId;
 }

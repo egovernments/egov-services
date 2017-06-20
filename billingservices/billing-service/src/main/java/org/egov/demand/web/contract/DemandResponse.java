@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DemandResponse {
 
-	private ResponseInfo responseInfo;
+	private ResponseInfo ResponseInfo;
 
 	private List<Demand> Demands = new ArrayList<>();
 }

@@ -762,6 +762,7 @@ class CruProperty extends Component {
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
                     textFieldStyle={{width: '100%'}}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -779,6 +780,7 @@ class CruProperty extends Component {
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
                     textFieldStyle={{width: '100%'}}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -879,6 +881,7 @@ class CruProperty extends Component {
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
                     textFieldStyle={{width: '100%'}}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -1111,6 +1114,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   textFieldStyle={{width: '100%'}}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1129,6 +1133,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   textFieldStyle={{width: '100%'}}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1235,6 +1240,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   textFieldStyle={{width: '100%'}}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>

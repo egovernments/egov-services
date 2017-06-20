@@ -8,14 +8,14 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class OtpRepository {
 
+    private static final String OTP_CREATE = "otp/v1/_create";
     private final String otpCreateUrl;
     private RestTemplate restTemplate;
 
     public OtpRepository(RestTemplate restTemplate,
-                         @Value("${otp.host}") String otpHost,
-                         @Value("${otp.create.url}") String otpCreateUrl) {
+                         @Value("${otp.host}") String otpHost) {
         this.restTemplate = restTemplate;
-        this.otpCreateUrl = otpHost + otpCreateUrl;
+        this.otpCreateUrl = otpHost + OTP_CREATE;
     }
 
     public String fetchOtp(OtpRequest otpRequest) {

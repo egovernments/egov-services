@@ -1,7 +1,6 @@
 package org.egov.pgr.common.repository;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.common.model.OtpRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

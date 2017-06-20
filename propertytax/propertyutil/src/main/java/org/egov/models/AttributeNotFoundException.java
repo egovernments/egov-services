@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 /**
  * <h1>AttributeNotFoundException</h1>
+ * 
  * @author S Anilkumar
  *
  */
@@ -13,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AttributeNotFoundException extends RuntimeException{
+public class AttributeNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

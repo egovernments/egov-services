@@ -17,5 +17,6 @@ public class AttributeDefinition {
     private int order;
     private String description;
     private String code;
+    private String url;
     private List<ValueDefinition> values;
 }

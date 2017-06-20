@@ -109,16 +109,16 @@ public class ServiceGroupController {
 
 	}
 	
-	@PostMapping(value = "/{id}/_update")
+	@PostMapping(value = "/{code}/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
-			@PathVariable("id") final long id, final BindingResult errors) {
-		if (errors.hasErrors() || id == 0L) {
+			@PathVariable("code") final String code, final BindingResult errors) {
+		if (errors.hasErrors() || (null == code || code.isEmpty())) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("serviceGroupRequest::" + serviceGroupRequest);
-		serviceGroupRequest.getServiceGroup().setId(id);
+		serviceGroupRequest.getServiceGroup().setCode(code);
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -163,6 +163,11 @@ public class ServiceGroupController {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_NAME_MANDATORY_CODE)
 					.message(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else 	if (serviceGroup.getCode() == null || serviceGroup.getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODE_MANDATORY_CODE)
+					.message(PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 	}

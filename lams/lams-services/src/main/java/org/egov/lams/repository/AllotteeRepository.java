@@ -37,6 +37,9 @@ public class AllotteeRepository {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public AllotteeResponse getAllottees(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 
@@ -132,8 +135,7 @@ public class AllotteeRepository {
 				logger.error("Following exception occurred: " + e.getResponseBodyAsString());
 				UserErrorResponse userErrorResponse = null;
 				try {
-					ObjectMapper mapper = new ObjectMapper();
-					userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+					userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
 				} catch (JsonMappingException jme) {
 					logger.error("Following Exception Occurred While Mapping JSON Response From User Service : "
 							+ jme.getMessage());

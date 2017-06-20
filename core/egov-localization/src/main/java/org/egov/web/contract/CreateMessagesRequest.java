@@ -1,15 +1,17 @@
 package org.egov.web.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.egov.domain.model.Tenant;
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.egov.domain.model.Tenant;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor

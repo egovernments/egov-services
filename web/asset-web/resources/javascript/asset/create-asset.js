@@ -1,127 +1,4 @@
-// const cutf=[
-//       {
-//         "name": "Description",
-//         "type": "SingleValueList",
-//         "isActive": null,
-//         "isMandatory": null,
-//         "values": "ABC,BCD",
-//         "localText": null,
-//         "regExFormate": null,
-//         "url": null,
-//         "order": null,
-//         "columns": null
-//       },
-//       {
-//         "name": "Floor Details",
-//         "type": "Table",
-//         "isActive": null,
-//         "isMandatory": null,
-//         "values": null,
-//         "localText": null,
-//         "regExFormate": null,
-//         "url": null,
-//         "order": null,
-//         "columns": [
-//           {
-//             "name": "column1",
-//             "type": "string",
-//             "isActive": null,
-//             "isMandatory": null,
-//             "values": null,
-//             "localText": null,
-//             "regExFormate": null,
-//             "url": null,
-//             "order": null,
-//             "columns": null
-//           },
-//           {
-//             "name": "column2",
-//             "type": "number",
-//             "isActive": null,
-//             "isMandatory": null,
-//             "values": null,
-//             "localText": null,
-//             "regExFormate": null,
-//             "url": null,
-//             "order": null,
-//             "columns": null
-//           },
-//           {
-//             "name": "column2",
-//             "type": "number",
-//             "isActive": null,
-//             "isMandatory": null,
-//             "values": null,
-//             "localText": null,
-//             "regExFormate": null,
-//             "url": null,
-//             "order": null,
-//             "columns": null
-//           }
-//         ]
-//       },
-//       {
-//         "name": "Details",
-//         "type": "text",
-//         "isActive": null,
-//         "isMandatory": null,
-//         "values": null,
-//         "localText": null,
-//         "regExFormate": null,
-//         "url": null,
-//         "order": null,
-//         "columns": null
-//       },
-//       {
-//         "name": "Amenities Details",
-//         "type": "Table",
-//         "isActive": null,
-//         "isMandatory": null,
-//         "values": null,
-//         "localText": null,
-//         "regExFormate": null,
-//         "url": null,
-//         "order": null,
-//         "columns": [
-//           {
-//             "name": "column11",
-//             "type": "string",
-//             "isActive": null,
-//             "isMandatory": null,
-//             "values": null,
-//             "localText": null,
-//             "regExFormate": null,
-//             "url": null,
-//             "order": null,
-//             "columns": null
-//           },
-//           {
-//             "name": "column22",
-//             "type": "number",
-//             "isActive": null,
-//             "isMandatory": null,
-//             "values": null,
-//             "localText": null,
-//             "regExFormate": null,
-//             "url": null,
-//             "order": null,
-//             "columns": null
-//           },
-//           {
-//             "name": "column23",
-//             "type": "number",
-//             "isActive": null,
-//             "isMandatory": null,
-//             "values": null,
-//             "localText": null,
-//             "regExFormate": null,
-//             "url": null,
-//             "order": null,
-//             "columns": null
-//           }
-//         ]
-//       }
-//     ]
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 var flag = 0, flag1 = 0, mode = getUrlVars()["type"];
 const makeAjaxUpload = function(file, cb) {
     if(file.constructor == File) {
@@ -150,6 +27,15 @@ const makeAjaxUpload = function(file, cb) {
     }
 }
 
+const hasValues = function(files) {
+  for(var i=0; i< files.length; i++) {
+    if(files[i] && files[i].value && files[i].value.constructor == Array && files[i].value.length)
+      return true;
+  }
+
+  return false;
+}
+
 const uploadFiles = function(body, cb) {
     if(body.Asset.assetAttributes && body.Asset.assetAttributes.length) {
         var counter1 = body.Asset.assetAttributes.length;
@@ -158,24 +44,31 @@ const uploadFiles = function(body, cb) {
           if(body.Asset.assetAttributes[i].type == "File") {
             var counter = body.Asset.assetAttributes[i].value.length;
             var docs = [];
-            for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
-                makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
-                    if (breakout == 1)
-                        return;
-                    else if (err) {
-                        cb(err);
-                        breakout = 1;
-                    } else {
-                        counter--;
-                        docs.push(res.files[0].fileStoreId);
-                        if(counter == 0) {
-                            body.Asset.assetAttributes[i].value = docs;
-                            counter1--;
-                            if(counter1 == 0 && breakout == 0)
-                                cb(null, body);
-                        }
-                    }
-                })
+            if(counter > 0) {
+              for(let j=0; j<body.Asset.assetAttributes[i].value.length; j++) {
+                  makeAjaxUpload(body.Asset.assetAttributes[i].value[j], function(err, res) {
+                      if (breakout == 1)
+                          return;
+                      else if (err) {
+                          cb(err);
+                          breakout = 1;
+                      } else {
+                          counter--;
+                          docs.push(res.files[0].fileStoreId);
+                          if(counter == 0) {
+                              body.Asset.assetAttributes[i].value = docs;
+                              counter1--;
+                              if(counter1 == 0 && breakout == 0)
+                                  cb(null, body);
+                          }
+                      }
+                  })
+              }
+            } else {
+              counter1--;
+              if(counter1 == 0 && breakout == 0) {
+                  cb(null, body);
+              }
             }
           } else {
             counter1--;
@@ -267,7 +160,9 @@ class CreateAsset extends React.Component {
         relatedAssets: [],
         removeAsset: "",
         modify1: false,
-        modify2: false
+        modify2: false,
+        allFiles: [],
+        removedFiles: {}
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -284,7 +179,7 @@ class CreateAsset extends React.Component {
     this.removeReferenceConfirm = this.removeReferenceConfirm.bind(this);
     this.removeReference = this.removeReference.bind(this);
     this.openNewRelAssetMdl = this.openNewRelAssetMdl.bind(this);
-
+    this.addToRemovedFiles = this.addToRemovedFiles.bind(this);
   }
 
   close() {
@@ -557,8 +452,9 @@ class CreateAsset extends React.Component {
         ...this.state,
         error: "",
         success: ""
-      })
+      });
       var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
+      var remFiles = Object.assign({}, this.state.removedFiles);
       if(tempInfo && tempInfo.assetCategory)
         tempInfo.assetCategory.tenantId = tenantId;
       delete tempInfo.assetReferenceName;
@@ -569,10 +465,16 @@ class CreateAsset extends React.Component {
               for(var j=0; j<tempInfo.assetAttributes[i].value.length; j++)
                 delete tempInfo.assetAttributes[i].value[j]["new"];
           }
+
+          if(tempInfo.assetAttributes[i].type == "File" && tempInfo.assetAttributes[i].value && remFiles && Object.keys(remFiles).length > 0 && remFiles[tempInfo.assetAttributes[i].key]) {
+            tempInfo.assetAttributes[i].value.map(function(val, ind) {
+              if(remFiles[tempInfo.assetAttributes[i].key][val])
+                tempInfo.assetAttributes[i].value.splice(ind, 1);
+            })
+          }
         }
       }
 
-      
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -656,19 +558,23 @@ class CreateAsset extends React.Component {
             }
             attr[i].value = values;
           } else if(attr[i].type == "File") {
-            attr[i].value = e.target.files;
+            if(attr[i].value && attr[i].value.constructor == Array) {
+              for(var z=0; z< e.target.files.length; z++) {
+                attr[i].value.push(e.target.files[z]);
+              }
+            } else {
+              attr[i].value = e.target.files;
+            }
           } else {
             attr[i].value = e.target.value;
           }
         }
-
         this.setState({
           assetSet: {
             ...this.state.assetSet,
             assetAttributes: Object.assign([], attr)
           }
         });
-
         return;
       }
     }
@@ -923,12 +829,22 @@ class CreateAsset extends React.Component {
             if(res) {
               let asset = res["Assets"][0];
               var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
+              var _files = [];
+              if(asset.assetAttributes && asset.assetAttributes.length) {
+                for(var i=0; i<asset.assetAttributes.length; i++) {
+                  if(asset.assetAttributes[i].type == "File") {
+                    _files.push(asset.assetAttributes[i]);
+                  }
+                }  
+              }
+
               setTimeout(function() {
                 _this.setState({
                     assetSet: {
                       ...asset,
                       dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
-                    }
+                    },
+                    allFiles: JSON.parse(JSON.stringify(_files))
                 });
               }, 100);
 
@@ -1080,9 +996,25 @@ class CreateAsset extends React.Component {
       })
   }
 
+  addToRemovedFiles(name, fileId, addBack) {
+    var removedFiles = Object.assign({}, this.state.removedFiles);
+    if(addBack) {
+      delete removedFiles[name][fileId];
+    } else {
+      if(removedFiles[name]) {
+        removedFiles[name][fileId] = 1;
+      } else {
+        removedFiles[name] = {[fileId]: 1};
+      }
+    }
+    this.setState({
+      removedFiles: Object.assign({}, removedFiles)
+    })
+  }
+
   render() {
-    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets} = this.state;
+    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles} = this;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1259,6 +1191,59 @@ class CreateAsset extends React.Component {
                 </div>
               )
         }
+    }
+
+    const renderFileDelBtn = function(name, fileId) {
+      if(!removedFiles[name] || (removedFiles[name] && !removedFiles[name][fileId]))
+        return (
+          <button type="button" className="btn btn-close" style={{"color": "#000000"}} onClick={() => addToRemovedFiles(name, fileId)}>Delete</button>
+        )
+      else 
+        return (
+          <button type="button" className="btn btn-close" style={{"color": "#000000"}} onClick={() => addToRemovedFiles(name, fileId, true)}>Undo</button>
+        )
+    }
+
+    const renderFileBody = function(fles) {
+      return fles.map(function(v, ind) {
+        return v.value.map(function(file, ind2) {
+          return (
+            <tr key={ind2} style={{"background-color": (removedFiles[v.key] && removedFiles[v.key][file] ? "#d3d3d3" : "#ffffff"), "text-decoration": (removedFiles[v.key] && removedFiles[v.key][file] ? "line-through" : "")}}>
+              <td>{ind2+1}</td>
+              <td>{v.key}</td>
+              <td>
+                <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                  Download
+                </a>
+              </td>
+              <td>{getUrlVars()["type"] == "update" ? renderFileDelBtn(v.key, file) : ""}</td>
+            </tr>
+          )
+        })
+      }) 
+    }
+
+    const showAttachedFiles = function() {
+      if(allFiles.length && hasValues(allFiles)) {
+          return (
+              <table id="fileTable" className="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th>Sr. No.</th>
+                      <th>Name</th>
+                      <th>File</th>
+                      <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody id="agreementSearchResultTableBody">
+                    {
+                      renderFileBody(allFiles)
+                    }
+                  </tbody>
+
+             </table>
+            )
+      }
     }
 
     const checkFields = function(item, index, ifTable) {
@@ -2096,6 +2081,8 @@ class CreateAsset extends React.Component {
                   {renderIfCapitalized(this.state.capitalized)}
               </div>
             </div>
+            <br/>
+            {showAttachedFiles()}
             <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;
               <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

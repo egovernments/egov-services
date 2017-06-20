@@ -1095,8 +1095,10 @@ $("#createAgreementForm").validate({
         agreement["asset"]["assetCategory"]["code"] = assetDetails["assetCategory"]["code"];
         agreement["asset"]["assetCategory"]["name"] = assetDetails["assetCategory"]["name"];
 
-        agreement["rentIncrementMethod"] = {};
-        agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
+        if($("#rentIncrementMethod").val()) {
+            agreement["rentIncrementMethod"] = {};
+            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();    
+        }
         agreement["tenantId"] = tenantId;
         agreement["source"] = "DATA_ENTRY";
         agreement["action"] = "CREATE"; //Different in case of cancel/evict. Please remove
@@ -1132,6 +1134,8 @@ $("#createAgreementForm").validate({
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
+                        if(window.opener)
+                            window.opener.location.reload();
                         window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] +"&from=dataEntry";
                     }
 

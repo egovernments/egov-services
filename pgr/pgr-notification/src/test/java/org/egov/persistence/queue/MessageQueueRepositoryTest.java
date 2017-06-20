@@ -65,8 +65,9 @@ public class MessageQueueRepositoryTest {
             .sender("")
             .build();
         when(kafkaTemplate.send(EMAIL_TOPIC, expectedEmailMessage)).thenReturn(sendResult);
+        final EmailRequest emailRequest = new EmailRequest(subject, body, emailAddress);
 
-        messageQueueRepository.sendEmail(emailAddress, new EmailRequest(subject, body));
+        messageQueueRepository.sendEmail(emailRequest);
 
         verify(kafkaTemplate).send(EMAIL_TOPIC, expectedEmailMessage);
     }
@@ -84,8 +85,9 @@ public class MessageQueueRepositoryTest {
             .build();
 
         when(kafkaTemplate.send(EMAIL_TOPIC, expectedEmailMessage)).thenThrow(new RuntimeException());
+        final EmailRequest emailRequest = new EmailRequest(subject, body, emailAddress);
 
-        messageQueueRepository.sendEmail(emailAddress, new EmailRequest(subject, body));
+        messageQueueRepository.sendEmail(emailRequest);
     }
 
 }

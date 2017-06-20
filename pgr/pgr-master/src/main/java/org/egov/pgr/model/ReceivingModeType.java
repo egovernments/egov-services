@@ -79,9 +79,9 @@ public class ReceivingModeType {
 
 	@NotNull
 	private Boolean active;
-
-	@NotNull
-	private Boolean visible;
+	
+	@Length(max = 250)
+	private String channel;
 
 	private AuditDetails auditDetails;
 

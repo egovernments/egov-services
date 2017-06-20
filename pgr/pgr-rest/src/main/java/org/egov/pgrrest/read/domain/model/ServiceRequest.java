@@ -119,9 +119,12 @@ public class ServiceRequest {
 	public boolean descriptionLength() {
 		return description.length() < 10 || description.length() >500;
 	}
-	 public boolean emailValidate(){
-		return requester.isValidEmailAddress();
-	}
+    public boolean emailValidate(){
+        if(requester.getEmail() == null || requester.getEmail().isEmpty()) {
+            return  true;
+        }
+        return requester.isValidEmailAddress();
+    }
 
 	public void maskUserDetails(){
         getRequester().maskMobileAndEmailDetails();

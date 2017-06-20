@@ -96,12 +96,12 @@ public class ReceivingCenterTypeQueryBuilder {
 			preparedStatementValues.add(centerTypeRequest.getName());
 		}
 
-		/*
-		 * if (centerTypeRequest.getCode() != null) { isAppendAndClause =
-		 * addAndClauseIfRequired(isAppendAndClause, selectQuery);
-		 * selectQuery.append(" centerType.code = ?");
-		 * preparedStatementValues.add(centerTypeRequest.getCode()); }
-		 */
+		if (centerTypeRequest.getCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" centerType.code = ?");
+			preparedStatementValues.add(centerTypeRequest.getCode());
+		}
+
 		if (centerTypeRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" centerType.active = ?");
@@ -165,13 +165,13 @@ public class ReceivingCenterTypeQueryBuilder {
 
 	public static String insertReceivingCenterTypeQuery() {
 
-		return "INSERT INTO egpgr_receiving_center(code,name,description,iscrnrequired,orderno,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_receiving_center(id,code,name,description,iscrnrequired,orderno,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egpgr_receiving_center'),?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public static String updateReceivingCenterTypeQuery() {
-		return "UPDATE egpgr_receiving_center SET code=?, name = ?,description = ?,iscrnrequired=?,orderno=?,"
-				+ "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+		return "UPDATE egpgr_receiving_center SET name = ?,description = ?,iscrnrequired=?,orderno=?,"
+				+ "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
 	}
 
 	public static String checkReceivingCenterTypeByName() {

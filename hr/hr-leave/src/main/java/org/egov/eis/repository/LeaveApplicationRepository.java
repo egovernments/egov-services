@@ -104,8 +104,7 @@ public class LeaveApplicationRepository {
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
         final Date now = new Date();
         final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-                leaveApplicationRequest.getRequestInfo().getUserInfo().getUserName(),
-                leaveApplicationRequest.getRequestInfo().getUserInfo().getTenantId());
+                leaveApplicationRequest.getRequestInfo());
         for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             leaveApplication.setStateId(stateId);
             final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
@@ -128,8 +127,7 @@ public class LeaveApplicationRepository {
         final Date now = new Date();
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
         final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-                leaveApplicationRequest.getRequestInfo().getUserInfo().getUserName(),
-                leaveApplicationRequest.getRequestInfo().getUserInfo().getTenantId());
+                leaveApplicationRequest.getRequestInfo());
         leaveApplication.setStateId(Long.valueOf(task.getId()));
         leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
         final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),

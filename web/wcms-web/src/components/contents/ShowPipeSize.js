@@ -22,6 +22,7 @@ import TextField from 'material-ui/TextField';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
+import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import DataTable from '../common/Table';
@@ -125,7 +126,7 @@ class showPipeSize extends Component {
       e.preventDefault();
       // console.log("Show Table");
       flag=1;
-      changeButtonText("Search Again");
+      changeButtonText("Search");
       // this.setState({searchBtnText:'Search Again'})
       showTable(true);
   }
@@ -216,7 +217,7 @@ class showPipeSize extends Component {
     {
       return (
         <Card>
-          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Result < /strong>}/>
+          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Result < /strong>}/>
           <CardText>
         <Table id="pipeSizeTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
@@ -243,13 +244,19 @@ class showPipeSize extends Component {
           search(e)
         }}>
           <Card>
-             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Modify Category Type < /strong>}/>
+             <CardHeader title={< strong style = {{color:"#5a3e1b"}} >  Search Pipe Size< /strong>}/>
 
             <CardText>
               <Card>
                 <CardText>
                   <Grid>
                     <Row>
+                    <Col xs={12} md={6}>
+                      <TextField errorText={fieldErrors.code
+                        ? fieldErrors.code
+                        : ""} value={showPipeSize.code?showPipeSize.code:""} onChange={(e) => handleChange(e, "code", false, "")} hintText="Code" floatingLabelText="Code" />
+                    </Col>
+
                     <Col xs={12} md={6}>
                     <TextField errorText={fieldErrors.sizeInMilimeter
                       ? fieldErrors.sizeInMilimeter
@@ -259,6 +266,27 @@ class showPipeSize extends Component {
                     } } hintText="123456" floatingLabelText="H.S.C Pipe Size (mm)" />  </Col>
 
                     </Row>
+                    <Row>
+                    <Col xs={12} md={6}>
+                                        <Checkbox
+                                         label="Active"
+                                         defaultChecked={true}
+                                         value={showPipeSize.active?showPipeSize.active:""}
+                                         onCheck={(event,isInputChecked) => {
+                                           var e={
+                                             "target":{
+                                               "value":isInputChecked
+                                             }
+                                           }
+                                           handleChange(e, "active", true, "")}
+                                         }
+                                         style={styles.checkbox}
+                                         style={styles.topGap}
+                                        />
+                          </Col>
+
+
+                    </Row>
 
                     </Grid>
 
@@ -266,7 +294,7 @@ class showPipeSize extends Component {
               </Card>
 
               <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
                 <RaisedButton type="submit"  label={buttonText} backgroundColor={"#5a3e1b"} labelColor={white}/>
                 <RaisedButton label="Close"/>

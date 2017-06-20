@@ -1,1 +1,0 @@
-DELETE from servicetype_keyword;

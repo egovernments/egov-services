@@ -1,10 +1,9 @@
 package org.egov.asset.web.controller;
 
 import java.util.List;
-import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
-import org.egov.asset.config.ApplicationProperties;
+import javax.validation.Valid;
+
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
@@ -39,23 +38,21 @@ public class AssetCategoryController {
 	private AssetCategoryService assetCategoryService;
 
 	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	@Autowired
 	private AssetCategoryValidator assetCategoryValidator;
 
 	@PostMapping("/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid AssetCategoryCriteria assetCategoryCriteria, BindingResult bindingResult) {
+	public ResponseEntity<?> search(@RequestBody final RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid final AssetCategoryCriteria assetCategoryCriteria,
+			final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
-		List<AssetCategory> assetCategories = assetCategoryService.search(assetCategoryCriteria);
-		AssetCategoryResponse response = new AssetCategoryResponse();
+		final List<AssetCategory> assetCategories = assetCategoryService.search(assetCategoryCriteria);
+		final AssetCategoryResponse response = new AssetCategoryResponse();
 		response.setAssetCategory(assetCategories);
 		response.setResponseInfo(new ResponseInfo());
 
@@ -64,52 +61,50 @@ public class AssetCategoryController {
 
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid AssetCategoryRequest assetCategoryRequest,
-			BindingResult bindingResult) {
+	public ResponseEntity<?> create(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
+			final BindingResult bindingResult) {
 
 		logger.info("AssetCategory create::" + assetCategoryRequest);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		assetCategoryValidator.validateAssetCategory(assetCategoryRequest);
-		AssetCategoryResponse response = assetCategoryService.createAsync(assetCategoryRequest);
+		final AssetCategoryResponse response = assetCategoryService.createAsync(assetCategoryRequest);
 
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	@PostMapping("{code}/_update")
-	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody @Valid AssetCategoryRequest assetCategoryRequest, BindingResult bindingResult) {
-		
-		logger.info("AssetCategory update::" + assetCategoryRequest+","+"code:"+code);
+	public ResponseEntity<?> update(@PathVariable("code") final String code,
+			@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest, final BindingResult bindingResult) {
+
+		logger.info("AssetCategory update::" + assetCategoryRequest + "," + "code:" + code);
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		if (!code.equals(assetCategoryRequest.getAssetCategory().getCode())) {
+		if (!code.equals(assetCategoryRequest.getAssetCategory().getCode()))
 			throw new RuntimeException("Invalid asset code");
-		}
-		AssetCategoryResponse assetCategoryResponse = assetCategoryService.updateAsync(assetCategoryRequest);
-		
+		final AssetCategoryResponse assetCategoryResponse = assetCategoryService.updateAsync(assetCategoryRequest);
+
 		return new ResponseEntity<>(assetCategoryResponse, HttpStatus.OK);
 	}
-	
-	private ErrorResponse populateErrors(BindingResult errors) {
-		ErrorResponse errRes = new ErrorResponse();
 
-		ResponseInfo responseInfo = new ResponseInfo();
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
+
+		final ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		errRes.setResponseInfo(responseInfo);
 
-		Error error = new Error();
+		final Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors()) {
-			for (FieldError errs : errors.getFieldErrors()) {
+		if (errors.hasFieldErrors())
+			for (final FieldError errs : errors.getFieldErrors())
 				error.getFields().put(errs.getField(), errs.getRejectedValue());
-			}
-		}
 		errRes.setError(error);
 		return errRes;
 	}

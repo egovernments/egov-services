@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-
 import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
@@ -49,6 +48,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class AgreementService {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementService.class);
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private AgreementRepository agreementRepository;
@@ -110,7 +112,6 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("createAgreement service::" + agreement);
 		String kafkaTopic = null;
-		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 
 		Calendar calendar = Calendar.getInstance();
@@ -127,6 +128,7 @@ public class AgreementService {
 			kafkaTopic = propertiesManager.getSaveAgreementTopic();
 			agreement.setStatus(Status.ACTIVE);
 			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+			agreement.setAgreementDate(agreement.getCommencementDate());
 		} else {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);
@@ -146,7 +148,7 @@ public class AgreementService {
 		agreement.setId(agreementRepository.getAgreementID());
 		try {
 
-			agreementValue = mapper.writeValueAsString(agreementRequest);
+			agreementValue = objectMapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException JsonProcessingException) {
 			logger.info("AgreementService : " + JsonProcessingException.getMessage(), JsonProcessingException);
@@ -172,7 +174,6 @@ public class AgreementService {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		String kafkaTopic = null;
 
@@ -194,14 +195,17 @@ public class AgreementService {
 								agreementRequest.getRequestInfo());
 					}
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-					agreement.setStatus(Status.CANCELLED);
+					if (agreement.getStatus().equals(Status.REJECTED))
+						agreement.setStatus(Status.CANCELLED);
+					else
+						agreement.setStatus(Status.REJECTED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					// no action for print notice
 				}
 			}
 		}
 		try {
-			agreementValue = mapper.writeValueAsString(agreementRequest);
+			agreementValue = objectMapper.writeValueAsString(agreementRequest);
 			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
 		} catch (JsonProcessingException jsonProcessingException) {
 			logger.error("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
@@ -219,6 +223,12 @@ public class AgreementService {
 		 * isAllotteeNull declared to indicate whether criteria arguments for
 		 * each of the Agreement,Asset and Allottee objects are given or not.
 		 */
+		
+		if(agreementCriteria.getToDate() != null)
+		{
+			agreementCriteria.setToDate(setToTime(agreementCriteria.getToDate()));	
+		}
+		
 		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
 				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
@@ -232,7 +242,7 @@ public class AgreementService {
 		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
 				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
 				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
-				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorno() == null;
+				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorNo() == null;
 
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");
@@ -264,6 +274,16 @@ public class AgreementService {
 			logger.info("agreementRepository.findByAgreement : all values null");
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		}
+	}
+
+	private static Date setToTime(Date toDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(toDate);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.SECOND,59);
+		cal.set(Calendar.MILLISECOND,999);
+		return cal.getTime();	
 	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {

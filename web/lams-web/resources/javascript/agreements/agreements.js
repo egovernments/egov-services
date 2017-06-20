@@ -1118,7 +1118,7 @@ $("#createAgreementForm").validate({
         agreement["workflowDetails"] = {};
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverPositionId"]);
         if(agreement.remarks) {
-            agreement["workflowDetails"]["remarks"] = agreement.remarks;
+            agreement["workflowDetails"]["comments"] = agreement.remarks;
         }
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
@@ -1128,9 +1128,11 @@ $("#createAgreementForm").validate({
         agreement["asset"]["assetCategory"]["id"] = assetDetails["assetCategory"]["id"];
         agreement["asset"]["assetCategory"]["code"] = assetDetails["assetCategory"]["code"];
         agreement["asset"]["assetCategory"]["name"] = assetDetails["assetCategory"]["name"];
-
-        agreement["rentIncrementMethod"] = {};
-        agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
+        if($("#rentIncrementMethod").val()) {
+            agreement["rentIncrementMethod"] = {};
+            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();    
+        }
+        
         agreement["tenantId"] = tenantId;
         agreement["source"] = "SYSTEM";
         agreement["action"] = "CREATE";//Different in case of cancel/evict. Please remove
@@ -1166,6 +1168,8 @@ $("#createAgreementForm").validate({
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
+                        if(window.opener)
+                            window.opener.location.reload();
                         window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverPositionId"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
                     }
 

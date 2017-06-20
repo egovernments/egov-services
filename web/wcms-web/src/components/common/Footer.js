@@ -11,7 +11,7 @@ const styles = {
 
     paper: {
       width: '100%',
-      marginTop: 20,
+      marginTop: 260,
       display: 'inline-block',
       backgroundColor:"#f3f4f5",
       color:"black",

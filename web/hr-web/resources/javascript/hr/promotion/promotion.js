@@ -9,12 +9,13 @@ class EmployeePromotion extends React.Component {
       name:"",
       code:"",
       departmentId:"",
-      designationId:""
+      designationId:"",
+      positionId:""
     },
     departmentId:"",
     designationId:"",
     employeeType:"",
-    name:"",
+    pName:"",
     promotionType:"",
     reason:"",
     district:"",
@@ -27,12 +28,13 @@ class EmployeePromotion extends React.Component {
     promotionDate:"",
     accepted:""},
     positionList:[],departmentList:[],designationList:[],employees:[],
-    fundList:[],functionaryList:[],districtList:[],promotionList:[],reasonList:[]
+    fundList:[],functionaryList:[],districtList:[],promotionList:[],reasonList:[],pNameList:[]
   }
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.vacantPositionFun = this.vacantPositionFun.bind(this);
   }
 
 addOrUpdate(){
@@ -86,7 +88,7 @@ componentWillUpdate() {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee Promotion");
 
     var _state = {}, _this = this, count = 5;
     const checkCountAndCall = function(key, res) {
@@ -113,7 +115,6 @@ componentWillUpdate() {
     });
 
 
-    $('#code,#name,#departmentId,#designationId').prop("disabled", true);
     $('#effectiveDate, #promotionDate').datepicker({
         format: 'dd/mm/yyyy',
         autoclose:true,
@@ -121,15 +122,26 @@ componentWillUpdate() {
     });
     $('#effectiveDate').val("");
     $('#promotionDate').val("");
-    $('#effectiveDate,#promotionDate ').on("change", function(e) {
+    $('#effectiveDate,#promotionDate ').on('changeDate', function(e) {
+
+
           _this.setState({
                 promotionSet: {
                     ..._this.state.promotionSet,
                     "effectiveDate":$("#effectiveDate").val(),
                     "promotionDate":$("#promotionDate").val()
                 }
-          })
+          });
+          if(_this.state.promotionSet.designationId&&_this.state.promotionSet.departmentId){
+            var _designation = _this.state.promotionSet.designationId;
+            var _department = _this.state.promotionSet.departmentId;
+            var _promotionDate = _this.state.promotionSet.promotionDate;
+              _this.vacantPositionFun(_department,_designation,_promotionDate);
+          }
+
     });
+
+
 
     getCommonMasterById("hr-employee","employees", id, function(err, res) {
       if(res && res.Employee) {
@@ -152,7 +164,8 @@ componentWillUpdate() {
               name: obj.name,
               code: obj.code,
               departmentId:obj.assignments[ind].department,
-              designationId:obj.assignments[ind].designation
+              designationId:obj.assignments[ind].designation,
+              positionId:obj.assignments[ind].position
             }
           }
         })
@@ -160,14 +173,50 @@ componentWillUpdate() {
     });
   }
 
-  handleChange(e,name) {
-      this.setState({
-          promotionSet:{
-              ...this.state.promotionSet,
-              [name]:e.target.value
-          }
-      })
+  vacantPositionFun(departmentId,designationId,promotionDate){
+    var _this = this;
+    commonApiPost("hr-masters", "vacantpositions", "_search", {
+        tenantId,
+        departmentId: departmentId,
+        designationId: designationId,
+        asOnDate: promotionDate
+    }, function(err, res) {
+        if (res) {
+          _this.setState({
+              promotionSet:{
+                  ..._this.state.promotionSet,
+              },pNameList:res.Position
+          })
+        }
+    });
 
+  }
+
+  handleChange(e,name) {
+    var _this = this;
+    switch (name) {
+      case "designationId":
+        if(this.state.promotionSet.departmentId&&this.state.promotionSet.promotionDate){
+          var _department = this.state.promotionSet.departmentId;
+          var _date = this.state.promotionSet.promotionDate;
+          _this.vacantPositionFun(_department,e.target.value,_date);
+        }
+        break;
+        case "departmentId":
+        if(this.state.promotionSet.designationId&&this.state.promotionSet.promotionDate){
+          var _designation = this.state.promotionSet.designationId;
+          var _date = this.state.promotionSet.promotionDate;
+            _this.vacantPositionFun(e.target.value,_designation,_date);
+        }
+          break;
+    }
+
+        this.setState({
+            promotionSet:{
+                ...this.state.promotionSet,
+                [name]:e.target.value
+            }
+        })
   }
 
   close() {
@@ -175,9 +224,9 @@ componentWillUpdate() {
   }
 
   render() {
-    let {handleChange,addOrUpdate,handleChangeTwoLevel}=this;
+    let {handleChange,addOrUpdate,handleChangeTwoLevel,vacantPositionFun}=this;
     let{ code,departmentId,designationId,name,promotionType,reason,district,positionId,
-        fund,functionary,effectiveDate,promotionDate,remark ,documents,employeeid,accepted}=this.state.promotionSet;
+        fund,functionary,effectiveDate,promotionDate,remark ,documents,employeeid,accepted,pName}=this.state.promotionSet;
     let {isSearchClicked,employees,assignments_designation,assignments_department,assignments_position}=this.state;
 
     const renderOption=function(list) {
@@ -210,7 +259,7 @@ componentWillUpdate() {
                       </div>
                       <div className="col-sm-6">
                           <input type="text" name="code" id="code" value={employeeid.code}
-                          onChange={(e)=>{handleChange(e,"employeeid","code")}}/>
+                          onChange={(e)=>{handleChange(e,"employeeid","code")}} disabled/>
                       </div>
                   </div>
                 </div>
@@ -221,7 +270,7 @@ componentWillUpdate() {
                         </div>
                         <div className="col-sm-6">
                             <input type="text" name="name" id="name" value= {employeeid.name}
-                                onChange={(e)=>{handleChangeTwoLevel(e,"employeeid","name")}}/>
+                                onChange={(e)=>{handleChangeTwoLevel(e,"employeeid","name")}} disabled/>
                         </div>
                     </div>
                   </div>
@@ -234,8 +283,8 @@ componentWillUpdate() {
                     </div>
                     <div className="col-sm-6">
                       <div className="styled-select">
-                        <select id="departmentId" name="departmentId" value={employeeid.departmentId}
-                          onChange={(e)=>{  handleChangeTwoLevel(e,"employeeid","departmentId")}}>
+                        <select name="departmentId" value={employeeid.departmentId}
+                          onChange={(e)=>{  handleChangeTwoLevel(e,"employeeid","departmentId")}} disabled>
                           <option value="">Select department</option>
                           {renderOption(this.state.departmentList)}
                        </select>
@@ -250,10 +299,28 @@ componentWillUpdate() {
                       </div>
                       <div className="col-sm-6">
                         <div className="styled-select">
-                            <select id="designationId" name="designationId" value={employeeid.designationId}
-                              onChange={(e)=>{ handleChange(e,"employeeid","designationId")}} >
+                            <select name="designationId" value={employeeid.designationId}
+                              onChange={(e)=>{ handleChange(e,"employeeid","designationId")}} disabled>
                             <option value="">Select Designation</option>
                             {renderOption(this.state.designationList)}
+                           </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label htmlFor="">Position  </label>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="styled-select">
+                            <select name="positionId" value={employeeid.positionId}
+                              onChange={(e)=>{ handleChange(e,"employeeid","positionId")}} disabled>
+                            <option value="">Select Position</option>
+                            {renderOption(this.state.positionList)}
                            </select>
                       </div>
                     </div>
@@ -268,7 +335,89 @@ componentWillUpdate() {
                     <h3 className="categoryType">Promotion Details </h3>
                   </div>
                 </div>
+                <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="">Department <span>*</span></label>
+                          </div>
+                          <div className="col-sm-6">
+                            <div className="styled-select">
+                              <select id="department" name="departmentId" value={departmentId}
+                                onChange={(e)=>{  handleChange(e,"departmentId")}}required>
+                                <option value="">Select department</option>
+                                {renderOption(this.state.departmentList)}
+                             </select>
+                             </div>
+                          </div>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Designation <span>*</span></label>
+                            </div>
+                            <div className="col-sm-6">
+                              <div className="styled-select">
+                                  <select id="designation" name="designationId" value={designationId}
+                                      onChange={(e)=>{handleChange(e,"designationId")}} required>
+                                  <option value="">Select Designation</option>
+                                  {renderOption(this.state.designationList)}
+                                 </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Promotion effective from<span>*</span></label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div className="text-no-ui">
+                            <span><i className="glyphicon glyphicon-calendar"></i></span>
+                            <input type="text" id="promotionDate" name="promotionDate" value="promotionDate" value={promotionDate}
+                            onChange={(e)=>{handleChange(e,"promotionDate")}} required/>
+
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="">Position name<span>*</span></label>
+                          </div>
+                          <div className="col-sm-6">
+                          <div className="styled-select">
+                            <select id="pName" name="pName" value={pName}
+                            onChange={(e)=>{handleChange(e,"pName")}} required>
+                              <option value="">Select Promotion Position</option>
+                              {renderOption(this.state.pNameList)}
+                           </select>
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
             <div className="row">
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label htmlFor="">Enquiry passed Date</label>
+                      </div>
+                      <div className="col-sm-6">
+                      <div className="text-no-ui">
+                      <span><i className="glyphicon glyphicon-calendar"></i></span>
+                      <input type="text" id="effectiveDate" name="effectiveDate" value="effectiveDate" value={effectiveDate}
+                      onChange={(e)=>{handleChange(e,"effectiveDate")}} />
+
+                      </div>
+                  </div>
+                </div>
+            </div>
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
@@ -285,52 +434,7 @@ componentWillUpdate() {
                       </div>
                   </div>
                 </div>
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor="">Position name<span>*</span></label>
-                        </div>
-                        <div className="col-sm-6">
-                          <input type="text" name="name" id="name" value= {name}
-                              onChange={(e)=>{handleChange(e,"name")}}/>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              <div className="row">
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor="">Department <span>*</span></label>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="styled-select">
-                            <select id="department" name="departmentId" value={departmentId}
-                              onChange={(e)=>{  handleChange(e,"departmentId")}}required>
-                              <option value="">Select department</option>
-                              {renderOption(this.state.departmentList)}
-                           </select>
-                           </div>
-                        </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">Designation <span>*</span></label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="styled-select">
-                                <select id="designation" name="designationId" value={designationId}
-                                    onChange={(e)=>{handleChange(e,"designationId")}} required>
-                                <option value="">Select Designation</option>
-                                {renderOption(this.state.designationList)}
-                               </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div className="row">
                     <div className="col-sm-6">
                         <div className="row">
@@ -365,38 +469,7 @@ componentWillUpdate() {
                           </div>
                         </div>
                       </div>
-                      <div className="row">
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                  <label htmlFor="">Enquiry passed Date</label>
-                                </div>
-                                <div className="col-sm-6">
-                                <div className="text-no-ui">
-                                <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                <input type="text" id="effectiveDate" name="effectiveDate" value="effectiveDate" value={effectiveDate}
-                                onChange={(e)=>{handleChange(e,"effectiveDate")}} />
 
-                                </div>
-                            </div>
-                          </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                              <div className="col-sm-6 label-text">
-                                <label htmlFor="">Promotion effective from<span>*</span></label>
-                              </div>
-                              <div className="col-sm-6">
-                              <div className="text-no-ui">
-                              <span><i className="glyphicon glyphicon-calendar"></i></span>
-                              <input type="text" id="promotionDate" name="promotionDate" value="promotionDate" value={promotionDate}
-                              onChange={(e)=>{handleChange(e,"promotionDate")}} required/>
-
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                    </div>
 
               <div className="row">
                 <div className="col-sm-6">
@@ -410,6 +483,20 @@ componentWillUpdate() {
                         </div>
                     </div>
                 </div>
+                <div className="col-sm-6">
+                    <div className="row">
+                        <div className="col-sm-6 label-text">
+                            <label htmlFor="documents">Attachments docs<span>*</span></label>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="styled-file">
+                            <input id="documents" name="documents" type="file" required multiple/>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              {/*<div className="row">
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
@@ -427,22 +514,8 @@ componentWillUpdate() {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                              <label htmlFor="documents">Attachments docs<span>*</span></label>
-                          </div>
-                          <div className="col-sm-6">
-                              <div className="styled-file">
-                              <input id="documents" name="documents" type="file" required multiple/>
-                             </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-              </div>
+              </div>*/}
+          </div>
           <br/>
             <div className="text-center">
               <button id="sub" type="submit"  className="btn btn-submit">Create</button>&nbsp;&nbsp;

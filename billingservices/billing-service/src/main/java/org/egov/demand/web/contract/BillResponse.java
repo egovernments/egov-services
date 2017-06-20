@@ -3,19 +3,24 @@ package org.egov.demand.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.demand.model.BillInfo;
+import org.egov.demand.model.Bill;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * BillResponse
  */
 
-public class BillResponse   {
-  @JsonProperty("ResposneInfo")
-  private ResponseInfo resposneInfo = null;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BillResponse {
 
-  @JsonProperty("BillInfos")
-  private List<BillInfo> billInfos = new ArrayList<BillInfo>();
-  
+	private ResponseInfo resposneInfo = null;
+
+	private List<Bill> billInfos = new ArrayList<>();
+
 }
-

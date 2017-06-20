@@ -337,6 +337,9 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Override
 	public TaskResponse getTasks(TaskRequest taskRequest) {
 		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
+		if (LOG.isTraceEnabled())
+		LOG.trace("Received task parameters " + taskRequest );
+		
 		final List<Task> tasks = new ArrayList<Task>();
 		RequestInfo requestInfo = taskRequest.getRequestInfo();
 		UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);

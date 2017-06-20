@@ -85,9 +85,6 @@ public class ReceivingCenterType {
 	@NotNull
 	private Boolean active;
 
-	@NotNull
-	private Boolean visible;
-
 	private AuditDetails auditDetails;
 
 	@Length(max = 250)

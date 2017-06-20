@@ -40,11 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -61,6 +56,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class EmployeeRepository {
@@ -199,10 +199,10 @@ public class EmployeeRepository {
 	 * present in db for the given column and given table.
 	 * 
 	 * @param table
-	 * @param field
-	 * @param value
-	 *            is a comma separated value string
-	 * @return
+	 * @param column
+	 * @param documentsAsCSVs is a comma separated value string
+	 * @param tenantId
+	 * @return true if duplicate records exist else returns false
 	 */
 	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String column, String documentsAsCSVs, String tenantId) {
 		return jdbcTemplate.queryForObject(
@@ -234,9 +234,9 @@ public class EmployeeRepository {
 	 * tenantId
 	 * 
 	 * @param table
-	 * @param field
-	 * @param value
-	 * @return
+	 * @param employeeId
+	 * @param tenantId
+	 * @return list of ids
 	 */
 	public List<Long> getListOfIds(String table, Long employeeId, String tenantId) {
 		// FIXME hard coded query

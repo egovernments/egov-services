@@ -230,7 +230,6 @@ class Nominee extends React.Component{
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
-        $('#code').prop("disabled", true);
 
        if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Nominee");
 
@@ -262,6 +261,7 @@ class Nominee extends React.Component{
 
       getCommonMasterById("hr-employee","employees", id, function(err, res) {
         if(res && res.Employee && res.Employee[0]) {
+          var obj = res.Employee[0];
           _this.setState({
             allNomineeValue: {
              ..._this.state.allNomineeValue,
@@ -424,7 +424,7 @@ class Nominee extends React.Component{
                       <label htmlFor="">Name <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="name" value={name} onChange={(e)=>{ handleChange(e,"name")}} required/>
+                      <input type="text" name="name" value={name} id = "name" onChange={(e)=>{ handleChange(e,"name")}} required/>
                     </div>
                   </div>
                 </div>
@@ -547,7 +547,7 @@ class Nominee extends React.Component{
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Nominated <span>*</span></label>
+                      <label htmlFor="">Is Nominee <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
                       <input type="checkbox" name="nominated" value={nominated} onChange={(e)=>{ handleChange(e,"nominated", true)}} checked={nominated? true : false}/>
@@ -557,7 +557,7 @@ class Nominee extends React.Component{
                 <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="employed"> Employee <span>*</span></label>
+                    <label for="employed"> Is Employee <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
@@ -662,8 +662,8 @@ class Nominee extends React.Component{
                             <label for="name">Employee Name</label>
                         </div>
                             <div className="col-sm-6">
-                              <input type="text" name="name" id="name" value={allNomineeValue.employeeid.name}
-                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","name")}} readonly/>
+                              <input type="text" name="name" value={allNomineeValue.employeeid.name}
+                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","name")}} disabled/>
                             </div>
                         </div>
                     </div>
@@ -674,7 +674,7 @@ class Nominee extends React.Component{
                                 </div>
                                     <div className="col-sm-6">
                                     <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
-                                    onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}}readonly/>
+                                    onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}} disabled/>
                                     </div>
                               </div>
                         </div>

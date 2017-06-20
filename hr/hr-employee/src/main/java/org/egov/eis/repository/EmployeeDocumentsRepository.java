@@ -40,12 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsTableRowMapper;
@@ -58,6 +52,12 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class EmployeeDocumentsRepository {
@@ -72,16 +72,19 @@ public class EmployeeDocumentsRepository {
 			+ " WHERE employeeId = ? AND document = ? AND referenceType = ? AND referenceId =? AND tenantId = ?";
 	
 	public static final String DELETE_QUERY_FOR_REFERENCE_IDS = "DELETE FROM egeis_employeeDocuments"
-			+ " WHERE employeeId = :employeeId AND referenceType = :referenceType AND referenceId IN (:referenceIds) AND tenantId = :tenantId";
+			+ " WHERE employeeId = :employeeId AND referenceType = :referenceType AND referenceId IN (:referenceIds)"
+			+ " AND tenantId = :tenantId";
 
-	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " id, document, referencetype, referenceid, tenantId" + " FROM egeis_employeeDocuments"
-			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT id, document, referencetype, referenceid, tenantId"
+			+ " FROM egeis_employeeDocuments WHERE employeeId = ? AND tenantId = ? ";
+
+	public static final String SELECT_BY_REF_TYPE_QUERY = "SELECT id, document, referenceType, referenceId, tenantId"
+			+ " FROM egeis_employeeDocuments"
+			+ " WHERE employeeId = ? AND referenceId = ? AND referenceType = ? AND tenantId = ? ";
+
 	// select document, referencetype, employeeid for given set of document urls
-	public static final String SELECT_BY_DOCUMENTS_QUERY = "SELECT"
-			+ " document, employeeId, referenceType, referenceId FROM egeis_employeeDocuments"
-			+ " WHERE document IN (:document) AND tenantId = :tenantId";
+	public static final String SELECT_BY_DOCUMENTS_QUERY = "SELECT document, employeeId, referenceType, referenceId"
+			+ " FROM egeis_employeeDocuments WHERE document IN (:document) AND tenantId = :tenantId";
 	
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -149,9 +152,8 @@ public class EmployeeDocumentsRepository {
 			return null;
 		}
 	}
-	
+
 	public List<EmployeeDocument> findByDocuments(List<String> inputDocuments, String tenantId) {
-		
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("document", inputDocuments);
 		namedParameters.put("tenantId", tenantId);
@@ -161,5 +163,10 @@ public class EmployeeDocumentsRepository {
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
+	}
+
+	public List<EmployeeDocument> findByEntityType(Long employeeId, Long referenceId, String refType, String tenantId) {
+		return jdbcTemplate.query(SELECT_BY_REF_TYPE_QUERY, new Object[] { employeeId, referenceId, refType, tenantId },
+				employeeDocumentsTableRowMapper);
 	}
 }

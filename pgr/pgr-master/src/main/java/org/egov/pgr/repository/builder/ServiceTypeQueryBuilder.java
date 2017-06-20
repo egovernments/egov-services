@@ -157,7 +157,7 @@ public class ServiceTypeQueryBuilder {
 
     public static String insertComplaintTypeQuery(){
     	return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category) "
-    			+ "values (?,?,?,?,?,?,?,?,?,?,?)"; 
+    			+ "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?)"; 
     	
     }
     public static String insertServiceTypeQuery() {
@@ -191,7 +191,7 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String selectServiceNameAndCodeQuery() {
-        return " select code FROM egpgr_grievancetype where name = ? and tenantId = ?";
+        return " select code FROM egpgr_complainttype where name = ? OR (tenantId = ? and code = ?)";
     }
 
     public static String selectServiceNameAndCodeNotInQuery() {

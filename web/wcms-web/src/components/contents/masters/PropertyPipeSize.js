@@ -76,7 +76,7 @@ class PropertyPipeSize extends Component {
          alert(err);
      });
 
-      let response2=Api.commonApiPost("property", "masters/propertytypes", "_search?", {id:id,tenantId:"ap.kurnool"},{},true).then((res)=>
+      let response2=Api.commonApiPost("property", "propertytypes", "_search?", {id:id,tenantId:"ap.kurnool"},{},true).then((res)=>
      {
         this.setState({
           list2: res.masterModel
@@ -117,7 +117,7 @@ add(e)
     {
     // console.log(response);
   },function(err) {
-      alert(err);
+      alert("Selected Property type and Pipe size already exists ");
   });
 }
 }
@@ -158,7 +158,7 @@ add(e)
           {
               return list.map((item)=>
               {
-                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name || item.sizeInInch} />)
+                  return (<MenuItem key={item.id} value={item.id} primaryText={item.name || item.sizeInMilimeter} />)
               })
           }
       }
@@ -166,7 +166,7 @@ add(e)
         <div className="PropertyPipeSize">
             <Card>
                 <CardHeader
-                    title={<strong style={{color:brown500}}>Create Property Pipe Size </strong>}
+                    title={<strong style={{color:brown500}}> Property Pipe Size </strong>}
                 />
                 <CardText>
                       <Card>
@@ -227,7 +227,7 @@ add(e)
                             </Card>
 
 
-                      <div style={{float:"center"}}>
+                      <div style={{textAlign:"center"}}>
                       {showActionButton()}
                       <RaisedButton type="button" label="Close" />
                       </div>

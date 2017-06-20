@@ -113,7 +113,7 @@ public class PropertyCategoryController {
 
     }
 
-    @PostMapping(value = "/_update/{propertyCategoryId}")
+    @PostMapping(value = "/{propertyCategoryId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeCategoryTypeReq propertyCategoryRequest,
             final BindingResult errors,

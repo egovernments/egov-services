@@ -1,6 +1,8 @@
 package org.egov.models;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,13 +21,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IdRequest {
+	
+    @JsonProperty("idName")
+    @NotNull
+    private String idName;
 
-	private String idType;
-
-	private String entity;
-
-	private String tenentId;
-
-	private List<IdAttribute> attributes;
+    @NotNull
+    @JsonProperty("tenantId")
+	private String tenantId;
+	
+    @JsonProperty("format")
+    private String format;
 
 }

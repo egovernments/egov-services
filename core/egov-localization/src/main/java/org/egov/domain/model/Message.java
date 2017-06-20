@@ -16,6 +16,7 @@ public class Message {
     private String message;
     private Tenant tenant;
     private String locale;
+    private String module;
 
     public boolean isMoreSpecificComparedTo(Message otherMessage) {
         return code.equals(otherMessage.getCode())

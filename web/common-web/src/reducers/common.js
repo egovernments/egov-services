@@ -24,14 +24,14 @@ export default (state = defaultState, action) => {
     case 'SETTINGS_SAVED':
       return {
         ...state,
-        redirectTo: action.error ? null : '/',
+        redirectTo: action.error ? null : '/dashboard',
         currentUser: action.error ? null : action.payload.UserRequest
       };
     case 'LOGIN':
     case 'REGISTER':
       return {
         ...state,
-        redirectTo: action.error ? null : '/',
+        redirectTo: action.error ? null : '/dashboard',
         token: action.error ? null : action.payload.access_token,
         currentUser: action.error ? null : action.payload.UserRequest
       };
@@ -54,7 +54,9 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         pleaseWait: action.pleaseWait
-      }
+      };
+    default:
+        return state
   }
 
   return state;

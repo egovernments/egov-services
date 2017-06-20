@@ -86,7 +86,9 @@ public class ServiceType {
     
     private String group;
     
-    private int category;
+    private Integer category;
+    
+    private Integer slaHours;
    
     private AuditDetails auditDeatils;
 

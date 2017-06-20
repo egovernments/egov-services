@@ -10,6 +10,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 public class EmailMessageContext {
+    private String email;
     private String bodyTemplateName;
     private String subjectTemplateName;
     private Map<Object, Object> bodyTemplateValues;

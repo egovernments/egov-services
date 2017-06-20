@@ -10,23 +10,22 @@ INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,pa
 
 --Asset Register Report HTML Page
 insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,
-	lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'AssetRegisterReportsSearchPage',
+	lastmodifieddate)values(nextval('SEQ_EG_ACTION'),'AssetRegisterReportsSearchPage',
 		'/asset-web/app/common/search-asset-register-report.html','AssetRegisterReportsSearchPage',
-			null,(select id from service where name='Asset Register Report' and  tenantId='default'),1,'Asset Register Report',true,1,now(),1,now(),
-				'default');
+			null,(select id from service where name='Asset Register Report' and  tenantId='default'),1,'Asset Register Report',true,1,now(),1,now());
 
 --Asset Register Report Service
 insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,
-	lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'SearchAssetRegisterReports','/asset-services/assets/_search',
+	lastmodifieddate)values(nextval('SEQ_EG_ACTION'),'SearchAssetRegisterReports','/asset-services/assets/_search',
 		'SearchAssetRegisterReports',null,(select id from service where name='Asset Register Report' and tenantId='default'),1,
-			'Asset Register Report',false,1,now(),1,now(),'default');
+			'Asset Register Report',false,1,now(),1,now());
 	
 -- Role Action Mapping of Asset Register Report with SUPERUSER
 insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', 
-	(select id from eg_action where name = 'AssetRegisterReportsSearchPage' and tenantId='default' ),'default');
+	(select id from eg_action where name = 'AssetRegisterReportsSearchPage'),'default');
 
 insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', 
-	(select id from eg_action where name = 'SearchAssetRegisterReports' and tenantId='default' ),'default');
+	(select id from eg_action where name = 'SearchAssetRegisterReports'),'default');
 
 --Role Action Mapping of Asset Register Report with Asset Report Viewer
 INSERT INTO EG_ROLEACTION (ROLECODE,ACTIONID,TENANTID) values ('AssetReportViewer',

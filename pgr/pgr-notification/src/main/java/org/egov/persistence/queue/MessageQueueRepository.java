@@ -29,12 +29,12 @@ public class MessageQueueRepository {
         sendMessage(smsTopic, smsMessage);
     }
 
-    public void sendEmail(String emailAddress, EmailRequest emailRequest) {
+    public void sendEmail(EmailRequest emailRequest) {
         final EmailMessage emailMessage = EmailMessage.builder()
             .body(emailRequest.getBody())
             .subject(emailRequest.getSubject())
             .sender(EMPTY)
-            .email(emailAddress)
+            .email(emailRequest.getEmail())
             .build();
         sendMessage(emailTopic, emailMessage);
     }

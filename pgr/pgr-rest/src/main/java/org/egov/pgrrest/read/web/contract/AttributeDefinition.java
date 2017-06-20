@@ -19,6 +19,7 @@ public class AttributeDefinition {
     private boolean required;
     private String dataTypeDescription;
     private String description;
+    private String url;
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgrrest.common.model.AttributeDefinition attributeDefinition) {
@@ -28,6 +29,7 @@ public class AttributeDefinition {
         this.required = attributeDefinition.isRequired();
         this.dataTypeDescription = attributeDefinition.getDataTypeDescription();
         this.description=attributeDefinition.getDescription();
+        this.url = attributeDefinition.getUrl();
         this.attribValues = mapAttributeValues(attributeDefinition.getValues());
     }
 

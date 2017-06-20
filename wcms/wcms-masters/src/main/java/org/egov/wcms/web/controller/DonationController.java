@@ -67,6 +67,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,15 +113,16 @@ public class DonationController {
         return getSuccessResponse(donationList, donationRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/_update")
+    @PostMapping(value = "/{donationId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final DonationRequest donationRequest,
-            final BindingResult errors) {
+            final BindingResult errors,@PathVariable("donationId") final Long donationId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Donation Update Request::" + donationRequest);
+        donationRequest.getDonation().setId(donationId);
 
         final List<ErrorResponse> errorResponses = validateDonationRequest(donationRequest);
         if (!errorResponses.isEmpty())

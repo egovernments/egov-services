@@ -1,0 +1,28 @@
+{
+	"ResponseInfo": null,
+	"Disposals": 
+	[
+		{
+			"tenantId": "ap.kurnool",
+			"id": 15,
+			"assetId": 31,
+			"buyerName": "Abhi",
+			"buyerAddress": "Bangalore",
+			"disposalReason": "disposalReason",
+			"disposalDate": 1496564536178,
+			"panCardNumber": "baq1234567",
+			"aadharCardNumber": "12345678123456",
+			"assetCurrentValue": 100,
+			"saleValue": 200,
+			"transactionType": "SALE",
+			"assetSaleAccount": 15,
+			"auditDetails": 
+			{
+				"createdBy": "2",
+				"createdDate": 1496746205544,
+				"lastModifiedBy": "2",
+				"lastModifiedDate": 1496746205544
+			}
+		}
+	]
+}

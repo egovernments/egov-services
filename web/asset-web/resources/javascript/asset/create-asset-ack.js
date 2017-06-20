@@ -31,7 +31,7 @@ class CreateAsset extends React.Component {
                       <center><font color="ass"><b style={{"font-weight": "bold"}}> Asset {getUrlVars()["type"] ? "Category" : ""} {getUrlVars()["value"] == "update" ? "Updated" : "Created"}</b> </font> </center>
                   </h3>
                   <h3>
-                      <center><font color="ass"> Successfully  {getUrlVars()["value"] == "update" ? "Updated" : "Created"} an Asset {getUrlVars()["type"] ? "Category" : ""} with Asset {getUrlVars()["type"] ? "Category" : ""} Name <strong style={{'fontWeight':700}}>
+                      <center><font color="ass"> Successfully  {getUrlVars()["value"] == "update" ? "Updated" : (getUrlVars()["value"] == "revaluate" ? "Revaluated" : "Created")} an Asset {getUrlVars()["type"] ? "Category" : ""} with Asset {getUrlVars()["type"] ? "Category" : ""} Name <strong style={{'fontWeight':700}}>
                       { getUrlVars()["name"] ? decodeURIComponent(getUrlVars()["name"]) : ""}</strong> {renderCode()}  </font> </center>
                   </h3>
                   <div className="text-center">

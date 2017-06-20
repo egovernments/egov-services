@@ -2,13 +2,9 @@ package org.egov.lams.model;
 
 import java.util.Date;
 import java.util.Set;
-
 import javax.validation.constraints.NotNull;
-
 import org.egov.lams.model.enums.Status;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,10 +25,10 @@ public class AgreementCriteria {
 	 private String tenderNumber;
 	 private String acknowledgementNumber;
 	 
-	 @JsonFormat(pattern="dd/MM/yyyy")
+	 @DateTimeFormat(pattern="dd/MM/yyyy")
 	 private Date fromDate;
 	 
-	 @JsonFormat(pattern="dd/MM/yyyy")
+	 @DateTimeFormat(pattern="dd/MM/yyyy")
 	 private Date toDate;
 	 private Status status;
 	 private String tinNumber;
@@ -43,7 +39,7 @@ public class AgreementCriteria {
 	 private Long locality;
 	 private Long revenueWard;
 	 private Long electionWard;
-	 private Long doorno;
+	 private Long doorNo;
 	 private String allotteeName;
 	 private Long mobileNumber;
 	 private Long offSet;

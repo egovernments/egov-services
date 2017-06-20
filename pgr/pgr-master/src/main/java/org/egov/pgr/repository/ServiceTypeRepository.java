@@ -74,11 +74,9 @@ public class ServiceTypeRepository {
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
 		final String complaintInsert = ServiceTypeQueryBuilder.insertComplaintTypeQuery();
-		//name, code, active, slahours, tenantid, type
 		boolean active = true;
-		Long slaHours = 25L;
-		final Object[] object = new Object[] { serviceRequest.getService().getId(), serviceRequest.getService().getServiceName(),
-				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, slaHours,
+		final Object[] object = new Object[] { serviceRequest.getService().getServiceName(),
+				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
 				serviceRequest.getService().getTenantId(), serviceRequest.getService().getType(),
 				serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), serviceRequest.getService().getCategory()
 				};
@@ -144,25 +142,18 @@ public class ServiceTypeRepository {
 
     }
 
-    public boolean checkServiceByNameAndCode(final String code, final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(name);
-        // preparedStatementValues.add(id);
-        preparedStatementValues.add(tenantId);
-        final String query;
-        if (code == null)
-            query = ServiceTypeQueryBuilder.selectServiceNameAndCodeQuery();
-        else {
-            preparedStatementValues.add(code);
-            query = ServiceTypeQueryBuilder.selectServiceNameAndCodeNotInQuery();
-        }
-        final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
-                preparedStatementValues.toArray());
-        if (!serviceTypes.isEmpty())
-            return false;
-
-        return true;
-    }
+	public boolean checkServiceByNameAndCode(final String code, final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(tenantId);
+		preparedStatementValues.add(code);
+		final String query = ServiceTypeQueryBuilder.selectServiceNameAndCodeQuery();
+		final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!serviceTypes.isEmpty())
+			return false;
+		return true;
+	}
 
     public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();

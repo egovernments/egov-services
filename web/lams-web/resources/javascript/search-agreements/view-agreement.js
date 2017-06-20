@@ -6,6 +6,11 @@ function getValueByName(name, id) {
     }
 }
 
+function setRentPrefix(name) {
+    $(`label[for=rent]`).text(name + " Rent (Rs)");
+}
+
+var rejectedSenderName;
 try {
     var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
 } catch (e) {
@@ -209,7 +214,7 @@ $(document).ready(function() {
                                         _obj = revenueBlock;
                                         break;
                                 }
-                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey) || "NA");
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, values[key][ckey]) || "NA");
                             } else
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
@@ -367,6 +372,8 @@ $(document).ready(function() {
         if (workflow && workflow.length) {
             workflow = workflow.sort();
             for (var i = 0; i < workflow.length; i++) {
+                if(workflow[i].status == "Assistant Approved")
+                    rejectedSenderName = workflow[i].senderName;
                 $("#historyTable tbody").append(`<tr>
                     <td data-label="createdDate">${workflow[i].createdDate}</td>
                     <td data-label="updatedBy">${workflow[i].senderName}</td>
@@ -383,15 +390,15 @@ $(document).ready(function() {
                 if (process.attributes.validActions.values[i].key)
                     $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "approve" || process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
-                    $("#workFlowDetails").remove();
+                    $(".workFlowDetails").remove();
                 }
                 if(process.attributes.validActions.values[i].key.toLowerCase() == "forward") {
                     flg = 1;
                 }
             }
 
-            if(flg == 0 && $("#workFlowDetails"))
-                $("#workFlowDetails").remove();
+            if(flg == 0 && $(".workFlowDetails"))
+                $(".workFlowDetails").remove();
         } else {
             $("#workFlowDetails").remove();
         }
@@ -440,40 +447,42 @@ $(document).ready(function() {
         $(".shopAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
-
-    } else if (_type.toLowerCase() == "shopping complex") {
+        setRentPrefix("Land");
+    } else if (_type.toLowerCase() == "shop") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateThree").remove();
-
+        setRentPrefix("Shop");
     } else if (_type.toLowerCase() == "market") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        setRentPrefix("Market");
     } else if (_type.toLowerCase() == "kalyana mandapam") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        setRentPrefix("Kalyana Mandapam");
     } else if (_type.toLowerCase() == "parking space") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-
+        setRentPrefix("Parking Space");
     } else if (_type.toLowerCase() == "slaughter house") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-
+        setRentPrefix("Slaughter House");
     } else if (_type.toLowerCase() == "usufruct") {
 
 
@@ -481,25 +490,30 @@ $(document).ready(function() {
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        $("#rrReadingNo").remove();
+        setRentPrefix("Usufruct");
     } else if (_type.toLowerCase() == "community toilet complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        setRentPrefix("Community Toilet Complex");
     } else if (_type.toLowerCase() == "fish tanks") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
+        setRentPrefix("Fish Tanks");
     } else if (_type.toLowerCase() == "parks") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
-    }
+        setRentPrefix("Parks");
+    }   
     final_validatin_rules = Object.assign(validation_rules, commom_fields_rules);
     for (var key in final_validatin_rules) {
         if (final_validatin_rules[key].required) {
@@ -534,19 +548,19 @@ $(document).ready(function() {
         _agrmntDet.workflowDetails = {
             "businessKey": process.businessKey,
             "type": process.businessKey,
-            "assignee": $("#approverPositionId") && $("#approverPositionId").val() ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
+            "assignee": $("#approverPositionId") && $("#approverPositionId").val() && (!data.action || (data.action && data.action.toLowerCase() != "reject")) ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
             "status": process.status,
             "action": data.action
         };
 
+        if(_agrmntDet.wFremarks) {
+            _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
+            delete _agrmntDet.wFremarks;
+        }
+
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
-            }
-
-            if(_agrmntDet.wFremarks) {
-                _agrmntDet["workflowDetails"]["remarks"] = _agrmntDet.wFremarks;
-                delete _agrmntDet.wFremarks;
             }
 
             var response = $.ajax({
@@ -566,7 +580,9 @@ $(document).ready(function() {
 
 
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "") + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
+                if(window.opener)
+                    window.opener.location.reload();
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + (data.action && data.action.toLowerCase() == "reject" ? (rejectedSenderName || "") : ($("#approverPositionId").val() ? getNameById(employees, $("#approverPositionId").val()) : "")) + "&ackNo=" + (data.action.toLowerCase() == "approve" ? response.responseJSON["Agreements"][0]["agreementNumber"] : response.responseJSON["Agreements"][0]["acknowledgementNumber"]) + "&action=" + data.action;
             } else {
                 showError(response["statusText"]);
             }
@@ -608,6 +624,9 @@ $(document).ready(function() {
                 });
 
                 if (response["status"] === 201) {
+                    if(window.opener)
+                        window.opener.location.reload();
+
                     printNotice(response["responseJSON"].Notices[0]);
                     // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
                 } else {
@@ -630,7 +649,7 @@ $(document).ready(function() {
               data: JSON.stringify({
                   RequestInfo: requestInfo,
                   Agreement: agreementDetails
-              }), 
+              }),
               async: false,
               headers: {
                   'auth-token': authToken

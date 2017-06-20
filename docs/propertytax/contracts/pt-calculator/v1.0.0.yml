@@ -25,7 +25,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/property/v1'
+basePath: '/properties/taxes/v1'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
@@ -61,7 +61,7 @@ paths:
       tags:
         - Calculation  
 
-  /calculationFactor/_search:
+  /factor/_search:
   ######################################################
   # Will be synchronous.
   # tenantId should be passed in query param.
@@ -106,7 +106,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /calculationFactor/_create:
+  /factor/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -142,7 +142,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /calculationFactor/_update:
+  /factor/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -179,7 +179,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /guidanceValue/_search:
+  /guidancevalue/_search:
   ######################################################
   # Will be synchronous.
   # tenantId should be passed in query param.
@@ -244,7 +244,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /guidanceValue/_create:
+  /guidancevalue/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -280,7 +280,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /guidanceValue/_update:
+  /guidancevalue/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -317,7 +317,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /taxRates/_search:
+  /taxrates/_search:
   ######################################################
   # Will be synchronous.
   # tenantId should be passed in query param.
@@ -342,7 +342,7 @@ paths:
           required: true
           type: string
           format: date
-        - name: dependentTaxHead
+        - name: parentTaxHead
           in: query
           description: Dependent Tax head for which Tax Rate to be returned.
           required: false
@@ -362,7 +362,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /taxRates/_create:
+  /taxrates/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -398,7 +398,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /taxRates/_update:
+  /taxrates/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -435,7 +435,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /taxPeriods/_search:
+  /taxperiods/_search:
   ######################################################
   # Will be synchronous.
   # tenantId should be passed in query param.
@@ -475,7 +475,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /taxPeriods/_create:
+  /taxperiods/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -511,7 +511,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /taxPeriods/_update:
+  /taxperiods/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -594,6 +594,11 @@ definitions:
         type: number
         format: double
         description: Total tax for the unit.
+      headWiseTaxes:
+        description: Head wise taxes
+        type: array
+        items:
+          $ref: "#/definitions/HeadWiseTax"
     required:
     - occupancyDate
     - effectiveDate
@@ -662,15 +667,9 @@ definitions:
         description: The subUsage for which this Guidance value is.
       unitTaxes:
         $ref: "#/definitions/CommonTaxDetails"
-      taxHeads:
-        description: Unit Taxes
-        type: array
-        items:
-          $ref: "#/definitions/HeadWiseTax"
     required:
     - assessableArea
     - unitTaxes
-    - taxHeads
         
   HeadWiseTax:
     type: object
@@ -698,9 +697,9 @@ definitions:
       property:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/Property'
       taxEffectiveDate:
-        type: string
-        format: date
-        description: The tax effective date has to be provided in floor/unit info which is part of 'Property'. There will be tax rule changes due to GO across the city, that time this property value is mandatory. If this value is sent calculator will not read from floor/unit otherwise will be taken from floor/unit.
+        type: integer
+        format: int64
+        description: The tax effective date (time in epoch) has to be provided in floor/unit info which is part of 'Property'. There will be tax rule changes due to GO across the city, that time this property value is mandatory. If this value is sent calculator will not read from floor/unit otherwise will be taken from floor/unit.
       calculationType:
         type: string
         description: Type of calculation
@@ -708,10 +707,19 @@ definitions:
          - ARV
          - CVS
          - UAS
+      taxPeriod:
+        type: string
+        description: Tax to be calculated for which type of period
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
     required:
       - requestInfo
       - property
       - calculationType
+      - taxPeriod
       
   CalculationResponse:
     description: Contract class to send response.
@@ -726,14 +734,18 @@ definitions:
   CalculationFactor:
     type: object
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the GuidanceValue
       tenantId:
         type: string
-        description: tenant id of the OccuapancyFactor
+        description: tenant id of the CalculationFactor
         maxLength: 128
         minLength: 4
-      code:
+      factorCode:
         type: string
-        description: code of the OccuapancyFactor
+        description: code for the respctive type of the factor from property master.
         maxLength: 16
         minLength: 4
       factorType:
@@ -752,18 +764,22 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: Factor value effective date.
+        description: Factor value effective date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: Factor value end date.
+        description: Factor value end date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
+    - id
     - tenantId
-    - code
+    - factorCode
     - factorType
     - factorValue
+    - fromDate
+    - toDate
+
     
   CalculationFactorRequest:
     properties:
@@ -792,6 +808,10 @@ definitions:
     type: object
     description: Guidance Value
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the GuidanceValue
       tenantId:
         type: string
         description: tenant id of the GuidanceValue
@@ -834,16 +854,19 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: Guidance value effective date.
+        description: Guidance value effective date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: Guidance value end date.
+        description: Guidance value end date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
+    - id
     - tenantId
     - boundary
+    - fromDate
+    - toDate
     - value
     
   GuidanceValueRequest:
@@ -872,6 +895,15 @@ definitions:
   TaxRates:
     type: object
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the TaxRates
+      tenantId:
+        type: string
+        description: tenant id of the GuidanceValue
+        maxLength: 128
+        minLength: 4
       taxHead:
         type: string
         description: The tax head code for which the tax rates are defined.
@@ -881,18 +913,18 @@ definitions:
       fromDate:
         type: string
         format: date
-        description: start date from when the tax rate is applicable
+        description: start date from when the tax rate is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: start date from when the tax rate is applicable
+        description: start date from when the tax rate is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       fromValue:
-        type: string
-        format: date
+        type: number
+        format: double
         description: from ARV amount from which the tax rate is applicable
       toValue:
-        type: string
-        format: date
+        type: number
+        format: double
         description: to ARV amount to which the tax rate is applicable
       ratePercentage:
         type: number
@@ -903,6 +935,8 @@ definitions:
         format: double
         description: for some ARV ranges there might not be percentages, the flat amounts will be defined.
     required:
+      - id
+      - tenantId
       - taxHead
       - fromDate
       - toDate
@@ -936,14 +970,23 @@ definitions:
     type: object
     description: A object holds a tax periods.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the TaxRates
+      tenantId:
+        type: string
+        description: tenant id of the GuidanceValue
+        maxLength: 128
+        minLength: 4
       fromDate:
         type: string
         format: date
-        description: Start date for tax period
+        description: Start date for tax period. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       toDate:
         type: string
         format: date
-        description: End date for tax period
+        description: End date for tax period. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       code:
         type: string
         description: representation of a tax period.
@@ -964,13 +1007,8 @@ definitions:
         minLength: 4
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      tenantId:
-        type: string
-        readOnly: true
-        description: Unique Identifier of the tenant 
-        maxLength: 128
-        minLength: 4
     required:
+      - id
       - fromDate
       - toDate
       - code

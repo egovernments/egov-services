@@ -1,9 +1,8 @@
 package org.egov.eis.service.exception;
 
+import lombok.Getter;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
-
-import lombok.Getter;
 
 public class UserException extends RuntimeException {
 

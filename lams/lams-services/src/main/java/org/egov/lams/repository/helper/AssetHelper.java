@@ -21,7 +21,7 @@ public class AssetHelper {
 		if (assetCriteria.getAssetCategory() == null && assetCriteria.getElectionWard() == null
 				&& assetCriteria.getRevenueWard() == null && assetCriteria.getAsset() == null
 				&& assetCriteria.getLocality() == null && assetCriteria.getAssetCode() == null
-				&& assetCriteria.getDoorno() == null) {
+				&& assetCriteria.getDoorNo() == null) {
 			// this if condition is not entered in geneal from search agreements
 			throw new RuntimeException("All search criteria for asset details are null");
 		}
@@ -59,9 +59,9 @@ public class AssetHelper {
 			assetParams.append("tenantId=" + assetCriteria.getTenantId());
 		}
 
-		if (assetCriteria.getDoorno() != null) {
+		if (assetCriteria.getDoorNo() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
-			assetParams.append("doorno="+ assetCriteria.getDoorno());
+			assetParams.append("doorno="+ assetCriteria.getDoorNo());
 		}
 		
 		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);

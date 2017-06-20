@@ -40,15 +40,10 @@
 
 package org.egov.eis.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.Employee;
 import org.egov.eis.model.User;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.UserSearchURLHelper;
@@ -62,9 +57,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.List;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class UserService {
@@ -82,7 +79,7 @@ public class UserService {
 
 	public List<User> getUsers(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(employeeCriteria.getId(), employeeCriteria.getTenantId());
-		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
 
 		UserGetRequest userGetRequest = getUserGetRequest(employeeCriteria, requestInfo);
 		LOGGER.debug("UserGetRequest : " + userGetRequest);
@@ -97,7 +94,7 @@ public class UserService {
 			e.printStackTrace();
 		}
 		
-		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
 		LOGGER.debug("UserResponse : " + users);
 
 		return users;
@@ -108,7 +105,7 @@ public class UserService {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
-		LOGGER.info("\n\n\n\n\n" + "User create url : " + url);
+		LOGGER.debug("\n\n\n\n\n" + "User create url : " + url);
 		LOGGER.debug("UserRequest : " + userRequest);
 
 		UserResponse userResponse = null;
@@ -139,7 +136,7 @@ public class UserService {
 			throw new UserException(null, userRequest.getRequestInfo());
 		}
 		
-		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
 		LOGGER.debug("UserResponse : " + userResponse);
 
 		return userResponse;
@@ -149,7 +146,7 @@ public class UserService {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ getUserUpdatePath(userId);
 
-		LOGGER.info("\n\n\n\n\n" + "User update url : " + url);
+		LOGGER.debug("\n\n\n\n\n" + "User update url : " + url);
 		LOGGER.debug("UserRequest : " + userRequest);
 
 		UserResponse userResponse = null;
@@ -180,7 +177,7 @@ public class UserService {
 			throw new UserException(null, userRequest.getRequestInfo());
 		}
 		
-		LOGGER.info("\n\n\n\n\n" + "User search url : " + url);
+		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
 		LOGGER.debug("UserResponse : " + userResponse);
 
 		return userResponse;
@@ -195,12 +192,14 @@ public class UserService {
 		UserGetRequest userGetRequest = new UserGetRequest();
 
 		userGetRequest.setId(employeeCriteria.getId());
-		userGetRequest.setPageSize(employeeCriteria.getId().size());
 		userGetRequest.setRoleCodes(employeeCriteria.getRoleCodes());
 		userGetRequest.setTenantId(employeeCriteria.getTenantId());
 		userGetRequest.setPageNumber(employeeCriteria.getPageNumber());
 		userGetRequest.setRequestInfo(requestInfo);
 
+		if(!isEmpty(employeeCriteria.getId())) {
+			userGetRequest.setPageSize(employeeCriteria.getId().size());
+		}
 		if (!isEmpty(userGetRequest.getRoleCodes())) {
 			userGetRequest.getRoleCodes().add("EMPLOYEE");
 			userGetRequest.setPageSize(500);

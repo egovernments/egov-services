@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.pgr.model.ReceivingModeType;
-import org.egov.pgr.repository.builder.ReceivingCenterTypeQueryBuilder;
 import org.egov.pgr.repository.builder.ReceivingModeTypeQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ReceivingModeTypeRowMapper;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
@@ -75,8 +74,8 @@ public class ReceivingModeTypeRepository {
 		LOGGER.info("ReceivingModeType Create Request::" + modeTypeRequest);
 		final String receivingModeTypeInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeTypeQuery();
 		final ReceivingModeType modeType = modeTypeRequest.getModeType();
-		final Object[] obj = new Object[] { modeType.getCode(), modeType.getName(), modeType.getDescription(),
-				modeType.getActive(), modeType.getVisible(),
+		final Object[] obj = new Object[] {modeType.getCode(), modeType.getName(), modeType.getDescription(),
+				modeType.getActive(),modeType.getChannel(),
 				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
 				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
@@ -89,8 +88,8 @@ public class ReceivingModeTypeRepository {
 		LOGGER.info("ReceivingModeType Update Request::" + modeTypeRequest);
 		final String receivingCenterTypeUpdate = ReceivingModeTypeQueryBuilder.updateReceivingModeTypeQuery();
 		final ReceivingModeType modeType = modeTypeRequest.getModeType();
-		final Object[] obj = new Object[] {modeType.getCode(), modeType.getName(), modeType.getDescription(), modeType.getActive(),modeType.getVisible(),
-				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()), modeType.getId() };
+		final Object[] obj = new Object[] {modeType.getName(), modeType.getDescription(),modeType.getChannel(),modeType.getActive(),
+				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()), modeType.getCode() };
 		jdbcTemplate.update(receivingCenterTypeUpdate, obj);
 		return modeTypeRequest;
 

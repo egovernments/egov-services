@@ -33,62 +33,74 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssetCategoryController.class)
 public class AssetCategoryControllerTest {
-	
+
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
-	private AssetCategoryService  assetCategoryService;
-	
+	private AssetCategoryService assetCategoryService;
+
 	@MockBean
 	private ApplicationProperties applicationProperties;
-	
+
 	@MockBean
 	private AssetCategoryValidator assetCategoryValidator;
 
 	@Test
-	public void test_Should_Search_AssetCategory() throws Exception{
-		
+	public void test_Should_Search_AssetCategory() throws Exception {
+
 		List<AssetCategory> assetCategories = new ArrayList<>();
 		assetCategories.add(getAssetCategory());
-		
-		when(assetCategoryService.search(any(AssetCategoryCriteria.class))).thenReturn(assetCategories); 
 
-		mockMvc.perform(post("/assetCategories/_search")
-	        		.param("tenantId", "ap.kurnool")
-	                .contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("requestinfowrapper.json")))
-	                .andExpect(status().isOk())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("assetcategorysearchresponse.json")));
+		when(assetCategoryService.search(any(AssetCategoryCriteria.class))).thenReturn(assetCategories);
+
+		mockMvc.perform(post("/assetCategories/_search").param("tenantId", "ap.kurnool")
+				.contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
+				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("assetcategorysearchresponse.json")));
 	}
-	
+
 	@Test
-	public void test_Should_Create_AssetCategory() throws Exception{
-		
+	public void test_Should_Create_AssetCategory() throws Exception {
+
 		List<AssetCategory> assetCategories = new ArrayList<>();
 		assetCategories.add(getAssetCategory());
 		AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
 		assetCategoryResponse.setAssetCategory(assetCategories);
 		assetCategoryResponse.setResponseInfo(new ResponseInfo());
-		
-		when(assetCategoryService.createAsync(any(AssetCategoryRequest.class))).thenReturn(assetCategoryResponse); 
+
+		when(assetCategoryService.createAsync(any(AssetCategoryRequest.class))).thenReturn(assetCategoryResponse);
 		when(applicationProperties.getAssetCategoryAsync()).thenReturn(true);
 
-		mockMvc.perform(post("/assetCategories/_create")
-	                .contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("assetcategorycreaterequest.json")))
-	                .andExpect(status().isCreated())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("assetcategorysearchresponse.json")));
+		mockMvc.perform(post("/assetCategories/_create").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("assetcategorycreaterequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("assetcategorysearchresponse.json")));
+	}
+
+	@Test
+	public void test_Should_Update_AssetCategory() throws Exception {
+
+		List<AssetCategory> assetCategories = new ArrayList<>();
+		assetCategories.add(getUpdateAssetCategory());
+		AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
+		assetCategoryResponse.setAssetCategory(assetCategories);
+
+		when(assetCategoryService.updateAsync(any(AssetCategoryRequest.class))).thenReturn(assetCategoryResponse);
+		// when(applicationProperties.getUpdateAssetCategoryTopicName()).thenReturn("");
+
+		mockMvc.perform(post("/assetCategories/2/_update").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("assetcategoryupdaterequest.json"))).andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("assetcategoryupdateresponse.json")));
 	}
 
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);
 	}
-	
+
 	private AssetCategory getAssetCategory() {
-		
+
 		AssetCategory assetCategory = new AssetCategory();
 		assetCategory.setTenantId("ap.kurnool");
 		assetCategory.setVersion("v1");
@@ -97,7 +109,29 @@ public class AssetCategoryControllerTest {
 		assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
 		assetCategory.setIsAssetAllow(true);
 		assetCategory.setAssetAccount(2l);
-		
+
+		return assetCategory;
+	}
+
+	private AssetCategory getUpdateAssetCategory() {
+
+		AssetCategory assetCategory = new AssetCategory();
+		assetCategory.setTenantId("ap.kurnool");
+		assetCategory.setId(2L);
+		assetCategory.setName("assetcategory3");
+		assetCategory.setCode("2");
+		assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
+		assetCategory.setParent(2L);
+		assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
+		assetCategory.setIsAssetAllow(true);
+		assetCategory.setAssetAccount(2l);
+		assetCategory.setAccumulatedDepreciationAccount(2L);
+		assetCategory.setRevaluationReserveAccount(5L);
+		assetCategory.setDepreciationExpenseAccount(3L);
+		assetCategory.setUnitOfMeasurement(10L);
+		assetCategory.setVersion("v1");
+		assetCategory.setDepreciationRate(null);
+
 		return assetCategory;
 	}
 

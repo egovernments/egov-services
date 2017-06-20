@@ -1,37 +1,38 @@
 title Bill Based Collection
 
-Client->+BillingSvc: Search Bill
+Client->+BillingSvc: Search Demand & Create Bill
 note over Client,BillingSvc
     Validate search request and 
     prepare bill response
 end note
 BillingSvc->-Client: Demand/Bill Response
 
-
-Client->+ReceiptSvc: Get collection modes allowed
+Client->+ReceiptSvc: Get collection modes allowed and bank List
 note over Client,ReceiptSvc
     Get the collection modes allowed
-    for the logged in user.
+    for the logged in user and the list 
+    of bank from financial Service.
 end note
-ReceiptSvc->-Client: Response apportioned receipt details list.
-
-Client->+FinancialSvc: Get bank list
-note over Client,FinancialSvc
+ReceiptSvc->+FinancialSvc: Get bank list
+note over ReceiptSvc,FinancialSvc
     Get the list of bank for Cheque/DD
     payments.
 end note
-FinancialSvc->-Client: Bank list reponse.
+FinancialSvc->-ReceiptSvc: Bank list response.
+ReceiptSvc->-Client: Response with Collection modes allowed and bank list.
 
 Client->+ReceiptSvc: Submit payment request
-note over Client,ReceiptSvc
-    Apportion the paid amount by invoking
-    BillingSvc, create receipt
-end note
 ReceiptSvc->ReceiptSvc: Validate payment request
+ReceiptSvc->BillingSvc: Get the  apportioned receipt details list.
+note over BillingSvc,ReceiptSvc
+    Apportion the paid amount by invoking
+    BillingSvc 
+end note
+BillingSvc->ReceiptSvc : Response apportioned receipt details list.
 ReceiptSvc->IDGenSvc: Generate receipt number
-ReceiptSvc->ReceiptSvc: Persist receipt
 ReceiptSvc->+KafkaQSvc: Queue for further processing
 ReceiptSvc->-Client: Create receipt response
+KafkaQSvc->ReceiptSvc: Persist receipt
 
 KafkaQSvc->WorkflowSvc: Initiate workflow
 KafkaQSvc->VoucherSvc: Post voucher in financials

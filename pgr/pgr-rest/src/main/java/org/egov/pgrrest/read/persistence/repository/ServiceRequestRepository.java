@@ -36,10 +36,6 @@ public class ServiceRequestRepository {
         this.serviceRequestMessageQueueRepository.save(sevaRequest);
     }
 
-    public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return submissionRepository.find(serviceRequestSearchCriteria);
-    }
-
     public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
         final List<String> serviceRequestIds = serviceRequestESRepository.getMatchingServiceRequestIds(searchCriteria);
         if(CollectionUtils.isEmpty(serviceRequestIds)) {

@@ -41,13 +41,9 @@
 package org.egov.eis.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -57,6 +53,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class RequestInfoWrapper {
 
+	@NotNull
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 

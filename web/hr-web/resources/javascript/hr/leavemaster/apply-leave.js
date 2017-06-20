@@ -55,22 +55,26 @@ class ApplyLeave extends React.Component {
 
       if(type === "view") {
         getCommonMasterById("hr-leave","leaveapplications", id, function(err, res) {
-          if(res) {
-            _leaveSet = res.LeaveApplication[0];
+          if(res && res.LeaveApplication && res.LeaveApplication[0]) {
+            _leaveSet = res && res.LeaveApplication && res.LeaveApplication[0];
             commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,
                 id: _leaveSet.employee
             }, function(err, res1)  {
-              if(res1) {
-                employee = res1.Employee[0];
+              if(res1 && res1.Employee && res1.Employee[0]) {
+                employee = res1 && res1.Employee && res1.Employee[0];
                 _leaveSet.name = employee.name;
                 _leaveSet.code = employee.code;
                 _this.setState({
                    leaveSet: _leaveSet,
                    leaveNumber: _leaveSet.applicationNumber
                 })
+              } else {
+                showError("Something went wrong. Please contact Administrator.");
               }
             })
+          } else {
+            showError("Something went wrong. Please contact Administrator.");
           }
         });
       } else {
@@ -195,7 +199,7 @@ class ApplyLeave extends React.Component {
 
         if(!id) {
           commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId},function(err, res) {
-            if(res) {
+            if(res && res.Employee && res.Employee[0]) {
               var obj = res.Employee[0];
               _this.setState({
                 leaveSet:{
@@ -206,6 +210,8 @@ class ApplyLeave extends React.Component {
                   },
                  departmentId: _this.getPrimaryAssigmentDep(obj,"department")
               })
+            } else {
+              showError("Something went wrong. Please contact Administrator.");
             }
           });
         } else {
@@ -325,7 +331,7 @@ addOrUpdate(e, mode) {
         e.preventDefault();
         var _this = this;
 
-        if(_this.state.availableDays<=0){
+          if(_this.state.leaveSet.availableDays<=0 && _this.state.leaveSet.availableDays==""){
           return (showError("You do not have leave for this leave type."));
         }
         var employee;

@@ -439,7 +439,7 @@ public class PropertyMasterController {
 	 */
 
 
-	@RequestMapping(path="/walltypemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/walltypes/_search",method=RequestMethod.POST)
 	public WallTypeResponse getWallTypeMaster(@RequestBody RequestInfoWrapper requestInfo ,
 			@RequestParam(required=true) String tenantId,
 			@RequestParam(required=false) Integer[] ids,
@@ -500,18 +500,20 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path="/usagemaster/_search",method=RequestMethod.POST)
+	@RequestMapping(path="/usages/_search",method=RequestMethod.POST)
 	public UsageMasterResponse getUsageMaster(@RequestBody RequestInfoWrapper requestInfo ,
 			@RequestParam(required=true) String tenantId,
 			@RequestParam(required=false) Integer[] ids,
-			@RequestParam(required=false) String category,
 			@RequestParam(required=false) String name,
 			@RequestParam(required=false) String code,
 			@RequestParam(required=false) String nameLocal,
+			@RequestParam(required=false) Boolean active,
+			@RequestParam(required=false) Boolean isResidential,
+			@RequestParam(required=false) Integer orderNumber,
 			@RequestParam(required=false) Integer pageSize,
 			@RequestParam(required=false) Integer offSet) throws Exception {
 
-		return	masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, pageSize, offSet);
+		return	masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, active, isResidential, orderNumber, pageSize, offSet);
 
 	}
 

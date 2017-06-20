@@ -34,6 +34,15 @@ public class AgreementApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AgreementApplication.class, args);
 	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper(){
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		return objectMapper;
+	}
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {

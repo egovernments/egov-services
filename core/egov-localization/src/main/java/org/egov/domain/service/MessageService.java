@@ -1,14 +1,19 @@
 package org.egov.domain.service;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class MessageService {
@@ -97,5 +102,23 @@ public class MessageService {
         messageCacheRepository.cacheMessages(locale, tenant, messages);
         return messages;
     }
-
+    
+    public boolean createMessage(String locale, String tenantId, List<Message> messageList){
+    	messageRepository.deleteMessages(locale, tenantId, messageList);
+   		boolean createStatus = messageRepository.createMessage(locale, tenantId, messageList);
+   		if(createStatus){
+   			return true;
+   		}
+   		return false; 
+    }
+    
+    public boolean deleteMessage(String locale, String tenantId, List<Message> messageList){
+    	boolean deleteStatus = messageRepository.deleteMessages(locale, tenantId, messageList);
+    	if(deleteStatus){
+    		return true;
+    	}
+    	return false;     	
+    }
+    
+    
 }

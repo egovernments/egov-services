@@ -380,4 +380,28 @@ public class ServiceRequestTest {
             .type(UserType.EMPLOYEE)
             .build();
     }
+
+   @Test(expected = InvalidComplaintException.class)
+         public void testShouldFailIfEmailIdIsInavalidFormat() {
+            final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
+               .coordinates(new Coordinates(1.1, 2.2))
+               .build();
+           final Requester complainant = Requester.builder()
+               .mobile("mobile number")
+               .email("email@gmail.com")
+               .firstName("first name")
+               .build();
+           ServiceRequest complaint = ServiceRequest.builder()
+               .requester(complainant)
+               .tenantId("tenantId")
+               .description(null)
+               .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+               .serviceRequestLocation(serviceRequestLocation)
+               .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+               .attributeEntries(new ArrayList<AttributeEntry>())
+               .build();
+
+           assertTrue(complaint.emailValidate());
+           complaint.validate();
+       }
 }

@@ -29,7 +29,7 @@ class Header extends Component {
     return (
       <div className="Header">
             <AppBar
-              title="Create New Function"
+              title="Financials"
               iconElementLeft={<Logo />}
               iconElementRight={<RightIcon/>}
             />

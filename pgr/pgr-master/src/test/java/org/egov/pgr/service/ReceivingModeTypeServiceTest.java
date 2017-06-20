@@ -109,7 +109,6 @@ public class ReceivingModeTypeServiceTest {
         receivingModeType.setName("New receivingMode Name");
         receivingModeType.setDescription("receivingMode Name Description");
         receivingModeType.setActive(true);
-        receivingModeType.setVisible(true);
         return receivingModeType;
     }
 

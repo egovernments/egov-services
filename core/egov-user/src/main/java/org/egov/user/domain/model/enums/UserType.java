@@ -41,5 +41,5 @@
 package org.egov.user.domain.model.enums;
 
 public enum UserType {
-    CITIZEN, EMPLOYEE, SYSTEM;
+    CITIZEN, EMPLOYEE, SYSTEM, BUSINESS;
 }

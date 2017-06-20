@@ -120,7 +120,7 @@ public class EscalationTimeTypeController {
 
 	}
 	
-	@PostMapping(value = "/_update/{id}")
+	@PostMapping(value = "/{id}/_update/")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,
 			@PathVariable("id") final long id, final BindingResult errors) {

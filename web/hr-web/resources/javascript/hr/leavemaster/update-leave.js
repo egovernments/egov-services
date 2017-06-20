@@ -73,21 +73,23 @@ class UpdateLeave extends React.Component {
     })
 
     commonApiPost("hr-leave","leaveapplications", "_search", {tenantId, stateId}, function(err, res) {
-      if(res) {
+      if(res && res.LeaveApplication && res.LeaveApplication[0]) {
         _leaveSet = res.LeaveApplication[0];
         commonApiPost("hr-masters", "hrstatuses","_search",{tenantId, id:_leaveSet.status},function(err, res2){
-          if(res2){
+          if(res2 && res2.HRStatus && res2.HRStatus[0]){
             var _status = res2.HRStatus[0];
             if(_status.code!="REJECTED") {
               $("input,select,textarea").prop("disabled", true);
             }
+          } else {
+            showError("Something went wrong please contact Administrator");
           }
         });
         commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
             id: _leaveSet.employee
         }, function(err, res1)  {
-          if(res1) {
+          if(res1 && res1.Employee && res1.Employee[0]) {
             employee = res1.Employee[0];
             _leaveSet.name = employee.name;
             _leaveSet.code = employee.code;
@@ -97,8 +99,13 @@ class UpdateLeave extends React.Component {
                departmentId: _this.getPrimaryAssigmentDep(employee,"department"),
                employeeid:employee.id
             })
+          } else {
+            showError("Something went wrong please contact Administrator");
           }
         });
+      }
+      else {
+        showError("Something went wrong please contact Administrator");
       }
     });
 

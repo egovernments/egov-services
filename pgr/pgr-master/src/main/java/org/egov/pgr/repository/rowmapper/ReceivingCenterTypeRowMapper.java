@@ -55,7 +55,6 @@ public class ReceivingCenterTypeRowMapper implements RowMapper<ReceivingCenterTy
 		centerType.setCode(rs.getString("code"));
 		centerType.setName(rs.getString("name"));
 		centerType.setDescription(rs.getString("description"));
-		centerType.setActive(rs.getBoolean("active"));
 		centerType.setTenantId(rs.getString("tenantId"));
 		centerType.setActive(rs.getBoolean("active"));
 		centerType.setIscrnrequired(rs.getBoolean("iscrnrequired"));

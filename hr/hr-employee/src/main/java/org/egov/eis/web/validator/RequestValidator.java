@@ -65,10 +65,10 @@ public class RequestValidator {
 			BindingResult requestBodyBindingResult) {
 		// validate input params
 		if (modelAttributeBindingResult != null && modelAttributeBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+			return errHandler.getErrorResponseEntityForInvalidRequest(modelAttributeBindingResult, requestInfo);
 		}
 		if (requestBodyBindingResult != null && requestBodyBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+			return errHandler.getErrorResponseEntityForInvalidRequest(requestBodyBindingResult, requestInfo);
 		}
 		return null;
 	}

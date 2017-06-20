@@ -51,6 +51,7 @@ import org.egov.egf.persistence.queue.contract.BankContract;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,8 +62,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "egf_bank")
+@Builder
 @SequenceGenerator(name = Bank.SEQ_BANK, sequenceName = Bank.SEQ_BANK, allocationSize = 1)
-
 public class Bank extends AbstractAuditable {
 
 	private static final long serialVersionUID = -2839424467289504649L;

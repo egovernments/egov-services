@@ -434,13 +434,13 @@ paths:
             schema:
               $ref: '#/definitions/Error'  
               
-     # receiving mode API
-    /source/_create:
+    # OTP Configuration API
+    /receivingmode/_create:
       post:
-        summary: create source
-        description: create source
+        summary: create receiving mode
+        description: create receiving mode
         tags:
-          - Source
+          - ReceivingMode
         parameters:
           - name: Receiving Mode
             in: body
@@ -462,13 +462,19 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     
-    /source/_update:
+    /receivingmode/{id}/_update:
       post:
-        summary: update source
-        description: update source
+        summary: update receiving mode
+        description: update receiving mode
         tags:
-          - Source
+          - ReceivingMode
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
           - name: Receiving Mode
             in: body
             description: required parameters have to be populated
@@ -489,11 +495,11 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
 
-    /source/_search:
+    /receivingmode/_search:
       post:
-        summary: searches sources
+        summary: searches receving mode
         tags:
-          - Source
+          - ReceivingMode
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -513,12 +519,12 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
     # receiving center API
-    /channel/_create:
+    /receivingcenter/_create:
       post:
-        summary: creates channel
-        description: creates channel
+        summary: creates receiving center
+        description: creates receiving center
         tags:
-          - channel
+          - ReceivingCenter
         parameters:
           - name: Receiving Center
             in: body
@@ -540,13 +546,19 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # receiving center API
-    /channel/_update:
+    /receivingcenter/{id}/_update:
       post:
-        summary: update channel
-        description: update channel
+        summary: update receiving center
+        description: update receiving center
         tags:
-          - channel
+          - ReceivingCenter
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
           - name: Receiving Center
             in: body
             description: required parameters have to be populated
@@ -567,11 +579,11 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /channel/_search:
+    /receivingcenter/_search:
       post:
-        summary: searches channels
+        summary: searches receiving center
         tags:
-          - channel
+          - ReceivingCenter
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -618,13 +630,20 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Bulk Router Type API
-    /router/_update:
+    /router/{id}/_update:
       post:
         summary: updates router
         description: updates router
         tags:
           - router
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
+            
           - name: Router
             in: body
             description: required parameters have to be populated
@@ -695,13 +714,20 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Escalation Time Type API
-    /escalation/_update:
+    /escalation/{id}/_update:
       post:
         summary: updates escalation time type
         description: updates escalation time type
         tags:
           - escalation
         parameters:
+          - name: id
+            in: path
+            description: escalation id.
+            required: true
+            type: number
+            format: int64
+            
           - name: Update Escalation
             in: body
             description: required parameters have to be populated
@@ -738,6 +764,84 @@ paths:
             description: Successful response
             schema:
               $ref: '#/definitions/EscalationTimeTypeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+         # receiving mode API
+    /OTPConfig/_create:
+      post:
+        summary: create OTP Configuration entry
+        description: create OTP Configuration
+        tags:
+          - OTPConfig
+        parameters:
+          - name: OTPConfig
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/OTPConfigReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/OTPConfigRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /OTPConfig/{tenantid}/_update:
+      post:
+        summary: update OTP Configuration entry
+        description: update OTP Configuration
+        tags:
+          - OTPConfig
+        parameters:
+          - name: tenantid
+            in: path
+            description: Tenant's ID.
+            required: true
+            type: string
+          - name: OTPConfig
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/OTPConfigReq'
+        responses:
+          '201':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/OTPConfigRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          '404':
+            description: tenantId provided was not found
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+
+    /OTPConfig/_search:
+      post:
+        summary: searches OTP Configurations
+        tags:
+          - OTPConfig
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/OTPConfigRes'
           400:
             description: Invalid input
             schema:
@@ -1213,14 +1317,18 @@ definitions:
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-        visible:
-          type: boolean
-          description: flag for visibility 
+        channel:
+          type: string
+          description: channel for identification to show in ui. 
+          enum:
+            - WEB
+            - MOBILE
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
         - name
+        - channel
         - tenantId
         
   #Receiving Code Definitions
@@ -1265,16 +1373,21 @@ definitions:
           type: string
           description: human readable description should be assigned by user.
           maxLength: 100
+        orderno: 
+          type: integer
+          format: int64
+          description: orderno for sorting purpous..
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
+        iscrnrequired:
+          type: boolean
+          format: varchar
+          description: TRUE for to generate the crn number and FALSE for not generate the crn number.  
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-        visible:
-          type: boolean
-          description: flag for visibility 
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1332,17 +1445,50 @@ definitions:
         - grievancetype
         - boundary
         - position
-        - tenantId    
-    
-
+        - tenantId 
+        
+  OTPConfig:
+      type: object
+      properties:
+        tenantId:
+         type: string 
+         description : Unique Identifier of the tenant.
+        otpEnabledForAnonymousComplaint:
+          type: boolean
+          description : Boolean identifier to confirm the enabled status.
+      required:
+        - tenantId
+        - otpEnabledForAnonymousComplaint
         
   BoundaryIdType:
       type: object
       properties:
         boundarytype:
           type: integer
-          description: boundary id.  
+          description: boundary id. 
+          
+  OTPConfigReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        otpConfig:
+          $ref: '#/definitions/OTPConfig'
+      required:
+        - RequestInfo
+        - otpConfig
     
+  OTPConfigRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        otgConfigs:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/OTPConfig'
+  
     
     #Escalation Time Definitions
   EscalationTimeTypeReq:

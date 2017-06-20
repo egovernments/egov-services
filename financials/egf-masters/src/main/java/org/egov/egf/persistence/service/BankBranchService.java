@@ -5,9 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.egov.egf.domain.exception.InvalidDataException;
 import org.egov.egf.json.ObjectMapperFactory;
 import org.egov.egf.persistence.entity.Bank;
@@ -35,20 +32,17 @@ public class BankBranchService {
 	private final BankBranchRepository bankBranchRepository;
 	private final BankBranchQueueRepository bankBranchQueueRepository;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	@Autowired
 	private SmartValidator validator;
 
-	@Autowired
 	private BankService bankService;
 
 	@Autowired
 	public BankBranchService(final BankBranchRepository bankBranchRepository,
-			BankBranchQueueRepository bankBranchQueueRepository) {
+			BankBranchQueueRepository bankBranchQueueRepository,BankService bankService,SmartValidator validator) {
 		this.bankBranchRepository = bankBranchRepository;
 		this.bankBranchQueueRepository = bankBranchQueueRepository;
+		this.bankService = bankService;
+		this.validator = validator;
 	}
 
 	public void push(final BankBranchContractRequest bankBranchContractRequest) {
@@ -106,7 +100,7 @@ public class BankBranchService {
 				}
 				break;
 			case "updateAll":
-				Assert.notNull(bankBranchContractRequest.getBankBranches(), "BankBranches to create must not be null");
+				Assert.notNull(bankBranchContractRequest.getBankBranches(), "BankBranches to update must not be null");
 				for (BankBranchContract b : bankBranchContractRequest.getBankBranches()) {
 					validator.validate(b, errors);
 				}
@@ -115,7 +109,7 @@ public class BankBranchService {
 				validator.validate(bankBranchContractRequest.getRequestInfo(), errors);
 			}
 		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
+			errors.addError(new ObjectError("Missing data ", e.getMessage()));
 		}
 		return errors;
 

@@ -115,7 +115,7 @@ public class CategoryTypeController {
 
     }
 
-    @PostMapping(value = "/_update/{code}")
+    @PostMapping(value = "/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final CategoryTypeRequest categoryRequest,
             final BindingResult errors, @PathVariable("code") final String code) {

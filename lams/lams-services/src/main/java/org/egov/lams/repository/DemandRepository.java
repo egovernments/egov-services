@@ -38,6 +38,9 @@ public class DemandRepository {
 	private static final Logger LOGGER = Logger.getLogger(DemandRepository.class);
 
 	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
 	private RestTemplate restTemplate;
 
 	@Autowired
@@ -45,6 +48,8 @@ public class DemandRepository {
 
 	@Autowired
 	DemandHelper demandHelper;
+	
+	
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
 
@@ -99,8 +104,7 @@ public class DemandRepository {
 			LOGGER.info("Following exception occurred: " + e.getResponseBodyAsString());
 			UserErrorResponse userErrorResponse = null;
 			try {
-				ObjectMapper mapper = new ObjectMapper();
-				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
 			} catch (JsonMappingException jme) {
 				LOGGER.error(
 						"Exception Occurred While Mapping JSON Response From demand Service : " + jme.getMessage());

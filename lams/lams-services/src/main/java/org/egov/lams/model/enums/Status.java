@@ -5,7 +5,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Status {
 
-	ACTIVE("ACTIVE"), CANCELLED("CANCELLED"), EVICTED("EVICTED"), RENEWED("RENEWED"), WORKFLOW("WORKFLOW");
+	ACTIVE("ACTIVE"),
+	
+	REJECTED("REJECTED"),
+	
+	CANCELLED("CANCELLED"),
+	
+	EVICTED("EVICTED"),
+	
+	RENEWED("RENEWED"),
+	
+	WORKFLOW("WORKFLOW");
 
 	private String value;
 

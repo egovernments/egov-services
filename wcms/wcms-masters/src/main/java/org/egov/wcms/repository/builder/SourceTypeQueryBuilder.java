@@ -173,5 +173,10 @@ public class SourceTypeQueryBuilder {
     public static String selectWaterSourceByNameAndCodeNotInQuery() {
         return " select code from egwtr_water_source_type where name = ? and tenantId = ? and code != ? ";
     }
-
+    public static String selectSourceTypeByNameQuery() {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        selectQuery.append(" Where watersource.name = ?");
+        selectQuery.append(" AND watersource.tenantId = ?");
+        return selectQuery.toString();
+    }
 }

@@ -173,6 +173,7 @@ public class WorkflowRepository {
 			task.setStatus(workflowDetails.getStatus());
 			assignee.setId(workflowDetails.getAssignee());
 			task.setAssignee(assignee);
+			task.setComments(workflowDetails.getComments());
 		} else {
 
 			LOGGER.info("The workflow object before collection update ::: " + agreement.getWorkflowDetails());

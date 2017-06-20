@@ -73,8 +73,8 @@ public class ReceivingModeTypeGetReq {
 	private String description;
 
 	private Boolean active;
-
-	private Boolean visible;
+	
+	private String channel;
 
 	@NotNull
 	private String tenantId;

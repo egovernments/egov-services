@@ -222,7 +222,8 @@ public class BoundaryService {
 				"Administration", '%' + name + '%', tenantId).stream().forEach(location -> {
 					final Map<String, Object> res = new HashMap<>();
 					res.put("id", location.getId());
-					res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
+					res.put("name", location.getChild().getName() + " - " + location.getParent().getName()+" - "+ location.getChild().getParent().getName());
+					
 					list.add(res);
 				});
 		return list;

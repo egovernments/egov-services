@@ -1,0 +1,21 @@
+{
+    "floorTypes": [
+        {
+            "data": null,
+            "tenantId": "123",
+            "name": "Prasad",
+            "code": "Khan",
+            "nameLocal": null,
+            "description": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ],
+    "responseInfo": {
+      
+    }
+}

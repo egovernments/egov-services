@@ -114,7 +114,7 @@ public class PropertyTypeUsageTypeController {
         return getSuccessResponse(propUsageTypes, propUsageTypeRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/_update/{propertyUsageId}")
+    @PostMapping(value = "/{propertyUsageId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeUsageTypeReq propUsageTypeRequest,
             final BindingResult errors,

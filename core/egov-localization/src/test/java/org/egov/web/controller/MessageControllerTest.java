@@ -1,13 +1,23 @@
 package org.egov.web.controller;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.egov.TestConfiguration;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
-
-
-
+import org.egov.web.contract.NewMessagesRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +27,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MessageController.class)
@@ -91,6 +89,45 @@ public class MessageControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("mandatoryFieldsMissingErrorResponse.json")));
     }
+    
+    @Test
+	public void test_should_create_messages() throws Exception {
+		mockMvc.perform(post("/messages/_create").content(getFileContents("createNewMessageRequest.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isCreated())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("createNewMessageResponse.json")));
+		verify(messageService).createMessage(any(NewMessagesRequest.class));
+	}
+    
+    @Test
+	public void test_should_give_bad_request_message_when_mandatory_fields_not_available_create_messages() throws Exception {
+		mockMvc.perform(post("/messages/_create").content(getFileContents("createNewMessageRequestMissingMandatoryFields.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("createNewMessageRequestMissingMandatoryFieldsResponse.json")));
+	}
+    
+    @Test
+	public void test_should_update_messages() throws Exception {
+		mockMvc.perform(post("/messages/_update").content(getFileContents("createNewMessageRequest.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isCreated())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("createNewMessageResponse.json")));
+		verify(messageService).createMessage(any(NewMessagesRequest.class));
+	}
+    
+    @Test
+	public void test_should_give_bad_request_message_when_mandatory_fields_not_available_update_messages() throws Exception {
+		mockMvc.perform(post("/messages/_update").content(getFileContents("createNewMessageRequestMissingMandatoryFields.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("createNewMessageRequestMissingMandatoryFieldsResponse.json")));
+	}
+    
 
     private String getFileContents(String fileName) {
         try {

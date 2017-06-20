@@ -58,39 +58,11 @@ public class SevaRequestTest {
         assertEquals(Long.valueOf(9), serviceRequestRecord.getWorkflowStateId());
         assertEquals("ap.public", serviceRequestRecord.getTenantId());
         final List<AttributeEntry> actualAttributeEntries = serviceRequestRecord.getAttributeEntries();
-        assertEquals(9, actualAttributeEntries.size());
+        assertEquals(10, actualAttributeEntries.size());
     }
 
     private Date toDate(LocalDateTime localDateTime) {
         return new org.egov.pgr.common.date.Date(localDateTime).toDate();
-    }
-
-    @Test
-    public void test_should_set_complainant_user_id_to_null_for_anonymous_complaint() {
-        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
-        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get("RequestInfo");
-        final HashMap<String, Object> userInfo = (HashMap<String, Object>) requestInfo.get("userInfo");
-        userInfo.put("type", "SYSTEM");
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-
-        final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
-
-        assertNotNull(serviceRequestRecord);
-        assertNull(serviceRequestRecord.getLoggedInRequesterUserId());
-    }
-
-    @Test
-    public void test_should_set_complainant_user_id_to_null_for_when_employee_creates_complaint_on_behalf_of_citizen() {
-        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
-        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get("RequestInfo");
-        final HashMap<String, Object> userInfo = (HashMap<String, Object>) requestInfo.get("userInfo");
-        userInfo.put("type", "EMPLOYEE");
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-
-        final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
-
-        assertNotNull(serviceRequestRecord);
-        assertNull(serviceRequestRecord.getLoggedInRequesterUserId());
     }
 
     @Test

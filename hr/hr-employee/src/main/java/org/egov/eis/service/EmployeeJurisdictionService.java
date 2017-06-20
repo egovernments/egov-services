@@ -1,12 +1,12 @@
 package org.egov.eis.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.EmployeeJurisdictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class EmployeeJurisdictionService {

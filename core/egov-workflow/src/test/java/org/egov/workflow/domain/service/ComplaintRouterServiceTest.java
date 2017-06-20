@@ -42,20 +42,20 @@ public class ComplaintRouterServiceTest {
     @Before
     public void before() {
         complaintRouterService = new ComplaintRouterService(complaintRouterRepository, boundaryRepository, positionRepository,
-                complaintTypeRepository, employeeRepository, positionHierarchyRepository);
+            complaintTypeRepository, employeeRepository, positionHierarchyRepository);
         final ComplaintTypeResponse complaintType = getComplaintType();
         final ComplaintRouter router = getComplaintRouter();
-        when(complaintTypeRepository.fetchComplaintTypeByCode("C001","tenantId")).thenReturn(complaintType);
+        when(complaintTypeRepository.fetchComplaintTypeByCode("C001", "tenantId")).thenReturn(complaintType);
         when(complaintRouterRepository.findByComplaintTypeAndBoundary(complaintType.getId(), 1L)).thenReturn(router);
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(router);
         when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION")).thenReturn(router);
-        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L,"tenantId")).thenReturn(getPositionHierarchies());
+        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L, "tenantId")).thenReturn(getPositionHierarchies());
         when(positionRepository.getById(10L, "tenantId")).thenReturn(getPositions());
     }
 
     @Test
     public void test_should_return_assignee_for_complaint_from_router() {
-        when(boundaryRepository.fetchBoundaryById(1L,"tenantId")).thenReturn(getBoundary());
+        when(boundaryRepository.fetchBoundaryById(1L, "tenantId")).thenReturn(getBoundary());
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
@@ -77,9 +77,9 @@ public class ComplaintRouterServiceTest {
 
     @Test
     public void test_should_return_assignee_for_complaint_without_positionhierarchy() {
-        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L,"tenantId")).thenReturn(getPositionHeirarchy());
-        when(employeeRepository.getByRoleCode("GRO","default")).thenReturn(getEmployees());
-        when(positionRepository.getById(10L,"default")).thenReturn(getPositions());
+        when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L, "tenantId")).thenReturn(getPositionHeirarchy());
+        when(employeeRepository.getByRoleCode("GRO", "tenantId")).thenReturn(getEmployees());
+        when(positionRepository.getById(10L, "tenantId")).thenReturn(getPositions());
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
@@ -163,7 +163,7 @@ public class ComplaintRouterServiceTest {
     }
 
     private PositionHierarchyResponse getPositionHierarchies() {
-        final List<PositionHierarchy> positionHierarchyArrayList=new ArrayList<PositionHierarchy>();
+        final List<PositionHierarchy> positionHierarchyArrayList = new ArrayList<PositionHierarchy>();
         final PositionResponse fromPosition = new PositionResponse();
         fromPosition.setId(2L);
         fromPosition.setName("Accounts_Officer_1");
@@ -172,7 +172,7 @@ public class ComplaintRouterServiceTest {
         toPosition.setId(3L);
         toPosition.setName("Grievence_Officer_1");
 
-        PositionHierarchy positionHierarchy=PositionHierarchy.builder().fromPosition(fromPosition).toPosition(toPosition).build();
+        PositionHierarchy positionHierarchy = PositionHierarchy.builder().fromPosition(fromPosition).toPosition(toPosition).build();
 
         positionHierarchyArrayList.add(positionHierarchy);
 
@@ -181,7 +181,7 @@ public class ComplaintRouterServiceTest {
 
     private List<Employee> getEmployees() {
         List<Assignment> assignments = new ArrayList<Assignment>();
-        Assignment assignment=Assignment.builder().id(1L).isPrimary(Boolean.TRUE).department(1L).position(10L).build();
+        Assignment assignment = Assignment.builder().id(1L).isPrimary(Boolean.TRUE).department(1L).position(10L).build();
         assignments.add(assignment);
 
         final List<Employee> employees = new ArrayList<Employee>();
@@ -204,7 +204,7 @@ public class ComplaintRouterServiceTest {
         return position;
     }
 
-    private PositionHierarchyResponse getPositionHeirarchy(){
+    private PositionHierarchyResponse getPositionHeirarchy() {
         return PositionHierarchyResponse.builder().responseInfo(ResponseInfo.builder().build()).positionHierarchy(new ArrayList<PositionHierarchy>()).build();
     }
 

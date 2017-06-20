@@ -50,9 +50,17 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BankContract extends AuditableContract {
 
 	private Long id;
@@ -80,10 +88,6 @@ public class BankContract extends AuditableContract {
 
 	public Long getId() {
 		return id;
-	}
-
-	public BankContract() {
-		super();
 	}
 
 	public BankContract(final String id) {

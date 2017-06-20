@@ -28,6 +28,7 @@ public class SevaRequestMapFactory {
         attributeValues.add(toMap("locationId", "7"));
         attributeValues.add(toMap("childLocationId", "8"));
         attributeValues.add(toMap("assignmentId", "6"));
+        attributeValues.add(toMap("citizenUserId", "4"));
         serviceRequestMap.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final HashMap<String, Object> requestInfoMap = new HashMap<>();

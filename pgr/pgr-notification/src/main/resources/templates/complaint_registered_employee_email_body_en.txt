@@ -1,0 +1,1 @@
+A grievance request regarding {{name}} has been registered at {{locationName}} by {{complainantName}} (Mob :{{mobileNumber}}).

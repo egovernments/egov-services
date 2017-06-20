@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.domain.service;
 
 import org.egov.pgrrest.common.entity.ServiceType;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceTypeSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,12 @@ public class ServiceRequestTypeService {
 
     public ServiceType getComplaintType(String complaintTypeCode, String tenantId) {
         return serviceRequestTypeRepository.getServiceRequestType(complaintTypeCode, tenantId);
+    }
+
+    public void enrich(ServiceRequest serviceRequest) {
+        final ServiceType serviceRequestType = serviceRequestTypeRepository
+            .getServiceRequestType(serviceRequest.getServiceRequestType().getCode(), serviceRequest.getTenantId());
+        serviceRequest.setServiceType(serviceRequestType.isComplaintType());
     }
 
     public List<ServiceType> findByCriteria(ServiceTypeSearchCriteria searchCriteria) {

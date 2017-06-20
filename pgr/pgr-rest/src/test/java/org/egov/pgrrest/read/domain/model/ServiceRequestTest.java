@@ -26,13 +26,15 @@ public class ServiceRequestTest {
             .firstName("first name")
             .email("email@gmail.com")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
             .serviceRequestLocation(serviceRequestLocation)
             .tenantId("tenantId")
             .description("description")
-            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
@@ -51,6 +53,8 @@ public class ServiceRequestTest {
             .firstName("first name")
             .email("email@gmail.com")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
@@ -58,7 +62,7 @@ public class ServiceRequestTest {
             .tenantId("tenantId")
             .description("description")
             .crn("crn")
-            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
@@ -70,12 +74,14 @@ public class ServiceRequestTest {
         final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
             .locationId(null)
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(Requester.builder().build())
             .authenticatedUser(getCitizen())
             .serviceRequestLocation(serviceRequestLocation)
             .modifyServiceRequest(true)
-            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
@@ -103,11 +109,13 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName(null)
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
-            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
         assertTrue(complaint.isRequesterAbsent());
@@ -124,11 +132,13 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName(null)
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getEmployee())
             .serviceRequestLocation(serviceRequestLocation)
-            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
         assertTrue(complaint.isRequesterAbsent());
@@ -145,11 +155,13 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .mobile(null)
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
-            .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
@@ -167,11 +179,13 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .mobile(null)
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .authenticatedUser(getEmployee())
                 .serviceRequestLocation(serviceRequestLocation)
-                .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
@@ -190,13 +204,15 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
-                .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
@@ -214,6 +230,8 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .authenticatedUser(getEmployee())
@@ -221,7 +239,7 @@ public class ServiceRequestTest {
                 .tenantId("tenantId")
                 .description("description")
                 .receivingMode("receivingMode")
-                .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
@@ -238,13 +256,15 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .tenantId(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
                 .description("description")
-                .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
@@ -262,13 +282,15 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .tenantId("tenantId")
                 .description(null)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
-                .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .attributeEntries(new ArrayList<AttributeEntry>())
                 .build();
 
@@ -286,13 +308,15 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, null, null);
         ServiceRequest complaint = ServiceRequest.builder()
             .requester(complainant)
             .tenantId("tenantId")
             .description("description")
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .serviceRequestLocation(serviceRequestLocation)
-            .serviceRequestType(new ServiceRequestType(null, null, null))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<AttributeEntry>())
             .build();
 
@@ -310,11 +334,13 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType("type", null, "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .tenantId("tenantId")
                 .description("description")
-                .serviceRequestType(new ServiceRequestType("type", null, "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .serviceRequestLocation(serviceRequestLocation)
                 .attributeEntries(new ArrayList<AttributeEntry>())
@@ -334,11 +360,13 @@ public class ServiceRequestTest {
             .email("foo@bar.com")
             .firstName("first name")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType("type", "complaintTypeCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
                 .requester(complainant)
                 .tenantId("tenantId")
                 .description("description")
-                .serviceRequestType(new ServiceRequestType("type", "complaintTypeCode", "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .crn(null)
                 .modifyServiceRequest(true)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
@@ -357,13 +385,15 @@ public class ServiceRequestTest {
     }
 
     private ServiceRequest getComplaint(ServiceRequestLocation serviceRequestLocation) {
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintTypeCode", "tenantId", null);
         return ServiceRequest.builder()
                 .requester(Requester.builder().build())
                 .authenticatedUser(getCitizen())
                 .serviceRequestLocation(serviceRequestLocation)
                 .tenantId("tenantId")
                 .description("description")
-                .serviceRequestType(new ServiceRequestType(null, "complaintTypeCode", "tenantId"))
+                .serviceRequestType(serviceRequestType)
                 .build();
     }
 
@@ -391,13 +421,15 @@ public class ServiceRequestTest {
                .email("email@gmail.com")
                .firstName("first name")
                .build();
-           ServiceRequest complaint = ServiceRequest.builder()
+       final ServiceRequestType tenantId =
+           new ServiceRequestType(null, null, "tenantId", null);
+       ServiceRequest complaint = ServiceRequest.builder()
                .requester(complainant)
                .tenantId("tenantId")
                .description(null)
                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                .serviceRequestLocation(serviceRequestLocation)
-               .serviceRequestType(new ServiceRequestType(null, null, "tenantId"))
+               .serviceRequestType(tenantId)
                .attributeEntries(new ArrayList<AttributeEntry>())
                .build();
 

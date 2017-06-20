@@ -250,13 +250,15 @@ public class ServiceRequestControllerTest {
             .firstName("first name")
             .mobile("mobile number")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", null, null);
         return ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
             .serviceRequestLocation(serviceRequestLocation)
             .tenantId(null)
             .description("description")
-            .serviceRequestType(new ServiceRequestType(null, "complaintCode", null))
+            .serviceRequestType(serviceRequestType)
             .attributeEntries(new ArrayList<>())
             .build();
     }
@@ -292,10 +294,12 @@ public class ServiceRequestControllerTest {
         final Coordinates coordinates = new Coordinates(0.0, 0.0);
         final ServiceRequestLocation serviceRequestLocation = new ServiceRequestLocation(coordinates,
             null, "34");
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType("abc", "complaintCode", "tenantId", null);
         ServiceRequest complaint = ServiceRequest.builder()
             .authenticatedUser(user)
             .crn(crn)
-            .serviceRequestType(new ServiceRequestType("abc", "complaintCode", "tenantId"))
+            .serviceRequestType(serviceRequestType)
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)

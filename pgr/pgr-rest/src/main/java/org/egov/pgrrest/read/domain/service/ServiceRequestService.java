@@ -19,14 +19,20 @@ public class ServiceRequestService {
     private ServiceRequestRepository serviceRequestRepository;
     private UserRepository userRepository;
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
+	private OtpService otpService;
+	private ServiceRequestTypeService serviceRequestTypeService;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
                                  SevaNumberGeneratorService sevaNumberGeneratorService,
-                                 UserRepository userRepository) {
+                                 UserRepository userRepository,
+                                 OtpService otpService,
+                                 ServiceRequestTypeService serviceRequestTypeService) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
+        this.otpService = otpService;
+        this.serviceRequestTypeService = serviceRequestTypeService;
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
@@ -45,16 +51,22 @@ public class ServiceRequestService {
         return serviceRequestRepository.getCount(serviceRequestSearchCriteria);
     }
 
-    public void save(ServiceRequest complaint, SevaRequest sevaRequest) {
-		complaint.validate();
+    public void save(ServiceRequest serviceRequest, SevaRequest sevaRequest) {
+		serviceRequest.validate();
+        enrichWithServiceType(serviceRequest);
+        otpService.validateOtp(serviceRequest);
 		final String crn = sevaNumberGeneratorService.generate();
-		complaint.setCrn(crn);
-		sevaRequest.update(complaint);
+		serviceRequest.setCrn(crn);
+		sevaRequest.update(serviceRequest);
 		setUserIdForAnonymousUser(sevaRequest);
 		serviceRequestRepository.save(sevaRequest);
 	}
 
-	private void setUserIdForAnonymousUser(SevaRequest sevaRequest) {
+    private void enrichWithServiceType(ServiceRequest serviceRequest) {
+        serviceRequestTypeService.enrich(serviceRequest);
+    }
+
+    private void setUserIdForAnonymousUser(SevaRequest sevaRequest) {
         if (sevaRequest.getUserId() != null) {
             return;
         }

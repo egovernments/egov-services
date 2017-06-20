@@ -32,13 +32,15 @@ public class SevaRequestTest {
             .crossHierarchyId("id")
             .build();
 
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, null, TENANT_ID, null);
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .tenantId(TENANT_ID)
             .authenticatedUser(user)
             .requester(Requester.builder().build())
             .crn(CRN)
             .serviceRequestLocation(serviceRequestLocation)
-            .serviceRequestType(new ServiceRequestType(null, null, TENANT_ID)).build();
+            .serviceRequestType(serviceRequestType).build();
     }
 
     private AuthenticatedUser getAuthenticatedUser() {

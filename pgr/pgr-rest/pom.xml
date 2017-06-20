@@ -30,14 +30,8 @@
 
         <dependency>
             <groupId>org.egov.services</groupId>
-            <artifactId>services-common</artifactId>
-            <version>0.5.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.16.4</version>
+            <version>0.17.2</version>
         </dependency>
 
         <dependency>
@@ -199,6 +193,7 @@
                                         <exclude>org.egov.pgrrest.common.model.ValueDefinition</exclude>
                                         <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.InvalidOtpRequestException</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.exception.OtpValidationNotComplete</exclude>
                                         <exclude>org.egov.pgrrest.PgrRestSpringBootApplication</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.entity.*</exclude>
                                         <exclude>org.egov.pgrrest.common.contract.*</exclude>

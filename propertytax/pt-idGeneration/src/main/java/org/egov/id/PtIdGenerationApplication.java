@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Description : This is initialization  class for  pt-idGeneration module
+ * Description : This is initialization class for pt-idGeneration module
+ * 
  * @author Pavan Kumar Kamma
  *
  */
@@ -18,7 +19,7 @@ public class PtIdGenerationApplication {
 	}
 
 	@Bean
-	public ResponseInfoFactory getResponseInfo(){
+	public ResponseInfoFactory getResponseInfo() {
 		return new ResponseInfoFactory();
 	}
 }

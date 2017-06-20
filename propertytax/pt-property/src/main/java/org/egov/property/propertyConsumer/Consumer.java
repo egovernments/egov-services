@@ -32,7 +32,7 @@ public class Consumer {
 	RestTemplate restTemplate;
 
 	@Autowired
-	Environment env;
+	Environment environment;
 
 	@Autowired
 	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
@@ -46,8 +46,8 @@ public class Consumer {
 	@Bean
 	public Map<String, Object> consumerConfig() {
 		Map<String, Object> consumerProperties = new HashMap<String, Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, env.getProperty("auto.offset.reset.config"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, env.getProperty("bootstrap.servers"));
+		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("auto.offset.reset.config"));
+		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("bootstrap.servers"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "boundary");
@@ -91,11 +91,11 @@ public class Consumer {
 	@KafkaListener(topics= {"#{environment.getProperty('property.create')}","#{environment.getProperty('property.update')}"})
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
-		if (consumerRecord.topic().equalsIgnoreCase(env.getProperty("property.create"))) {
+		if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("property.create"))) {
 			persisterService.addProperty(consumerRecord.value().getProperties());
 		} 
 
-		else if (consumerRecord.topic().equalsIgnoreCase(env.getProperty("property.update"))) {
+		else if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("property.update"))) {
 			persisterService.updateProperty(consumerRecord.value().getProperties());
 		}
 	}

@@ -1,10 +1,10 @@
 package org.egov.models;
 
-import org.egov.models.ResponseInfo.StatusEnum;
 import org.springframework.stereotype.Service;
 
 /**
  * <h1>ResponseInfoFactory</h1>
+ * 
  * @author Narendra
  *
  */
@@ -19,7 +19,7 @@ public class ResponseInfoFactory {
 			ts = requestInfo.getTs().toString();
 		String resMsgId = "uief87324"; // FIXME : Hard-coded
 		String msgId = requestInfo.getMsgId();
-		String responseStatus = success ? StatusEnum.SUCCESSFUL.toString() : StatusEnum.FAILED.toString();
-			return new ResponseInfo(apiId, ver, Long.valueOf(ts), resMsgId, msgId,responseStatus);
+		ResponseStatusEnum responseStatus = success ? ResponseStatusEnum.SUCCESSFUL : ResponseStatusEnum.FAILED;
+		return new ResponseInfo(apiId, ver, Long.valueOf(ts), resMsgId, msgId, responseStatus);
 	}
 }

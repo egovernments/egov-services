@@ -1,11 +1,8 @@
 package org.egov.id.api;
 
-import org.egov.id.util.IdGenerationService;
+import org.egov.id.service.IdGenerationService;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * api's related to the IdGeneration Controller
+ * 
  * @author Pavan Kumar Kamma
  */
 @RestController
@@ -23,26 +21,18 @@ public class IdGenerationController {
 	@Autowired
 	IdGenerationService idGenerationService;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-
 	/**
 	 * description: generate unique ID for property
+	 * 
 	 * @param IdGenerationRequest
 	 * @return IdGenerationResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(method = RequestMethod.POST, path = "_create")
-	public IdGenerationResponse generateIdResponse(@RequestBody IdGenerationRequest idGenReq) throws Exception {
+	@RequestMapping(method = RequestMethod.POST, path = "_genearate")
+	public IdGenerationResponse generateIdResponse(@RequestBody IdGenerationRequest idGenerationRequest)
+			throws Exception {
 
-		RequestInfo requestInfo = idGenReq.getRequestInfo();
-		IdGenerationResponse idGenerationResponse = new IdGenerationResponse();
-		IdResponse idResponse = new IdResponse();
-
-		String generatedId = idGenerationService.generateId(idGenReq);
-		idResponse.setId(generatedId);
-		idGenerationResponse.setIdResponse(idResponse);
-		idGenerationResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		IdGenerationResponse idGenerationResponse = idGenerationService.generateIdResponse(idGenerationRequest);
 
 		return idGenerationResponse;
 	}

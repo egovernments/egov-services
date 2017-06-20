@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * This is aspectj class for idGeneration 
+ * This is aspectj class for idGeneration
  * 
  * @author S Anilkumar
  * 
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class PtIdGenerationApplicationAspectj {
-	private static final Logger logger=LoggerFactory.getLogger(PtIdGenerationApplicationAspectj.class);
+	private static final Logger logger = LoggerFactory.getLogger(PtIdGenerationApplicationAspectj.class);
 
 	@Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
 	public void controller() {
@@ -34,11 +34,7 @@ public class PtIdGenerationApplicationAspectj {
 	protected void allMethod() {
 	}
 
-
-
-
-
-	/*before -> Any resource annotated with @Controller annotation */
+	/* before -> Any resource annotated with @Controller annotation */
 
 	@Before("controller() && allMethod()")
 	public void logBefore(JoinPoint joinPoint) {
@@ -48,13 +44,12 @@ public class PtIdGenerationApplicationAspectj {
 		logger.debug("Arguments :  " + Arrays.toString(joinPoint.getArgs()));
 		logger.debug("Target class : " + joinPoint.getTarget().getClass().getName());
 
-
 	}
 
-
-
-
-	/*After -> All method within resource annotated with @Controller annotation and return a  value*/
+	/*
+	 * After -> All method within resource annotated with @Controller annotation
+	 * and return a value
+	 */
 
 	@AfterReturning(pointcut = "controller() && allMethod()", returning = "result")
 	public void logAfter(JoinPoint joinPoint, Object result) {
@@ -64,10 +59,7 @@ public class PtIdGenerationApplicationAspectj {
 		logger.debug("LEAVING: " + joinPoint.getSignature().getName() + " WITH: " + returnValue);
 	}
 
-
-
-
-	//After -> Any method within resource annotated with @Controller annotation 
+	// After -> Any method within resource annotated with @Controller annotation
 	// throws an exception ...Log it
 
 	@AfterThrowing(pointcut = "controller() && allMethod()", throwing = "exception")
@@ -76,8 +68,8 @@ public class PtIdGenerationApplicationAspectj {
 		logger.error("Cause : " + exception.getCause());
 	}
 
-
-	//Around -> Any method within resource annotated with @Controller annotation 
+	// Around -> Any method within resource annotated with @Controller
+	// annotation
 
 	@Around("controller() && allMethod()")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -88,9 +80,7 @@ public class PtIdGenerationApplicationAspectj {
 			String methodName = joinPoint.getSignature().getName();
 			Object result = joinPoint.proceed();
 			long elapsedTime = System.currentTimeMillis() - start;
-			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : "
-					+ elapsedTime + " ms");
-
+			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : " + elapsedTime + " ms");
 
 			return result;
 		} catch (IllegalArgumentException e) {
@@ -99,7 +89,6 @@ public class PtIdGenerationApplicationAspectj {
 			throw e;
 		}
 	}
-
 
 	/*
 	 * This method for returing string value of object
@@ -115,4 +104,3 @@ public class PtIdGenerationApplicationAspectj {
 	}
 
 }
-

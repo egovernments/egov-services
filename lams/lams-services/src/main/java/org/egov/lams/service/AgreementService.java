@@ -232,7 +232,7 @@ public class AgreementService {
 		if(agreementCriteria.getToDate() != null)
 		{
 			logger.info("agreement created to date before setting time" +agreementCriteria.getToDate());
-			setToTime(agreementCriteria.getToDate());
+			agreementCriteria.setToDate(setToTime(agreementCriteria.getToDate()));
 			logger.info("agreement created to date after setting time" +agreementCriteria.getToDate());
 		}
 		
@@ -292,15 +292,15 @@ public class AgreementService {
 		fromDate = cal.getTime();	
 	}
 
-	private void setToTime(Date toDate) {
+	private static Date setToTime(Date toDate) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(toDate);
 		cal.set(Calendar.HOUR_OF_DAY,23);
 		cal.set(Calendar.MINUTE,59);
 		cal.set(Calendar.SECOND,59);
 		cal.set(Calendar.MILLISECOND,999);
-		toDate = cal.getTime();	
 		logger.info("todate" +toDate);
+		return cal.getTime();	
 	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {

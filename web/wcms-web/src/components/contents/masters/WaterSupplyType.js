@@ -49,7 +49,7 @@ const styles = {
   }
 };
 
-class DocumentType extends Component {
+class WaterSupplyType extends Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -77,10 +77,10 @@ class DocumentType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{}).then((res)=>
            {
               this.setState({
-                list: res.Category
+                list: res.SupplyType
             });
 
         },  (err)=> {
@@ -104,15 +104,15 @@ class DocumentType extends Component {
 
     // let mode=getUrlVars()["type"];
 
-      let {changeButtonText,documenttype}=this.props;
-      var DocumentType = {
-        name:documenttype.ownerName,
-        description:documenttype.Description,
-        active:documenttype.active,
+      let {changeButtonText,WaterSupplyType}=this.props;
+      var SupplyType = {
+        name:WaterSupplyType.name,
+        description:WaterSupplyType.Description,
+        active:WaterSupplyType.active,
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "documenttype", "_update/"+id, {},{DocumentType:DocumentType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{SupplyType:SupplyType}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -122,11 +122,11 @@ class DocumentType extends Component {
       }
 
     else{
-      let response=Api.commonApiPost("wcms-masters", "documenttype", "_create", {},{DocumentType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "supplytype", "_create", {},{SupplyType:WaterSupplyType}).then(function(response)
       {
       // console.log(response);
     },function(err) {
-        alert("Entered Document type already exists");
+        alert("Entered Water Supply Type already exist");
     });
 }
     }
@@ -137,7 +137,7 @@ class DocumentType extends Component {
 
   render() {
     let {
-      documenttype,
+      WaterSupplyType,
       fieldErrors,
       isFormValid,
       handleChange,
@@ -154,15 +154,16 @@ class DocumentType extends Component {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}   onClick={()=> {
                              add("name","description","active")}} />
+
         )
       }
     };
         return (
-          <div className="documenttype">
+          <div className="WaterSupplyType">
           <Card>
-            <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Create Document Type< /strong>}/>
+            <CardHeader title={< strong style = {{color:"#5a3e1b"}} >  Water Supply Type< /strong>}/>
 
             <CardText>
               <Card>
@@ -170,15 +171,13 @@ class DocumentType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.ownerName
-                        ? fieldErrors.ownerName
-                        : ""} value={documenttype.ownerName?documenttype.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="Name" floatingLabelText="Name" />
+                      <TextField errorText="This field is required." value={WaterSupplyType.name?WaterSupplyType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="Supply Type" floatingLabelText="Water Supply Type" />
                     </Col>
 
                     <Col xs={12} md={6}>
                       <TextField errorText={fieldErrors.Descrption
                         ? fieldErrors.Description
-                        : ""} value={documenttype.Description?documenttype.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
+                        : ""} value={WaterSupplyType.Description?WaterSupplyType.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
                     </Col>
                     </Row>
                     <Row>
@@ -186,7 +185,7 @@ class DocumentType extends Component {
                                         <Checkbox
                                          label="Active"
                                          defaultChecked={true}
-                                         value={documenttype.active?documenttype.active:""}
+                                         value={WaterSupplyType.active?WaterSupplyType.active:""}
                                          onCheck={(event,isInputChecked) => {
                                            var e={
                                              "target":{
@@ -223,7 +222,7 @@ class DocumentType extends Component {
   }
 }
 
-const mapStateToProps = state => ({documenttype: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({WaterSupplyType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -236,7 +235,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: ["ownerName",]
+          required: ["name",]
         }
       }
     });
@@ -257,4 +256,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentType);
+export default connect(mapStateToProps, mapDispatchToProps)(WaterSupplyType);

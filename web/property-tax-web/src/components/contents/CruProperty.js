@@ -9,7 +9,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Upload from 'material-ui-upload/Upload';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white} from 'material-ui/styles/colors';
+import {blue800, red500,white} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -24,16 +24,16 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: brown500
+    borderColor: "#354f57"
   },
   underlineFocusStyle: {
-    borderColor: brown500
+    borderColor: "#354f57"
   },
   floatingLabelStyle: {
-    color: brown500
+    color: "#354f57"
   },
   floatingLabelFocusStyle: {
-    color: brown500
+    color:"#354f57"
   },
   customWidth: {
     width:100
@@ -57,10 +57,13 @@ const styles = {
  },
  floatButtonMargin: {
    marginLeft: 20,
-   fontSize:12
+   fontSize:12,
+   width:30,
+   height:30
  },
  iconFont: {
-   fontSize:17
+   fontSize:17,
+   cursor:'pointer'
  },
  radioButton: {
     marginBottom:0,
@@ -307,13 +310,11 @@ class CruProperty extends Component {
     }
 
     const createProperty = () => {
-    /*  let properties:[
-          owners:cruProperty.owners,
-          propertyDetail: {
-            floors:cruProperty.floors
-          }
-      ];*/
-      console.log(cruProperty);
+      var body = {
+        requestInfo:{},
+        properties:[]
+      }
+
      Api.commonApiPost('properties/_create', {},{}).then((res)=>{
         console.log(res);
       }).catch((err)=> {
@@ -338,6 +339,7 @@ class CruProperty extends Component {
           underlineFocusStyle={styles.underlineFocusStyle}
           className="fullWidth"
           maxLength={12}
+          floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -355,6 +357,7 @@ class CruProperty extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
           maxLength={10}
+          floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -371,6 +374,7 @@ class CruProperty extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
           maxLength={32}
+          floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -390,6 +394,7 @@ class CruProperty extends Component {
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
+            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         >
             <MenuItem value={1} primaryText="Male"/>
             <MenuItem value={2} primaryText="Female"/>
@@ -410,6 +415,7 @@ class CruProperty extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
           maxLength={32}
+          floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         />
     </Col>
     <Col xs={12} md={3} sm={6}>
@@ -430,7 +436,7 @@ class CruProperty extends Component {
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
-
+            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         >
             <MenuItem value={1} primaryText="Father"/>
             <MenuItem value={2} primaryText="Husband"/>
@@ -449,6 +455,7 @@ class CruProperty extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
           maxLength={32}
+          floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         />
     </Col>
 
@@ -470,6 +477,7 @@ class CruProperty extends Component {
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
+            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
         >
             <MenuItem value={1} primaryText="Ex-Service man"/>
             <MenuItem value={2} primaryText="Freedom Fighter"/>
@@ -488,6 +496,7 @@ class CruProperty extends Component {
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
             maxLength={3}
+            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
           />
     </Col>
 
@@ -584,6 +593,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   >
                         <MenuItem value={1} primaryText="Ground floor" />
                         <MenuItem value={2} primaryText=" Basement-2" />
@@ -600,6 +610,7 @@ class CruProperty extends Component {
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
                     maxLength={3}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -618,6 +629,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   >
                         {renderOption(this.state.structureclasses)}
                   </SelectField>
@@ -638,6 +650,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   >
                         {renderOption(this.state.usages)}
 
@@ -659,6 +672,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   >
                       {renderOption(this.state.usages)}
                   </SelectField>
@@ -672,6 +686,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -690,6 +705,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   >
                         {renderOption(this.state.occupancies)}
                   </SelectField>
@@ -703,6 +719,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <div className="clearfix"></div>
@@ -715,6 +732,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -726,6 +744,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -778,6 +797,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   >
                         <MenuItem value={1} primaryText="Yes" />
                         <MenuItem value={2} primaryText="No" />
@@ -792,6 +812,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -803,6 +824,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -814,6 +836,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <div className="clearfix"></div>
@@ -826,6 +849,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -837,6 +861,7 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <Col xs={12} md={3} sm={6}>
@@ -865,12 +890,13 @@ class CruProperty extends Component {
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
                     underlineFocusStyle={styles.underlineFocusStyle}
+                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                   />
               </Col>
               <div className="clearfix"></div>
               <br/>
 
-              <Col xs={12} md={3} sm={6}>
+              <Col xs={12}  style={{textAlign:'right'}}>
 
                 {((editIndex == -1 || editIndex == undefined) && true) &&
                   <RaisedButton  type="button" label="Save Room Details"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
@@ -911,6 +937,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 >
                       <MenuItem value={1} primaryText="Ground floor" />
                       <MenuItem value={2} primaryText=" Basement-2" />
@@ -920,13 +947,14 @@ class CruProperty extends Component {
             <Col xs={12} md={3} sm={6}>
                 <TextField  className="fullWidth"
                   floatingLabelText="Unit Number"
-                  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.unit.unitNo}</span> :""): ""}
+                  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
                   value={cruProperty.floor ? cruProperty.floor.unitNo : ""}
                   onChange={(e) => {handleChangeNextOne(e,"floor" ,"unitNo", true, /^\d{3}$/g)}}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={3}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -945,6 +973,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 >
                       {renderOption(this.state.structureclasses)}
                 </SelectField>
@@ -965,6 +994,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 >
                       {renderOption(this.state.usages)}
 
@@ -986,6 +1016,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 >
                     {renderOption(this.state.usages)}
                 </SelectField>
@@ -1000,6 +1031,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={20}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1018,6 +1050,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 >
                       {renderOption(this.state.occupancies)}
                 </SelectField>
@@ -1032,6 +1065,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={32}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <div className="clearfix"></div>
@@ -1045,6 +1079,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={9}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1057,6 +1092,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={9}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1111,6 +1147,7 @@ class CruProperty extends Component {
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 >
                       <MenuItem value={1} primaryText="Yes" />
                       <MenuItem value={2} primaryText="No" />
@@ -1126,6 +1163,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={6}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1138,6 +1176,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={6}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1150,6 +1189,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={6}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <div className="clearfix"></div>
@@ -1163,6 +1203,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={10}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1175,6 +1216,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={15}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
             <Col xs={12} md={3} sm={6}>
@@ -1205,6 +1247,7 @@ class CruProperty extends Component {
                   underlineStyle={styles.underlineStyle}
                   underlineFocusStyle={styles.underlineFocusStyle}
                   maxLength={6}
+                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                 />
             </Col>
         </div>
@@ -1235,6 +1278,7 @@ class CruProperty extends Component {
               floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
               underlineStyle={styles.underlineStyle}
               underlineFocusStyle={styles.underlineFocusStyle}
+              floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
             >
             <MenuItem value={1} primaryText="Flat" />
             <MenuItem value={2} primaryText="Room" />
@@ -1251,7 +1295,7 @@ class CruProperty extends Component {
             }/>
         </Col>}
         <div className="clearfix"></div>
-        <hr/>
+
         {this.state.addRoom && roomForm()}
         {!this.state.addRoom && flatForm()}
           <br/>
@@ -1282,7 +1326,7 @@ class CruProperty extends Component {
           <div className="cruProperty">
               <form onSubmit={(e) => {search(e)}}>
                   <Card>
-                      <CardHeader title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
+                      <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -1308,6 +1352,7 @@ class CruProperty extends Component {
                                                 <th>Gaurdian</th>
                                                 <th>Owner Type</th>
                                                 <th>Percentage of Ownership</th>
+                                                <th></th>
                                               </tr>
                                             </thead>
                                             <tbody>
@@ -1325,7 +1370,11 @@ class CruProperty extends Component {
                                                         <td>{i.gaurdian}</td>
                                                         <td>{i.ownerType}</td>
                                                         <td>{i.ownerShipPercentage}</td>
+                                                        <td><i className="material-icons" style={styles.iconFont} onClick={ () => {
+                                                                deleteObject("owners", index);
 
+                                                            }}>delete</i>
+                                                            </td>
                                                       </tr> )
                                                   }
 
@@ -1344,7 +1393,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Create New Property</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Create New Property</div>} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -1365,6 +1414,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                  {renderOption(this.state.propertytypes)}
                                                </SelectField>
@@ -1386,6 +1436,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
                                                     {renderOption(this.state.propertytypes)}
                                               </SelectField>
@@ -1406,6 +1457,7 @@ class CruProperty extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                 >
                                                     {renderOption(this.state.propertytypes)}
                                             </SelectField>
@@ -1427,6 +1479,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                   {renderOption(this.state.apartments)}
                                               </SelectField>
@@ -1447,6 +1500,7 @@ class CruProperty extends Component {
                                                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                     underlineStyle={styles.underlineStyle}
                                                     underlineFocusStyle={styles.underlineFocusStyle}
+                                                    floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                 >
                                                 {renderOption(this.state.departments)}
                                                 </SelectField>
@@ -1460,7 +1514,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Property Address</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Property Address</div>} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -1476,6 +1530,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={15}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1494,6 +1549,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                       {renderOption(this.state.locality)}
                                               </SelectField>
@@ -1514,6 +1570,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.apartments)}
                                               </SelectField>
@@ -1534,6 +1591,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                   {renderOption(this.state.zone)}
                                               </SelectField>
@@ -1554,6 +1612,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.ward)}
                                               </SelectField>
@@ -1574,6 +1633,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                       {renderOption(this.state.block)}
                                               </SelectField>
@@ -1594,6 +1654,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.street)}
                                               </SelectField>
@@ -1614,6 +1675,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.revanue)}
                                               </SelectField>
@@ -1634,6 +1696,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.election)}
                                               </SelectField>
@@ -1648,6 +1711,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={12}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1659,6 +1723,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
                                           <Col xs={12} md={12}>
@@ -1692,6 +1757,7 @@ class CruProperty extends Component {
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
+                                                        floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -1707,6 +1773,7 @@ class CruProperty extends Component {
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={128}
+                                                        floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -1719,6 +1786,7 @@ class CruProperty extends Component {
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={6}
+                                                        floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                     />
                                                 </Col>
                                             </div>
@@ -1730,7 +1798,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Amenities</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Amenities</div>} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -1848,7 +1916,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -1871,6 +1939,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   id="creationReason"
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                   <MenuItem value={1} primaryText="New Property"/>
                                                   <MenuItem value={2} primaryText="Bifurcation"/>
@@ -1888,6 +1957,7 @@ class CruProperty extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   id="upicNumber"
                                                   maxLength={15}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>}
                                           <Col xs={12} md={3} sm={6}>
@@ -1906,6 +1976,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                   {renderOption(this.state.propertytypes)}
                                               </SelectField>
@@ -1926,6 +1997,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
@@ -1946,6 +2018,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
@@ -1960,6 +2033,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={8}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
 
@@ -1970,7 +2044,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Construction Types</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Construction Types</div>} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -1992,6 +2066,7 @@ class CruProperty extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                       {renderOption(this.state.floortypes)}
                                               </SelectField>
@@ -2012,6 +2087,7 @@ class CruProperty extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.rooftypes)}
                                               </SelectField>
@@ -2032,6 +2108,7 @@ class CruProperty extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.walltypes)}
                                               </SelectField>
@@ -2052,6 +2129,7 @@ class CruProperty extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.woodtypes)}
                                               </SelectField>
@@ -2063,7 +2141,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                   <Card>
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Floor Details</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Floor Details</div>} />
                       <CardText style={styles.reducePadding}>
                           <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
@@ -2097,7 +2175,7 @@ class CruProperty extends Component {
                                               <th>Building Permission Number</th>
                                               <th>Building Permission Date</th>
                                               <th>Plinth Area In Building Plan</th>
-                                              <th>Action</th>
+                                              <th></th>
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -2125,18 +2203,10 @@ class CruProperty extends Component {
                                                     <td>{i.buildingPermissionDate}</td>
                                                     <td>{i.plinthAreaBuildingPlan}</td>
                                                     <td>
-                                                      <FloatingActionButton mini={true} style={styles.floatButtonMargin} onClick={ () => {
-                                                        editObject("floor",i);
-                                                        isEditIndex(index);
-                                                      }}>
-                                                         <i className="material-icons">mode_edit</i>
-                                                       </FloatingActionButton>
-                                                       <FloatingActionButton mini={true} style={styles.floatButtonMargin} onClick={ () => {
-                                                         deleteObject("floors", index);
-                                                         isEditIndex(-1);
-                                                       }}>
-                                                         <i className="material-icons">delete</i>
-                                                     </FloatingActionButton>
+                                                         <i className="material-icons" style={styles.iconFont} onClick={ () => {
+                                                           deleteObject("floors", index);
+                                                           isEditIndex(-1);
+                                                         }}>delete</i>
                                                     </td>
                                                   </tr>)
                                               }
@@ -2158,7 +2228,7 @@ class CruProperty extends Component {
                       </CardText>
                   </Card>
                 {true &&  <Card>
-                    <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
+                    <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
                     <CardText style={styles.reducePadding}>
                         <Card className="darkShadow">
                             <CardText style={styles.reducePadding}>
@@ -2178,7 +2248,7 @@ class CruProperty extends Component {
                     </CardText>
                   </Card>}
                   <Card>
-                    <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Workflow</div>} />
+                    <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                         <Card className="darkShadow">
                             <CardText style={styles.reducePadding}>
@@ -2199,6 +2269,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
                                                     <MenuItem value={4} primaryText="Options" />
                                               </SelectField>
@@ -2218,6 +2289,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
                                                     <MenuItem value={4} primaryText="Options" />
                                               </SelectField>
@@ -2237,6 +2309,7 @@ class CruProperty extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
                                                     <MenuItem value={4} primaryText="Options" />
                                               </SelectField>

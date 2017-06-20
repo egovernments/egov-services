@@ -50,7 +50,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.workflow.config.ApplicationProperties;
+import org.egov.workflow.domain.service.EscalationService;
 import org.egov.workflow.domain.service.RouterService;
+import org.egov.workflow.domain.service.Workflow;
 import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.egov.workflow.web.contract.RouterType;
@@ -77,8 +79,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/router")
-public class RouterController {
-	
+public class RouterController{
+
 	@Autowired
     private ErrorHandler errHandler;
 	
@@ -116,7 +118,7 @@ public class RouterController {
 
 	}
 	
-	@PostMapping(value = "/{id}/_update")
+	@PostMapping(value = "/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final RouterTypeReq routerTypeReq,
 			final BindingResult errors) {

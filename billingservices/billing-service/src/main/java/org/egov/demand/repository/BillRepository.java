@@ -41,7 +41,7 @@ public class BillRepository {
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				Bill bill = bills.get(index);
 				
-				ps.setLong(1, bill.getId());
+				ps.setString(1, bill.getId());
 				ps.setString(2, bill.getTenantId());
 				ps.setString(3, bill.getPayeeName());
 				ps.setString(4, bill.getPayeeAddress());
@@ -76,9 +76,9 @@ public class BillRepository {
 				public void setValues(PreparedStatement ps, int index) throws SQLException {
 					BillDetail billDetail = billDetails.get(index);
 					
-					ps.setLong(1, billDetail.getId());
+					ps.setString(1, billDetail.getId());
 					ps.setString(2, bill.getTenantId());
-					ps.setLong(3, bill.getId());
+					ps.setString(3, bill.getId());
 					ps.setString(4, billDetail.getBusinessService());
 					ps.setString(5, billDetail.getBillNumber());
 					ps.setLong(6, billDetail.getBillDate());

@@ -27,10 +27,6 @@ public class BillingServiceApplication {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
 	}
 */
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	}
 
 	@Bean
 	public ObjectMapper getObjectMapper(){

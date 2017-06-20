@@ -16,5 +16,11 @@ class Otp {
     private String tenantId;
     @JsonProperty("isValidationSuccessful")
     private boolean validationSuccessful;
+    @JsonProperty("UUID")
+    private String uuid;
+
+    public boolean isValidationComplete(String mobileNumber) {
+        return validationSuccessful && identity.equals(mobileNumber);
+    }
 }
 

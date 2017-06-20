@@ -11,21 +11,34 @@ import org.springframework.web.client.RestTemplate;
 public class EmployeeRepository {
 
     private final RestTemplate restTemplate;
-    private final String url;
+    private final String findEmployeeByPositionUrl;
+    private final String findEmployeeByIdUrl;
+
     private final static String EMPLOYEE_BY_POSITION =
         "hr-employee/employees/_search?positionId={positionId}&tenantId={tenantId}";
+    private final static String EMPLOYEE_BY_ID =
+        "hr-employee/employees/_search?id={id}&tenantId={tenantId}";
 
     @Autowired
     public EmployeeRepository(final RestTemplate restTemplate,
                               @Value("${hremployee.host}") final String employeeServiceHostname) {
         this.restTemplate = restTemplate;
-        this.url = employeeServiceHostname + EMPLOYEE_BY_POSITION;
+        this.findEmployeeByPositionUrl = employeeServiceHostname + EMPLOYEE_BY_POSITION;
+        this.findEmployeeByIdUrl = employeeServiceHostname + EMPLOYEE_BY_ID;
+
     }
 
     public Employee getEmployeeByPosition(final Long positionId, final String tenantId) {
         RequestInfoWrapper requestBody = buildRequestInfo();
         final EmployeeRes response = restTemplate
-            .postForObject(url, requestBody, EmployeeRes.class, positionId, tenantId);
+            .postForObject(findEmployeeByPositionUrl, requestBody, EmployeeRes.class, positionId, tenantId);
+        return response != null ? response.toDomain() : null;
+    }
+
+    public Employee getEmployeeById(Long id, final String tenantId) {
+        RequestInfoWrapper requestBody = buildRequestInfo();
+        final EmployeeRes response = restTemplate
+            .postForObject(findEmployeeByIdUrl, requestBody, EmployeeRes.class, id, tenantId);
         return response != null ? response.toDomain() : null;
     }
 

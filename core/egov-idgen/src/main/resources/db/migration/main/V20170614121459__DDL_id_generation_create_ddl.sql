@@ -6,7 +6,7 @@ CREATE TABLE id_generator
     format character varying(200) NOT NULL,
     sequencenumber  integer NOT NULL,
     
-    CONSTRAINT id_generator_pkey PRIMARY KEY (id)
+    CONSTRAINT pk_id_generator PRIMARY KEY (id)
 );
 CREATE SEQUENCE SEQ_ACK_NUM;
 CREATE SEQUENCE SEQ_ASSESMNT_NUM;

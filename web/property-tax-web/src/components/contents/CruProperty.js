@@ -1266,7 +1266,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                               <Grid fluid>
                                 <Row>
@@ -1328,7 +1328,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Create New Property</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -1444,7 +1444,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Property Address</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -1709,7 +1709,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Amenities</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -1827,7 +1827,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -1947,7 +1947,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Construction Types</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -2040,7 +2040,7 @@ class CruProperty extends Component {
                   <Card>
                       <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Floor Details</div>} />
                       <CardText style={styles.reducePadding}>
-                          <Card>
+                          <Card className="darkShadow">
                               <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -2174,7 +2174,7 @@ class CruProperty extends Component {
                 {true &&  <Card>
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
                     <CardText style={styles.reducePadding}>
-                        <Card>
+                        <Card className="darkShadow">
                             <CardText style={styles.reducePadding}>
                                 <Grid fluid>
                                     <Row>
@@ -2194,7 +2194,7 @@ class CruProperty extends Component {
                   <Card>
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:brown500, fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
-                        <Card>
+                        <Card className="darkShadow">
                             <CardText style={styles.reducePadding}>
                                 <Grid fluid>
                                     <Row>

@@ -45,6 +45,10 @@ label {
   height: 64px !important;
 }
 
+.darkShadow {
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 6px, rgba(0, 0, 0, 0.4) 0px 1px 4px !important;
+}
+
 @media (min-width: 992px) {
 .col-md-6 {
     width: 50% !important;

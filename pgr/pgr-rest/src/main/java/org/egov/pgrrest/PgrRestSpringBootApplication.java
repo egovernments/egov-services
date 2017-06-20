@@ -2,6 +2,7 @@ package org.egov.pgrrest;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
@@ -84,6 +85,11 @@ public class PgrRestSpringBootApplication {
     @Bean
     public OtpSMSRepository otpSMSRepository(@Value("${sms.topic}") String smsTopic) {
 	    return new OtpSMSRepository(logAwareKafkaTemplate, smsTopic);
+    }
+
+    @Bean
+    public EmployeeRepository employeeRepository(RestTemplate restTemplate, @Value("${hremployee.host}") String employeeHostName) {
+	    return new EmployeeRepository(restTemplate, employeeHostName);
     }
 
 	@Bean

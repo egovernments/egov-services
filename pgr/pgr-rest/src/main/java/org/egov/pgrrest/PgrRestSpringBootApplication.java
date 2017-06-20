@@ -2,8 +2,11 @@ package org.egov.pgrrest;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pgr.common.repository.OtpRepository;
+import org.egov.pgr.common.repository.OtpSMSRepository;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
@@ -56,14 +59,12 @@ public class PgrRestSpringBootApplication {
 
 	private TransportClient client;
 
-	@PostConstruct
-	public void initialize() {
-		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-	}
+	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
 	@PostConstruct
 	public void init() throws UnknownHostException {
-		Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
+        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+        Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
 		final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
 		final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
 				elasticSearchTransportPort);
@@ -74,6 +75,16 @@ public class PgrRestSpringBootApplication {
 	public UserRepository userRepository(RestTemplate restTemplate) {
 		return new UserRepository(restTemplate, userServiceHost, getUserDetailsUrl, getUserByUserNameUrl);
 	}
+
+	@Bean
+    public OtpRepository otpRepository(RestTemplate restTemplate, @Value("${otp.host}") String otpHost) {
+	    return new OtpRepository(restTemplate, otpHost);
+    }
+
+    @Bean
+    public OtpSMSRepository otpSMSRepository(@Value("${sms.topic}") String smsTopic) {
+	    return new OtpSMSRepository(logAwareKafkaTemplate, smsTopic);
+    }
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {

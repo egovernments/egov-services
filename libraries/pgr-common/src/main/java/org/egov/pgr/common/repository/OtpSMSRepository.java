@@ -10,11 +10,11 @@ import static java.lang.String.format;
 @Service
 public class OtpSMSRepository {
     private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
-    private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
     private String smsTopic;
 
     @Autowired
-    public OtpSMSRepository(LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate,
+    public OtpSMSRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
                             @Value("${sms.topic}") String smsTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.smsTopic = smsTopic;

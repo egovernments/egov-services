@@ -18,9 +18,9 @@ public class ServiceRequestService {
     private static final String ANONYMOUS_USER_NAME = "anonymous";
     private ServiceRequestRepository serviceRequestRepository;
     private UserRepository userRepository;
-	private SevaNumberGeneratorService sevaNumberGeneratorService;
-	private OtpService otpService;
-	private ServiceRequestTypeService serviceRequestTypeService;
+    private SevaNumberGeneratorService sevaNumberGeneratorService;
+    private OtpService otpService;
+    private ServiceRequestTypeService serviceRequestTypeService;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
@@ -36,14 +36,14 @@ public class ServiceRequestService {
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        List<ServiceRequest> serviceRequestList =  serviceRequestRepository.find(serviceRequestSearchCriteria);
+        List<ServiceRequest> serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         return serviceRequestList;
     }
 
     private void maskCitizenDetailsForAnonymousRequest(ServiceRequestSearchCriteria serviceRequestSearchCriteria,
                                                        List<ServiceRequest> serviceRequestList) {
-        if(serviceRequestSearchCriteria.isAnonymous())
+        if (serviceRequestSearchCriteria.isAnonymous())
             serviceRequestList.forEach(ServiceRequest::maskUserDetails);
     }
 
@@ -52,15 +52,19 @@ public class ServiceRequestService {
     }
 
     public void save(ServiceRequest serviceRequest, SevaRequest sevaRequest) {
-		serviceRequest.validate();
+        serviceRequest.validate();
         enrichWithServiceType(serviceRequest);
         otpService.validateOtp(serviceRequest);
-		final String crn = sevaNumberGeneratorService.generate();
-		serviceRequest.setCrn(crn);
-		sevaRequest.update(serviceRequest);
-		setUserIdForAnonymousUser(sevaRequest);
-		serviceRequestRepository.save(sevaRequest);
-	}
+        enrichWithCRN(serviceRequest);
+        sevaRequest.update(serviceRequest);
+        setUserIdForAnonymousUser(sevaRequest);
+        serviceRequestRepository.save(sevaRequest);
+    }
+
+    private void enrichWithCRN(ServiceRequest serviceRequest) {
+        final String crn = sevaNumberGeneratorService.generate();
+        serviceRequest.setCrn(crn);
+    }
 
     private void enrichWithServiceType(ServiceRequest serviceRequest) {
         serviceRequestTypeService.enrich(serviceRequest);
@@ -73,21 +77,21 @@ public class ServiceRequestService {
 
         final User anonymousUser = getAnonymousUser(sevaRequest.getServiceRequest().getTenantId());
         sevaRequest.getRequestInfo()
-			.setUserInfo(org.egov.common.contract.request.User.builder()
-				.id(anonymousUser.getId())
-				.type(SYSTEM_USER)
-				.build());
+            .setUserInfo(org.egov.common.contract.request.User.builder()
+                .id(anonymousUser.getId())
+                .type(SYSTEM_USER)
+                .build());
     }
 
     private User getAnonymousUser(String tenantId) {
-        return userRepository.getUserByUserName(ANONYMOUS_USER_NAME,tenantId);
+        return userRepository.getUserByUserName(ANONYMOUS_USER_NAME, tenantId);
     }
 
     public void update(ServiceRequest complaint, SevaRequest sevaRequest) {
-		complaint.validate();
-		sevaRequest.update(complaint);
-		setUserIdForAnonymousUser(sevaRequest);
-		serviceRequestRepository.update(sevaRequest);
-	}
+        complaint.validate();
+        sevaRequest.update(complaint);
+        setUserIdForAnonymousUser(sevaRequest);
+        serviceRequestRepository.update(sevaRequest);
+    }
 
 }

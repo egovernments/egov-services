@@ -18,8 +18,7 @@ public class OtpService {
 
     public OtpService(OtpRepository otpRepository,
                       OtpSMSRepository otpSMSSender,
-                      ComplaintConfigurationRepository
-        complaintConfigurationRepository) {
+                      ComplaintConfigurationRepository complaintConfigurationRepository) {
         this.otpRepository = otpRepository;
         this.otpSMSSender = otpSMSSender;
         this.complaintConfigurationRepository = complaintConfigurationRepository;
@@ -44,6 +43,7 @@ public class OtpService {
 
     private boolean isOtpValidationComplete(ServiceRequest serviceRequest) {
         final OtpValidationRequest otpValidationRequest = serviceRequest.getOtpValidationRequest();
+        otpValidationRequest.validate();
         return otpRepository.isOtpValidationComplete(otpValidationRequest);
     }
 

@@ -17,14 +17,15 @@ import org.springframework.stereotype.Component;
 /**
  * This is aspectj class for idGeneration
  * 
- * @author S Anilkumar
+ * @author Pavan Kumar Kamma
  * 
  */
 
 @Aspect
 @Component
 public class PtIdGenerationApplicationAspectj {
-	private static final Logger logger = LoggerFactory.getLogger(PtIdGenerationApplicationAspectj.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(PtIdGenerationApplicationAspectj.class);
 
 	@Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
 	public void controller() {
@@ -39,10 +40,13 @@ public class PtIdGenerationApplicationAspectj {
 	@Before("controller() && allMethod()")
 	public void logBefore(JoinPoint joinPoint) {
 
-		logger.debug("Entering in Method :  " + joinPoint.getSignature().getName());
-		logger.debug("Class Name :  " + joinPoint.getSignature().getDeclaringTypeName());
+		logger.debug(
+				"Entering in Method :  " + joinPoint.getSignature().getName());
+		logger.debug("Class Name :  "
+				+ joinPoint.getSignature().getDeclaringTypeName());
 		logger.debug("Arguments :  " + Arrays.toString(joinPoint.getArgs()));
-		logger.debug("Target class : " + joinPoint.getTarget().getClass().getName());
+		logger.debug(
+				"Target class : " + joinPoint.getTarget().getClass().getName());
 
 	}
 
@@ -56,7 +60,8 @@ public class PtIdGenerationApplicationAspectj {
 
 		String returnValue = this.getValue(result);
 
-		logger.debug("LEAVING: " + joinPoint.getSignature().getName() + " WITH: " + returnValue);
+		logger.debug("LEAVING: " + joinPoint.getSignature().getName()
+				+ " WITH: " + returnValue);
 	}
 
 	// After -> Any method within resource annotated with @Controller annotation
@@ -64,7 +69,8 @@ public class PtIdGenerationApplicationAspectj {
 
 	@AfterThrowing(pointcut = "controller() && allMethod()", throwing = "exception")
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable exception) {
-		logger.error("An exception has been thrown in " + joinPoint.getSignature().getName() + " ()");
+		logger.error("An exception has been thrown in "
+				+ joinPoint.getSignature().getName() + " ()");
 		logger.error("Cause : " + exception.getCause());
 	}
 
@@ -80,11 +86,13 @@ public class PtIdGenerationApplicationAspectj {
 			String methodName = joinPoint.getSignature().getName();
 			Object result = joinPoint.proceed();
 			long elapsedTime = System.currentTimeMillis() - start;
-			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : " + elapsedTime + " ms");
+			logger.debug("Method " + className + "." + methodName + " ()"
+					+ " execution time : " + elapsedTime + " ms");
 
 			return result;
 		} catch (IllegalArgumentException e) {
-			logger.error("Illegal argument " + Arrays.toString(joinPoint.getArgs()) + " in "
+			logger.error("Illegal argument "
+					+ Arrays.toString(joinPoint.getArgs()) + " in "
 					+ joinPoint.getSignature().getName() + "()");
 			throw e;
 		}

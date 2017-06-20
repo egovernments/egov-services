@@ -227,10 +227,12 @@ public class AgreementService {
 		if(agreementCriteria.getFromDate() != null)
 		{
 			setFromTime(agreementCriteria.getFromDate());
+			logger.info("agreement created from date" +agreementCriteria.getFromDate());
 		}
 		if(agreementCriteria.getToDate() != null)
 		{
 			setToTime(agreementCriteria.getFromDate());
+			logger.info("agreement created to date" +agreementCriteria.getToDate());
 		}
 		
 		boolean isAgreementNull = agreementCriteria.getAgreementId() == null

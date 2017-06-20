@@ -124,6 +124,7 @@ public class Agreement {
 	private Cancellation cancellation;
 	private Renewal renewal;
 	
+	
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date createdDate;
 	private String createdBy;

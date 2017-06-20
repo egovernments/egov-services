@@ -224,16 +224,9 @@ public class AgreementService {
 		 * each of the Agreement,Asset and Allottee objects are given or not.
 		 */
 		
-		if(agreementCriteria.getFromDate() != null)
-		{
-			setFromTime(agreementCriteria.getFromDate());
-			logger.info("agreement created from date" +agreementCriteria.getFromDate());
-		}
 		if(agreementCriteria.getToDate() != null)
 		{
-			logger.info("agreement created to date before setting time" +agreementCriteria.getToDate());
-			agreementCriteria.setToDate(setToTime(agreementCriteria.getToDate()));
-			logger.info("agreement created to date after setting time" +agreementCriteria.getToDate());
+			agreementCriteria.setToDate(setToTime(agreementCriteria.getToDate()));	
 		}
 		
 		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
@@ -283,15 +276,6 @@ public class AgreementService {
 		}
 	}
 
-	private void setFromTime(Date fromDate) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY,00);
-		cal.set(Calendar.MINUTE,00);
-		cal.set(Calendar.SECOND,0);
-		cal.set(Calendar.MILLISECOND,0);
-		fromDate = cal.getTime();	
-	}
-
 	private static Date setToTime(Date toDate) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(toDate);
@@ -299,7 +283,6 @@ public class AgreementService {
 		cal.set(Calendar.MINUTE,59);
 		cal.set(Calendar.SECOND,59);
 		cal.set(Calendar.MILLISECOND,999);
-		logger.info("todate" +toDate);
 		return cal.getTime();	
 	}
 

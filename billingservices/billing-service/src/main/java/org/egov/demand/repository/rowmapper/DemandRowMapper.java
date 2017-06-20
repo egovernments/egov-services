@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.egov.common.contract.request.User;
+
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
+import org.egov.demand.model.Owner;
 import org.egov.demand.model.enums.Type;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,13 +23,13 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 	@Override
 	public List<Demand> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-		Map<Long, Demand> demandMap = new HashMap<>();
+		Map<String, Demand> demandMap = new HashMap<>();
 		String demandIdRsName = "did";
 
 		while (rs.next()) {
 
 			try {
-				Long demandId = (Long) rs.getObject(demandIdRsName);
+				String demandId = (String) rs.getString(demandIdRsName);
 				log.info("demandid in row mapper" + demandId);
 				Demand demand = demandMap.get(demandId);
 
@@ -40,7 +42,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 					demand.setConsumerType(rs.getString("dconsumerType"));
 					demand.setTaxPeriodFrom(rs.getLong("dtaxPeriodFrom"));
 					demand.setTaxPeriodTo(rs.getLong("dtaxPeriodTo"));
-					
+					demand.setTenantId(rs.getString("dtenantid"));
 					String type = rs.getString("dtype");
 					demand.setType(Type.fromValue(type));
 
@@ -50,9 +52,9 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 					else
 						demand.setMinimumAmountPayable(minimumAmountPayable);
 
-					User user = new User();
-					user.setId(rs.getLong("downer"));
-					demand.setOwner(user);
+					Owner owner = new Owner();
+					owner.setId(rs.getLong("downer"));
+					demand.setOwner(owner);
 
 					AuditDetail auditDetail = new AuditDetail();
 					auditDetail.setCreatedBy(rs.getString("dcreatedby"));
@@ -66,8 +68,8 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				}
 
 				DemandDetail demandDetail = new DemandDetail();
-				demandDetail.setId(rs.getLong("dlid"));
-				demandDetail.setDemandId(rs.getLong("dldemandid"));
+				demandDetail.setId(rs.getString("dlid"));
+				demandDetail.setDemandId(rs.getString("dldemandid"));
 				demandDetail.setTaxHeadCode(rs.getString("dltaxheadcode"));
 				demandDetail.setTenantId(rs.getString("dltenantid"));
 

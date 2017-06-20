@@ -90,7 +90,7 @@ public class DemandRepository {
 		for (Demand demand : demands) {
 
 			AuditDetail auditDetail = demand.getAuditDetail();
-			Long demandId = demand.getId();
+			String demandId = demand.getId();
 			String demandtenantId = demand.getTenantId();
 
 			Object[] demandRecord = { demandId, demand.getConsumerCode(), demand.getConsumerType(),
@@ -113,7 +113,7 @@ public class DemandRepository {
 		for (DemandDetail demandDetail : demandDetails) {
 
 			AuditDetail auditDetail = demandDetail.getAuditDetail();
-			Long demandDetailId = demandDetail.getId();
+			String demandDetailId = demandDetail.getId();
 			String demandTenantId = demandDetail.getTenantId();
 
 			Object[] demandDetailRecord = { demandDetailId, demandDetail.getDemandId(),

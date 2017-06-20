@@ -12,8 +12,8 @@ public class DemandDetailRowMapper implements RowMapper<DemandDetail>{
 	public DemandDetail mapRow(ResultSet rs, int RowNum) throws SQLException {
 
 		DemandDetail demandDetail = new DemandDetail();
-		demandDetail.setId(rs.getLong("dlid"));
-		demandDetail.setDemandId(rs.getLong("dldemandid"));
+		demandDetail.setId(rs.getString("dlid"));
+		demandDetail.setDemandId(rs.getString("dldemandid"));
 		demandDetail.setTaxHeadCode(rs.getString("dltaxheadcode"));
 		demandDetail.setTenantId(rs.getString("dltenantid"));
 

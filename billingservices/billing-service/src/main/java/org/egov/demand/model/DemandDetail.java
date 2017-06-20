@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DemandDetail {
 
-	private Long id;
+	private String id;
 	
-	private Long demandId;	
+	private String demandId;	
 
 	@NotNull
 	private String taxHeadCode;

@@ -44,10 +44,10 @@ public class DemandService {
 		
 		int currentDemandId = 0;
 		int demandsSize = demands.size();
-		List<Long> demandIds = sequenceGenService.getdemandIds(demandsSize);
+		List<String> demandIds = sequenceGenService.getIds(demandsSize,applicationProperties.getDemandSeqName());
 		
 		for (Demand demand : demands) {
-			Long demandId = demandIds.get(currentDemandId++);
+			String demandId = demandIds.get(currentDemandId++);
 			demand.setId(demandId);
 			demand.setAuditDetail(auditDetail);
 			String tenantId = demand.getTenantId();
@@ -60,7 +60,7 @@ public class DemandService {
 		}
 		
 		int demandDetailsSize = demandDetails.size();
-		List<Long> demandDetailIds = sequenceGenService.getdemandDetailIds(demandDetailsSize);
+		List<String> demandDetailIds = sequenceGenService.getIds(demandDetailsSize,applicationProperties.getDemandDetailSeqName());
 		int currentDetailId = 0;
 		for (DemandDetail demandDetail : demandDetails) {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));

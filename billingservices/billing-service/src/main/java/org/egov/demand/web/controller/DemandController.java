@@ -1,5 +1,6 @@
 package org.egov.demand.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
@@ -26,10 +27,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/demand")
+@Slf4j
 public class DemandController {
 
 	@Autowired
@@ -39,28 +44,17 @@ public class DemandController {
 	private ResponseInfoFactory responseInfoFactory;
 	
 	@PostMapping("_create")
+	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 
+		log.info("the demand request object : "+demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		
-		/*Demand demand = new Demand();
-		demand.setConsumerCode("consumer code");
-		DemandDetail demandDetail = new DemandDetail();
-		demandDetail.setTaxAmount(100d);
-		DemandDetail demandDetail1 = new DemandDetail();
-		demandDetail1.setTaxAmount(200d);
-		List<DemandDetail> demandDetails = new ArrayList<>();
-		demandDetails.add(demandDetail1);
-		demandDetails.add(demandDetail);
-		demand.setDemandDetails(demandDetails);
-		List<Demand> demands = new ArrayList<>();
-		demands.add(demand);
-		demandRequest.setDemands(demands);*/
-		
 		List<Demand> demands = demandService.create(demandRequest);
+		log.info("the demands list : "+demands);
 		return new ResponseEntity<>(new DemandResponse(
 				responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands),
 				HttpStatus.CREATED);
@@ -113,6 +107,7 @@ private ErrorResponse getErrorResponse(Errors bindingResult,RequestInfo requestI
 		error.setCode(400);
 		error.setMessage("Mandatory Fields Null");
 		error.setDescription("exception occurred in DemandController");
+		error.setFields(new ArrayList<ErrorField>());
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			ErrorField errorField = new ErrorField(fieldError.getCode(),fieldError.getDefaultMessage(), fieldError.getField());
 			error.getFields().add(errorField);

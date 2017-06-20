@@ -18,7 +18,7 @@ public class ComplaintConfigurationRepository {
         this.url = pgrMasterHost + ANONYMOUS_COMPLAINT_OTP_CONFIG_URL;
     }
 
-    public boolean fetchOtp(String tenantId) {
+    public boolean isOtpEnabledForAnonymousComplaint(String tenantId) {
         final RequestInfoWrapper request = buildRequestInfo();
         final OtpConfigResponse response =
                 restTemplate.postForObject(url, request, OtpConfigResponse.class, tenantId);

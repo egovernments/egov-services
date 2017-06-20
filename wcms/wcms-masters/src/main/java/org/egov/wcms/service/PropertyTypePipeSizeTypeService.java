@@ -41,7 +41,6 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.wcms.config.ConfigurationManager;
 import org.egov.wcms.model.PropertyTypePipeSizeType;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;

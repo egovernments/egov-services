@@ -125,13 +125,7 @@ public class ApplicationProperties {
     @Value("${kafka.topics.sourcetype.update.name}")
     private String updateSourceTypeTopicName;
 
-    // topic for water-transaction use case
-    @Value("${kafka.topics.newconnection.create.name}")
-    private String createNewConnectionTopicName;
-
-    @Value("${kafka.topics.legacyconnection.create.name}")
-    private String createLegacyConnectionTopicName;
-
+    
     @Autowired
     private Environment environment;
 
@@ -228,14 +222,6 @@ public class ApplicationProperties {
 
     public String getUpdateSourceTypeTopicName() {
         return updateSourceTypeTopicName;
-    }
-
-    public String getCreateNewConnectionTopicName() {
-        return createNewConnectionTopicName;
-    }
-
-    public String getCreateLegacyConnectionTopicName() {
-        return createLegacyConnectionTopicName;
     }
 
     public String getCreateDocumentTypeTopicName() {

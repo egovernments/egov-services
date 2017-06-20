@@ -76,7 +76,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/source")
+@RequestMapping("/receivingmode")
 public class ReceivingModeTypeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeController.class);

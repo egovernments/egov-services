@@ -1,76 +1,69 @@
-package org.egov.demand.web.controller;
+package org.egov.demand.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.demand.TestConfiguration;
+import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
 import org.egov.demand.model.enums.Type;
-import org.egov.demand.service.DemandService;
-import org.egov.demand.util.FileUtils;
+import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.web.contract.DemandRequest;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(DemandController.class)
-@Import(TestConfiguration.class)
-public class DemandControllerTest {
+public class DemandServiceTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+	@Mock
+	private DemandRepository demandRepository;
 
-	@MockBean
+	@Mock
+	private SequenceGenService sequenceGenService;
+
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+	@Mock
+	private ApplicationProperties applicationProperties;
+
+	@InjectMocks
 	private DemandService demandService;
-
-	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
-
+	
 	@Test
-	public void testShouldCreateDemands() throws IOException, Exception {
-
+	public void methodShouldCreateDemand(){
+		
 		RequestInfo requestInfo = getRequestInfo();
+		
+		User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
 		Demand demand = getDemand();
+		List<DemandDetail> details = demand.getDemandDetails();
 		List<Demand> demands = new ArrayList<>();
 		demands.add(demand);
-		DemandRequest demandRequest = new DemandRequest(requestInfo, demands);
-		System.err.println(demandRequest);
-
-		//when(demandService.create(any(DemandRequest.class))).thenReturn(demands);
-		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class)))
-		//.thenReturn(getResponseInfo(requestInfo));
-
-		 when(demandService.create(demandRequest)).thenReturn(demands);
-		 when(responseInfoFactory.getResponseInfo(requestInfo,HttpStatus.CREATED))
-		 	.thenReturn(getResponseInfo(requestInfo));
-
-		mockMvc.perform(post("/demand/_create").contentType(MediaType.APPLICATION_JSON)
-				.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-				.andExpect(content().json(getFileContents("demandresponse.json")));
-	}
-
-	private String getFileContents(String fileName) throws IOException {
-		return new FileUtils().getFileContents(fileName);
+		
+		DemandRequest demandRequest = new DemandRequest(requestInfo,demands);
+		List<String> strings = new ArrayList<>();
+		strings.add("1");
+		strings.add("2");
+		
+		when(sequenceGenService.getIds(demands.size(),applicationProperties.getDemandSeqName())).thenReturn(strings);
+		when(sequenceGenService.getIds(details.size(),applicationProperties.getDemandDetailSeqName())).thenReturn(strings);
+		
+		assertEquals(demandService.create(demandRequest), demands);
 	}
 	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {
@@ -125,5 +118,6 @@ public class DemandControllerTest {
 		requestInfo.setDid("did");
 		return requestInfo;
 	}
+
 
 }

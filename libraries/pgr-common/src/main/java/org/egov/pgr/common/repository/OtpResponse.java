@@ -17,6 +17,10 @@ public class OtpResponse {
     public boolean isOtpNumberAbsent() {
         return isEmpty(getOtpNumber());
     }
+
+    public boolean isValidationComplete(String mobileNumber) {
+        return otp != null && otp.isValidationComplete(mobileNumber);
+    }
 }
 
 

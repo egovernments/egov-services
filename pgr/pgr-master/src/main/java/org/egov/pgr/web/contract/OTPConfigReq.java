@@ -39,12 +39,9 @@
  */
 package org.egov.pgr.web.contract;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgr.model.EscalationTimeType;
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,13 +58,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class EscalationTimeTypeRes {
+public class OTPConfigReq {
+	
+	@NotNull
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-    @NotNull
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+    @JsonProperty("otpConfig")
+    private OTPConfig otpConfig;
 
-    @JsonProperty("EscalationTimeType")
-    private List<EscalationTimeType> escalationTimeTypes;
 }
-

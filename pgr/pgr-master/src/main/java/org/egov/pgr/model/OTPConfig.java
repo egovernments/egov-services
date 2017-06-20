@@ -37,18 +37,10 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.web.contract;
-
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgr.model.EscalationTimeType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package org.egov.pgr.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,13 +53,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class EscalationTimeTypeRes {
-
-    @NotNull
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-
-    @JsonProperty("EscalationTimeType")
-    private List<EscalationTimeType> escalationTimeTypes;
+@Builder
+public class OTPConfig {
+	
+	public static final String SEQ_CATEGORY = "SEQ_EGPGR_OTPCONFIG";
+	
+	private String tenantId;
+	private boolean otpConfigEnabled; 
+	private AuditDetails auditDetails; 
 }
-

@@ -215,9 +215,9 @@ public class ReceivingCenterTypeController {
 		} 
 		else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGCENTER_CODE_UNIQUE_CODE)
+                    .code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
                     .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_CODE_UNQ_FIELD_NAME).build();
+                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
         } else
 			return;

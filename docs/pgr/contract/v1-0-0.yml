@@ -1453,12 +1453,12 @@ definitions:
         tenantId:
          type: string 
          description : Unique Identifier of the tenant.
-        otpConfigEnabled:
+        otpEnabledForAnonymousComplaint:
           type: boolean
           description : Boolean identifier to confirm the enabled status.
       required:
         - tenantId
-        - otpConfigEnabled
+        - otpEnabledForAnonymousComplaint
         
   BoundaryIdType:
       type: object

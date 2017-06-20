@@ -118,6 +118,18 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.escalationtimetype.update.key}")
     private String updateEscalationTimeTypeKey;
+	
+	@Value("${kafka.topics.otpconfig.create.name}")
+    private String createOtpConfigName;
+    
+	@Value("${kafka.topics.otpconfig.create.key}")
+    private String createOtpConfigKey;
+	
+    @Value("${kafka.topics.otpconfig.update.name}")
+    private String updateOtpConfigName;
+    
+	@Value("${kafka.topics.otpconfig.update.key}")
+    private String updateOtpConfigKey;
     
 	public String getUpdateEscalationTimeTypeName() {
 		return updateEscalationTimeTypeName;
@@ -203,6 +215,22 @@ public class ApplicationProperties {
 
 	public String getCreateEscalationTimeTypeKey() {
 		return createEscalationTimeTypeKey;
+	}
+	
+	public String getCreateOtpConfigTopicName() {
+		return createOtpConfigName;
+	}
+
+	public String getCreateOtpConfigTopicKey() {
+		return createOtpConfigKey;
+	}
+	
+	public String getUpdateOtpConfigTopicName() {
+		return updateOtpConfigName;
+	}
+
+	public String getUpdateOtpConfigTopicKey() {
+		return updateOtpConfigKey;
 	}
 
 

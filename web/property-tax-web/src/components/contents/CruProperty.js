@@ -2120,46 +2120,7 @@ class CruProperty extends Component {
                                           </tbody>
                                           </Table>
 
-                                          <Table id="cruPropertyTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
-                                          <thead style={{backgroundColor:"#607b84",color:"white"}}>
-                                            <tr>
-                                              <th>#</th>
-                                              <th>Unit Number</th>
-                                              <th>Unit Type</th>
-                                              <th>Action</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {(cruProperty.floor && cruProperty.floor.units) && cruProperty.floor.units.map(function(i, index){
-                                              if(i){
-                                                return (<tr key={index}>
-                                                    <td>{index}</td>
-                                                    <td>{i.unitNo}</td>
-                                                    <td>{i.unitType}</td>
-                                                    <td>
-                                                    <FloatingActionButton mini={true} style={styles.floatButtonMargin} onClick={ () => {
-                                                      cThis.setState({
-                                                          addFloor: true
-                                                        });
-                                                      editObject("unit",i);
-                                                      isEditIndex(index);
-
-                                                    }}>
-                                                       <i className="material-icons" style={styles.iconFont}>mode_edit</i>
-                                                   </FloatingActionButton>
-                                                     <FloatingActionButton mini={true} style={styles.floatButtonMargin} onClick={ () => {
-                                                        deleteNestedObject("floor", "units", index);
-                                                        isEditIndex(-1);
-                                                  }}>
-                                                         <i className="material-icons">delete</i>
-                                                     </FloatingActionButton>
-                                                    </td>
-                                                  </tr>)
-                                              }
-
-                                            })}
-                                          </tbody>
-                                          </Table>
+                                        
                                                 </div>}
                                           </Row>
                                       </Col>

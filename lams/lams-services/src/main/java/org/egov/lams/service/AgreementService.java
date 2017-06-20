@@ -232,7 +232,7 @@ public class AgreementService {
 		if(agreementCriteria.getToDate() != null)
 		{
 			logger.info("agreement created to date before setting time" +agreementCriteria.getToDate());
-			setToTime(agreementCriteria.getFromDate());
+			setToTime(agreementCriteria.getToDate());
 			logger.info("agreement created to date after setting time" +agreementCriteria.getToDate());
 		}
 		

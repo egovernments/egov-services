@@ -15,6 +15,6 @@ class OtpConfigResponse {
         if (CollectionUtils.isEmpty(otgConfigs)) {
             return false;
         }
-        return otgConfigs.get(0).isOtpConfigEnabled();
+        return otgConfigs.get(0).isOtpEnabledForAnonymousComplaint();
     }
 }

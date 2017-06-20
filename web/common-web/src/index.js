@@ -11,6 +11,7 @@ import registerServiceWorker from './registerServiceWorker';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import App from "./components/App"
 
+import './styles/index.css';
 import './styles/application.css';
 import './styles/vistyle.css';
 import './styles/bootstrap.min.css';
@@ -30,9 +31,9 @@ injectTapEventPlugin();
 const muiTheme = getMuiTheme({
   palette: {
 
-    primary1Color: "#5a3e1b",
-    primary2Color: "#5a3e1b",
-    textColor:"#5a3e1b"
+    primary1Color: "#354f57",
+    primary2Color: "#354f57",
+    textColor:"#354f57"
   }
 });
 

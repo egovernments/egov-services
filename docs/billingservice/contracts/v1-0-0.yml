@@ -872,19 +872,17 @@ definitions:
         type: boolean
         description: True for tax/charges/penalty. False for advances(if any).
       purpose:
-        type: array
+        type: string
         description: Purpose of Account head.
-        items:
-          type: string
-          enum:
-           - ARREAR_AMOUNT
-           - CURRENT_AMOUNT
-           - ADVANCE_AMOUNT
-           - ARREAR_LATEPAYMENT_CHARGES
-           - CURRENT_LATEPAYMENT_CHARGES
-           - CHEQUE_BOUNCE_PENALTY
-           - REBATE
-           - OTHERS
+        enum:
+         - ARREAR_AMOUNT
+         - CURRENT_AMOUNT
+         - ADVANCE_AMOUNT
+         - ARREAR_LATEPAYMENT_CHARGES
+         - CURRENT_LATEPAYMENT_CHARGES
+         - CHEQUE_BOUNCE_PENALTY
+         - REBATE
+         - OTHERS
     required:
       - glcode
       - accountDescription

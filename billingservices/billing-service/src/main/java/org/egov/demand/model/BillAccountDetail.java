@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BillAccountDetail {
 
-	private Long id;
+	private String id;
 
 	private String glcode;
 

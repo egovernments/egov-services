@@ -116,10 +116,19 @@ public class OTPConfigService {
 		return otpConfigRepository.updateOTPConfig(otpConfig);
 	}
 	
-	public List<org.egov.pgr.web.contract.OTPConfig> getAllOtpConfig(List<String> tenantId){
-		List<OTPConfig> configList = otpConfigRepository.getAllOtpConfig(tenantId);
+	public List<org.egov.pgr.web.contract.OTPConfig> getAllOtpConfig(List<String> tenantList) {
+		List<OTPConfig> configList = otpConfigRepository.getAllOtpConfig(tenantList);
+		for(int i=0;i<configList.size();i++){
+			tenantList.remove(configList.get(i).getTenantId());
+		}
+		for (int i = 0; i < tenantList.size(); i++) {
+			OTPConfig config = new OTPConfig();
+			config.setTenantId(tenantList.get(i));
+			config.setOtpConfigEnabled(false);
+			configList.add(config);
+		}
 		return modelToContract(configList);
-		
+
 	}
 	
 	private List<org.egov.pgr.web.contract.OTPConfig> modelToContract(List<OTPConfig> configList){

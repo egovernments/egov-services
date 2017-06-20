@@ -138,7 +138,7 @@ add(e)
       const showActionButton=function() {
         if((!mode) ||mode==="Update")
         {
-          return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+          return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                                add("applicationType","documentTypeId","active")}} />
           )
         }

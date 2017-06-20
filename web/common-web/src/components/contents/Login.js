@@ -191,7 +191,7 @@ class Login extends Component {
                                 />
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid}  label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={brown500} labelColor={white} onClick={(e)=>{
+                                  <RaisedButton disabled={!isFormValid}  label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
                                     login(e,false,"adasdsa3435",[]);
                                     window.localStorage.setItem("token","adasdsa3435");
                                   }}/>
@@ -231,7 +231,7 @@ class Login extends Component {
                           <TextField
                             hintText="Search Text"
                           />
-                          <RaisedButton label="Search"  backgroundColor={brown500} labelColor={white}/>
+                          <RaisedButton label="Search" backgroundColor={"#354f57"} labelColor={white}/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>

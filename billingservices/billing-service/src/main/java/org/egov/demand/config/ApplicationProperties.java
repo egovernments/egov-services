@@ -73,7 +73,15 @@ public class ApplicationProperties {
 	@Value("${bs.billaccountdetail.seq.name}")
 	private String billAccDetailSeqName;
 	
+	@Value("${kafka.topics.save.demand}")
+	private String createDemandTopic;
 	
+	@Value("${kafka.topics.update.demand}")
+	private String updateDemandTopic;
 	
-
+	@Value("${bs.demand.seq.name}")
+	private String demandSeqName;
+	
+	@Value("${bs.demanddetail.seq.name}")
+	private String demandDetailSeqName;
 }

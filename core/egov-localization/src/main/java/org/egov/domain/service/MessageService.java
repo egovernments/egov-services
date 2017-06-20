@@ -13,7 +13,6 @@ import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
-import org.egov.web.contract.CreateMessagesRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -104,13 +103,22 @@ public class MessageService {
         return messages;
     }
     
-    public boolean createMessage(CreateMessagesRequest createMessagesRequest){
-    	messageRepository.deleteMessages(createMessagesRequest);
-   		boolean createStatus = messageRepository.createMessage(createMessagesRequest);
+    public boolean createMessage(String locale, String tenantId, List<Message> messageList){
+    	messageRepository.deleteMessages(locale, tenantId, messageList);
+   		boolean createStatus = messageRepository.createMessage(locale, tenantId, messageList);
    		if(createStatus){
    			return true;
    		}
    		return false; 
     }
-
+    
+    public boolean deleteMessage(String locale, String tenantId, List<Message> messageList){
+    	boolean deleteStatus = messageRepository.deleteMessages(locale, tenantId, messageList);
+    	if(deleteStatus){
+    		return true;
+    	}
+    	return false;     	
+    }
+    
+    
 }

@@ -8,14 +8,13 @@ import javax.validation.constraints.NotNull;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 /**
  * Categories defined under asset category type are shown in the drop down.
  */
@@ -25,56 +24,39 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class AssetCategory   {
-	
-  @JsonProperty("tenantId")
-  @NotNull
-  private String tenantId;
-	
-  @JsonProperty("id")
-  private Long id;
+public class AssetCategory {
 
-  @JsonProperty("name")
-  @NotNull
-  private String name;
+	@NotNull
+	private String tenantId;
 
-  @JsonProperty("code")
-  private String code;
+	private Long id;
 
-  @JsonProperty("assetCategoryType")
-  private AssetCategoryType assetCategoryType;
+	@NotNull
+	private String name;
 
-  @JsonProperty("parent")
-  private Long parent;
+	private String code;
 
-  @JsonProperty("depreciationMethod")
-  private DepreciationMethod depreciationMethod;
-  
-  @JsonProperty("isAssetAllow")
-  private Boolean isAssetAllow;
+	private AssetCategoryType assetCategoryType;
 
-  @JsonProperty("assetAccount")
-  private Long assetAccount;
+	private Long parent;
 
-  @JsonProperty("accumulatedDepreciationAccount")
-  private Long accumulatedDepreciationAccount;
+	private DepreciationMethod depreciationMethod;
 
-  @JsonProperty("revaluationReserveAccount")
-  private Long revaluationReserveAccount;
+	private Boolean isAssetAllow;
 
-  @JsonProperty("depreciationExpenseAccount")
-  private Long depreciationExpenseAccount;
+	private Long assetAccount;
 
-  @JsonProperty("unitOfMeasurement")
-  private Long unitOfMeasurement;
-  
-  @JsonProperty("version")
-  private String version;
+	private Long accumulatedDepreciationAccount;
 
-  @JsonProperty("depreciationRate")
-  private List<DepreciationMetaData> depreciationRate ;
+	private Long revaluationReserveAccount;
 
-  @JsonProperty("assetFieldsDefination")
-  private List<AttributeDefination> assetFieldsDefination;
+	private Long depreciationExpenseAccount;
+
+	private Long unitOfMeasurement;
+
+	private String version;
+
+	private List<DepreciationMetaData> depreciationRate;
+
+	private List<AttributeDefination> assetFieldsDefination;
 }
-

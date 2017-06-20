@@ -231,8 +231,9 @@ public class AgreementService {
 		}
 		if(agreementCriteria.getToDate() != null)
 		{
+			logger.info("agreement created to date before setting time" +agreementCriteria.getToDate());
 			setToTime(agreementCriteria.getFromDate());
-			logger.info("agreement created to date" +agreementCriteria.getToDate());
+			logger.info("agreement created to date after setting time" +agreementCriteria.getToDate());
 		}
 		
 		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
@@ -298,6 +299,7 @@ public class AgreementService {
 		cal.set(Calendar.SECOND,59);
 		cal.set(Calendar.MILLISECOND,999);
 		toDate = cal.getTime();	
+		logger.info("todate" +toDate);
 	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {

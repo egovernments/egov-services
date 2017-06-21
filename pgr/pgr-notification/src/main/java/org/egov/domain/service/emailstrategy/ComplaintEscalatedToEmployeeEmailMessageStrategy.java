@@ -31,25 +31,23 @@ public class ComplaintEscalatedToEmployeeEmailMessageStrategy implements EmailMe
             .bodyTemplateName(EMAIL_BODY_EN_TEMPLATE)
             .bodyTemplateValues(getBodyTemplate(context))
             .subjectTemplateName(EMAIL_SUBJECT_EN_TEMPLATE)
-            .subjectTemplateValues(getSubjectTemplateValues())
+            .subjectTemplateValues(getSubjectTemplateValues(context))
             .email(context.getEmployee().getEmail())
             .build();
     }
 
     private Map<Object, Object> getBodyTemplate(NotificationContext context) {
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
-        //TODO: Fetch employee details
         builder.put(NAME, context.getServiceType().getName());
         builder.put(NUMBER, context.getSevaRequest().getCrn());
-        builder.put(PREVIOUS_ASSIGNEE_NAME, null);
-        builder.put(DESIGNATION, null);
-        builder.put(POSITION, null);
+        builder.put(PREVIOUS_ASSIGNEE_NAME, context.getPreviousEmployee().getName());
+        builder.put(DESIGNATION, context.getPreviousEmployeeDesignation());
+        builder.put(POSITION, context.getPreviousEmployeePosition());
         return builder.build();
     }
 
-    private Map<Object, Object> getSubjectTemplateValues() {
-        //TODO: Populate location name
-        return ImmutableMap.of(LOCATION_NAME, null);
+    private Map<Object, Object> getSubjectTemplateValues(NotificationContext context) {
+        return ImmutableMap.of(LOCATION_NAME, context.getLocation().getName());
     }
 }
 

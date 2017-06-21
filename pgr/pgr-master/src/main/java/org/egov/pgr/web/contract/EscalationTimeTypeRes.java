@@ -64,7 +64,7 @@ import lombok.ToString;
 public class EscalationTimeTypeRes {
 
     @NotNull
-    @JsonProperty("RequestInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
     @JsonProperty("EscalationTimeType")

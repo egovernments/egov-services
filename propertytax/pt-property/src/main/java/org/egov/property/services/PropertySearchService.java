@@ -158,6 +158,7 @@ public class PropertySearchService {
 
 		if ( houseNoBldgApt!=null && !houseNoBldgApt.isEmpty() )
 			searchPropertySql.append(" AND Addr.housenobldgapt='"+houseNoBldgApt.trim()+"'");
+		//TODO do not leave any unwanted or commented code
 
 		/*if ( revenueZone > 0)
 			searchPropertySql.append(" AND puser.revenueZone= "+revenueZone);

@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuditDetail {
-	
-	  private String createdBy;
 
-	  private String lastModifiedBy;
+	private String createdBy;
 
-	  private Long createdTime;
+	private String lastModifiedBy;
 
-	  private Long lastModifiedTime;
+	private Long createdTime;
+
+	private Long lastModifiedTime;
 }

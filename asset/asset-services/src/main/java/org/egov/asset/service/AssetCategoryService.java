@@ -11,6 +11,8 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetCategoryRepository;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,80 +34,82 @@ public class AssetCategoryService {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
-	public List<AssetCategory> search(AssetCategoryCriteria assetCategoryCriteria) {
+	public List<AssetCategory> search(final AssetCategoryCriteria assetCategoryCriteria) {
 		return assetCategoryRepository.search(assetCategoryCriteria);
 	}
 
-	public void create(AssetCategoryRequest assetCategoryRequest) {
+	public void create(final AssetCategoryRequest assetCategoryRequest) {
 
 		try {
-				assetCategoryRepository.create(assetCategoryRequest);
-		} catch(Exception ex) {
+			assetCategoryRepository.create(assetCategoryRequest);
+		} catch (final Exception ex) {
 			ex.printStackTrace();
 			logger.info("AssetCategoryService create");
 		}
 	}
 
-	public AssetCategoryResponse createAsync(AssetCategoryRequest assetCategoryRequest) {
+	public AssetCategoryResponse createAsync(final AssetCategoryRequest assetCategoryRequest) {
 
 		assetCategoryRequest.getAssetCategory().setCode(assetCategoryRepository.getAssetCategoryCode());
 		logger.info("AssetCategoryService createAsync" + assetCategoryRequest);
 		String value = null;
 		try {
 			value = objectMapper.writeValueAsString(assetCategoryRequest);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			logger.info("the exception in assetcategory service create async method : " + e);
 		}
 		try {
 			assetProducer.sendMessage(applicationProperties.getCreateAssetCategoryTopicName(), "save-aasetcategory",
 					value);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception in assetcategory service create async method : " + ex);
 		}
-		List<AssetCategory> assetCategories = new ArrayList<>();
+		final List<AssetCategory> assetCategories = new ArrayList<>();
 		assetCategories.add(assetCategoryRequest.getAssetCategory());
 
-		return getAssetCategoryResponse(assetCategories);
+		return getAssetCategoryResponse(assetCategories, assetCategoryRequest.getRequestInfo());
 	}
 
-	public void update(AssetCategoryRequest assetCategoryRequest) {
-
-		try {
-			assetCategoryRepository.update(assetCategoryRequest);
-		} catch(Exception ex) {
-			ex.printStackTrace();
-			logger.info("AssetCategoryService update"+ex.getMessage());
-		}
+	public AssetCategoryResponse update(final AssetCategoryRequest assetCategoryRequest) {
+		final AssetCategory assetCategory = assetCategoryRepository.update(assetCategoryRequest);
+		final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
+		assetCategories.add(assetCategory);
+		return getAssetCategoryResponse(assetCategories, new RequestInfo());
 	}
-	
-	public AssetCategoryResponse updateAsync(AssetCategoryRequest assetCategoryRequest) {
-		
+
+	public AssetCategoryResponse updateAsync(final AssetCategoryRequest assetCategoryRequest) {
+
 		logger.info("AssetCategoryService updateAsync" + assetCategoryRequest);
 		String value = null;
 		try {
 			value = objectMapper.writeValueAsString(assetCategoryRequest);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			logger.info("the exception in assetcategory service  updateasync method : " + e);
 		}
 		try {
 			assetProducer.sendMessage(applicationProperties.getUpdateAssetCategoryTopicName(), "update-aasetcategory",
 					value);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception in assetcategory service updateasync method : " + ex);
 		}
-		List<AssetCategory> assetCategories = new ArrayList<>();
+		final List<AssetCategory> assetCategories = new ArrayList<>();
 		assetCategories.add(assetCategoryRequest.getAssetCategory());
 
-		return getAssetCategoryResponse(assetCategories);
+		return getAssetCategoryResponse(assetCategories, assetCategoryRequest.getRequestInfo());
 	}
-	private AssetCategoryResponse getAssetCategoryResponse(List<AssetCategory> assetCategories) {
-		AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
-		assetCategoryResponse.setAssetCategory(assetCategories);
 
+	private AssetCategoryResponse getAssetCategoryResponse(final List<AssetCategory> assetCategories,
+			final RequestInfo requestInfo) {
+		final AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
+		assetCategoryResponse.setAssetCategory(assetCategories);
+		assetCategoryResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
 		return assetCategoryResponse;
 	}
 }

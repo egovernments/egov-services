@@ -22,8 +22,7 @@ public class ComplaintRegisteredEmployeeSMSMessageStrategy implements SMSMessage
     public SMSMessageContext getMessageContext(NotificationContext context) {
         final Map<Object, Object> map = ImmutableMap.of(
             NAME, context.getServiceType().getName(),
-            //TODO: Set location name
-            LOCATION_NAME, null,
+            LOCATION_NAME, context.getLocation().getName(),
             COMPLAINANT_NAME, context.getSevaRequest().getRequesterName(),
             MOBILE_NUMBER, context.getSevaRequest().getMobileNumber()
         );

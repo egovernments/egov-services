@@ -504,14 +504,16 @@ public class PropertyMasterController {
 	public UsageMasterResponse getUsageMaster(@RequestBody RequestInfoWrapper requestInfo ,
 			@RequestParam(required=true) String tenantId,
 			@RequestParam(required=false) Integer[] ids,
-			@RequestParam(required=false) String category,
 			@RequestParam(required=false) String name,
 			@RequestParam(required=false) String code,
 			@RequestParam(required=false) String nameLocal,
+			@RequestParam(required=false) Boolean active,
+			@RequestParam(required=false) Boolean isResidential,
+			@RequestParam(required=false) Integer orderNumber,
 			@RequestParam(required=false) Integer pageSize,
 			@RequestParam(required=false) Integer offSet) throws Exception {
 
-		return	masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, pageSize, offSet);
+		return	masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, active, isResidential, orderNumber, pageSize, offSet);
 
 	}
 

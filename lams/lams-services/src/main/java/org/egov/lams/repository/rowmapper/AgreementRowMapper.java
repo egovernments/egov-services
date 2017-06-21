@@ -72,6 +72,10 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setCouncilDate(rs.getTimestamp("council_date"));
 					agreement.setCouncilNumber(rs.getString("council_number"));
 					agreement.setExpiryDate(rs.getTimestamp("expiry_date"));
+					agreement.setCreatedDate(rs.getTimestamp("created_date"));
+					agreement.setCreatedBy(rs.getString("created_by"));
+					agreement.setLastmodifiedDate(rs.getTimestamp("last_modified_date"));
+					agreement.setLastmodifiedBy(rs.getString("last_modified_by"));
 
 					String source = rs.getString("source");
 					agreement.setSource(Source.fromValue(source));

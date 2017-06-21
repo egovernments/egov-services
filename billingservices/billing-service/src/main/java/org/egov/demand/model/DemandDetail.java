@@ -1,5 +1,7 @@
 package org.egov.demand.model;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,16 +10,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DemandDetail {
+
+	private String id;
 	
-	  private Long id;
+	private String demandId;	
 
-	  private Double taxAmount;
+	@NotNull
+	private String taxHeadCode;
 
-	  private Double collectionAmount = 0.0d;
+	@NotNull
+	private Double taxAmount;
+	
+	@NotNull
+	private Double collectionAmount = 0.0d;
 
-	  private DemandReason demandReason;
+	private AuditDetail auditDetail;
 
-	  private AuditDetail auditDetails;
-
-	  private String tenantId;
+	@NotNull
+	private String tenantId;
 }

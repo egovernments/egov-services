@@ -40,13 +40,12 @@
 
 package org.egov.eis.model.enums;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum MaritalStatus {
 	MARRIED("MARRIED"), UNMARRIED("UNMARRIED"), WIDOW("WIDOW"), WIDOWER("WIDOWER"), DIVORCED("DIVORCED");

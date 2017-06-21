@@ -126,7 +126,7 @@ class DocumentType extends Component {
       {
       // console.log(response);
     },function(err) {
-        alert(err);
+        alert("Entered Document type already exists");
     });
 }
     }
@@ -154,7 +154,7 @@ class DocumentType extends Component {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                              add("name","description","active")}} />
         )
       }
@@ -210,7 +210,7 @@ class DocumentType extends Component {
 
 
               <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
 
                {showActionButton()}

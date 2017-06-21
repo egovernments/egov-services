@@ -19,6 +19,8 @@ import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Api from '../../../api/wCAPIS';
+import App from '../../App';
+
 
 
 const $ = require('jquery');
@@ -93,7 +95,7 @@ class PipeSize extends Component {
             // });
 
         },  (err)=> {
-            alert(err);
+            alert("Please Enter the details");
         })
       }
 
@@ -104,20 +106,22 @@ class PipeSize extends Component {
   {
     var type=getUrlVars()["type"];
     var id=getUrlVars()["id"];
-    let {changeButtonText,pipeSize}=this.props;
+    let {changeButtonText,pipeSize,toggleDailogAndSetText}=this.props;
     var PipeSize = {
         sizeInMilimeter:pipeSize.sizeInMilimeter,
+        description:pipeSize.Description,
         sizeInInch:pipeSize.sizeInInch,
         active:pipeSize.Active,
         tenantId:'default'
     }
       if(type == "Update"){
 
-        let response=Api.commonApiPost("wcms-masters", "pipesize", "_update/"+id, {},{PipeSize:PipeSize}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "pipesize/"+id, "_update", {},{PipeSize:PipeSize}).then(function(response)
         {
-        console.log(response);
+        // console.log(response);
+        alert("Pipe Size Updated Successfully")
       },function(err) {
-          alert(err);
+          alert("Enetered Pipe Size already exist");
       });
 
       }
@@ -126,8 +130,13 @@ class PipeSize extends Component {
       let response=Api.commonApiPost("wcms-masters", "pipesize", "_create", {},{PipeSize}).then(function(response)
       {
       // console.log(response);
+       alert("Pipe Size Created Successfully");
+      // toggleDailogAndSetText(true," done");
     },function(err) {
-        alert(err);
+       console.log(response);
+        alert("Pipe Size enetered in mm already exist");
+
+       toggleDailogAndSetText(true,"Not Done");
     });
   }
     }
@@ -148,17 +157,18 @@ class PipeSize extends Component {
       fieldErrors,
       // isFormValid,
       handleChange,
+      toggleDailogAndSetText,
 
     } = this.props;
     let {add, handleChangeState} = this;
     let mode=getUrlVars()["type"];
-    console.log(pipeSize);
+    // console.log(pipeSize);
     const showActionButton=function() {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
-                             add("sizeInMilimeter","sizeInInch","active")}} />
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+                             add("sizeInMilimeter","sizeInInch","active","description")}} />
         )
       }
     };
@@ -167,7 +177,7 @@ class PipeSize extends Component {
         return (
       <div className="pipeSize">
           <Card>
-            <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Create Pipe Size Master< /strong>}/>
+            <CardHeader title={< strong style = {{color:"#5a3e1b"}} >  Pipe Size < /strong>}/>
 
             <CardText>
               <Card>
@@ -175,9 +185,7 @@ class PipeSize extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.sizeInMilimeter
-                        ? fieldErrors.sizeInMilimeter
-                        : ""} value={pipeSize.sizeInMilimeter?pipeSize.sizeInMilimeter:""}  onChange={(e) =>{ handleChangeState(e, "sizeInMilimeter", false, "");
+                      <TextField errorText="This field is required." value={pipeSize.sizeInMilimeter?pipeSize.sizeInMilimeter:""}  onChange={(e) =>{ handleChangeState(e, "sizeInMilimeter", false, "");
 
 
                       } } hintText="123456" floatingLabelText="H.S.C Pipe Size (mm)" />
@@ -190,6 +198,7 @@ class PipeSize extends Component {
                     </Col>
                     </Row>
                     <Row>
+
                     <Col xs={12} md={6}>
                                         <Checkbox
                                          label="Active"
@@ -207,6 +216,11 @@ class PipeSize extends Component {
                                          style={styles.topGap}
                                         />
                           </Col>
+                          <Col xs={12} md={6}>
+                            <TextField errorText={fieldErrors.Descrption
+                              ? fieldErrors.Description
+                              : ""} value={pipeSize.Description?pipeSize.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
+                          </Col>
                         </Row>
 
                     </Grid>
@@ -218,7 +232,7 @@ class PipeSize extends Component {
 
 
               <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
 
 
@@ -272,6 +286,14 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({
+      type: "TOGGLE_DAILOG_AND_SET_TEXT",
+      dailogState,
+      msg
+    })
+},
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
 

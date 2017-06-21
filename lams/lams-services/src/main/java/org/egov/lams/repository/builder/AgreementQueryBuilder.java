@@ -140,10 +140,10 @@ public class AgreementQueryBuilder {
 			if (agreementsModel.getToDate().compareTo(agreementsModel.getFromDate()) < 0)
 				throw new RuntimeException("ToDate cannot be lesser than fromdate");
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" AGREEMENT.AGREEMENT_DATE>=?");
+			selectQuery.append(" AGREEMENT.CREATED_DATE>=?");
 			preparedStatementValues.add(agreementsModel.getFromDate());
 			addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" AGREEMENT.AGREEMENT_DATE<=?");
+			selectQuery.append(" AGREEMENT.CREATED_DATE<=?");
 			preparedStatementValues.add(agreementsModel.getToDate());
 		} else if (agreementsModel.getFromDate() != null || agreementsModel.getToDate() != null)
 			throw new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");

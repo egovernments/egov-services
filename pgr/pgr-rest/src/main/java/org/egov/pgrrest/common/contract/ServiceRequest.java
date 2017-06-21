@@ -31,6 +31,7 @@ public class ServiceRequest {
     private static final String REQUESTER_ADDRESS = "requesterAddress";
     private static final String RECEIVING_MODE = "receivingMode";
     private static final String RECEIVING_CENTER = "receivingCenter";
+    private static final String OTP_REFERENCE = "otpReference";
     private static final String USER_ID = "userId";
 
     private String tenantId;
@@ -144,7 +145,7 @@ public class ServiceRequest {
         return org.egov.pgrrest.read.domain.model.ServiceRequest.builder()
             .authenticatedUser(authenticatedUser)
             .crn(crn)
-            .serviceRequestType(new ServiceRequestType(serviceTypeName, serviceTypeCode, tenantId))
+            .serviceRequestType(getServiceRequestType())
             .address(address)
             .mediaUrls(mediaUrls)
             .serviceRequestLocation(serviceRequestLocation)
@@ -154,7 +155,16 @@ public class ServiceRequest {
             .receivingMode(getReceivingMode())
             .receivingCenter(getReceivingCenter())
             .modifyServiceRequest(isUpdate)
+            .otpReference(getOtpReference())
             .attributeEntries(toDomainAttributeEntries())
+            .build();
+    }
+
+    private ServiceRequestType getServiceRequestType() {
+        return ServiceRequestType.builder()
+            .name(serviceTypeName)
+            .code(serviceTypeCode)
+            .tenantId(tenantId)
             .build();
     }
 
@@ -189,6 +199,10 @@ public class ServiceRequest {
 
     private String getReceivingCenter() {
         return getDynamicSingleValue(RECEIVING_CENTER);
+    }
+
+    private String getOtpReference() {
+        return getDynamicSingleValue(OTP_REFERENCE);
     }
 
     private String getRequesterUserId() {

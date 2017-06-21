@@ -45,7 +45,9 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.model.OTPConfig;
 import org.egov.pgr.service.EscalationTimeTypeService;
+import org.egov.pgr.service.OTPConfigService;
 import org.egov.pgr.service.ReceivingCenterTypeService;
 import org.egov.pgr.service.ReceivingModeTypeService;
 import org.egov.pgr.service.RouterService;
@@ -94,6 +96,9 @@ public class PGRConsumer {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired 
+	private OTPConfigService otpConfigService; 
 
    	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
@@ -101,9 +106,9 @@ public class PGRConsumer {
 			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicetype.create.name}", 
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.servicetype.update.name}","${kafka.topics.router.create.name}",
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}", 
-			"${kafka.topics.escalationtimetype.update.name}"})
+			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}"})
 	
-public void listen(final ConsumerRecord<String, String> record) {
+	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -131,33 +136,31 @@ public void listen(final ConsumerRecord<String, String> record) {
 			} else if (record.topic().equals(applicationProperties.getUpdateServiceGroupTopicName())) {
 				LOGGER.info("Consuming update ServiceGroup request");
 				serviceGroupService.update(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
-			} else if(record.topic().equals(applicationProperties.getUpdateServiceTypeTopicName())) {
+			} else if (record.topic().equals(applicationProperties.getUpdateServiceTypeTopicName())) {
 				LOGGER.info("Consuming update ServiceType request");
 				serviceTypeService.update(objectMapper.readValue(record.value(), ServiceRequest.class));
-			} else if(record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())){
-
-	        		LOGGER.info("Consuming create Category request");
-	                serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
-	        }
-			else if (record.topic().equals(applicationProperties.getCreateRouterTopicName())){
-	        		LOGGER.info("Consuming create Router request");
-	        		
-	        		routerService.create(objectMapper.readValue(record.value(), RouterTypeReq.class));
-	        	}
-
-	        	
-	        else if (record.topic().equals(applicationProperties.getCreateEscalationTimeTypeName())) {
+			} else if (record.topic().equals(applicationProperties.getCreateServiceGroupTopicName())) {
+				LOGGER.info("Consuming create Category request");
+				serviceGroupService.create(objectMapper.readValue(record.value(), ServiceGroupRequest.class));
+			} else if (record.topic().equals(applicationProperties.getCreateRouterTopicName())) {
+				LOGGER.info("Consuming create Router request");
+				routerService.create(objectMapper.readValue(record.value(), RouterTypeReq.class));
+			} else if (record.topic().equals(applicationProperties.getCreateEscalationTimeTypeName())) {
 				LOGGER.info("Consuming create Escalation time type request");
 				escalationTimeTypeService.create(objectMapper.readValue(record.value(), EscalationTimeTypeReq.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateEscalationTimeTypeName())) {
 				LOGGER.info("Consuming update Escalation time type request");
 				escalationTimeTypeService.update(objectMapper.readValue(record.value(), EscalationTimeTypeReq.class));
-
+			} else if (record.topic().equals(applicationProperties.getCreateOtpConfigTopicName())) {
+				LOGGER.info("Consuming create OTP Config request");
+				otpConfigService.create(objectMapper.readValue(record.value(),  OTPConfig.class));
+			} else if (record.topic().equals(applicationProperties.getUpdateOtpConfigTopicName())) {
+				LOGGER.info("Consuming update OTP Config request");
+				otpConfigService.update(objectMapper.readValue(record.value(),  OTPConfig.class)); 
 			}
-			
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		}
+	}
    	}
 

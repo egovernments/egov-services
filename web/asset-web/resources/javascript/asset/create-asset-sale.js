@@ -75,7 +75,8 @@ class Sale extends React.Component {
           departments: [],
           revenueZones: [],
           revenueWards: [],
-          showPANNAadhar: false
+          showPANNAadhar: false,
+          assetAccount: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.close = this.close.bind(this);
@@ -98,12 +99,19 @@ class Sale extends React.Component {
     }
 
     componentDidMount() {
+      if(window.opener && window.opener.document) {
+        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+        if(logo_ele && logo_ele[0]) {
+          document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
+        }
+      }
+
       $(".datepicker").datepicker({
         format: "dd/mm/yyyy",
         autoclose: true
       });
 
-      let id = getUrlVars()["id"], _this = this, count = 4, _state = {};
+      let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         count--;
@@ -141,12 +149,25 @@ class Sale extends React.Component {
         checkCountAndCall("revenueZones", res);
       });
 
+      commonApiPost("egf-masters", "accountcodepurposes", "_search", {tenantId, name:"Fixed Assets"}, function(err, res2){
+        if(res2){
+          getDropdown("assetAccount", function(res) {
+            for(var i= 0; i<res.length; i++) {
+              res[i].name = res[i].glcode + "-" + res[i].name;
+            }
+            checkCountAndCall("assetAccount", res);
+          }, {accountCodePurpose: res2["accountCodePurposes"][0].id});
+        } else {
+          checkCountAndCall("assetAccount", []);
+        }
+      })
+
       $("#disposalDate").datepicker({
         format: "dd/mm/yyyy",
         autoclose: true
       });
 
-      $("#disposalDate").on("change", function(e) {
+      $("#disposalDate").on("changeDate", function(e) {
         _this.setState({
           disposal: {
             ..._this.state.disposal,
@@ -204,7 +225,7 @@ class Sale extends React.Component {
         }
       })
     }
-
+    
     handlePANValidation(e) {
       if(!e.target.value) {
         e.target.setCustomValidity("Please fill out this field.");
@@ -269,7 +290,31 @@ class Sale extends React.Component {
 
   	render() {
       let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation, viewAssetDetails} = this;
-      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar} = this.state;
+      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, assetAccount} = this.state;
+
+      const renderOptions = function(list) {
+        if(list) {
+          if(list.constructor == Array) {
+            return list.map((item, ind)=> {
+                  if(typeof item == "object") {
+                    return (<option key={ind} value={item.id}>
+                          {item.name}
+                    </option>)
+                  } else {
+                    return (<option key={ind} value={item}>
+                          {item}
+                    </option>)
+                  }
+                })
+          } else {
+            return Object.keys(list).map((k, index)=> {
+                  return (<option key={index} value={k}>
+                          {list[k]}
+                    </option>)
+                })
+          }
+        }
+      }
 
       const showOtherDetails = function() {
         if(showPANNAadhar) {
@@ -491,6 +536,7 @@ class Sale extends React.Component {
                             <div>
                               <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
                                 <option value="">Select Account Code</option>
+                                {renderOptions(assetAccount)}
                               </select>
                             </div>
                           </div>

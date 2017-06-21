@@ -1,7 +1,9 @@
 package org.egov.workflow;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,17 +13,26 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 
 @SpringBootApplication
 public class EgovWorkflowApplication {
 
-	private static final String IST = "Asia/Calcutta";
+	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+
+	@Value("${app.timezone}")
+	private String timeZone;
 
 	public static void main(String[] args) {
-		TimeZone.setDefault(TimeZone.getTimeZone(IST));
 		SpringApplication.run(EgovWorkflowApplication.class, args);
+	}
+
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
 	}
 
 	@Bean
@@ -39,21 +50,26 @@ public class EgovWorkflowApplication {
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper mapper) {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}
 
 	@Bean
-    public ObjectMapper getObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm a"));
-        return mapper;
-    }
+	public ObjectMapper getObjectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm a"));
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return mapper;
+	}
 
-    @Bean
-    public RestTemplate restTemplate() {
-	    return new RestTemplate();
-    }
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 
 }

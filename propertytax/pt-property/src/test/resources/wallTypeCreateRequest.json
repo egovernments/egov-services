@@ -1,0 +1,27 @@
+
+{
+	"RequestInfo": {
+     	"apiId" : "emp",
+		"ver" : "1.0",
+		"ts" : 22366,
+		"action" : "create",
+		"did" : "1",
+		"key" : "abcdkey",
+		"msgId" : "20170310130900",
+		"requesterId" : "yosadhara",
+		"authToken" : "b5da31a4-b400-4d6e-aa46-9ebf33cce933"
+    },
+    "wallTypes": [{
+      "tenantId": "default",
+      "name": "create1_walltype2",
+      "code": "code_walltype2",
+      "nameLocal": "nameLocal_walltype3",
+      "description": "Wall type2 description!!",
+    	"auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+    }]
+  }

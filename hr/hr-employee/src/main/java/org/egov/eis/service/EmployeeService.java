@@ -40,14 +40,8 @@
 
 package org.egov.eis.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Employee;
@@ -55,34 +49,24 @@ import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
 import org.egov.eis.model.enums.BloodGroup;
-import org.egov.eis.repository.AssignmentRepository;
-import org.egov.eis.repository.DepartmentalTestRepository;
-import org.egov.eis.repository.EducationalQualificationRepository;
-import org.egov.eis.repository.EmployeeJurisdictionRepository;
-import org.egov.eis.repository.EmployeeLanguageRepository;
-import org.egov.eis.repository.EmployeeRepository;
-import org.egov.eis.repository.HODDepartmentRepository;
-import org.egov.eis.repository.ProbationRepository;
-import org.egov.eis.repository.RegularisationRepository;
-import org.egov.eis.repository.ServiceHistoryRepository;
-import org.egov.eis.repository.TechnicalQualificationRepository;
+import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
-import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class EmployeeService {

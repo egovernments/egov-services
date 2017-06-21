@@ -1,10 +1,13 @@
 package org.egov.asset.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
@@ -17,12 +20,12 @@ import org.egov.asset.model.enums.Status;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,23 +43,26 @@ public class AssetServiceTest {
 
 	@InjectMocks
 	private AssetService assetService;
-	
+
 	@Mock
 	private ResponseInfoFactory responseInfoFactory;
-	
+
 	@Mock
 	private ObjectMapper objectMapper;
 
-	/*@Test
+	@Test
 	public void testSearch() {
 		List<Asset> assets = new ArrayList<>();
 		assets.add(getAsset());
 		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
-		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
 
-		assertTrue(assetResponse.equals(assetService.getAssets(any(AssetCriteria.class))));
-	}*/
+		AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
+		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+		System.err.println(assetResponse);
+		System.err.println(assetService.getAssets(assetCriteria, new RequestInfo()));
+		assertEquals(assetResponse, assetService.getAssets(assetCriteria, new RequestInfo()));
+	}
 
 	@Test
 	public void testCreate() {
@@ -129,6 +135,7 @@ public class AssetServiceTest {
 	private Asset getAsset() {
 		Asset asset = new Asset();
 		asset.setTenantId("ap.kurnool");
+		asset.setId(null);
 		asset.setName("asset name");
 		asset.setStatus(Status.CREATED);
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);

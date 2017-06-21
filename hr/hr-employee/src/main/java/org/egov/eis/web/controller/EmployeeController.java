@@ -40,12 +40,6 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
@@ -53,16 +47,7 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.UserSearchURLHelper;
-import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeGetRequest;
-import org.egov.eis.web.contract.EmployeeInfoResponse;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.EmployeeResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
-import org.egov.eis.web.contract.UserGetRequest;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreate;
@@ -76,14 +61,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
@@ -118,11 +101,11 @@ public class EmployeeController {
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * EmployeeResponse type or ErrorResponse type
-	 * 
-	 * @param EmployeeGetRequest,
-	 * @param BindingResult
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
+	 *
+	 * @param employeeCriteria,
+	 * @param modelAttributeBindingResult
+	 * @param requestInfoWrapper
+	 * @param requestBodyBindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("_search")
@@ -150,13 +133,14 @@ public class EmployeeController {
 		return getSuccessResponseForSearch(employeesList, requestInfo);
 	}
 	
-		/**
+	/**
          * Maps Post Requests for _loggedinemployee & returns ResponseEntity of either
          * EmployeeResponse type or ErrorResponse type
          * 
-         * @param BindingResult
-         * @param RequestInfoWrapper
-         * @param BindingResult
+         * @param requestInfoWrapper
+         * @param requestBodyBindingResult
+         * @param tenantId
+         * @param modelAttributeBindingResult
          * @return ResponseEntity<?>
          */
         @PostMapping("_loggedinemployee")
@@ -208,11 +192,11 @@ public class EmployeeController {
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * EmployeeResponse type or ErrorResponse type
-	 * 
-	 * @param employeeId,
-	 * @param BindingResult
-	 * @param RequestInfoWrapper
-	 * @param BindingResult
+	 *
+	 * @param employeeGetRequest,
+	 * @param modelAttributeBindingResult
+	 * @param requestInfoWrapper
+	 * @param requestBodyBindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping("{id}/_search")
@@ -220,7 +204,7 @@ public class EmployeeController {
 	public ResponseEntity<?> get(@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest,
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
-		
+
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
 				modelAttributeBindingResult, requestBodyBindingResult);
@@ -236,7 +220,7 @@ public class EmployeeController {
 			System.out.println("employee=" + employee);
 		} catch (EmployeeIdNotFoundException idNotFoundException) {
 			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), idNotFoundException);
-			return errorHandler.getResponseEntityForInvalidEmployeeId(modelAttributeBindingResult, requestInfo);
+			return errorHandler.getResponseEntityForInvalidEmployeeId(requestInfo);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -247,9 +231,9 @@ public class EmployeeController {
 	/**
 	 * Maps Post Requests for _create & returns ResponseEntity of either
 	 * EmployeeResponse type or ErrorResponse type
-	 * 
-	 * @param EmployeeRequest
-	 * @param BindingResult
+	 *
+	 * @param employeeRequest
+	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping(value = "/_create")
@@ -277,9 +261,9 @@ public class EmployeeController {
 	/**
 	 * Maps Post Requests for _update & returns ResponseEntity of either
 	 * EmployeeResponse type or ErrorResponse type
-	 * 
-	 * @param EmployeeRequest
-	 * @param BindingResult
+	 *
+	 * @param employeeRequest
+	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
 	@PostMapping(value = "/_update")
@@ -290,7 +274,7 @@ public class EmployeeController {
 		ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
-		
+
 		Employee employee = null;
 		try {
 			employee = employeeService.updateAsync(employeeRequest);
@@ -307,16 +291,17 @@ public class EmployeeController {
 	/**
 	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
 	 * are any errors or else returns null
-	 * 
-	 * @param EmployeeRequest
+	 *
+	 * @param employeeRequest
 	 * @param bindingResult
+	 * @param isUpdate
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest, BindingResult bindingResult,
 			boolean isUpdate) {
 		// validate input params that can be handled by annotations
 		if (bindingResult.hasErrors()) {
-			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
+			return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());
 		}
 
 		// validate input params that can't be handled by annotations
@@ -329,7 +314,7 @@ public class EmployeeController {
 					bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
+			return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());
 		}
 		return null;
 	}
@@ -337,9 +322,9 @@ public class EmployeeController {
 	/**
 	 * Populate EmployeeInfoResponse object & returns ResponseEntity of type
 	 * EmployeeInfoResponse containing ResponseInfo & List of EmployeeInfo
-	 * 
-	 * @param List<EmployeeInfo>
-	 * @param RequestInfo
+	 *
+	 * @param employeesList
+	 * @param requestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
@@ -351,14 +336,13 @@ public class EmployeeController {
 		employeeInfoResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Populate EmployeeResponse object & returns ResponseEntity of type
 	 * EmployeeResponse containing ResponseInfo & Employee objects
-	 * 
+	 *
 	 * @param employee
 	 * @param requestInfo
-	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
@@ -370,7 +354,7 @@ public class EmployeeController {
 		employeeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
 	}
-	
+
 	public ResponseEntity<?> getSuccessResponseForGet(Employee employee, RequestInfo requestInfo) {
 		return getSuccessResponseForCreate(employee, requestInfo);
 	}

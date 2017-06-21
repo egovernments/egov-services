@@ -128,6 +128,7 @@ public class AgreementService {
 			kafkaTopic = propertiesManager.getSaveAgreementTopic();
 			agreement.setStatus(Status.ACTIVE);
 			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+			agreement.setAgreementDate(agreement.getCommencementDate());
 		} else {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);
@@ -222,6 +223,12 @@ public class AgreementService {
 		 * isAllotteeNull declared to indicate whether criteria arguments for
 		 * each of the Agreement,Asset and Allottee objects are given or not.
 		 */
+		
+		if(agreementCriteria.getToDate() != null)
+		{
+			agreementCriteria.setToDate(setToTime(agreementCriteria.getToDate()));	
+		}
+		
 		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
 				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
@@ -235,7 +242,7 @@ public class AgreementService {
 		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
 				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
 				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
-				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorno() == null;
+				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorNo() == null;
 
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");
@@ -267,6 +274,16 @@ public class AgreementService {
 			logger.info("agreementRepository.findByAgreement : all values null");
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		}
+	}
+
+	private static Date setToTime(Date toDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(toDate);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.SECOND,59);
+		cal.set(Calendar.MILLISECOND,999);
+		return cal.getTime();	
 	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {

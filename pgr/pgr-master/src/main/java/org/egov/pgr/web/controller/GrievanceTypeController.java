@@ -103,7 +103,7 @@ public class GrievanceTypeController {
         }
         logger.info("Grievance Type Request::" + serviceTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateCategoryRequest(serviceTypeRequest);
+        final List<ErrorResponse> errorResponses = validateServiceRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -128,7 +128,7 @@ public class GrievanceTypeController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         serviceTypeRequest.getService().setServiceCode(code);
-        final List<ErrorResponse> errorResponses = validateCategoryRequest(serviceTypeRequest);
+        final List<ErrorResponse> errorResponses = validateUpdateServiceRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -166,23 +166,32 @@ public class GrievanceTypeController {
 
     }
 
-    private List<ErrorResponse> validateCategoryRequest(final ServiceRequest serviceTypeRequest) {
+    private List<ErrorResponse> validateServiceRequest(final ServiceRequest serviceTypeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(serviceTypeRequest);
+		final List<ErrorField> errorFields = getErrorFields(serviceTypeRequest);
+        final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
+				.build();
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
-
-    private Error getError(final ServiceRequest serviceTypeRequest) {
-        serviceTypeRequest.getService();
-		final List<ErrorField> errorFields = getErrorFields(serviceTypeRequest);
-		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+    
+    private List<ErrorResponse> validateUpdateServiceRequest(final ServiceRequest serviceTypeRequest) {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final List<ErrorField> errorFields = getUpdateErrorFields(serviceTypeRequest);
+        final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_SERVICETYPE_REQUEST_MESSAGE).errorFields(errorFields)
 				.build();
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponses.add(errorResponse);
+        return errorResponses;
     }
+    
 
     private List<ErrorField> getErrorFields(final ServiceRequest serviceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
@@ -193,6 +202,15 @@ public class GrievanceTypeController {
         return errorFields;
     }
 
+    private List<ErrorField> getUpdateErrorFields(final ServiceRequest serviceTypeRequest) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
+        addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
+        checkMetadataExists(serviceTypeRequest,errorFields);
+        checkCategorySLAValues(serviceTypeRequest, errorFields);
+        return errorFields;
+    }
+    
     private void addGrievanceNameValidationErrors(final ServiceRequest serviceTypeRequest,
             final List<ErrorField> errorFields) {
         final ServiceType service = serviceTypeRequest.getService();
@@ -203,14 +221,7 @@ public class GrievanceTypeController {
                     .field(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-       } else if (!serviceTypeService.getCategoryByNameAndCode(service.getServiceCode(), service.getServiceName(), service.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_CODE)
-                    .message(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
+       } else
             return;
     }
 

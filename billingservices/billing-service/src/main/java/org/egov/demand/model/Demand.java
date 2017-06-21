@@ -2,6 +2,10 @@ package org.egov.demand.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
+import org.egov.demand.model.enums.Type;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,23 +15,35 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Demand {
 
-	private Long id;
+	private String id;
 
-	private Installment installment;
+	@NotNull
+	private String tenantId;
 
+	@NotNull
 	private String consumerCode;
 
+	@NotNull
 	private String consumerType;
 
+	@NotNull
 	private String businessService;
 
+	@NotNull
 	private Owner owner;
+
+	@NotNull
+	private Long taxPeriodFrom;
+
+	@NotNull
+	private Long taxPeriodTo;
+	
+	@NotNull
+	private Type type;
 
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 
 	private AuditDetail auditDetail;
-
-	private String tenantId;
 
 	private Double minimumAmountPayable;
 }

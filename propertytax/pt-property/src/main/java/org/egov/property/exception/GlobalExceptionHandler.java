@@ -9,7 +9,7 @@ import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfo.StatusEnum;
+import org.egov.models.ResponseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 		List<Error> errorList=new ArrayList<Error>();
 		errorList.add(error);
     	ResponseInfo responseInfo=new ResponseInfo();
-		responseInfo.setStatus(StatusEnum.FAILED.toString());
+		responseInfo.setStatus(ResponseStatusEnum.FAILED);
 		return new ErrorRes(responseInfo,errorList);		
 		}
     
@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidInputException)ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidInputException)ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList=new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo,errorList);		}
@@ -80,10 +80,10 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidPropertyBoundaryException)ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidPropertyBoundaryException)ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList=new ArrayList<Error>();
 			errorList.add(error);
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			return new ErrorRes(responseInfo,errorList);
 		}
 		else if(ex instanceof AttributeNotFoundException){
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((AttributeNotFoundException)ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((AttributeNotFoundException)ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList=new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo,errorList);
@@ -106,7 +106,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidUpdatePropertyException)ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidUpdatePropertyException)ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList=new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo,errorList);
@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((PropertySearchException)ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((PropertySearchException)ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList=new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo,errorList);
@@ -129,7 +129,7 @@ public class GlobalExceptionHandler {
 		else{
 			Error error=new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),ex.getMessage(),null,new HashMap<String,String>());
 			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setStatus(StatusEnum.FAILED.toString());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList=new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo,errorList);

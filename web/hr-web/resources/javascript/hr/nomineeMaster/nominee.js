@@ -230,11 +230,10 @@ class Nominee extends React.Component{
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
-        $('#code,#name').prop("disabled", true);
 
        if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Nominee");
 
-       $('body').on("change", "#dateOfBirth", function(e) {
+       $('body').on('changeDate', "#dateOfBirth", function(e) {
           _this.setState({
              nomineeSet: {
                  ..._this.state.nomineeSet,
@@ -425,7 +424,7 @@ class Nominee extends React.Component{
                       <label htmlFor="">Name <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="name" value={name} onChange={(e)=>{ handleChange(e,"name")}} required/>
+                      <input type="text" name="name" value={name} id = "name" onChange={(e)=>{ handleChange(e,"name")}} required/>
                     </div>
                   </div>
                 </div>
@@ -548,7 +547,7 @@ class Nominee extends React.Component{
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Nominated <span>*</span></label>
+                      <label htmlFor="">Is Nominee <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
                       <input type="checkbox" name="nominated" value={nominated} onChange={(e)=>{ handleChange(e,"nominated", true)}} checked={nominated? true : false}/>
@@ -558,7 +557,7 @@ class Nominee extends React.Component{
                 <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="employed"> Employee <span>*</span></label>
+                    <label for="employed"> Is Employee <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
@@ -663,8 +662,8 @@ class Nominee extends React.Component{
                             <label for="name">Employee Name</label>
                         </div>
                             <div className="col-sm-6">
-                              <input type="text" name="name" id="name" value={allNomineeValue.employeeid.name}
-                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","name")}} readonly/>
+                              <input type="text" name="name" value={allNomineeValue.employeeid.name}
+                              onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","name")}} disabled/>
                             </div>
                         </div>
                     </div>
@@ -672,23 +671,23 @@ class Nominee extends React.Component{
                         <div className="row">
                             <div className="col-sm-6 label-text">
                                 <label for="">Employee Code</label>
-                                </div>
+                                  </div>
                                     <div className="col-sm-6">
-                                    <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
-                                    onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}}readonly/>
+                                      <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
+                                      onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}} disabled/>
                                     </div>
-                              </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     {showCustomFieldsTable()}
                  &nbsp;&nbsp;
                   <div className="text-center">
                         {showActionButton()} &nbsp;&nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
-                </div>
-                </div>
-                </form>
+              </div>
             </div>
+          </form>
+        </div>
     );
   }
 }

@@ -1,50 +1,38 @@
 package org.egov.demand.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.egov.common.contract.request.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Owner   {
-	
-	  private String tenantId;
+@NoArgsConstructor
+public class Owner {
 
-	  private Long id;
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
-	  private String userName;
+	@JsonProperty("id")
+	private Long id = null;
 
-	  private String authToken;
+	@JsonProperty("userName")
+	private String userName = null;
 
-	  private String salutation;
+	@JsonProperty("name")
+	private String name = null;
 
-	  private String name;
+	@JsonProperty("gender")
+	private String gender = null;
 
-	  private String gender;
+	@JsonProperty("mobileNumber")
+	private String mobileNumber = null;
 
-	  private String mobileNumber;
+	@JsonProperty("emailId")
+	private String emailId = null;
 
-	  private String emailId;
+	@JsonProperty("aadhaarNumber")
+	private String aadhaarNumber = null;
 
-	  private String aadhaarNumber;
-
-	  private Boolean active;
-
-	  private Long pwdExpiryDate;
-
-	  private String locale;
-
-	  private String type;
-
-	  private Boolean accountLocked = false;
-
-	  private List<Role> roles = new ArrayList<>();
-
-	  private OwnerUserDetails userDetails;
-
-	  private AuditDetail auditDetails;
 }

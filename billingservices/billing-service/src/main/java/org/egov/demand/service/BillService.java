@@ -40,36 +40,90 @@
 
 package org.egov.demand.service;
 
+import java.util.List;
+
+import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.Demand;
+import org.egov.demand.model.GenerateBillCriteria;
+import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
+import org.egov.demand.web.contract.BillResponse;
+import org.egov.demand.web.contract.DemandResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class BillService {
 	
-	//@Autowired
-	//private KafkaTemplate<String, String> kafkaTemplate;
+	private static final Logger logger = LoggerFactory.getLogger(BillService.class);
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
-	 
-	public void createAsync(BillRequest billRequest){
-		System.out.println("createAsync: "+billRequest);
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private BillRepository billRepository;
+	
+	@Autowired
+	private BillHelper billHelper;
+	
+	public BillResponse createAsync(BillRequest billRequest) { 
+		
+		billHelper.getBillRequestWithIds(billRequest);
 		
 		try {
-			kafkaTemplate.send("test-sp-kaf","key", objectMapper.writeValueAsString(billRequest));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
+			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),
+								objectMapper.writeValueAsString(billRequest));
+		} catch (Exception e) {
+			logger.info("BillService createAsync:"+e);
 			e.printStackTrace();
+			throw new RuntimeException(e);
+			
 		}
+		return getBillResponse(billRequest.getBillInfos());
 	}
+	
+	public void create(BillRequest billRequest){		
+		billRepository.saveBill(billRequest);
+	}
+	
+	public BillResponse generateBill(GenerateBillCriteria generateBillCriteria) {
+		List<DemandResponse> demandResponses = null;
+		List<Bill> bills = null;
+		return null;
+	}
+	
+	/*public List<Bill> prepareBill(List<Demand> demands,String tenantId){
+		List<Bill> bills = null;
+		
+		for(Demand demand : demands){
+			
+			BillDetail billDetail = BillDetail.builder().businessService(demand.getBusinessService()).consumerType(demand.getConsumerType()).
+			consumerCode(demand.getConsumerCode()).displayMessage(null).minimumAmount(null).
+			totalAmount(null).tenantId(tenantId).build();
+			
+		}
+	}*/
+	
+	public BillResponse getBillResponse(List<Bill> bills) {
+		BillResponse billResponse = new BillResponse();
+		billResponse.setBillInfos(bills);
+		return billResponse;
+	}
+	
+	
 
 }

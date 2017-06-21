@@ -1,0 +1,22 @@
+{
+    "responseInfo": {
+       
+    },
+    "structureClasses": [
+        {
+            "tenantId": "default",
+            "name": null,
+            "code": null,
+            "nameLocal": null,
+            "description": null,
+            "active": null,
+            "orderNumber": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

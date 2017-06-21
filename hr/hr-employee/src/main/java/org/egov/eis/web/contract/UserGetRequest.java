@@ -40,14 +40,12 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.Collections;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.*;
+import java.util.Collections;
+import java.util.List;
 
 @AllArgsConstructor
 @Builder
@@ -91,7 +89,7 @@ public class UserGetRequest {
 
     private List<String> sort = Collections.singletonList("name");
 
-	@Size(max=256)
+	@Size(min=1, max=256)
 	private String tenantId;
 
 }

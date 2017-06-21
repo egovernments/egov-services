@@ -161,6 +161,11 @@ public class SupplyTypeQueryBuilder {
         return " select code from egwtr_supply_type where name = ? and"
                 + " tenantId = ? and code != ? ";
     }
-    
+    public static String selectSupplytypeByNameQuery() {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        selectQuery.append(" Where supplytype.name = ?");
+        selectQuery.append(" AND supplytype.tenantId = ?");
+        return selectQuery.toString();
+    }
     
 }

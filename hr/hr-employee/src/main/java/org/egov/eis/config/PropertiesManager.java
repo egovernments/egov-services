@@ -40,14 +40,9 @@
 
 package org.egov.eis.config;
 
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Component
 @Getter
@@ -65,8 +60,20 @@ public class PropertiesManager {
 	private String updateEmployeeTopic;
 	
 	@Value("${kafka.topics.employee.savedb.key}")
-	String employeeSaveKey;
-	
+	private String employeeSaveKey;
+
+	@Value("${kafka.topics.nominee.savedb.name}")
+	private String saveNomineeTopic;
+
+	@Value("${kafka.topics.nominee.savedb.key}")
+	private String nomineeSaveKey;
+
+	@Value("${kafka.topics.nominee.updatedb.name}")
+	private String updateNomineeTopic;
+
+	@Value("${kafka.topics.nominee.updatedb.key}")
+	private String nomineeUpdateKey;
+
 	@Value("${egov.services.users_service.hostname}")
 	private String usersServiceHostName;
 

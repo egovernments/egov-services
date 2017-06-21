@@ -105,7 +105,7 @@ class EmployeeSearch extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-        if (this.state.modified && this.state.employees.length) {
+        if (this.state.modified) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -127,10 +127,10 @@ class EmployeeSearch extends React.Component {
          document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
        }
     }
-    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Search Employee for " + titleCase(getUrlVars()["value"]));
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
-    var count = 5, _state = {}, _this = this;
+    var count = 1, _state = {}, _this = this;
 
     const checkCountAndCall = function(key, res) {
       _state[key] = res;
@@ -203,7 +203,7 @@ class EmployeeSearch extends React.Component {
                         <th>Employee Name</th>
                         <th>Employee Designation</th>
                         <th>Employee Department</th>
-                        <th>Employee Position</th>
+                        <th>Employee Status</th>
                         <th>Action</th>
 
                     </tr>
@@ -282,13 +282,13 @@ class EmployeeSearch extends React.Component {
                 break;
               }
             }
+
             return (<tr key={index}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
-
                     <td data-label="designation">{getNameById(designationList,item.assignments[ind].designation)}</td>
                     <td data-label="department">{getNameById(departmentList,item.assignments[ind].department)}</td>
-                    <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
+                    <td data-label="position">{getNameById(employeeStatusList,item.employeeStatus,"code")}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],getUrlVars()["value"],item.id)}
                     </td>
@@ -360,7 +360,7 @@ class EmployeeSearch extends React.Component {
                     </div>
                 </div>
               </div>
-              {<div className="col-sm-6">
+              <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
                         <label for=""> Employee Name  </label>
@@ -371,9 +371,9 @@ class EmployeeSearch extends React.Component {
                           }} disabled/>
                       </div>
                   </div>
-                </div>}
-          </div>
-        <div className="row">
+                </div>
+            </div>
+        {/*<div className="row">
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
@@ -390,7 +390,7 @@ class EmployeeSearch extends React.Component {
                     </div>
                 </div>
               </div>
-              {/*<div className="col-sm-6">
+              <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
                         <label for=""> Status</label>
@@ -406,8 +406,8 @@ class EmployeeSearch extends React.Component {
                       </div>
                       </div>
                   </div>
-                </div>*/}
-          </div>
+                </div>
+          </div>*/}
           <div className="text-right text-danger">
                           Note: Any one of the search criteria is mandatory.
                     </div>

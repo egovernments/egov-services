@@ -1,1 +1,0 @@
-DELETE from egpgr_complaintstatus_mapping;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 
@@ -20,7 +21,9 @@ import static org.egov.pgrrest.common.entity.ServiceType.SEQ_SERVICE_TYPE;
 @SequenceGenerator(name = SEQ_SERVICE_TYPE, sequenceName = SEQ_SERVICE_TYPE, allocationSize = 1)
 public class ServiceType extends AbstractAuditable<Long> {
 	public static final String SEQ_SERVICE_TYPE = "SEQ_EGPGR_COMPLAINTTYPE";
+	private final static String COMPLAINT_TYPE_KEYWORD = "complaint";
 	private static final long serialVersionUID = 8904645810221559541L;
+
 	@Id
 	@GeneratedValue(generator = SEQ_SERVICE_TYPE, strategy = GenerationType.SEQUENCE)
 	private Long id;
@@ -68,5 +71,10 @@ public class ServiceType extends AbstractAuditable<Long> {
 	public void setId(final Long id) {
 		this.id = id;
 	}
+
+	public boolean isComplaintType() {
+        return !CollectionUtils.isEmpty(keywords) &&
+            keywords.stream().anyMatch(COMPLAINT_TYPE_KEYWORD::equalsIgnoreCase);
+    }
 
 }

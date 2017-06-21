@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.egov.domain.InvalidTokenRequestException;
+import org.egov.domain.exception.InvalidTokenRequestException;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.springframework.util.StringUtils.isEmpty;

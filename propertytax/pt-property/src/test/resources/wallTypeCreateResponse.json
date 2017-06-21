@@ -1,0 +1,20 @@
+{
+    "responseInfo": {
+        
+    },
+    "wallTypes": [
+        {
+            "tenantId": "default",
+            "name": null,
+            "code": null,
+            "nameLocal": null,
+            "description": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

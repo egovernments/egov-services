@@ -42,5 +42,7 @@ public class AssetCriteria {
 	private Long offset;
 
 	private String description;
-	private Long grossValue;
+	private Double grossValue;
+	private Double fromCapitalizedValue;
+	private Double toCapitalizedValue;
 }

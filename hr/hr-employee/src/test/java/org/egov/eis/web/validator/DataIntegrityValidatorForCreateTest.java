@@ -1,21 +1,8 @@
 package org.egov.eis.web.validator;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.enums.EntityType;
-import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.NonVacantPositionsRepository;
 import org.egov.eis.utils.FileUtils;
@@ -32,7 +19,10 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataIntegrityValidatorForCreateTest {
@@ -43,9 +33,6 @@ public class DataIntegrityValidatorForCreateTest {
 	@Mock
 	private NonVacantPositionsRepository nonVacantPositionsRepository;
 
-	@Mock
-	private EmployeeDocumentsRepository employeeDocumentsRepository;
-	
 	@InjectMocks
 	private DataIntegrityValidatorForCreate dataIntegrityValidatorForCreate;
 
@@ -72,45 +59,7 @@ public class DataIntegrityValidatorForCreateTest {
 		// code is invalid
 		assertTrue(validateEmployee(true, true, false, "employees1.json").hasErrors());
 	}
-	
-	@Test
-	public void checkForErrorsWhenDocumentsWithDuplicatesWithinInput() {
-		// documents within input has duplicates(repeated) and hence invalid
-		assertTrue(validateEmployee(true, true, true, "employeesWithDuplicateDocumentsWithin.json").hasErrors());
-	}
-	
-	@Test
-	public void checkForErrorsWhenDocumentsWithDuplicatesWithinInputAcrossEntities() {
-		// documents within input has duplicates(repeated) and hence invalid
-		assertTrue(validateEmployee(true, true, true, "employeesWithDuplicateDocumentsWithin2.json").hasErrors());
-	}
-	
-	@Test
-	public void checkForErrorsWhenDocumentsWithDuplicatesInDb() {
-		List<EmployeeDocument> documentsFromDb = new ArrayList<>();
-		EmployeeDocument ed1 = EmployeeDocument.builder().id(100L).document("three")
-				.referenceType(EntityType.EMPLOYEE_HEADER.getValue()).build();
-		documentsFromDb.add(ed1);
-		when(employeeDocumentsRepository.findByDocuments(any(), anyString()))
-		.thenReturn(documentsFromDb);
-		
-		// documentsin db has duplicates and hance last argument is false
-		assertTrue(validateEmployee(true, true, true, "employees1.json").hasErrors());
-	}
-	
-	@Test
-	public void checkForErrorsWhenDocumentsWithDuplicatesInEducationInDb() {
-		List<EmployeeDocument> documentsFromDb = new ArrayList<>();
-		EmployeeDocument ed1 = EmployeeDocument.builder().id(100L).document("three")
-				.referenceType(EntityType.EDUCATION.getValue()).build();
-		documentsFromDb.add(ed1);
-		when(employeeDocumentsRepository.findByDocuments(any(), anyString()))
-		.thenReturn(documentsFromDb);
-		
-		// documentsin db has duplicates and hance last argument is false
-		assertTrue(validateEmployee(true, true, true, "employees1.json").hasErrors());
-	}
-	
+
 	private Errors validateEmployee(boolean validGpfNo, boolean validPassportNo, boolean validCode,
 			String employeeFileName) {
 		when(employeeRepository.duplicateExists("egeis_employee", "gpfNo", "12393243", "1"))

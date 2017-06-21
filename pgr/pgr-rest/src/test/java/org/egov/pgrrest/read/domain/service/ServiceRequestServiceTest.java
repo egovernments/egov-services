@@ -41,6 +41,12 @@ public class ServiceRequestServiceTest {
     @Mock
     private SevaNumberGeneratorService sevaNumberGeneratorService;
 
+    @Mock
+    private ServiceRequestTypeService serviceRequestTypeService;
+
+    @Mock
+    private OtpService otpService;
+
     @InjectMocks
     private ServiceRequestService serviceRequestService;
 
@@ -178,6 +184,8 @@ public class ServiceRequestServiceTest {
             .mobile("mobile number")
             .email("email@gmail.com")
             .build();
+        final ServiceRequestType serviceRequestType =
+            new ServiceRequestType(null, "complaintCode", "tenantId", null);
         return ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
@@ -186,8 +194,8 @@ public class ServiceRequestServiceTest {
             .description("description")
             .crn("crn")
             .department(2L)
-            .serviceRequestType(new ServiceRequestType(null, "complaintCode", "tenantId"))
-            .attributeEntries(new ArrayList<AttributeEntry>())
+            .serviceRequestType(serviceRequestType)
+            .attributeEntries(new ArrayList<>())
             .build();
     }
 
@@ -204,7 +212,7 @@ public class ServiceRequestServiceTest {
     private org.egov.pgrrest.common.contract.ServiceRequest getServiceRequest() {
         return org.egov.pgrrest.common.contract.ServiceRequest.builder()
             .tenantId("tenantId")
-            .attribValues(new ArrayList<org.egov.pgr.common.contract.AttributeEntry>())
+            .attribValues(new ArrayList<>())
             .build();
     }
 

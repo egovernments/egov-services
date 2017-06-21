@@ -1,23 +1,27 @@
 package org.egov.domain.service;
 
-import org.egov.domain.TokenValidationFailureException;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.domain.exception.TokenValidationFailureException;
 import org.egov.domain.model.*;
 import org.egov.persistence.repository.TokenRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
+@Slf4j
 public class TokenService {
 
     private TokenRepository tokenRepository;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private LocalDateTimeFactory localDateTimeFactory;
 
     @Autowired
-    public TokenService(TokenRepository tokenRepository) {
+    public TokenService(TokenRepository tokenRepository,
+						LocalDateTimeFactory localDateTimeFactory) {
         this.tokenRepository = tokenRepository;
-    }
+		this.localDateTimeFactory = localDateTimeFactory;
+	}
 
     public Token create(TokenRequest tokenRequest) {
         tokenRequest.validate();
@@ -26,13 +30,15 @@ public class TokenService {
 
     public Token validate(ValidateRequest validateRequest) {
         validateRequest.validate();
-        final Tokens tokens = tokenRepository
-                .find(validateRequest);
-        if( !tokens.hasSingleNonExpiredToken()) {
-            logger.info("Token validation failure for otp #", validateRequest.getOtp());
+        final Tokens tokens = tokenRepository.find(validateRequest);
+		final LocalDateTime now = localDateTimeFactory.now();
+
+		if( !tokens.hasSingleNonExpiredToken(now)) {
+            log.info("Token validation failure for otp #", validateRequest.getOtp());
             throw new TokenValidationFailureException();
         }
-        final Token matchingToken = tokens.getNonExpiredToken();
+
+        final Token matchingToken = tokens.getNonExpiredToken(now);
         tokenRepository.markAsValidated(matchingToken);
         return matchingToken;
     }

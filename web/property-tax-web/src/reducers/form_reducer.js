@@ -9,7 +9,8 @@ const defaultState = {
   validationData: {},
   showTable: false,
   buttonText: "Search",
-  editIndex: -1
+  editIndex: -1,
+  addRoom: false
 };
 
 export default(state = defaultState, action) => {
@@ -31,6 +32,34 @@ export default(state = defaultState, action) => {
               ]
             }
           }
+
+    case "PUSH_ONE_ARRAY" :
+
+    if (!state.form.hasOwnProperty(action.formObject)) {
+          state.form[action.formObject] = {};
+          state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject]) { alert('Boom2');
+      state.form[action.formObject] = {};
+      state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject][action.formArray]) {
+      state.form[action.formObject][action.formArray] = [];
+      console.log(state.form[action.formObject]);
+    }
+
+    return {
+      ...state,
+      form: {
+        ...state.form,
+        [action.formObject]: {
+          ...state.form[action.formObject],
+             [action.formArray]:[
+               ...state.form[action.formObject][action.formArray],
+               state.form[action.formData]
+             ]
+        }
+      }
+    }
+
 
     case "RESET_OBJECT":
 
@@ -54,6 +83,18 @@ export default(state = defaultState, action) => {
           }
         }
 
+        case "UPDATE_NESTED_OBJECT":
+
+          state.form[action.objectName][action.objectArray][state.editIndex]=state.form[action.object]
+
+            return {
+              ...state,
+              form: {
+                ...state.form,
+              [action.objectName]: state.form[action.objectName][action.objectArray].map((e,i) => e )
+              }
+            }
+
     case "EDIT_OBJECT":
 
         return {
@@ -71,6 +112,12 @@ export default(state = defaultState, action) => {
         editIndex: action.index
       }
 
+    case "ADD_ROOM":
+      return {
+        ...state,
+        addRoom: action.room
+      }
+
     case "DELETE_OBJECT":
 
       return {
@@ -83,6 +130,22 @@ export default(state = defaultState, action) => {
           ]
         }
       }
+
+      case "DELETE_NESTED_OBJECT":
+
+        return {
+          ...state,
+          form: {
+            ...state.form,
+            [action.property]:{
+              ...state.form[action.property],
+              [action.propertyOne]:[
+                ...state.form[action.property][action.propertyOne].slice(0, action.index),
+                ...state.form[action.property][action.propertyOne].slice(action.index+1)
+              ]
+            }
+          }
+        }
 
 
     case "SET_FORM":

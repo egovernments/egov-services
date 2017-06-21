@@ -46,7 +46,8 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
 
     private void setServiceLatitudeAndLongitude(ServiceRequestDocument document, ServiceRequest serviceRequest) {
         if (serviceRequest.getLat() != null && serviceRequest.getLng() != null) {
-            document.setServiceGeo(new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng()));
+            final GeoPoint geoPoint = new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng());
+            document.setServiceGeo(geoPoint.toString());
         }
     }
 }

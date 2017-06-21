@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -14,7 +15,6 @@ import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
-import org.egov.lams.web.errorhandlers.LamsException;
 import org.egov.lams.web.validator.AgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +63,6 @@ public class AgreementController {
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"+ agreementCriteria);
 		List<Agreement> agreements = agreementService
 				.searchAgreement(agreementCriteria,requestInfo);
-		if(agreements.isEmpty())
-			throw new LamsException("No agreements found for the given criteria");
 		System.err.println("before sending for response su7ccess");
 		return getSuccessResponse(agreements, requestInfo);
 	}

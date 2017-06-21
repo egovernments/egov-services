@@ -40,11 +40,11 @@
 
 package org.egov.eis.repository.helper;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import org.springframework.stereotype.Component;
 
 @Component
 public class PreparedStatementHelper {
@@ -75,6 +75,22 @@ public class PreparedStatementHelper {
 		} else {
 			try {
 				ps.setLong(index, value);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void setBooleanOrNull(PreparedStatement ps, int index, Boolean value) {
+		if (value == null) {
+			try {
+				ps.setNull(index, Types.BOOLEAN);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				ps.setBoolean(index, value);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -10,25 +10,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 /**
  * BillRequest
  */
-@Setter
-@Getter
-@ToString
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class BillRequest   {
 	
   @JsonProperty("RequestInfo")
-  private RequestInfo requestInfo = null;
+  private RequestInfo requestInfo;
 
-  @JsonProperty("BillInfos")
-  private List<Bill> billInfos = new ArrayList<Bill>();
+  private List<Bill> billInfos = new ArrayList<>();
 }
 

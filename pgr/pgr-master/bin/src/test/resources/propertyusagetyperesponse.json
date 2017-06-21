@@ -1,0 +1,22 @@
+{
+  "ResponseInfo": {
+    "apiId": "1",
+    "ver": "1",
+    "ts": "Sun Jan 01 01:01:01 IST 2017",
+    "resMsgId": "uief87324",
+    "msgId": "",
+    "status": "200"
+  },
+  "propertyUsageTypes": [
+    {
+      "id": 1,
+      "propertyType": null,
+      "propertyTypeId": 8,
+      "usageType": null,
+      "usageTypeId": 2,
+      "active": true,
+      "tenantId": "DEFAULT",
+      "auditDetails": null
+    }
+  ]
+}

@@ -52,7 +52,7 @@ public class ReceivingModeTypeQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,modeType.visible from egpgr_receivingmode modeType";
+	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,modeType.channel from egpgr_receivingmode modeType";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final ReceivingModeTypeGetReq modeTypeRequest, final List preparedStatementValues) {
@@ -97,10 +97,16 @@ public class ReceivingModeTypeQueryBuilder {
 			selectQuery.append(" modeType.code = ?");
 			preparedStatementValues.add(modeTypeRequest.getCode());
 		}
+		
+		if (modeTypeRequest.getChannel() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" modeType.channel = ?");
+			preparedStatementValues.add(modeTypeRequest.getChannel());
+		}
 
 		if (modeTypeRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.visible = ?");
+			selectQuery.append(" modeType.active = ?");
 			preparedStatementValues.add(modeTypeRequest.getActive());
 		}
 	}
@@ -157,13 +163,13 @@ public class ReceivingModeTypeQueryBuilder {
 	}
 
 	public static String insertReceivingModeTypeQuery() {
-		return "INSERT INTO egpgr_receivingmode(code,name,description,active,visible,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_receivingmode(id,code,name,description,active,channel,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egpgr_receivingmode'),?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public static String updateReceivingModeTypeQuery() {
 		return "UPDATE egpgr_receivingmode SET name = ?,description = ?,"
-				+ "visible=?,active=?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+				+ "channel=?,active=?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
 	}
 
 	public static String checkReceivingModeTypeByName(){

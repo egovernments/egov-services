@@ -180,7 +180,12 @@ public class PipeSizeTypeQueryBuilder {
     public static String selectPipeSizeInmmAndCodeNotInQuery() {
         return " select code from egwtr_pipesize where sizeinmilimeter = ? and tenantId = ? and code != ? ";
     }
-
+    public static String selectPipesizeByCodeQuery() {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        selectQuery.append(" Where pipesize.code = ?");
+        selectQuery.append(" AND pipesize.tenantId = ?");
+        return selectQuery.toString();
+    }
     public static String selectPipeSizeIdQuery() {
         return " select * FROM egwtr_pipesize where id = ?";
     }

@@ -120,10 +120,9 @@ public class PgrMasterConstants {
 	public static final String NO_0F_HOURS_MANADATORY_FIELD_NAME = "noOfHours";
 	public static final String NO_0F_HOURS_MANADATORY_ERROR_MESSAGE = "No of hours is required";
 
-	public static final String RECEIVINGCENTER_CODE_UNIQUE_CODE="pgr.0010";
-	public static final String  RECEIVINGCENTER_UNQ_ERROR_MESSAGE="Entered ReceivingCenter Code Already Exist.";
-	public static final String RECEIVINGCENTER_CODE_UNQ_FIELD_NAME="code";
-
+	public static final String RECEIVINGCENTER_NAME_UNIQUE_CODE="pgr.0010";
+	public static final String RECEIVINGCENTER_UNQ_ERROR_MESSAGE="Entered ReceivingCenter Name Already Exist.";
+	public static final String RECEIVINGCENTER_NAME_UNQ_FIELD_NAME="name";
 	
 	public static final String RECEIVINGMODE_CODE_UNIQUE_CODE ="pgr.0011";
 	public static final String RECEIVINGMODE_UNQ_ERROR_MESSAGE="Entered ReceivingMode Code Already Exist.";
@@ -149,6 +148,15 @@ public class PgrMasterConstants {
 	public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "category";
 	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 
+	public static final String RECEIVINGMODE_CHANNEL_VALID_CODE = "pgr.0012";
+	public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channel";
+	public static final String RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE = "Channel should be WEB or MOBILE.";
+	
+	public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0012";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "channel";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "Channel is required.";
+	
+	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);
 	}

@@ -40,13 +40,13 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
 import org.egov.eis.repository.NonVacantPositionsRepository;
 import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class NonVacantPositionsService {

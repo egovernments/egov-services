@@ -19,6 +19,7 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -125,8 +126,8 @@ class ShowCategoryType extends Component {
       e.preventDefault();
       // console.log("Show Table");
       flag=1;
-      changeButtonText("Search Again");
-      // this.setState({searchBtnText:'Search Again'})
+      changeButtonText("Search");
+      // this.setState({searchBtnText:'Search'})
       showTable(true);
   }
 
@@ -216,7 +217,7 @@ class ShowCategoryType extends Component {
     {
       return (
         <Card>
-          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Result < /strong>}/>
+          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Result < /strong>}/>
           <CardText>
         <Table id="categoryTypeTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
@@ -243,7 +244,7 @@ class ShowCategoryType extends Component {
           search(e)
         }}>
           <Card>
-             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Modify Category Type < /strong>}/>
+             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Category Type < /strong>}/>
 
             <CardText>
               <Card>
@@ -253,10 +254,36 @@ class ShowCategoryType extends Component {
                     <Col xs={12} md={6}>
                       <TextField errorText={fieldErrors.name
                         ? fieldErrors.name
-                        : ""} value={showCategoryType.name?showCategoryType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="Name" floatingLabelText="Name" />
+                        : ""} value={showCategoryType.name?showCategoryType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="CategoryType" floatingLabelText="CategoryType" />
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <TextField errorText={fieldErrors.code
+                        ? fieldErrors.code
+                        : ""} value={showCategoryType.code?showCategoryType.code:""} onChange={(e) => handleChange(e, "code", false, "")} hintText="Code" floatingLabelText="Code" />
                     </Col>
 
+
                     </Row>
+                    <Row>
+                    <Col xs={12} md={6}>
+                                        <Checkbox
+                                         label="Active"
+                                         defaultChecked={true}
+                                         value={showCategoryType.active?showCategoryType.active:""}
+                                         onCheck={(event,isInputChecked) => {
+                                           var e={
+                                             "target":{
+                                               "value":isInputChecked
+                                             }
+                                           }
+                                           handleChange(e, "active", true, "")}
+                                         }
+                                         style={styles.checkbox}
+                                         style={styles.topGap}
+                                        />
+                          </Col>
+                        </Row>
+
 
                     </Grid>
 
@@ -264,7 +291,7 @@ class ShowCategoryType extends Component {
               </Card>
 
                             <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
                 <RaisedButton type="submit" disabled={!isFormValid} label={buttonText} backgroundColor={"#5a3e1b"} labelColor={white}/>
                 <RaisedButton label="Close"/>

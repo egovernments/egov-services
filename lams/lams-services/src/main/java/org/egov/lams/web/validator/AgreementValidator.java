@@ -161,7 +161,6 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
 		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
 
-		// TODO remove hard coded value of rent*3
 		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor()).get(0);
 		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor))
 			errors.rejectValue("Agreement.securityDeposit", "",

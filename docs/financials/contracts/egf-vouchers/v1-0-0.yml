@@ -220,6 +220,10 @@ definitions:
           type: integer
           format: int64
           description: id of the external module which is calling voucher creation.
+        department:
+          type: integer
+          format: int64
+          description: id of the department for creating voucher.
         ledgers:
           type:  array
           description:  ledgers of the Voucher
@@ -231,6 +235,7 @@ definitions:
       - name
       - type
       - voucherDate
+      - department
     Ledger:
       type: object
       properties:
@@ -242,8 +247,6 @@ definitions:
           type: integer
           format: int32
           description: order id 
-        chartOfAccount:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/ChartOfAccount"
         glcode:
           type: string
           description: glcode 
@@ -394,6 +397,3 @@ definitions:
       required:
       - name
       - exclude
-        
-
-

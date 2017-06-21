@@ -40,13 +40,13 @@
 
 package org.egov.eis.repository;
 
-import java.util.List;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class NonVacantPositionsRepository {
@@ -59,7 +59,7 @@ public class NonVacantPositionsRepository {
 			+ " FROM egeis_assignment"
 			+ " WHERE positionId = ? AND departmentId = ? AND designationId = ? AND (? BETWEEN fromDate AND toDate"
             + " OR ? BETWEEN fromDate AND toDate OR fromDate BETWEEN ? AND ? OR toDate BETWEEN ? AND ?)"
-			+ " AND tenantId = ? $employeeIdCheck)";
+			+ " AND isPrimary = true AND tenantId = ? $employeeIdCheck)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

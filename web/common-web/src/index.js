@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 // import {blue500} from 'material-ui/styles/colors';
@@ -11,6 +11,7 @@ import registerServiceWorker from './registerServiceWorker';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import App from "./components/App"
 
+import './styles/index.css';
 import './styles/application.css';
 import './styles/vistyle.css';
 import './styles/bootstrap.min.css';
@@ -30,18 +31,18 @@ injectTapEventPlugin();
 const muiTheme = getMuiTheme({
   palette: {
 
-    primary1Color: "#5a3e1b",
-    primary2Color: "#5a3e1b",
-    textColor:"#5a3e1b"
+    primary1Color: "#354f57",
+    primary2Color: "#354f57",
+    textColor:"#354f57"
   }
 });
 
 ReactDOM.render(
 <Provider store={store}>
   <MuiThemeProvider muiTheme={muiTheme}>
-    <HashRouter>
+    <BrowserRouter>
       <App />
-    </HashRouter>
+    </BrowserRouter>
   </MuiThemeProvider>
 </Provider>, document.getElementById('root'));
 registerServiceWorker();

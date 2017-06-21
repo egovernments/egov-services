@@ -85,20 +85,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /departments/{id}/_update:
+    /departments/_update:
       post:
         summary: Update any of the departments
         description: Update any of the departments
         tags: 
           - Department
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the Department
-            required: true
-            type: integer
-            format: int64
           - name: departmentRequest
             in: body
             description: Deartment Request
@@ -181,20 +174,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /floortypes/{id}/_update:
+    /floortypes/_update:
       post:
         summary: Update any of the floortypes
         description: Update any of the floortypes
         tags: 
           - FloorType
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the FloorType
-            required: true
-            type: integer
-            format: int64
           - name: floorTypeRequest
             in: body
             description: Floor Type Request
@@ -286,20 +272,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /occuapancies/{id}/_update:
+    /occuapancies/_update:
       post:
         summary: Update any of the occuapancymasters
         description: Update any of the occuapancymasters
         tags: 
           - OccuapancyMaster
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the OccuapancyMaster
-            required: true
-            type: integer
-            format: int64
           - name: occuapancyMasterRequest
             in: body
             description: Occuapancy Master Request
@@ -391,20 +370,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /propertytypes/{id}/_update:
+    /propertytypes/_update:
       post:
         summary: Update any of the propertytypes
         description: Update any of the propertytypes
         tags: 
           - PropertyType
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the PropertyType
-            required: true
-            type: integer
-            format: int64
           - name: propertyTypeRequest
             in: body
             description: Property Type Request
@@ -487,20 +459,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /rooftypes/{id}/_update:
+    /rooftypes/_update:
       post:
         summary: Update any of the rooftypes
         description: Update any of the rooftypes
         tags: 
           - RoofType
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the RoofType
-            required: true
-            type: integer
-            format: int64
           - name: roofTypeRequest
             in: body
             description: Roof Type Request
@@ -592,20 +557,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /structureclasses/{id}/_update:
+    /structureclasses/_update:
       post:
         summary: Update any of the structureclasses
         description: Update any of the structureclasses
         tags: 
           - StructureClass
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the StructureClass
-            required: true
-            type: integer
-            format: int64
           - name: structureClassRequest
             in: body
             description: Structure Class Request
@@ -701,20 +659,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /usages/{id}/_update:
+    /usages/_update:
       post:
         summary: Update any of the usagemasters
         description: Update any of the usagemasters
         tags: 
           - UsageMaster
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the UsageMaster
-            required: true
-            type: integer
-            format: int64
           - name: usageMasterRequest
             in: body
             description: Usage Master Request
@@ -797,20 +748,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /walltypes/{id}/_update:
+    /walltypes/_update:
       post:
         summary: Update any of the walltypes
         description: Update any of the walltypes
         tags: 
           - WallType
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the WallType
-            required: true
-            type: integer
-            format: int64
           - name: wallTypeRequest
             in: body
             description: Wall Type Request
@@ -893,20 +837,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /woodtypes/{id}/_update:
+    /woodtypes/_update:
       post:
         summary: Update any of the woodtype
         description: Update any of the woodtype
         tags: 
           - WoodType
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: id
-            in: path
-            description: Unique id of the WoodType
-            required: true
-            type: integer
-            format: int64
           - name: woodTypeRequest
             in: body
             description: Wood Type Request

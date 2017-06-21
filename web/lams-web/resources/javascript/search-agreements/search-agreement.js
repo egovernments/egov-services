@@ -36,7 +36,7 @@ class AgreementSearch extends React.Component {
   handleMobileValidation(e) {
     if(e.target.value && !(/[0-9]{10}/).test(e.target.value)) {
       e.target.setCustomValidity("Please enter 10 digits.");
-    else {
+    } else {
       e.target.setCustomValidity("");
     }
   }

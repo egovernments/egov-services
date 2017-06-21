@@ -1,10 +1,8 @@
 package org.egov.property;
 
-
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;
 
 /**
- * This is aspectj class for property 
+ * This is aspectj class for property
  * 
  * @author S Anilkumar
  * 
@@ -27,7 +25,7 @@ import org.slf4j.LoggerFactory;;
 @Component
 public class PtPropertyAspectj {
 
-	private static final Logger logger=LoggerFactory.getLogger(PtPropertyAspectj.class);
+	private static final Logger logger = LoggerFactory.getLogger(PtPropertyAspectj.class);
 
 	/*
 	 * This pointcut will execute for controller methods
@@ -43,11 +41,7 @@ public class PtPropertyAspectj {
 	protected void allMethod() {
 	}
 
-
-
-
-
-	/*before -> Any resource annotated with @Controller annotation */
+	/* before -> Any resource annotated with @Controller annotation */
 
 	@Before("controller() && allMethod()")
 	public void logBefore(JoinPoint joinPoint) {
@@ -57,13 +51,12 @@ public class PtPropertyAspectj {
 		logger.debug("Arguments :  " + Arrays.toString(joinPoint.getArgs()));
 		logger.debug("Target class : " + joinPoint.getTarget().getClass().getName());
 
-
 	}
 
-
-
-
-	/*After -> All method within resource annotated with @Controller annotation and return a  value*/
+	/*
+	 * After -> All method within resource annotated with @Controller annotation
+	 * and return a value
+	 */
 
 	@AfterReturning(pointcut = "controller() && allMethod()", returning = "result")
 	public void logAfter(JoinPoint joinPoint, Object result) {
@@ -73,10 +66,7 @@ public class PtPropertyAspectj {
 		logger.debug("LEAVING: " + joinPoint.getSignature().getName() + " WITH: " + returnValue);
 	}
 
-
-
-
-	//After -> Any method within resource annotated with @Controller annotation 
+	// After -> Any method within resource annotated with @Controller annotation
 	// throws an exception ...Log it
 
 	@AfterThrowing(pointcut = "controller() && allMethod()", throwing = "exception")
@@ -85,8 +75,8 @@ public class PtPropertyAspectj {
 		logger.error("Cause : " + exception.getCause());
 	}
 
-
-	//Around -> Any method within resource annotated with @Controller annotation 
+	// Around -> Any method within resource annotated with @Controller
+	// annotation
 
 	@Around("controller() && allMethod()")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -97,9 +87,7 @@ public class PtPropertyAspectj {
 			String methodName = joinPoint.getSignature().getName();
 			Object result = joinPoint.proceed();
 			long elapsedTime = System.currentTimeMillis() - start;
-			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : "
-					+ elapsedTime + " ms");
-
+			logger.debug("Method " + className + "." + methodName + " ()" + " execution time : " + elapsedTime + " ms");
 
 			return result;
 		} catch (IllegalArgumentException e) {
@@ -112,7 +100,6 @@ public class PtPropertyAspectj {
 	/*
 	 * This method for returing string value of object
 	 */
-
 
 	private String getValue(Object result) {
 

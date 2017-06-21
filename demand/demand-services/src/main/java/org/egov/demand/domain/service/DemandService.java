@@ -3,16 +3,19 @@ package org.egov.demand.domain.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.egov.demand.persistence.entity.EgDemand;
 import org.egov.demand.persistence.entity.EgDemandDetails;
 import org.egov.demand.persistence.entity.EgDemandReason;
+import org.egov.demand.persistence.entity.EgdmCollectedReceipt;
 import org.egov.demand.persistence.entity.Installment;
 import org.egov.demand.persistence.repository.DemandRepository;
 import org.egov.demand.web.contract.Demand;
 import org.egov.demand.web.contract.DemandDetails;
+import org.egov.demand.web.contract.PaymentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +76,11 @@ public class DemandService {
 				if (egDemandDetail.getId().equals(demandDetails.getId())) {
 					LOGGER.info("match is occuring in update service");
 					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
+					LOGGER.info("payment info to update receipts" + demand.getPaymentInfos());
+					if (!demand.getPaymentInfos().isEmpty()) {
+						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand, egDemandDetail));
+						LOGGER.info("back end receipt details" + egDemandDetail.getEgdmCollectedReceipts());
+					}
 				}
 			}
 		}
@@ -94,6 +102,7 @@ public class DemandService {
 					egDemandDetail.setAmount(demandDetails.getTaxAmount());
 					egDemandDetail.setAmtCollected(demandDetails.getCollectionAmount());
 					egDemandDetail.setAmtRebate(demandDetails.getRebateAmount());
+					LOGGER.info("demand details updated");
 				}
 			}
 			// adding to demand if demanddetails does not exists
@@ -111,4 +120,25 @@ public class DemandService {
 		egDemand.addCollected(demand.getCollectionAmount());
 		return demandRepository.save(egDemand);
 	}
+	
+	private Set<EgdmCollectedReceipt> getCollectedReceipts(Demand demand, EgDemandDetails egDemandDetails) {
+		Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
+
+		List<PaymentInfo> paymentInfo = demand.getPaymentInfos();
+		for (PaymentInfo info : paymentInfo) {
+			EgdmCollectedReceipt receipt = new EgdmCollectedReceipt();
+			receipt.setEgdemandDetail(egDemandDetails);
+			receipt.setReceiptNumber(info.getReceiptNumber());
+			receipt.setReasonAmount(egDemandDetails.getAmtCollected());
+			receipt.setReceiptDate(info.getReceiptDate());
+			receipt.setUpdatedTime(new Date());
+			receipt.setAmount(info.getReceiptAmount());
+			receipt.setStatus(info.getStatus().charAt(0));
+			receipt.setTenantId(demand.getTenantId());
+			egdmCollectedReceipts.add(receipt);
+			LOGGER.info("adding receipt details " + receipt);
+		}
+		return egdmCollectedReceipts;
+	}
+	
 }

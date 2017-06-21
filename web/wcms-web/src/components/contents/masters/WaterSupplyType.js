@@ -77,7 +77,7 @@ class WaterSupplyTypes extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "supplytype/"+id, "_update", {},{}).then((res)=>
            {
               this.setState({
                 list: res.supplytypes
@@ -101,9 +101,6 @@ class WaterSupplyTypes extends Component {
   {
     var type=getUrlVars()["type"];
     var id=getUrlVars()["id"];
-
-    // let mode=getUrlVars()["type"];
-
       let {changeButtonText,WaterSupplyTypes}=this.props;
       var SupplyType = {
         name:WaterSupplyTypes.ownerName,
@@ -112,7 +109,7 @@ class WaterSupplyTypes extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{SupplyType:SupplyType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "supplytype/"+id, "_update", {},{SupplyType:SupplyType}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -125,8 +122,14 @@ class WaterSupplyTypes extends Component {
       let response=Api.commonApiPost("wcms-masters", "supplytype", "_create", {},{SupplyType}).then(function(response)
       {
       // console.log(response);
+      alert("Water Supply Type created Successfully");
     },function(err) {
-        alert("Entered Water Source Type already exist");
+      if(!SupplyType.name){
+          alert("Please Enter Water Supply Type ");
+      }
+      else{
+        alert("Entered Water Supply Type already exist");
+      }
     });
 }
     }
@@ -148,7 +151,7 @@ class WaterSupplyTypes extends Component {
     let {search} = this;
     let mode=getUrlVars()["type"];
 
-       console.log(mode);
+      //  console.log(mode);
 
     const showActionButton=function() {
       if((!mode) ||mode==="Update")

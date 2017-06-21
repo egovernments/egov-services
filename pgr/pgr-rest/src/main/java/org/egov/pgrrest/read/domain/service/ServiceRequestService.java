@@ -1,10 +1,13 @@
 package org.egov.pgrrest.read.domain.service;
 
+import org.egov.pgr.common.model.Employee;
+import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
+import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,19 +24,26 @@ public class ServiceRequestService {
     private SevaNumberGeneratorService sevaNumberGeneratorService;
     private OtpService otpService;
     private ServiceRequestTypeService serviceRequestTypeService;
+    private SubmissionRepository submissionRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
                                  SevaNumberGeneratorService sevaNumberGeneratorService,
                                  UserRepository userRepository,
                                  OtpService otpService,
-                                 ServiceRequestTypeService serviceRequestTypeService) {
+                                 ServiceRequestTypeService serviceRequestTypeService,
+                                 SubmissionRepository submissionRepository,
+                                 EmployeeRepository employeeRepository) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
         this.otpService = otpService;
         this.serviceRequestTypeService = serviceRequestTypeService;
+        this.submissionRepository = submissionRepository;
+        this.employeeRepository = employeeRepository;
     }
+
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         List<ServiceRequest> serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
@@ -89,9 +99,27 @@ public class ServiceRequestService {
 
     public void update(ServiceRequest complaint, SevaRequest sevaRequest) {
         complaint.validate();
+        validateUpdateEligibility(complaint);
         sevaRequest.update(complaint);
         setUserIdForAnonymousUser(sevaRequest);
         serviceRequestRepository.update(sevaRequest);
     }
 
+    public Long getAssignmentId(String crn, String tenantId) {
+        return submissionRepository.getAssignmentByCrnAndTenantId(crn, tenantId);
+
+    }
+
+    private Employee getEmployeeByAssignee(Long assigneeId, String tenantId) {
+        return employeeRepository.getEmployeeById(assigneeId, tenantId);
+    }
+
+    private void validateUpdateEligibility(ServiceRequest complaint) {
+        Long assignmentIdDB = getAssignmentId(complaint.getCrn(), complaint.getTenantId());
+        Employee employee = getEmployeeByAssignee(complaint.getAuthenticatedUser().getId(), complaint.getTenantId());
+        if (assignmentIdDB.equals(employee.getPrimaryPosition())) {
+            return;
+        }
+        complaint.getAuthenticatedUser().validateUpdateEligibility();
+    }
 }

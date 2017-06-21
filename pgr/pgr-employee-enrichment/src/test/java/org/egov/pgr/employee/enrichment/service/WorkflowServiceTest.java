@@ -1,6 +1,6 @@
 package org.egov.pgr.employee.enrichment.service;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
@@ -584,8 +584,9 @@ public class WorkflowServiceTest {
         Map<String, Attribute> valueMap = new HashMap<>();
         List<Value> stateIdValues = new ArrayList<>();
         stateIdValues.add(new Value(STATE_ID_KEY, STATE_ID));
-        valueMap.put(STATE_ID_KEY, new Attribute(Boolean.TRUE, STATE_ID_KEY, "String", Boolean.FALSE, StringUtils
-            .EMPTY, stateIdValues));
+        final Attribute attribute =
+            new Attribute(Boolean.TRUE, STATE_ID_KEY, "String", Boolean.FALSE, StringUtils.EMPTY, stateIdValues);
+        valueMap.put(STATE_ID_KEY, attribute);
         return valueMap;
     }
 

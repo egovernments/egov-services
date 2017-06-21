@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DemandConsumer {
 
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
@@ -29,6 +30,9 @@ public class DemandConsumer {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private BillRepository billRepository;
 
 	@Autowired
 	private BillRepository billRepository;
@@ -51,7 +55,10 @@ public class DemandConsumer {
 			log.info("processMessage:" + exception);
 			throw exception;
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1719d9390742814a7beabfa7d70251a16d8d0798
 	}
 
 }

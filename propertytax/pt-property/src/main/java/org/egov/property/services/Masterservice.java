@@ -22,78 +22,353 @@ import org.egov.models.WoodTypeResponse;
 
 public interface Masterservice {
 
-
-
+	/**
+	 * Description : This method will use for creating department type
+	 * 
+	 * @param tenantId
+	 * @param departmentRequest
+	 * @return
+	 */
 	public DepartmentResponseInfo createDepartmentMaster(String tenantId, DepartmentRequest departmentRequest);
 
+	/**
+	 * Description: department update
+	 * 
+	 * @param tenantId
+	 * @param id
+	 * @param DepartmentRequest
+	 */
 	public DepartmentResponseInfo updateDepartmentMaster(String tenantId, Long id, DepartmentRequest departmentRequest);
 
+	/**
+	 * Description: search for deparment
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param category
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 */
 	public DepartmentResponseInfo getDepartmentMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String category, String name, String code, String nameLocal, Integer pageSize, Integer offSet);
 
-	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId,Integer []ids, String name ,String code,String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	/**
+	 * Description : This method for getting floor master details
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param requestInfo
+	 * @return masterModel
+	 * @throws Exception
+	 */
+	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
-	public FloorTypeResponse createFloorType(FloorTypeRequest floorTypeRequest,String tenantId) throws Exception;
+	/**
+	 * <P>
+	 * This method will presist the given floor type in the database
+	 * </p>
+	 * 
+	 * @param floorTypeRequest
+	 * @param tenantId
+	 * @return {@link FloorTypeResponse}
+	 */
+	public FloorTypeResponse createFloorType(FloorTypeRequest floorTypeRequest, String tenantId) throws Exception;
 
-	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest,String tenantId,Integer id) throws Exception;
+	/**
+	 * <p>
+	 * This method will update floor type object with the given details
+	 * <p>
+	 * 
+	 * @param floorTypeRequest
+	 * @param tenantId
+	 * @param id
+	 * @return {@link FloorTypeRequest}
+	 */
+	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest, String tenantId, Integer id)
+			throws Exception;
 
-	// Wood Types
+	/**
+	 * <P>
+	 * This method will search the Wood type records based on the given
+	 * parameters
+	 * <p>
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return {@link WoodTypeResponse}
+	 */
+	public WoodTypeResponse getWoodTypes(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
-	public WoodTypeResponse getWoodTypes (RequestInfo requestInfo,String tenantId,Integer []ids, String name ,String code,String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	/**
+	 * <p>
+	 * Thos method will insert the wood type record in the database
+	 * <p>
+	 * 
+	 * @param woodTypeRequest
+	 * @param tenantId
+	 * @return {@link WoodTypeResponse}
+	 */
+	public WoodTypeResponse createWoodType(WoodTypeRequest woodTypeRequest, String tenantId) throws Exception;
 
-	public WoodTypeResponse createWoodType(WoodTypeRequest woodTypeRequest,String tenantId) throws Exception;
+	/**
+	 * <p>
+	 * This method will update the wood type object for the given Id for given
+	 * wood type object
+	 * <p>
+	 * 
+	 * @param woodTypeRequest
+	 * @param tenantId
+	 * @param id
+	 * @return {@link WoodTypeResponse}
+	 */
+	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest, String tenantId, Integer id)
+			throws Exception;
 
-	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest,String tenantId,Integer id) throws Exception;
+	/**
+	 * 
+	 * <P>
+	 * This method will search for the roof type objects for the given
+	 * parameters and returns the matched roof type Objects
+	 * <p>
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return {@link RoofTypeResponse}
+	 */
+	public RoofTypeResponse getRoofypes(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
+	/**
+	 * <p>
+	 * This methhod will insert the given roof object in the database
+	 * </p>
+	 * 
+	 * @param roofTypeRequest
+	 * @param tenantId
+	 * @return {@link RoofTypeResponse}
+	 */
+	public RoofTypeResponse createRoofype(RoofTypeRequest roofTypeRequest, String tenantId) throws Exception;
 
-	// Roof Types
+	/**
+	 * <p>
+	 * This method will update the given rooftype object for the given rooftype
+	 * Id
+	 * </p>
+	 * 
+	 * @param roofTypeRequest
+	 * @param tenantId
+	 * @param id
+	 * @return {@link RoofTypeResponse}
+	 */
+	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest, String tenantId, Integer id)
+			throws Exception;
 
-	public RoofTypeResponse getRoofypes (RequestInfo requestInfo,String tenantId,Integer []ids, String name ,String code,String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	/**
+	 * Description : This api for creating strctureClass master
+	 * 
+	 * @param tenantId
+	 * @param StructureClassRequest
+	 * @return structureClassResponse
+	 * @throws Exception
+	 */
+	public StructureClassResponse craeateStructureClassMaster(String tenantId,
+			StructureClassRequest structureClassRequest);
 
-	public RoofTypeResponse createRoofype(RoofTypeRequest roofTypeRequest,String tenantId) throws Exception;
-
-	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest,String tenantId,Integer id) throws Exception;
-
-	public StructureClassResponse craeateStructureClassMaster(String tenantId, StructureClassRequest structureClassRequest);
-
+	/**
+	 * Description : This api for updating strctureClass master
+	 * 
+	 * @param tenantId
+	 * @param StructureClassRequest
+	 * @return structureClassResponse
+	 * @throws Exception
+	 */
 	public StructureClassResponse updateStructureClassMaster(String tenantId, Long id,
 			StructureClassRequest structureClassRequest);
 
-	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name , String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet);
+	/**
+	 * Description : This api for searching strctureClass master
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param active
+	 * @param orderNumber
+	 * @param pageSize
+	 * @param offSet
+	 * @return structureClassResponse
+	 * @throws Exception
+	 */
+	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
+			Integer offSet);
 
+	/**
+	 * Description : This method will use for creating property type
+	 * 
+	 * @param tenantId
+	 * @param propertyTypeRequest
+	 * @return
+	 */
 	public PropertyTypeResponse createPropertyTypeMaster(String tenantId, PropertyTypeRequest propertyTypeRequest);
 
-	public PropertyTypeResponse updatePropertyTypeMaster(String tenantId, Long id, PropertyTypeRequest propertyTypeRequest);
+	/**
+	 * Description : This method will use for update property type
+	 * 
+	 * @param tenantId
+	 * @param propertyTypeResponse
+	 * @return
+	 */
+	public PropertyTypeResponse updatePropertyTypeMaster(String tenantId, Long id,
+			PropertyTypeRequest propertyTypeRequest);
 
-
+	/**
+	 * Description : This api for searching propertyType master
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param active
+	 * @param orderNumber
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 */
 	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
 			Integer offSet);
 
+	/**
+	 * Description : This method will use for creating Occuapancy
+	 * 
+	 * @param tenantId
+	 * @param occuapancyRequest
+	 * @return
+	 */
 	public OccuapancyMasterResponse createOccuapancyMaster(String tenantId,
 			OccuapancyMasterRequest occuapancyMasterRequest);
 
+	/**
+	 * Description : This api for updating occupancyType master
+	 * 
+	 * @param tenantId
+	 * @param id
+	 * @param occuapancyRequest
+	 * @return
+	 */
 	public OccuapancyMasterResponse updateOccuapancyMaster(String tenantId, Long id,
 			OccuapancyMasterRequest occuapancyRequest);
 
+	/**
+	 * Description: search occupancy query formation and used in
+	 * getOccupancyMaster method
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param active
+	 * @param orderNumber
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 */
 	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
 			Integer offSet);
 
-	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	/**
+	 * Description : This method for getting wall type master details
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param requestInfo
+	 * @return masterModel
+	 * @throws Exception
+	 */
+	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
+	/**
+	 * Description : This method for getting wall type master details
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param requestInfo
+	 * @return masterModel
+	 * @throws Exception
+	 */
 	public WallTypeResponse createWallTypeMaster(String tenantId, WallTypeRequest wallTypeRequest) throws Exception;
 
-	public WallTypeResponse updateWallTypeMaster(String tenantId, Long id, WallTypeRequest wallTypeRequest) throws Exception;
+	/**
+	 * Description : this method for updating wall type
+	 * 
+	 * @param wallTypeRequest
+	 * @param id
+	 * @return
+	 */
+	public WallTypeResponse updateWallTypeMaster(String tenantId, Long id, WallTypeRequest wallTypeRequest)
+			throws Exception;
 
+	/**
+	 * Description : This method for getting usage master details
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param requestInfo
+	 * @return masterModel
+	 * @throws Exception
+	 */
+	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
+			Integer offSet) throws Exception;
 
-	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize, Integer offSet) throws Exception;
+	/**
+	 * Description : This method for creating usageMaster
+	 * 
+	 * @param tenantId
+	 * @param usageMasters
+	 * @return masterModel
+	 * @throws Exception
+	 */
+	public UsageMasterResponse createUsageMaster(String tenantId, UsageMasterRequest usageMasterRequest)
+			throws Exception;
 
-	public UsageMasterResponse createUsageMaster(String tenantId, UsageMasterRequest usageMasterRequest) throws Exception;
-
-	public UsageMasterResponse updateUsageMaster(String tenantId, Long id, UsageMasterRequest usageMasterRequest) throws Exception;
+	/**
+	 * Description : This method for updating usageMaster
+	 * 
+	 * @param tenantId
+	 * @param usageMasters
+	 * @return masterModel
+	 * @throws Exception
+	 */
+	public UsageMasterResponse updateUsageMaster(String tenantId, Long id, UsageMasterRequest usageMasterRequest)
+			throws Exception;
 
 }
-
-
-

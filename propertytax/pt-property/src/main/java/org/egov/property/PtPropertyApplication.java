@@ -23,7 +23,6 @@ public class PtPropertyApplication {
 	
 	@Bean
 	public ResponseInfoFactory responseInfoFactory(){
-		
 		return new ResponseInfoFactory();
 	}
 

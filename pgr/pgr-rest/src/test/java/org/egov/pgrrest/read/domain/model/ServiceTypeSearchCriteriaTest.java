@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.model;
 
 
-import org.egov.pgrrest.read.domain.exception.InvalidComplaintTypeSearchException;
+import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeSearchException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,7 +20,7 @@ public class ServiceTypeSearchCriteriaTest {
                 .categoryId(123L)
                 .build();
 
-        thrown.expect(InvalidComplaintTypeSearchException.class);
+        thrown.expect(InvalidServiceTypeSearchException.class);
         thrown.expectMessage("Invalid search type");
 
         searchCriteria.validate();
@@ -33,7 +33,7 @@ public class ServiceTypeSearchCriteriaTest {
                 .categoryId(null)
                 .build();
 
-        thrown.expect(InvalidComplaintTypeSearchException.class);
+        thrown.expect(InvalidServiceTypeSearchException.class);
         thrown.expectMessage("Category id is not present");
 
         searchCriteria.validate();

@@ -1,1 +1,0 @@
-alter table eg_wf_states add column previous_owner bigint;

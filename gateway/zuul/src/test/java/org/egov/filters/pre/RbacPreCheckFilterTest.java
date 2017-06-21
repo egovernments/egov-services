@@ -18,7 +18,6 @@ public class RbacPreCheckFilterTest {
 
     private HashSet<String> openEndpointsWhitelist = new HashSet<>();
     private HashSet<String> anonymousEndpointsWhitelist = new HashSet<>();
-    private List<String> rbacWhitelist = new ArrayList<>(Arrays.asList("/pgr"));
 
     private RbacPreCheckFilter rbacPreCheckFilter;
 
@@ -28,7 +27,7 @@ public class RbacPreCheckFilterTest {
         openEndpointsWhitelist.add("open-endpoint2");
         anonymousEndpointsWhitelist.add("/pgr/complaintTypeCategories");
         anonymousEndpointsWhitelist.add("anonymous-endpoint2");
-        rbacPreCheckFilter = new RbacPreCheckFilter(openEndpointsWhitelist, anonymousEndpointsWhitelist,rbacWhitelist);
+        rbacPreCheckFilter = new RbacPreCheckFilter(openEndpointsWhitelist, anonymousEndpointsWhitelist);
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.clear();
         ctx.setRequest(request);
@@ -68,12 +67,4 @@ public class RbacPreCheckFilterTest {
         assertTrue((Boolean) ctx.get("shouldDoRbac"));
     }
 
-    @Test
-    public void test_that_Rbac_check_should_not_happen_when_Uri_Is_Not_Present_In_Whitelist() throws Exception {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        request.setRequestURI("/hr-leave/save");
-        ctx.setRequest(request);
-        rbacPreCheckFilter.run();
-        assertFalse((Boolean) ctx.get("shouldDoRbac"));
-    }
 }

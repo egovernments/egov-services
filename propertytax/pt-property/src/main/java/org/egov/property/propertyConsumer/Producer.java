@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * This class will use for sending property object to kafka server
+ * 
  * @author S Anilkumar
  */
 @Configuration
@@ -31,13 +32,12 @@ public class Producer {
 	@Autowired
 	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
 
-
 	/**
 	 * This method will return map object for producer configuration
 	 */
 	@Bean
-	public Map<String,Object> producerConfig(){
-		Map<String,Object> producerProperties=new HashMap<String,Object>();
+	public Map<String, Object> producerConfig() {
+		Map<String, Object> producerProperties = new HashMap<String, Object>();
 		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("bootstrap.servers"));
 		producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
@@ -45,19 +45,21 @@ public class Producer {
 	}
 
 	/**
-	 * This method will return producer factory bean based on producer configuration
+	 * This method will return producer factory bean based on producer
+	 * configuration
 	 */
 	@Bean
-	public ProducerFactory<String, PropertyRequest> producerFactory(){
+	public ProducerFactory<String, PropertyRequest> producerFactory() {
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
 	/**
-	 * This method will return kafka template bean based on  producer factory bean
+	 * This method will return kafka template bean based on producer factory
+	 * bean
 	 */
 
 	@Bean
-	public KafkaTemplate<String, PropertyRequest> kafkaTemplate(){
+	public KafkaTemplate<String, PropertyRequest> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 
@@ -65,18 +67,17 @@ public class Producer {
 	 * This will be create rest template and returns rest object
 	 * 
 	 */
-	@Bean 
-	public RestTemplate restTemplate(){
+	@Bean
+	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
 
 	/**
-	 * This method will send object to kafka server based on topic name
-	 * topic: name of topic
-	 * propertyRequest:PropertyRequest object
+	 * This method will send object to kafka server based on topic name topic:
+	 * name of topic propertyRequest:PropertyRequest object
 	 */
 
-	public void send(String topic,PropertyRequest propertyRequest){
+	public void send(String topic, PropertyRequest propertyRequest) {
 		kafkaTemplate.send(topic, propertyRequest);
 	}
 }

@@ -1,5 +1,8 @@
 package org.egov.asset.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -16,17 +19,20 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class VouchercreateAccountCodeDetails {
-	
-	  @JsonProperty("glcode")
-	  private String glcode = null;
 
-	  @JsonProperty("debitAmount")
-	  private Double debitAmount = null;
+	@JsonProperty("glcode")
+	private String glcode;
 
-	  @JsonProperty("creditAmount")
-	  private Double creditAmount = null;
+	@JsonProperty("debitAmount")
+	private Double debitAmount = 0.0;
 
-	  @JsonProperty("narration")
-	  private String narration = null;
+	@JsonProperty("creditAmount")
+	private Double creditAmount = 0.0;
+
+	@JsonProperty("function")
+	private Function function;
+
+	@JsonProperty("subledgerDetails")
+	private List<LedgerDetail> subledgerDetails = new ArrayList<>();
 
 }

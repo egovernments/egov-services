@@ -1,7 +1,5 @@
 package org.egov.asset.model;
 
-import java.util.List;
-
 import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 
@@ -13,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 /**
  * Hold the asset Revaluation information.
  */
@@ -24,67 +23,62 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class Revaluation {
-	
-  @JsonProperty("tenantId")
-  private String tenantId = null;
 
-  @JsonProperty("id")
-  private Long id = null;
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
-  @JsonProperty("assetId")
-  private Long assetId = null;
+	@JsonProperty("id")
+	private Long id = null;
 
-  @JsonProperty("currentCapitalizedValue")
-  private Double currentCapitalizedValue = null;
+	@JsonProperty("assetId")
+	private Long assetId = null;
 
-  @JsonProperty("typeOfChange")
-  private TypeOfChangeEnum typeOfChange = null;
+	@JsonProperty("currentCapitalizedValue")
+	private Double currentCapitalizedValue = null;
 
-  @JsonProperty("revaluationAmount")
-  private Double revaluationAmount = null;
+	@JsonProperty("typeOfChange")
+	private TypeOfChangeEnum typeOfChange = null;
 
-  @JsonProperty("valueAfterRevaluation")
-  private Double valueAfterRevaluation = null;
+	@JsonProperty("revaluationAmount")
+	private Double revaluationAmount = null;
 
-  @JsonProperty("revaluationDate")
-  private Long revaluationDate = null;
+	@JsonProperty("valueAfterRevaluation")
+	private Double valueAfterRevaluation = null;
 
-  @JsonProperty("reevaluatedBy")
-  private String reevaluatedBy = null;
-  
-  @JsonProperty("reasonForRevaluation")
-  private String reasonForRevaluation = null;
+	@JsonProperty("revaluationDate")
+	private Long revaluationDate = null;
 
-  @JsonProperty("fixedAssetsWrittenOffAccount")
-  private Long fixedAssetsWrittenOffAccount = null;
+	@JsonProperty("reevaluatedBy")
+	private String reevaluatedBy = null;
 
-  @JsonProperty("function")
-  private Long function = null;
+	@JsonProperty("reasonForRevaluation")
+	private String reasonForRevaluation = null;
 
-  @JsonProperty("fund")
-  private Long fund = null;
+	@JsonProperty("fixedAssetsWrittenOffAccount")
+	private Long fixedAssetsWrittenOffAccount = null;
 
-  @JsonProperty("scheme")
-  private Long scheme = null;
+	@JsonProperty("function")
+	private Long function = null;
 
-  @JsonProperty("subScheme")
-  private Long subScheme = null;
+	@JsonProperty("fund")
+	private Long fund = null;
 
-  @JsonProperty("comments")
-  private String comments = null;
-  
-  @JsonProperty("status")
-  private RevaluationStatus status = null;
-  
-  @JsonProperty("auditDetails")
-  private AuditDetails auditDetails;
-  
-  public CreateVoucherHelper toVoucher(List<VouchercreateAccountCodeDetails> vouchercreateAccountCodeDetails){
-	 
-	  return CreateVoucherHelper.builder().voucherName("Asset Revalution").voucherType("JOURNALVOUCHER").
-			  voucherDate(revaluationDate).fund(fund).function(function).scheme(scheme).subScheme(subScheme).
-			  accountCodeDetails(vouchercreateAccountCodeDetails).build();
-  }
+	@JsonProperty("scheme")
+	private Long scheme = null;
+
+	@JsonProperty("subScheme")
+	private Long subScheme = null;
+
+	@JsonProperty("comments")
+	private String comments = null;
+
+	@JsonProperty("status")
+	private RevaluationStatus status = null;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
+	@JsonProperty("voucherReference")
+	private Long voucherReference;
 
 }
-

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Chip from 'material-ui/Chip';
 import FontIcon from 'material-ui/FontIcon';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Upload from 'material-ui-upload/Upload';
@@ -84,6 +85,9 @@ noMargin: {
 },
 textRight: {
   textAlign:'right'
+},
+chip: {
+  marginTop:4
 }
 };
 
@@ -96,6 +100,7 @@ class CruProperty extends Component {
       addOwner: true,
       addFloor: true,
       addRoom: false,
+      files:[],
       propertytypes: [],
       apartments:[],
       departments:[],
@@ -253,7 +258,12 @@ class CruProperty extends Component {
 
   }
 
-  onFileLoad = (e) => console.log(e.target.result)
+  onFileLoad = (e, file) => {  console.log(file.name)
+    this.setState((prevState)=>{
+      prevState.files.push(file.name);
+    })
+    console.log(this.state.files)
+  }
 
   componentWillUpdate() {
 
@@ -307,6 +317,12 @@ class CruProperty extends Component {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
             })
         }
+    }
+
+    const fileNames = () => {
+      this.state.files.map(function(e,i){
+        {i} {e}
+      })
     }
 
     const createProperty = () => {
@@ -1292,7 +1308,7 @@ class CruProperty extends Component {
         </Col>
         {(cruProperty.floor ? (cruProperty.floor.unitType == 1 ? true : false) : false) &&
           <Col xs={12} md={3} sm={6}>
-            <RaisedButton type="button" label="Add Room" style={{marginTop:28}}  backgroundColor="#0b272e" labelColor={white} onClick={
+            <RaisedButton type="button" label="Add Room" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} onClick={
               () => {
                 this.setState({addRoom:true});
                 this.setState({addFloor:false});
@@ -1745,7 +1761,7 @@ class CruProperty extends Component {
                                                   }
                                                   handleChange(e, "cAddressDiffPAddress", false, '')
                                                 }}
-                                                maxLength={6}
+                                                
                                               />
                                           </Col>
                                           {cruProperty.cAddressDiffPAddress &&
@@ -1764,6 +1780,7 @@ class CruProperty extends Component {
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														maxLength={6}
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -2239,13 +2256,16 @@ class CruProperty extends Component {
                         <Card className="darkShadow">
                             <CardText style={styles.reducePadding}>
                                 <Grid fluid>
-                                    <Row>
-                                        <Col xs={12} md={12}>
+                                    <Row style={{paddingTop:8, paddingBottom:4}}>
+                                        <Col xs={12} md={3}>
                                           <Row>
-
-                                                  <Upload onFileLoad={this.onFileLoad} />
-
+                                              <Upload onFileLoad={this.onFileLoad} />
                                           </Row>
+                                        </Col>
+                                        <Col xs={12} md={9} style={{display: 'flex',flexWrap: 'wrap'}}>
+                                        {this.state.files.map((e,i)=> (<Chip key={i} style={styles.chip}>
+                                          {e}</Chip>)
+                                        )}
                                         </Col>
                                     </Row>
                                 </Grid>

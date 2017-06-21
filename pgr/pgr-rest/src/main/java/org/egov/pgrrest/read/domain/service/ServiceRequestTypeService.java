@@ -28,7 +28,7 @@ public class ServiceRequestTypeService {
         final ServiceType serviceRequestType = serviceRequestTypeRepository
             .getServiceRequestType(serviceRequest.getServiceRequestType().getCode(), serviceRequest.getTenantId());
         if (serviceRequestType == null) {
-            throw new InvalidServiceTypeCodeException();
+            throw new InvalidServiceTypeCodeException(serviceRequest.getServiceRequestType().getCode());
         }
         serviceRequest.setServiceType(serviceRequestType.isComplaintType());
     }

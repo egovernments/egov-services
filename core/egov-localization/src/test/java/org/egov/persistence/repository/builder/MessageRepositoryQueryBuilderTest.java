@@ -24,7 +24,7 @@ public class MessageRepositoryQueryBuilderTest {
 	
 	@Test
 	public void test_should_return_valid_delete_query() {
-		String expectThisString = "DELETE FROM message WHERE locale = ? AND tenantid = ? AND code IN ('codeOne','codeTwo') AND module IN ('moduleOne','moduleTwo')";
+		String expectThisString = "DELETE FROM message WHERE locale = ? AND tenantid = ? AND code IN ('codeOne','codeTwo')AND module IN ('moduleOne','moduleTwo')";
 		List<org.egov.web.contract.Message> myMessages = getMyMessages();
 		NewMessagesRequest messageRequest = new NewMessagesRequest(new RequestInfo(), "LOCALE", myMessages, "TenantId");
 		assertTrue(expectThisString.equals(messageQueryBuilder.getDeleteQuery(getOnlyMessages(messageRequest))));

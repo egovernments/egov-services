@@ -30,25 +30,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.17.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${commons-lang-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>0.17.6</version>
         </dependency>
 
         <dependency>

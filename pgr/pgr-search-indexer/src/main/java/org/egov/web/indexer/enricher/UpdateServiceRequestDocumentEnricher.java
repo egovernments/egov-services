@@ -1,6 +1,6 @@
 package org.egov.web.indexer.enricher;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.contract.ServiceType;
 import org.egov.web.indexer.contract.SevaRequest;

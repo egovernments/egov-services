@@ -101,9 +101,6 @@ class WaterSupplyTypes extends Component {
   {
     var type=getUrlVars()["type"];
     var id=getUrlVars()["id"];
-
-    // let mode=getUrlVars()["type"];
-
       let {changeButtonText,WaterSupplyTypes}=this.props;
       var SupplyType = {
         name:WaterSupplyTypes.ownerName,
@@ -125,8 +122,14 @@ class WaterSupplyTypes extends Component {
       let response=Api.commonApiPost("wcms-masters", "supplytype", "_create", {},{SupplyType}).then(function(response)
       {
       // console.log(response);
+      alert("Water Supply Type created Successfully");
     },function(err) {
-        alert("Entered Water Source Type already exist");
+      if(!SupplyType.name){
+          alert("Please Enter Water Supply Type ");
+      }
+      else{
+        alert("Entered Water Supply Type already exist");
+      }
     });
 }
     }
@@ -148,7 +151,7 @@ class WaterSupplyTypes extends Component {
     let {search} = this;
     let mode=getUrlVars()["type"];
 
-       console.log(mode);
+      //  console.log(mode);
 
     const showActionButton=function() {
       if((!mode) ||mode==="Update")

@@ -127,7 +127,12 @@ class CategoryType extends Component {
       // console.log(response);
       alert("Category Type Created successfully")
     },function(err) {
+      if(!Category.name){
+        alert("Please Enter Category type ");
+      }
+      else{
         alert("Entered Category Type already exist");
+      }
     });
 }
     }

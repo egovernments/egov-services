@@ -121,7 +121,12 @@ class PipeSize extends Component {
         // console.log(response);
         alert("Pipe Size Updated Successfully")
       },function(err) {
+        if(!PipeSize.sizeInMilimeter){
+          alert("Please Enter PipeSize in mm");
+        }
+        else{
           alert("Enetered Pipe Size already exist");
+        }
       });
 
       }

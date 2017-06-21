@@ -126,7 +126,12 @@ class WaterSourceType extends Component {
       {
       // console.log(response);
     },function(err) {
-        alert("Entered Water Source Type already exist");
+      if(!sourceType.name){
+        alert("Please Enter Water Source Type");
+      }
+      else{
+          alert("Entered Water Source Type already exist");
+      }
     });
 }
     }

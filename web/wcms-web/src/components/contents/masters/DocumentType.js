@@ -77,10 +77,10 @@ class DocumentType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "documenttype", "_update/"+id, {},{}).then((res)=>
            {
               this.setState({
-                list: res.Category
+                list: res.documentTypes
             });
 
         },  (err)=> {
@@ -112,7 +112,7 @@ class DocumentType extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "documenttype", "_update/"+id, {},{DocumentType:DocumentType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "documenttype/"+id, "_update", {},{DocumentType:DocumentType}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -126,8 +126,14 @@ class DocumentType extends Component {
       {
       // console.log(response);
     },function(err) {
+      if(!DocumentType.name){
+        alert("Please enter Document type");
+
+      }
+      else{
         alert("Entered Document type already exists");
-    });
+    }
+  });
 }
     }
 

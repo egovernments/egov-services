@@ -33,15 +33,15 @@ public class AuthPreCheckFilter extends ZuulFilter {
     private static final String AUTH_TOKEN_REQUEST_BODY_FIELD_NAME = "authToken";
     private static final String FAILED_TO_SERIALIZE_REQUEST_BODY_MESSAGE = "Failed to serialize requestBody";
     private HashSet<String> openEndpointsWhitelist;
-    private HashSet<String> anonymousEndpointsWhitelist;
+    private HashSet<String> mixedModeEndpointsWhitelist;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ObjectMapper objectMapper;
 
 
     public AuthPreCheckFilter(HashSet<String> openEndpointsWhitelist,
-                              HashSet<String> anonymousEndpointsWhitelist) {
+                              HashSet<String> mixedModeEndpointsWhitelist) {
         this.openEndpointsWhitelist = openEndpointsWhitelist;
-        this.anonymousEndpointsWhitelist = anonymousEndpointsWhitelist;
+        this.mixedModeEndpointsWhitelist = mixedModeEndpointsWhitelist;
         objectMapper = new ObjectMapper();
     }
 
@@ -78,7 +78,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
         RequestContext.getCurrentContext().set(AUTH_TOKEN_KEY, authToken);
         logger.info(RETRIEVED_AUTH_TOKEN_MESSAGE, authToken);
         if (authToken == null) {
-            if (anonymousEndpointsWhitelist.contains(getRequestURI())) {
+            if (mixedModeEndpointsWhitelist.contains(getRequestURI())) {
                 logger.info(ROUTING_TO_ANONYMOUS_ENDPOINT_MESSAGE, getRequestURI());
                 setShouldDoAuth(false);
             } else {

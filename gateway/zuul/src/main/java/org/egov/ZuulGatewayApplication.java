@@ -28,8 +28,8 @@ public class ZuulGatewayApplication {
     @Value("#{'${egov.open-endpoints-whitelist}'.split(',')}")
     private String[] openEndpointsWhitelist;
 
-    @Value("#{'${egov.anonymous-endpoints-whitelist}'.split(',')}")
-    private String[] anonymousEndpointsWhitelist;
+    @Value("#{'${egov.mixed-mode-endpoints-whitelist}'.split(',')}")
+    private String[] mixedModeEndpointsWhitelist;
 
     @Value("${egov.auth-service-host}")
     private String authServiceHost;
@@ -40,7 +40,7 @@ public class ZuulGatewayApplication {
     @Bean
     public AuthPreCheckFilter authCheckFilter() {
         return new AuthPreCheckFilter(new HashSet<>(Arrays.asList(openEndpointsWhitelist)),
-            new HashSet<>(Arrays.asList(anonymousEndpointsWhitelist)));
+            new HashSet<>(Arrays.asList(mixedModeEndpointsWhitelist)));
     }
 
     @Bean
@@ -58,7 +58,7 @@ public class ZuulGatewayApplication {
     @Bean
     public RbacPreCheckFilter rbacCheckFilter() {
         return new RbacPreCheckFilter(new HashSet<>(Arrays.asList(openEndpointsWhitelist)),
-            new HashSet<>(Arrays.asList(anonymousEndpointsWhitelist))
+            new HashSet<>(Arrays.asList(mixedModeEndpointsWhitelist))
         );
     }
 }

@@ -22,10 +22,9 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidComplaintTypeSearchException.class)
-    public ErrorResponse handleInvalidSearchTypeException(Exception ex) {
-        //TODO: Fix this
-        return new ErrorResponse(null, null);
+    @ExceptionHandler(InvalidServiceTypeSearchException.class)
+    public ErrorResponse handleInvalidSearchTypeException(InvalidServiceTypeSearchException ex) {
+        return new InvalidServiceTypeSearchExceptionAdapter().adapt(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

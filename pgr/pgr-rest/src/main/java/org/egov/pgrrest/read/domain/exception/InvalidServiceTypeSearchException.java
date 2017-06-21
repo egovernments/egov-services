@@ -1,10 +1,10 @@
 package org.egov.pgrrest.read.domain.exception;
 
-public class InvalidComplaintTypeSearchException extends RuntimeException {
+public class InvalidServiceTypeSearchException extends RuntimeException {
 
     private static final long serialVersionUID = -8981494500342459033L;
 
-    public InvalidComplaintTypeSearchException(String message) {
+    public InvalidServiceTypeSearchException(String message) {
         super(message);
     }
 }

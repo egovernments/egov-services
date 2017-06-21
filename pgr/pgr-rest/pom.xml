@@ -207,6 +207,7 @@
                                         <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidOtpValidationRequestExceptionAdapter</exclude>
                                         <exclude>org.egov.pgrrest.read.web.adapters.error.OtpValidationNotCompleteExceptionAdapter</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidServiceTypeSearchExceptionAdapter</exclude>
                                         <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidServiceTypeExceptionAdapter</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.QueryFactory</exclude>

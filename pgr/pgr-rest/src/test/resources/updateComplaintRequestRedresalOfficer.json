@@ -6,7 +6,6 @@
         "did": "",
         "key": "",
         "msgId": "",
-        "requesterId": "",
         "authToken": "authToken"
     },
     "serviceRequest": {

@@ -57,6 +57,7 @@ public class CustomControllerAdvice {
         return new InvalidOtpValidationRequestExceptionAdapter().adapt(null);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UpdateComplaintNotAllowed.class)
     public ErrorResponse handleUpdateComplaintException() {
         return new UpdateComplaintNotAllowedExceptionAdapter().adapt(null);

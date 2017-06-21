@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.errorhandler;
 
+import org.apache.commons.lang.WordUtils;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
@@ -75,7 +76,7 @@ public class ErrorHandler {
 					error.getFields().put(fieldError.getField(), fieldError.getDefaultMessage());
 				} else {
 					String field = getErrorFieldName(fieldError.getField());
-					error.getFields().put(fieldError.getField(), field + " Can't Be Left Empty. Please Provide A Valid " + field);
+					error.getFields().put(fieldError.getField(), field + " Can't Be Left Empty. Please Provide Valid " + field);
 				}
 			}
 		}
@@ -153,18 +154,19 @@ public class ErrorHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * This method takes the error field as input for NotNull validated fields & returns the correct field names
+	 * for which the error has occurred. So that we can insert those names in field error messages
+	 * Eg. if error field is "employee.code", it will return "Code"
+	 * Eg. if error field is "employee.user.roles.code", it will return "User Roles Code"
+	 * @param field
+	 * @return String
+	 */
 	private String getErrorFieldName(String field) {
-		String f = field.substring(field.lastIndexOf('.') + 1, field.length());
-		StringBuilder actualField = new StringBuilder("");
-		for (int i = 0; i < f.length(); i++) {
-			if (i == 0) {
-				actualField.append(Character.toUpperCase(f.charAt(i)));
-			} else if (f.charAt(i) >= 65 && f.charAt(i) <= 90) {
-				actualField.append(" " + f.charAt(i));
-			} else if (f.charAt(i) >= 97 && f.charAt(i) <= 122) {
-				actualField.append(f.charAt(i));
-			}
-		}
-		return actualField.toString();
+		field = WordUtils.capitalize(field.replaceAll("\\[.+\\]", "").replaceAll("\\.", " "));
+		if (field.contains(" "))
+			return field.substring(field.indexOf(" ") + 1);
+		else
+			return field;
 	}
 }

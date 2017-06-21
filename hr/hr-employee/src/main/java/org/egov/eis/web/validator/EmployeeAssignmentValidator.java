@@ -94,7 +94,7 @@ public class EmployeeAssignmentValidator implements Validator {
                 errors.rejectValue("employee.assignments[" + index + "]", "invalid",
                         "Assignment's From Date " + dateFormat.format(assignments.get(index).getFromDate())
                                 + " Can Not Be Greater Than To Date " + dateFormat.format(assignments.get(index).getToDate())
-                                + ". Please Send Correct Dates");
+                                + ". Please Enter Correct Dates");
             }
         }
         ;
@@ -102,7 +102,7 @@ public class EmployeeAssignmentValidator implements Validator {
         // check for atleast 1 primary assignment
         if (primaryAssignments.size() == 0) {
             errors.rejectValue("employee.assignments", "invalid",
-                    "No Primary Assignment Found In Request. Please Send At Least One Primary Assignment");
+                    "No Primary Assignment Found In Request. Please Enter At Least One Primary Assignment");
         }
 
         // check if assignmentDates are overlapping for primary assignments
@@ -118,7 +118,7 @@ public class EmployeeAssignmentValidator implements Validator {
                             "Primary Assignment From Date " + dateFormat.format(new Date(ith_fromDate))
                                     + " Is Overlapping With Dates " + dateFormat.format(new Date(jth_fromDate)) + " & "
                                     + dateFormat.format(new Date(jth_toDate)) + " Of Other Primary Assignment."
-                                    + " Please Send Correct Dates");
+                                    + " Please Enter Correct Dates");
                 }
 
                 if (ith_toDate >= jth_fromDate && ith_toDate <= jth_toDate) {
@@ -126,7 +126,7 @@ public class EmployeeAssignmentValidator implements Validator {
                             "Primary Assignment To Date " + dateFormat.format(new Date(ith_toDate))
                                     + " Is Overlapping With Dates " + dateFormat.format(new Date(jth_fromDate)) + " & "
                                     + dateFormat.format(new Date(jth_toDate)) + " Of Other Primary Assignment."
-                                    + " Please Send Correct Dates");
+                                    + " Please Enter Correct Dates");
                 }
 
                 if (jth_fromDate >= ith_fromDate && jth_fromDate <= ith_toDate) {
@@ -134,7 +134,7 @@ public class EmployeeAssignmentValidator implements Validator {
                             "Primary Assignment From Date " + dateFormat.format(new Date(jth_fromDate))
                                     + " Is Overlapping With Dates " + dateFormat.format(new Date(ith_fromDate)) + " & "
                                     + dateFormat.format(new Date(ith_toDate)) + " Of Other Primary Assignment."
-                                    + " Please Send Correct Dates");
+                                    + " Please Enter Correct Dates");
                 }
 
                 if (jth_toDate >= ith_fromDate && jth_toDate <= ith_toDate) {
@@ -142,7 +142,7 @@ public class EmployeeAssignmentValidator implements Validator {
                             "Primary Assignment To Date " + dateFormat.format(new Date(jth_toDate))
                                     + " Is Overlapping With Dates " + dateFormat.format(new Date(ith_fromDate)) + " & "
                                     + dateFormat.format(new Date(ith_toDate)) + " Of Other Primary Assignment."
-                                    + " Please Send Correct Dates");
+                                    + " Please Enter Correct Dates");
                 }
             }
         }

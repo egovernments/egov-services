@@ -84,14 +84,14 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         // required
         if (isEmpty(employeeId)) {
             errors.rejectValue("employee.id", "invalid",
-                    "Employee Id Is Not Provided For Update. Please Send The Employee ID");
+                    "Employee Id Is Not Provided. Please Enter Employee ID");
             return;
         }
 
         if (!employeeRepository.checkIfEmployeeExists(employeeId, tenantId)) {
             // FIXME throw error employee id does not exist
             errors.rejectValue("employee.id", "invalid",
-                    "Employee With Given Id Does Not Exist In The System. Please Send The Correct Id");
+                    "Employee With Given Id Does Not Exist In The System. Please Enter Correct Id");
             return;
         }
 
@@ -117,19 +117,19 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
         if (checkIfColumnValueIsSameInDB("egeis_employee", "code",
                 employee.getCode(), employee.getId(), employee.getTenantId())) {
             errors.rejectValue("employee.code", "invalid",
-                    "Employee Code Can't Be Changed. Please Send The Same Employee Code.");
+                    "Employee Code Can't Be Changed. Please Enter Same Employee Code.");
         }
 
         if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
                 employee.getPassportNo(), employee.getId(), employee.getTenantId())) {
             errors.rejectValue("employee.passportNo", "invalid",
-                    "Passport Number Already Exists In System. Please Send The Correct Passport Number.");
+                    "Passport Number Already Exists In System. Please Enter Correct Passport Number.");
         }
 
         if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo", employee.getGpfNo(),
                 employee.getId(), employee.getTenantId())) {
             errors.rejectValue("employee.gpfNo", "invalid",
-                    "GPF Number Already Exists In System. Please Send The Correct GPF Number.");
+                    "GPF Number Already Exists In System. Please Enter Correct GPF Number.");
         }
     }
 
@@ -145,7 +145,7 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
                 String toDate = dateFormat.format(assignments.get(index).getToDate());
                 errors.rejectValue("employee.assignments[" + index + "]", "invalid",
                         "Employee Is Already Having A Primary Assignment Between "
-                                + fromDate + " & " + toDate + ". Please Send The Different Dates.");
+                                + fromDate + " & " + toDate + ". Please Enter Different Dates.");
             }
         }
     }

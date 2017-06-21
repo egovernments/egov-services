@@ -272,7 +272,7 @@ public class MessageServiceTest {
     public void test_should_create_messages() {
     	List<org.egov.web.contract.Message> myMessages = getMyMessages();
     	NewMessagesRequest messageRequest = new NewMessagesRequest(new RequestInfo(), "LOCALE", myMessages, "TenantId");
-    	messageService.createMessage(messageRequest);
+    	messageService.createMessage(messageRequest.getLocale(), messageRequest.getTenantId(), getOnlyMessages(messageRequest));
     	verify(messageRepository).deleteMessages(messageRequest.getLocale(), messageRequest.getTenantId(), getOnlyMessages(messageRequest));
     	verify(messageRepository).createMessage(messageRequest.getLocale(), messageRequest.getTenantId(), getOnlyMessages(messageRequest));
     }

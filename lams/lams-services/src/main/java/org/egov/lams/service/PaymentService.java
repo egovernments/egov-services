@@ -318,8 +318,9 @@ public class PaymentService {
 		paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate());
 		paymentInfo.setReceiptNumber(billReceiptInfo.getReceiptNum());
 		paymentInfo.setStatus(billReceiptInfo.getReceiptStatus());
+		LOGGER.info("paymengtinfo"+ paymentInfos);
+		paymentInfos.add(paymentInfo);
 		return paymentInfos;
-
 	}
 
 	private void updateDemandDetailForReceiptCreate(Demand demand, BillReceiptReq billReceiptInfo) {

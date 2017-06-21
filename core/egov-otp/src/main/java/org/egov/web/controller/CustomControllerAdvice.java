@@ -1,9 +1,9 @@
 package org.egov.web.controller;
 
-import org.egov.domain.InvalidTokenRequestException;
-import org.egov.domain.InvalidTokenSearchCriteriaException;
-import org.egov.domain.InvalidTokenValidateRequestException;
-import org.egov.domain.TokenUpdateException;
+import org.egov.domain.exception.InvalidTokenRequestException;
+import org.egov.domain.exception.InvalidTokenSearchCriteriaException;
+import org.egov.domain.exception.InvalidTokenValidateRequestException;
+import org.egov.domain.exception.TokenUpdateException;
 import org.egov.web.adapter.error.TokenSearchErrorAdapter;
 import org.egov.web.adapter.error.TokenUpdateErrorAdapter;
 import org.egov.web.adapter.error.TokenValidationRequestErrorAdapter;

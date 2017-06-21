@@ -1,7 +1,6 @@
 package org.egov.domain.model;
 
-import org.egov.domain.InvalidTokenValidateRequestException;
-import org.junit.Assert;
+import org.egov.domain.exception.InvalidTokenValidateRequestException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

@@ -1,4 +1,4 @@
-package org.egov.domain;
+package org.egov.domain.exception;
 
 import lombok.Getter;
 import org.egov.domain.model.TokenSearchCriteria;

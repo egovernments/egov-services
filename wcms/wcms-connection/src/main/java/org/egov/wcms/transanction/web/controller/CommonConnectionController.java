@@ -43,23 +43,14 @@ package org.egov.wcms.transanction.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.wcms.transanction.model.enums.ApplicationType;
 import org.egov.wcms.transanction.model.enums.BillingType;
 import org.egov.wcms.transanction.model.enums.ConnectionType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/master")
-public class CommonMastersController {
-
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
+@RequestMapping("/connection")
+public class CommonConnectionController {
 
     @RequestMapping(value = "/_getconnectiontypes")
     public Map<String, ConnectionType> getConnectionTypeEnum() {

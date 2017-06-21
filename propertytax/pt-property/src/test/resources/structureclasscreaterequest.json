@@ -13,12 +13,12 @@
       "structureClasses":[  
          {  
             "tenantId":"default",
-            "name":"structure",
-            "code":"123",
-            "nameLocal":"structure",
-            "description":"structure create",
-            "active":true,
-            "orderNumber":0,
+            "name":null,
+            "code":null,
+            "nameLocal":null,
+            "description":null,
+            "active":null,
+            "orderNumber":null,
             "auditDetails" : {
             	"createdBy": null,
             	"lastModifiedBy": null,

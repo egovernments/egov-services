@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-
+import { withRouter } from 'react-router';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 // import {Switch,Route} from 'react-router-dom';
@@ -12,9 +12,11 @@ import Footer from './common/Footer';
 import router from "../router";
 var axios = require('axios');
 
-
 class App extends Component {
 
+  componentWillReceiveProps(nextProps) {
+    
+  }
   componentDidMount(){
 
     var instance = axios.create({
@@ -41,10 +43,16 @@ class App extends Component {
       throw new Error(response.data.message);
     });
 
+    instance.get('/localization/messages?tenantId=default&locale=en_IN').then(function(response) {
+      localStorage.setItem("lang_response", JSON.stringify(response.data.messages));
+    }).catch(function(response) {
+      throw new Error(response.data.message);
+    });
+
   }
 
   render() {
-    var {toggleDailogAndSetText,isDialogOpen,msg}=this.props;
+    var {toggleDailogAndSetText,isDialogOpen,msg,history}=this.props;
     const actions = [
       <FlatButton
         label="Ok"
@@ -86,4 +94,4 @@ const mapDispatchToProps = dispatch => ({
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

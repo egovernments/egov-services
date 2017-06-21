@@ -180,6 +180,29 @@ export default(state = defaultState, action) => {
       }
     }
 
+    case "REMOVE_MANDATORY":
+    var obj = state.validationData;
+    if(obj.required.required.includes(action.property)){
+      let rindex = obj.required.required.indexOf(action.property);
+      obj.required.required.splice(rindex, 1);
+      if(obj.required.current.includes(action.property)){
+        let cindex = obj.required.current.indexOf(action.property);
+        obj.required.current.splice(cindex, 1);
+      }
+      if (action.pattern.toString().length > 0){
+        let pindex = obj.pattern.required.indexOf(action.property);
+        obj.pattern.required.splice(pindex, 1);
+      }
+      return{
+        ...state,
+        validationData: obj
+      }
+    }else{
+      return {
+        ...state
+      }
+    }
+
     case "RESET_STATE":
       return {
         form: {},

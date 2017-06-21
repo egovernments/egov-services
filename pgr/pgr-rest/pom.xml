@@ -193,7 +193,7 @@
                                         <exclude>org.egov.pgrrest.common.model.ValueDefinition</exclude>
                                         <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.InvalidOtpRequestException</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.OtpValidationNotComplete</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.exception.OtpValidationNotCompleteException</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException</exclude>
                                         <exclude>org.egov.pgrrest.PgrRestSpringBootApplication</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.entity.*</exclude>
@@ -205,6 +205,9 @@
                                         <exclude>org.egov.pgrrest.write.repository.ServiceRequestWriteRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidOtpValidationRequestExceptionAdapter</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.adapters.error.OtpValidationNotCompleteExceptionAdapter</exclude>
+                                        <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidServiceTypeExceptionAdapter</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.QueryFactory</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestESRepository</exclude>

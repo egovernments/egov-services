@@ -5,7 +5,7 @@ import org.egov.pgr.common.model.OtpValidationRequest;
 import org.egov.pgr.common.repository.ComplaintConfigurationRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
-import org.egov.pgrrest.read.domain.exception.OtpValidationNotComplete;
+import org.egov.pgrrest.read.domain.exception.OtpValidationNotCompleteException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class OtpService {
         }
         final boolean isOtpValidationComplete = isOtpValidationComplete(serviceRequest);
         if (!isOtpValidationComplete) {
-            throw new OtpValidationNotComplete();
+            throw new OtpValidationNotCompleteException();
         }
     }
 

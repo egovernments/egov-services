@@ -76,8 +76,11 @@ public class DemandService {
 				if (egDemandDetail.getId().equals(demandDetails.getId())) {
 					LOGGER.info("match is occuring in update service");
 					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
-					if(!demand.getPaymentInfos().isEmpty())
-						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand,egDemandDetail));
+					LOGGER.info("payment info to update receipts" + demand.getPaymentInfos());
+					if (!demand.getPaymentInfos().isEmpty()) {
+						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand, egDemandDetail));
+						LOGGER.info("back end receipt details" + egDemandDetail.getEgdmCollectedReceipts());
+					}
 				}
 			}
 		}
@@ -99,6 +102,7 @@ public class DemandService {
 					egDemandDetail.setAmount(demandDetails.getTaxAmount());
 					egDemandDetail.setAmtCollected(demandDetails.getCollectionAmount());
 					egDemandDetail.setAmtRebate(demandDetails.getRebateAmount());
+					LOGGER.info("demand details updated");
 				}
 			}
 			// adding to demand if demanddetails does not exists
@@ -132,6 +136,7 @@ public class DemandService {
 			receipt.setStatus(info.getStatus().charAt(0));
 			receipt.setTenantId(demand.getTenantId());
 			egdmCollectedReceipts.add(receipt);
+			LOGGER.info("adding receipt details " + receipt);
 		}
 		return egdmCollectedReceipts;
 	}

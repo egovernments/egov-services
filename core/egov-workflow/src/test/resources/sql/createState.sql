@@ -1,5 +1,5 @@
 ------------------START------------------
-CREATE TABLE eg_wf_state_history (
+CREATE TABLE cs_wf_state_history (
     id serial PRIMARY KEY ,
     state_id bigint NOT NULL,
     value character varying(255) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE eg_wf_state_history (
     PREVIOUS_OWNER bigint,
     tenantid character varying(256) not null
 );
-CREATE SEQUENCE seq_eg_wf_state_history
+CREATE SEQUENCE seq_cs_wf_state_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -29,7 +29,7 @@ CREATE SEQUENCE seq_eg_wf_state_history
 -------------------END-------------------
 
 ------------------START------------------
-CREATE TABLE eg_wf_states (
+CREATE TABLE cs_wf_states (
     id serial PRIMARY KEY,
     type character varying(255) NOT NULL,
     value character varying(255) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE eg_wf_states (
     PREVIOUS_OWNER bigint,
     tenantid character varying(256) not null
 );
-CREATE SEQUENCE seq_eg_wf_states
+CREATE SEQUENCE seq_cs_wf_states
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE

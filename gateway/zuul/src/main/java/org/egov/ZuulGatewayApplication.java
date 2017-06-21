@@ -12,7 +12,6 @@ import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -38,9 +37,6 @@ public class ZuulGatewayApplication {
     @Value("${egov.auth-service-uri}")
     private String authServiceUri;
 
-    @Value("#{'${egov.rbac-whitelist}'.split(',')}")
-    private String[] rbacWhiteList;
-
     @Bean
     public AuthPreCheckFilter authCheckFilter() {
         return new AuthPreCheckFilter(new HashSet<>(Arrays.asList(openEndpointsWhitelist)),
@@ -56,13 +52,13 @@ public class ZuulGatewayApplication {
 
     @Bean
     public RbacFilter rbacFilter() {
-        return new RbacFilter(new ArrayList<>(Arrays.asList(rbacWhiteList)));
+        return new RbacFilter();
     }
 
     @Bean
     public RbacPreCheckFilter rbacCheckFilter() {
         return new RbacPreCheckFilter(new HashSet<>(Arrays.asList(openEndpointsWhitelist)),
-            new HashSet<>(Arrays.asList(anonymousEndpointsWhitelist)),
-            new ArrayList<>(Arrays.asList(rbacWhiteList)));
+            new HashSet<>(Arrays.asList(anonymousEndpointsWhitelist))
+        );
     }
 }

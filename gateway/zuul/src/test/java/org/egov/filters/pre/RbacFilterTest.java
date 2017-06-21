@@ -9,7 +9,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.egov.constants.RequestContextConstants.ERROR_CODE_KEY;
 import static org.egov.constants.RequestContextConstants.USER_INFO_KEY;
@@ -20,11 +19,10 @@ public class RbacFilterTest {
     private MockHttpServletRequest request = new MockHttpServletRequest();
 
     private RbacFilter rbacFilter;
-    private List<String> rbacWhitelist = new ArrayList<>(Arrays.asList("/pgr"));
 
     @Before
     public void init(){
-        rbacFilter = new RbacFilter(rbacWhitelist);
+        rbacFilter = new RbacFilter();
     }
 
     @Test

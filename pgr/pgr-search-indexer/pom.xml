@@ -27,33 +27,17 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.egov.services</groupId>
-            <artifactId>services-common</artifactId>
-            <version>0.5.0</version>
-        </dependency>
 
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.11.0</version>
+            <version>0.17.5</version>
         </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda-time-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-            <version>1.1.2.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -78,12 +62,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.egov.services</groupId>
-            <artifactId>tracer</artifactId>
-            <version>0.14.0</version>
         </dependency>
 
         <!--Test dependencies-->

@@ -77,10 +77,10 @@ class WaterSourceType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "sourcetype/"+id, "_update", {},{}).then((res)=>
            {
               this.setState({
-                list: res.Category
+                list: res.waterSourceType
             });
 
         },  (err)=> {
@@ -112,7 +112,7 @@ class WaterSourceType extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "sourcetype", "_update/"+id, {},{sourceType:sourceType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "sourcetype/"+id, "_update", {},{sourceType:sourceType}).then(function(response)
         {
         console.log(response);
       },function(err) {

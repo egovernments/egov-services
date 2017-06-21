@@ -77,7 +77,7 @@ class WaterSupplyTypes extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "supplytype/"+id, "_update", {},{}).then((res)=>
            {
               this.setState({
                 list: res.supplytypes
@@ -112,7 +112,7 @@ class WaterSupplyTypes extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{SupplyType:SupplyType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "supplytype/"+id, "_update", {},{SupplyType:SupplyType}).then(function(response)
         {
         console.log(response);
       },function(err) {

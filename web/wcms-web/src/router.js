@@ -13,6 +13,8 @@ import WaterTapConnection from './components/contents/WaterTapConnection';
 import ShowUsageType from './components/contents/ShowUsageType';
 import ShowDocumentTypeApplicationType from './components/contents/ShowDocumentTypeApplicationType';
 import ShowCategoryType from './components/contents/ShowCategoryType';
+import ShowWaterSourceType from './components/contents/ShowWaterSourceType';
+import ShowWaterSupplyType from './components/contents/ShowWaterSupplyType';
 import ShowPipeSize from './components/contents/ShowPipeSize';
 import ShowDocumentName from './components/contents/ShowDocumentName';
 import ShowDocumentType from './components/contents/ShowDocumentType';
@@ -55,6 +57,8 @@ const Main = () => (
       <Route exact path='/ShowPipeSize' component={ShowPipeSize}/>
       <Route exact path='/masters/WaterSourceType' component={WaterSourceType}/>
       <Route exact path='/masters/WaterSupplyType' component={WaterSupplyType}/>
+      <Route exact path='/ShowWaterSupplyType' component={ShowWaterSupplyType}/>
+      <Route exact path='/ShowWaterSourceType' component={ShowWaterSourceType}/>
       <Route exact path='/masters/PropertyPipeSize' component={PropertyPipeSize}/>
       </Switch>
   </main>

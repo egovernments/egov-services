@@ -134,13 +134,9 @@ class PipeSize extends Component {
       // toggleDailogAndSetText(true," done");
     },function(err) {
        console.log(response);
-      if(!response){
-        alert("Please  ");
-       }
-       else {
         alert("Pipe Size enetered in mm already exist");
-    }
-      // toggleDailogAndSetText(true,"Not Done");
+
+       toggleDailogAndSetText(true,"Not Done");
     });
   }
     }

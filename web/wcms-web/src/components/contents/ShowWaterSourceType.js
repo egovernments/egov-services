@@ -224,7 +224,7 @@ class ShowWaterSourceType extends Component {
             <tr>
               <th>Sl No.</th>
               <th>Code</th>
-              <th>Water Supply Type</th>
+              <th>Water Source Type</th>
               <th>Status</th>
               <th>Action</th>
             </tr>

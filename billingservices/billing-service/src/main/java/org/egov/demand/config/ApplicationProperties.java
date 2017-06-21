@@ -51,6 +51,12 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ApplicationProperties {
+	
+	@Value("${egov.services.user_service.hostname}")
+	private String userServiceHostName;
+
+	@Value("${egov.services.user_service.searchpath}")
+	private String userServiceSearchPath;
 
 	@Value("${kafka.topics.save.bill}")
 	private String createBillTopic;
@@ -84,4 +90,9 @@ public class ApplicationProperties {
 	
 	@Value("${bs.demanddetail.seq.name}")
 	private String demandDetailSeqName;
+
+	@Value("${bs.billdetail.billnumber.seq.name}")
+	private String billNumSeqName;
+	
+
 }

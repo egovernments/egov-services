@@ -154,6 +154,7 @@
                                     <excludes>
                                         <exclude>org.egov.OtpApplication</exclude>
                                         <exclude>org.egov.web.contract.*</exclude>
+                                        <exclude>org.egov.domain.service.LocalDateTimeFactory</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

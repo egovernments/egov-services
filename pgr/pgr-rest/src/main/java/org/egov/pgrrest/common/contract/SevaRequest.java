@@ -12,6 +12,9 @@ import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -44,6 +47,7 @@ public class SevaRequest {
             return AuthenticatedUser.createAnonymousUser();
         }
         return AuthenticatedUser.builder()
+            .roleCodes(getRoles(userInfo.getRoles()))
             .type(UserType.valueOf(userInfo.getType()))
             .email(userInfo.getEmailId())
             .mobileNumber(userInfo.getMobileNumber())
@@ -60,4 +64,9 @@ public class SevaRequest {
     public void update(ServiceRequest complaint) {
         serviceRequest.setCrn(complaint.getCrn());
     }
+
+    private List<String> getRoles(List<org.egov.common.contract.request.Role> roles) {
+        return roles.stream().map(role -> role.getCode()).collect(Collectors.toList());
+    }
+
 }

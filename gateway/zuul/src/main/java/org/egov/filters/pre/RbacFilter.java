@@ -5,16 +5,9 @@ import com.netflix.zuul.context.RequestContext;
 import org.egov.contract.User;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-
 import static org.egov.constants.RequestContextConstants.*;
 
 public class RbacFilter extends ZuulFilter{
-
-    private List<String> rbacWhitelist;
-    public RbacFilter(List<String> rbacWhitelist){
-        this.rbacWhitelist = rbacWhitelist;
-    }
 
     @Override
     public String filterType() {return "pre";}

@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.VoucherType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,13 +23,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Voucher {
-
+	
 	private Long id;
-
+	
 	@NotNull
 	private VoucherType type;
 
-	private VoucherName name;
+	private String name;
 
 	private String description;
 
@@ -47,9 +49,12 @@ public class Voucher {
 	private Long refVhId;
 
 	private Long moduleId;
+	
+	private String cgvn;
+	
+	@NotNull
+	private Long department;
 
-	private List<Ledger> ledgers = new ArrayList<>();
-
-	private Vouchermis vouchermis;
+	private List<VouchercreateAccountCodeDetails> ledgers = new ArrayList<>();
 
 }

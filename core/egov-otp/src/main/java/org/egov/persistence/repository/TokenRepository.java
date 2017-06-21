@@ -1,6 +1,6 @@
 package org.egov.persistence.repository;
 
-import org.egov.domain.TokenUpdateException;
+import org.egov.domain.exception.TokenUpdateException;
 import org.egov.domain.model.*;
 import org.springframework.stereotype.Service;
 

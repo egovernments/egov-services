@@ -8,17 +8,16 @@ import org.springframework.http.HttpStatus;
 @Configuration
 public class ResponseInfoFactory {
 
-	public ResponseInfo getResponseInfo(RequestInfo requestInfo,HttpStatus status){
-		
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo, HttpStatus status) {
+
 		ResponseInfo responseInfo = new ResponseInfo();
-		if(requestInfo!=null){
+		if (requestInfo != null) {
 			responseInfo.setApiId(requestInfo.getApiId());
 			responseInfo.setMsgId(requestInfo.getMsgId());
-			//responseInfo.setResMsgId(requestInfo.get);
+			// responseInfo.setResMsgId(requestInfo.get);
 			responseInfo.setStatus(status.toString());
 			responseInfo.setVer(requestInfo.getVer());
-			if(requestInfo.getTs()!=null)
-				responseInfo.setTs(requestInfo.getTs().toString());
+			responseInfo.setTs(requestInfo.getTs());
 		}
 		return responseInfo;
 	}

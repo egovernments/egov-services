@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
-import java.util.List;
 
 import static org.egov.constants.RequestContextConstants.RBAC_BOOLEAN_FLAG_NAME;
 import static org.egov.constants.RequestContextConstants.SKIP_RBAC;
@@ -17,14 +16,11 @@ public class RbacPreCheckFilter extends ZuulFilter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private HashSet<String> openEndpointsWhitelist;
     private HashSet<String> anonymousEndpointsWhitelist;
-    private List<String> rbacWhitelist;
 
     public RbacPreCheckFilter(HashSet<String> openEndpointsWhitelist,
-                              HashSet<String> anonymousEndpointsWhitelist,
-                              List<String> rbacWhitelist) {
+                              HashSet<String> anonymousEndpointsWhitelist) {
         this.openEndpointsWhitelist = openEndpointsWhitelist;
         this.anonymousEndpointsWhitelist = anonymousEndpointsWhitelist;
-        this.rbacWhitelist = rbacWhitelist;
     }
 
     @Override
@@ -50,15 +46,6 @@ public class RbacPreCheckFilter extends ZuulFilter {
             logger.info(SKIP_RBAC, getRequestURI());
             return null;
         }
-
-        //This is whitelist which has contextroot based on which we can decide which
-        //modules url's should have check for RBAC
-        if(!rbacWhitelist.stream().anyMatch(url -> getRequestURI().contains(url))){
-            setShouldDoRbac(false);
-            logger.info(SKIP_RBAC, getRequestURI());
-            return null;
-        }
-
         setShouldDoRbac(true);
         return null;
     }

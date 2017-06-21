@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Consumer class will use for listing  property object from kafka server to insert data in postgres database
+ * Consumer class will use for listing property object from kafka server to
+ * insert data in postgres database
+ * 
  * @author: S Anilkumar
  */
 @Service
@@ -46,7 +48,8 @@ public class Consumer {
 	@Bean
 	public Map<String, Object> consumerConfig() {
 		Map<String, Object> consumerProperties = new HashMap<String, Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("auto.offset.reset.config"));
+		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
+				environment.getProperty("auto.offset.reset.config"));
 		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("bootstrap.servers"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
@@ -55,7 +58,8 @@ public class Consumer {
 	}
 
 	/**
-	 * This method will return the consumer factory bean based on consumer configuration
+	 * This method will return the consumer factory bean based on consumer
+	 * configuration
 	 */
 	@Bean
 	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
@@ -85,15 +89,18 @@ public class Consumer {
 
 	/**
 	 * receive method
+	 * 
 	 * @param PropertyRequest
-	 * This method is listened whenever property is created and updated
+	 *            This method is listened whenever property is created and
+	 *            updated
 	 */
-	@KafkaListener(topics= {"#{environment.getProperty('property.create')}","#{environment.getProperty('property.update')}"})
+	@KafkaListener(topics = { "#{environment.getProperty('property.create')}",
+			"#{environment.getProperty('property.update')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("property.create"))) {
 			persisterService.addProperty(consumerRecord.value().getProperties());
-		} 
+		}
 
 		else if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("property.update"))) {
 			persisterService.updateProperty(consumerRecord.value().getProperties());

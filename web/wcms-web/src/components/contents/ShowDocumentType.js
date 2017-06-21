@@ -19,6 +19,7 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -89,21 +90,16 @@ class ShowDocumentType extends Component {
           bDestroy: true,
 
        });
-       var _this =this;
 
         let response=Api.commonApiPost("wcms-masters", "documenttype", "_search", {},{}).then((res)=>
-     {
-       console.log(res);
-      _this.setState({
+    {
+      this.setState({
         list: res.documentTypes
-
       });
-
 
     },(err)=> {
         alert(err);
-    });
-    //call boundary service fetch wards,location,zone data
+    });//call boundary service fetch wards,location,zone data
   }
 
   componentDidMount()
@@ -130,8 +126,8 @@ class ShowDocumentType extends Component {
       e.preventDefault();
       // console.log("Show Table");
       flag=1;
-      changeButtonText("Search Again");
-      // this.setState({searchBtnText:'Search Again'})
+      changeButtonText("Search");
+      // this.setState({searchBtnText:'Search'})
       showTable(true);
   }
 
@@ -164,16 +160,16 @@ class ShowDocumentType extends Component {
       isFormValid,
       isTableShow,
       handleChange,
-      handleChangeState,
+      handleChangeNextOne,
       handleChangeNextTwo,
       buttonText
     } = this.props;
 
     let {search} = this;
     let{list}=this.state;
-    //  console.log(showDocumentType);
-    //  console.log(isTableShow);
-    console.log(list);
+    // console.log(showDocumentType);
+    // console.log(isTableShow);
+    // console.log(list);
     let renderAction=function(type,id){
       if (type==="Update") {
         console.log(type);
@@ -195,8 +191,7 @@ class ShowDocumentType extends Component {
 
     let renderBody=function()
     {
-     console.log(list);
-
+      //  console.log(list);
       return list.map((item,index)=>
       {
 
@@ -222,14 +217,14 @@ class ShowDocumentType extends Component {
     {
       return (
         <Card>
-          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Result < /strong>}/>
+          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Result < /strong>}/>
           <CardText>
         <Table id="documentTypeTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
             <tr>
               <th>Sl No.</th>
               <th>Code</th>
-              <th>DocumentType</th>
+              <th>Document Type</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -249,7 +244,7 @@ class ShowDocumentType extends Component {
           search(e)
         }}>
           <Card>
-             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Modify Document Type < /strong>}/>
+             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Document Type < /strong>}/>
 
             <CardText>
               <Card>
@@ -257,24 +252,44 @@ class ShowDocumentType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                    <TextField errorText={fieldErrors.name
-                      ? fieldErrors.name
-                      : ""} value={showDocumentType.name?showDocumentType.name:""} onChange={(e) =>{ handleChangeState(e, "name", false, "");
+                      <TextField value={showDocumentType.name?showDocumentType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="documentType" floatingLabelText="documentType" />
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <TextField value={showDocumentType.code?showDocumentType.code:""} onChange={(e) => handleChange(e, "code", false, "")} hintText="Code" floatingLabelText="Code" />
+                    </Col>
 
-
-                    } } hintText="abcd" floatingLabelText="Name" />  </Col>
 
                     </Row>
+                    <Row>
+                    <Col xs={12} md={6}>
+                                        <Checkbox
+                                         label="Active"
+                                         defaultChecked={true}
+                                         value={showDocumentType.active?showDocumentType.active:""}
+                                         onCheck={(event,isInputChecked) => {
+                                           var e={
+                                             "target":{
+                                               "value":isInputChecked
+                                             }
+                                           }
+                                           handleChange(e, "active", true, "")}
+                                         }
+                                         style={styles.checkbox}
+                                         style={styles.topGap}
+                                        />
+                          </Col>
+                        </Row>
+
 
                     </Grid>
 
                 </CardText>
               </Card>
 
-              <div style={{
-                float: "center"
+                            <div style={{
+                textAlign: "center"
               }}>
-                <RaisedButton type="submit"  label={buttonText} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton type="submit" label={buttonText} backgroundColor={"#5a3e1b"} labelColor={white}/>
                 <RaisedButton label="Close"/>
               </div>
             </CardText>

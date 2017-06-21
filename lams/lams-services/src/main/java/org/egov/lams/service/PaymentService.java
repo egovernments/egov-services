@@ -193,7 +193,7 @@ public class PaymentService {
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 			int orderNo = 0;
-			System.out.print("PaymentService- generateBillXml - getting purpose");
+			LOGGER.info("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
 				LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
@@ -256,7 +256,7 @@ public class PaymentService {
 	}
 
 	public ResponseEntity<ReceiptAmountInfo> updateDemand(BillReceiptInfoReq billReceiptInfoReq) {
-		System.out.print("PaymentService- updateDemand - billReceiptInfoReq::: - "
+		LOGGER.info("PaymentService- updateDemand - billReceiptInfoReq::: - "
 				+ billReceiptInfoReq.getBillReceiptInfo().getBillReferenceNum());
 
 		RequestInfo requestInfo = billReceiptInfoReq.getRequestInfo();
@@ -265,20 +265,20 @@ public class PaymentService {
 		BillReceiptReq billReceiptInfo = billReceiptInfoReq.getBillReceiptInfo();
 		billSearchCriteria.setBillId(Long.valueOf(billReceiptInfo.getBillReferenceNum()));
 		BillInfo billInfo = billRepository.searchBill(billSearchCriteria, requestInfo);
-		System.out.print("PaymentService- updateDemand - billInfo - " + billInfo.getBillNumber());
+		LOGGER.info("PaymentService- updateDemand - billInfo - " + billInfo.getBillNumber());
 		demandSearchCriteria.setDemandId(billInfo.getDemandId());
 		Demand currentDemand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands()
 				.get(0);
-		System.out.print("PaymentService- updateDemand - currentDemand - " + currentDemand.getId());
+		LOGGER.info("PaymentService- updateDemand - currentDemand - " + currentDemand.getId());
 		if (currentDemand.getMinAmountPayable() != null && currentDemand.getMinAmountPayable() > 0)
 			currentDemand.setMinAmountPayable(0d);
 
 		updateDemandDetailForReceiptCreate(currentDemand, billReceiptInfoReq.getBillReceiptInfo());
-		System.out.print("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
+		LOGGER.info("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
 		LOGGER.info("The amount collected from citizen is ::: " + currentDemand.getCollectionAmount());
 		currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 		demandRepository.updateDemandForCollection(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
-		System.out.print("PaymentService- updateDemand - setPaymentInfos done");
+		LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
 		// / FIXME put update workflow here here
 		updateWorkflow(billInfo.getConsumerCode(), requestInfo);
@@ -314,8 +314,8 @@ public class PaymentService {
 
 		List<PaymentInfo> paymentInfos = new ArrayList<>();
 		PaymentInfo paymentInfo = new PaymentInfo();
-		paymentInfo.setReceiptAmount(billReceiptInfo.getTotalAmount().toString());
-		paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate().toString());
+		paymentInfo.setReceiptAmount(billReceiptInfo.getTotalAmount());
+		paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate());
 		paymentInfo.setReceiptNumber(billReceiptInfo.getReceiptNum());
 		paymentInfo.setStatus(billReceiptInfo.getReceiptStatus());
 		return paymentInfos;
@@ -366,16 +366,16 @@ public class PaymentService {
 	public ResponseEntity<ReceiptAmountInfo> receiptAmountBifurcation(final BillReceiptReq billReceiptInfo,
 			BillInfo billInfo) {
 		ResponseEntity<ReceiptAmountInfo> receiptAmountInfoResponse = null;
-		System.out.print("PaymentService- receiptAmountBifurcation - billReceiptInfo - " + billReceiptInfo);
-		System.out.print("PaymentService- receiptAmountBifurcation - billInfo - " + billInfo);
+		LOGGER.info("PaymentService- receiptAmountBifurcation - billReceiptInfo - " + billReceiptInfo);
+		LOGGER.info("PaymentService- receiptAmountBifurcation - billInfo - " + billInfo);
 		final ReceiptAmountInfo receiptAmountInfo = new ReceiptAmountInfo();
 		BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
 		BigDecimal arrearAmount = BigDecimal.ZERO;
-		System.out.print("PaymentService- receiptAmountBifurcation - getting purpose");
+		LOGGER.info("PaymentService- receiptAmountBifurcation - getting purpose");
 		Map<String, String> purposeMap = billRepository.getPurpose(billReceiptInfo.getTenantId());
 		final List<BillDetailInfo> billDetails = new ArrayList<>(billInfo.getBillDetailInfos());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
-			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - " + rcptAccInfo);
+			LOGGER.info("PaymentService- receiptAmountBifurcation - rcptAccInfo - " + rcptAccInfo);
 			if (rcptAccInfo.getCrAmount() != null
 					&& BigDecimal.valueOf(rcptAccInfo.getCrAmount()).compareTo(BigDecimal.ZERO) == 1) {
 				if (rcptAccInfo.getPurpose().equals(purposeMap.get("ARREAR_AMOUNT").toString()))
@@ -393,7 +393,7 @@ public class PaymentService {
 					receiptAmountInfoResponse = new ResponseEntity<>(receiptAmountInfo, HttpStatus.OK);
 				}
 			}
-			System.out.print("PaymentService- receiptAmountBifurcation - receiptAmountInfo - " + receiptAmountInfo);
+			LOGGER.info("PaymentService- receiptAmountBifurcation - receiptAmountInfo - " + receiptAmountInfo);
 		}
 		return receiptAmountInfoResponse;
 	}

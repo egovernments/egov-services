@@ -27,6 +27,9 @@ import org.egov.models.RoofTypeResponse;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
+import org.egov.models.WallType;
+import org.egov.models.WallTypeRequest;
+import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
@@ -36,7 +39,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,7 +46,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = { PtPropertyApplication.class })
-//@PropertySource(value="classpath:applicationTest.properties")
 public class PropertyServiceTest {
 
 	@Autowired
@@ -693,12 +694,10 @@ public class PropertyServiceTest {
 			Department master = new Department();
 
 			AuditDetails auditDetails = new AuditDetails();
-
 			auditDetails.setCreatedBy("Anil");
 			auditDetails.setLastModifiedBy("Anil");
 			auditDetails.setCreatedTime((long) 564644560);
 			auditDetails.setLastModifiedTime((long) 564644560);
-
 			master.setTenantId("default");
 			master.setCategory("software");
 			master.setName("anil");
@@ -771,6 +770,106 @@ public class PropertyServiceTest {
 		}
 	}
 
+	@Test
+	public void createUsageMasterTest() {
+
+		try {
+			String tenantId = "default";
+
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("yyyykey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+
+			List<UsageMaster> usageMasters = new ArrayList<>();
+
+			UsageMaster usageMaster = new UsageMaster();
+			usageMaster.setTenantId("default");
+			usageMaster.setName("Yoyo");
+			usageMaster.setCode("1234");
+			usageMaster.setNameLocal("test_namelocal");
+			usageMaster.setDescription("test_description");
+
+			long createdTime = new Date().getTime();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+
+			usageMaster.setAuditDetails(auditDetails);
+			usageMasters.add(usageMaster);
+
+			UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
+			usageMasterRequest.setUsageMasters(usageMasters);
+			usageMasterRequest.setRequestInfo(requestInfo);
+
+			UsageMasterResponse response = masterService.createUsageMaster(tenantId, usageMasterRequest);
+
+			if (response.getUsageMasters().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	@Test
+	public void updateUsageMasterTest() throws Exception {
+		try {
+			String tenantId = "default";
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+
+			List<UsageMaster> usageMasters = new ArrayList<>();
+
+			UsageMaster usageMaster = new UsageMaster();
+			usageMaster.setTenantId("default");
+			usageMaster.setName("Yoyo");
+			usageMaster.setCode("1234");
+			usageMaster.setNameLocal("update_namelocal");
+			usageMaster.setDescription("update_description");
+
+			long createdTime = new Date().getTime();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+
+			usageMaster.setAuditDetails(auditDetails);
+			usageMasters.add(usageMaster);
+
+			UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
+			usageMasterRequest.setUsageMasters(usageMasters);
+			usageMasterRequest.setRequestInfo(requestInfo);
+
+			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(tenantId, Long.valueOf(usageId),
+					usageMasterRequest);
+
+			if (usageMasterResponse.getUsageMasters().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception ex) {
+			assert (false);
+		}
+	}
+
 	/**
 	 * * Description : test case for searching department master api
 	 * 
@@ -811,50 +910,95 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void createUsageMasterTest() {
+	public void createWallTypeTest() {
+		try {
+			String tenantId = "default";
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("yyyykey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+			List<WallType> wallTypes = new ArrayList<>();
+			WallType wallType = new WallType();
+			wallType.setTenantId("default");
+			wallType.setName("Yoyo");
+			wallType.setCode("1234");
+			wallType.setNameLocal("test_namelocal");
+			wallType.setDescription("test_description");
+			long createdTime = new Date().getTime();
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+			wallType.setAuditDetails(auditDetails);
+			wallTypes.add(wallType);
+			WallTypeRequest wallTypeRequest = new WallTypeRequest();
+			wallTypeRequest.setWallTypes(wallTypes);
+			wallTypeRequest.setRequestInfo(requestInfo);
 
-		String tenantId = "default";
+			WallTypeResponse wallTypeResponse;
 
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("emp");
-		requestInfo.setVer("1.0");
-		requestInfo.setTs(new Long(122366));
-		requestInfo.setDid("1");
-		requestInfo.setKey("yyyykey");
-		requestInfo.setMsgId("20170310130900");
-		requestInfo.setRequesterId("yosadhara");
-		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+			wallTypeResponse = masterService.createWallTypeMaster(tenantId, wallTypeRequest);
 
-		List<UsageMaster> usageMasters = new ArrayList<>();
+			if (wallTypeResponse.getWallTypes().size() == 0)
+				assertTrue(false);
 
-		UsageMaster usageMaster = new UsageMaster();
-		usageMaster.setTenantId("default");
-		usageMaster.setName("Yoyo");
-		usageMaster.setCode("1234");
-		usageMaster.setNameLocal("test_namelocal");
-		usageMaster.setDescription("test_description");
+			assertTrue(true);
 
-		long createdTime = new Date().getTime();
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
 
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("yosadhara");
-		auditDetails.setLastModifiedBy("yosadhara");
-		auditDetails.setCreatedTime(createdTime);
-		auditDetails.setLastModifiedTime(createdTime);
-
-		usageMaster.setAuditDetails(auditDetails);
-		usageMasters.add(usageMaster);
-
-		UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
-		usageMasterRequest.setUsageMasters(usageMasters);
-		usageMasterRequest.setRequestInfo(requestInfo);
+	@Test
+	public void updateWallTypeTest() {
 
 		try {
-			UsageMasterResponse response = masterService.createUsageMaster(tenantId, usageMasterRequest);
+			long id = 1;
+			String tenantId = "default";
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("rajesh");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 
-			if (response.getUsageMasters().size() == 0)
+			List<WallType> wallTypes = new ArrayList<>();
+
+			WallType wallType = new WallType();
+			wallType.setTenantId("default");
+			wallType.setName("Yoyo");
+			wallType.setCode("1234");
+			wallType.setNameLocal("test_namelocal");
+			wallType.setDescription("test_description");
+
+			long createdTime = new Date().getTime();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+
+			wallType.setAuditDetails(auditDetails);
+			wallTypes.add(wallType);
+
+			WallTypeRequest wallTypeRequest = new WallTypeRequest();
+			wallTypeRequest.setWallTypes(wallTypes);
+			wallTypeRequest.setRequestInfo(requestInfo);
+			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(tenantId, id, wallTypeRequest);
+			if (wallTypeResponse.getWallTypes().size() == 0)
 				assertTrue(false);
 			assertTrue(true);
+
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -862,53 +1006,39 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void updateUsageMasterTest() throws Exception {
+	public void searchWallTypeTest() {
+		try {
+			String tenantId = "default";
+			Integer[] ids = new Integer[] { 1 };
+			String name = "create_walltype";
+			String code = "12345";
+			String nameLocal = "search_nameLocal";
+			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 
-		String tenantId = "default";
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("emp");
-		requestInfo.setVer("1.0");
-		requestInfo.setTs(new Long(122366));
-		requestInfo.setDid("1");
-		requestInfo.setKey("abcdkey");
-		requestInfo.setMsgId("20170310130900");
-		requestInfo.setRequesterId("yosadhara");
-		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
 
-		List<UsageMaster> usageMasters = new ArrayList<>();
+			WallTypeResponse wallTypeResponse = masterService.getWallTypeMaster(requestInfo, tenantId, ids, name, code,
+					nameLocal, pageSize, offset);
+			if (wallTypeResponse.getWallTypes().size() == 0)
+				assertTrue(false);
 
-		UsageMaster usageMaster = new UsageMaster();
-		usageMaster.setTenantId("default");
-		usageMaster.setName("Yoyo");
-		usageMaster.setCode("1234");
-		usageMaster.setNameLocal("update_namelocal");
-		usageMaster.setDescription("update_description");
-
-		long createdTime = new Date().getTime();
-
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("yosadhara");
-		auditDetails.setLastModifiedBy("yosadhara");
-		auditDetails.setCreatedTime(createdTime);
-		auditDetails.setLastModifiedTime(createdTime);
-
-		usageMaster.setAuditDetails(auditDetails);
-		usageMasters.add(usageMaster);
-
-		UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
-		usageMasterRequest.setUsageMasters(usageMasters);
-		usageMasterRequest.setRequestInfo(requestInfo);
-
-		UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(tenantId, Long.valueOf(usageId),
-				usageMasterRequest);
-
-		if (usageMasterResponse.getUsageMasters().size() == 0)
+			assertTrue(true);
+		} catch (Exception e) {
 			assertTrue(false);
+		}
 
-		assertTrue(true);
 	}
-
-
 
 	private RequestInfo getRequestInfoObject() {
 		RequestInfo requestInfo = new RequestInfo();

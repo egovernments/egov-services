@@ -2,9 +2,7 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.common.model.AttributeDefinition;
-import org.egov.pgrrest.common.model.ServiceDefinition;
-import org.egov.pgrrest.common.model.ValueDefinition;
+import org.egov.pgrrest.common.model.*;
 import org.egov.pgrrest.read.domain.exception.ServiceDefinitionNotFoundException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceDefinitionService;
@@ -22,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -84,6 +83,8 @@ public class ServiceDefinitionControllerTest {
             .readOnly(false)
             .code("attribute1")
             .dataType("dataType1")
+            .roles(asList(new AttributeRolesDefinition("EMPLOYEE")))
+            .actions(asList(new AttributeActionsDefinition("UPDATE")))
             .required(true)
             .dataTypeDescription("data type description1")
             .values(getValues())
@@ -91,7 +92,7 @@ public class ServiceDefinitionControllerTest {
     }
 
     private List<ValueDefinition> getValues() {
-        return Arrays.asList(new ValueDefinition("name1", "key1", true),
+        return asList(new ValueDefinition("name1", "key1", true),
             new ValueDefinition("name2", "key2", false));
     }
 }

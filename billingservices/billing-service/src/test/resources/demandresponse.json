@@ -15,10 +15,8 @@
                 "id": 1,
                 "userName": null,
                 "name": null,
-                "type": null,
                 "mobileNumber": null,
-                "emailId": null,
-                "roles": null
+                "emailId": null
             },
             "taxPeriodFrom": 12345,
             "taxPeriodTo": 1234567890,

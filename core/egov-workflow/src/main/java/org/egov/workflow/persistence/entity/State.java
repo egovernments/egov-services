@@ -55,7 +55,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "EG_WF_STATES")
+@Table(name = "CS_WF_STATES")
 @SequenceGenerator(name = State.SEQ_STATE, sequenceName = State.SEQ_STATE, allocationSize = 1)
 
 public class State extends AbstractAuditable<Long> {
@@ -63,7 +63,7 @@ public class State extends AbstractAuditable<Long> {
     public static final String DEFAULT_STATE_VALUE_CREATED = "Created";
     public static final String DEFAULT_STATE_VALUE_CLOSED = "Closed";
     public static final String STATE_REOPENED = "Reopened";
-    static final String SEQ_STATE = "SEQ_EG_WF_STATES";
+    static final String SEQ_STATE = "SEQ_CS_WF_STATES";
     private static final long serialVersionUID = -9159043292636575746L;
 
     @Id

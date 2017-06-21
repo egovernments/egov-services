@@ -19,6 +19,7 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -62,7 +63,7 @@ const styles = {
   }
 };
 
-class ShowCategoryType extends Component {
+class ShowWaterSourceType extends Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -80,7 +81,7 @@ class ShowCategoryType extends Component {
 
   componentWillMount()
   {
-    $('#categoryTypeTable').DataTable({
+    $('#waterSourceTypeTable').DataTable({
          dom: 'lBfrtip',
          buttons: [
                    'excel', 'pdf', 'print'
@@ -90,10 +91,10 @@ class ShowCategoryType extends Component {
 
        });
 
-        let response=Api.commonApiPost("wcms-masters", "category", "_search", {},{}).then((res)=>
+        let response=Api.commonApiPost("wcms-masters", "sourcetype", "_search", {},{}).then((res)=>
     {
       this.setState({
-        list: res.Category
+        list: res.waterSourceType
       });
 
     },(err)=> {
@@ -112,7 +113,7 @@ class ShowCategoryType extends Component {
 }
 
   componentWillUnmount(){
-     $('#categoryTypeTable')
+     $('#waterSourceTypeTable')
      .DataTable()
      .destroy(true);
   }
@@ -125,21 +126,21 @@ class ShowCategoryType extends Component {
       e.preventDefault();
       // console.log("Show Table");
       flag=1;
-      changeButtonText("Search Again");
-      // this.setState({searchBtnText:'Search Again'})
+      changeButtonText("Search");
+      // this.setState({searchBtnText:'Search'})
       showTable(true);
   }
 
   componentWillUpdate() {
     if(flag == 1) {
       flag = 0;
-      $('#categoryTypeTable').dataTable().fnDestroy();
+      $('#waterSourceTypeTable').dataTable().fnDestroy();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     // if (true) {
-    //     $('#categoryTypeTable').DataTable({
+    //     $('#waterSourceTypeTable').DataTable({
     //       dom: 'lBfrtip',
     //       buttons: [
     //                 'excel', 'pdf', 'print'
@@ -154,7 +155,7 @@ class ShowCategoryType extends Component {
 
   render() {
     let {
-      showCategoryType,
+      showWaterSourceType,
       fieldErrors,
       isFormValid,
       isTableShow,
@@ -166,7 +167,7 @@ class ShowCategoryType extends Component {
 
     let {search} = this;
     let{list}=this.state;
-    // console.log(showCategoryType);
+    // console.log(showWaterSourceType);
     // console.log(isTableShow);
     // console.log(list);
     let renderAction=function(type,id){
@@ -174,14 +175,14 @@ class ShowCategoryType extends Component {
         console.log(type);
 
               return (
-                      <a href={`masters/CategoryType?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`masters/WaterSourceType?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }
     else {
 
             return (
-                    <a href={`masters/CategoryType?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`masters/WaterSourceType?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
 
             );
 
@@ -216,19 +217,19 @@ class ShowCategoryType extends Component {
     {
       return (
         <Card>
-          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Result < /strong>}/>
+          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Result < /strong>}/>
           <CardText>
-        <Table id="categoryTypeTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+        <Table id="waterSourceTypeTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
             <tr>
               <th>Sl No.</th>
               <th>Code</th>
-              <th>Category Type</th>
+              <th>Water Source Type</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
-          <tbody id="categoryTypeTableResultBoday">
+          <tbody id="waterSourceTypeTableResultBoday">
                 {renderBody()}
             </tbody>
 
@@ -238,12 +239,12 @@ class ShowCategoryType extends Component {
       )
     }
     return (
-      <div className="showCategoryType">
+      <div className="showWaterSourceType">
         <form onSubmit={(e) => {
           search(e)
         }}>
           <Card>
-             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Modify Category Type < /strong>}/>
+             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Water Source Type < /strong>}/>
 
             <CardText>
               <Card>
@@ -251,12 +252,34 @@ class ShowCategoryType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.name
-                        ? fieldErrors.name
-                        : ""} value={showCategoryType.name?showCategoryType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="Name" floatingLabelText="Name" />
+                      <TextField value={showWaterSourceType.name?showWaterSourceType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="waterSourceType" floatingLabelText="waterSourceType" />
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <TextField value={showWaterSourceType.code?showWaterSourceType.code:""} onChange={(e) => handleChange(e, "code", false, "")} hintText="Code" floatingLabelText="Code" />
                     </Col>
 
+
                     </Row>
+                    <Row>
+                    <Col xs={12} md={6}>
+                                        <Checkbox
+                                         label="Active"
+                                         defaultChecked={true}
+                                         value={showWaterSourceType.active?showWaterSourceType.active:""}
+                                         onCheck={(event,isInputChecked) => {
+                                           var e={
+                                             "target":{
+                                               "value":isInputChecked
+                                             }
+                                           }
+                                           handleChange(e, "active", true, "")}
+                                         }
+                                         style={styles.checkbox}
+                                         style={styles.topGap}
+                                        />
+                          </Col>
+                        </Row>
+
 
                     </Grid>
 
@@ -264,9 +287,9 @@ class ShowCategoryType extends Component {
               </Card>
 
                             <div style={{
-                float: "center"
+                textAlign: "center"
               }}>
-                <RaisedButton type="submit" disabled={!isFormValid} label={buttonText} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton type="submit" label={buttonText} backgroundColor={"#5a3e1b"} labelColor={white}/>
                 <RaisedButton label="Close"/>
               </div>
             </CardText>
@@ -284,7 +307,7 @@ class ShowCategoryType extends Component {
   }
 }
 
-const mapStateToProps = state => ({showCategoryType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({showWaterSourceType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -316,4 +339,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShowCategoryType);
+export default connect(mapStateToProps, mapDispatchToProps)(ShowWaterSourceType);

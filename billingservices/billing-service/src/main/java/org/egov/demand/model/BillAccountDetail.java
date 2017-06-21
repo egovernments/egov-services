@@ -14,6 +14,10 @@ public class BillAccountDetail {
 
 	private String id;
 
+	private String tenantId;
+
+	private String billDetail;
+	
 	private String glcode;
 
 	private Integer order;
@@ -26,5 +30,5 @@ public class BillAccountDetail {
 
 	private Boolean isActualDemand;
 
-	private List<Purpose> purpose = new ArrayList<>();
+	private Purpose purpose ;
 }

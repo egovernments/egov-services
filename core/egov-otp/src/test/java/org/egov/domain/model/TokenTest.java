@@ -15,29 +15,34 @@ public class TokenTest {
 
     @Test
     public void test_is_expired_should_return_false_when_token_expiry_is_in_the_future() {
-        final Token token = Token.builder()
-                .expiryDateTime(LocalDateTime.now(ZoneId.of(IST)).plusSeconds(30))
+		final LocalDateTime now = LocalDateTime.now(ZoneId.of(IST));
+		final Token token = Token.builder()
+                .expiryDateTime(now.plusSeconds(30))
                 .build();
 
-        assertFalse(token.isExpired());
+        assertFalse(token.isExpired(now));
     }
 
     @Test
     public void test_is_expired_should_return_false_when_token_expiry_is_now() {
-        final Token token = Token.builder()
-                .expiryDateTime(LocalDateTime.now(ZoneId.of(IST)))
+		final LocalDateTime now = LocalDateTime.now(ZoneId.of(IST));
+
+		final Token token = Token.builder()
+                .expiryDateTime(now)
                 .build();
 
-        assertFalse(token.isExpired());
+        assertFalse(token.isExpired(now));
     }
 
     @Test
     public void test_is_expired_should_return_true_when_token_expiry_is_in_the_past() {
-        final Token token = Token.builder()
-                .expiryDateTime(LocalDateTime.now(ZoneId.of(IST)).minusSeconds(30))
+		final LocalDateTime now = LocalDateTime.now(ZoneId.of(IST));
+
+		final Token token = Token.builder()
+                .expiryDateTime(now.minusSeconds(30))
                 .build();
 
-        assertTrue(token.isExpired());
+        assertTrue(token.isExpired(now));
     }
 
 

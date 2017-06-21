@@ -39,6 +39,7 @@
  */
 package org.egov.demand.persistence.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -70,7 +71,8 @@ import lombok.Setter;
 @Setter
 @Table(name = "egdm_collected_receipts")
 @SequenceGenerator(name = EgdmCollectedReceipt.SEQ_COLLECTEDRECEIPTS, sequenceName = EgdmCollectedReceipt.SEQ_COLLECTEDRECEIPTS, allocationSize = 1)
-public class EgdmCollectedReceipt implements Cloneable {
+public class EgdmCollectedReceipt implements Cloneable, Serializable {
+	private static final long serialVersionUID = 1L;
 	public static final Character RCPT_CANCEL_STATUS = 'C';
 	public static final String SEQ_COLLECTEDRECEIPTS = "seq_egdm_collected_receipts";
 	@Id

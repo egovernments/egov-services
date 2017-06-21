@@ -121,7 +121,12 @@ class PipeSize extends Component {
         // console.log(response);
         alert("Pipe Size Updated Successfully")
       },function(err) {
+        if(!PipeSize.sizeInMilimeter){
+          alert("Please Enter PipeSize in mm");
+        }
+        else{
           alert("Enetered Pipe Size already exist");
+        }
       });
 
       }
@@ -134,13 +139,9 @@ class PipeSize extends Component {
       // toggleDailogAndSetText(true," done");
     },function(err) {
        console.log(response);
-      if(!response){
-        alert("Please  ");
-       }
-       else {
         alert("Pipe Size enetered in mm already exist");
-    }
-      // toggleDailogAndSetText(true,"Not Done");
+
+       toggleDailogAndSetText(true,"Not Done");
     });
   }
     }

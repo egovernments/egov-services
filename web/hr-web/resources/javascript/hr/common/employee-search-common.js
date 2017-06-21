@@ -130,7 +130,7 @@ class EmployeeSearch extends React.Component {
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Search Employee for " + titleCase(getUrlVars()["value"]));
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
-    var count = 5, _state = {}, _this = this;
+    var count = 1, _state = {}, _this = this;
 
     const checkCountAndCall = function(key, res) {
       _state[key] = res;
@@ -203,7 +203,7 @@ class EmployeeSearch extends React.Component {
                         <th>Employee Name</th>
                         <th>Employee Designation</th>
                         <th>Employee Department</th>
-                        <th>Employee Position</th>
+                        <th>Employee Status</th>
                         <th>Action</th>
 
                     </tr>
@@ -282,13 +282,13 @@ class EmployeeSearch extends React.Component {
                 break;
               }
             }
+
             return (<tr key={index}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
-
                     <td data-label="designation">{getNameById(designationList,item.assignments[ind].designation)}</td>
                     <td data-label="department">{getNameById(departmentList,item.assignments[ind].department)}</td>
-                    <td data-label="position">{getNameById(assignments_position,item.assignments[ind].position)}</td>
+                    <td data-label="position">{getNameById(employeeStatusList,item.employeeStatus,"code")}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],getUrlVars()["value"],item.id)}
                     </td>

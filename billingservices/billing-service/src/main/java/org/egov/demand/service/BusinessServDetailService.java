@@ -37,31 +37,43 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.repository.BusinessServiceDetailRepository;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.BusinessServiceDetailResponse;
+import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * BillRequest
- */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class BusinessServiceDetailResponse {
+@Service
+public class BusinessServDetailService {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+    public static final Logger LOGGER = LoggerFactory.getLogger(BusinessServDetailService.class);
 
-    @JsonProperty("BusinessServiceDetails")
-    private List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+    @Autowired
+    private BusinessServiceDetailRepository businessServiceDetailRepository;
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
+    public BusinessServiceDetailResponse searchBusinessServiceDetails(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
+        LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");
+        final List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRepository.searchBusinessServiceDetails(businessServiceDetailCriteria);
+        return getBusinessServiceDetailResponse(businessServiceDetails, requestInfo);
+    }
+
+    private BusinessServiceDetailResponse getBusinessServiceDetailResponse(final List<BusinessServiceDetail> businessServiceDetails, final RequestInfo requestInfo) {
+        final BusinessServiceDetailResponse businessServiceDetailResponse = new BusinessServiceDetailResponse();
+        businessServiceDetailResponse.setBusinessServiceDetails(businessServiceDetails);
+        businessServiceDetailResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
+        return businessServiceDetailResponse;
+    }
 }

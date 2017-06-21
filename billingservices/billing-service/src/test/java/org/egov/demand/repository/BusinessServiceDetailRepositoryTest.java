@@ -37,37 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.repository.querybuilder.BusinessServDetailQueryBuilder;
+import org.egov.demand.repository.rowmapper.BusinessServDetailRowMapper;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusinessServiceDetail {
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
-    @NotNull
-    private String id;
+@RunWith(SpringRunner.class)
+public class BusinessServiceDetailRepositoryTest {
 
-    @NotNull
-    private String tenantId;
+    @InjectMocks
+    private BusinessServiceDetailRepository BusinessServiceDetailRepository;
 
-    private String businessService;
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
+    @Mock
+    private BusinessServDetailRowMapper businessServDetailRowMapper;
 
-    private Boolean partPaymentAllowed;
+    @Mock
+    private BusinessServDetailQueryBuilder businessServDetailQueryBuilder;
 
-    private Boolean callBackForApportioning;
-
-    private String callBackApportionURL;
-
-    @NotNull
-    private AuditDetail auditDetail;
+    @Test
+    public void shouldSearchForBusinessServiceDetails() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final BusinessServiceDetailCriteria BusinessServiceDetailCriteria = Mockito.mock(BusinessServiceDetailCriteria.class);
+        final String queryString = "testQuery";
+        when(businessServDetailQueryBuilder.prepareSearchQuery(BusinessServiceDetailCriteria, preparedStatementValues)).thenReturn(queryString);
+        final List<BusinessServiceDetail> businessServiceDetailList = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), businessServDetailRowMapper))
+                .thenReturn(businessServiceDetailList);
+        assertTrue(businessServiceDetailList.equals(BusinessServiceDetailRepository.searchBusinessServiceDetails(BusinessServiceDetailCriteria)));
+    }
 }

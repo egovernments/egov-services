@@ -37,37 +37,48 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.repository.querybuilder.BusinessServDetailQueryBuilder;
+import org.egov.demand.repository.rowmapper.BusinessServDetailRowMapper;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusinessServiceDetail {
+@Repository
+public class BusinessServiceDetailRepository {
 
-    @NotNull
-    private String id;
+    private static final Logger logger = LoggerFactory.getLogger(BusinessServiceDetailRepository.class);
 
-    @NotNull
-    private String tenantId;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    private String businessService;
+    @Autowired
+    private BusinessServDetailRowMapper businessServDetailRowMapper;
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
+    @Autowired
+    private BusinessServDetailQueryBuilder businessServDetailQueryBuilder;
 
-    private Boolean partPaymentAllowed;
+    public List<BusinessServiceDetail> searchBusinessServiceDetails(final BusinessServiceDetailCriteria businessServiceDetailCriteria) {
 
-    private Boolean callBackForApportioning;
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = businessServDetailQueryBuilder.prepareSearchQuery(businessServiceDetailCriteria, preparedStatementValues);
+        List<BusinessServiceDetail> businessServiceDetailList = new ArrayList<>();
+        try {
+            logger.info("queryStr -> " + queryStr + "preparedStatementValues -> " + preparedStatementValues.toString());
+            businessServiceDetailList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), businessServDetailRowMapper);
+            logger.info("BusinessServiceDetailRepository businessServiceDetailList -> " + businessServiceDetailList);
+        } catch (final Exception ex) {
+            logger.info("the exception from searchBusinessServiceDetails : " + ex);
+        }
+        return businessServiceDetailList;
+    }
 
-    private String callBackApportionURL;
-
-    @NotNull
-    private AuditDetail auditDetail;
 }

@@ -122,9 +122,9 @@ public class TaxHeadMasterControllerTest {
 		taxHeadMaster.setIsDebit(true);
 		taxHeadMaster.setIsActualDemand(true);
 		taxPeriod.setId("string");
-		taxPeriod.setDescription("string");
+		taxPeriod.setCode("string");
 		taxPeriod.setFinancialYear("2017-2018");
-		taxPeriod.setModule("string");
+		taxPeriod.setService("string");
 		taxPeriod.setFromDate(123L);
 		taxPeriod.setToDate(345L);
 		

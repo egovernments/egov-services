@@ -37,37 +37,45 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.repository.querybuilder;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusinessServiceDetail {
+@Component
+public class BusinessServDetailQueryBuilder {
 
-    @NotNull
-    private String id;
+    private static final Logger logger = LoggerFactory.getLogger(BusinessServDetailQueryBuilder.class);
 
-    @NotNull
-    private String tenantId;
+    private static final String BASE_QUERY = "SELECT * FROM EGBS_BUSINESS_SERVICE_DETAILS businessservice ";
 
-    private String businessService;
+    public String prepareSearchQuery(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        logger.info("prepareSearchQuery --> ");
+        prepareWhereClause(selectQuery, preparedStatementValues, businessServiceDetailCriteria);
+        // addPagingClause(selectQuery, preparedStatementValues, searchAsset);
+        logger.info("Search business service details query from BusinessServDetailQueryBuilder -> " + selectQuery);
+        return selectQuery.toString();
+    }
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
+    private void prepareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                    final BusinessServiceDetailCriteria businessServiceDetailCriteria) {
 
-    private Boolean partPaymentAllowed;
+        selectQuery.append(" WHERE ");
 
-    private Boolean callBackForApportioning;
+        if (StringUtils.isNotBlank(businessServiceDetailCriteria.getTenantId())) {
+            selectQuery.append(" businessservice.tenantId = ? ");
+            preparedStatementValues.add(businessServiceDetailCriteria.getTenantId());
+        }
 
-    private String callBackApportionURL;
-
-    @NotNull
-    private AuditDetail auditDetail;
+        if (StringUtils.isNotBlank(businessServiceDetailCriteria.getBusinessService())) {
+            selectQuery.append(" and businessservice.businessservice = ? ");
+            preparedStatementValues.add(businessServiceDetailCriteria.getBusinessService());
+        }
+    }
 }

@@ -37,37 +37,40 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.repository.rowmapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.BusinessServiceDetail;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusinessServiceDetail {
+@Component
+public class BusinessServDetailRowMapper implements RowMapper<BusinessServiceDetail> {
 
-    @NotNull
-    private String id;
+    @Override
+    public BusinessServiceDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-    @NotNull
-    private String tenantId;
+        BusinessServiceDetail businessServiceDetail = new BusinessServiceDetail();
+        businessServiceDetail.setId(rs.getString("id"));
+        businessServiceDetail.setTenantId(rs.getString("tenantId"));
+        businessServiceDetail.setBusinessService(rs.getString("businessservice"));
+        businessServiceDetail.setPartPaymentAllowed(rs.getBoolean("partPaymentAllowed"));
+        businessServiceDetail.setCollectionModesNotAllowed(Arrays.asList(rs.getString("collectionModesNotAllowed")));
+        businessServiceDetail.setCallBackForApportioning(rs.getBoolean("callBackForApportioning"));
+        businessServiceDetail.setCallBackApportionURL(rs.getString("callBackApportionURL"));
 
-    private String businessService;
+        AuditDetail auditDetail = new AuditDetail();
+        auditDetail.setCreatedBy(rs.getString("createdby"));
+        auditDetail.setLastModifiedBy(rs.getString("lastmodifiedby"));
+        auditDetail.setCreatedTime(rs.getLong("createddate"));
+        auditDetail.setLastModifiedTime(rs.getLong("lastmodifieddate"));
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
+        businessServiceDetail.setAuditDetail(auditDetail);
 
-    private Boolean partPaymentAllowed;
-
-    private Boolean callBackForApportioning;
-
-    private String callBackApportionURL;
-
-    @NotNull
-    private AuditDetail auditDetail;
+        return businessServiceDetail;
+    }
 }

@@ -37,37 +37,42 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.web.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.egov.demand.service.BusinessServDetailService;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.BusinessServiceDetailResponse;
+import org.egov.demand.web.contract.RequestInfoWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusinessServiceDetail {
+@RestController
+@RequestMapping("/businessservices")
+public class BusinessServiceDetailController {
 
-    @NotNull
-    private String id;
+    private static final Logger logger = LoggerFactory.getLogger(BusinessServiceDetailController.class);
 
-    @NotNull
-    private String tenantId;
+    @Autowired
+    private BusinessServDetailService businessServDetailService;
 
-    private String businessService;
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                    @ModelAttribute @Valid final BusinessServiceDetailCriteria BusinessServiceDetailsCriteria, final BindingResult bindingResult) {
+        logger.info("BusinessServiceDetailsCriteria -> " + BusinessServiceDetailsCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
-
-    private Boolean partPaymentAllowed;
-
-    private Boolean callBackForApportioning;
-
-    private String callBackApportionURL;
-
-    @NotNull
-    private AuditDetail auditDetail;
+        /*if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }*/
+        final BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(BusinessServiceDetailsCriteria, requestInfoWrapper.getRequestInfo());
+        return new ResponseEntity<>(businessServiceDetailResponse, HttpStatus.OK);
+    }
 }

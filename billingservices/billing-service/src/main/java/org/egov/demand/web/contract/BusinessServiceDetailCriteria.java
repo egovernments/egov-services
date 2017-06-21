@@ -37,37 +37,24 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.web.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BusinessServiceDetail {
-
-    @NotNull
-    private String id;
+@ToString
+@Builder
+public class BusinessServiceDetailCriteria {
 
     @NotNull
     private String tenantId;
 
+    @NotNull
     private String businessService;
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
-
-    private Boolean partPaymentAllowed;
-
-    private Boolean callBackForApportioning;
-
-    private String callBackApportionURL;
-
-    @NotNull
-    private AuditDetail auditDetail;
 }

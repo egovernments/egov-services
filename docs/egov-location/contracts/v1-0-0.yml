@@ -1,17 +1,19 @@
 swagger: '2.0'
 info:
-  version: 0.0.0
+  version: 1.0.0
   title: Location Service
-host: phoenix-qa.egovernments.org
+  contact:
+    name: eGov
+    email: info@egovernments.org
 schemes:
   - https
 basePath: '/v1/[API endpoint]'
-
+x-api-id: org.egov.boundary
 paths:
   /hierarchyType:
     get:
-      summary: List of Hierarchy Types Like "ADMIN","LOCATION", "REVENUE" etc.
-      description: >
+      summary: 'List of Hierarchy Types Like "ADMIN","LOCATION", "REVENUE" etc.'
+      description: |
         Provides a list of available Hierarchy Type and their associated
          codes. These request types can be unique to each tenant.
       parameters:
@@ -113,8 +115,8 @@ paths:
             $ref: '#/definitions/ErrorRes'
   /boundaryType:
     get:
-      summary: List of boundary Types Like "City","Zone", "Ward" etc.
-      description: >
+      summary: 'List of boundary Types Like "City","Zone", "Ward" etc.'
+      description: |
         Provides a list of available boundary Type and their associated
          codes. These request types can be unique to each tenant.
       parameters:
@@ -176,7 +178,7 @@ paths:
           description: tenantid provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  /boundaryType/{id}:
+  '/boundaryType/{id}':
     put:
       summary: Update boundaryType
       description: To update an existing boundaryType.
@@ -217,7 +219,7 @@ paths:
   /boundaries:
     get:
       summary: List of boundaries for the given query parameters.
-      description: >
+      description: |
         Provides a list of available boundary  and their associated
          id's. These request types can be unique to each tenant.
       parameters:
@@ -271,10 +273,12 @@ paths:
           format: varchar
         - name: parentBoundaryCode
           in: query
-          description: the code of parent boundary for which we anted child boundaries in the response.
+          description: >-
+            the code of parent boundary for which we anted child boundaries in
+            the response.
           required: true
           type: string
-          format: varchar  
+          format: varchar
         - name: orderBy
           in: query
           description: Hierarchy of the boundary.
@@ -302,11 +306,10 @@ paths:
           description: tenantid provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-
   /crossHierarchy:
     get:
       summary: List of cross Hierarchy data for the given query parameters.
-      description: >
+      description: |
         Provides a list of available boundary  and their associated
          id's. These request types can be unique to each tenant.
       parameters:
@@ -343,14 +346,12 @@ paths:
           description: tenantid provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-
-
   /boundary:
     post:
       summary: Creates a boundary
       description: Creates a boundary.
       parameters:
-        - $ref: "#/parameters/tenant_id"
+        - $ref: '#/parameters/tenant_id'
         - name: boundary
           in: body
           description: The boundary to create boundary.
@@ -369,11 +370,10 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
         '404':
-          description:  Not able to update boundary.
+          description: Not able to update boundary.
           schema:
             $ref: '#/definitions/ErrorRes'
-          
-  /boundary/{id}:
+  '/boundary/{id}':
     put:
       summary: Update boundary
       description: To update an existing boundary.
@@ -411,11 +411,32 @@ paths:
           description: tenant_id provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  
-            
-
+  /boundary/isshapefileexist:
+    post:
+      summary: Check whether the GIS shape file exists or not.
+      description: >-
+        This API checks whether the GIS shape file exists or not for given
+        tenant Id. The API returns true if shape file exists. Returns false if
+        shape file doesn't exist for given tenant.
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+      tags:
+        - boundary
+      responses:
+        '200':
+          description: Successful Response.
+          schema:
+            $ref: '#/definitions/ShapeFileResponse'
+        '400':
+          description: Tenantid was not provided or General service error
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
 definitions:
-  HierarchyType :
+  HierarchyType:
     type: object
     properties:
       id:
@@ -432,8 +453,7 @@ definitions:
         type: string
         format: date
         description: Local HierarchyType name .
-      
-  BoundaryType :
+  BoundaryType:
     type: object
     properties:
       id:
@@ -443,9 +463,9 @@ definitions:
         type: string
         format: date
       parent:
-        $ref: '#/definitions/BoundaryType' 
+        $ref: '#/definitions/BoundaryType'
       hierarchyType:
-        $ref: '#/definitions/HierarchyType' 
+        $ref: '#/definitions/HierarchyType'
   Boundary:
     type: object
     properties:
@@ -484,12 +504,11 @@ definitions:
         type: string
         description: latitude of the boundary.
       boundaryType:
-        $ref: '#/definitions/BoundaryType' 
+        $ref: '#/definitions/BoundaryType'
       materialized_path:
         type: string
         description: materialized path of the boundary.
-        
-  CrossHierarchy :
+  CrossHierarchy:
     type: object
     properties:
       id:
@@ -501,7 +520,6 @@ definitions:
       child:
         type: string
         description: child name for the cross hierarchy.
-
   CrossHierarchyResponse:
     properties:
       RequestInfo:
@@ -509,7 +527,6 @@ definitions:
       HierarchyType:
         $ref: '#/definitions/CrossHierarchy'
     type: object
-        
   HierarchyTypeRequest:
     properties:
       RequestInfo:
@@ -517,9 +534,6 @@ definitions:
       HierarchyType:
         $ref: '#/definitions/HierarchyType'
     type: object
-      
-  
-        
   HierarchyTypeResponse:
     properties:
       ResponseInfo:
@@ -528,7 +542,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/HierarchyType'
-
   BoundaryTypeRequest:
     properties:
       RequestInfo:
@@ -536,7 +549,6 @@ definitions:
       BoundaryType:
         $ref: '#/definitions/BoundaryType'
     type: object
-    
   BoundaryTypeResponse:
     properties:
       ResponseInfo:
@@ -545,16 +557,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/BoundaryType'
-    type: object 
-      
+    type: object
   BoundaryRequest:
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Boundary:
-          $ref: '#/definitions/Boundary'
+        $ref: '#/definitions/Boundary'
     type: object
-        
   BoundaryResponse:
     properties:
       ResponseInfo:
@@ -564,7 +574,6 @@ definitions:
         items:
           $ref: '#/definitions/Boundary'
     type: object
-        
   ErrorRes:
     properties:
       ResposneInfo:
@@ -572,8 +581,6 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
     type: object
-    
-
   RequestInfo:
     type: object
     properties:
@@ -611,7 +618,6 @@ definitions:
       - api_id
       - ver
       - ts
-      
   ResponseInfo:
     type: object
     properties:
@@ -641,7 +647,6 @@ definitions:
       - ver
       - ts
       - status
-      
   Error:
     type: object
     properties:
@@ -657,7 +662,20 @@ definitions:
     required:
       - code
       - message
-      
+  ShapeFileResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      shapeFile:
+        $ref: '#/definitions/ShapeFile'
+  ShapeFile:
+    type: object
+    properties:
+      fileExist:
+        type: boolean
+        description: Returns true if shape file exists otherwise returns false.
 parameters:
   tenant_id:
     name: tenant_id

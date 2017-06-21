@@ -84,4 +84,9 @@ public class ApplicationProperties {
 	
 	@Value("${bs.demanddetail.seq.name}")
 	private String demandDetailSeqName;
+
+	@Value("${bs.billdetail.billnumber.seq.name}")
+	private String billNumSeqName;
+	
+
 }

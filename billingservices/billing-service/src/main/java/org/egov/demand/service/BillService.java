@@ -43,11 +43,15 @@ package org.egov.demand.service;
 import java.util.List;
 
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.Demand;
+import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
+import org.egov.demand.web.contract.DemandResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,32 +77,21 @@ public class BillService {
 	@Autowired
 	private BillRepository billRepository;
 	
-	public BillResponse createAsync(BillRequest billRequest){
+	@Autowired
+	private BillHelper billHelper;
+	
+	public BillResponse createAsync(BillRequest billRequest) { 
 		
-		List<Bill> bills = billRequest.getBillInfos();
-		
-		int billIndex = 0;
-		/*for(Bill bill:bills){
-			bill.setId(billRepository.getNextValue(applicationProperties.getBillSeqName()));
-			bills.set(billIndex, bill);
-
-			List<BillDetail> billDetails = bill.getBillDetails();
-			int billDetailIndex = 0;
-			for(BillDetail billDetail:billDetails){
-				billDetail.setId(billRepository.getNextValue(applicationProperties.getBillDetailSeqName()));
-				billDetails.set(billDetailIndex, billDetail);
-				billDetailIndex++;
-			}
-			
-			billIndex++;
-		}*/
+		billHelper.getBillRequestWithIds(billRequest);
 		
 		try {
 			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),
 								objectMapper.writeValueAsString(billRequest));
 		} catch (Exception e) {
 			logger.info("BillService createAsync:"+e);
+			e.printStackTrace();
 			throw new RuntimeException(e);
+			
 		}
 		return getBillResponse(billRequest.getBillInfos());
 	}
@@ -106,10 +99,31 @@ public class BillService {
 	public void create(BillRequest billRequest){		
 		billRepository.saveBill(billRequest);
 	}
-	public BillResponse getBillResponse(List<Bill> bills){
+	
+	public BillResponse generateBill(GenerateBillCriteria generateBillCriteria) {
+		List<DemandResponse> demandResponses = null;
+		List<Bill> bills = null;
+		return null;
+	}
+	
+	/*public List<Bill> prepareBill(List<Demand> demands,String tenantId){
+		List<Bill> bills = null;
+		
+		for(Demand demand : demands){
+			
+			BillDetail billDetail = BillDetail.builder().businessService(demand.getBusinessService()).consumerType(demand.getConsumerType()).
+			consumerCode(demand.getConsumerCode()).displayMessage(null).minimumAmount(null).
+			totalAmount(null).tenantId(tenantId).build();
+			
+		}
+	}*/
+	
+	public BillResponse getBillResponse(List<Bill> bills) {
 		BillResponse billResponse = new BillResponse();
 		billResponse.setBillInfos(bills);
 		return billResponse;
 	}
+	
+	
 
 }

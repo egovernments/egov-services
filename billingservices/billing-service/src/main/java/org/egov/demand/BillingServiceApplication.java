@@ -15,18 +15,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Import({ TracerConfiguration.class })
 public class BillingServiceApplication {
 
-	/*
-	 * @Value("${app.timezone}") private String timeZone;
-	 */
-
-	/*
-	 * @PostConstruct public void initialize() {
-	 * TimeZone.setDefault(TimeZone.getTimeZone(timeZone)); }
-	 */
-
 	@Bean
-	public ObjectMapper getObjectMapper() {
-
+	public ObjectMapper getObjectMapper(){
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		// objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 

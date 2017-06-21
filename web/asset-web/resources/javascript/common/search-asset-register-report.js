@@ -57,22 +57,7 @@ class SearchAsset extends React.Component {
 
         }
 
-        //////console.log("finsi2",this.state.locality);
-        //////console.log("Final",this.state.searchSet);
-      //
-      //   if(location===undefined){
-      //
-      //       queryObject.locality = this.state.searchSet.location;
-      //       queryObject.location = "";
-      //
-      //   }else{
 
-      //         queryObject.locality = location;
-      //         queryObject.location = "";
-      //   }
-      //
-      //
-      //   //////console.log("after",queryObject);
       if(post==0){
         commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
           if(res) {
@@ -168,6 +153,7 @@ class SearchAsset extends React.Component {
 
                           function footer(){
                             doc.text(190,285, 'page ' + doc.page);
+                            doc.text(150,290, 'Report generated on ' + localDate);
                             doc.page ++;
                             };
 
@@ -207,7 +193,7 @@ class SearchAsset extends React.Component {
                                 addPageContent: function(data) {
                                   doc.rect(6, 6, doc.internal.pageSize.width - 12, doc.internal.pageSize.height - 12, 'S');
                                   doc.setFontSize(8);
-                                  doc.text(150, 5, 'Report generated on ' + localDate); //print number bottom right
+                                 //print number bottom right
                                   doc.setFontType("bold");
                                   doc.setFontSize(24);
                                     doc.text(105, 20, tenantId.split(".")[1] + ' Municipal Corporation', null, null, 'center');
@@ -227,21 +213,88 @@ class SearchAsset extends React.Component {
                                     doc.setFontSize(8);
                                     doc.setFontType("normal");
                                     footer();
-
-
                                 }
                             });
-
-
-
                           doc.setFontSize(8);
-
-
-
-                           doc.save('Asset-register-report.pdf');
+                          doc.save('Asset-register-report.pdf');
                       }
-                  },
-                     'copy', 'csv', 'excel', 'print'
+                  },{
+                    text: 'Excel',
+                              action: function ( e, dt, node, config ) {
+                                console.log("excel");
+                                var date = new Date();
+                                var localDate =  date.toLocaleString();
+                                var printData = _this.state.list;
+                                var searchString = "";
+                                var searchResult = _this.state.searchSet;
+                                var locationArray = JSON.parse(localStorage.getItem("locality"));
+
+                                if(searchResult.code!=""){
+                                  ////console.log("searchResult.code",searchResult.code);
+                                  searchString = searchString+ " Asset Code - "+ searchResult.code;
+                                }
+
+                                if(searchResult.name!=""){
+                                  searchString = searchString + " Asset Name - "+ searchResult.name;
+                                }
+                                if(searchResult.status!=""){
+                                  searchString = searchString + " Asset Status - "+ searchResult.status;
+                                }
+                                if(searchResult.assetCategory!=""){
+                                  searchString = searchString + " Asset Category - "+ printData[0].assetCategory.name;
+                                }
+                                if(searchResult.location!=""){
+                                  searchString = searchString + " Asset Location - "+ searchResult.location ;
+                                }
+                                if(searchResult.grossValue!=""){
+                                  searchString = searchString + " Current value of asset "+ searchResult.grossValue ;
+                                }
+
+                                var finalString = tenantId.split(".")[1] +" Municipal Corporation";
+                                console.log(finalString);
+                                var ep1=new ExcelPlus();
+
+
+
+
+                                  ep1.createFile("Success");
+                                  var wscols = [
+                                    {wch:6},
+                                    {wch:7},
+                                    {wch:10},
+                                    {wch:6},
+                                    {wch:7},
+                                    {wch:10},
+                                    {wch:20}
+                                ];
+                                ep1['!cols'] = wscols;
+                                    ep1.write({ "sheet":"Success", "cell":"D1", "content":finalString });
+                                    ep1.write({ "sheet":"Success", "cell":"D2", "content":"Asset register report" });
+                                    ep1.write({ "sheet":"Success", "cell":"H1", "content":'Report generated on ' + localDate });
+                                    ep1.write({ "sheet":"Success", "cell":"B4", "content":"List of Assets :"+searchString});
+
+                                  ep1.writeRow(7, ["Sr. No", "Code", "Asset Name","Status","Asset Category", "Location","Current value of asset"] );
+                                  for(var i=0;i<printData.length;i++){
+                                    for(var j =0;j<locationArray.length;j++){
+                                    if(printData[i].locationDetails.locality==locationArray[j].id){
+                                        printData[i].locationDetails.locality = locationArray[j].name;
+                                        break;
+                                    }
+                                  }
+                                  //console.log(printData[i]);
+                                          if(printData[i].grossValue==null){
+                                            printData[i].grossValue = " ";
+                                          }
+                                        ep1.writeNextRow([i+1,printData[i].code,printData[i].name,printData[i].status,printData[i].assetCategory.name,printData[i].locationDetails.locality,printData[i].grossValue])
+                                  }
+
+                                  ep1.saveAs("success.xlsx");
+                              }
+
+
+                    },
+                     //
+                    //  'copy', 'csv', 'excel', 'print'
              ],
              "ordering": false,
              "bDestroy": true,

@@ -34,9 +34,6 @@ public class DemandConsumer {
 	@Autowired
 	private BillRepository billRepository;
 
-	@Autowired
-	private BillRepository billRepository;
-
 	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" })
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
@@ -55,10 +52,5 @@ public class DemandConsumer {
 			log.info("processMessage:" + exception);
 			throw exception;
 		}
-<<<<<<< HEAD
-
-=======
->>>>>>> 1719d9390742814a7beabfa7d70251a16d8d0798
 	}
-
 }

@@ -49,7 +49,7 @@ const styles = {
   }
 };
 
-class WaterSupplyType extends Component {
+class WaterSupplyTypes extends Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -80,7 +80,7 @@ class WaterSupplyType extends Component {
             let response=Api.commonApiPost("wcms-masters", "supplytype", "_update/"+id, {},{}).then((res)=>
            {
               this.setState({
-                list: res.SupplyTypes
+                list: res.supplytypes
             });
 
         },  (err)=> {
@@ -104,11 +104,11 @@ class WaterSupplyType extends Component {
 
     // let mode=getUrlVars()["type"];
 
-      let {changeButtonText,WaterSupplyType}=this.props;
+      let {changeButtonText,WaterSupplyTypes}=this.props;
       var SupplyType = {
-        name:WaterSupplyType.name,
-        description:WaterSupplyType.Description,
-        active:WaterSupplyType.active,
+        name:WaterSupplyTypes.ownerName,
+        description:WaterSupplyTypes.Description,
+        active:WaterSupplyTypes.active,
         tenantId:'default'
       }
       if(type == "Update"){
@@ -122,11 +122,11 @@ class WaterSupplyType extends Component {
       }
 
     else{
-      let response=Api.commonApiPost("wcms-masters", "supplytype", "_create", {},{SupplyType:WaterSupplyType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "supplytype", "_create", {},{SupplyType}).then(function(response)
       {
       // console.log(response);
     },function(err) {
-        alert("Entered Water Supply Type already exist");
+        alert("Entered Water Source Type already exist");
     });
 }
     }
@@ -137,7 +137,7 @@ class WaterSupplyType extends Component {
 
   render() {
     let {
-      WaterSupplyType,
+      WaterSupplyTypes,
       fieldErrors,
       isFormValid,
       handleChange,
@@ -161,7 +161,7 @@ class WaterSupplyType extends Component {
       }
     };
         return (
-          <div className="WaterSupplyType">
+          <div className="WaterSupplyTypes">
           <Card>
             <CardHeader title={< strong style = {{color:"#5a3e1b"}} >  Water Supply Type< /strong>}/>
 
@@ -171,13 +171,13 @@ class WaterSupplyType extends Component {
                   <Grid>
                     <Row>
                     <Col xs={12} md={6}>
-                      <TextField errorText="This field is required." value={WaterSupplyType.name?WaterSupplyType.name:""} onChange={(e) => handleChange(e, "name", false, "")} hintText="Supply Type" floatingLabelText="Water Supply Type" />
+                      <TextField errorText="This field is required." value={WaterSupplyTypes.ownerName?WaterSupplyTypes.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="name" floatingLabelText="Water Supply Type" />
                     </Col>
 
                     <Col xs={12} md={6}>
                       <TextField errorText={fieldErrors.Descrption
                         ? fieldErrors.Description
-                        : ""} value={WaterSupplyType.Description?WaterSupplyType.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
+                        : ""} value={WaterSupplyTypes.Description?WaterSupplyTypes.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
                     </Col>
                     </Row>
                     <Row>
@@ -185,7 +185,7 @@ class WaterSupplyType extends Component {
                                         <Checkbox
                                          label="Active"
                                          defaultChecked={true}
-                                         value={WaterSupplyType.active?WaterSupplyType.active:""}
+                                         value={WaterSupplyTypes.active?WaterSupplyTypes.active:""}
                                          onCheck={(event,isInputChecked) => {
                                            var e={
                                              "target":{
@@ -222,7 +222,7 @@ class WaterSupplyType extends Component {
   }
 }
 
-const mapStateToProps = state => ({WaterSupplyType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({WaterSupplyTypes: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -235,7 +235,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: ["name",]
+          required: ["ownerName",]
         }
       }
     });
@@ -256,4 +256,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaterSupplyType);
+export default connect(mapStateToProps, mapDispatchToProps)(WaterSupplyTypes);

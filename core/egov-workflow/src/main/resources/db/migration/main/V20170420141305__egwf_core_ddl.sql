@@ -1,4 +1,5 @@
 -----------------START--------------------
+drop table if exists egpgr_router;
 CREATE TABLE egpgr_router (
     id bigint NOT NULL,
     complainttypeid numeric,
@@ -12,6 +13,7 @@ CREATE TABLE egpgr_router (
     tenantid character varying(256) not null
 );
 
+DROP SEQUENCE IF EXISTS seq_egpgr_router;
 CREATE SEQUENCE seq_egpgr_router
     START WITH 1
     INCREMENT BY 1

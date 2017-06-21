@@ -3,11 +3,13 @@ package org.egov.pgrrest.read.web.controller;
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
+import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowed;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.junit.Test;
@@ -63,6 +65,20 @@ public class ServiceRequestControllerTest {
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(resources.getFileContents("createComplaintErrorResponse.json")));
+    }
+
+    @Test
+    public void test_for_updating_a_complaint_not_assigned_to_redresal_officer()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new UpdateComplaintNotAllowed()).when(serviceRequestService).update(any(ServiceRequest
+                .class),
+            any(SevaRequest.class));
+        mockMvc.perform(post("/seva/_update")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("updateComplaintRequestRedresalOfficer.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("updateComplaintErrorResponseForRedressal.json")));
     }
 
     @Test
@@ -322,5 +338,6 @@ public class ServiceRequestControllerTest {
     private AuthenticatedUser getCitizen() {
         return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).build();
     }
+
 
 }

@@ -10,10 +10,7 @@ import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,5 +83,9 @@ public class SubmissionRepository {
             .findByCrnListAndTenantId(crnList, tenantId);
         return submissionAttributes.stream()
             .collect(Collectors.groupingBy(SubmissionAttribute::getCrn));
+    }
+
+    public Long getAssignmentByCrnAndTenantId(String serviceRequestId, String tenantId) {
+        return submissionJpaRepository.findAssigneeByCrnAndTenantId(serviceRequestId, tenantId);
     }
 }

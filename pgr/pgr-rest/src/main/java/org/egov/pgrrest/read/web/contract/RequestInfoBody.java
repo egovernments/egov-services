@@ -12,4 +12,7 @@ public class RequestInfoBody {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
+    public boolean isAnonymous() {
+        return this.getRequestInfo() == null || this.getRequestInfo().getUserInfo() == null;
+    }
 }

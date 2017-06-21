@@ -57,4 +57,8 @@ public class CustomControllerAdvice {
         return new InvalidOtpValidationRequestExceptionAdapter().adapt(null);
     }
 
+    @ExceptionHandler(UpdateComplaintNotAllowed.class)
+    public ErrorResponse handleUpdateComplaintException() {
+        return new UpdateComplaintNotAllowedExceptionAdapter().adapt(null);
+    }
 }

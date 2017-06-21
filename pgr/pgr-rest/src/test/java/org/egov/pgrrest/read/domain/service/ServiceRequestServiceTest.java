@@ -1,15 +1,14 @@
 package org.egov.pgrrest.read.domain.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgrrest.common.contract.*;
-import org.egov.pgrrest.common.model.AttributeEntry;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgr.common.model.Employee;
+import org.egov.pgr.common.repository.EmployeeRepository;
+import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.model.*;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
-import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
+import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +17,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,12 +48,18 @@ public class ServiceRequestServiceTest {
     @InjectMocks
     private ServiceRequestService serviceRequestService;
 
+    @Mock
+    private EmployeeRepository employeeRepository;
+
+    @Mock
+    private SubmissionRepository submissionRepository;
+
     @Test
     public void testShouldValidateComplaintOnSave() {
         final ServiceRequest complaint = mock(ServiceRequest.class);
         when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
         final SevaRequest sevaRequest = getSevaRequest();
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         serviceRequestService.save(complaint, sevaRequest);
 
         verify(complaint, times(1)).validate();
@@ -65,8 +69,11 @@ public class ServiceRequestServiceTest {
     public void testShouldValidateComplaintOnUpdate() {
         final ServiceRequest complaint = mock(ServiceRequest.class);
         when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
+        when(complaint.getTenantId()).thenReturn("tenantId");
         final SevaRequest sevaRequest = getSevaRequest();
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
+        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId())).thenReturn(1L);
         serviceRequestService.update(complaint, sevaRequest);
 
         verify(complaint, times(1)).validate();
@@ -76,7 +83,7 @@ public class ServiceRequestServiceTest {
     public void testShouldUpdateSevaRequestWithDomainComplaintOnSave() {
         final ServiceRequest complaint = getComplaint();
         final SevaRequest sevaRequest = mock(SevaRequest.class);
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         serviceRequestService.save(complaint, sevaRequest);
 
         verify(sevaRequest).update(complaint);
@@ -86,7 +93,9 @@ public class ServiceRequestServiceTest {
     public void testShouldUpdateSevaRequestWithDomainComplaintOnUpdate() {
         final ServiceRequest complaint = getComplaint();
         final SevaRequest sevaRequest = mock(SevaRequest.class);
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
+        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId())).thenReturn(1L);
         serviceRequestService.update(complaint, sevaRequest);
 
         verify(sevaRequest).update(complaint);
@@ -97,7 +106,7 @@ public class ServiceRequestServiceTest {
         final ServiceRequest complaint = getComplaint();
         final SevaRequest sevaRequest = getSevaRequest();
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         serviceRequestService.save(complaint, sevaRequest);
 
         assertEquals(CRN, complaint.getCrn());
@@ -109,7 +118,7 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = getSevaRequest();
         sevaRequest.getRequestInfo().setUserInfo(null);
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
 
         serviceRequestService.save(complaint, sevaRequest);
 
@@ -145,7 +154,7 @@ public class ServiceRequestServiceTest {
         final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = getServiceRequest();
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         serviceRequestService.save(complaint, sevaRequest);
 
         verify(complaintRepository).save(sevaRequest);
@@ -156,7 +165,9 @@ public class ServiceRequestServiceTest {
         final ServiceRequest complaint = getComplaint();
         final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = getServiceRequest();
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
-        when(userRepository.getUserByUserName("anonymous","tenantId")).thenReturn(populateUser());
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
+        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId())).thenReturn(1L);
         serviceRequestService.update(complaint, sevaRequest);
 
         verify(complaintRepository).update(sevaRequest);
@@ -200,7 +211,7 @@ public class ServiceRequestServiceTest {
     }
 
     private AuthenticatedUser getCitizen() {
-        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).build();
+        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).roleCodes(getUserRoles()).build();
     }
 
     private SevaRequest getSevaRequest() {
@@ -218,6 +229,15 @@ public class ServiceRequestServiceTest {
 
     private User populateUser() {
         return User.builder().id(1L).name("user").build();
+    }
+
+    private Employee getEmployee() {
+        return Employee.builder().primaryPosition(1L).build();
+    }
+
+
+    private List<String> getUserRoles() {
+       return Arrays.asList("GRO");
     }
 
 }

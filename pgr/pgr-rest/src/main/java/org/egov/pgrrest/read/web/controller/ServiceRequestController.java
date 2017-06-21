@@ -174,15 +174,15 @@ public class ServiceRequestController {
         return ResponseInfo.builder()
             .apiId(requestInfo.getApiId())
             .ver(requestInfo.getVer())
-            .ts(new Date().toString())
+            .ts(requestInfo.getTs())
             .msgId(requestInfo.getMsgId())
             .resMsgId("placeholder")
             .status("placeholder")
             .build();
     }
 
-    private boolean checkIsAnonymous(RequestInfoBody request){
-        return request == null || request.getRequestInfo() == null ||request.getRequestInfo().getUserInfo() == null ? true : false;
+    private boolean checkIsAnonymous(RequestInfoBody request) {
+        return request != null && request.isAnonymous();
     }
 
 }

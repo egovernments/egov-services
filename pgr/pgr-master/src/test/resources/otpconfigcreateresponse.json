@@ -1,0 +1,24 @@
+{
+    "ResponseInfo": {
+        "apiId": "emp",
+        "ver": "1.0",
+        "ts": "Thu Mar 09 18:30:00 GMT 2017",
+        "resMsgId": "uief87324",
+        "msgId": "20170310130900",
+        "status": "200"
+    },
+    "otpConfig": [
+        {
+            "tenantId": "BLR05",
+            "otpEnabledForAnonymousComplaint": true
+        }
+    ],
+    "responseInfo": {
+        "apiId": "emp",
+        "ver": "1.0",
+        "ts": "Thu Mar 09 18:30:00 GMT 2017",
+        "resMsgId": "uief87324",
+        "msgId": "20170310130900",
+        "status": "200"
+    }
+}

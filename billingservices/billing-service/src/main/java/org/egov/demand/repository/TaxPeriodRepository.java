@@ -37,28 +37,47 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.repository;
+
+import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.repository.querybuilder.TaxPeriodQueryBuilder;
+import org.egov.demand.repository.rowmapper.TaxPeriodRowMapper;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+@Repository
+public class TaxPeriodRepository {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+    private static final Logger logger = LoggerFactory.getLogger(TaxPeriodRepository.class);
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    @Autowired
+    private TaxPeriodRowMapper taxPeriodRowMapper;
+
+    @Autowired
+    private TaxPeriodQueryBuilder taxPeriodQueryBuilder;
+
+    public List<TaxPeriod> searchTaxPeriods(final TaxPeriodCriteria taxPeriodCriteria) {
+
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = taxPeriodQueryBuilder.prepareSearchQuery(taxPeriodCriteria, preparedStatementValues);
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+        try {
+            logger.info("queryStr -> " + queryStr + "preparedStatementValues -> " + preparedStatementValues.toString());
+            taxPeriods = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), taxPeriodRowMapper);
+            logger.info("TaxPeriodRepository taxPeriods -> " + taxPeriods);
+        } catch (final Exception ex) {
+            logger.info("the exception from searchTaxPeriods : " + ex);
+        }
+        return taxPeriods;
+    }
 }

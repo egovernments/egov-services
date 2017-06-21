@@ -37,28 +37,43 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.egov.demand.service.TaxPeriodService;
+import org.egov.demand.web.contract.RequestInfoWrapper;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.validation.Valid;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+@RestController
+@RequestMapping("/taxperiod")
+public class TaxPeriodController {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    private static final Logger logger = LoggerFactory.getLogger(TaxPeriodController.class);
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    @Autowired
+    private TaxPeriodService taxPeriodService;
+
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                    @ModelAttribute @Valid final TaxPeriodCriteria taxPeriodCriteria, final BindingResult bindingResult) {
+        logger.info("taxPeriodCriteria -> " + taxPeriodCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
+
+        /*if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }*/
+        final TaxPeriodResponse taxPeriodResponse = taxPeriodService.searchTaxPeriods(taxPeriodCriteria, requestInfoWrapper.getRequestInfo());
+        return new ResponseEntity<>(taxPeriodResponse, HttpStatus.OK);
+    }
+
 }

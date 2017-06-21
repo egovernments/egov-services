@@ -37,28 +37,38 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.repository.rowmapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Component
+public class TaxPeriodRowMapper implements RowMapper<TaxPeriod> {
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    @Override
+    public TaxPeriod mapRow(ResultSet rs, int rowNum) throws SQLException {
+        TaxPeriod taxPeriod = new TaxPeriod();
+        taxPeriod.setId(rs.getString("id"));
+        taxPeriod.setService(rs.getString("service"));
+        taxPeriod.setCode(rs.getString("code"));
+        taxPeriod.setFromDate(rs.getLong("fromDate"));
+        taxPeriod.setToDate(rs.getLong("toDate"));
+        taxPeriod.setFinancialYear(rs.getString("financialYear"));
+        taxPeriod.setTenantId(rs.getString("tenantId"));
+
+        AuditDetail auditDetail = new AuditDetail();
+        auditDetail.setCreatedBy(rs.getString("createdby"));
+        auditDetail.setLastModifiedBy(rs.getString("lastmodifiedby"));
+        auditDetail.setCreatedTime(rs.getLong("createddate"));
+        auditDetail.setLastModifiedTime(rs.getLong("lastmodifieddate"));
+
+        taxPeriod.setAuditDetail(auditDetail);
+
+        return taxPeriod;
+    }
 }

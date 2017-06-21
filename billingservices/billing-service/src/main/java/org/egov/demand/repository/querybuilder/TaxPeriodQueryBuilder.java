@@ -37,28 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.repository.querybuilder;
 
-import java.util.ArrayList;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.demand.repository.TaxPeriodRepository;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+@Component
+public class TaxPeriodQueryBuilder {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+    private static final Logger logger = LoggerFactory.getLogger(TaxPeriodRepository.class);
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    private static final String BASE_QUERY = "SELECT * FROM EGBS_TAXPERIOD taxperiod ";
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    public String prepareSearchQuery(final TaxPeriodCriteria taxPeriodCriteria, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        logger.info("prepareSearchQuery --> ");
+        prepareWhereClause(selectQuery, preparedStatementValues, taxPeriodCriteria);
+        logger.info("Search tax periods query from TaxPeriodQueryBuilder -> " + selectQuery);
+        return selectQuery.toString();
+    }
+
+    private void prepareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+          final TaxPeriodCriteria taxPeriodCriteria) {
+
+        selectQuery.append(" WHERE ");
+
+        if (StringUtils.isNotBlank(taxPeriodCriteria.getTenantId())) {
+            selectQuery.append(" taxperiod.tenantId = ? ");
+            preparedStatementValues.add(taxPeriodCriteria.getTenantId());
+        }
+
+        if (StringUtils.isNotBlank(taxPeriodCriteria.getService())) {
+            selectQuery.append(" and taxperiod.service = ? ");
+            preparedStatementValues.add(taxPeriodCriteria.getService());
+        }
+
+        if (StringUtils.isNotBlank(taxPeriodCriteria.getCode())) {
+            selectQuery.append(" and taxperiod.code = ? ");
+            preparedStatementValues.add(taxPeriodCriteria.getCode());
+        }
+    }
 }

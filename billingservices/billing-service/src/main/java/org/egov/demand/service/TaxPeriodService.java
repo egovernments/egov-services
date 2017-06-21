@@ -37,28 +37,43 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.egov.demand.repository.TaxPeriodRepository;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodResponse;
+import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+import java.util.List;
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Service
+public class TaxPeriodService {
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    public static final Logger LOGGER = LoggerFactory.getLogger(TaxPeriodService.class);
+
+    @Autowired
+    private TaxPeriodRepository taxPeriodRepository;
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
+    public TaxPeriodResponse searchTaxPeriods(final TaxPeriodCriteria taxPeriodCriteria, final RequestInfo requestInfo) {
+        LOGGER.info("-- TaxPeriodService searchTaxPeriods -- ");
+        final List<TaxPeriod> taxPeriods = taxPeriodRepository.searchTaxPeriods(taxPeriodCriteria);
+        return getTaxPeriodResponse(taxPeriods, requestInfo);
+    }
+
+    private TaxPeriodResponse getTaxPeriodResponse(final List<TaxPeriod> taxPeriods, final RequestInfo requestInfo) {
+        final TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
+        taxPeriodResponse.setTaxPeriods(taxPeriods);
+        taxPeriodResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
+        return taxPeriodResponse;
+    }
 }

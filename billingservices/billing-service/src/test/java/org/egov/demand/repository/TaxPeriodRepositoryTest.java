@@ -37,28 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.repository;
+
+import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.repository.querybuilder.TaxPeriodQueryBuilder;
+import org.egov.demand.repository.rowmapper.TaxPeriodRowMapper;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+@RunWith(SpringRunner.class)
+public class TaxPeriodRepositoryTest {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @InjectMocks
+    private TaxPeriodRepository taxPeriodRepository;
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    @Mock
+    private JdbcTemplate jdbcTemplate;
+
+    @Mock
+    private TaxPeriodRowMapper taxPeriodRowMapper;
+
+    @Mock
+    private TaxPeriodQueryBuilder taxPeriodQueryBuilder;
+
+    @Test
+    public void shouldSearchForTaxPeriods() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final TaxPeriodCriteria taxPeriodCriteria = Mockito.mock(TaxPeriodCriteria.class);
+        final String queryString = "testQuery";
+        when(taxPeriodQueryBuilder.prepareSearchQuery(taxPeriodCriteria, preparedStatementValues)).thenReturn(queryString);
+        final List<TaxPeriod> taxPeriods = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), taxPeriodRowMapper))
+                .thenReturn(taxPeriods);
+        assertTrue(taxPeriods.equals(taxPeriodRepository.searchTaxPeriods(taxPeriodCriteria)));
+    }
 }

@@ -37,28 +37,62 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.web.contract;
+package org.egov.demand.service;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.repository.TaxPeriodRepository;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodResponse;
+import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.TaxPeriod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TaxPeriodRequest {
+@RunWith(SpringRunner.class)
+public class TaxPeriodServiceTest {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @InjectMocks
+    private TaxPeriodService taxPeriodService;
 
-	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+    @Mock
+    private TaxPeriodRepository taxPeriodRepository;
+
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
+
+    @Test
+    public void shouldSearchTaxPeriods() {
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+
+        taxPeriods.add(getTaxPeriod());
+
+        TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
+        taxPeriodResponse.setTaxPeriods(taxPeriods);
+
+        TaxPeriodCriteria taxPeriodCriteria = TaxPeriodCriteria.builder().tenantId("ap").build();
+        when(taxPeriodRepository.searchTaxPeriods(any(TaxPeriodCriteria.class))).thenReturn(taxPeriods);
+        assertEquals(taxPeriodResponse, taxPeriodService.searchTaxPeriods(taxPeriodCriteria, new RequestInfo()));
+    }
+
+    private TaxPeriod getTaxPeriod() {
+        TaxPeriod taxPeriod = new TaxPeriod();
+        taxPeriod.setId("1");
+        taxPeriod.setTenantId("ap.kurnool");
+        taxPeriod.setService("Test Service");
+        taxPeriod.setCode("2017-2018-I");
+        taxPeriod.setFromDate(1478930l);
+        taxPeriod.setToDate(4783525l);
+        taxPeriod.setFinancialYear("2017-18");
+        return taxPeriod;
+    }
 }

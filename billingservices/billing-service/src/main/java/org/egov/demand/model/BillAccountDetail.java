@@ -1,15 +1,16 @@
 package org.egov.demand.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.egov.demand.model.enums.Purpose;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BillAccountDetail {
 
 	private String id;

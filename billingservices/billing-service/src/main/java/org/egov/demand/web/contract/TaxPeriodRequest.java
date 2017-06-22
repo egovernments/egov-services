@@ -60,5 +60,5 @@ public class TaxPeriodRequest {
 	private RequestInfo requestInfo;
 
 	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+	private List<TaxPeriod> taxPeriods = new ArrayList<>();
 }

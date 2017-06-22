@@ -45,21 +45,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 @Component
+@Slf4j
 public class BusinessServDetailQueryBuilder {
-
-    private static final Logger logger = LoggerFactory.getLogger(BusinessServDetailQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT * FROM EGBS_BUSINESS_SERVICE_DETAILS businessservice ";
 
     public String prepareSearchQuery(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        logger.info("prepareSearchQuery --> ");
+        log.info("prepareSearchQuery --> ");
         prepareWhereClause(selectQuery, preparedStatementValues, businessServiceDetailCriteria);
         // addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-        logger.info("Search business service details query from BusinessServDetailQueryBuilder -> " + selectQuery);
+        log.info("Search business service details query from BusinessServDetailQueryBuilder -> " + selectQuery);
         return selectQuery.toString();
     }
 

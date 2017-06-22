@@ -49,7 +49,7 @@ public class BillController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}*/
 		//billValidator.validateBillRequest(billRequest);
-		BillResponse billResponse = billService.generateBill(generateBillCriteria);
+		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfo);
 		
 		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
 	}

@@ -24,6 +24,7 @@ public class BillRequest   {
   @JsonProperty("RequestInfo")
   private RequestInfo requestInfo;
 
-  private List<Bill> billInfos = new ArrayList<>();
+  @JsonProperty("Bill")
+  private List<Bill> bill = new ArrayList<>();
 }
 

@@ -115,6 +115,7 @@ add(e)
   else{
     let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
     {
+      alert("Document Type Application Type Create successfully");
   },function(err) {
     if(!documentTypeApplicationType.applicationType && documentTypeApplicationType.documentTypeId){
       alert("Please Select Application type and Document Type");

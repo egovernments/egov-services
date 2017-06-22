@@ -128,6 +128,7 @@ class DocumentType extends Component {
       let response=Api.commonApiPost("wcms-masters", "documenttype", "_create", {},{DocumentType}).then(function(response)
       {
       // console.log(response);
+      alert("Document Type create successfully")
     },function(err) {
       if(!DocumentType.name){
         alert("Please enter Document type");

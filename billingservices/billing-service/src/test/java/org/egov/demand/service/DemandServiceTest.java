@@ -16,11 +16,14 @@ import org.egov.demand.model.Owner;
 import org.egov.demand.model.enums.Type;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.factory.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -41,8 +44,14 @@ public class DemandServiceTest {
 	@InjectMocks
 	private DemandService demandService;
 	
+	@Mock
+	private ResponseInfoFactory responseInfoFactory;
+	
 	@Test
 	public void methodShouldCreateDemand(){
+		
+		 final String demandsequence =  "seq_egbs_demand";
+		 final String demandDemanddetailSequnece = "seq_egbs_demanddetail";
 		
 		RequestInfo requestInfo = getRequestInfo();
 		
@@ -60,10 +69,14 @@ public class DemandServiceTest {
 		strings.add("1");
 		strings.add("2");
 		
-		when(sequenceGenService.getIds(demands.size(),applicationProperties.getDemandSeqName())).thenReturn(strings);
-		when(sequenceGenService.getIds(details.size(),applicationProperties.getDemandDetailSeqName())).thenReturn(strings);
+		when(applicationProperties.getDemandSeqName()).thenReturn(demandsequence);
+		when(applicationProperties.getDemandDetailSeqName()).thenReturn(demandDemanddetailSequnece);
+		when(sequenceGenService.getIds(demands.size(),demandsequence)).thenReturn(strings);
+		when(sequenceGenService.getIds(details.size(),demandDemanddetailSequnece)).thenReturn(strings);
 		
-		assertEquals(demandService.create(demandRequest), demands);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
+		
+		assertEquals(demandService.create(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
 	}
 	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {

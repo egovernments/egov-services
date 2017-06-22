@@ -19,6 +19,7 @@ import org.egov.demand.model.enums.Type;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -54,14 +54,12 @@ public class DemandControllerTest {
 		demands.add(demand);
 		DemandRequest demandRequest = new DemandRequest(requestInfo, demands);
 		System.err.println(demandRequest);
-
+		
 		//when(demandService.create(any(DemandRequest.class))).thenReturn(demands);
 		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class)))
 		//.thenReturn(getResponseInfo(requestInfo));
 
-		 when(demandService.create(demandRequest)).thenReturn(demands);
-		 when(responseInfoFactory.getResponseInfo(requestInfo,HttpStatus.CREATED))
-		 	.thenReturn(getResponseInfo(requestInfo));
+		 when(demandService.create(demandRequest)).thenReturn(new DemandResponse( getResponseInfo(requestInfo),demands));
 
 		mockMvc.perform(post("/demand/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())

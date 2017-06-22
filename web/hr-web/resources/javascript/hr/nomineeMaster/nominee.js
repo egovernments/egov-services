@@ -233,7 +233,7 @@ class Nominee extends React.Component{
 
        if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Nominee");
 
-       $('body').on("change", "#dateOfBirth", function(e) {
+       $('body').on('changeDate', "#dateOfBirth", function(e) {
           _this.setState({
              nomineeSet: {
                  ..._this.state.nomineeSet,
@@ -671,23 +671,23 @@ class Nominee extends React.Component{
                         <div className="row">
                             <div className="col-sm-6 label-text">
                                 <label for="">Employee Code</label>
-                                </div>
+                                  </div>
                                     <div className="col-sm-6">
-                                    <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
-                                    onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}} disabled/>
+                                      <input type="text" name="code" id="code" value={allNomineeValue.employeeid.code}
+                                      onChange={(e)=>{handleChangeThreeLevel(e,"allNomineeValue","employeeid","code")}} disabled/>
                                     </div>
-                              </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     {showCustomFieldsTable()}
                  &nbsp;&nbsp;
                   <div className="text-center">
                         {showActionButton()} &nbsp;&nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
-                </div>
-                </div>
-                </form>
+              </div>
             </div>
+          </form>
+        </div>
     );
   }
 }

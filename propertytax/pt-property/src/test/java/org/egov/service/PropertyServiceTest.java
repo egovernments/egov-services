@@ -27,16 +27,20 @@ import org.egov.models.RoofTypeResponse;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
+import org.egov.models.WallType;
+import org.egov.models.WallTypeRequest;
+import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.services.Masterservice;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,7 +48,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = { PtPropertyApplication.class })
-//@PropertySource(value="classpath:applicationTest.properties")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PropertyServiceTest {
 
 	@Autowired
@@ -105,7 +109,7 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void updateRoofType() {
+	public void modifyRoofType() {
 		String tenantId = "123";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<RoofType> roofTypes = new ArrayList<>();
@@ -213,34 +217,7 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void searchWoodType() {
-
-		String tenantId = "1234";
-		String name = "Maple Wood Type";
-		String code = "256";
-		String nameLocal = "Maple";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
-		RequestInfo requestInfo = getRequestInfoObject();
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		try {
-			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
-					new Integer[] { woodId }, name, code, nameLocal, pageSize, offset);
-
-			if (woodTypeResponse.getWoodTypes().size() == 0)
-				assertTrue(false);
-
-			assertTrue(true);
-
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-
-	}
-
-	@Test
-	public void updateWoodType() {
+	public void modifyWoodType() {
 
 		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -282,6 +259,35 @@ public class PropertyServiceTest {
 
 	}
 
+	
+	@Test
+	public void searchWoodType() {
+
+		String tenantId = "1234";
+		String name = "Maple Wood Type";
+		String code = "256";
+		String nameLocal = "Maple";
+		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+		RequestInfo requestInfo = getRequestInfoObject();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		try {
+			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
+					new Integer[] { woodId }, name, code, nameLocal, pageSize, offset);
+
+			if (woodTypeResponse.getWoodTypes().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	
 	@Test
 	public void createFloorTypeTest() {
 
@@ -323,37 +329,9 @@ public class PropertyServiceTest {
 		}
 
 	}
-
+	
 	@Test
-	public void searchFloorType() {
-
-		String tenantId = "1234";
-		String name = "Tile Flooring";
-		String code = "256";
-		String nameLocal = "Tile";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
-
-		RequestInfo requestInfo = getRequestInfoObject();
-
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-
-		try {
-			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
-					new Integer[] { floorId }, name, code, nameLocal, pageSize, offset);
-
-			if (floorTypeResponse.getFloorTypes().size() == 0)
-				assertTrue(false);
-			assertTrue(true);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-
-	}
-
-	@Test
-	public void updateFloorType() {
+	public void modifyFloorType() {
 		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<FloorType> floorTypes = new ArrayList<>();
@@ -394,6 +372,36 @@ public class PropertyServiceTest {
 		}
 
 	}
+
+	@Test
+	public void searchFloorType() {
+
+		String tenantId = "1234";
+		String name = "Tile Flooring";
+		String code = "256";
+		String nameLocal = "Tile";
+		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+
+		RequestInfo requestInfo = getRequestInfoObject();
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		try {
+			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
+					new Integer[] { floorId }, name, code, nameLocal, pageSize, offset);
+
+			if (floorTypeResponse.getFloorTypes().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	
 
 	/**
 	 * Description : Test case for creating Occuapancy master
@@ -455,7 +463,7 @@ public class PropertyServiceTest {
 	 */
 
 	@Test
-	public void updateOccuapancyMaster() throws Exception {
+	public void modifyOccuapancyMaster() throws Exception {
 		try {
 
 			String tenantId = "default";
@@ -594,7 +602,7 @@ public class PropertyServiceTest {
 	 */
 
 	@Test
-	public void updatePropertyTypeMaster() throws Exception {
+	public void modifyPropertyTypeMaster() throws Exception {
 		try {
 
 			String tenantId = "default";
@@ -693,12 +701,10 @@ public class PropertyServiceTest {
 			Department master = new Department();
 
 			AuditDetails auditDetails = new AuditDetails();
-
 			auditDetails.setCreatedBy("Anil");
 			auditDetails.setLastModifiedBy("Anil");
 			auditDetails.setCreatedTime((long) 564644560);
 			auditDetails.setLastModifiedTime((long) 564644560);
-
 			master.setTenantId("default");
 			master.setCategory("software");
 			master.setName("anil");
@@ -733,7 +739,7 @@ public class PropertyServiceTest {
 	 */
 
 	@Test
-	public void updateDepartmentMaster() throws Exception {
+	public void modifyDepartmentMaster() throws Exception {
 		try {
 
 			String tenantId = "default";
@@ -770,7 +776,7 @@ public class PropertyServiceTest {
 			assertTrue(false);
 		}
 	}
-
+	
 	/**
 	 * * Description : test case for searching department master api
 	 * 
@@ -810,46 +816,47 @@ public class PropertyServiceTest {
 		}
 	}
 
+
 	@Test
 	public void createUsageMasterTest() {
 
-		String tenantId = "default";
-
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("emp");
-		requestInfo.setVer("1.0");
-		requestInfo.setTs(new Long(122366));
-		requestInfo.setDid("1");
-		requestInfo.setKey("yyyykey");
-		requestInfo.setMsgId("20170310130900");
-		requestInfo.setRequesterId("yosadhara");
-		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
-
-		List<UsageMaster> usageMasters = new ArrayList<>();
-
-		UsageMaster usageMaster = new UsageMaster();
-		usageMaster.setTenantId("default");
-		usageMaster.setName("Yoyo");
-		usageMaster.setCode("1234");
-		usageMaster.setNameLocal("test_namelocal");
-		usageMaster.setDescription("test_description");
-
-		long createdTime = new Date().getTime();
-
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("yosadhara");
-		auditDetails.setLastModifiedBy("yosadhara");
-		auditDetails.setCreatedTime(createdTime);
-		auditDetails.setLastModifiedTime(createdTime);
-
-		usageMaster.setAuditDetails(auditDetails);
-		usageMasters.add(usageMaster);
-
-		UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
-		usageMasterRequest.setUsageMasters(usageMasters);
-		usageMasterRequest.setRequestInfo(requestInfo);
-
 		try {
+			String tenantId = "default";
+
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("yyyykey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+
+			List<UsageMaster> usageMasters = new ArrayList<>();
+
+			UsageMaster usageMaster = new UsageMaster();
+			usageMaster.setTenantId("default");
+			usageMaster.setName("Yoyo");
+			usageMaster.setCode("1234");
+			usageMaster.setNameLocal("test_namelocal");
+			usageMaster.setDescription("test_description");
+
+			long createdTime = new Date().getTime();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+
+			usageMaster.setAuditDetails(auditDetails);
+			usageMasters.add(usageMaster);
+
+			UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
+			usageMasterRequest.setUsageMasters(usageMasters);
+			usageMasterRequest.setRequestInfo(requestInfo);
+
 			UsageMasterResponse response = masterService.createUsageMaster(tenantId, usageMasterRequest);
 
 			if (response.getUsageMasters().size() == 0)
@@ -862,53 +869,185 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void updateUsageMasterTest() throws Exception {
+	public void modifyUsageMasterTest() throws Exception {
+		try {
+			String tenantId = "default";
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 
-		String tenantId = "default";
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("emp");
-		requestInfo.setVer("1.0");
-		requestInfo.setTs(new Long(122366));
-		requestInfo.setDid("1");
-		requestInfo.setKey("abcdkey");
-		requestInfo.setMsgId("20170310130900");
-		requestInfo.setRequesterId("yosadhara");
-		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+			List<UsageMaster> usageMasters = new ArrayList<>();
 
-		List<UsageMaster> usageMasters = new ArrayList<>();
+			UsageMaster usageMaster = new UsageMaster();
+			usageMaster.setTenantId("default");
+			usageMaster.setName("Yoyo");
+			usageMaster.setCode("1234");
+			usageMaster.setNameLocal("update_namelocal");
+			usageMaster.setDescription("update_description");
 
-		UsageMaster usageMaster = new UsageMaster();
-		usageMaster.setTenantId("default");
-		usageMaster.setName("Yoyo");
-		usageMaster.setCode("1234");
-		usageMaster.setNameLocal("update_namelocal");
-		usageMaster.setDescription("update_description");
+			long createdTime = new Date().getTime();
 
-		long createdTime = new Date().getTime();
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
 
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("yosadhara");
-		auditDetails.setLastModifiedBy("yosadhara");
-		auditDetails.setCreatedTime(createdTime);
-		auditDetails.setLastModifiedTime(createdTime);
+			usageMaster.setAuditDetails(auditDetails);
+			usageMasters.add(usageMaster);
 
-		usageMaster.setAuditDetails(auditDetails);
-		usageMasters.add(usageMaster);
+			UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
+			usageMasterRequest.setUsageMasters(usageMasters);
+			usageMasterRequest.setRequestInfo(requestInfo);
 
-		UsageMasterRequest usageMasterRequest = new UsageMasterRequest();
-		usageMasterRequest.setUsageMasters(usageMasters);
-		usageMasterRequest.setRequestInfo(requestInfo);
+			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(tenantId, Long.valueOf(usageId),
+					usageMasterRequest);
 
-		UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(tenantId, Long.valueOf(usageId),
-				usageMasterRequest);
-
-		if (usageMasterResponse.getUsageMasters().size() == 0)
-			assertTrue(false);
-
-		assertTrue(true);
+			if (usageMasterResponse.getUsageMasters().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception ex) {
+			assert (false);
+		}
 	}
 
+	
+	@Test
+	public void createWallTypeTest() {
+		try {
+			String tenantId = "default";
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("yyyykey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+			List<WallType> wallTypes = new ArrayList<>();
+			WallType wallType = new WallType();
+			wallType.setTenantId("default");
+			wallType.setName("Yoyo");
+			wallType.setCode("1234");
+			wallType.setNameLocal("test_namelocal");
+			wallType.setDescription("test_description");
+			long createdTime = new Date().getTime();
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+			wallType.setAuditDetails(auditDetails);
+			wallTypes.add(wallType);
+			WallTypeRequest wallTypeRequest = new WallTypeRequest();
+			wallTypeRequest.setWallTypes(wallTypes);
+			wallTypeRequest.setRequestInfo(requestInfo);
 
+			WallTypeResponse wallTypeResponse;
+
+			wallTypeResponse = masterService.createWallTypeMaster(tenantId, wallTypeRequest);
+
+			if (wallTypeResponse.getWallTypes().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void modifyWallTypeTest() {
+
+		try {
+			long id = 1;
+			String tenantId = "default";
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("rajesh");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+
+			List<WallType> wallTypes = new ArrayList<>();
+
+			WallType wallType = new WallType();
+			wallType.setTenantId("default");
+			wallType.setName("Yoyo");
+			wallType.setCode("1234");
+			wallType.setNameLocal("test_namelocal");
+			wallType.setDescription("test_description");
+
+			long createdTime = new Date().getTime();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("yosadhara");
+			auditDetails.setLastModifiedBy("yosadhara");
+			auditDetails.setCreatedTime(createdTime);
+			auditDetails.setLastModifiedTime(createdTime);
+
+			wallType.setAuditDetails(auditDetails);
+			wallTypes.add(wallType);
+
+			WallTypeRequest wallTypeRequest = new WallTypeRequest();
+			wallTypeRequest.setWallTypes(wallTypes);
+			wallTypeRequest.setRequestInfo(requestInfo);
+			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(tenantId, id, wallTypeRequest);
+			if (wallTypeResponse.getWallTypes().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	@Test
+	public void searchWallTypeTest() {
+		try {
+			String tenantId = "default";
+			Integer[] ids = new Integer[] { 1 };
+			String name = "Yoyo";
+			String code = "1234";
+			String nameLocal = "test_namelocal";
+			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs(new Long(122366));
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("yosadhara");
+			requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+
+			WallTypeResponse wallTypeResponse = masterService.getWallTypeMaster(requestInfo, tenantId, ids, name, code,
+					nameLocal, pageSize, offset);
+			if (wallTypeResponse.getWallTypes().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
 
 	private RequestInfo getRequestInfoObject() {
 		RequestInfo requestInfo = new RequestInfo();

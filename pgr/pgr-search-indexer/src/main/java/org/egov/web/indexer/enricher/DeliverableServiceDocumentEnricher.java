@@ -6,7 +6,7 @@ import org.egov.web.indexer.contract.SevaRequest;
 import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
 import org.springframework.stereotype.Service;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class DeliverableServiceDocumentEnricher implements ServiceRequestDocumentEnricher {

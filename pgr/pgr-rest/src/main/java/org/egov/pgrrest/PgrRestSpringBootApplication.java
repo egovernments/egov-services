@@ -2,6 +2,7 @@ package org.egov.pgrrest;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pgr.common.repository.ComplaintConfigurationRepository;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
@@ -12,6 +13,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -60,6 +62,7 @@ public class PgrRestSpringBootApplication {
 
 	private TransportClient client;
 
+	@Autowired
 	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
 	@PostConstruct
@@ -88,8 +91,15 @@ public class PgrRestSpringBootApplication {
     }
 
     @Bean
-    public EmployeeRepository employeeRepository(RestTemplate restTemplate, @Value("${hremployee.host}") String employeeHostName) {
+    public EmployeeRepository employeeRepository(RestTemplate restTemplate,
+                                                 @Value("${hremployee.host}") String employeeHostName) {
 	    return new EmployeeRepository(restTemplate, employeeHostName);
+    }
+
+    @Bean
+    public ComplaintConfigurationRepository complaintConfigurationRepository(
+        RestTemplate restTemplate, @Value("${pgrmaster.host}") String pgrMasterHost) {
+        return new ComplaintConfigurationRepository(restTemplate, pgrMasterHost);
     }
 
 	@Bean

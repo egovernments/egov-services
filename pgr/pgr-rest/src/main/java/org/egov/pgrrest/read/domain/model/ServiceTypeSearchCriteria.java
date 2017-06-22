@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import org.egov.pgrrest.read.domain.exception.InvalidComplaintTypeSearchException;
+import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeSearchException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,13 +38,13 @@ public class ServiceTypeSearchCriteria {
 
     private void validateCategorySearchType() {
         if (getComplaintTypeSearch() == ServiceRequestTypeSearch.CATEGORY && Objects.isNull(categoryId)) {
-            throw new InvalidComplaintTypeSearchException(CATEGORY_ID_IS_NOT_PRESENT);
+            throw new InvalidServiceTypeSearchException(CATEGORY_ID_IS_NOT_PRESENT);
         }
     }
 
     private void validateSearchType() {
         if (KNOWN_SEARCH_TYPES.indexOf(complaintTypeSearch.toLowerCase()) < 0) {
-            throw new InvalidComplaintTypeSearchException(INVALID_KNOWN_TYPE);
+            throw new InvalidServiceTypeSearchException(INVALID_KNOWN_TYPE);
         }
     }
 

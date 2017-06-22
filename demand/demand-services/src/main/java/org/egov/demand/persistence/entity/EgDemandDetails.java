@@ -103,7 +103,7 @@ public class EgDemandDetails implements Serializable, Cloneable {
 	@Column(name = "amt_collected")
 	private BigDecimal amtCollected = BigDecimal.ZERO;
 	@OneToMany(mappedBy = "egdemandDetail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private transient Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
+	private Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
 	@Column(name = "amt_rebate")
 	private BigDecimal amtRebate = BigDecimal.ZERO;
 	@ManyToOne(fetch = FetchType.LAZY)

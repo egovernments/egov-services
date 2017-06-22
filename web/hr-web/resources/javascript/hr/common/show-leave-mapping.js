@@ -2,13 +2,19 @@ class ShowLeaveMapping extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      leaveTypeList:[]
+      leaveTypeList:[],designationList:[]
     }
+    this.setInitialState = this.setInitialState.bind(this);
+  }
+
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
 
   componentDidMount()
   {
+
     if(window.opener && window.opener.document) {
        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
        if(logo_ele && logo_ele[0]) {
@@ -23,7 +29,18 @@ class ShowLeaveMapping extends React.Component {
           leaveTypeList: res.LeaveAllotment
         })
       }
-    })
+    });
+    var count = 1, _state = {}, _this = this;
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
+    }
+
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("designationList", res);
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -45,7 +62,7 @@ class ShowLeaveMapping extends React.Component {
 
 
   render() {
-    let {leaveTypeList}=this.state;
+    let {leaveTypeList,designationList}=this.state;
 
     const renderAction=function(type,id){
       if (type==="update") {
@@ -66,6 +83,7 @@ class ShowLeaveMapping extends React.Component {
       return leaveTypeList.map((item,index)=>
       {
             return (<tr key={index}>
+                    <td data-label="designation">{getNameById(designationList,item.designation,"name")}</td>
                     <td data-label="leaveType">{item.leaveType.name}</td>
                     <td data-label="noOfDay">{item.noOfDays}</td>
                     <td data-label="action">
@@ -82,6 +100,7 @@ class ShowLeaveMapping extends React.Component {
         <table id="LeaveTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Designation</th>
                     <th>Leave Type</th>
                     <th>No of day</th>
                     <th>Action</th>

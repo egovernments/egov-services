@@ -20,6 +20,8 @@ public class AttributeDefinition {
     private String dataTypeDescription;
     private String description;
     private String url;
+    private List<String> roles;
+    private List<String> actions;
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgrrest.common.model.AttributeDefinition attributeDefinition) {
@@ -30,6 +32,8 @@ public class AttributeDefinition {
         this.dataTypeDescription = attributeDefinition.getDataTypeDescription();
         this.description=attributeDefinition.getDescription();
         this.url = attributeDefinition.getUrl();
+        this.roles = attributeDefinition.getRoleNames();
+        this.actions = attributeDefinition.getActionNames();
         this.attribValues = mapAttributeValues(attributeDefinition.getValues());
     }
 

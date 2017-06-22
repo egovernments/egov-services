@@ -104,7 +104,7 @@ add(e)
       tenantId:'default'
     }
     if(type == "Update"){
-      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_update/"+id, {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype/"+id, "_update", {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
       {
     },function(err) {
         alert(err);
@@ -116,7 +116,12 @@ add(e)
     let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
     {
   },function(err) {
+    if(!documentTypeApplicationType.applicationType && documentTypeApplicationType.documentTypeId){
+      alert("Please Select Application type and Document Type");
+    }
+    else{
       alert("Selected Document type and Application type already exist");
+    }
   });
 }
 }
@@ -138,7 +143,7 @@ add(e)
       const showActionButton=function() {
         if((!mode) ||mode==="Update")
         {
-          return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+          return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                                add("applicationType","documentTypeId","active")}} />
           )
         }

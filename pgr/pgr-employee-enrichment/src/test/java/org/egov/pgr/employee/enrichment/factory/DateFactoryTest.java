@@ -1,6 +1,6 @@
 package org.egov.pgr.employee.enrichment.factory;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.egov.pgr.employee.enrichment.DateConverter;
 import org.junit.Test;
 

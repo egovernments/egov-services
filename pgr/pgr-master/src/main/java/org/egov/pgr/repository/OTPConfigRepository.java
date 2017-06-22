@@ -84,9 +84,9 @@ public class OTPConfigRepository {
 		return false; 
 	}
 	
-	public List<OTPConfig> getAllOtpConfig(List<String> tenantId) {
-		LOGGER.info("Tenant ID Received ::" + tenantId);
-		final String queryStr = "SELECT tenantid, enabled FROM egpgr_otp_config " + constructQuery(tenantId);
+	public List<OTPConfig> getAllOtpConfig(List<String> tenantList) {
+		LOGGER.info("Tenant ID Received ::" + tenantList);
+		final String queryStr = "SELECT tenantid, enabled FROM egpgr_otp_config " + constructQuery(tenantList);
 		final List<OTPConfig> otpConfigs = jdbcTemplate.query(queryStr,
 				otpConfigMapper);
 		return otpConfigs;

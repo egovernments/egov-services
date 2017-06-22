@@ -13,15 +13,15 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
-import org.egov.models.IDSeqNotFoundException;
-import org.egov.models.IDSeqOverflowException;
-import org.egov.models.IdGenerationRequest;
-import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdRequest;
-import org.egov.models.IdResponse;
-import org.egov.models.InvalidIDFormatException;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.id.model.IDSeqNotFoundException;
+import org.egov.id.model.IDSeqOverflowException;
+import org.egov.id.model.IdGenerationRequest;
+import org.egov.id.model.IdGenerationResponse;
+import org.egov.id.model.IdRequest;
+import org.egov.id.model.IdResponse;
+import org.egov.id.model.InvalidIDFormatException;
+import org.egov.id.model.RequestInfo;
+import org.egov.id.model.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -51,7 +51,8 @@ public class IdGenerationService {
 	 * @return idGenerationResponse
 	 * @throws Exception
 	 */
-	public IdGenerationResponse generateIdResponse(IdGenerationRequest idGenerationRequest) throws Exception {
+	public IdGenerationResponse generateIdResponse(
+			IdGenerationRequest idGenerationRequest) throws Exception {
 
 		RequestInfo requestInfo = idGenerationRequest.getRequestInfo();
 		List<IdRequest> idRequests = idGenerationRequest.getIdRequests();
@@ -59,13 +60,15 @@ public class IdGenerationService {
 		IdGenerationResponse idGenerationResponse = new IdGenerationResponse();
 
 		for (IdRequest idRequest : idRequests) {
-			String generatedId = generateIdFromIdRequest(idRequest, requestInfo);
+			String generatedId = generateIdFromIdRequest(idRequest,
+					requestInfo);
 			IdResponse idResponse = new IdResponse();
 			idResponse.setId(generatedId);
 			idResponses.add(idResponse);
 			idGenerationResponse.setIdResponses(idResponses);
 		}
-		idGenerationResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		idGenerationResponse.setResponseInfo(responseInfoFactory
+				.createResponseInfoFromRequestInfo(requestInfo, true));
 
 		return idGenerationResponse;
 
@@ -79,7 +82,8 @@ public class IdGenerationService {
 	 * @return generatedId
 	 * @throws Exception
 	 */
-	private String generateIdFromIdRequest(IdRequest idRequest, RequestInfo requestInfo) throws Exception {
+	private String generateIdFromIdRequest(IdRequest idRequest,
+			RequestInfo requestInfo) throws Exception {
 
 		String generatedId = "";
 
@@ -100,7 +104,8 @@ public class IdGenerationService {
 	 * @return generatedId
 	 * @throws Exception
 	 */
-	private String getGeneratedId(IdRequest idRequest, RequestInfo requestInfo) throws Exception {
+	private String getGeneratedId(IdRequest idRequest, RequestInfo requestInfo)
+			throws Exception {
 		String IdFormat = getIdFormat(idRequest, requestInfo);
 		idRequest.setFormat(IdFormat);
 		String generatedId = getFormattedId(idRequest, requestInfo);
@@ -115,7 +120,8 @@ public class IdGenerationService {
 	 * @return idFormat
 	 * @throws Exception
 	 */
-	private String getIdFormat(IdRequest idRequest, RequestInfo requestInfo) throws Exception {
+	private String getIdFormat(IdRequest idRequest, RequestInfo requestInfo)
+			throws Exception {
 		// connection and prepared statement
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -128,7 +134,8 @@ public class IdGenerationService {
 			String tenantId = idRequest.getTenantId();
 			// select the id format from the id generation table
 			StringBuffer idSelectQuery = new StringBuffer();
-			idSelectQuery.append("SELECT format FROM id_generator ").append(" WHERE idname=? and tenantid=?");
+			idSelectQuery.append("SELECT format FROM id_generator ")
+					.append(" WHERE idname=? and tenantid=?");
 			pst = conn.prepareStatement(idSelectQuery.toString());
 			pst.setString(1, idName);
 			pst.setString(2, tenantId);
@@ -138,7 +145,8 @@ public class IdGenerationService {
 			} else {
 				// querying for the id format with idname
 				StringBuffer idNameQuery = new StringBuffer();
-				idNameQuery.append("SELECT format FROM id_generator ").append(" WHERE idname=?");
+				idNameQuery.append("SELECT format FROM id_generator ")
+						.append(" WHERE idname=?");
 				pst = conn.prepareStatement(idNameQuery.toString());
 				pst.setString(1, idName);
 				rs = pst.executeQuery();
@@ -163,7 +171,8 @@ public class IdGenerationService {
 	 * @throws Exception
 	 */
 
-	private String getFormattedId(IdRequest idRequest, RequestInfo requestInfo) throws Exception {
+	private String getFormattedId(IdRequest idRequest, RequestInfo requestInfo)
+			throws Exception {
 
 		String idFormat = idRequest.getFormat();
 		List<String> matchList = new ArrayList<String>();
@@ -175,9 +184,11 @@ public class IdGenerationService {
 		}
 		for (String attributeName : matchList) {
 			if (matchList.get(0) == attributeName) {
-				idFormat = idFormat.replace("[" + attributeName + "]", generateDateFormat(attributeName, requestInfo));
+				idFormat = idFormat.replace("[" + attributeName + "]",
+						generateDateFormat(attributeName, requestInfo));
 			} else if (matchList.get(matchList.size() - 1) == attributeName) {
-				idFormat = idFormat.replace("[" + attributeName + "]", generateRandomText(attributeName, requestInfo));
+				idFormat = idFormat.replace("[" + attributeName + "]",
+						generateRandomText(attributeName, requestInfo));
 			} else {
 				idFormat = idFormat.replace("[" + attributeName + "]",
 						generateSequenceNumber(attributeName, requestInfo));
@@ -194,14 +205,16 @@ public class IdGenerationService {
 	 * @param requestInfo
 	 * @return formattedDate
 	 */
-	private String generateDateFormat(String dateFormat, RequestInfo requestInfo) {
+	private String generateDateFormat(String dateFormat,
+			RequestInfo requestInfo) {
 		try {
 			Date date = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
 			String formattedDate = formatter.format(date);
 			return formattedDate;
 		} catch (Exception e) {
-			throw new InvalidIDFormatException(environment.getProperty("id.invalid.format"), requestInfo);
+			throw new InvalidIDFormatException(
+					environment.getProperty("id.invalid.format"), requestInfo);
 		}
 
 	}
@@ -220,7 +233,8 @@ public class IdGenerationService {
 		try {
 			Pattern.compile(regex);
 		} catch (Exception e) {
-			throw new InvalidIDFormatException(environment.getProperty("id.invalid.format"), requestInfo);
+			throw new InvalidIDFormatException(
+					environment.getProperty("id.invalid.format"), requestInfo);
 		}
 		Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(regex);
 		while (matcher.find()) {
@@ -242,7 +256,8 @@ public class IdGenerationService {
 	 * @param requestInfo
 	 * @return seqNumber
 	 */
-	private String generateSequenceNumber(String sequenceName, RequestInfo requestInfo) throws Exception {
+	private String generateSequenceNumber(String sequenceName,
+			RequestInfo requestInfo) throws Exception {
 
 		String sequenceSql = "SELECT nextval('" + sequenceName + "')";
 		// connection and prepared statement
@@ -262,14 +277,19 @@ public class IdGenerationService {
 			conn.setAutoCommit(true);
 		} catch (Exception e) {
 			if (rs == null) {
-				throw new IDSeqNotFoundException(environment.getProperty("id.sequence.notfound"), requestInfo);
+				throw new IDSeqNotFoundException(
+						environment.getProperty("id.sequence.notfound"),
+						requestInfo);
 			} else {
-				throw new IDSeqOverflowException(environment.getProperty("id.sequence.overflow"), requestInfo);
+				throw new IDSeqOverflowException(
+						environment.getProperty("id.sequence.overflow"),
+						requestInfo);
 			}
 		} finally {
 			conn.close();
 		}
-		StringBuilder seqNumber = new StringBuilder(String.format("%06d", seqId));
+		StringBuilder seqNumber = new StringBuilder(
+				String.format("%06d", seqId));
 		return seqNumber.toString();
 	}
 }

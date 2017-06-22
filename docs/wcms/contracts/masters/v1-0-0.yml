@@ -22,7 +22,6 @@
     contact:
       name: Rishi
       email: rishi@egovernments.org
-  host: phoenix-qa.egovernments.org
   schemes:
     - https
   basePath: '/v1/egov-wcms-masters/[API endpoint]'
@@ -97,11 +96,11 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
-  # PipeSize Type API
-    /pipesizetype/_create:
+  # PipeSize  API
+    /pipesize/_create:
       post:
-        summary: creates different types of allowed pipe size.
-        description: API to create pipe size.
+        summary: Create new pipe size.
+        description: API to create new pipe size.
         tags:
           - Pipe Size
         parameters:
@@ -110,18 +109,18 @@
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/PipeSizeTypeReq'
+              $ref: '#/definitions/PipeSizeReq'
         responses:
           '201':
             description: Pipe size created sucessfully.
             schema:
-              $ref: "#/definitions/PipeSizeTypesRes"
+              $ref: "#/definitions/PipeSizeRes"
           '400':
             description: Invalid input.
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /pipesizetype/{code}/_update:
+    /pipesize/{code}/_update:
       parameters:
        - $ref: "#/parameters/updateCode"
       post:
@@ -135,18 +134,18 @@
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/PipeSizeTypeReq'
+              $ref: '#/definitions/PipeSizeReq'
         responses:
           '200':
             description: Pipe size updated successfully.
             schema:
-              $ref: "#/definitions/PipeSizeTypesRes"
+              $ref: "#/definitions/PipeSizeRes"
           '400':
             description: Update Pipe Size failed.
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /pipesizetype/_search:
+    /pipesize/_search:
       post:
         summary: searches existing values
         tags:
@@ -156,14 +155,12 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-          - $ref: "#/parameters/sizeInInch"
           - $ref: "#/parameters/sizeInMilimeter"
         responses:
           200: 
             description: Successful response
             schema:
-              $ref: '#/definitions/PipeSizeTypesRes'
+              $ref: '#/definitions/PipeSizeRes'
           400:
             description: Invalid input
             schema:
@@ -755,11 +752,6 @@
       type: number
       description: Unique H.S.C pipe size in milli-meters.
   
-    sizeInInch:
-      name: sizeInInch
-      in: query
-      type: number
-      description: H.S.C pipe size in inches.
       
     propertyTypeCode:
       name: propertyTypeCode
@@ -1252,30 +1244,30 @@
         - name
         - tenantId
   
-  # PipeSize Type definitions
-    PipeSizeTypeReq:
+  # PipeSize definitions
+    PipeSizeReq:
       type: object
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        pipesize:
-          $ref: '#/definitions/PipeSizeType'
+        PipeSize:
+          $ref: '#/definitions/PipeSize'
       required:
         - RequestInfo
-        - pipesize
+        - PipeSize
 
-    PipeSizeTypesRes:
+    PipeSizeRes:
       type: object
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PipeSizeTypes:
+        PipeSize:
           type: array
           maximum: 20
           items:
-            $ref: '#/definitions/PipeSizeType'
+            $ref: '#/definitions/PipeSize'
   
-    PipeSizeType:
+    PipeSize:
       type: object
       properties:
         id:
@@ -1286,10 +1278,12 @@
           type: string
           description: unique code this can be assigned by user.
           maxLength: 64
-        name: 
-          type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
+        sizeInMilimeter:
+          type: number
+          description: Unique H.S.C pipe size in milli-meters.
+        sizeInInch:
+          type: number
+          description: H.S.C pipe size in inches.
         description: 
           type: string
           description: human readable description should be assigned by user.
@@ -1298,12 +1292,6 @@
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
-        sizeInMilimeter:
-          type: number
-          description: Unique H.S.C pipe size in milli-meters.
-        sizeInInch:
-          type: number
-          description: H.S.C pipe size in inches.
         tenantId:
           type: string
           description: Unique Identifier of the tenant   
@@ -1311,7 +1299,7 @@
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
-        - name
+        - sizeInMilimeter
         - tenantId
 
   # Category Type definitions
@@ -1320,11 +1308,11 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        category:
+        CategoryType:
           $ref: '#/definitions/CategoryType'
       required:
         - RequestInfo
-        - category
+        - CategoryType
     
     CategoryTypeRes:
       type: object

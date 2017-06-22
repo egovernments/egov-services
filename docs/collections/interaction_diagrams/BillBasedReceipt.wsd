@@ -35,6 +35,7 @@ ReceiptSvc->-Client: Create receipt response
 KafkaQSvc->ReceiptSvc: Persist receipt
 
 KafkaQSvc->WorkflowSvc: Initiate workflow
+KafkaQSvc->InstrumentSvc : Persist instrument
 KafkaQSvc->VoucherSvc: Post voucher in financials
 KafkaQSvc->BillingSvc: Update demand system based on receipt date.
 KafkaQSvc->ESSvc: Push to elastic search

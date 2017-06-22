@@ -50,27 +50,25 @@ import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.MeterCostService;
-import org.egov.wcms.service.PipeSizeTypeService;
+import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.UsageTypeService;
-import org.egov.wcms.service.WaterConnectionService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.MeterCostRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.egov.wcms.web.contract.UsageTypeRequest;
-import org.egov.wcms.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +101,7 @@ public class WaterMasterConsumer {
     private DonationService donationService;
 
     @Autowired
-    private PipeSizeTypeService pipeSizeService;
+    private PipeSizeService pipeSizeService;
 
     @Autowired
     private PropertyCategoryService propertyCategoryService;
@@ -124,8 +122,6 @@ public class WaterMasterConsumer {
     @Autowired
     private SourceTypeService waterSourceTypeService;
     
-    @Autowired
-    private WaterConnectionService waterConnectionService; 
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.usagetype.create.name}","${kafka.topics.usagetype.update.name}",
             
@@ -139,7 +135,8 @@ public class WaterMasterConsumer {
             "${kafka.topics.propertypipesize.create.name}", "${kafka.topics.propertypipesize.update.name}",
             "${kafka.topics.sourcetype.create.name}", "${kafka.topics.sourcetype.update.name}",
             "${kafka.topics.supplytype.create.name}",
-            "${kafka.topics.supplytype.update.name}"})
+            "${kafka.topics.supplytype.update.name}"
+})
 
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
@@ -158,9 +155,9 @@ public class WaterMasterConsumer {
             else if (record.topic().equals(applicationProperties.getUpdateCategoryTopicName()))
                 categoryService.update(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))
-                pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
+                pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
-                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
+                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeRequest.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
             	propUsageTypeService.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
@@ -178,9 +175,9 @@ public class WaterMasterConsumer {
             else if (record.topic().equals(applicationProperties.getUpdatePropertyUsageTopicName()))
                 propUsageTypeService.update(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if (record.topic().equals(applicationProperties.getCreatePropertyPipeSizeTopicName()))
-                propertyPipeSizeService.create(objectMapper.readValue(record.value(), PropertyTypePipeSizeTypeRequest.class));
+                propertyPipeSizeService.create(objectMapper.readValue(record.value(), PropertyTypePipeSizeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdatePropertyPipeSizeTopicName()))
-                propertyPipeSizeService.update(objectMapper.readValue(record.value(), PropertyTypePipeSizeTypeRequest.class));
+                propertyPipeSizeService.update(objectMapper.readValue(record.value(), PropertyTypePipeSizeRequest.class));
             else if(record.topic().equals(applicationProperties.getCreateDocumentTypeApplicationTypeTopicName()))
             	docTypeApplTypeService.create(objectMapper.readValue(record.value(), DocumentTypeApplicationTypeReq.class));
             else if (record.topic().equals(applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName()))
@@ -195,11 +192,5 @@ public class WaterMasterConsumer {
             e.printStackTrace();
         }
         
-        try {
-            if (record.topic().equals(applicationProperties.getCreateNewConnectionTopicName()))
-            	waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
     }
 }

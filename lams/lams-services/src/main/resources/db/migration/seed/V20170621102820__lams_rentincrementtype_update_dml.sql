@@ -1,0 +1,4 @@
+INSERT INTO eglams_rentincrementtype (id, type, asset_category, flat_amount, fromdate, todate, percentage, created_by, last_modified_by, created_date, last_modified_date,tenant_id) VALUES (3, 'type3', 1, 4500.00, '2017-06-20 00:00:00', '2018-12-05 00:00:00', 25.00, '61', null, '2017-06-20 00:00:00', NULL,'ap.kurnool');
+INSERT INTO eglams_rentincrementtype (id, type, asset_category, flat_amount, fromdate, todate, percentage, created_by, last_modified_by, created_date, last_modified_date,tenant_id) VALUES (4, 'type4', 1, 5500.00, '2017-06-20 00:00:00', '2018-12-05 00:00:00', 33.00, '61', null, '2017-06-20 00:00:00', NULL,'ap.kurnool');
+UPDATE eglams_rentincrementtype SET percentage = 10.00 WHERE id = 1;
+UPDATE eglams_rentincrementtype SET percentage = 20.00 WHERE id = 2;

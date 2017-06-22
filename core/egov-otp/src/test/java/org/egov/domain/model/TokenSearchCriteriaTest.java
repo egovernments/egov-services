@@ -1,6 +1,6 @@
 package org.egov.domain.model;
 
-import org.egov.domain.InvalidTokenSearchCriteriaException;
+import org.egov.domain.exception.InvalidTokenSearchCriteriaException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

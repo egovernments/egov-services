@@ -9,8 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-
 @Service
 public class PositionRepository {
 
@@ -25,7 +23,8 @@ public class PositionRepository {
     }
 
     public Position getDesignationIdForAssignee(String tenantId, long assigneeId) {
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         PositionsResponse positions = restTemplate.postForObject(url, request,PositionsResponse.class,assigneeId,tenantId);
         return positions.toDomain();

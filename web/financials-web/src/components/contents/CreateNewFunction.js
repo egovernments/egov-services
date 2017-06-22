@@ -11,6 +11,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Api from '../../api/financialsApi';
 
+//declare css in common file and include here
 const styles = {
     errorStyle: {
       color: red500,
@@ -92,6 +93,7 @@ class NewFunction extends Component {
       return(
         <div className="NewFunction">
             <Card>
+              //header style should be defined and reused
                 <CardHeader
                     title={<strong style={{color:brown500}}>Function</strong>}
                 />
@@ -100,6 +102,7 @@ class NewFunction extends Component {
                           <CardText>
                               <Grid>
                                   <Row>
+                                    //xs md should be commonly defined and used
                                     <Col xs={12} md={6}>
                                       <TextField errorText={fieldErrors.name
                                         ? fieldErrors.name
@@ -135,7 +138,7 @@ class NewFunction extends Component {
                                               value: value
                                             }
                                           };
-                                          handleChange(e, "parentType", false, "")}} floatingLabelText="Parent Type " >
+                                          handleChange(e, "parentType", false, "")}} floatingLabelText="Parent Type" >
                                         <MenuItem value={1} primaryText="Housing"/>
                                         <MenuItem value={2} primaryText="Welfare of Children"/>
                                         <MenuItem value={3} primaryText="Welfare of Aged"/>
@@ -172,6 +175,7 @@ class NewFunction extends Component {
     }
 
 }
+//move to common page and resuse these functions
 const mapStateToProps = state => ({NewFunction: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({

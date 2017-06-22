@@ -1,8 +1,8 @@
 package org.egov.id.api;
 
+import org.egov.id.model.IdGenerationRequest;
+import org.egov.id.model.IdGenerationResponse;
 import org.egov.id.service.IdGenerationService;
-import org.egov.models.IdGenerationRequest;
-import org.egov.models.IdGenerationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +29,12 @@ public class IdGenerationController {
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, path = "_genearate")
-	public IdGenerationResponse generateIdResponse(@RequestBody IdGenerationRequest idGenerationRequest)
+	public IdGenerationResponse generateIdResponse(
+			@RequestBody IdGenerationRequest idGenerationRequest)
 			throws Exception {
 
-		IdGenerationResponse idGenerationResponse = idGenerationService.generateIdResponse(idGenerationRequest);
+		IdGenerationResponse idGenerationResponse = idGenerationService
+				.generateIdResponse(idGenerationRequest);
 
 		return idGenerationResponse;
 	}

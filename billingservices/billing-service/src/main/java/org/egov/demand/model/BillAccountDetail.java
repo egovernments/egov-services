@@ -1,19 +1,24 @@
 package org.egov.demand.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.egov.demand.model.enums.Purpose;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BillAccountDetail {
 
-	private Long id;
+	private String id;
 
+	private String tenantId;
+
+	private String billDetail;
+	
 	private String glcode;
 
 	private Integer order;
@@ -26,5 +31,5 @@ public class BillAccountDetail {
 
 	private Boolean isActualDemand;
 
-	private List<Purpose> purpose = new ArrayList<>();
+	private Purpose purpose ;
 }

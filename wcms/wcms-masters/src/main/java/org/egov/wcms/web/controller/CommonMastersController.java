@@ -44,8 +44,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.BillingType;
-import org.egov.wcms.model.enums.ConnectionType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,20 +59,5 @@ public class CommonMastersController {
         return applicationType;
     }
 
-    @RequestMapping(value = "/_getconnectiontypes")
-    public Map<String, ConnectionType> getConnectionTypeEnum() {
-        final Map<String, ConnectionType> connectionType = new HashMap<>();
-        for (final ConnectionType key : ConnectionType.values())
-            connectionType.put(key.name(), key);
-        return connectionType;
-    }
-
-    @RequestMapping(value = "/_getbillingtypes")
-    public Map<String, BillingType> getBillingTypeEnum() {
-        final Map<String, BillingType> billingType = new HashMap<>();
-        for (final BillingType key : BillingType.values())
-            billingType.put(key.name(), key);
-        return billingType;
-    }
-
+   
 }

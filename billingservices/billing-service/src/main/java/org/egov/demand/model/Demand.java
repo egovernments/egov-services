@@ -2,7 +2,10 @@ package org.egov.demand.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.egov.common.contract.request.User;
+
+import javax.validation.constraints.NotNull;
+import org.egov.demand.model.enums.Type;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,21 +15,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Demand {
 
-	private Long id;
+	private String id;
 
+	@NotNull
 	private String tenantId;
 
+	@NotNull
 	private String consumerCode;
 
+	@NotNull
 	private String consumerType;
 
+	@NotNull
 	private String businessService;
 
-	private User owner;
+	@NotNull
+	private Owner owner;
 
+	@NotNull
 	private Long taxPeriodFrom;
 
+	@NotNull
 	private Long taxPeriodTo;
+	
+	@NotNull
+	private Type type;
 
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 

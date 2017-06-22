@@ -1,6 +1,6 @@
 package org.egov.pgr.employee.enrichment.model;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.employee.enrichment.DateConverter;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.junit.Test;

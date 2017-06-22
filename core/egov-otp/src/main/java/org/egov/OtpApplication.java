@@ -58,7 +58,6 @@ public class OtpApplication {
 
 	@Bean
 	public ObjectMapper getObjectMapper() {
-
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		return objectMapper;

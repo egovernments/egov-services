@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS eg_wf_states;
-DROP TABLE IF EXISTS eg_wf_state_history;
+DROP TABLE IF EXISTS cs_wf_states;
+DROP TABLE IF EXISTS cs_wf_state_history;
 
-DROP SEQUENCE IF EXISTS seq_eg_wf_state_history;
-DROP SEQUENCE IF EXISTS seq_eg_wf_states;
+DROP SEQUENCE IF EXISTS seq_cs_wf_state_history;
+DROP SEQUENCE IF EXISTS seq_cs_wf_states;

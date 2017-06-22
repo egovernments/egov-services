@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.egov.pgr.common.model.OtpValidationRequest;
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
@@ -46,7 +47,12 @@ public class ServiceRequest {
     private Long assignee;
     private String state;
     private String citizenFeedback;
+    private String otpReference;
     private List<AttributeEntry> attributeEntries;
+
+    public boolean isComplaintType() {
+        return serviceRequestType.isComplaintType();
+    }
 
     public List<AttributeEntry> getAttributeEntries() {
         return attributeEntries == null ? Collections.emptyList() : attributeEntries;
@@ -113,7 +119,7 @@ public class ServiceRequest {
     }
 
     public boolean isProcessingFeePresentForCreation(){
-        return  modifyServiceRequest == false && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey()));
+        return !modifyServiceRequest && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey()));
     }
 
 	public boolean descriptionLength() {
@@ -128,5 +134,17 @@ public class ServiceRequest {
 
 	public void maskUserDetails(){
         getRequester().maskMobileAndEmailDetails();
+    }
+
+    public OtpValidationRequest getOtpValidationRequest() {
+	    return OtpValidationRequest.builder()
+            .mobileNumber(requester.getMobile())
+            .otpReference(otpReference)
+            .tenantId(tenantId)
+            .build();
+    }
+
+    public void setServiceType(boolean isComplaintType) {
+        serviceRequestType.setServiceType(isComplaintType);
     }
 }

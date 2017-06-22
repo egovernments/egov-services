@@ -9,7 +9,8 @@ import static java.lang.String.format;
 
 @Service
 public class OtpSMSRepository {
-    private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
+    private static final String SMS_REGISTER_OTP_MESSAGE =
+        "Dear Citizen, to register the complaint, the OTP is %s.";
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
     private String smsTopic;
 

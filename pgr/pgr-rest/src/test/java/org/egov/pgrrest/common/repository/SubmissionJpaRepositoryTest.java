@@ -64,4 +64,16 @@ public class SubmissionJpaRepositoryTest {
         assertEquals("requester add", actualSubmission.getRequesterAddress());
     }
 
+    @Test
+    @Sql(scripts = {
+        "/sql/clearSubmissions.sql",
+        "/sql/insertSubmissions.sql"
+    })
+    public void test_should_retrieve_assigneeid_for_given_crn() {
+        final Long assigneeId = submissionJpaRepository.findAssigneeByCrnAndTenantId("crn1", "tenant1");
+
+        assertEquals(Long.valueOf(3), assigneeId);
+    }
+
+
 }

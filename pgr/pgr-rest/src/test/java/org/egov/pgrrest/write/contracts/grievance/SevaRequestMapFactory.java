@@ -35,7 +35,6 @@ public class SevaRequestMapFactory {
         final HashMap<String, Object> userInfoMap = new HashMap<>();
         userInfoMap.put("type", "CITIZEN");
         userInfoMap.put("id", "3");
-        requestInfoMap.put("requesterId", "2");
         requestInfoMap.put("userInfo", userInfoMap);
         sevaRequestMap.put("RequestInfo", requestInfoMap);
         return sevaRequestMap;

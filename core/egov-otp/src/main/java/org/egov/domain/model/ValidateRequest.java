@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.egov.domain.InvalidTokenValidateRequestException;
+import org.egov.domain.exception.InvalidTokenValidateRequestException;
 
 import static org.springframework.util.StringUtils.isEmpty;
 

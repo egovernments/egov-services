@@ -39,11 +39,12 @@
  */
 package org.egov.wcms.web.contract;
 
-import java.util.List;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.PipeSize;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -52,33 +53,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class PipeSizeTypeGetRequest {
-
-    private List<Long> id;
-
-    private String code;
-
-    private double sizeInMilimeter;
-
-    private Boolean active;
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class PipeSizeRequest {
 
     @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
+    @JsonProperty("PipeSize")
+    private PipeSize pipeSize;
 
 }

@@ -39,10 +39,11 @@
  */
 package org.egov.wcms.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.PropertyTypePipeSize;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,12 +60,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class PropertyTypePipeSizeTypeRequest {
+public class PropertyTypePipeSizeResponse {
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
     @JsonProperty("PropertyPipeSize")
-    private PropertyTypePipeSizeType propertyPipeSize;
+    private List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
 
 }

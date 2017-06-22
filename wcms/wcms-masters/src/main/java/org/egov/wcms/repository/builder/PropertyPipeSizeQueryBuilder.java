@@ -41,7 +41,7 @@ package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -56,7 +56,7 @@ public class PropertyPipeSizeQueryBuilder {
             + "propertypipesize.tenantId as propertypipesize_tenantId "
             + "FROM egwtr_property_pipe_size propertypipesize ";
 
-    public String getQuery(final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest,
+    public String getQuery(final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest,
             final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, propertyPipeSizeGetRequest);
@@ -67,7 +67,7 @@ public class PropertyPipeSizeQueryBuilder {
 
     @SuppressWarnings("unchecked")
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
+            final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
 
         if (propertyPipeSizeGetRequest.getId() == null && propertyPipeSizeGetRequest.getPropertyType() == null &&
                 propertyPipeSizeGetRequest.getPipeSizeType() == null && propertyPipeSizeGetRequest.getActive() == null
@@ -108,7 +108,7 @@ public class PropertyPipeSizeQueryBuilder {
     }
 
     private void addOrderByClause(final StringBuilder selectQuery,
-            final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
+            final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         final String sortBy = propertyPipeSizeGetRequest.getSortBy() == null ? "propertypipesize.id"
                 : "propertypipesize." + propertyPipeSizeGetRequest.getSortBy();
         final String sortOrder = propertyPipeSizeGetRequest.getSortOrder() == null ? "DESC"

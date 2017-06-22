@@ -50,7 +50,7 @@ import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.MeterCostService;
-import org.egov.wcms.service.PipeSizeTypeService;
+import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
@@ -62,9 +62,9 @@ import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.MeterCostRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
@@ -101,7 +101,7 @@ public class WaterMasterConsumer {
     private DonationService donationService;
 
     @Autowired
-    private PipeSizeTypeService pipeSizeService;
+    private PipeSizeService pipeSizeService;
 
     @Autowired
     private PropertyCategoryService propertyCategoryService;
@@ -155,9 +155,9 @@ public class WaterMasterConsumer {
             else if (record.topic().equals(applicationProperties.getUpdateCategoryTopicName()))
                 categoryService.update(objectMapper.readValue(record.value(), CategoryTypeRequest.class));
             else if (record.topic().equals(applicationProperties.getCreatePipeSizetopicName()))
-                pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
+                pipeSizeService.create(objectMapper.readValue(record.value(), PipeSizeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdatePipeSizeTopicName()))
-                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeTypeRequest.class));
+                pipeSizeService.update(objectMapper.readValue(record.value(), PipeSizeRequest.class));
             else if(record.topic().equals(applicationProperties.getCreatePropertyUsageTopicName()))
             	propUsageTypeService.create(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if(record.topic().equals(applicationProperties.getCreateDonationTopicName()))
@@ -175,9 +175,9 @@ public class WaterMasterConsumer {
             else if (record.topic().equals(applicationProperties.getUpdatePropertyUsageTopicName()))
                 propUsageTypeService.update(objectMapper.readValue(record.value(), PropertyTypeUsageTypeReq.class));
             else if (record.topic().equals(applicationProperties.getCreatePropertyPipeSizeTopicName()))
-                propertyPipeSizeService.create(objectMapper.readValue(record.value(), PropertyTypePipeSizeTypeRequest.class));
+                propertyPipeSizeService.create(objectMapper.readValue(record.value(), PropertyTypePipeSizeRequest.class));
             else if (record.topic().equals(applicationProperties.getUpdatePropertyPipeSizeTopicName()))
-                propertyPipeSizeService.update(objectMapper.readValue(record.value(), PropertyTypePipeSizeTypeRequest.class));
+                propertyPipeSizeService.update(objectMapper.readValue(record.value(), PropertyTypePipeSizeRequest.class));
             else if(record.topic().equals(applicationProperties.getCreateDocumentTypeApplicationTypeTopicName()))
             	docTypeApplTypeService.create(objectMapper.readValue(record.value(), DocumentTypeApplicationTypeReq.class));
             else if (record.topic().equals(applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName()))

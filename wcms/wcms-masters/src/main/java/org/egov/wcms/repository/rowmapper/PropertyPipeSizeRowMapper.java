@@ -42,15 +42,15 @@ package org.egov.wcms.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.PropertyTypePipeSize;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSizeType> {
+public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSize> {
     @Override
-    public PropertyTypePipeSizeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
+    public PropertyTypePipeSize mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
         propertyPipeSize.setPipeSizeId((Long) rs.getObject("propertypipesize_pipesizeId"));
         propertyPipeSize.setPropertyTypeId(rs.getLong("propertypipesize_propertytypeId"));

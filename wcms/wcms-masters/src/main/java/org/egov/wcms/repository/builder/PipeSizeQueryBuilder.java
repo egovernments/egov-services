@@ -42,26 +42,26 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.web.contract.PipeSizeTypeGetRequest;
+import org.egov.wcms.web.contract.PipeSizeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PipeSizeTypeQueryBuilder {
+public class PipeSizeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final Logger logger = LoggerFactory.getLogger(PipeSizeTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(PipeSizeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT pipesize.id as pipesize_id, pipesize.code as pipesize_code,"
             + " pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId "
             + " FROM egwtr_pipesize pipesize ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final PipeSizeTypeGetRequest pipeSizeGetRequest, final List preparedStatementValues) {
+    public String getQuery(final PipeSizeGetRequest pipeSizeGetRequest, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, pipeSizeGetRequest);
         addOrderByClause(selectQuery, pipeSizeGetRequest);
@@ -72,7 +72,7 @@ public class PipeSizeTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+            final PipeSizeGetRequest pipeSizeGetRequest) {
 
         if (pipeSizeGetRequest.getId() == null && pipeSizeGetRequest.getSizeInMilimeter() == 0
                 && pipeSizeGetRequest.getActive() == null
@@ -112,7 +112,7 @@ public class PipeSizeTypeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(final StringBuilder selectQuery, final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+    private void addOrderByClause(final StringBuilder selectQuery, final PipeSizeGetRequest pipeSizeGetRequest) {
         final String sortBy = pipeSizeGetRequest.getSortBy() == null ? "pipesize.code"
                 : "pipesize." + pipeSizeGetRequest.getSortBy();
         final String sortOrder = pipeSizeGetRequest.getSortOrder() == null ? "DESC" : pipeSizeGetRequest.getSortOrder();
@@ -121,7 +121,7 @@ public class PipeSizeTypeQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+            final PipeSizeGetRequest pipeSizeGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());

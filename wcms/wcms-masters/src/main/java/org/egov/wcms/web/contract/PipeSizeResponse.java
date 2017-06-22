@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.PipeSizeType;
+import org.egov.wcms.model.PipeSize;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -60,11 +60,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class PipeSizeTypeResponse {
+public class PipeSizeResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
     @JsonProperty("PipeSize")
-    private List<PipeSizeType> pipeSizes = new ArrayList<>();
+    private List<PipeSize> pipeSizes = new ArrayList<>();
 }

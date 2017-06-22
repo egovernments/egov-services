@@ -41,11 +41,11 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.wcms.model.PipeSizeType;
+import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.PipeSizeTypeRepository;
-import org.egov.wcms.web.contract.PipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeRequest;
+import org.egov.wcms.repository.PipeSizeRepository;
+import org.egov.wcms.web.contract.PipeSizeGetRequest;
+import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +55,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class PipeSizeTypeService {
+public class PipeSizeService {
 
-    public static final Logger logger = LoggerFactory.getLogger(PipeSizeTypeService.class);
+    public static final Logger logger = LoggerFactory.getLogger(PipeSizeService.class);
 
     @Autowired
-    private PipeSizeTypeRepository pipeSizeRepository;
+    private PipeSizeRepository pipeSizeRepository;
 
     @Autowired
     private WaterMasterProducer waterMasterProducer;
@@ -68,16 +68,16 @@ public class PipeSizeTypeService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    public PipeSizeTypeRequest create(final PipeSizeTypeRequest pipeSizeRequest) {
+    public PipeSizeRequest create(final PipeSizeRequest pipeSizeRequest) {
         return pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest);
     }
 
-    public PipeSizeTypeRequest update(final PipeSizeTypeRequest pipeSizeRequest) {
+    public PipeSizeRequest update(final PipeSizeRequest pipeSizeRequest) {
         return pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest);
     }
 
-    public PipeSizeType createPipeSize(final String topic, final String key, final PipeSizeTypeRequest pipeSizeRequest) {
-        pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(PipeSizeType.SEQ_PIPESIZE));
+    public PipeSize createPipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
+        pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
         final ObjectMapper mapper = new ObjectMapper();
@@ -97,7 +97,7 @@ public class PipeSizeTypeService {
         return pipeSizeRequest.getPipeSize();
     }
 
-    public PipeSizeType updatePipeSize(final String topic, final String key, final PipeSizeTypeRequest pipeSizeRequest) {
+    public PipeSize updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
@@ -121,7 +121,7 @@ public class PipeSizeTypeService {
         return pipeSizeRepository.checkPipeSizeInmmAndCode(code, sizeInMilimeter, tenantId);
     }
 
-    public List<PipeSizeType> getPipeSizes(final PipeSizeTypeGetRequest pipeSizeGetRequest) {
+    public List<PipeSize> getPipeSizes(final PipeSizeGetRequest pipeSizeGetRequest) {
         return pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
 
     }

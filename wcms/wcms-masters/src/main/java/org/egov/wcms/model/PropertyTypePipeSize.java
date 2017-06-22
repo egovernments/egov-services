@@ -58,7 +58,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class PropertyTypePipeSizeType {
+public class PropertyTypePipeSize {
 
     public static final String SEQ_PROPERTY_PIPESIZE = "SEQ_EGWTR_PROPERTY_PIPESIZE";
 

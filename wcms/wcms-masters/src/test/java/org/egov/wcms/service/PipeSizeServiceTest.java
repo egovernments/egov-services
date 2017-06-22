@@ -49,11 +49,11 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PipeSizeType;
+import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.producers.WaterMasterProducer;
-import org.egov.wcms.repository.PipeSizeTypeRepository;
-import org.egov.wcms.web.contract.PipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeRequest;
+import org.egov.wcms.repository.PipeSizeRepository;
+import org.egov.wcms.web.contract.PipeSizeGetRequest;
+import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,15 +63,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(PipeSizeTypeService.class)
+@WebMvcTest(PipeSizeService.class)
 @WebAppConfiguration
-public class PipeSizeTypeServiceTest {
+public class PipeSizeServiceTest {
 
     @Mock
     private ApplicationProperties applicationProperties;
 
     @Mock
-    private PipeSizeTypeRepository pipeSizeRepository;
+    private PipeSizeRepository pipeSizeRepository;
 
     @Mock
     private WaterMasterProducer waterMasterProducer;
@@ -80,16 +80,16 @@ public class PipeSizeTypeServiceTest {
     private CodeGeneratorService codeGeneratorService;
 
     @InjectMocks
-    private PipeSizeTypeService pipeSizeService;
+    private PipeSizeService pipeSizeService;
 
     @Test
     public void test_Should_Create_PipeSize() throws Exception {
-        final PipeSizeTypeRequest pipeSizeRequest = new PipeSizeTypeRequest();
+        final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
         pipeSize.setSizeInInch(1.2);
@@ -98,7 +98,7 @@ public class PipeSizeTypeServiceTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSize(pipeSize);
 
-        final PipeSizeType pipeSizeResult = pipeSizeService.createPipeSize("topic", "key", pipeSizeRequest);
+        final PipeSize pipeSizeResult = pipeSizeService.createPipeSize("topic", "key", pipeSizeRequest);
 
         assertNotNull(pipeSizeResult);
     }
@@ -113,12 +113,12 @@ public class PipeSizeTypeServiceTest {
 
     @Test
     public void test_Should_Update_PipeSize() throws Exception {
-        final PipeSizeTypeRequest pipeSizeRequest = new PipeSizeTypeRequest();
+        final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
         pipeSize.setSizeInInch(1.2);
@@ -127,7 +127,7 @@ public class PipeSizeTypeServiceTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSize(pipeSize);
 
-        final PipeSizeType pipeSizeResult = pipeSizeService.updatePipeSize("topic", "key", pipeSizeRequest);
+        final PipeSize pipeSizeResult = pipeSizeService.updatePipeSize("topic", "key", pipeSizeRequest);
 
         assertNotNull(pipeSizeResult);
     }
@@ -156,13 +156,13 @@ public class PipeSizeTypeServiceTest {
     @Test
     public void test_Should_Get_PipeSizes() throws Exception {
 
-        final PipeSizeTypeGetRequest pipeSizeGetRequest = new PipeSizeTypeGetRequest();
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSizeGetRequest pipeSizeGetRequest = new PipeSizeGetRequest();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
 
-        final List<PipeSizeType> pipeSizes = new ArrayList<>();
-        List<PipeSizeType> pipeSizesResult = new ArrayList<>();
+        final List<PipeSize> pipeSizes = new ArrayList<>();
+        List<PipeSize> pipeSizesResult = new ArrayList<>();
         pipeSizes.add(pipeSize);
         when(pipeSizeRepository.findForCriteria(pipeSizeGetRequest)).thenReturn(pipeSizes);
         pipeSizesResult = pipeSizeService.getPipeSizes(pipeSizeGetRequest);
@@ -173,13 +173,13 @@ public class PipeSizeTypeServiceTest {
     @Test(expected = Exception.class)
     public void test_throwException_Get_PipeSizes() throws Exception {
 
-        final PipeSizeTypeGetRequest pipeSizeGetRequest = new PipeSizeTypeGetRequest();
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSizeGetRequest pipeSizeGetRequest = new PipeSizeGetRequest();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
 
-        final List<PipeSizeType> pipeSizes = new ArrayList<>();
-        List<PipeSizeType> pipeSizesResult = new ArrayList<>();
+        final List<PipeSize> pipeSizes = new ArrayList<>();
+        List<PipeSize> pipeSizesResult = new ArrayList<>();
         pipeSizes.add(pipeSize);
         when(pipeSizeRepository.findForCriteria(pipeSizeGetRequest)).thenThrow(Exception.class);
         pipeSizesResult = pipeSizeService.getPipeSizes(pipeSizeGetRequest);

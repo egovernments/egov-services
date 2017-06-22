@@ -41,6 +41,8 @@ package org.egov.wcms.web.contract;
 
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -56,17 +58,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class PropertyTypePipeSizeTypeGetRequest {
+public class PipeSizeGetRequest {
 
     private List<Long> id;
 
-    private String propertyType;
+    private String code;
 
-    private Double pipeSizeType;
-
-    private Long propertyTypeId;
-
-    private Long pipeSizeId;
+    private double sizeInMilimeter;
 
     private Boolean active;
 
@@ -76,5 +74,11 @@ public class PropertyTypePipeSizeTypeGetRequest {
     private String sortBy;
 
     private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

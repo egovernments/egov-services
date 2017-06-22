@@ -58,7 +58,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class PipeSizeType {
+public class PipeSize {
 
     public static final String SEQ_PIPESIZE = "SEQ_EGWTR_PIPESIZE";
 

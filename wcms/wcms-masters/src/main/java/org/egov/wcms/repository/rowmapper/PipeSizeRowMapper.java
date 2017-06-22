@@ -42,16 +42,16 @@ package org.egov.wcms.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.wcms.model.PipeSizeType;
+import org.egov.wcms.model.PipeSize;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PipeSizeTypeRowMapper implements RowMapper<PipeSizeType> {
+public class PipeSizeRowMapper implements RowMapper<PipeSize> {
 
     @Override
-    public PipeSizeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final PipeSizeType pipeSize = new PipeSizeType();
+    public PipeSize mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setId(rs.getLong("pipesize_id"));
         pipeSize.setCode(rs.getString("pipesize_code"));
         pipeSize.setSizeInMilimeter(rs.getDouble("pipesize_sizeinmilimeter"));

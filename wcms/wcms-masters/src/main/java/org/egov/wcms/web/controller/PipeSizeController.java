@@ -48,12 +48,12 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PipeSizeType;
-import org.egov.wcms.service.PipeSizeTypeService;
+import org.egov.wcms.model.PipeSize;
+import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.PipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeResponse;
+import org.egov.wcms.web.contract.PipeSizeGetRequest;
+import org.egov.wcms.web.contract.PipeSizeRequest;
+import org.egov.wcms.web.contract.PipeSizeResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.Error;
@@ -76,12 +76,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/pipesize")
-public class PipeSizeTypeController {
+public class PipeSizeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PipeSizeTypeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PipeSizeController.class);
 
     @Autowired
-    private PipeSizeTypeService pipeSizeService;
+    private PipeSizeService pipeSizeService;
 
     @Autowired
     private ErrorHandler errHandler;
@@ -94,7 +94,7 @@ public class PipeSizeTypeController {
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final PipeSizeTypeRequest pipeSizeRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid final PipeSizeRequest pipeSizeRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -106,9 +106,9 @@ public class PipeSizeTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PipeSizeType pipeSize = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),
+        final PipeSize pipeSize = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),
                 "pipesize-create", pipeSizeRequest);
-        final List<PipeSizeType> pipeSizes = new ArrayList<>();
+        final List<PipeSize> pipeSizes = new ArrayList<>();
         pipeSizes.add(pipeSize);
         return getSuccessResponse(pipeSizes, pipeSizeRequest.getRequestInfo());
 
@@ -116,7 +116,7 @@ public class PipeSizeTypeController {
 
     @PostMapping(value = "/{code}/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeTypeRequest pipeSizeRequest, final BindingResult errors,
+    public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeRequest pipeSizeRequest, final BindingResult errors,
             @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -129,16 +129,16 @@ public class PipeSizeTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final PipeSizeType pipeSize = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),
+        final PipeSize pipeSize = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),
                 "pipesize-update", pipeSizeRequest);
-        final List<PipeSizeType> pipeSizes = new ArrayList<>();
+        final List<PipeSize> pipeSizes = new ArrayList<>();
         pipeSizes.add(pipeSize);
         return getSuccessResponse(pipeSizes, pipeSizeRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final PipeSizeTypeGetRequest pipeSizeGetRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid final PipeSizeGetRequest pipeSizeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -152,7 +152,7 @@ public class PipeSizeTypeController {
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         // Call service
-        List<PipeSizeType> pipeSizeList = null;
+        List<PipeSize> pipeSizeList = null;
         try {
             pipeSizeList = pipeSizeService.getPipeSizes(pipeSizeGetRequest);
         } catch (final Exception exception) {
@@ -164,7 +164,7 @@ public class PipeSizeTypeController {
 
     }
 
-    private List<ErrorResponse> validatePipeSizeRequest(final PipeSizeTypeRequest pipeSizeRequest) {
+    private List<ErrorResponse> validatePipeSizeRequest(final PipeSizeRequest pipeSizeRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(pipeSizeRequest);
@@ -175,7 +175,7 @@ public class PipeSizeTypeController {
         return errorResponses;
     }
 
-    private Error getError(final PipeSizeTypeRequest pipeSizeRequest) {
+    private Error getError(final PipeSizeRequest pipeSizeRequest) {
         pipeSizeRequest.getPipeSize();
         final List<ErrorField> errorFields = getErrorFields(pipeSizeRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
@@ -184,7 +184,7 @@ public class PipeSizeTypeController {
                 .build();
     }
 
-    private List<ErrorField> getErrorFields(final PipeSizeTypeRequest pipeSizeRequest) {
+    private List<ErrorField> getErrorFields(final PipeSizeRequest pipeSizeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addPipeSizeInmmValidationErrors(pipeSizeRequest, errorFields);
         addTeanantIdValidationErrors(pipeSizeRequest, errorFields);
@@ -192,8 +192,8 @@ public class PipeSizeTypeController {
         return errorFields;
     }
 
-    private void addPipeSizeInmmValidationErrors(final PipeSizeTypeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
-        final PipeSizeType pipeSize = pipeSizeRequest.getPipeSize();
+    private void addPipeSizeInmmValidationErrors(final PipeSizeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
+        final PipeSize pipeSize = pipeSizeRequest.getPipeSize();
         if (pipeSize.getSizeInMilimeter() == 0) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
@@ -213,8 +213,8 @@ public class PipeSizeTypeController {
             return;
     }
 
-    private void addTeanantIdValidationErrors(final PipeSizeTypeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
-        final PipeSizeType pipeSize = pipeSizeRequest.getPipeSize();
+    private void addTeanantIdValidationErrors(final PipeSizeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
+        final PipeSize pipeSize = pipeSizeRequest.getPipeSize();
         if (pipeSize.getTenantId() == null || pipeSize.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.TENANTID_MANDATORY_CODE)
@@ -226,8 +226,8 @@ public class PipeSizeTypeController {
             return;
     }
 
-    private void addActiveValidationErrors(final PipeSizeTypeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
-        final PipeSizeType pipeSize = pipeSizeRequest.getPipeSize();
+    private void addActiveValidationErrors(final PipeSizeRequest pipeSizeRequest, final List<ErrorField> errorFields) {
+        final PipeSize pipeSize = pipeSizeRequest.getPipeSize();
         if (pipeSize.getActive() == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
@@ -252,8 +252,8 @@ public class PipeSizeTypeController {
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(final List<PipeSizeType> pipeSizeList, final RequestInfo requestInfo) {
-        final PipeSizeTypeResponse pipeSizeResponse = new PipeSizeTypeResponse();
+    private ResponseEntity<?> getSuccessResponse(final List<PipeSize> pipeSizeList, final RequestInfo requestInfo) {
+        final PipeSizeResponse pipeSizeResponse = new PipeSizeResponse();
         pipeSizeResponse.setPipeSizes(pipeSizeList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());

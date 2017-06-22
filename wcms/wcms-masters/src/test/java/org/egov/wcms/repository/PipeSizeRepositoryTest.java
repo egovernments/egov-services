@@ -50,12 +50,12 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PipeSizeType;
-import org.egov.wcms.repository.builder.PipeSizeTypeQueryBuilder;
-import org.egov.wcms.repository.rowmapper.PipeSizeTypeRowMapper;
-import org.egov.wcms.service.PipeSizeTypeService;
-import org.egov.wcms.web.contract.PipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PipeSizeTypeRequest;
+import org.egov.wcms.model.PipeSize;
+import org.egov.wcms.repository.builder.PipeSizeQueryBuilder;
+import org.egov.wcms.repository.rowmapper.PipeSizeRowMapper;
+import org.egov.wcms.service.PipeSizeService;
+import org.egov.wcms.web.contract.PipeSizeGetRequest;
+import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -69,21 +69,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(PipeSizeTypeRepository.class)
+@WebMvcTest(PipeSizeRepository.class)
 @WebAppConfiguration
-public class PipeSizeTypeRepositoryTest {
+public class PipeSizeRepositoryTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
 
     @Mock
-    private PipeSizeTypeQueryBuilder pipeSizeQueryBuilder;
+    private PipeSizeQueryBuilder pipeSizeQueryBuilder;
 
     @Mock
-    private PipeSizeTypeRowMapper pipeSizeRowMapper;
+    private PipeSizeRowMapper pipeSizeRowMapper;
 
     @MockBean
-    private PipeSizeTypeService pipeSizeService;
+    private PipeSizeService pipeSizeService;
 
     @MockBean
     private ErrorHandler errHandler;
@@ -95,16 +95,16 @@ public class PipeSizeTypeRepositoryTest {
     private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
-    private PipeSizeTypeRepository pipeSizeRepository;
+    private PipeSizeRepository pipeSizeRepository;
 
     @Test
     public void test_Should_Create_PipeSize() throws Exception {
-        final PipeSizeTypeRequest pipeSizeRequest = new PipeSizeTypeRequest();
+        final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
         // pipeSize.getAuditDeatils().setCreatedBy(1L);
@@ -120,9 +120,9 @@ public class PipeSizeTypeRepositoryTest {
 
     @Test(expected = Exception.class)
     public void test_throwException_Create_PipeSize() throws Exception {
-        final PipeSizeTypeRequest pipeSizeRequest = new PipeSizeTypeRequest();
+        final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
         // pipeSize.getAuditDeatils().setCreatedBy(1L);
@@ -138,12 +138,12 @@ public class PipeSizeTypeRepositoryTest {
 
     @Test
     public void test_Should_Modify_PipeSize() throws Exception {
-        final PipeSizeTypeRequest pipeSizeRequest = new PipeSizeTypeRequest();
+        final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
         // pipeSize.getAuditDeatils().setCreatedBy(1L);
@@ -159,9 +159,9 @@ public class PipeSizeTypeRepositoryTest {
 
     @Test(expected = Exception.class)
     public void test_throwException_Modify_PipeSize() throws Exception {
-        final PipeSizeTypeRequest pipeSizeRequest = new PipeSizeTypeRequest();
+        final PipeSizeRequest pipeSizeRequest = new PipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
-        final PipeSizeType pipeSize = new PipeSizeType();
+        final PipeSize pipeSize = new PipeSize();
         pipeSize.setCode("10");
         pipeSize.setActive(true);
         // pipeSize.getAuditDeatils().setCreatedBy(1L);
@@ -195,9 +195,9 @@ public class PipeSizeTypeRepositoryTest {
     @Test
     public void test_Should__FindforCriteria() throws Exception {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final PipeSizeTypeGetRequest pipeSizeGetRequest = new PipeSizeTypeGetRequest();
+        final PipeSizeGetRequest pipeSizeGetRequest = new PipeSizeGetRequest();
         when(pipeSizeQueryBuilder.getQuery(pipeSizeGetRequest, preparedStatementValues)).thenReturn("query");
-        final List<PipeSizeType> pipeSizes = pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
+        final List<PipeSize> pipeSizes = pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
 
         assertTrue(pipeSizes != null);
 
@@ -207,9 +207,9 @@ public class PipeSizeTypeRepositoryTest {
     @Test(expected = Exception.class)
     public void test_throwException__FindforCriteria() throws Exception {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final PipeSizeTypeGetRequest pipeSizeGetRequest = new PipeSizeTypeGetRequest();
+        final PipeSizeGetRequest pipeSizeGetRequest = new PipeSizeGetRequest();
         when(pipeSizeQueryBuilder.getQuery(pipeSizeGetRequest, preparedStatementValues)).thenThrow(Exception.class);
-        final List<PipeSizeType> pipeSizes = pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
+        final List<PipeSize> pipeSizes = pipeSizeRepository.findForCriteria(pipeSizeGetRequest);
 
         assertTrue(pipeSizes != null);
 

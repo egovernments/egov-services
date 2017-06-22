@@ -51,10 +51,10 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.util.FileUtils;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
@@ -69,7 +69,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PopertyTypePipeSizeTypeController.class)
+@WebMvcTest(PopertyTypePipeSizeController.class)
 public class PropertyTypePipeSizeTypeControllerTest {
 
     @Autowired
@@ -88,15 +88,15 @@ public class PropertyTypePipeSizeTypeControllerTest {
     private ApplicationProperties applicationProperties;
 
     @InjectMocks
-    private PopertyTypePipeSizeTypeController popertyPipeSizeController;
+    private PopertyTypePipeSizeController popertyPipeSizeController;
 
     @Test(expected = Exception.class)
     public void test_Should_Search_PropertyPipeSize() throws Exception {
 
-        final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
+        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         final RequestInfo requestInfo = new RequestInfo();
         final ResponseInfo responseInfo = new ResponseInfo();
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
+        final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setActive(true);
         propertyPipeSize.setPipeSizeType(2d);
         propertyPipeSize.setPropertyTypeName("property");
@@ -104,8 +104,8 @@ public class PropertyTypePipeSizeTypeControllerTest {
 
         propertyPipeSizes.add(propertyPipeSize);
 
-        final PropertyTypePipeSizeTypeGetRequest propertyCategoryGetRequest = Mockito
-                .mock(PropertyTypePipeSizeTypeGetRequest.class);
+        final PropertyTypePipeSizeGetRequest propertyCategoryGetRequest = Mockito
+                .mock(PropertyTypePipeSizeGetRequest.class);
 
         when(propertyPipeSizeService.getPropertyPipeSizes(propertyCategoryGetRequest)).thenReturn(propertyPipeSizes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);

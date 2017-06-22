@@ -1,9 +1,12 @@
 package org.egov.lams.notification.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 public class PaymentInfo {
 	private String receiptNumber;
-	private String receiptAmount;
-	private String receiptDate;
+	private BigDecimal receiptAmount;
+	private Date receiptDate;
 	private String status;
 
 	public String getReceiptNumber() {
@@ -14,19 +17,19 @@ public class PaymentInfo {
 		this.receiptNumber = receiptNumber;
 	}
 
-	public String getReceiptAmount() {
+	public BigDecimal getReceiptAmount() {
 		return receiptAmount;
 	}
 
-	public void setReceiptAmount(String receiptAmount) {
+	public void setReceiptAmount(BigDecimal receiptAmount) {
 		this.receiptAmount = receiptAmount;
 	}
 
-	public String getReceiptDate() {
+	public Date getReceiptDate() {
 		return receiptDate;
 	}
 
-	public void setReceiptDate(String receiptDate) {
+	public void setReceiptDate(Date receiptDate) {
 		this.receiptDate = receiptDate;
 	}
 

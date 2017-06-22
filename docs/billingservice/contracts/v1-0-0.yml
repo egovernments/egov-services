@@ -368,6 +368,16 @@ paths:
           description: Unique identification provided by business details.
           required: false
           type: string
+        - name: email
+          in: query
+          description: Email Id of Primary owner of business detail.
+          required: false
+          type: string
+        - name: mobileNumber
+          in: query
+          description: Mobile Number of Primary owner of business detail.
+          required: false
+          type: string
         - name: businessService
           in: query
           description: Billing system details e.g., PropertyTax,Water Charges etc.
@@ -604,7 +614,7 @@ paths:
           description: Billing system details e.g., PropertyTax,Water Charges etc.
           required: false
           type: string
-        - name: emailId
+        - name: email
           in: query
           description: Email Id of Primary owner of business detail.
           required: false
@@ -1051,10 +1061,6 @@ definitions:
       businessService:
         type: string
         description: BusinessService code.
-      minimumAmountPayable:
-        type: number
-        format: double
-        description: Minimum bill amount to be paid.
       collectionModesNotAllowed:
         type: array
         items: 

@@ -42,8 +42,10 @@ package org.egov.collection.model;
 import java.math.BigDecimal;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class ReceiptDetail implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;

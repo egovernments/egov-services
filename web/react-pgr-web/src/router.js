@@ -3,6 +3,8 @@ import {Switch,Route} from 'react-router-dom';
 import grievanceCreate from './components/contents/grievanceCreate';
 import ReceivingCenterCreate from './components/contents/master/receivingCenter/receivingCenterCreate';
 import ViewEditReceivingCenter from './components/contents/master/receivingCenter/viewEditReceivingCenter';
+import grievanceCreateSD from './components/contents/grievanceCreateSD';
+import grievanceView from './components/contents/grievanceView';
 
 const Main = () => (
   <main>

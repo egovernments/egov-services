@@ -81,19 +81,19 @@ public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator imp
 		if ((employee.getCode() != null) && duplicateExists("egeis_employee", "code",
 				employee.getCode(), employee.getTenantId())) {
 			errors.rejectValue("employee.code", "invalid",
-					"Employee Code Already Exists In System. Please Send The Different Employee Code.");
+					"Employee Code Already Exists In System. Please Enter Different Employee Code.");
 		}
 
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getTenantId())) {
 			errors.rejectValue("employee.passportNo", "invalid",
-					"Passport Number Already Exists In System. Please Send The Correct Passport Number.");
+					"Passport Number Already Exists In System. Please Enter Correct Passport Number.");
 		}
 
 		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo",
 				employee.getGpfNo(), employee.getTenantId())) {
 			errors.rejectValue("employee.gpfNo", "invalid",
-					"GPF Number Already Exists In System. Please Send The Correct GPF Number.");
+					"GPF Number Already Exists In System. Please Enter Correct GPF Number.");
 		}
 	}
 

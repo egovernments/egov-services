@@ -159,6 +159,8 @@ public class EmployeeService {
 		List<Long> ids = null;
 		if (!isEmpty(employeeCriteria.getRoleCodes())) {
 			usersList = userService.getUsers(employeeCriteria, requestInfo);
+			employeeCriteria.setActive(false);
+			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
 			LOGGER.debug("userService: " + usersList);
 			if(isEmpty(usersList))
 				return Collections.EMPTY_LIST;
@@ -176,10 +178,11 @@ public class EmployeeService {
 			LOGGER.debug("Employee ids " + ids);
 			employeeCriteria.setId(ids);
 			usersList = userService.getUsers(employeeCriteria, requestInfo);
+			employeeCriteria.setActive(false);
+			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
 			LOGGER.debug("userService: " + usersList);
 		}
 		employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
-		System.err.println("employeeInfoList size inside getEmployees: " + employeeInfoList.size());
 
 		if (!isEmpty(ids)) {
 			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,

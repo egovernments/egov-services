@@ -70,12 +70,12 @@ public class NomineeValidator {
                 if (i != j && nominees.get(i).equals(nominees.get(j))) {
                     errors.rejectValue("nominees[" + i + "]", "invalid",
                             "Duplicate Nominees " + nominees.get(i).getName() + " & "
-                                    + nominees.get(j).getName() + " Present In Request. Please Check & Resend The Data.");
+                                    + nominees.get(j).getName() + " Present In Request. Please Enter The Correct Data.");
                 }
             }
             if(!nomineeRepository.checkIfUnique(nominees.get(i), isUpdate)) {
                 errors.rejectValue("nominees[" + i + "]", "invalid",
-                        "Nominee " + nominees.get(i).getName() + " Already Exists In System. Please Send Different Nominee.");
+                        "Nominee " + nominees.get(i).getName() + " Already Exists In System. Please Enter Different Nominee.");
             }
         }
     }
@@ -92,7 +92,7 @@ public class NomineeValidator {
             if (!nomineeRepository.ifExists(EntityType.EMPLOYEE_HEADER.getDbTable(), nominees.get(i).getEmployee().getId(),
                     nominees.get(i).getTenantId())) {
                 errors.rejectValue("nominees[" + i + "].employee.id", "invalid",
-                        "Nominating Employee Id Doesn't Exists. Please Send The Correct Id");
+                        "Nominating Employee Id Doesn't Exists. Please Enter Correct Id");
             }
         }
     }

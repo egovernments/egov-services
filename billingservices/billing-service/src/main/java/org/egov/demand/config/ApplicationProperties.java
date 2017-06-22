@@ -41,17 +41,32 @@
 
 package org.egov.demand.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import lombok.Getter;
 import lombok.ToString;
 
 @Configuration
 @Getter
+@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @ToString
 public class ApplicationProperties {
+	
+	@Value("${egov.services.user_service.hostname}")
+	private String userServiceHostName;
 
+	@Value("${egov.services.user_service.searchpath}")
+	private String userServiceSearchPath;
+
+	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
+	
+	@Autowired
+	private Environment environment;
+	
 	@Value("${kafka.topics.save.bill}")
 	private String createBillTopic;
 	
@@ -63,6 +78,19 @@ public class ApplicationProperties {
 	
 	@Value("${kafka.topics.update.bill.key}")
 	private String updatekBillTopicKey;
+	
+	//Added for Creatining taxHeadMaster
+	@Value("${kafka.topics.save.taxHeadMaster}")
+	private String createTaxHeadMasterTopicName;
+
+	@Value("${kafka.topics.update.taxHeadMaster}")
+	private String updateTaxHeadMasterTopicName;
+	
+	@Value("${kafka.topics.save.taxHeadMaster.key}")
+	private String createTaxHeadMasterTopicKey;
+
+	@Value("${kafka.topics.update.taxHeadMaster.key}")
+	private String updateTaxHeadMasterTopicKey;
 
 	@Value("${bs.bill.seq.name}")
 	private String billSeqName;
@@ -88,5 +116,7 @@ public class ApplicationProperties {
 	@Value("${bs.billdetail.billnumber.seq.name}")
 	private String billNumSeqName;
 	
-
+	public String commonsSearchPageSizeDefault() {
+		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
+	}
 }

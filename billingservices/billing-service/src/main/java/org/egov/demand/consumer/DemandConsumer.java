@@ -39,26 +39,18 @@ public class DemandConsumer {
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.info("key:" + topic + ":" + "value:" + consumerRecord);
 
-		DemandRequest demandRequest = null;
 		try {
-			demandRequest = objectMapper.convertValue(consumerRecord, DemandRequest.class);
-		} catch (IllegalArgumentException e) {
-			log.error("error while converting map to demandrequest");
-			throw e;
+			
+			if (applicationProperties.getCreateDemandTopic().equals(topic))
+				demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
+			else if (applicationProperties.getUpdateDemandTopic().equals(topic))
+				demandService.update(objectMapper.convertValue(consumerRecord, DemandRequest.class));
+			else if (topic.equals(applicationProperties.getCreateBillTopic()))
+				billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
+			
+		} catch (Exception exception) {
+			log.info("processMessage:" + exception);
+			throw exception;
 		}
-		if (applicationProperties.getCreateDemandTopic().equals(topic))
-			demandService.save(demandRequest);
-		else if (applicationProperties.getUpdateDemandTopic().equals(topic))
-			demandService.update(demandRequest);
-		
-		try{
-			if(topic.equals(applicationProperties.getCreateBillTopic()))
-			billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
-		} catch (Exception ex) {
-			log.info("processMessage:"+ex);
-			ex.printStackTrace();
-		}
-		
 	}
-
 }

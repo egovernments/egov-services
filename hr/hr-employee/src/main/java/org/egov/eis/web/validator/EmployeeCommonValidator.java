@@ -70,27 +70,27 @@ public abstract class EmployeeCommonValidator {
     protected void validateEmployee(Employee employee, Errors errors) {
         if (employee.getRetirementAge() != null && employee.getRetirementAge() > 100)
             errors.rejectValue("employee.retirementAge", "invalid",
-                    "Retirement Age Should Be Less Than 100. Please Send The Correct Retirement Age.");
+                    "Retirement Age Should Be Less Than 100. Please Enter The Correct Retirement Age.");
 
         if ((employee.getDateOfAppointment() != null && employee.getDateOfJoining() != null)
                 && (employee.getDateOfAppointment().after(employee.getDateOfJoining())))
             errors.rejectValue("employee.dateOfAppointment", "invalid",
-                    "Date Of Appointment Should Be Before Date Of Joining. Please Send The Correct Dates.");
+                    "Date Of Joining Should Be Greater Than Date Of Appointment. Please Enter Correct Dates.");
 
         if ((employee.getDateOfResignation() != null && employee.getDateOfJoining() != null)
                 && (employee.getDateOfResignation().before(employee.getDateOfJoining())))
             errors.rejectValue("employee.dateOfJoining", "invalid",
-                    "Date Of Resignation Should Be After Date Of Joining. Please Send The Correct Dates.");
+                    "Date Of Resignation Should Be Greater Than Date Of Joining. Please Enter Correct Dates.");
 
         if ((employee.getDateOfTermination() != null && employee.getDateOfJoining() != null)
                 && (employee.getDateOfTermination().before(employee.getDateOfJoining())))
             errors.rejectValue("employee.dateOfTermination", "invalid",
-                    "Date Of Termination Should Be After Date Of Joining. Please Send The Correct Dates.");
+                    "Date Of Termination Should Be Greater Than Date Of Joining. Please Enter Correct Dates.");
 
         if ((employee.getDateOfRetirement() != null && employee.getDateOfJoining() != null)
                 && (employee.getDateOfRetirement().before(employee.getDateOfJoining())))
             errors.rejectValue("employee.dateOfRetirement", "invalid",
-                    "Date Of Retirement Should Be After Date Of Joining. Please Send The Correct Dates.");
+                    "Date Of Retirement Should Be Greater Than Date Of Joining. Please Enter Correct Dates.");
     }
 
     void validateEntityId(Map<Long, Integer> idsMap, EntityType entityType, Long employeeId,
@@ -100,7 +100,7 @@ public abstract class EmployeeCommonValidator {
             if (!idsFromDB.contains(id))
                 errors.rejectValue("employee." + entityType.getContractFieldName() + "[" + idsMap.get(id) + "].id",
                         "invalid", entityType.getEntityName() + " Doesn't Exist For This Employee." +
-                                " Please Send Correct " + entityType.getEntityName() + ".");
+                                " Please Enter Correct " + entityType.getEntityName() + ".");
         });
     }
 
@@ -114,7 +114,7 @@ public abstract class EmployeeCommonValidator {
                     Date toDate = assignments.get(i).getToDate();
                     errors.rejectValue("employee.assignments[" + i + "].position", "invalid",
                             "Primary Position Already Assigned Between The Given Dates " + dateFormat.format(fromDate)
-                                    + " & " + dateFormat.format(toDate) + ". Please Send The Correct Data.");
+                                    + " & " + dateFormat.format(toDate) + ". Please Enter Correct Data.");
                 }
             }
         }

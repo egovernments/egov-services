@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum VoucherType {
 
-	JOURNALVOUCHER("JOURNALVOUCHER"), PAYMENT("PAYMENT"), RECEIPT("RECEIPT");
+	JOURNALVOUCHER("JOURNAL VOUCHER"), PAYMENT("PAYMENT"), RECEIPT("RECEIPT");
 
 	private String value;
 

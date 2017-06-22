@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import ImagePreview from '../common/ImagePreview.js';
 import SimpleMap from '../common/GoogleMaps.js';
 
@@ -84,18 +85,18 @@ class grievanceCreate extends Component {
   };
 
   handleView = () => {
-    let {initForm} = this.props;
+    let {initForm, history} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    //view mode
+    history.push("/viewGrievance/"+this.state.serviceRequestId);
   };
 
    loadReceivingCenter(value){
      if(value == 'MANUAL'){
        var currentThis = this;
-       Api.commonApiPost("/pgr/receivingcenter/_search").then(function(response)
+       Api.commonApiPost("/pgr-master/receivingcenter/_search").then(function(response)
        {
-         currentThis.setState({receivingCenter : response.receivingCenters});
+         currentThis.setState({receivingCenter : response.ReceivingCenterType});
        },function(err) {
 
        });
@@ -118,10 +119,10 @@ class grievanceCreate extends Component {
   {
     //ReceivingMode
     var currentThis = this;
-    Api.commonApiPost("/pgr/receivingmode/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
     {
 
-      currentThis.setState({receivingModes : response.receivingModes});
+      currentThis.setState({receivingModes : response.ReceivingModeType});
     },function(err) {
 
     });
@@ -166,7 +167,7 @@ class grievanceCreate extends Component {
         var userArray = [], userRequest={};
         userArray.push(localStorage.getItem('id'));
         userRequest['id']=userArray;
-        userRequest['tenantId']=localStorage.getItem("tenantId");
+        userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
         let userInfo = Api.commonApiPost("/user/_search",{},userRequest).then(function(userResponse)
         {
           var userName = userResponse.user[0].name;
@@ -246,6 +247,7 @@ class grievanceCreate extends Component {
     {
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
+      currentThis.setState({serviceRequestId:srn});
       var ack = 'Service Request is received and is under process. SRN (Service Request No.) is '+srn+'. Please use this for all your future references'
       currentThis.setState({srn:'SRN (Service Request No.): '+srn});
       currentThis.setState({acknowledgement:ack});
@@ -474,7 +476,7 @@ class grievanceCreate extends Component {
           <Dialog
             title={this.state.srn}
             actions={actions}
-            modal={false}
+            modal={true}
             open={this.state.open}
             onRequestClose={this.handleClose}
           >
@@ -494,7 +496,6 @@ class grievanceCreate extends Component {
 
 const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
-    console.log('init form dispatch:',type);
     var requiredArray = [];
     if(type == 'CITIZEN'){
       requiredArray = ["serviceCategory","serviceCode","description","addressId"]

@@ -411,7 +411,7 @@ paths:
           description: tenant_id provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  /boundary/isshapefileexist:
+  /boundarys/isshapefileexist:
     post:
       summary: Check whether the GIS shape file exists or not.
       description: >-

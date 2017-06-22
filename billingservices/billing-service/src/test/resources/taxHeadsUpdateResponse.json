@@ -1,0 +1,31 @@
+{
+  "responseInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": null
+  },
+  "taxHeadMasters": [
+    {
+      "id": "23",
+      "tenantId": "ap.kurnool",
+      "category": "TAX",
+      "service": "string",
+      "name": "string",
+      "code": "string",
+      "glCode": "string",
+      "isDebit": true,
+      "isActualDemand": true,
+      "taxPeriod": {
+        "fromDate":123,
+        "toDate": 345,
+        "module": "string",
+        "description": "string",
+        "financialYear": "2017-2018"
+      },
+      "auditDetail": null
+    }
+  ]
+}

@@ -91,11 +91,11 @@ public class DataIntegrityValidatorForUpdateNominee extends NomineeValidator imp
 		for(int i = 0; i < nominees.size(); i++) {
 			if(isEmpty(nominees.get(i).getId())) {
 				errors.rejectValue("nominees[" + i + "].id", "invalid",
-						"Nominee " + nominees.get(i).getName() + " Doesn't Have Id. Please Send Correct Id");
+						"Nominee " + nominees.get(i).getName() + " Doesn't Have Id. Please Enter Correct Id");
 			}
 			if(!nomineeRepository.ifExists(EntityType.NOMINEE.getDbTable(), nominees.get(i).getId(), nominees.get(i).getTenantId())) {
 				errors.rejectValue("nominees[" + i + "].id", "invalid",
-						"Nominee Id " + nominees.get(i).getId() + " Doesn't Exist In System. Please Send Correct Id");
+						"Nominee Id " + nominees.get(i).getId() + " Doesn't Exist In System. Please Enter Correct Id");
 			}
 		}
 	}

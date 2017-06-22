@@ -1,4 +1,3 @@
-var $ = require('jquery');
 var axios = require('axios');
 // var store = require('configureStore').configure();
 
@@ -29,9 +28,9 @@ var requestInfo = {
   "requesterId": "61",
   "authToken": "3268dd63-aaa1-4a47-b678-6b6dc6d04ad4"
 };
-//uncomment for ap
-// var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
-var tenantId = localStorage.getItem("tenantId");
+
+
+var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
   commonApiPost: (context, queryObject = {}, body = {}) => {

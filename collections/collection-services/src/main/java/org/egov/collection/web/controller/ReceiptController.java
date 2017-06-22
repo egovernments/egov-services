@@ -122,11 +122,12 @@ public class ReceiptController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		
+		ReceiptInfo receiptInfo = receiptService.create(receiptRequest.getReceiptInfo());
+		if(null == receiptInfo){
+			
 		}
+		
 
 		return null;
 	}

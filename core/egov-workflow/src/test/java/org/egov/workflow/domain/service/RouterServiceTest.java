@@ -25,11 +25,7 @@ public class RouterServiceTest {
     private RouterService routerService;
     
   
-    @Before
-    public void setUp() {
-    	routerService =
-                new RouterService(routerRepository);
-    }
+    
   //testcase needs to be enhanced
     @Test
     public void test_should_create_or_update_router() {
@@ -54,7 +50,7 @@ public class RouterServiceTest {
     public boolean checkforDuplicate(PersistRouterReq persistRouterReq){
 		PersistRouter pr = new PersistRouter();
 		pr = routerRepository.ValidateRouter(persistRouterReq);
-		System.out.println(pr);
+		
 		if (pr != null){
 			return false;
 		}

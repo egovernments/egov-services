@@ -19,9 +19,9 @@ public class RouterQueryBuilder {
 
 	private static final String INSERT_ROUTER = "INSERT INTO egpgr_router(id,complainttypeid, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
 			+ "(nextval('seq_egpgr_router'),?,?,?,?,?,?,?,?,?)";
-	private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, tenantid=? where bndryid = ? and complainttypeid= ? and id= ?";
+	private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? where bndryid = ? and complainttypeid= ? and tenantid=?";
 	
-	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ?";
+	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ? and tenantid=?";
 	
 	public static String insertRouter() {
 		return INSERT_ROUTER;

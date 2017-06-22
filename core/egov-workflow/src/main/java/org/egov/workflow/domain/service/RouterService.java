@@ -173,7 +173,7 @@ public class RouterService {
 	}
 	
 
-	public RouterType createRouter(final String topic, final String key,
+	/*public RouterType createRouter(final String topic, final String key,
 			final RouterTypeReq routerTypeReq) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String routerValue = null;
@@ -192,7 +192,7 @@ public class RouterService {
 		}
 		logger.error("Producer successfully posted the request to Queue");
 		return routerTypeReq.getRouterType();
-	}
+	}*/
 	
 	
 	

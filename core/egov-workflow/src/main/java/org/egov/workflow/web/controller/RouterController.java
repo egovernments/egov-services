@@ -107,9 +107,8 @@ public class RouterController{
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final RouterType routerType = routerService.createRouter(
-				applicationProperties.getCreateRouterTopicName(),
-				applicationProperties.getCreateRouterTopicKey(), routerTypeReq);
+		final RouterType routerType = routerTypeReq.getRouterType();
+		routerService.create(routerTypeReq);
 		final List<RouterType> routerTypes = new ArrayList<>();
 		routerTypes.add(routerType);
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
@@ -130,9 +129,8 @@ public class RouterController{
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final RouterType routerType = routerService.createRouter(
-				applicationProperties.getCreateRouterTopicName(),
-				applicationProperties.getCreateRouterTopicKey(), routerTypeReq);
+		final RouterType routerType = routerTypeReq.getRouterType();
+		routerService.create(routerTypeReq);
 		final List<RouterType> routerTypes = new ArrayList<>();
 		routerTypes.add(routerType);
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());

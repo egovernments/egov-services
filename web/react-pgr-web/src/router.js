@@ -25,6 +25,11 @@ const Main = () => (
       <Route exact path='/searchGrievance' component={grievanceSearch}/>
       <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>
       <Route exact path='/viewOrUpdateReceivingMode' component={viewOrUpdateReceivingMode}/>
+      <Route exact name="receivingModeCreate" path='/receivingModeCreate' component={receivingModeCreate}/>
+      <Route exact name="receivingModeCreate" path='/receivingModeCreate/:id' component={receivingModeCreate}/>
+      <Route exact name="receivingModeCreate" path='/receivingModeCreate/:id' component={receivingModeCreate}/>
+      <Route exact path='/viewOrUpdateReceivingMode/view' component={viewOrUpdateReceivingMode}/>
+      <Route exact path='/viewOrUpdateReceivingMode/edit' component={viewOrUpdateReceivingMode}/>
       <Route exact path='/createReceivingCenter' component={ReceivingCenterCreate}/>
       <Route exact name="createServiceGroup" path='/createServiceGroup/:code' component={ServiceGroupCreate}/>
       <Route exact path='/createServiceGroup' component={ServiceGroupCreate}/>

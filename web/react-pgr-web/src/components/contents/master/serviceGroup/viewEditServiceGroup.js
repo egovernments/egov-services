@@ -56,7 +56,7 @@ const styles = {
 
 var _this;
 
-class ViewEditServiceGroup extends Component {
+class ViewEditReceivingCenter extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -67,9 +67,9 @@ class ViewEditServiceGroup extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/receivingcenter/_search",{},body).then(function(response){
-            //console.log(response);
-            current.setState({data:response.ReceivingCenterType});
+        Api.commonApiPost("/pgr-master/serviceGroup/_search",{},body).then(function(response){
+            console.log(response);
+            current.setState({data:response.ServiceGroups});
         }).catch((error)=>{
             console.log(error);
         })
@@ -85,7 +85,7 @@ class ViewEditServiceGroup extends Component {
     render() {
 
       let {
-        receivingCenterCreate,
+        serviceGroupCreate,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -103,7 +103,7 @@ class ViewEditServiceGroup extends Component {
       let url = this.props.location.pathname;
 
       return(
-        <div className="receivingCenterCreate">
+        <div className="serviceGroupCreate">
             <Card style={styles.marginStyle}>
                 <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Center</div>} />
                 <CardText style={{padding:0}}>
@@ -117,10 +117,6 @@ class ViewEditServiceGroup extends Component {
                                           <th>Name</th>
                                           <th>Code</th>
                                           <th>Description</th>
-                                          <th>Active</th>
-                                          <th>Audit Details</th>
-                                          <th>CRN Required</th>
-                                          <th>Order No</th>
                                           <th></th>
                                         </tr>
                                     </thead>
@@ -136,8 +132,8 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/receivingCenter/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
-                                              {url == '/receivingCenter/edit' && <td><Link  to={`/createReceivingCenter/${e.code}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
+                                              {url == '/serviceGroup/edit' && <td><Link  to={`/createServiceGroup/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}
@@ -154,7 +150,7 @@ class ViewEditServiceGroup extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({receivingCenterCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({serviceGroupCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -186,4 +182,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewEditServiceGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEditReceivingCenter);

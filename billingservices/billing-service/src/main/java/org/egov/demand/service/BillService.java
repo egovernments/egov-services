@@ -118,7 +118,8 @@ public class BillService {
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
 		
-		List<Demand> demands = demandService.getDemands(demandCriteria);
+		DemandResponse demandResponse = demandService.getDemands(demandCriteria,requestInfo);
+		List<Demand> demands = demandResponse.getDemands();
 		
 		List<Bill> bills = null; 
 		

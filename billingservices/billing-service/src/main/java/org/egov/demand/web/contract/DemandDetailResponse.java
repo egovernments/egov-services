@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.model.DemandDetail;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +18,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DemandDetailResponse {
 
-	private ResponseInfo ResponseInfo;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	private List<DemandDetail> DemandDetails = new ArrayList<>();
+	@JsonProperty("DemandDetails")
+	private List<DemandDetail> demandDetails = new ArrayList<>();
 }

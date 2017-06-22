@@ -1,23 +1,25 @@
 package org.egov.demand.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxHeadMasterRepository;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -35,40 +37,55 @@ public class TaxHeadMasterService {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
+	private TaxPeriodService taxPeriodService;
+	
+	@Autowired
+	private SequenceGenService sequenceGenService;
+	
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
 	private ApplicationProperties applicationProperties;
 	
 	public TaxHeadMasterResponse getTaxHeads(TaxHeadMasterCriteria searchTaxHead, RequestInfo requestInfo) {
 		logger.info("TaxHeadMasterService getTaxHeads");
+		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();
+		taxPeriodCriteria.setTenantId(searchTaxHead.getTenantId());
+		taxPeriodCriteria.setService(searchTaxHead.getService());
 		List<TaxHeadMaster> taxHeadMaster= taxHeadMasterRepository.findForCriteria(searchTaxHead);
+		List<TaxPeriod> taxPeriod= taxPeriodService.searchTaxPeriods(taxPeriodCriteria, requestInfo).getTaxPeriods();
+		for(int i=0;i<taxHeadMaster.size();i++){
+			taxHeadMaster.get(i).setTaxPeriod(taxPeriod.get(i));
+		}
 		return getTaxHeadMasterResponse(taxHeadMaster,requestInfo);
 	}
 	
 	public TaxHeadMasterResponse create(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRepository.create(taxHeadMasterRequest);
+		List<TaxHeadMaster> taxHeadMaster=taxHeadMasterRequest.getTaxHeadMasters();
+		taxHeadMaster = taxHeadMasterRepository.create(taxHeadMasterRequest);
 		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
 	}
 	
-	/*public TaxHeadMasterResponse createAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
-
-		taxHeadMasterRequest.getTaxHeadMaster().setCode(taxHeadMasterRepository.getTaxHeadMasterCode());
-		taxHeadMasterRequest.getTaxHeadMaster().setId(Long.valueOf(taxHeadMasterRepository.getNextTaxHeadMasterId().longValue()));
+	public TaxHeadMasterResponse createAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
+		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRequest.getTaxHeadMasters();
+		
+		List<String> taxHeadIds = sequenceGenService.getIds(taxHeadMaster.size(),applicationProperties.getTaxHeadSeqName());
+		List<String> taxHeadCodes = sequenceGenService.getIds(taxHeadMaster.size(),applicationProperties.getTaxHeadCodeSeqName());
+		
+		for(int i=0;i<taxHeadMaster.size();i++){
+			taxHeadMaster.get(i).setId(taxHeadIds.get(i));
+			taxHeadMaster.get(i).setCode(taxHeadCodes.get(i));
+		}
+		taxHeadMasterRequest.setTaxHeadMasters(taxHeadMaster);
 
 		logger.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
-		String value = null;
 
-		try {
-			value = objectMapper.writeValueAsString(taxHeadMasterRequest);
-		} catch (JsonProcessingException e) {
-			logger.info("JsonProcessingException taxHeadMasterRequest for kafka : " + e);
-		}
-		logger.info("taxHeadMasterRequest value::" + value);
+		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(), taxHeadMasterRequest);
 
-		taxHeadMasterProducer.sendMessage(applicationProperties.getCreateTaxHeadMasterTopicName(),applicationProperties.getCreateTaxHeadMasterTopicKey(), value);
-
-		List<TaxHeadMaster> taxHeadMaster = new ArrayList<>();
-		taxHeadMaster.add(taxHeadMasterRequest.getTaxHeadMaster());
+		
 		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
-	}*/
+	}
 
 	public TaxHeadMasterResponse update(TaxHeadMasterRequest taxHeadMasterRequest) {
 

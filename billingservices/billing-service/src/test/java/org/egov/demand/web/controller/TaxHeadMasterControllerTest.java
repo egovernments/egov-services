@@ -21,7 +21,7 @@ import org.egov.demand.service.TaxHeadMasterService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
-import org.egov.demand.web.controller.TaxHeadMasterController;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.TaxHeadMasterValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +47,9 @@ public class TaxHeadMasterControllerTest {
 	
 	@MockBean
 	private TaxHeadMasterValidator taxHeadMasterValidator;
+	
+	@MockBean
+	private ResponseFactory responseFactory;
 	
 	@Test
 	public void test_Should_Search_TaxHeadMaster() throws Exception {

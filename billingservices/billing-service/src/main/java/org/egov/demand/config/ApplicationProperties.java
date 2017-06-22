@@ -116,6 +116,12 @@ public class ApplicationProperties {
 	@Value("${bs.billdetail.billnumber.seq.name}")
 	private String billNumSeqName;
 	
+	@Value("${bs.taxhead.seq.name}")
+	private String taxHeadSeqName;
+	
+	@Value("${bs.taxhead.code.seq.name}")
+	private String taxHeadCodeSeqName;
+	
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

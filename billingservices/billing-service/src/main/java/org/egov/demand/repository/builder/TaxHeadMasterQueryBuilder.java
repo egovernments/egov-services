@@ -50,8 +50,8 @@ public class TaxHeadMasterQueryBuilder {
 		
 		if (searchTaxHead.getService() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" service like ?");
-			preparedStatementValues.add("%" + searchTaxHead.getService() + "%");
+			selectQuery.append(" service = ?");
+			preparedStatementValues.add(searchTaxHead.getService());
 		}
 		if (searchTaxHead.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

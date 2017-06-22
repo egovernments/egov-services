@@ -21,8 +21,6 @@
       "taxPeriod": {
         "fromDate":123,
         "toDate": 345,
-        "module": "string",
-        "description": "string",
         "financialYear": "2017-2018"
       },
       "auditDetail": null

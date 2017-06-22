@@ -119,7 +119,9 @@ public class BillService {
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
 		
+		log.info("generateBill demandCriteria: "+demandCriteria);
 		DemandResponse demandResponse = demandService.getDemands(demandCriteria,requestInfo);
+		log.info("generateBill demandResponse: "+demandResponse);
 		List<Demand> demands = demandResponse.getDemands();
 		
 		List<Bill> bills = null; 
@@ -137,6 +139,7 @@ public class BillService {
 		
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		
+		log.info("prepareBill map:" +map);
 		Demand demand = demands.get(0);
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
 				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();

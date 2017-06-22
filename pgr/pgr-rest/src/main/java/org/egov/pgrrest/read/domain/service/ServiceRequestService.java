@@ -3,7 +3,9 @@ package org.egov.pgrrest.read.domain.service;
 import org.egov.pgr.common.model.Employee;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowedException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
@@ -121,5 +123,20 @@ public class ServiceRequestService {
             return;
         }
         complaint.getAuthenticatedUser().validateUpdateEligibility();
+    }
+
+
+    public boolean validateUpdateEligibilityUI(String crn, String tenantId, AuthenticatedUser authenticatedUser) {
+        Long assignmentIdDB = getAssignmentId(crn, tenantId);
+        Employee employee = getEmployeeByAssignee(authenticatedUser.getId(), tenantId);
+        if (assignmentIdDB.equals(employee.getPrimaryPosition())) {
+            return true;
+        }
+        try {
+            authenticatedUser.validateUpdateEligibility();
+            return true;
+        } catch (UpdateComplaintNotAllowedException ue) {
+            return false;
+        }
     }
 }

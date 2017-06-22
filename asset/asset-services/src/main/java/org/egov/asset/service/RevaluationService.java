@@ -112,26 +112,42 @@ public class RevaluationService {
 
 		final AssetCategory assetCategory = asset.getAssetCategory();
 
-		final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = getSubledgerDetails(
-				revaluationRequest, assetCategory.getAssetAccount());
-		final List<ChartOfAccountDetailContract> subledgerDetailsForRevaluationReserverAccount = getSubledgerDetails(
-				revaluationRequest, assetCategory.getRevaluationReserveAccount());
+		List<Voucher> vouchers = new ArrayList<Voucher>();
+		if (assetCategory != null) {
+			if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
+				final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = getSubledgerDetails(
+						revaluationRequest, assetCategory.getAssetAccount());
+				final List<ChartOfAccountDetailContract> subledgerDetailsForRevaluationReserverAccount = getSubledgerDetails(
+						revaluationRequest, assetCategory.getRevaluationReserveAccount());
 
-		if (subledgerDetailsForAssetAccount != null && subledgerDetailsForRevaluationReserverAccount != null
-				&& !subledgerDetailsForAssetAccount.isEmpty()
-				&& !subledgerDetailsForRevaluationReserverAccount.isEmpty())
-			throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+				if (subledgerDetailsForAssetAccount != null && subledgerDetailsForRevaluationReserverAccount != null
+						&& !subledgerDetailsForAssetAccount.isEmpty()
+						&& !subledgerDetailsForRevaluationReserverAccount.isEmpty())
+					throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
 
-		else {
-			final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
-					assetCategory);
+			} else if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
+				final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = getSubledgerDetails(
+						revaluationRequest, assetCategory.getAssetAccount());
+				final List<ChartOfAccountDetailContract> subledgerDetailsForFixedAssetWrittenOffAccount = getSubledgerDetails(
+						revaluationRequest, revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount());
 
-			final VoucherRequest voucherRequest = voucherService.createVoucherRequestForReevalaution(revaluationRequest,
-					asset, accountCodeDetails);
+				if (subledgerDetailsForAssetAccount != null && subledgerDetailsForFixedAssetWrittenOffAccount != null
+						&& !subledgerDetailsForAssetAccount.isEmpty()
+						&& !subledgerDetailsForFixedAssetWrittenOffAccount.isEmpty())
+					throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+			} else {
+				final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
+						assetCategory);
 
-			return voucherService.createVoucher(voucherRequest, revaluationRequest.getRevaluation().getTenantId());
-		}
+				final VoucherRequest voucherRequest = voucherService
+						.createVoucherRequestForReevalaution(revaluationRequest, asset, accountCodeDetails);
 
+				vouchers = voucherService.createVoucher(voucherRequest,
+						revaluationRequest.getRevaluation().getTenantId());
+			}
+			return vouchers;
+		} else
+			throw new RuntimeException("Asset Category should be present for asset : " + asset.getName());
 	}
 
 	private List<VouchercreateAccountCodeDetails> getAccountDetails(final RevaluationRequest revaluationRequest,
@@ -144,9 +160,10 @@ public class RevaluationService {
 					.add(getGlCodes(revaluationRequest, assetCategory.getRevaluationReserveAccount(), true, false));
 		} else if (assetCategory != null
 				&& revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
+			accountCodeDetails.add(getGlCodes(revaluationRequest,
+					revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount(), false, true));
 			accountCodeDetails.add(getGlCodes(revaluationRequest, assetCategory.getAssetAccount(), true, false));
-			accountCodeDetails
-					.add(getGlCodes(revaluationRequest, assetCategory.getRevaluationReserveAccount(), false, true));
+
 		}
 		return accountCodeDetails;
 	}

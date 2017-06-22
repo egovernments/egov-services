@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Owner;
-import org.egov.demand.web.contract.UserRequest;
+import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.UserResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class OwnerRepository {
 			throw e;
 		}
 		List<Owner> owners = new ArrayList<>();
-		for (UserRequest userRequest : userResponse.getUser()) {
+		for (User userRequest : userResponse.getUser()) {
 			owners.add(userRequest.toOwner());
 		}
 		return owners;

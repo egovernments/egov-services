@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 public class TaxHeadMasterRequest {
 
 	@JsonProperty("RequestInfo")
-	private RequestInfo RequestInfo;
+	private RequestInfo requestInfo;
 	
 	@JsonProperty("TaxHeadMasters")
-	List<TaxHeadMaster> TaxHeadMasters = new ArrayList<>();;
+	List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();;
 }

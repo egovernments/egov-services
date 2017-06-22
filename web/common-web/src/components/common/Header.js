@@ -55,7 +55,7 @@ const RightIcon = (props) => {
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <MenuItem primaryText="Worklist"  leftIcon={<i className="material-icons">list</i>}></MenuItem>
+          {/*<MenuItem primaryText="Worklist"  leftIcon={<i className="material-icons">list</i>}></MenuItem>
             <MenuItem primaryText="Drafts" leftIcon={<i className="material-icons">drafts</i>}></MenuItem>
             <MenuItem primaryText="Notification" leftIcon={<i className="material-icons">notifications</i>}></MenuItem>
             <MenuItem primaryText="Edit Profile" leftIcon={<i className="material-icons">mode_edit</i>}></MenuItem>
@@ -63,6 +63,7 @@ const RightIcon = (props) => {
             <MenuItem primaryText="Feedback" leftIcon={<i className="material-icons">chat</i>}></MenuItem>
             <MenuItem primaryText="Report an issue" leftIcon={<i className="material-icons">bug_report</i>}></MenuItem>
             <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
+            */}
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
                 props.logout();
                 window.localStorage.setItem("token","");

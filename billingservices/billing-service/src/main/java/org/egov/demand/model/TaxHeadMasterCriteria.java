@@ -1,7 +1,5 @@
 package org.egov.demand.model;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;

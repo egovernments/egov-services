@@ -52,11 +52,10 @@ public class ServiceGroupRowMapper implements RowMapper<ServiceGroup> {
 	public ServiceGroup mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		final ServiceGroup serviceGroup = new ServiceGroup();
 		serviceGroup.setId(rs.getLong("id"));
+		serviceGroup.setCode(rs.getString("code"));
 		serviceGroup.setName(rs.getString("name"));
 		serviceGroup.setDescription(rs.getString("description"));
 		serviceGroup.setTenantId(rs.getString("tenantId"));
-		serviceGroup.setVersion(rs.getInt("version"));
-
 		return serviceGroup;
 	}
 }

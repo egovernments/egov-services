@@ -28,8 +28,8 @@ public class ReceivingModeRepositoryTest {
     public void test_should_find_all_receivingmodes_by_tenantId()
     {
         List<ReceivingMode> receivingMode=getReceivingModes();
-        when(receivingModeJpaRepository.findAllByTenantId("ap.public")).thenReturn(receivingMode);
-        List<org.egov.pgrrest.common.model.ReceivingMode> receivingModes=receivingModeRepository.findAllByReceivingModeByTenantId("ap.public");
+        when(receivingModeJpaRepository.findAllByTenantId("tenantId")).thenReturn(receivingMode);
+        List<org.egov.pgrrest.common.model.ReceivingMode> receivingModes=receivingModeRepository.findAllByReceivingModeByTenantId("tenantId");
         assertEquals(receivingMode.get(0).getName(),receivingModes.get(0).getName());
         assertEquals(receivingMode.get(1).getName(),receivingModes.get(1).getName());
         assertEquals(receivingMode.get(0).getId(),receivingModes.get(0).getId());
@@ -37,8 +37,8 @@ public class ReceivingModeRepositoryTest {
     }
 
     public List<ReceivingMode>  getReceivingModes() {
-        ReceivingMode receivingMode1=ReceivingMode.builder().id(1L).name("Website").code("WEBSITE").visible(false).tenantId("ap.public").build();
-        ReceivingMode receivingMode2=ReceivingMode.builder().id(2l).name("SMS").code("SMS").visible(false).tenantId("ap.public").build();
+        ReceivingMode receivingMode1=ReceivingMode.builder().id(1L).name("Website").code("WEBSITE").tenantId("tenantId").build();
+        ReceivingMode receivingMode2=ReceivingMode.builder().id(2l).name("SMS").code("SMS").tenantId("tenantId").build();
         return Arrays.asList(receivingMode1,receivingMode2);
     }
 }

@@ -1,5 +1,6 @@
 package org.egov.demand.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +46,5 @@ public class Demand {
 
 	private AuditDetail auditDetail;
 
-	private Double minimumAmountPayable;
+	private BigDecimal minimumAmountPayable;
 }

@@ -18,6 +18,8 @@ public class TaxPeriodCriteria {
     @NotNull
     private String service;
 
+    private String id;
+
     private String code;
 
     private Long fromDate;

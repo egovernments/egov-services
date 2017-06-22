@@ -81,7 +81,7 @@ public class UserGetRequest {
 
 	private List<String> roleCodes;
 
-    private Boolean active = true;
+    private Boolean active;
 
     private Integer pageSize = 20;
 

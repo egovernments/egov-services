@@ -46,11 +46,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyPipeSizeRowMapper;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +72,11 @@ public class PropertyPipeSizeRepository {
     @Autowired
     private PropertyPipeSizeQueryBuilder propertyPipeSizeQueryBuilder;
 
-    public PropertyTypePipeSizeTypeRequest persistCreatePropertyPipeSize(
-            final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
+    public PropertyTypePipeSizeRequest persistCreatePropertyPipeSize(
+            final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         LOGGER.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeInsert = PropertyPipeSizeQueryBuilder.insertPropertyPipeSizeQuery();
-        final PropertyTypePipeSizeType propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {
@@ -102,11 +102,11 @@ public class PropertyPipeSizeRepository {
         return propertyPipeSizeRequest;
     }
 
-    public PropertyTypePipeSizeTypeRequest persistUpdatePropertyPipeSize(
-            final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
+    public PropertyTypePipeSizeRequest persistUpdatePropertyPipeSize(
+            final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         LOGGER.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeUpdate = PropertyPipeSizeQueryBuilder.updatePropertyPipeSizeQuery();
-        final PropertyTypePipeSizeType propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {
@@ -151,7 +151,7 @@ public class PropertyPipeSizeRepository {
         return true;
     }
 
-    public List<PropertyTypePipeSizeType> findForCriteria(final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
+    public List<PropertyTypePipeSize> findForCriteria(final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         try {
             if (propertyPipeSizeGetRequest.getPipeSizeType() != null)
@@ -167,9 +167,9 @@ public class PropertyPipeSizeRepository {
 
         final String queryStr = propertyPipeSizeQueryBuilder.getQuery(propertyPipeSizeGetRequest, preparedStatementValues);
         final String pipeSizeInmmQuery = PropertyPipeSizeQueryBuilder.getPipeSizeInmm();
-        final List<PropertyTypePipeSizeType> propertyPipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+        final List<PropertyTypePipeSize> propertyPipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 propertyPipeSizeRowMapper);
-        for (final PropertyTypePipeSizeType propertyPipeSize : propertyPipeSizes)
+        for (final PropertyTypePipeSize propertyPipeSize : propertyPipeSizes)
             propertyPipeSize.setPipeSizeType(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
                     new Object[] { propertyPipeSize.getPipeSizeId(), propertyPipeSize.getTenantId() }, Double.class));
         return propertyPipeSizes;

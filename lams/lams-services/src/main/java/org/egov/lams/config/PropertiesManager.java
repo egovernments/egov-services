@@ -149,6 +149,9 @@ public class PropertiesManager {
 	@Value("${egov.services.egov-common-workflows_service.searchpath}")
 	public String commonWorkFlowServiceSearchPath;
 	
+	@Value("${commons.workflow.cancel.action}")
+	public String commonsWorkflowCancelAction;
+	
 	@Value("${app.timezone}")
 	public String timeZone;
 	

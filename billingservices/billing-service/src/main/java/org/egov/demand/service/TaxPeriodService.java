@@ -44,7 +44,7 @@ import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class TaxPeriodService {
     private TaxPeriodRepository taxPeriodRepository;
 
     @Autowired
-    private ResponseInfoFactory responseInfoFactory;
+    private ResponseFactory responseInfoFactory;
 
     public TaxPeriodResponse searchTaxPeriods(final TaxPeriodCriteria taxPeriodCriteria, final RequestInfo requestInfo) {
         LOGGER.info("-- TaxPeriodService searchTaxPeriods -- ");

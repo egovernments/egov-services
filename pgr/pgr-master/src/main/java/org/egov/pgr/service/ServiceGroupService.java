@@ -39,6 +39,8 @@
  */
 package org.egov.pgr.service;
 
+import java.util.List;
+
 import org.egov.pgr.model.ServiceGroup;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceGroupRepository;
@@ -113,6 +115,10 @@ public class ServiceGroupService {
 		}
 		logger.error("Producer successfully posted the request to Queue");
 		return serviceGroupRequest.getServiceGroup();
+	}
+	
+	public List<ServiceGroup> getAllServiceGroup(String tenantId){
+		return categoryRepository.getAllServiceGroup(tenantId); 
 	}
 	
 	

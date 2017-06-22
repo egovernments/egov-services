@@ -56,7 +56,7 @@ const styles = {
 
 var _this;
 
-class ViewEditReceivingCenter extends Component {
+class ViewEditServiceGroup extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -184,4 +184,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewEditReceivingCenter);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEditServiceGroup);

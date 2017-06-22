@@ -1,5 +1,5 @@
 {
-  "responseInfo": {
+  "ResponseInfo": {
     "apiId": null,
     "ver": null,
     "ts": null,
@@ -7,7 +7,7 @@
     "msgId": null,
     "status": null
   },
-  "taxHeadMasters": [
+  "TaxHeadMasters": [
     {
       "id": "23",
       "tenantId": "ap.kurnool",
@@ -21,8 +21,6 @@
       "taxPeriod": {
         "fromDate":123,
         "toDate": 345,
-        "module": "string",
-        "description": "string",
         "financialYear": "2017-2018"
       },
       "auditDetail": null

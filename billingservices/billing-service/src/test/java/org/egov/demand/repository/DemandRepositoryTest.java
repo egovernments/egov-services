@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class DemandRepositoryTest {
 		demand.setBusinessService("businessservice");
 		demand.setConsumerType("consumertype");
 		demand.setOwner(owner);
-		demand.setMinimumAmountPayable(200d);
+		demand.setMinimumAmountPayable(BigDecimal.valueOf(200d));
 		demand.setTaxPeriodFrom(12345l);
 		demand.setTaxPeriodTo(1234567890l);
 		demand.setType(Type.DUES);
@@ -85,12 +86,12 @@ public class DemandRepositoryTest {
 
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		DemandDetail demandDetail = new DemandDetail();
-		demandDetail.setTaxAmount(100d);
-		demandDetail.setCollectionAmount(0d);
+		demandDetail.setTaxAmount(BigDecimal.valueOf(100d));
+		demandDetail.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail.setTaxHeadCode("0002");
 		DemandDetail demandDetail1 = new DemandDetail();
-		demandDetail1.setTaxAmount(200d);
-		demandDetail1.setCollectionAmount(0d);
+		demandDetail1.setTaxAmount(BigDecimal.valueOf(200d));
+		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail1.setTaxHeadCode("0003");
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);

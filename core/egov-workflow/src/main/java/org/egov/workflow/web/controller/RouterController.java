@@ -77,8 +77,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/router")
-public class RouterController {
-	
+public class RouterController{
+
 	@Autowired
     private ErrorHandler errHandler;
 	
@@ -198,7 +198,8 @@ public class RouterController {
 					.field(PgrMasterConstants.ROUTER_SERVICE_MANADATORY_ERROR_MESSAGE).build();
 			errorFields.add(errorField);
 		}
-		if (routerType.getPosition() == 0) {
+		
+		if (routerType.getPosition() == null || routerType.getPosition() == 0) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_POSITION_MANDATORY_CODE)
 					.message(PgrMasterConstants.ROUTER_POSITION_MANADATORY_FIELD_NAME)
 					.field(PgrMasterConstants.ROUTER_POSITION_MANADATORY_ERROR_MESSAGE).build();

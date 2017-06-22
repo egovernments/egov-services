@@ -61,7 +61,7 @@ class CategoryType extends Component {
 
   componentDidMount()
   {
-    let {initForm} = this.props;
+    let {initForm,setForm} = this.props;
     initForm();
     var _this=this;
 
@@ -77,11 +77,13 @@ class CategoryType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "category", "_search", {id},{}).then((res)=>
            {
-              this.setState({
-                list: res.Category
-            });
+            //   this.setState({
+            //     list: res.Category
+            // });
+            console.log(res.Category[0]);
+             setForm(res.Category[0]);
 
         },  (err)=> {
             alert(err);
@@ -241,6 +243,22 @@ const mapDispatchToProps = dispatch => ({
         pattern: {
           current: [],
           required: ["ownerName",]
+        }
+      }
+    });
+  },
+  setForm: (form) => {
+    dispatch({
+      type: "SET_FORM",
+      data:form,
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: ["ownerName"]
         }
       }
     });

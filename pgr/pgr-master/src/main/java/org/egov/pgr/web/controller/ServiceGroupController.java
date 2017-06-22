@@ -52,9 +52,13 @@ import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.model.ServiceGroup;
 import org.egov.pgr.service.ServiceGroupService;
 import org.egov.pgr.util.PgrMasterConstants;
+import org.egov.pgr.web.contract.RequestInfoWrapper;
+import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.egov.pgr.web.contract.ServiceGroupResponse;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
+import org.egov.pgr.web.errorhandlers.Error;
+import org.egov.pgr.web.errorhandlers.ErrorHandler;
 import org.egov.pgr.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,13 +67,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.egov.pgr.web.errorhandlers.Error;
 
 @RestController
 @RequestMapping("/serviceGroup")
@@ -85,6 +89,9 @@ public class ServiceGroupController {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+    private ErrorHandler errHandler;
 
 	@PostMapping(value = "/_create")
 	@ResponseBody
@@ -131,6 +138,32 @@ public class ServiceGroupController {
 		return getSuccessResponse(categories, serviceGroupRequest.getRequestInfo());
 
 	}
+	
+	@PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final ServiceGroupGetRequest serviceGroupGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+
+        // Call service
+        List<ServiceGroup> serviceGroupList = null;
+        try {
+        	serviceGroupList = serviceGroupService.getAllServiceGroup(serviceGroupGetRequest.getTenantId());
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + serviceGroupGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getSuccessResponse(serviceGroupList, requestInfo);
+    }
 
 	private List<ErrorResponse> validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();

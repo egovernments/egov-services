@@ -48,11 +48,11 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyPipeSizeRowMapper;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -79,26 +79,26 @@ public class PropertyPipeSizeRepositoryTest {
     @Test
     public void test_Should_Search_PropertyPipeSize() {
 
-        final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
-        final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
+        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
+        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizes.add(propertyPipeSize);
 
-        when(propertyPipeSizeQueryBuilder.getQuery(any(PropertyTypePipeSizeTypeGetRequest.class), any(List.class)))
+        when(propertyPipeSizeQueryBuilder.getQuery(any(PropertyTypePipeSizeGetRequest.class), any(List.class)))
                 .thenReturn("");
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(PropertyPipeSizeRowMapper.class)))
                 .thenReturn(propertyPipeSizes);
 
         assertTrue(
-                propertyPipeSizes.equals(propertyPipeSizeRepository.findForCriteria(new PropertyTypePipeSizeTypeGetRequest())));
+                propertyPipeSizes.equals(propertyPipeSizeRepository.findForCriteria(new PropertyTypePipeSizeGetRequest())));
     }
 
     @Test
     public void test_Inavalid_Find_PropertyPipeSize() throws Exception {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
-        final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
+        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
+        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizes.add(propertyPipeSize);
-        final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeRequest = Mockito.mock(PropertyTypePipeSizeTypeGetRequest.class);
+        final PropertyTypePipeSizeGetRequest propertyPipeSizeRequest = Mockito.mock(PropertyTypePipeSizeGetRequest.class);
         when(propertyPipeSizeQueryBuilder.getQuery(propertyPipeSizeRequest, preparedStatementValues)).thenReturn(null);
         when(jdbcTemplate.query("query", preparedStatementValues.toArray(), propertyPipeSizeRowMapper))
                 .thenReturn(propertyPipeSizes);
@@ -109,13 +109,13 @@ public class PropertyPipeSizeRepositoryTest {
     @Test
     public void test_Should_Create_PropertyPipeSize() {
 
-        final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeTypeRequest();
+        final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1l);
         requestInfo.setUserInfo(user);
         propertyPipeSizeRequest.setRequestInfo(requestInfo);
-        final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
@@ -126,13 +126,13 @@ public class PropertyPipeSizeRepositoryTest {
     @Test
     public void test_Should_Update_PropertyPipeSize() {
 
-        final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeTypeRequest();
+        final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
         user.setId(1l);
         requestInfo.setUserInfo(user);
         propertyPipeSizeRequest.setRequestInfo(requestInfo);
-        final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
@@ -140,8 +140,8 @@ public class PropertyPipeSizeRepositoryTest {
                 .equals(propertyPipeSizeRepository.persistUpdatePropertyPipeSize(propertyPipeSizeRequest)));
     }
 
-    private PropertyTypePipeSizeType getPropertyPipeSize() {
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
+    private PropertyTypePipeSize getPropertyPipeSize() {
+        final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setTenantId("default");
         propertyPipeSize.setPipeSizeType(2d);
         propertyPipeSize.setPropertyTypeName("property type");

@@ -1,5 +1,7 @@
 package org.egov.demand.model;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Email;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +19,7 @@ import lombok.ToString;
 @ToString
 public class GenerateBillCriteria {
 	
+	@NotNull
 	private String tenantId;
 	
 	private String demandId;

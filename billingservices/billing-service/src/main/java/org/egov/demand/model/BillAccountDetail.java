@@ -1,15 +1,18 @@
 package org.egov.demand.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+
 import org.egov.demand.model.enums.Purpose;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BillAccountDetail {
 
 	private String id;
@@ -24,9 +27,9 @@ public class BillAccountDetail {
 
 	private String accountDescription;
 
-	private Double creditAmount;
+	private BigDecimal creditAmount;
 
-	private Double debitAmount;
+	private BigDecimal debitAmount;
 
 	private Boolean isActualDemand;
 

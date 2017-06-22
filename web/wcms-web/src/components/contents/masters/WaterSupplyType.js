@@ -61,7 +61,7 @@ class WaterSupplyTypes extends Component {
 
   componentDidMount()
   {
-    let {initForm} = this.props;
+    let {initForm,setForm} = this.props;
     initForm();
     var _this=this;
 
@@ -77,11 +77,14 @@ class WaterSupplyTypes extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "supplytype/"+id, "_update", {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "supplytype", "_search", {id},{}).then((res)=>
            {
-              this.setState({
-                list: res.supplytypes
-            });
+            //   this.setState({
+            //     list: res.supplytypes
+            // });
+            console.log(res.supplytypes[0]);
+            setForm(res.supplytypes[0]);
+
 
         },  (err)=> {
             alert(err);
@@ -178,9 +181,7 @@ class WaterSupplyTypes extends Component {
                     </Col>
 
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.Descrption
-                        ? fieldErrors.Description
-                        : ""} value={WaterSupplyTypes.Description?WaterSupplyTypes.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
+                      <TextField value={WaterSupplyTypes.Description?WaterSupplyTypes.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
                     </Col>
                     </Row>
                     <Row>
@@ -243,6 +244,23 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  setForm: (form) => {
+    dispatch({
+      type: "SET_FORM",
+      data:form,
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: ["ownerName"]
+        }
+      }
+    });
+  },
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },

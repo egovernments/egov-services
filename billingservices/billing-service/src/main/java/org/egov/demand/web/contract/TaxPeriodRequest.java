@@ -50,15 +50,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class TaxPeriodRequest {
 
+	@NotNull
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	@JsonProperty("TaxPeriods")
-	List<TaxPeriod> taxPeriods = new ArrayList<>();
+	private List<TaxPeriod> taxPeriods = new ArrayList<>();
 }

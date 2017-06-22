@@ -24,7 +24,7 @@ public class BillHelper {
 	private ApplicationProperties applicationProperties;
 	
 	public void getBillRequestWithIds(BillRequest billRequest){
-		List<Bill> bills = billRequest.getBill();
+		List<Bill> bills = billRequest.getBills();
 		
 		Integer totalNoOfBills = bills.size();
 		Integer totalNoOfBillDetails = 0;

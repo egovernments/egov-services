@@ -88,20 +88,19 @@ public class BillService {
 	
 	@Autowired
 	private DemandService demandService;
-	
+
 	public BillResponse createAsync(BillRequest billRequest) { 
 		
 		billHelper.getBillRequestWithIds(billRequest);
 		
 		try {
-			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),
-								objectMapper.writeValueAsString(billRequest));
+			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),billRequest);
 		} catch (Exception e) {
 			log.info("BillService createAsync:"+e);
 			throw new RuntimeException(e);
 			
 		}
-		return getBillResponse(billRequest.getBill());
+		return getBillResponse(billRequest.getBills());
 	}
 	
 	public void create(BillRequest billRequest){		
@@ -125,7 +124,7 @@ public class BillService {
 		else 
 			throw new RuntimeException("Invalid demand criteria");
 			
-		return createAsync(BillRequest.builder().bill(bills).requestInfo(requestInfo).build());
+		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 	
 	private List<Bill> prepareBill(List<Demand> demands,String tenantId){

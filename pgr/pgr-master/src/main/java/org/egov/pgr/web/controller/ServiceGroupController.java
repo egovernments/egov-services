@@ -157,7 +157,7 @@ public class ServiceGroupController {
         // Call service
         List<ServiceGroup> serviceGroupList = null;
         try {
-        	serviceGroupList = serviceGroupService.getAllServiceGroup(serviceGroupGetRequest.getTenantId());
+        	serviceGroupList = serviceGroupService.getAllServiceGroup(serviceGroupGetRequest);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + serviceGroupGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

@@ -12,6 +12,7 @@ import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.repository.DemandRepository;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;

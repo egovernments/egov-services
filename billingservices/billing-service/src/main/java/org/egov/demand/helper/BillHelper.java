@@ -6,7 +6,7 @@ import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
-import org.egov.demand.repository.GenIdServiceUtil;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.BillRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BillHelper {
 	
 	@Autowired
-	private GenIdServiceUtil genIdServiceUtil;
+	private SequenceGenService sequenceGenService;
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -39,10 +39,10 @@ public class BillHelper {
 			}
 		}
 		
-		List<String> billIds = genIdServiceUtil.getNextValue(applicationProperties.getBillSeqName(), totalNoOfBills);
-		List<String> billDetailIds = genIdServiceUtil.getNextValue(applicationProperties.getBillDetailSeqName(), totalNoOfBillDetails);
-		List<String> billAccIds = genIdServiceUtil.getNextValue(applicationProperties.getBillAccDetailSeqName(), totalNoOfAccountDetails);
-		List<String> billNumber = genIdServiceUtil.getNextValue(applicationProperties.getBillNumSeqName(), totalNoOfBillDetails);
+		List<String> billIds = sequenceGenService.getIds(totalNoOfBills,applicationProperties.getBillSeqName());
+		List<String> billDetailIds = sequenceGenService.getIds(totalNoOfBillDetails,applicationProperties.getBillDetailSeqName());
+		List<String> billAccIds = sequenceGenService.getIds(totalNoOfAccountDetails,applicationProperties.getBillAccDetailSeqName());
+		List<String> billNumber = sequenceGenService.getIds(totalNoOfBillDetails,applicationProperties.getBillNumSeqName());
 		
 		int billIndex = 0;
 		int billDetailIndex = 0;

@@ -41,15 +41,16 @@ public class UserSearchRequest {
 
 	@JsonProperty("emailId")
 	private String emailId;
+	
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-	@JsonProperty("fuzzyLogic")
+/*	@JsonProperty("fuzzyLogic")
 	private boolean fuzzyLogic;
 
 	@JsonProperty("active")
 	private boolean active = true;
 
-	@JsonProperty("tenantId")
-	private String tenantId;
 
 	@JsonProperty("pageSize")
 	private int pageSize = 20;
@@ -64,6 +65,6 @@ public class UserSearchRequest {
 	private String userType;
 
 	@JsonProperty("roleCodes")
-	private List<String> roleCodes;
+	private List<String> roleCodes;*/
 
 }

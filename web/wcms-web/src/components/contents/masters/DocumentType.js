@@ -61,7 +61,7 @@ class DocumentType extends Component {
 
   componentDidMount()
   {
-    let {initForm} = this.props;
+    let {initForm,setForm} = this.props;
     initForm();
     var _this=this;
 
@@ -77,11 +77,14 @@ class DocumentType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "documenttype", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "documenttype", "_search", {},{}).then((res)=>
            {
-              this.setState({
-                list: res.documentTypes
-            });
+            //   this.setState({
+            //     list: res.documentTypes
+            // });
+            console.log(res.documentTypes[0]);
+              setForm(res.documentTypes[0]);
+
 
         },  (err)=> {
             alert(err);
@@ -243,6 +246,22 @@ const mapDispatchToProps = dispatch => ({
         pattern: {
           current: [],
           required: ["ownerName",]
+        }
+      }
+    });
+  },
+  setForm: (form) => {
+    dispatch({
+      type: "SET_FORM",
+      data:form,
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: ["ownerName"]
         }
       }
     });

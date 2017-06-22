@@ -41,7 +41,7 @@ const styles = {
 };
 
 
-class DocumentTypeApplicationType extends Component {
+class Donation extends Component {
 
   constructor(props) {
        super(props);
@@ -96,15 +96,15 @@ add(e)
 
   // let mode=getUrlVars()["type"];
 
-    let {changeButtonText,DocumentTypeApplicationType}=this.props;
-    var documentTypeApplicationType = {
-      applicationType:DocumentTypeApplicationType.applicationType,
-      documentTypeId:DocumentTypeApplicationType.documentTypeId,
-      active:DocumentTypeApplicationType.active,
+    let {changeButtonText,Donation}=this.props;
+    var donation = {
+      applicationType:Donation.applicationType,
+      documentTypeId:Donation.documentTypeId,
+      active:Donation.active,
       tenantId:'default'
     }
     if(type == "Update"){
-      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype/"+id, "_update", {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "donation", "_update/"+id, {},{donation:donation}).then(function(response)
       {
     },function(err) {
         alert(err);
@@ -113,10 +113,10 @@ add(e)
     }
 
   else{
-    let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
+    let response=Api.commonApiPost("wcms-masters", "donation", "_create", {},{Donation:donation}).then(function(response)
     {
   },function(err) {
-    if(!documentTypeApplicationType.applicationType && documentTypeApplicationType.documentTypeId){
+    if(!donation.applicationType && donation.documentTypeId){
       alert("Please Select Application type and Document Type");
     }
     else{
@@ -130,7 +130,7 @@ add(e)
 
     render(){
       let {
-        DocumentTypeApplicationType,
+        Donation,
         handleChange,
         fieldErrors,
       }=this.props;
@@ -179,7 +179,7 @@ add(e)
         <div className="DocumentTypeApplicationType">
             <Card>
                 <CardHeader
-                    title={<strong style={{color:brown500}}>Create DocumentType Application Type </strong>}
+                    title={<strong style={{color:brown500}}>Create Donation </strong>}
                 />
                 <CardText>
                       <Card>
@@ -189,27 +189,27 @@ add(e)
                                   <Row>
                                     <Col xs={12} md={6}>
 
-                                      <SelectField  value={DocumentTypeApplicationType.applicationType?DocumentTypeApplicationType.applicationType:""} onChange={(event, index, value) => {
+                                      <SelectField  value={Donation.applicationType?Donation.applicationType:""} onChange={(event, index, value) => {
                                           var e = {
                                             target: {
                                               value: value
                                             }
                                           };
-                                          handleChange(e, "applicationType", false, "")}} floatingLabelText="Application Type" >
+                                          handleChange(e, "applicationType", false, "")}} floatingLabelText="Property Type" >
                                         <MenuItem value={1} primaryText=""/>
                                         {renderOption(this.state.list2)}
                                       </SelectField>
                                     </Col>
 
                                     <Col xs={12} md={6}>
-                                      <SelectField value={DocumentTypeApplicationType.documentTypeId?DocumentTypeApplicationType.documentTypeId:""} onChange={(event, index, value) =>{
+                                      <SelectField value={Donation.documentTypeId?Donation.documentTypeId:""} onChange={(event, index, value) =>{
                                           var e = {
                                             target: {
                                               value: value
                                             }
                                           };
                                           handleChange(e, "documentTypeId", false, "")}
-                                        } floatingLabelText="Document Type" >
+                                        } floatingLabelText="Category " >
                                          <MenuItem value={1} primaryText=""/>
                                          {renderOption(this.state.list)}
                                       </SelectField>
@@ -217,22 +217,60 @@ add(e)
                                   </Row>
                                   <Row>
                                   <Col xs={12} md={6}>
-                                                      <Checkbox
-                                                       label="Active"
-                                                       defaultChecked={true}
-                                                       value={DocumentTypeApplicationType.active?DocumentTypeApplicationType.active:""}
-                                                       onCheck={(event,isInputChecked) => {
-                                                         var e={
-                                                           "target":{
-                                                             "value":isInputChecked
-                                                           }
-                                                         }
-                                                         handleChange(e, "active", true, "")}
-                                                       }
-                                                       style={styles.checkbox}
-                                                       style={styles.topGap}
-                                                      />
+                                    <SelectField value={Donation.documentTypeId?Donation.documentTypeId:""} onChange={(event, index, value) =>{
+                                        var e = {
+                                          target: {
+                                            value: value
+                                          }
+                                        };
+                                        handleChange(e, "documentTypeId", false, "")}
+                                      } floatingLabelText="UsageType " >
+                                       <MenuItem value={1} primaryText=""/>
+                                       {renderOption(this.state.list)}
+                                    </SelectField>
+                                  </Col>
+                                  <Col xs={12} md={6}>
+                                    <SelectField value={Donation.documentTypeId?Donation.documentTypeId:""} onChange={(event, index, value) =>{
+                                        var e = {
+                                          target: {
+                                            value: value
+                                          }
+                                        };
+                                        handleChange(e, "documentTypeId", false, "")}
+                                      } floatingLabelText="Max H.S.C Pipe SIze " >
+                                       <MenuItem value={1} primaryText=""/>
+                                       {renderOption(this.state.list)}
+                                    </SelectField>
+                                  </Col>
+
+                                  </Row>
+                                  <Row>
+                                  <Col xs={12} md={6}>
+                                    <SelectField value={Donation.documentTypeId?Donation.documentTypeId:""} onChange={(event, index, value) =>{
+                                        var e = {
+                                          target: {
+                                            value: value
+                                          }
+                                        };
+                                        handleChange(e, "documentTypeId", false, "")}
+                                      } floatingLabelText="Min H.S.C Pipe SIze " >
+                                       <MenuItem value={1} primaryText=""/>
+                                       {renderOption(this.state.list)}
+                                    </SelectField>
+                                  </Col>
+                                  <Col xs={12} md={6}>
+                                    <TextField value={Donation.ownerName?Donation.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="Category Type" floatingLabelText="Donation" />
+                                  </Col>
+
+                                  </Row>
+                                  <Row>
+                                  <Col xs={12} md={6}>
+                                            <DatePicker hintText="From Date " container="inline" />
                                         </Col>
+                                        <Col xs={12} md={6}>
+                                                  <DatePicker hintText="Effective To " container="inline" />
+                                              </Col>
+
                                       </Row>
 
                                 </Grid>
@@ -251,7 +289,7 @@ add(e)
     }
 
 }
-const mapStateToProps = state => ({DocumentTypeApplicationType: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+const mapStateToProps = state => ({Donation: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 
 const mapDispatchToProps = dispatch => ({
   initForm: () => {
@@ -290,4 +328,4 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentTypeApplicationType);
+export default connect(mapStateToProps, mapDispatchToProps)(Donation);

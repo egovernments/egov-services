@@ -7,7 +7,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.egov.demand.producer.TaxHeadMasterProducer;
 import org.egov.demand.repository.TaxHeadMasterRepository;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
@@ -34,9 +33,6 @@ public class TaxHeadMasterService {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
-	
-	@Autowired
-	private TaxHeadMasterProducer taxHeadMasterProducer;
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;

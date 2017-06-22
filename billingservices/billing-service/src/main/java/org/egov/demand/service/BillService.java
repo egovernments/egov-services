@@ -60,8 +60,6 @@ import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +89,6 @@ public class BillService {
 	@Autowired
 	private DemandService demandService;
 	
-	@Autowired	
 	public BillResponse createAsync(BillRequest billRequest) { 
 		
 		billHelper.getBillRequestWithIds(billRequest);

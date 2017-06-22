@@ -14,7 +14,6 @@ import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.model.enums.Category;
-import org.egov.demand.producer.TaxHeadMasterProducer;
 import org.egov.demand.repository.TaxHeadMasterRepository;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
@@ -42,9 +41,6 @@ public class TaxHeadMasterServiceTest {
 
 	@Mock
 	private ObjectMapper objectMapper;
-
-	@Mock
-	private TaxHeadMasterProducer taxHeadMasterProducer;
 
 	@Mock
 	private ApplicationProperties applicationProperties;

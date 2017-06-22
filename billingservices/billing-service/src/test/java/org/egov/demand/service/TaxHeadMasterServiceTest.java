@@ -15,6 +15,7 @@ import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.model.enums.Category;
+
 import org.egov.demand.repository.TaxHeadMasterRepository;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
@@ -28,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -112,6 +114,7 @@ public class TaxHeadMasterServiceTest {
 		taxPeriod.setCode("string");
 		taxPeriod.setFinancialYear("2017-2018");
 		taxPeriod.setService("string");
+
 		taxPeriod.setFromDate(123L);
 		taxPeriod.setToDate(345L);
 		taxHeadMaster.setTaxPeriod(taxPeriod);

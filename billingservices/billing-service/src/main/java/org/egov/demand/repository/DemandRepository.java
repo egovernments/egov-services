@@ -2,6 +2,8 @@ package org.egov.demand.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -130,10 +132,10 @@ public class DemandRepository {
 
 	}
 
-	public List<Demand> getDemands(DemandCriteria demandCriteria) {
+	public List<Demand> getDemands(DemandCriteria demandCriteria,Set<String> ownerIds) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String searchDemandQuery = DemandQueryBuilder.getDemandQuery(demandCriteria, preparedStatementValues);
+		String searchDemandQuery = DemandQueryBuilder.getDemandQuery(demandCriteria,ownerIds, preparedStatementValues);
 		List<Demand> demands = new ArrayList<>();
 		try {
 			demands.addAll(

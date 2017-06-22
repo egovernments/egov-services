@@ -38,20 +38,18 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.domain.model.enums;
+package org.egov.eis.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 
-public enum TransferType {
-
-    TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB("Transfer within department/Corporation/ULB"),
-    TRANSFER_OUTSIDE_CORPORATION_OR_ULB("Transfer outside Corporation/ULB");
+public enum TypeOfMovement {
+    TRANSFER("TRANSFER"), PROMOTION("PROMOTION"), TRANSFER_CUM_PROMOTION("TRANSFER_CUM_PROMOTION");
 
     private String value;
 
-    TransferType(String value) {
+    TypeOfMovement(String value) {
         this.value = value;
     }
 
@@ -62,8 +60,8 @@ public enum TransferType {
     }
 
     @JsonCreator
-    public static TransferType fromValue(String passedValue) {
-        for (TransferType obj : TransferType.values()) {
+    public static TypeOfMovement fromValue(String passedValue) {
+        for (TypeOfMovement obj : TypeOfMovement.values()) {
             if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
                 return obj;
             }

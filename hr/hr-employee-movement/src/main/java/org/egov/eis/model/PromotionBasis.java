@@ -38,7 +38,8 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.domain.model;
+package org.egov.eis.model;
+
 
 import lombok.*;
 
@@ -49,7 +50,7 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @ToString
-public class TransferReasons {
+public class PromotionBasis {
 
     private Long id;
 

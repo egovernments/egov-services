@@ -38,34 +38,21 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.domain.model.enums;
+package org.egov.eis.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
+import lombok.*;
 
-public enum TypeOfMovement {
-    TRANSFER("TRANSFER"), PROMOTION("PROMOTION"), TRANSFER_CUM_PROMOTION("TRANSFER_CUM_PROMOTION");
 
-    private String value;
+@AllArgsConstructor
+@Builder
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class TransferReason {
 
-    TypeOfMovement(String value) {
-        this.value = value;
-    }
+    private Long id;
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    private String description;
 
-    @JsonCreator
-    public static TypeOfMovement fromValue(String passedValue) {
-        for (TypeOfMovement obj : TypeOfMovement.values()) {
-            if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-                return obj;
-            }
-        }
-        return null;
-    }
 }

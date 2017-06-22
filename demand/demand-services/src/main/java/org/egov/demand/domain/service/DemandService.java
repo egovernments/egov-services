@@ -55,7 +55,7 @@ public class DemandService {
 						demandDetail.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				if (demandReason != null) {
 					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
-							BigDecimal.ZERO);
+							demandDetail.getCollectionAmount()!=null ? demandDetail.getCollectionAmount() : BigDecimal.ZERO);
 					egDemandDetails.setTenantId(demand.getTenantId());
 					egDemandDetails.setEgDemand(egDemand);
 					demandDetailsList.add(egDemandDetails);
@@ -111,7 +111,7 @@ public class DemandService {
 						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				
 				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
-						BigDecimal.ZERO);
+						demandDetails.getCollectionAmount()!=null ? demandDetails.getCollectionAmount() : BigDecimal.ZERO);
 				egDemand.addEgDemandDetails(egDemandDetails);
 				egDemandDetails.setTenantId(demand.getTenantId());
 				egDemandDetails.setEgDemand(egDemand);

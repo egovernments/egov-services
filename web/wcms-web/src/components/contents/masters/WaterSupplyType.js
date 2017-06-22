@@ -77,7 +77,7 @@ class WaterSupplyTypes extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "supplytype", "_search", {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "supplytype", "_search", {id},{}).then((res)=>
            {
             //   this.setState({
             //     list: res.supplytypes
@@ -181,9 +181,7 @@ class WaterSupplyTypes extends Component {
                     </Col>
 
                     <Col xs={12} md={6}>
-                      <TextField errorText={fieldErrors.Descrption
-                        ? fieldErrors.Description
-                        : ""} value={WaterSupplyTypes.Description?WaterSupplyTypes.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
+                      <TextField value={WaterSupplyTypes.Description?WaterSupplyTypes.Description:""} multiLine={true} onChange={(e) => handleChange(e, "Description", false, "")} hintText="Description" floatingLabelText="Description" />
                     </Col>
                     </Row>
                     <Row>

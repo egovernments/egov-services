@@ -77,7 +77,7 @@ class DocumentType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "documenttype", "_search", {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "documenttype", "_search", {id},{}).then((res)=>
            {
             //   this.setState({
             //     list: res.documentTypes

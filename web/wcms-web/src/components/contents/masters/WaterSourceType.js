@@ -77,7 +77,7 @@ class WaterSourceType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "sourcetype", "_search", {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "sourcetype", "_search", {id},{}).then((res)=>
            {
             //   this.setState({
             //     list: res.waterSourceType

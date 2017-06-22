@@ -5,8 +5,8 @@ import org.egov.pgr.common.date.DateFormatter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class SevaRequest {
 

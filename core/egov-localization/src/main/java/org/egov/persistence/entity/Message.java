@@ -26,6 +26,9 @@ public class Message {
     @Column(name = "code")
     private String code;
 
+    @Column(name = "module")
+    private String module;
+
     @Column(name = "message")
     private String message;
 
@@ -44,6 +47,7 @@ public class Message {
             .code(code)
             .message(message)
             .locale(locale)
+            .module(module)
             .tenant(new Tenant(tenantId))
             .build();
     }

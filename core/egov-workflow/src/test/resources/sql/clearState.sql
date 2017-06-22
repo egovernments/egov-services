@@ -1,2 +1,2 @@
-DELETE FROM eg_wf_state_history;
-DELETE FROM eg_wf_states;
+DELETE FROM cs_wf_state_history;
+DELETE FROM cs_wf_states;

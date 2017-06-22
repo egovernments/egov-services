@@ -18,7 +18,8 @@ import lombok.ToString;
 @ToString
 @Builder
 public class PersistRouter {
-
+	public static final String SEQ_ROUTER = "SEQ_EGPGR_ROUTER";
+	@NotNull
 	private Long id;
 	
 	private Long service;

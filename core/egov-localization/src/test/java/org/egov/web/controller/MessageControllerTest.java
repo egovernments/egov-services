@@ -17,7 +17,6 @@ import org.egov.TestConfiguration;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
-import org.egov.web.contract.NewMessagesRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,14 +89,15 @@ public class MessageControllerTest {
             .andExpect(content().json(getFileContents("mandatoryFieldsMissingErrorResponse.json")));
     }
     
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
 	public void test_should_create_messages() throws Exception {
 		mockMvc.perform(post("/messages/_create").content(getFileContents("createNewMessageRequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("createNewMessageResponse.json")));
-		verify(messageService).createMessage(any(NewMessagesRequest.class));
+		verify(messageService).createMessage(any(String.class), any(String.class), any(List.class));
 	}
     
     @Test
@@ -109,14 +109,15 @@ public class MessageControllerTest {
 				.andExpect(content().json(getFileContents("createNewMessageRequestMissingMandatoryFieldsResponse.json")));
 	}
     
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
 	public void test_should_update_messages() throws Exception {
 		mockMvc.perform(post("/messages/_update").content(getFileContents("createNewMessageRequest.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("createNewMessageResponse.json")));
-		verify(messageService).createMessage(any(NewMessagesRequest.class));
+		verify(messageService).createMessage(any(String.class), any(String.class), any(List.class));
 	}
     
     @Test

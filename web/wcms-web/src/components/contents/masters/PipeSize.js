@@ -19,6 +19,8 @@ import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Api from '../../../api/wCAPIS';
+import App from '../../App';
+
 
 
 const $ = require('jquery');
@@ -93,7 +95,7 @@ class PipeSize extends Component {
             // });
 
         },  (err)=> {
-            alert(err);
+            alert("Please Enter the details");
         })
       }
 
@@ -104,7 +106,7 @@ class PipeSize extends Component {
   {
     var type=getUrlVars()["type"];
     var id=getUrlVars()["id"];
-    let {changeButtonText,pipeSize}=this.props;
+    let {changeButtonText,pipeSize,toggleDailogAndSetText}=this.props;
     var PipeSize = {
         sizeInMilimeter:pipeSize.sizeInMilimeter,
         description:pipeSize.Description,
@@ -116,9 +118,15 @@ class PipeSize extends Component {
 
         let response=Api.commonApiPost("wcms-masters", "pipesize/"+id, "_update", {},{PipeSize:PipeSize}).then(function(response)
         {
-        console.log(response);
+        // console.log(response);
+        alert("Pipe Size Updated Successfully")
       },function(err) {
-          alert(err);
+        if(!PipeSize.sizeInMilimeter){
+          alert("Please Enter PipeSize in mm");
+        }
+        else{
+          alert("Enetered Pipe Size already exist");
+        }
       });
 
       }
@@ -127,9 +135,13 @@ class PipeSize extends Component {
       let response=Api.commonApiPost("wcms-masters", "pipesize", "_create", {},{PipeSize}).then(function(response)
       {
       // console.log(response);
-      alert("Pipe Size Created Successfully");
+       alert("Pipe Size Created Successfully");
+      // toggleDailogAndSetText(true," done");
     },function(err) {
-        alert("Pipe Size in mm already exist");
+       console.log(response);
+        alert("Pipe Size enetered in mm already exist");
+
+       toggleDailogAndSetText(true,"Not Done");
     });
   }
     }
@@ -150,11 +162,12 @@ class PipeSize extends Component {
       fieldErrors,
       // isFormValid,
       handleChange,
+      toggleDailogAndSetText,
 
     } = this.props;
     let {add, handleChangeState} = this;
     let mode=getUrlVars()["type"];
-    console.log(pipeSize);
+    // console.log(pipeSize);
     const showActionButton=function() {
       if((!mode) ||mode==="Update")
       {
@@ -278,6 +291,14 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({
+      type: "TOGGLE_DAILOG_AND_SET_TEXT",
+      dailogState,
+      msg
+    })
+},
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
 

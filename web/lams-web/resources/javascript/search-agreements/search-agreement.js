@@ -30,9 +30,17 @@ class AgreementSearch extends React.Component {
   }
   this.handleChange = this.handleChange.bind(this);
   this.search = this.search.bind(this);
+  this.handleMobileValidation = this.handleMobileValidation.bind(this);
 }
 
-
+  handleMobileValidation(e) {
+    if(e.target.value && !(/[0-9]{10}/).test(e.target.value)) {
+      e.target.setCustomValidity("Please enter 10 digits.");
+    } else {
+      e.target.setCustomValidity("");
+    }
+  }
+  
   search(e) {
     e.preventDefault();
     var _this = this;
@@ -298,7 +306,7 @@ class AgreementSearch extends React.Component {
 
   render() {
     //console.log(this.state.searchSet);
-    let {handleChange,search,updateTable,handleSelectChange}=this;
+    let {handleChange,search,updateTable,handleSelectChange, handleMobileValidation}=this;
     let {isSearchClicked,agreements,assetCategories, hideCollectTaxOption}=this.state;
     let {locality,
     agreementNumber,
@@ -518,7 +526,7 @@ class AgreementSearch extends React.Component {
                                       <div className="col-sm-6">
                                           <div className="text-no-ui">
                                               <span>+91</span>
-                                              <input type="text" id="contact_no" name="contact_no" value={mobileNumber} maxLength="10" onChange={(e)=>{
+                                              <input type="text" id="contact_no" onInput={(e) => {handleMobileValidation(e)}} onInvalid={(e) => {handleMobileValidation(e)}} name="contact_no" value={mobileNumber} maxLength="10" onChange={(e)=>{
                                   handleChange(e,"mobileNumber")
                               }}/>
                                           </div>

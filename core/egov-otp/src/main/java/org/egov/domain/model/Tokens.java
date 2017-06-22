@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -11,16 +12,15 @@ import java.util.List;
 public class Tokens {
     private List<Token> tokens;
 
-    public boolean hasSingleNonExpiredToken() {
+    public boolean hasSingleNonExpiredToken(LocalDateTime now) {
         return !CollectionUtils.isEmpty(tokens)
-                && tokens.stream().anyMatch(token -> !token.isExpired());
+                && tokens.stream().anyMatch(token -> !token.isExpired(now));
     }
 
-    public Token getNonExpiredToken() {
+    public Token getNonExpiredToken(LocalDateTime now) {
         return tokens.stream()
-                .filter(token -> !token.isExpired())
+                .filter(token -> !token.isExpired(now))
                 .findFirst()
-                .map(token -> token)
                 .orElse(null);
     }
 }

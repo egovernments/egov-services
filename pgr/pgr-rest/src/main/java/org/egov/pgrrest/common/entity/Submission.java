@@ -99,9 +99,11 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
     }
 
     private ServiceRequestType getDomainServiceRequestType() {
-        return new ServiceRequestType(this.serviceType.getName(),
-            this.serviceType.getCode(),
-            this.serviceType.getTenantId());
+        return ServiceRequestType.builder()
+            .name(this.serviceType.getName())
+            .code(this.serviceType.getCode())
+            .tenantId(this.serviceType.getTenantId())
+            .build();
     }
 
     private Requester getComplainant() {

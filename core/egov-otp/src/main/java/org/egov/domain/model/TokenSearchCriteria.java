@@ -3,7 +3,7 @@ package org.egov.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.egov.domain.InvalidTokenSearchCriteriaException;
+import org.egov.domain.exception.InvalidTokenSearchCriteriaException;
 
 import static org.springframework.util.StringUtils.isEmpty;
 

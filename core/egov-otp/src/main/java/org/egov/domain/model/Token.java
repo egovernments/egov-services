@@ -1,18 +1,15 @@
 package org.egov.domain.model;
 
 import lombok.*;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
 @Getter
 public class Token {
-    private static final String IST = "Asia/Calcutta";
     @NotEmpty
     private final String tenantId;
     private String identity;
@@ -23,8 +20,8 @@ public class Token {
     @Setter
     private boolean validated;
 
-    public boolean isExpired() {
-        return LocalDateTime.now(ZoneId.of(IST)).isAfter(expiryDateTime);
+    public boolean isExpired(LocalDateTime now) {
+        return now.isAfter(expiryDateTime);
     }
 }
 

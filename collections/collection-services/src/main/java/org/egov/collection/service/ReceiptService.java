@@ -45,18 +45,41 @@ import java.util.List;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
+import org.egov.collection.web.contract.ReceiptInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReceiptService {
 
+	public static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
+
+	
 	@Autowired
 	private ReceiptRepository receiptRepository;
+	
 
 	public List<ReceiptHeader> getReceipts
 	(ReceiptSearchCriteria receiptSearchCriteria) {
 		return receiptRepository.find(receiptSearchCriteria);
+	}
+	
+	public ReceiptInfo pushToQueue(ReceiptInfo receiptInfo){
+		logger.info("Pushing recieptdetail to kafka queue");
+		receiptRepository.pushToQueue(receiptInfo);
+		return receiptInfo;
+	}
+	
+	public ReceiptInfo create(ReceiptInfo receiptInfo){
+		logger.info("Persisting recieptdetail");
+		boolean isInsertionSuccessfull = false;
+		isInsertionSuccessfull = receiptRepository.persistCreateRequest(receiptInfo);
+		if(!isInsertionSuccessfull){
+			receiptInfo = null;
+		}
+		return receiptInfo;
 	}
 
 }

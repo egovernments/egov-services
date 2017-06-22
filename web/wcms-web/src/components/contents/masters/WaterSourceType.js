@@ -61,7 +61,7 @@ class WaterSourceType extends Component {
 
   componentDidMount()
   {
-    let {initForm} = this.props;
+    let {initForm,setForm} = this.props;
     initForm();
     var _this=this;
 
@@ -77,11 +77,14 @@ class WaterSourceType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "sourcetype", "_search", {id},{}).then((res)=>
            {
-              this.setState({
-                list: res.Category
-            });
+            //   this.setState({
+            //     list: res.waterSourceType
+            // });
+              console.log(res.waterSourceType[0]);
+              setForm(res.waterSourceType[0]);
+
 
         },  (err)=> {
             alert(err);
@@ -112,7 +115,7 @@ class WaterSourceType extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "sourcetype", "_update/"+id, {},{sourceType:sourceType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "sourcetype/"+id, "_update", {},{sourceType:sourceType}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -126,7 +129,12 @@ class WaterSourceType extends Component {
       {
       // console.log(response);
     },function(err) {
-        alert("Entered Water Source Type already exist");
+      if(!sourceType.name){
+        alert("Please Enter Water Source Type");
+      }
+      else{
+          alert("Entered Water Source Type already exist");
+      }
     });
 }
     }
@@ -236,6 +244,22 @@ const mapDispatchToProps = dispatch => ({
         pattern: {
           current: [],
           required: ["ownerName",]
+        }
+      }
+    });
+  },
+  setForm: (form) => {
+    dispatch({
+      type: "SET_FORM",
+      data:form,
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: ["ownerName"]
         }
       }
     });

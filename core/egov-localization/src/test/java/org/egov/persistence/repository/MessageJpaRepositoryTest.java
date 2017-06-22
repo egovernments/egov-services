@@ -45,12 +45,14 @@ public class MessageJpaRepositoryTest {
             .code("code1")
             .locale(locale)
             .message("New message1")
+            .module("module")
             .build();
         final Message message2 = Message.builder()
             .tenantId(tenant)
             .code("code2")
             .locale(locale)
             .message("New message2")
+            .module("module")
             .build();
 
         messageJpaRepository.save(Arrays.asList(message1, message2));

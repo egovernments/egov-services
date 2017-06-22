@@ -47,11 +47,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -76,19 +76,19 @@ public class PropertyTypePipeSizeTypeServiceTest {
 
     @Test
     public void test_Should_Search_PropertyPipeSize() {
-        final List<PropertyTypePipeSizeType> propertyPipeSizes = new ArrayList<>();
+        final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         propertyPipeSizes.add(getPropertyPipeSize());
-        when(propertyPipeSizeRepository.findForCriteria(any(PropertyTypePipeSizeTypeGetRequest.class)))
+        when(propertyPipeSizeRepository.findForCriteria(any(PropertyTypePipeSizeGetRequest.class)))
                 .thenReturn(propertyPipeSizes);
         assertTrue(propertyPipeSizes
-                .equals(propertyPipeSizeService.getPropertyPipeSizes(any(PropertyTypePipeSizeTypeGetRequest.class))));
+                .equals(propertyPipeSizeService.getPropertyPipeSizes(any(PropertyTypePipeSizeGetRequest.class))));
     }
 
     @Test
     public void test_throwException_Push_To_Producer_PropertyPipeSize() {
 
-        final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
-        final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeTypeRequest();
+        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
+        final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
         propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
         assertTrue(propertyPipeSize.equals(propertyPipeSizeService.createPropertyPipeSize("", "", propertyPipeSizeRequest)));
     }
@@ -96,10 +96,10 @@ public class PropertyTypePipeSizeTypeServiceTest {
     @Test
     public void test_throwException_Create_PropertyPipeSize() {
 
-        final PropertyTypePipeSizeType propertyPipeSize = getPropertyPipeSize();
-        final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeTypeRequest();
+        final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
+        final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
         propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
-        when(propertyPipeSizeRepository.persistCreatePropertyPipeSize(any(PropertyTypePipeSizeTypeRequest.class)))
+        when(propertyPipeSizeRepository.persistCreatePropertyPipeSize(any(PropertyTypePipeSizeRequest.class)))
                 .thenReturn(propertyPipeSizeRequest);
         assertTrue(propertyPipeSizeRequest.equals(propertyPipeSizeService.create(propertyPipeSizeRequest)));
     }
@@ -108,15 +108,15 @@ public class PropertyTypePipeSizeTypeServiceTest {
     @Test(expected = Exception.class)
     public void test_throwException_Update_PropertyPipeSize() throws Exception {
 
-        final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest = Mockito.mock(PropertyTypePipeSizeTypeRequest.class);
+        final PropertyTypePipeSizeRequest propertyPipeSizeRequest = Mockito.mock(PropertyTypePipeSizeRequest.class);
         when(propertyPipeSizeRepository.persistUpdatePropertyPipeSize(propertyPipeSizeRequest)).thenThrow(Exception.class);
 
         assertTrue(propertyPipeSizeRequest.equals(propertyPipeSizeService.update(propertyPipeSizeRequest)));
     }
 
-    private PropertyTypePipeSizeType getPropertyPipeSize() {
+    private PropertyTypePipeSize getPropertyPipeSize() {
 
-        final PropertyTypePipeSizeType propertyPipeSize = new PropertyTypePipeSizeType();
+        final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setTenantId("default");
         propertyPipeSize.setPropertyTypeName("property type");
         propertyPipeSize.setPipeSizeType(2d);

@@ -288,25 +288,13 @@ paths:
             required: false
             type: string
             format: varchar
-          - name: fields
-            description: Specific fields can be specified per search, can be decalred multiple times, comma delimited like "field1", "field2".... If nothing is passed as Fields, all fields are returned.
-            in: query
-            required: false
-            type: string
-            format: varchar
-          - name: sort
-            description: This param sorts the result by the fields specified as the parameter value. Fields can be provided as a comma separated string. By default, sorting is done in ascending fashion. Appending :desc to a column will invert the ordering for that column. if nothing is passed it will assume seva requestedDatetime in ascending order for default sorting. For example, with a sort string sort=field1,field2:desc,field3, the table will be sorted in ascending order by field1, in descending order by field2, and in ascending order by field3.
-            in: query
-            required: false
-            type: string
-            format: varchar
         tags:
           - Seva
         responses:
           '200':
             description: seva
             schema:
-              $ref: '#/definitions/SevaResponse'
+              $ref: '#/definitions/CountResponse'
           '400':
             description:
               serviceRequestId or tenantId was not provided or General
@@ -1137,13 +1125,20 @@ definitions:
     type: object
   SevaResponse:
     properties:
-      resposneInfo:
+      responseInfo:
         $ref: '#/definitions/ResponseInfo'
       seva:
         type: array
         items:
           $ref: '#/definitions/Seva'
     type: object
+  CountResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      count:
+        type: integer
 
   ErrorRes:
     properties:

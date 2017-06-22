@@ -1,6 +1,8 @@
 package org.egov.pgrrest.common.entity;
 
 import lombok.*;
+import org.egov.pgrrest.common.model.AttributeRolesDefinition;
+import org.egov.pgrrest.common.model.AttributeActionsDefinition;
 import org.egov.pgrrest.common.model.ValueDefinition;
 
 import javax.persistence.Column;
@@ -49,7 +51,9 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
         return id.getCode();
     }
 
-    public org.egov.pgrrest.common.model.AttributeDefinition toDomain(List<ValueDefinition> domainValues) {
+    public org.egov.pgrrest.common.model.AttributeDefinition toDomain(List<ValueDefinition> domainValues,
+                                                                      List<AttributeRolesDefinition> domainAttributeRoles,
+                                                                      List<AttributeActionsDefinition> domainAttributeActions) {
         return org.egov.pgrrest.common.model.AttributeDefinition.builder()
             .code(getCode())
             .dataType(dataType)
@@ -59,6 +63,8 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
             .dataTypeDescription(dataTypeDescription)
             .description(description)
             .url(url)
+            .roles(domainAttributeRoles)
+            .actions(domainAttributeActions)
             .values(domainValues)
             .build();
     }

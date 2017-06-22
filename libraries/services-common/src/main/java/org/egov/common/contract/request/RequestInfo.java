@@ -1,9 +1,12 @@
 package org.egov.common.contract.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -11,14 +14,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class RequestInfo {
 
     private String apiId;
 
     private String ver;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    private Date ts;
+    private Long ts;
 
     private String action;
 

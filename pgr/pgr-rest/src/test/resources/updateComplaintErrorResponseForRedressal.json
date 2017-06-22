@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "YOU ARE NOT ALLOWED TO UPDATE THIS COMPLAINT",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.UPDATE_NOT_ALLOWED",
+                "message": "YOU ARE NOT ALLOWED TO UPDATE THIS COMPLAINT",
+                "field": "PGR.UPDATE_NOT_ALLOWED"
+            }
+        ]
+    }
+}

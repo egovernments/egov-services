@@ -348,5 +348,20 @@ public class BoundaryService {
 		}
 		return boundaries;
 	}
-
+	
+	//TODO: The internal logic of this API returns whether the shape file exists or not will be based on the resource exists in a directory structure <clientId>/<tenant>/wards.shp. 
+    //Later we need to rewrite the internal logic of this API to consider the meta-data after uploading the Shape file as a filestore (After implementing the uploading of shape file as file store).
+	public Boolean checkTenantShapeFileExistOrNot(String tenantId){
+		
+		String path = tenantId.replace(".", "/");
+			
+		ClassPathResource file = new ClassPathResource("/gis/"+path+"/wards.shp");
+		
+    	if(file.exists()){
+			
+			return true;
+		}
+		
+		return false;
+	}
 }

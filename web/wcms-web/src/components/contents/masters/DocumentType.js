@@ -61,7 +61,7 @@ class DocumentType extends Component {
 
   componentDidMount()
   {
-    let {initForm} = this.props;
+    let {initForm,setForm} = this.props;
     initForm();
     var _this=this;
 
@@ -77,11 +77,14 @@ class DocumentType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "category", "_update/"+id, {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "documenttype", "_search", {id},{}).then((res)=>
            {
-              this.setState({
-                list: res.Category
-            });
+            //   this.setState({
+            //     list: res.documentTypes
+            // });
+            console.log(res.documentTypes[0]);
+              setForm(res.documentTypes[0]);
+
 
         },  (err)=> {
             alert(err);
@@ -112,7 +115,7 @@ class DocumentType extends Component {
         tenantId:'default'
       }
       if(type == "Update"){
-        let response=Api.commonApiPost("wcms-masters", "documenttype", "_update/"+id, {},{DocumentType:DocumentType}).then(function(response)
+        let response=Api.commonApiPost("wcms-masters", "documenttype/"+id, "_update", {},{DocumentType:DocumentType}).then(function(response)
         {
         console.log(response);
       },function(err) {
@@ -125,9 +128,16 @@ class DocumentType extends Component {
       let response=Api.commonApiPost("wcms-masters", "documenttype", "_create", {},{DocumentType}).then(function(response)
       {
       // console.log(response);
+      alert("Document Type create successfully")
     },function(err) {
+      if(!DocumentType.name){
+        alert("Please enter Document type");
+
+      }
+      else{
         alert("Entered Document type already exists");
-    });
+    }
+  });
 }
     }
 
@@ -154,7 +164,7 @@ class DocumentType extends Component {
       if((!mode) ||mode==="Update")
       {
         // console.log(mode);
-        return(<RaisedButton type="submit" label={mode?"Save":"Add"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
+        return(<RaisedButton type="submit" label={mode?"Save":"Save"} backgroundColor={brown500} labelColor={white}  onClick={()=> {
                              add("name","description","active")}} />
         )
       }
@@ -237,6 +247,22 @@ const mapDispatchToProps = dispatch => ({
         pattern: {
           current: [],
           required: ["ownerName",]
+        }
+      }
+    });
+  },
+  setForm: (form) => {
+    dispatch({
+      type: "SET_FORM",
+      data:form,
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: ["ownerName"]
         }
       }
     });

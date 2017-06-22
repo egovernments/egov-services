@@ -19,14 +19,14 @@ import org.egov.demand.model.enums.Type;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandRequest;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,44 +35,43 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(DemandController.class)
 @Import(TestConfiguration.class)
 public class DemandControllerTest {
-	
+
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	private DemandService demandService;
-	
+
 	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
-	
+	private ResponseFactory responseInfoFactory;
+
 	@Test
 	public void testShouldCreateDemands() throws IOException, Exception {
 
 		RequestInfo requestInfo = getRequestInfo();
-		List<Demand> demands = getDemands();
+		Demand demand = getDemand();
+		List<Demand> demands = new ArrayList<>();
+		demands.add(demand);
 		DemandRequest demandRequest = new DemandRequest(requestInfo, demands);
 		System.err.println(demandRequest);
 		
 		//when(demandService.create(any(DemandRequest.class))).thenReturn(demands);
-		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class))).thenReturn(getResponseInfo(requestInfo));
-		
-		when(demandService.create(demandRequest)).thenReturn(demands);
-		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
-		
-	       mockMvc.perform(post("/demand/_create")
-	                .contentType(MediaType.APPLICATION_JSON)
-	                .content(getFileContents("demandrequest.json")))
-	                .andExpect(status().isCreated())
-	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-	                .andExpect(content().json(getFileContents("demandresponse.json")));
+		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class)))
+		//.thenReturn(getResponseInfo(requestInfo));
+
+		 when(demandService.create(demandRequest)).thenReturn(new DemandResponse( getResponseInfo(requestInfo),demands));
+
+		mockMvc.perform(post("/demand/_create").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("demandresponse.json")));
 	}
-	
+
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);
 	}
-
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		
+	
+	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
@@ -80,11 +79,9 @@ public class DemandControllerTest {
 		return responseInfo;
 	}
 
-	private List<Demand> getDemands() {
+	public  Demand getDemand() {
 
-		List<Demand> demands = new ArrayList<>();
 		Demand demand = new Demand();
-        
 		Owner owner = new Owner();
 		owner.setId(1l);
 
@@ -97,16 +94,15 @@ public class DemandControllerTest {
 		demand.setTaxPeriodTo(1234567890l);
 		demand.setType(Type.DUES);
 		demand.setTenantId("ap.kurnool");
-		
 		demand.setDemandDetails(getDemandDetails());
-		demands.add(demand);
-		return demands;
+		return demand;
 	}
 
-	private List<DemandDetail> getDemandDetails() {
+	public  List<DemandDetail> getDemandDetails() {
 
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		DemandDetail demandDetail = new DemandDetail();
+		
 		demandDetail.setTaxAmount(100d);
 		demandDetail.setCollectionAmount(0d);
 		demandDetail.setTaxHeadCode("0002");
@@ -119,7 +115,7 @@ public class DemandControllerTest {
 		return demandDetails;
 	}
 
-	private RequestInfo getRequestInfo() {
+	public  RequestInfo getRequestInfo() {
 
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setApiId("apiId");
@@ -127,4 +123,5 @@ public class DemandControllerTest {
 		requestInfo.setDid("did");
 		return requestInfo;
 	}
+
 }

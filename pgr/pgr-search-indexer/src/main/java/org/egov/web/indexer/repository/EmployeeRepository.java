@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-
 @Service
 public class EmployeeRepository {
 
@@ -25,8 +23,11 @@ public class EmployeeRepository {
     }
 
     public Employee fetchEmployeeByPositionId(final Long positionId, final LocalDate asOnDate, final String tenantId) {
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).build()).build();
-        return restTemplate.postForObject(hrMasterPositionUrl, wrapper, EmployeeResponse.class, positionId,asOnDate.toString("dd/MM/yyyy"),tenantId).getEmployees().get(0);
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(RequestInfo.builder().build()).build();
+        final String date = asOnDate.toString("dd/MM/yyyy");
+        final EmployeeResponse employeeResponse = restTemplate
+            .postForObject(hrMasterPositionUrl, wrapper, EmployeeResponse.class, positionId, date, tenantId);
+        return employeeResponse.getEmployees().get(0);
     }
 
 }

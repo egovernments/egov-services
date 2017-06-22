@@ -44,18 +44,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.producer.CollectionProducer;
+import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
+import org.egov.collection.web.contract.ReceiptInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class ReceiptRepository {
 	public static final Logger logger = LoggerFactory
 			.getLogger(ReceiptRepository.class);
+	
+	@Autowired
+	private CollectionProducer collectionProducer;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private static final String SELECT_RECEIPTHEADER_RCPT_NO = "SELECT * FROM egcl_receiptheader WHERE receiptnumber = :receiptnumber";
@@ -78,6 +93,32 @@ public class ReceiptRepository {
 		return namedParameterJdbcTemplate.query(
 				SELECT_RECEIPTHEADER_RCPT_NO, parametersMap,
 				new ReceiptRowMapper());
+	}
+	
+	public ReceiptInfo pushToQueue(ReceiptInfo receiptInfo) {
+		logger.info("Pushing recieptdetail to kafka queue");
+		try{
+			collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(),
+					applicationProperties.getCreateReceiptTopicKey(), receiptInfo);
+		}catch(Exception e){
+			logger.error("Pushing to Queue FAILED! ", e.getMessage());
+		}
+		return receiptInfo;
+	}
+	
+	public boolean persistCreateRequest(ReceiptInfo receiptDetail){
+		boolean isInsertionSuccessfull = false;
+		String query = ReceiptDetailQueryBuilder.insertReceiptDetails();
+		final Map<String, Object> parametersMap = new HashMap<>();
+		try{
+			namedParameterJdbcTemplate.update(query, parametersMap);
+		}catch(Exception e){
+			logger.error("Persisting to DB FAILED! ",e.getMessage());
+			return isInsertionSuccessfull;
+
+		}
+		isInsertionSuccessfull= true;
+		return isInsertionSuccessfull;
 	}
 
 }

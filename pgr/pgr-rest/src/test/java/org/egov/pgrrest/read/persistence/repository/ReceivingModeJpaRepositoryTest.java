@@ -29,7 +29,7 @@ public class ReceivingModeJpaRepositoryTest {
 	@Test
 	@Sql(scripts = { "/sql/clearReceivingMode.sql", "/sql/InsertReceivingModeData.sql" })
 	public void should_fetch_all_receiving_modes_with_tenantId() {
-		final List<ReceivingMode> actualResult = receivingModeJpaRepository.findAllByTenantId("ap.public");
+		final List<ReceivingMode> actualResult = receivingModeJpaRepository.findAllByTenantId("tenantId");
 
 		assertEquals(6, actualResult.size());
 	}
@@ -37,7 +37,7 @@ public class ReceivingModeJpaRepositoryTest {
 	@Test
     @Sql(scripts = { "/sql/clearReceivingMode.sql", "/sql/InsertReceivingModeData.sql" })
     public void test_should_find_receivingmode_when_code_isProvided(){
-       ReceivingMode receivingmode= receivingModeJpaRepository.findByCodeAndTenantId("WEBSITE", "ap.public");
+       ReceivingMode receivingmode= receivingModeJpaRepository.findByCodeAndTenantId("WEBSITE", "tenantId");
         assertEquals("Website",receivingmode.getName());
 }
 }

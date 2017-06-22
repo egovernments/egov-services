@@ -72,7 +72,7 @@ public class ReceivingCenterTypeServiceTest {
     private ReceivingCenterTypeRepository receivingCenterRepository;
 
     @Mock
-    private PGRProducer waterMasterProducer;
+    private PGRProducer pgrMasterProducer;
 
     @InjectMocks
     private ReceivingCenterTypeService receivingCenterTypeService;

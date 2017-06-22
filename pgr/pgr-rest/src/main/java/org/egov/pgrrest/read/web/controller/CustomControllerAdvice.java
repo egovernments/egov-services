@@ -1,10 +1,8 @@
 package org.egov.pgrrest.read.web.controller;
 
-import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
-import org.egov.pgrrest.read.domain.exception.InvalidComplaintTypeSearchException;
-import org.egov.pgrrest.read.domain.exception.ServiceDefinitionNotFoundException;
-import org.egov.pgrrest.read.web.adapters.error.ServiceDefinitionNotFoundExceptionAdapter;
-import org.egov.pgrrest.read.web.adapters.error.SevaRequestErrorAdapter;
+import org.egov.pgr.common.model.exception.InvalidOtpValidationRequestException;
+import org.egov.pgrrest.read.domain.exception.*;
+import org.egov.pgrrest.read.web.adapters.error.*;
 import org.egov.pgrrest.read.web.contract.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -24,10 +22,9 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidComplaintTypeSearchException.class)
-    public ErrorResponse handleInvalidSearchTypeException(Exception ex) {
-        //TODO: Fix this
-        return new ErrorResponse(null, null);
+    @ExceptionHandler(InvalidServiceTypeSearchException.class)
+    public ErrorResponse handleInvalidSearchTypeException(InvalidServiceTypeSearchException ex) {
+        return new InvalidServiceTypeSearchExceptionAdapter().adapt(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -42,4 +39,27 @@ public class CustomControllerAdvice {
         return new ServiceDefinitionNotFoundExceptionAdapter().adapt(null);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidServiceTypeCodeException.class)
+    public ErrorResponse handleInvalidServiceTypeCode(InvalidServiceTypeCodeException ex) {
+        return new InvalidServiceTypeExceptionAdapter().adapt(ex.getInvalidServiceTypeCode());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(OtpValidationNotCompleteException.class)
+    public ErrorResponse handleOtpValidationNotCompleteException() {
+        return new OtpValidationNotCompleteExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidOtpValidationRequestException.class)
+    public ErrorResponse handleInvalidOtpValidationRequestException() {
+        return new InvalidOtpValidationRequestExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UpdateComplaintNotAllowedException.class)
+    public ErrorResponse handleUpdateComplaintException() {
+        return new UpdateComplaintNotAllowedExceptionAdapter().adapt(null);
+    }
 }

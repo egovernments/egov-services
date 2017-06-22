@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /*
-    Represents a complaint to be created or updated.
+    Represents a service request to be created or updated.
  */
 @Builder
 @Getter

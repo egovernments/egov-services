@@ -755,56 +755,6 @@ public class PropertyMasterControllerTest {
 	}
 	
 	@Test
-	public void testSearchStructureClasses() throws Exception {
-		
-		StructureClassResponse structureClassResponse = new StructureClassResponse();
-		List<StructureClass> structureClasses = new ArrayList<>();
-		StructureClass structureClass = new StructureClass();
-		structureClass.setTenantId("default");
-		
-		AuditDetails auditDetails = new AuditDetails();
-		structureClass.setAuditDetails(auditDetails);
-		
-		structureClasses.add(structureClass);
-		
-		structureClassResponse.setResponseInfo(new ResponseInfo());
-		structureClassResponse.setStructureClasses(structureClasses);
-		
-		try {
-			
-			when(masterService
-				.getStructureClassMaster(
-					any(RequestInfo.class), 
-					any(String.class), 
-					any(Integer[].class), 
-					any(String.class), 
-					any(String.class), 
-					any(String.class),
-					any(Boolean.class),
-					any(Integer.class),
-					any(Integer.class),
-					any(Integer.class)))
-				.thenReturn(structureClassResponse);
-			
-			mockMvc.perform(post("/property/structureclasses/_search")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("structureclassSearchRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("structureclassSearchResponse.json")));
-			
-		} catch (Exception e) {
-			
-			assertTrue(Boolean.FALSE);
-			e.printStackTrace();
-		}
-		
-		assertTrue(Boolean.TRUE);
-		
-	}
-	
-	@Test
 	public void testCreateStructureClasses() throws Exception {
 		
 		List<StructureClass> structureClasses = new ArrayList<>();
@@ -832,10 +782,10 @@ public class PropertyMasterControllerTest {
 			mockMvc.perform(post("/property/structureclasses/_create")
 					.param("tenantId","default")
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("structureclassCreateRequest.json")))
+					.content(getFileContents("structureCreateRequest.json")))
 			.andExpect(status().isOk())
 			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("structureclassCreateResponse.json")));
+			.andExpect(content().json(getFileContents("structureCreateResponse.json")));
 
 		} catch (Exception e) {
 
@@ -888,6 +838,58 @@ public class PropertyMasterControllerTest {
 		assertTrue(Boolean.TRUE);
 
 	}
+	
+
+	@Test
+	public void testSearchStructureClasses() throws Exception {
+		
+		StructureClassResponse structureClassResponse = new StructureClassResponse();
+		List<StructureClass> structureClasses = new ArrayList<>();
+		StructureClass structureClass = new StructureClass();
+		structureClass.setTenantId("default");
+		
+		AuditDetails auditDetails = new AuditDetails();
+		structureClass.setAuditDetails(auditDetails);
+		
+		structureClasses.add(structureClass);
+		
+		structureClassResponse.setResponseInfo(new ResponseInfo());
+		structureClassResponse.setStructureClasses(structureClasses);
+		
+		try {
+			
+			when(masterService
+				.getStructureClassMaster(
+					any(RequestInfo.class), 
+					any(String.class), 
+					any(Integer[].class), 
+					any(String.class), 
+					any(String.class), 
+					any(String.class),
+					any(Boolean.class),
+					any(Integer.class),
+					any(Integer.class),
+					any(Integer.class)))
+				.thenReturn(structureClassResponse);
+			
+			mockMvc.perform(post("/property/structureclasses/_search")
+					.param("tenantId","default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("structureclassSearchRequest.json")))
+			.andExpect(status().isOk())
+			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+			.andExpect(content().json(getFileContents("structureclassSearchResponse.json")));
+			
+		} catch (Exception e) {
+			
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		
+		assertTrue(Boolean.TRUE);
+		
+	}
+	
 	
 	@Test
 	public void testSearchUsageMaster() throws Exception {

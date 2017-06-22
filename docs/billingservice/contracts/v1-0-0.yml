@@ -239,6 +239,113 @@ paths:
           description: Invalid input
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  /taxperiods/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      description: Returns a 'TaxPeriod'. 
+        By default, results will be sorted by service and description
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: service
+          in: query
+          description: Name of the business service for which 'TaxPeriod' is to be returned.
+          required: true
+          type: string
+        - name: description
+          in: query
+          description: description of the tax period for which 'TaxPeriod' is to be returned.
+          required: false
+          type: string
+        - name: fromDate
+          in: query
+          description: period from date
+          required: false
+          type: integer
+        - name: toDate
+          in: query
+          description: period to.
+          required: false
+          type: integer
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns 'TaxPeriod'.
+          schema:
+            $ref: '#/definitions/TaxPeriodResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxperiods/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      description: Creates a 'TaxPeriod'
+      parameters:
+        - name: TaxPeriod
+          in: body
+          description: Request header for the 'TaxPeriod'.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxPeriodRequest'
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: created TaxPeriod(s) successfully.
+          schema:
+            $ref: '#/definitions/TaxPeriodResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /taxperiods/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+    post:
+      description: Updates a 'TaxPeriod'.
+      parameters:
+        - name: TaxPeriod
+          in: body
+          description: Request header for the 'TaxPeriod'.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxPeriodRequest'
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: update a TaxPeriod(s) successful.
+          schema:
+            $ref: '#/definitions/TaxPeriodResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
   /_search:
   ######################################################
@@ -259,6 +366,16 @@ paths:
         - name: consumerCode
           in: query
           description: Unique identification provided by business details.
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: Email Id of Primary owner of business detail.
+          required: false
+          type: string
+        - name: mobileNumber
+          in: query
+          description: Mobile Number of Primary owner of business detail.
           required: false
           type: string
         - name: businessService
@@ -497,7 +614,7 @@ paths:
           description: Billing system details e.g., PropertyTax,Water Charges etc.
           required: false
           type: string
-        - name: emailId
+        - name: email
           in: query
           description: Email Id of Primary owner of business detail.
           required: false
@@ -746,6 +863,46 @@ definitions:
       - service
       - validFrom
       - validTill
+
+  TaxPeriod:
+    type: object
+    description: An object which holds the tax period info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Id of the bill
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+      fromDate:
+        type: integer
+        format: int64
+        description: Time in epoch, Start date for tax period
+      toDate:
+        type: integer
+        format: int64
+        description: Time in epoch, End date for tax period
+      module:
+        type: string
+        description: Name of the module this period belongs to.
+      description:
+        type: string
+        description: Description of a tax period.
+      financialYear:
+        type: string
+        description: financial year for which this period belongs.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+      - id
+      - tenantId
+      - fromDate
+      - toDate
+      - description
       
   Bill:
     type: object
@@ -891,13 +1048,19 @@ definitions:
     type: object
     description: The object holds the configuration details for each business service.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Id of the bill
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
       businessService:
         type: string
         description: BusinessService code.
-      minimumAmountPayable:
-        type: number
-        format: double
-        description: Minimum bill amount to be paid.
       collectionModesNotAllowed:
         type: array
         items: 
@@ -909,6 +1072,8 @@ definitions:
       partPaymentAllowed:
         type: boolean
         description: true if part payment allowed, false if part payment is not allowed.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       
   CollectedReceipts:
     type: object
@@ -1053,6 +1218,29 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/TaxHeadMaster'
+    type: object
+
+  TaxPeriodRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      taxPeriods:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/TaxPeriod'
+    type: object
+
+  TaxPeriodResponse:
+    properties:
+      ResposneInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      taxPeriods:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/TaxPeriod'
     type: object
     
 

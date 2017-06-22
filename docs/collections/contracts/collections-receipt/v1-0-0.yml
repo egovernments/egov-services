@@ -234,6 +234,57 @@ definitions:
         items: 
           type: string
         description: List of collection modes not allowed.
+      event: 
+        type: string
+        description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
+      receiptNumber:
+        type: string
+        description: Receipt Number generated in Collection system.
+      receiptDate:
+        type: string
+        format: date
+        description: Receipt Date.
+      receiptType:
+        description: Type of Receipt.
+        items:
+          type: string
+          enum:
+           - ADHOC
+           - BILLBASED
+           - CHALLAN
+      collectionType:
+        description: Type of collection.
+        items:
+          type: string
+          enum:
+           - COUNTER
+           - FIELD
+           - ONLINE
+      channel:
+        type: string
+        description: To be used by third party applications, to send the channel name.
+      voucherHeader:
+        description: Voucher header  need to refer from Finanicals.
+      Fund:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Fund'
+      Function:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Function'
+      fundSource:
+        description: Fund Source need to refer from Financials.
+        items:
+          type: string
+      department:
+        description: Department need to refer from Core services.
+        items:
+          type: string
+      boundary:
+        description: Boundary need to refer from Core services.
+        items:
+          type: string
+      reasonForCancellation:
+        description: Remarks to describe Reason For Cancellation.
+        items:
+          type: string
       billAccountDetails:
         type: array
         items:
@@ -288,67 +339,16 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
-      event: 
-        type: string
-        description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
-      receiptNumber:
-        type: string
-        description: Receipt Number generated in Collection system.
-      receiptDate:
-        type: string
-        format: date
-        description: Receipt Date.
-      receiptType:
-        description: Type of Receipt.
-        items:
-          type: string
-          enum:
-           - ADHOC
-           - BILLBASED
-           - CHALLAN
-      collectionType:
-        description: Type of collection.
-        items:
-          type: string
-          enum:
-           - COUNTER
-           - FIELD
-           - ONLINE
-      channel:
-        type: string
-        description: To be used by third party applications, to send the channel name.
       Bank:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Bank'
       BankAccount:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/BankAccount'
-      voucherHeader:
-        description: Voucher header  need to refer from Finanicals.
-      Fund:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Fund'
-      Function:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Function'
-      fundSource:
-        description: Fund Source need to refer from Financials.
-        items:
-          type: string
       instrumentType:
         description: Instrument Type need to refer from Financials.
         items:
           type: string
       instrumentHeader:
         description: Instrument Header need to refer from Financials.
-        items:
-          type: string
-      department:
-        description: Department need to refer from Core services.
-        items:
-          type: string
-      boundary:
-        description: Boundary need to refer from Core services.
-        items:
-          type: string
-      reasonForCancellation:
-        description: Remarks to describe Reason For Cancellation.
         items:
           type: string
       BillInfo:

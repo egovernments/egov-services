@@ -195,7 +195,7 @@ public class AgreementValidator implements org.springframework.validation.Valida
 
 	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
 		if(workflowDetails.getAssignee() == null)
-			errors.rejectValue("Agreement.Workflowdetails.assignee", "",
+			errors.rejectValue("Agreement.workflowDetails.assignee", "",
 					"Approver assignee details has to be filled");
 	}
 

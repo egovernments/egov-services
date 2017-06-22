@@ -26,7 +26,7 @@ var requestInfo = {
   "key": "xyz",
   "msgId": "654654",
   "requesterId": "61",
-  "authToken": "56f1793b-a221-4e20-ada1-f2af4612fa8a"
+  "authToken": authToken
 };
 
 

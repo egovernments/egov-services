@@ -3,9 +3,6 @@ import {connect} from 'react-redux';
 import { withRouter } from 'react-router';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-// import {Switch,Route} from 'react-router-dom';
-import { withRouter } from 'react-router'
-
 import Header from './common/Header';
 import Footer from './common/Footer';
 // import PropertyTaxSearch from "./contents/PropertyTaxSearch";
@@ -16,7 +13,7 @@ var axios = require('axios');
 class App extends Component {
 
   componentWillReceiveProps(nextProps) {
-    
+
   }
   componentDidMount(){
 

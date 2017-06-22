@@ -134,7 +134,7 @@ public class DemandService {
 			receipt.setUpdatedTime(new Date());
 			receipt.setAmount(info.getReceiptAmount());
 			receipt.setStatus(info.getStatus().charAt(0));
-			receipt.setTenantId(demand.getTenantId());
+			receipt.setTenantId(egDemandDetails.getTenantId());
 			egdmCollectedReceipts.add(receipt);
 			LOGGER.info("adding receipt details " + receipt);
 		}

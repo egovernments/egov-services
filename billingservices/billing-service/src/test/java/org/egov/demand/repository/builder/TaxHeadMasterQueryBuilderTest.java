@@ -45,7 +45,7 @@ public class TaxHeadMasterQueryBuilderTest {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		TaxHeadMasterCriteria taxHeadMasterCriteriaQuery = TaxHeadMasterCriteria.builder().tenantId("ap.kurnool").build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "select * from egbillingservices_taxheadmaster WHERE tenantId = ? ORDER BY name LIMIT ? OFFSET ?";
+		String queryWithTenantId = "select * from egbs_taxheadmaster WHERE tenantId = ? ORDER BY name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteriaQuery, preparedStatementValues));
 
@@ -58,7 +58,7 @@ public class TaxHeadMasterQueryBuilderTest {
 	
 	@Test
 	public void getInsertQuery() {
-		String queryWithTenantId = "INSERT INTO public.egbillingservices_taxheadmaster(id, tenantid, category,"
+		String queryWithTenantId = "INSERT INTO public.egbs_taxheadmaster(id, tenantid, category,"
 				+ "service, name, code, glcode, isdebit,isactualdemand, createdby, createdtime,"
 				+ "lastmodifiedby, lastmodifiedtime,taxperiod) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";

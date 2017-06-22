@@ -81,7 +81,7 @@ public class TaxHeadMasterControllerTest {
 		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMasters);
 		taxHeadMasterResponse.setResponseInfo(new ResponseInfo());
 
-		when(taxHeadMasterService.create(any(TaxHeadMasterRequest.class))).thenReturn(taxHeadMasterResponse);
+		when(taxHeadMasterService.createAsync(any(TaxHeadMasterRequest.class))).thenReturn(taxHeadMasterResponse);
 
 		mockMvc.perform(post("/taxheads/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("taxHeadsCreateRequest.json"))).andExpect(status().isCreated())
@@ -124,10 +124,7 @@ public class TaxHeadMasterControllerTest {
 		taxHeadMaster.setGlCode("string");
 		taxHeadMaster.setIsDebit(true);
 		taxHeadMaster.setIsActualDemand(true);
-		taxPeriod.setId("string");
-		taxPeriod.setCode("string");
 		taxPeriod.setFinancialYear("2017-2018");
-		taxPeriod.setService("string");
 		taxPeriod.setFromDate(123L);
 		taxPeriod.setToDate(345L);
 		

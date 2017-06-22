@@ -68,7 +68,7 @@ public class TaxHeadMasterController {
 		}
 		// TODO Input field validation, it will be a part of phase-2
 		taxHeadMasterValidator.validateTaxHeads(taxHeadMasterRequest);
-		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.create(taxHeadMasterRequest);
+		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.createAsync(taxHeadMasterRequest);
 		return new ResponseEntity<>(taxHeadMasterRponse, HttpStatus.CREATED);
 	}
 

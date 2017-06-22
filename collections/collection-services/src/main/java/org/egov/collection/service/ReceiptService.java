@@ -45,7 +45,7 @@ import java.util.List;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.ReceiptInfo;
+import org.egov.collection.web.contract.Receipt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,13 +66,12 @@ public class ReceiptService {
 		return receiptRepository.find(receiptSearchCriteria);
 	}
 	
-	public ReceiptInfo pushToQueue(ReceiptInfo receiptInfo){
+	public Receipt pushToQueue(Receipt receiptInfo){
 		logger.info("Pushing recieptdetail to kafka queue");
-		receiptRepository.pushToQueue(receiptInfo);
-		return receiptInfo;
+		return receiptRepository.pushToQueue(receiptInfo);
 	}
 	
-	public ReceiptInfo create(ReceiptInfo receiptInfo){
+	public Receipt create(Receipt receiptInfo){
 		logger.info("Persisting recieptdetail");
 		boolean isInsertionSuccessfull = false;
 		isInsertionSuccessfull = receiptRepository.persistCreateRequest(receiptInfo);

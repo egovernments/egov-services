@@ -3,7 +3,7 @@ package org.egov.collection.consumer;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.service.ReceiptService;
-import org.egov.collection.web.contract.ReceiptInfo;
+import org.egov.collection.web.contract.Receipt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class CollectionConsumer {
 		try {
 			if (topic.equals(applicationProperties.getCreateReceiptTopicName())) {
 				logger.info("Consuming create ReceiptDetails request");
-				recieptService.create(objectMapper.readValue(record, ReceiptInfo.class));
+				recieptService.create(objectMapper.readValue(record, Receipt.class));
 			}
 		} catch (final Exception e) {
 			logger.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());

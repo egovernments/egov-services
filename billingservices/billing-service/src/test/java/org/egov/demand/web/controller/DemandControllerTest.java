@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +54,6 @@ public class DemandControllerTest {
 		List<Demand> demands = new ArrayList<>();
 		demands.add(demand);
 		DemandRequest demandRequest = new DemandRequest(requestInfo, demands);
-		System.err.println(demandRequest);
-		
 		//when(demandService.create(any(DemandRequest.class))).thenReturn(demands);
 		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class)))
 		//.thenReturn(getResponseInfo(requestInfo));
@@ -75,7 +74,6 @@ public class DemandControllerTest {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
-		responseInfo.setVer(requestInfo.getVer());
 		return responseInfo;
 	}
 
@@ -89,7 +87,7 @@ public class DemandControllerTest {
 		demand.setBusinessService("businessservice");
 		demand.setConsumerType("consumertype");
 		demand.setOwner(owner);
-		demand.setMinimumAmountPayable(200d);
+		demand.setMinimumAmountPayable(BigDecimal.valueOf(200));
 		demand.setTaxPeriodFrom(12345l);
 		demand.setTaxPeriodTo(1234567890l);
 		demand.setType(Type.DUES);
@@ -103,12 +101,12 @@ public class DemandControllerTest {
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		DemandDetail demandDetail = new DemandDetail();
 		
-		demandDetail.setTaxAmount(100d);
-		demandDetail.setCollectionAmount(0d);
+		demandDetail.setTaxAmount(BigDecimal.valueOf(100));
+		demandDetail.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail.setTaxHeadCode("0002");
 		DemandDetail demandDetail1 = new DemandDetail();
-		demandDetail1.setTaxAmount(200d);
-		demandDetail1.setCollectionAmount(0d);
+		demandDetail1.setTaxAmount(BigDecimal.valueOf(200));
+		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail1.setTaxHeadCode("0003");
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);

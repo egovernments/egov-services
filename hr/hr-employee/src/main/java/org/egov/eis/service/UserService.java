@@ -193,10 +193,8 @@ public class UserService {
 		userGetRequest.setTenantId(employeeCriteria.getTenantId());
 		userGetRequest.setPageNumber(employeeCriteria.getPageNumber());
 		userGetRequest.setRequestInfo(requestInfo);
+		userGetRequest.setActive(employeeCriteria.getActive());
 
-		if(!isEmpty(employeeCriteria.getActive())) {
-			userGetRequest.setActive(employeeCriteria.getActive());
-		}
 		if(!isEmpty(employeeCriteria.getId())) {
 			userGetRequest.setPageSize(employeeCriteria.getId().size());
 		}

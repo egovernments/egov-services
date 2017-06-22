@@ -22,6 +22,7 @@ import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.controller.TaxHeadMasterController;
 import org.egov.demand.web.validator.TaxHeadMasterValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,7 @@ public class TaxHeadMasterControllerTest {
 	
 	@MockBean
 	private ResponseFactory responseFactory;
+
 	
 	@Test
 	public void test_Should_Search_TaxHeadMaster() throws Exception {
@@ -81,7 +83,7 @@ public class TaxHeadMasterControllerTest {
 		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMasters);
 		taxHeadMasterResponse.setResponseInfo(new ResponseInfo());
 
-		when(taxHeadMasterService.create(any(TaxHeadMasterRequest.class))).thenReturn(taxHeadMasterResponse);
+		when(taxHeadMasterService.createAsync(any(TaxHeadMasterRequest.class))).thenReturn(taxHeadMasterResponse);
 
 		mockMvc.perform(post("/taxheads/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("taxHeadsCreateRequest.json"))).andExpect(status().isCreated())
@@ -124,10 +126,7 @@ public class TaxHeadMasterControllerTest {
 		taxHeadMaster.setGlCode("string");
 		taxHeadMaster.setIsDebit(true);
 		taxHeadMaster.setIsActualDemand(true);
-		taxPeriod.setId("string");
-		taxPeriod.setCode("string");
 		taxPeriod.setFinancialYear("2017-2018");
-		taxPeriod.setService("string");
 		taxPeriod.setFromDate(123L);
 		taxPeriod.setToDate(345L);
 		

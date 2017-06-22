@@ -52,6 +52,8 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
+		log.info("genrateBill generateBillCriteria : "+generateBillCriteria);
+		log.info("genrateBill requestInfoWrapper : "+requestInfoWrapper);
 		
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.

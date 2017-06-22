@@ -7,6 +7,7 @@ import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,9 @@ public class DemandController {
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(demandService.create(demandRequest), HttpStatus.CREATED);
+		DemandResponse demandResponse =  demandService.create(demandRequest);
+		System.err.println(demandResponse);
+		return new ResponseEntity<>(demandResponse, HttpStatus.CREATED);
 	}
 
 	@PostMapping("_update")

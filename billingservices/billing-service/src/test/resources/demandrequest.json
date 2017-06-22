@@ -11,7 +11,7 @@
             "consumerCode": "consumercode",
             "consumerType": "consumertype",
             "businessService": "businessservice",
-            "minimumAmountPayable": 200.0,
+            "minimumAmountPayable": 200,
             "owner": {
                 "id": 1,
                 "userName": null,
@@ -28,15 +28,15 @@
                     "id": null,
                     "demandId": null,
                     "taxHeadCode": "0002",
-                    "taxAmount": 100.0,
-                    "collectionAmount": 0.0
+                    "taxAmount": 100,
+                    "collectionAmount": 0
                },
                 {
                     "id": null,
                     "demandId": null,
                     "taxHeadCode": "0003",
-                    "taxAmount": 200.0,
-                    "collectionAmount": 0.0
+                    "taxAmount": 200,
+                    "collectionAmount": 0
                 }
             ]
             }

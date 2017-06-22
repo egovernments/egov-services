@@ -40,12 +40,10 @@
 package org.egov.wcms.transanction.validator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transanction.model.DocumentOwner;
-import org.egov.wcms.transanction.model.enums.ApplicationType;
 import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.errorhandlers.Error;
@@ -185,9 +183,8 @@ public class NewWaterConnectionValidator {
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
         
-        //TODO: need to validate Master 
-       /* final List<ErrorField> masterfielderrorList = connectionMasterValidator.getMasterValidation(waterConnectionRequest);
-        errorFields.addAll(masterfielderrorList);*/
+        final List<ErrorField> masterfielderrorList = connectionMasterValidator.getMasterValidation(waterConnectionRequest);
+        errorFields.addAll(masterfielderrorList);
 
         return Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(WcmsTranasanctionConstants.INVALID_REQUEST_MESSAGE)
                 .errorFields(errorFields).build();
@@ -265,7 +262,7 @@ public class NewWaterConnectionValidator {
     
     //TODO:Donation master validation need to do
 
-   /* @SuppressWarnings("rawtypes")
+  /*  @SuppressWarnings("rawtypes")
     private boolean validateDonationAmount(final WaterConnectionReq waterConnectionRequest) {
 
         final List<Donation> donationList = donationService.getDonationList(prepareDonationGetRequest(waterConnectionRequest));
@@ -283,7 +280,7 @@ public class NewWaterConnectionValidator {
 
     //validatePropertyUsageMapping master validation need to do
 
-    /*private boolean validatePropertyUsageMapping(final WaterConnectionReq waterConnectionRequest) {
+   /* private boolean validatePropertyUsageMapping(final WaterConnectionReq waterConnectionRequest) {
         LOGGER.info("Validating Property - Usage Mapping");
         boolean result = false;
 
@@ -304,8 +301,8 @@ public class NewWaterConnectionValidator {
 
         return result;
 
-    }*/
-
+    }
+*/
    /* private boolean validatePropertyCategoryMapping(final WaterConnectionReq waterConnectionRequest) {
         LOGGER.info("Validating Property - Category Mapping");
         boolean result = false;

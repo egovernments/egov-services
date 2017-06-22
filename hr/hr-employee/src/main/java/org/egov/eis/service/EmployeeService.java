@@ -158,6 +158,9 @@ public class EmployeeService {
 		List<User> usersList = null;
 		List<Long> ids = null;
 		if (!isEmpty(employeeCriteria.getRoleCodes())) {
+			// FIXME : Right now we've to hit user service twice for active & inactive users.
+			// Remove this work around once the user service is updated.
+			employeeCriteria.setActive(true);
 			usersList = userService.getUsers(employeeCriteria, requestInfo);
 			employeeCriteria.setActive(false);
 			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
@@ -177,6 +180,9 @@ public class EmployeeService {
 			ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
 			LOGGER.debug("Employee ids " + ids);
 			employeeCriteria.setId(ids);
+			// FIXME : Right now we've to hit user service twice for active & inactive users.
+			// Remove this work around once the user service is updated.
+			employeeCriteria.setActive(true);
 			usersList = userService.getUsers(employeeCriteria, requestInfo);
 			employeeCriteria.setActive(false);
 			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
@@ -201,7 +207,18 @@ public class EmployeeService {
 			throw new EmployeeIdNotFoundException(employeeId);
 
 		EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
-		User user = userService.getUsers(employeeCriteria, requestInfo).get(0);
+		// FIXME : Right now we've to hit user service twice for inactive user.
+		// Remove this work around once the user service is updated.
+		employeeCriteria.setActive(true);
+		List<User> users = userService.getUsers(employeeCriteria, requestInfo);
+		User user = null;
+		if(users.size() == 1) {
+			user = users.get(0);
+		} else {
+			employeeCriteria.setActive(false);
+			user = userService.getUsers(employeeCriteria, requestInfo).get(0);
+		}
+
 		user.setBloodGroup(
 				isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
 		employee.setUser(user);

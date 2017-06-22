@@ -3,13 +3,12 @@ package org.egov.pgrrest.read.web.controller;
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
-import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowed;
+import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowedException;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.junit.Test;
@@ -28,8 +27,11 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,7 +73,7 @@ public class ServiceRequestControllerTest {
     public void test_for_updating_a_complaint_not_assigned_to_redresal_officer()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
-        doThrow(new UpdateComplaintNotAllowed()).when(serviceRequestService).update(any(ServiceRequest
+        doThrow(new UpdateComplaintNotAllowedException()).when(serviceRequestService).update(any(ServiceRequest
                 .class),
             any(SevaRequest.class));
         mockMvc.perform(post("/seva/_update")
@@ -105,6 +107,27 @@ public class ServiceRequestControllerTest {
             .andExpect(content().json(resources.getFileContents("updateComplaintResponse.json")));
     }
 
+    @Test
+    public void test_for_update_eligibility()
+        throws Exception {
+        when(serviceRequestService.validateUpdateEligibilityUI(eq("crn"), eq("tenantId"), any())).thenReturn(Boolean.TRUE);
+        mockMvc.perform(post("/seva/v1/_get?tenantId=tenantId&crn=crn")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("updateComplaintRequestEligibility.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().json(resources.getFileContents("updateComplaintResponseEligible.json")));
+    }
+
+    @Test
+    public void test_for_update_eligibility_returns_false_when_not_eligible()
+        throws Exception {
+        when(serviceRequestService.validateUpdateEligibilityUI(eq("crn"), eq("tenantId"), any())).thenReturn(Boolean.FALSE);
+        mockMvc.perform(post("/seva/v1/_get?tenantId=tenantId&crn=crn")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("updateComplaintRequestEligibility.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().json(resources.getFileContents("updateComplaintResponseNotEligible.json")));
+    }
 
     @Test
     public void test_should_return_masked_userdetails_in_service_requests_for_anonymous_user_search() throws Exception {
@@ -279,7 +302,7 @@ public class ServiceRequestControllerTest {
             .build();
     }
 
-    private ServiceRequest getServiceRequestForSearch(){
+    private ServiceRequest getServiceRequestForSearch() {
         String crn = "1234";
         String receivingMode = "MANUAL";
         String receivingCenter = "Commissioner Office";

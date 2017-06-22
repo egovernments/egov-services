@@ -21,8 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -185,6 +184,23 @@ public class ServiceRequestServiceTest {
         assertEquals(expectedComplaint, actualComplaints.get(0));
     }
 
+    @Test
+    public void testShouldReturnTrueIfEligible() {
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployeeEligible());
+        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
+        final AuthenticatedUser authenticatedUser = AuthenticatedUser.builder().id(1L).build();
+        boolean isValidateEligible = serviceRequestService.validateUpdateEligibilityUI("crn", "tenantId", authenticatedUser);
+        assertTrue(isValidateEligible);
+    }
+
+    @Test
+    public void testShouldReturnFalseIfEligible() {
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
+        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
+        boolean isValidateEligible = serviceRequestService.validateUpdateEligibilityUI("crn", "tenantId", getRedressalRole());
+        assertFalse(isValidateEligible);
+    }
+
     private ServiceRequest getComplaint() {
         final Coordinates coordinates = new Coordinates(0d, 0d);
         final ServiceRequestLocation serviceRequestLocation =
@@ -232,12 +248,23 @@ public class ServiceRequestServiceTest {
     }
 
     private Employee getEmployee() {
+        return Employee.builder().primaryPosition(2L).build();
+    }
+
+    private Employee getEmployeeEligible() {
         return Employee.builder().primaryPosition(1L).build();
     }
 
-
     private List<String> getUserRoles() {
-       return Arrays.asList("GRO");
+        return Arrays.asList("GRO");
+    }
+
+    private AuthenticatedUser getRedressalRole() {
+        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).roleCodes(getRoles()).build();
+    }
+
+    private List<String> getRoles() {
+        return Arrays.asList("RO");
     }
 
 }

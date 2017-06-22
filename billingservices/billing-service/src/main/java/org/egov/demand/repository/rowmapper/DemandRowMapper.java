@@ -29,7 +29,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 		while (rs.next()) {
 
 			try {
-				String demandId = (String) rs.getString(demandIdRsName);
+				String demandId = rs.getString(demandIdRsName);
 				log.info("demandid in row mapper" + demandId);
 				Demand demand = demandMap.get(demandId);
 
@@ -46,11 +46,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 					String type = rs.getString("dtype");
 					demand.setType(Type.fromValue(type));
 
-					Double minimumAmountPayable = rs.getDouble("dminimumAmountPayable");
-					if (minimumAmountPayable == 0)
-						demand.setMinimumAmountPayable(null);
-					else
-						demand.setMinimumAmountPayable(minimumAmountPayable);
+					demand.setMinimumAmountPayable(rs.getBigDecimal("dminimumAmountPayable"));
 
 					Owner owner = new Owner();
 					owner.setId(rs.getLong("downer"));
@@ -72,17 +68,8 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				demandDetail.setDemandId(rs.getString("dldemandid"));
 				demandDetail.setTaxHeadCode(rs.getString("dltaxheadcode"));
 				demandDetail.setTenantId(rs.getString("dltenantid"));
-
-				Double dlTaxAmount = rs.getDouble("dltaxamount");
-				Double dlcollectionamount = rs.getDouble("dlcollectionamount");
-				if (dlTaxAmount == 0)
-					demandDetail.setTaxAmount(null);
-				else
-					demandDetail.setTaxAmount(dlTaxAmount);
-				if (dlcollectionamount == 0)
-					demandDetail.setCollectionAmount(null);
-				else
-					demandDetail.setCollectionAmount(dlcollectionamount);
+				demandDetail.setTaxAmount(rs.getBigDecimal("dltaxamount"));
+				demandDetail.setCollectionAmount(rs.getBigDecimal("dlcollectionamount"));
 
 				AuditDetail dlauditDetail = new AuditDetail();
 				dlauditDetail.setCreatedBy(rs.getString("dlcreatedby"));

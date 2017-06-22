@@ -1,5 +1,5 @@
 {
-  "responseInfo": {
+  "ResponseInfo": {
     "apiId": null,
     "ver": null,
     "ts": null,
@@ -7,7 +7,7 @@
     "msgId": null,
     "status": null
   },
-  "taxHeadMasters": [
+  "TaxHeadMasters": [
     {
       "id": "23",
       "tenantId": "ap.kurnool",

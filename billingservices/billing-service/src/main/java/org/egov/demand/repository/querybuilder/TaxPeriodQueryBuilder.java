@@ -64,7 +64,7 @@ public class TaxPeriodQueryBuilder {
     }
 
     private void prepareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-          final TaxPeriodCriteria taxPeriodCriteria) {
+                                    final TaxPeriodCriteria taxPeriodCriteria) {
 
         selectQuery.append(" WHERE ");
 
@@ -81,6 +81,11 @@ public class TaxPeriodQueryBuilder {
         if (StringUtils.isNotBlank(taxPeriodCriteria.getCode())) {
             selectQuery.append(" and taxperiod.code = ? ");
             preparedStatementValues.add(taxPeriodCriteria.getCode());
+        }
+
+        if (StringUtils.isNotBlank(taxPeriodCriteria.getId())) {
+            selectQuery.append(" and taxperiod.id = ? ");
+            preparedStatementValues.add(taxPeriodCriteria.getId());
         }
     }
 }

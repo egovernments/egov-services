@@ -3,12 +3,14 @@ package org.egov.pgrrest.read.web.controller;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.web.contract.CountResponse;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
+import org.egov.pgrrest.read.web.contract.UpdateEligibiltyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -161,6 +163,14 @@ public class ServiceRequestController {
         return new CountResponse(null, count);
     }
 
+    @PostMapping(value = "/v1/_get")
+    public UpdateEligibiltyResponse getUpdateEligibity(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                                       @RequestParam(value = "crn", required = false) String crn,
+                                                       @RequestBody RequestInfoBody requestInfoBody) {
+        AuthenticatedUser authenticatedUser = requestInfoBody.toAuthenticatedUser();
+        boolean isUpdateEligible = serviceRequestService.validateUpdateEligibilityUI(crn, tenantId, authenticatedUser);
+        return new UpdateEligibiltyResponse(null, isUpdateEligible);
+    }
 
     private ServiceResponse createResponse(List<ServiceRequest> submissions) {
         final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = submissions.stream()

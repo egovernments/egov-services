@@ -32,6 +32,7 @@ public class DemandService {
 	public EgDemand createDemand(Demand demand) throws Exception {
 		LOGGER.info("createDemand - demand - " + demand);
 		EgDemand egDemand = new EgDemand();
+		BigDecimal totalDemandCollection = BigDecimal.ZERO;
 		Installment demandInstallment = null;
 		EgDemandDetails egDemandDetails = null;
 		Set<EgDemandDetails> demandDetailsList = new HashSet<EgDemandDetails>();
@@ -55,14 +56,17 @@ public class DemandService {
 						demandDetail.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				if (demandReason != null) {
 					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
-							BigDecimal.ZERO);
+							demandDetail.getCollectionAmount()!=null ? demandDetail.getCollectionAmount() : BigDecimal.ZERO);
 					egDemandDetails.setTenantId(demand.getTenantId());
 					egDemandDetails.setEgDemand(egDemand);
+					totalDemandCollection=totalDemandCollection.add(demandDetail.getCollectionAmount());
 					demandDetailsList.add(egDemandDetails);
 				} else
 					throw new Exception("Not a valid amount or demand reason details");
 			}
 		}
+		LOGGER.info("total collection to update in demand by edit demand" + totalDemandCollection);
+		egDemand.setAmtCollected(totalDemandCollection);
 		egDemand.setEgDemandDetails(demandDetailsList);
 		demandRepository.save(egDemand);
 		LOGGER.info("createDemand - egDemand - " + egDemand);
@@ -111,7 +115,7 @@ public class DemandService {
 						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				
 				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
-						BigDecimal.ZERO);
+						demandDetails.getCollectionAmount()!=null ? demandDetails.getCollectionAmount() : BigDecimal.ZERO);
 				egDemand.addEgDemandDetails(egDemandDetails);
 				egDemandDetails.setTenantId(demand.getTenantId());
 				egDemandDetails.setEgDemand(egDemand);

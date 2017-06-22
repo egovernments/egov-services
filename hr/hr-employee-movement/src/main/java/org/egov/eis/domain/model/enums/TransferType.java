@@ -38,58 +38,36 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.domain.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.Size;
-import java.util.Collections;
-import java.util.List;
+public enum TransferType {
 
-@AllArgsConstructor
-@Builder
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class UserGetRequest {
+    TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB("Transfer within department/Corporation/ULB"),
+    TRANSFER_OUTSIDE_CORPORATION_OR_ULB("Transfer outside Corporation/ULB");
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    private String value;
 
-	private List<Long> id;
+    TransferType(String value) {
+        this.value = value;
+    }
 
-	@Size(min=1, max=100)
-    private String userName;
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-	@Size(min=3, max=100)
-    private String name;
-
-	@Size(max=10)
-    private String mobileNumber;
-
-	@Size(max=12)
-    private String aadhaarNumber;
-
-	@Size(max=10)
-    private String pan;
-
-	@Size(max=128)
-	private String emailId;
-
-	private List<String> roleCodes;
-
-    private Boolean active;
-
-    private Integer pageSize = 20;
-
-    private Integer pageNumber = 0;
-
-    private List<String> sort = Collections.singletonList("name");
-
-	@Size(min=1, max=256)
-	private String tenantId;
-
+    @JsonCreator
+    public static TransferType fromValue(String passedValue) {
+        for (TransferType obj : TransferType.values()) {
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+                return obj;
+            }
+        }
+        return null;
+    }
 }

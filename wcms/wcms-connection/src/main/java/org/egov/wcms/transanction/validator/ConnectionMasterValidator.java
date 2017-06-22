@@ -39,31 +39,43 @@
  */
 package org.egov.wcms.transanction.validator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.wcms.transanction.config.ConfigurationManager;
+import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
+import org.egov.wcms.transanction.web.contract.CategoryResponseInfo;
+import org.egov.wcms.transanction.web.contract.PipeSizeResponseInfo;
+import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transanction.web.contract.SupplyResponseInfo;
+import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
+import org.egov.wcms.transanction.web.contract.WaterSourceResponseInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
+import org.egov.wcms.transanction.web.contract.factory.ResponseInfoFactory;
+import org.springframework.web.client.RestTemplate;
+
 
 @Service
-public class ConnectionMasterValidator {/*
+public class ConnectionMasterValidator {
+    
+    @Autowired
+    private ConfigurationManager configurationManager;
+    
+    @Autowired
+    RestTemplate restTemplate;
 
     @Autowired
-    private CategoryTypeRowMapper categoryRowMapper;
-    @Autowired
-    private PipeSizeTypeRowMapper pipeSizeTypeRowMapper;
-
-    @Autowired
-    private SourceTypeRowMapper sourceTypeRowMapper;
-
-    @Autowired
-    private SupplyTypeRowMapper supplyTypeRowMapper;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
+    ResponseInfoFactory responseInfoFactory;
+    
 
     public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if (!getCategoryTypeByName(waterConnectionRequest)) {
+        if (getCategoryTypeByName(waterConnectionRequest) ==null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.CATEGORY_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.CATEGORY_INVALID_FIELD_NAME)
@@ -71,7 +83,7 @@ public class ConnectionMasterValidator {/*
                     .build();
             errorFields.add(errorField);
         }
-        if (!getPipesizeTypeByCode(waterConnectionRequest)) {
+        if (getPipesizeTypeByCode(waterConnectionRequest)==null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.PIPESIZE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.PIPESIZE_INVALID_FIELD_NAME)
@@ -79,7 +91,7 @@ public class ConnectionMasterValidator {/*
                     .build();
             errorFields.add(errorField);
         }
-        if (!getSourceTypeByName(waterConnectionRequest)) {
+        if (getSourceTypeByName(waterConnectionRequest)==null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.SOURCETYPE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.SOURCETYPE_INVALID_FIELD_NAME)
@@ -87,7 +99,7 @@ public class ConnectionMasterValidator {/*
                     .build();
             errorFields.add(errorField);
         }
-        if (!getSupplyTypeByName(waterConnectionRequest)) {
+        if (getSupplyTypeByName(waterConnectionRequest)==null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_FIELD_NAME)
@@ -98,66 +110,63 @@ public class ConnectionMasterValidator {/*
         return errorFields;
     }
 
-    public Boolean getCategoryTypeByName(final WaterConnectionReq waterConnectionRequest) {
-        Boolean categoryExist = false;
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getCategoryType().getName());
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getTenantId());
-        final String query = CategoryTypeQueryBuilder.selectCategoryByNameQuery();
-        final List<CategoryType> categories = jdbcTemplate.query(query, preparedStatementValues.toArray(),
-                categoryRowMapper);
-        if (!categories.isEmpty()) {
-            categoryExist = true;
-            waterConnectionRequest.getConnection().setCategoryType(categories.get(0));
+   
+    public CategoryResponseInfo getCategoryTypeByName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+        .append(configurationManager.getWaterMasterServiceCategorySearchPathTopic());
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        CategoryResponseInfo positions = restTemplate.postForObject(url.toString(), request,CategoryResponseInfo.class,waterConnectionRequest.getConnection().getCategoryType(),waterConnectionRequest.getConnection().getTenantId());
+        if(positions!=null){
+        waterConnectionRequest.getConnection().setCategoryType(positions.getCategory()!=null && positions.getCategory().get(0)!=null?positions.getCategory().get(0).getId():"");
         }
-        return categoryExist;
+        return positions;
     }
-
-    public Boolean getPipesizeTypeByCode(final WaterConnectionReq waterConnectionRequest) {
-        Boolean pipeSizeExist = false;
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getHscPipeSizeType().getCode());
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getTenantId());
-        final String query = PipeSizeTypeQueryBuilder.selectPipesizeByCodeQuery();
-        final List<PipeSizeType> pipeSizes = jdbcTemplate.query(query, preparedStatementValues.toArray(),
-                pipeSizeTypeRowMapper);
-        if (!pipeSizes.isEmpty()) {
-            pipeSizeExist = true;
-            waterConnectionRequest.getConnection().setHscPipeSizeType(pipeSizes.get(0));
+    
+    public PipeSizeResponseInfo getPipesizeTypeByCode(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+        .append(configurationManager.getWaterMasterServicePipesizeSearchPathTopic());
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        PipeSizeResponseInfo pipesize = restTemplate.postForObject(url.toString(), request,PipeSizeResponseInfo.class,Double.parseDouble(waterConnectionRequest.getConnection().getHscPipeSizeType()),waterConnectionRequest.getConnection().getTenantId());
+        if(pipesize!=null){
+        waterConnectionRequest.getConnection().setHscPipeSizeType(pipesize.getPipeSize()!=null && pipesize.getPipeSize().get(0)!=null?pipesize.getPipeSize().get(0).getId():"");
         }
-
-        return pipeSizeExist;
+        return pipesize;
     }
-
-    public Boolean getSourceTypeByName(final WaterConnectionReq waterConnectionRequest) {
-        Boolean sourceTypeExist = false;
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getSourceType().getName());
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getTenantId());
-        final String query = SourceTypeQueryBuilder.selectSourceTypeByNameQuery();
-        final List<SourceType> sourcetypes = jdbcTemplate.query(query, preparedStatementValues.toArray(),
-                sourceTypeRowMapper);
-        if (!sourcetypes.isEmpty()) {
-            sourceTypeExist = true;
-            waterConnectionRequest.getConnection().setSourceType(sourcetypes.get(0));
+    
+    public WaterSourceResponseInfo getSourceTypeByName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+        .append(configurationManager.getWaterMasterServiceSourceSearchPathTopic());
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        WaterSourceResponseInfo sourcetype = restTemplate.postForObject(url.toString(), request,WaterSourceResponseInfo.class,waterConnectionRequest.getConnection().getSourceType(),waterConnectionRequest.getConnection().getTenantId());
+        if(sourcetype!=null){
+        waterConnectionRequest.getConnection().setSourceType(sourcetype.getWaterSourceType()!=null
+                && sourcetype.getWaterSourceType().get(0)!=null?sourcetype.getWaterSourceType().get(0).getId():"");
         }
-
-        return sourceTypeExist;
+        return sourcetype;
     }
-
-    public Boolean getSupplyTypeByName(final WaterConnectionReq waterConnectionRequest) {
-        Boolean sourceTypeExist = false;
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getSupplyType().getName());
-        preparedStatementValues.add(waterConnectionRequest.getConnection().getTenantId());
-        final String query = SupplyTypeQueryBuilder.selectSupplytypeByNameQuery();
-        final List<SupplyType> supplyTypes = jdbcTemplate.query(query, preparedStatementValues.toArray(),
-                supplyTypeRowMapper);
-        if (!supplyTypes.isEmpty()) {
-            sourceTypeExist = true;
-            waterConnectionRequest.getConnection().setSupplyType(supplyTypes.get(0));
+    
+    public SupplyResponseInfo getSupplyTypeByName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+        .append(configurationManager.getWaterMasterServiceSupplySearchPathTopic());
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        SupplyResponseInfo supplytype = restTemplate.postForObject(url.toString(), request,SupplyResponseInfo.class,waterConnectionRequest.getConnection().getSupplyType(),waterConnectionRequest.getConnection().getTenantId());
+        if(supplytype!=null){
+        waterConnectionRequest.getConnection().setSupplyType(supplytype.getSupplytypes()!=null
+                && supplytype.getSupplytypes().get(0)!=null?supplytype.getSupplytypes().get(0).getId():"");
         }
-
-        return sourceTypeExist;
+        return supplytype;
     }
-*/}
+    
+}

@@ -27,11 +27,11 @@ var requestInfo = {
   "key": "xyz",
   "msgId": "654654",
   "requesterId": "61",
-  "authToken": "036bff4a-abab-4d2c-bd72-20d8f956dd6c"
+  "authToken": "3268dd63-aaa1-4a47-b678-6b6dc6d04ad4"
 };
 //uncomment for ap
 // var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
-var tenantId = "default" //localStorage.getItem("tenantId");
+var tenantId = localStorage.getItem("tenantId");
 
 module.exports = {
   commonApiPost: (context, queryObject = {}, body = {}) => {

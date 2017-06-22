@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 // import {Switch,Route} from 'react-router-dom';
+import { withRouter } from 'react-router'
 
 import Header from './common/Header';
 import Footer from './common/Footer';
@@ -86,4 +87,4 @@ const mapDispatchToProps = dispatch => ({
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

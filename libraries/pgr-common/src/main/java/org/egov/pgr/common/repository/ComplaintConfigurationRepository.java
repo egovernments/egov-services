@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ComplaintConfigurationRepository {
 
-    private static final String ANONYMOUS_COMPLAINT_OTP_CONFIG_URL = "pgr/OTPConfig/_search?tenantId={tenantId}";
+    private static final String ANONYMOUS_COMPLAINT_OTP_CONFIG_URL = "pgr-master/OTPConfig/_search?tenantId={tenantId}";
     private final String url;
     private RestTemplate restTemplate;
 

@@ -96,9 +96,6 @@ public class TaxHeadMasterServiceTest {
 		taxPeriod.setCode("string");
 		taxPeriod.setFinancialYear("2017-2018");
 		taxPeriod.setService("string");
-		//taxPeriod.setDescription("string");
-		//taxPeriod.setFinancialYear("2017-2018");
-		//taxPeriod.setModule("string");
 		taxPeriod.setFromDate(123L);
 		taxPeriod.setToDate(345L);
 

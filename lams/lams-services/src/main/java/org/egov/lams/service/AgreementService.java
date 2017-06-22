@@ -195,8 +195,10 @@ public class AgreementService {
 								agreementRequest.getRequestInfo());
 					}
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-					if (agreement.getStatus().equals(Status.REJECTED))
+					if (agreement.getStatus().equals(Status.REJECTED)){
 						agreement.setStatus(Status.CANCELLED);
+						workFlowDetails.setAction(propertiesManager.getCommonsWorkflowCancelAction());
+					}
 					else
 						agreement.setStatus(Status.REJECTED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {

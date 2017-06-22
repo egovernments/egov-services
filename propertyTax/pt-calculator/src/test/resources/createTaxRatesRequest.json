@@ -1,0 +1,30 @@
+{
+	"RequestInfo": {
+       "apiId" : "emp",
+		"ver" : "1.0",
+		"ts" : 22366,
+		"action" : "create",
+		"did" : "1",
+		"key" : "abcdkey",
+		"msgId" : "20170310130900",
+		"requesterId" : "yosadhara",
+		"authToken" : "b5da31a4-b400-4d6e-aa46-9ebf33cce933"
+    },
+    "taxRates": [{
+      "tenantId": "default",
+      "taxHead": "taxHead-C",
+      "dependentTaxHead": "dependentTaxHead-C",
+      "fromDate": "03/06/2017 00:00:00",
+      "toDate": "10/06/2017 00:00:00",
+      "fromValue": 1000,
+      "toValue": 1500,
+      "ratePercentage": 33,
+      "taxFlatValue": 2222,
+      "auditDetails": {
+            "createdBy": null,
+            "lastModifiedBy": null,
+            "createdTime": null,
+            "lastModifiedTime": null
+        }
+    }]
+  }

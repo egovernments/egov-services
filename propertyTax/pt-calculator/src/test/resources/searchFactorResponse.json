@@ -1,0 +1,20 @@
+{
+    "responseInfo": {
+    },
+    "calculationFactors": [
+        {
+            "tenantId": "default",
+            "factorCode": "propertytax",
+            "factorType": "occupancy",
+            "factorValue": 1234.12,
+            "fromDate": "10/06/2007  00:00:00",
+            "toDate": "25/06/2017  00:00:00",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

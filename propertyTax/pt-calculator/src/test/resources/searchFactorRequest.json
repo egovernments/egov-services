@@ -1,0 +1,23 @@
+{  
+   "RequestInfo":{  
+         "apiId":"emp",
+         "ver":"1.0",
+         "ts":120,
+         "action":"create",
+         "did":"1",
+         "key":"abcdkey",
+         "msgId":"20170310130900",
+         "requesterId":"rajesh",
+         "userInfo": {
+         	"tenantId": "default",
+         	"id": "",
+         	"username": "",
+         	"mobile": "",
+         	"email": "",
+         	"primaryrole": [],
+         	"additionalroles": []
+         },
+         "correlationId": "test123",
+         "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
+      }
+}

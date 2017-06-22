@@ -49,7 +49,6 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.workflow.config.ApplicationProperties;
 import org.egov.workflow.domain.service.RouterService;
 import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
@@ -90,8 +89,7 @@ public class RouterController{
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+	
 
 	@PostMapping(value = "/_create")
 	@ResponseBody

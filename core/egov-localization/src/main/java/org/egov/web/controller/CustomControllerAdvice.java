@@ -2,7 +2,7 @@ package org.egov.web.controller;
 
 import org.egov.web.contract.Error;
 import org.egov.web.contract.ErrorResponse;
-import org.egov.web.exception.InvalidCreateMessageRequest;
+import org.egov.web.exception.InvalidMessageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class CustomControllerAdvice {
 
-    @ExceptionHandler(InvalidCreateMessageRequest.class)
+    @ExceptionHandler(InvalidMessageRequest.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse processValidationError(InvalidCreateMessageRequest ex) {
+    public ErrorResponse processValidationError(InvalidMessageRequest ex) {
         List<Error> errors = ex.getErrors().stream()
                 .map(e -> new Error(e.getCode(), e.getField(), e.getDefaultMessage()))
                 .collect(Collectors.toList());

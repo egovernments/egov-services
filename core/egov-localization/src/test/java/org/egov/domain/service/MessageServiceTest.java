@@ -1,29 +1,26 @@
 package org.egov.domain.service;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.egov.domain.model.Message;
+import org.egov.domain.model.MessageIdentity;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
-import org.egov.web.contract.NewMessagesRequest;
-import org.egov.web.contract.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MessageServiceTest {
@@ -44,20 +41,27 @@ public class MessageServiceTest {
     @Test
     public void test_should_augment_messages_for_given_tenant_with_non_overridden_default_messages() {
         String tenantId = "a";
-
         final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
-        Message defaultMessage1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
-            .message("default message1")
+            .module("module")
             .tenant(defaultTenant)
             .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("default message1")
+            .build();
         List<Message> defaultEnglishMessages = Collections.singletonList(defaultMessage1);
-        Message tenantMessage1 = Message.builder()
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
             .code("code2")
-            .message("marathi message for tenant a")
             .locale(MR_IN)
+            .module("module")
             .tenant(new Tenant("a"))
+            .build();
+        Message tenantMessage1 = Message.builder()
+            .messageIdentity(messageIdentity2)
+            .message("marathi message for tenant a")
             .build();
         List<Message> marathiMessagesForGivenTenant = Collections.singletonList(tenantMessage1);
         when(messageRepository.findByTenantIdAndLocale(new Tenant("default"), ENGLISH_INDIA))
@@ -79,11 +83,15 @@ public class MessageServiceTest {
         String tenantId = "a";
 
         final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
-        Message defaultMessage1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
-            .message("default message1")
+            .module("module")
             .tenant(defaultTenant)
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("default message1")
             .build();
         List<Message> defaultEnglishMessages = Collections.singletonList(defaultMessage1);
         when(messageRepository.findByTenantIdAndLocale(new Tenant("default"), ENGLISH_INDIA))
@@ -103,11 +111,15 @@ public class MessageServiceTest {
         String tenantId = "a";
 
         final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
-        Message defaultMessage1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
-            .message("default message1")
+            .module("module")
             .tenant(defaultTenant)
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("default message1")
             .build();
         List<Message> defaultEnglishMessages = Collections.singletonList(defaultMessage1);
         when(messageRepository.findByTenantIdAndLocale(new Tenant("default"), ENGLISH_INDIA))
@@ -130,49 +142,77 @@ public class MessageServiceTest {
         String tenantId = "a.b.c";
 
         final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
-        Message defaultMessage1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
+            .module("module")
+            .tenant(defaultTenant)
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
             .message("default message1")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .locale(ENGLISH_INDIA)
+            .module("module")
             .tenant(defaultTenant)
             .build();
         Message defaultMessage2 = Message.builder()
-            .code("code2")
-            .locale(ENGLISH_INDIA)
+            .messageIdentity(messageIdentity2)
             .message("default message2")
+            .build();
+        final MessageIdentity messageIdentity3 = MessageIdentity.builder()
+            .code("code3")
+            .locale(ENGLISH_INDIA)
+            .module("module")
             .tenant(defaultTenant)
             .build();
         Message defaultMessage3 = Message.builder()
-            .code("code3")
-            .locale(ENGLISH_INDIA)
+            .messageIdentity(messageIdentity3)
             .message("default message3")
-            .tenant(defaultTenant)
             .build();
         List<Message> defaultEnglishMessages = Arrays.asList(defaultMessage1, defaultMessage2, defaultMessage3);
-        Message tenantMessage1 = Message.builder()
+        final MessageIdentity messageIdentity4 = MessageIdentity.builder()
             .code("code1")
-            .message("marathi message for tenant a.b.c")
             .locale(MR_IN)
+            .module("module")
+            .tenant(new Tenant("a.b.c"))
+            .build();
+        Message tenantMessage1 = Message.builder()
+            .messageIdentity(messageIdentity4)
+            .message("marathi message for tenant a.b.c")
+            .build();
+        final MessageIdentity messageIdentity5 = MessageIdentity.builder()
+            .code("code5")
+            .locale(MR_IN)
+            .module("module")
             .tenant(new Tenant("a.b.c"))
             .build();
         Message tenantMessage2 = Message.builder()
-            .code("code5")
+            .messageIdentity(messageIdentity5)
             .message("marathi message for tenant a.b.c")
-            .locale(MR_IN)
-            .tenant(new Tenant("a.b.c"))
             .build();
         List<Message> marathiMessagesForGivenTenant = Arrays.asList(tenantMessage1, tenantMessage2);
-        Message tenantParentMessage1 = Message.builder()
+        final MessageIdentity messageIdentity6 = MessageIdentity.builder()
             .code("code2")
-            .message("marathi message for tenant a.b")
             .locale(MR_IN)
+            .module("module")
+            .tenant(new Tenant("a.b"))
+            .build();
+        Message tenantParentMessage1 = Message.builder()
+            .messageIdentity(messageIdentity6)
+            .message("marathi message for tenant a.b")
+            .build();
+        final MessageIdentity messageIdentity7 = MessageIdentity.builder()
+            .code("code4")
+            .locale(MR_IN)
+            .module("module")
             .tenant(new Tenant("a.b"))
             .build();
         Message tenantParentMessage2 = Message.builder()
-            .code("code4")
+            .messageIdentity(messageIdentity7)
             .message("marathi message for tenant a.b")
-            .locale(MR_IN)
-            .tenant(new Tenant("a.b"))
             .build();
         List<Message> marathiMessagesForTenantParent = Arrays.asList(tenantParentMessage1, tenantParentMessage2);
 
@@ -206,17 +246,25 @@ public class MessageServiceTest {
     public void test_should_return_computed_messages_from_cache_when_present() {
         String tenantId = "a.b.c";
         final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
-        Message defaultMessage1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
+            .module("module")
+            .tenant(defaultTenant)
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
             .message("default message1")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .locale(ENGLISH_INDIA)
+            .module("module")
             .tenant(defaultTenant)
             .build();
         Message defaultMessage2 = Message.builder()
-            .code("code2")
-            .locale(ENGLISH_INDIA)
+            .messageIdentity(messageIdentity2)
             .message("default message2")
-            .tenant(defaultTenant)
             .build();
         List<Message> expectedMessages = Arrays.asList(defaultMessage1, defaultMessage2);
         when(messageCacheRepository.getComputedMessages(MR_IN, new Tenant(tenantId)))
@@ -230,20 +278,27 @@ public class MessageServiceTest {
     @Test
     public void test_should_return_messages_from_cache_when_present() {
         String tenantId = "a";
-
         final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
-        Message defaultMessage1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
+            .module("module")
+            .tenant(new Tenant("a"))
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
             .message("default message1")
-            .tenant(defaultTenant)
             .build();
         List<Message> defaultEnglishMessages = Collections.singletonList(defaultMessage1);
-        Message tenantMessage1 = Message.builder()
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
             .code("code2")
-            .message("marathi message for tenant a")
             .locale(MR_IN)
+            .module("module")
             .tenant(new Tenant("a"))
+            .build();
+        Message tenantMessage1 = Message.builder()
+            .messageIdentity(messageIdentity2)
+            .message("marathi message for tenant a")
             .build();
         List<Message> marathiMessagesForGivenTenant = Collections.singletonList(tenantMessage1);
         when(messageCacheRepository.getMessages(MR_IN, new Tenant("a")))
@@ -263,76 +318,54 @@ public class MessageServiceTest {
     public void test_should_save_messages() {
         List<Message> modelMessages = getMessages();
 
-        messageService.createMessages(modelMessages);
+        messageService.create(modelMessages);
 
         verify(messageRepository).save(modelMessages);
     }
     
-    @Test
-    public void test_should_create_messages() {
-    	List<org.egov.web.contract.Message> myMessages = getMyMessages();
-    	NewMessagesRequest messageRequest = new NewMessagesRequest(new RequestInfo(), "LOCALE", myMessages, "TenantId");
-    	messageService.createMessage(messageRequest.getLocale(), messageRequest.getTenantId(), getOnlyMessages(messageRequest));
-    	verify(messageRepository).deleteMessages(messageRequest.getLocale(), messageRequest.getTenantId(), getOnlyMessages(messageRequest));
-    	verify(messageRepository).createMessage(messageRequest.getLocale(), messageRequest.getTenantId(), getOnlyMessages(messageRequest));
-    }
-
     private List<Message> getMessages() {
-        Message message1 = Message.builder()
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("core.msg.OTPvalidated")
-            .message("OTP यशस्वीपणे प्रमाणित")
             .locale(MR_IN)
+            .module("module")
+            .tenant(new Tenant(TENANT_ID))
+            .build();
+        Message message1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("OTP यशस्वीपणे प्रमाणित")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("core.lbl.imageupload")
+            .locale(MR_IN)
+            .module("module")
             .tenant(new Tenant(TENANT_ID))
             .build();
         Message message2 = Message.builder()
-            .code("core.lbl.imageupload")
+            .messageIdentity(messageIdentity2)
             .message("प्रतिमा यशस्वीरित्या अपलोड")
-            .locale(MR_IN)
+            .build();
+        final MessageIdentity messageIdentity3 = MessageIdentity.builder()
+            .code("core.msg.entermobileno")
+            .locale(ENGLISH_INDIA)
+            .module("module")
             .tenant(new Tenant(TENANT_ID))
             .build();
         Message message3 = Message.builder()
-            .code("core.msg.entermobileno")
-            .locale(ENGLISH_INDIA)
+            .messageIdentity(messageIdentity3)
             .message("EnterMobileNumber")
+            .build();
+        final MessageIdentity messageIdentity4 = MessageIdentity.builder()
+            .code("core.msg.enterfullname")
+            .locale(ENGLISH_INDIA)
+            .module("module")
             .tenant(new Tenant(TENANT_ID))
             .build();
         Message message4 = Message.builder()
-            .code("core.msg.enterfullname")
-            .locale(ENGLISH_INDIA)
+            .messageIdentity(messageIdentity4)
             .message("Enter fullname")
-            .tenant(new Tenant(TENANT_ID))
             .build();
 
         return (Arrays.asList(message1, message2, message3, message4));
     }
-    
-    private List<org.egov.web.contract.Message> getMyMessages(){
-    	org.egov.web.contract.Message msg1 = org.egov.web.contract.Message.builder()
-    			.code("codeOne")
-    			.message("messageOne")
-    			.module("moduleOne")
-    			.tenantId("tenantOne")
-    			.build();
-    	org.egov.web.contract.Message msg2 = org.egov.web.contract.Message.builder()
-    			.code("codeTwo")
-    			.message("messageTwo")
-    			.module("moduleTwo")
-    			.tenantId("tenantTwo")
-    			.build();
-    	return (Arrays.asList(msg1,msg2));
-    }
-    
-    private List<Message> getOnlyMessages(NewMessagesRequest newMessagesRequest){
-    	List<org.egov.web.contract.Message> requestMessages = newMessagesRequest.getMessages();
-    	List<Message> persistMessages = new ArrayList<>();
-    	if(requestMessages.size() > 0){
-    		Iterator<org.egov.web.contract.Message> itr = requestMessages.iterator();
-    		while(itr.hasNext()){
-    			org.egov.web.contract.Message msg = itr.next();
-    			Message myMessage = new Message(msg.getCode(), msg.getMessage(), new Tenant(newMessagesRequest.getTenantId()), newMessagesRequest.getLocale(), msg.getModule());
-    			persistMessages.add(myMessage);
-    		}
-    	}
-    	return persistMessages;
-    }
+
 }

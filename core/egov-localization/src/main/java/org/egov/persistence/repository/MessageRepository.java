@@ -1,41 +1,26 @@
 package org.egov.persistence.repository;
 
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
-import org.egov.persistence.repository.builder.MessageRepositoryQueryBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageRepository {
-	
+
     private MessageJpaRepository messageJpaRepository;
-    
-    // private MessageCacheRepository messageCacheRepository;
-    
-    @Autowired
-    private MessageRepositoryQueryBuilder messageQueryBuilder;
-    
-    private static final Logger logger = LoggerFactory.getLogger(MessageRepository.class);
-    
-    @Autowired
-	private JdbcTemplate jdbcTemplate;
-    
+
     public MessageRepository(MessageJpaRepository messageJpaRepository) {
         this.messageJpaRepository = messageJpaRepository;
     }
 
     public List<Message> findByTenantIdAndLocale(Tenant tenant, String locale) {
-        return messageJpaRepository.findByTenantIdAndLocale(tenant.getTenantId(), locale).stream()
+        return messageJpaRepository.find(tenant.getTenantId(), locale).stream()
             .map(org.egov.persistence.entity.Message::toDomain).collect(Collectors.toList());
     }
 
@@ -45,47 +30,47 @@ public class MessageRepository {
             .collect(Collectors.toList());
         messageJpaRepository.save(entityMessages);
     }
-    
-    public boolean deleteMessages(String locale, String tenantId, List<Message> messageList){
-    	String deleteQuery = messageQueryBuilder.getDeleteQuery(messageList);
-    	final Object[] obj = new Object[] { locale, tenantId };
-		int deleteStatus = jdbcTemplate.update(deleteQuery, obj);
-		logger.info("Status of Delete is : " + deleteStatus);
-		if(deleteStatus > 0){
-			return true;
-		}
-		return false; 
+
+    public void delete(String tenant, String locale, String module, List<String> codes) {
+        final List<org.egov.persistence.entity.Message> messages = messageJpaRepository
+            .find(tenant, locale, module, codes);
+        if (CollectionUtils.isEmpty(messages)) {
+            return;
+        }
+        messageJpaRepository.delete(messages);
     }
-    
-    public boolean createMessage(String locale, String tenantId, List<Message> messageList){
-    	String batchInsertQuery = messageQueryBuilder.getQueryForBatchInsert();
-    	int[] values = {};
-		try {
-			values = jdbcTemplate.batchUpdate(batchInsertQuery,
-					new BatchPreparedStatementSetter() {
-						@Override
-						public void setValues(java.sql.PreparedStatement statement, int i) throws SQLException {
-							Message eachMessage = messageList.get(i);
-							statement.setString(1, locale);
-							statement.setString(2, eachMessage.getCode());
-							statement.setString(3, eachMessage.getMessage());
-							statement.setString(4, tenantId);
-							statement.setString(5, eachMessage.getModule());
-						}
-						@Override
-						public int getBatchSize() {
-							return messageList.size();
-						}
-					});
-		} catch (Exception e) {
-			logger.error("Encountered an Exception : " + e);
-		}
-		logger.info("Status of Insert is : " + values.length);
-		if(values.length > 0){
-			// Tenant tenant = new Tenant(tenantId);
-			// messageCacheRepository.bustCacheEntry(createMessagesRequest.getLocale(), tenant);
-			return true;
-		}
-    	return false;
+
+    public void update(String tenant, String locale, String module, List<Message> domainMessages) {
+        final List<String> codes = getCodes(domainMessages);
+        final List<org.egov.persistence.entity.Message> entityMessages =
+            fetchMatchEntityMessages(tenant, locale, module, codes);
+        updateMessages(domainMessages, entityMessages);
     }
+
+    private List<org.egov.persistence.entity.Message> fetchMatchEntityMessages(String tenant, String locale,
+                                                                               String module, List<String> codes) {
+        return messageJpaRepository.find(tenant, locale, module, codes);
+    }
+
+    private void updateMessages(List<Message> domainMessages,
+                                List<org.egov.persistence.entity.Message> entityMessages) {
+        final Map<String, Message> codeToMessageMap = getCodeToMessageMap(domainMessages);
+        entityMessages.forEach(entityMessage -> {
+            final Message matchingMessage = codeToMessageMap.get(entityMessage.getCode());
+            entityMessage.update(matchingMessage);
+            messageJpaRepository.save(entityMessage);
+        });
+    }
+
+    private Map<String, Message> getCodeToMessageMap(List<Message> messages) {
+        return messages.stream()
+            .collect(Collectors.toMap(Message::getCode, message -> message));
+    }
+
+    private List<String> getCodes(List<Message> messages) {
+        return messages.stream()
+            .map(Message::getCode)
+            .collect(Collectors.toList());
+    }
+
 }

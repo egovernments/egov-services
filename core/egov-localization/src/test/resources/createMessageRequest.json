@@ -1,4 +1,7 @@
 {
+    "requestInfo": {
+    },
+    "tenantId": "default",
     "messages": [
         {
             "code": "wcms.create.connection.login",

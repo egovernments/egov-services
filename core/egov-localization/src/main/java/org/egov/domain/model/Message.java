@@ -1,27 +1,40 @@
 package org.egov.domain.model;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
+
+import javax.validation.constraints.Null;
 
 @Builder
 @Getter
-@AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Message {
-
-    private String code;
     private String message;
-    private Tenant tenant;
-    private String locale;
-    private String module;
+    @Null
+    private MessageIdentity messageIdentity;
 
     public boolean isMoreSpecificComparedTo(Message otherMessage) {
-        return code.equals(otherMessage.getCode())
-            && locale.equals(otherMessage.getLocale())
-            && module.equals(otherMessage.getModule())
-            && tenant.isMoreSpecificComparedTo(otherMessage.getTenant());
+        return messageIdentity.equals(otherMessage.getMessageIdentity());
+    }
+
+    public String getCode() {
+        return messageIdentity.getCode();
+    }
+
+    public String getModule() {
+        return messageIdentity.getModule();
+    }
+
+    public String getLocale() {
+        return messageIdentity.getLocale();
+    }
+
+    public String getTenant() {
+        return messageIdentity.getTenant().getTenantId();
     }
 }
+

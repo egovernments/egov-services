@@ -1,6 +1,7 @@
 package org.egov.persistence.entity;
 
 import lombok.*;
+import org.egov.domain.model.MessageIdentity;
 import org.egov.domain.model.Tenant;
 
 import javax.persistence.*;
@@ -36,19 +37,28 @@ public class Message {
     private String tenantId;
 
     public Message(org.egov.domain.model.Message domainMessage) {
+        this.tenantId = domainMessage.getTenant();
         this.locale = domainMessage.getLocale();
-        this.tenantId = domainMessage.getTenant().getTenantId();
-        this.message = domainMessage.getMessage();
+        this.module = domainMessage.getModule();
         this.code = domainMessage.getCode();
+        this.message = domainMessage.getMessage();
     }
 
     public org.egov.domain.model.Message toDomain() {
-        return org.egov.domain.model.Message.builder()
-            .code(code)
-            .message(message)
-            .locale(locale)
+        final Tenant tenant = new Tenant(tenantId);
+        final MessageIdentity messageIdentity = MessageIdentity.builder()
+            .tenant(tenant)
             .module(module)
-            .tenant(new Tenant(tenantId))
+            .locale(locale)
+            .code(code)
             .build();
+        return org.egov.domain.model.Message.builder()
+            .message(message)
+            .messageIdentity(messageIdentity)
+            .build();
+    }
+
+    public void update(org.egov.domain.model.Message updatedMessage) {
+        message = updatedMessage.getMessage();
     }
 }

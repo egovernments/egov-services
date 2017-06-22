@@ -11,6 +11,7 @@ import receivingModeCreate from './components/contents/master/receivingMode/rece
 import viewOrUpdateReceivingMode from './components/contents/master/receivingMode/viewOrUpdateReceivingMode';
 import ServiceGroupCreate from './components/contents/master/serviceGroup/serviceGroupCreate';
 import ViewEditServiceGroup from './components/contents/master/serviceGroup/viewEditServiceGroup';
+import viewReceivingMode from './components/contents/master/receivingMode/viewReceivingMode';
 
 
 const Main = () => (
@@ -18,19 +19,20 @@ const Main = () => (
     <Switch>
       <Route exact path='/'/>
       <Route exact path='/createGrievance' component={grievanceCreate}/>
+      <Route exact path='/searchGrievance' component={grievanceSearch}/>
       <Route exact name="createReceivingCenter" path='/createReceivingCenter/:id?' component={ReceivingCenterCreate}/>
+      <Route exact path='/createReceivingCenter' component={ReceivingCenterCreate}/>
       <Route exact path='/receivingCenter/view' component={ViewEditReceivingCenter}/>
       <Route exact path='/receivingCenter/edit' component={ViewEditReceivingCenter}/>
       <Route exact path='/viewReceivingCenter/:id' component={ViewReceivingCenter}/>
-      <Route exact path='/searchGrievance' component={grievanceSearch}/>
+
+
+
       <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>
-      <Route exact path='/viewOrUpdateReceivingMode' component={viewOrUpdateReceivingMode}/>
-      <Route exact name="receivingModeCreate" path='/receivingModeCreate' component={receivingModeCreate}/>
-      <Route exact name="receivingModeCreate" path='/receivingModeCreate/:id' component={receivingModeCreate}/>
-      <Route exact name="receivingModeCreate" path='/receivingModeCreate/:id' component={receivingModeCreate}/>
+      <Route exact name='receivingModeCreate' path='/receivingModeCreate/:id' component={receivingModeCreate}/>
       <Route exact path='/viewOrUpdateReceivingMode/view' component={viewOrUpdateReceivingMode}/>
       <Route exact path='/viewOrUpdateReceivingMode/edit' component={viewOrUpdateReceivingMode}/>
-      <Route exact path='/createReceivingCenter' component={ReceivingCenterCreate}/>
+      <Route exact path='/viewReceivingMode/:id' component={viewReceivingMode}/>
       <Route exact name="createServiceGroup" path='/createServiceGroup/:code' component={ServiceGroupCreate}/>
       <Route exact path='/createServiceGroup' component={ServiceGroupCreate}/>
       <Route exact path='/serviceGroup/view' component={ViewEditServiceGroup}/>

@@ -44,7 +44,7 @@ import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.BusinessServiceDetailRepository;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.BusinessServiceDetailResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -69,7 +69,7 @@ public class BusinessServDetailServiceTest {
     private BusinessServiceDetailRepository businessServiceDetailRepository;
 
     @Mock
-    private ResponseInfoFactory responseInfoFactory;
+    private ResponseFactory responseInfoFactory;
 
     @Test
     public void shouldSearchBusinessServiceDetails() {

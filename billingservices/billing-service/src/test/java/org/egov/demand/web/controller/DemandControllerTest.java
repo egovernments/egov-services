@@ -20,7 +20,7 @@ import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class DemandControllerTest {
 	private DemandService demandService;
 
 	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseFactory responseInfoFactory;
 
 	@Test
 	public void testShouldCreateDemands() throws IOException, Exception {

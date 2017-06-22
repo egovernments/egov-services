@@ -18,7 +18,7 @@ import org.egov.demand.producer.TaxHeadMasterProducer;
 import org.egov.demand.repository.TaxHeadMasterRepository;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,7 +35,7 @@ public class TaxHeadMasterServiceTest {
 	private TaxHeadMasterService taxHeadMasterService;
 
 	@Mock
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseFactory responseInfoFactory;
 
 	@Mock
 	private TaxHeadMasterRepository taxHeadMasterRepository;

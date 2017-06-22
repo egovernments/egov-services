@@ -44,7 +44,7 @@ import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -68,7 +68,7 @@ public class TaxPeriodServiceTest {
     private TaxPeriodRepository taxPeriodRepository;
 
     @Mock
-    private ResponseInfoFactory responseInfoFactory;
+    private ResponseFactory responseInfoFactory;
 
     @Test
     public void shouldSearchTaxPeriods() {

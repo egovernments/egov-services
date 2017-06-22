@@ -17,7 +17,7 @@ import org.egov.demand.model.enums.Type;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +45,7 @@ public class DemandServiceTest {
 	private DemandService demandService;
 	
 	@Mock
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseFactory responseInfoFactory;
 	
 	@Test
 	public void methodShouldCreateDemand(){

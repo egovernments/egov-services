@@ -11,7 +11,7 @@ import org.egov.demand.producer.TaxHeadMasterProducer;
 import org.egov.demand.repository.TaxHeadMasterRepository;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class TaxHeadMasterService {
 	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterService.class);
 	
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseFactory responseInfoFactory;
 	
 	@Autowired
 	private TaxHeadMasterRepository taxHeadMasterRepository;

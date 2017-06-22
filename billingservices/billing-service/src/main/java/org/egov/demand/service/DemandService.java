@@ -15,7 +15,7 @@ import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class DemandService {
 	private ApplicationProperties applicationProperties;
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseFactory responseInfoFactory;
 
 	public DemandResponse create(DemandRequest demandRequest) {
 

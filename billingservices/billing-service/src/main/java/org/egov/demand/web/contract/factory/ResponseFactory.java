@@ -13,8 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 @Configuration
-public class ResponseInfoFactory {
-	
+public class ResponseFactory {
+
 	public ResponseInfo getResponseInfo(RequestInfo requestInfo, HttpStatus status) {
 
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -28,18 +28,18 @@ public class ResponseInfoFactory {
 		}
 		return responseInfo;
 	}
-	
-	public ErrorResponse getErrorResponse(Errors bindingResult,RequestInfo requestInfo) {
-		
+
+	public ErrorResponse getErrorResponse(Errors bindingResult, RequestInfo requestInfo) {
+
 		Error error = new Error();
 		error.setCode(400);
 		error.setMessage("Mandatory Fields Null");
 		error.setDescription("exception occurred in DemandController");
 		error.setFields(new ArrayList<ErrorField>());
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
-			ErrorField errorField = new ErrorField(fieldError.getCode(),fieldError.getDefaultMessage(), fieldError.getField());
+			ErrorField errorField = new ErrorField(fieldError.getCode(), fieldError.getDefaultMessage(),fieldError.getField());
 			error.getFields().add(errorField);
 		}
-		return  new ErrorResponse(getResponseInfo(requestInfo,HttpStatus.BAD_REQUEST), error);
+		return new ErrorResponse(getResponseInfo(requestInfo, HttpStatus.BAD_REQUEST), error);
 	}
 }

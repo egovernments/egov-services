@@ -44,7 +44,7 @@ import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.BusinessServiceDetailRepository;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.BusinessServiceDetailResponse;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class BusinessServDetailService {
     private BusinessServiceDetailRepository businessServiceDetailRepository;
 
     @Autowired
-    private ResponseInfoFactory responseInfoFactory;
+    private ResponseFactory responseInfoFactory;
 
     public BusinessServiceDetailResponse searchBusinessServiceDetails(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
         LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");

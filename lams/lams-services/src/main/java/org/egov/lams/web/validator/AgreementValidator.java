@@ -11,6 +11,7 @@ import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
@@ -189,6 +190,13 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
 		validateRentIncrementType(agreement, errors);
+		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+	}
+
+	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
+		if(workflowDetails.getAssignee() == null)
+			errors.rejectValue("Agreement.Workflowdetails", "",
+					"Approver details has to be filled");
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {

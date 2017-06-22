@@ -63,35 +63,34 @@ class receivingModeCreate extends Component {
 
 
 
-  componentWillMount() {
-    if(this.props.match.params.code) {
-      let {receivingCenterCreate} = this.props;
-       this.setState({code:this.props.match.params.code});
-       var body = {}
-       let  current = this;
-       Api.commonApiPost("/pgr-master/receivingmode/_search",{code:this.state.code},body).then(function(response){
-          console.log(response);
-          this.setState({data:response.ReceivingModeType})
-        }).catch((error)=>{
-          console.log(error);
-        })
-       }
-    }
 
-  componentDidMount()
-  {
-    this.props.initForm();
-    this.props.handleChange({
-                            "target":{
-                              "value":true
-                            }}, "active", true, "");
+   componentWillMount() {
+     console.log(this.props.match.params.id);
+         if(this.props.match.params.id) {
 
-  }
+             this.setState({id:this.props.match.params.id});
+             var body = {}
+             let  current = this;
+             let {setForm} = this.props;
+
+             Api.commonApiPost("/pgr-master/receivingmode/_search",{id:this.props.match.params.id},body).then(function(response){
+                 console.log(response.ReceivingModeType);
+                 current.setState({data:response.ReceivingModeType})
+                 setForm(response.ReceivingModeType[0])
+             }).catch((error)=>{
+                 console.log(error);
+             })
+         } else {
+           let {initForm}=this.props;
+           initForm();
+         }
+     }
+
+
 
 
   addOrUpdate(e) {
     e.preventDefault();
-    console.log(this.props.receivingmodeSet);
 
     let {changeButtonText,receivingmodeSet}=this.props;
     var body ={
@@ -99,15 +98,16 @@ class receivingModeCreate extends Component {
          name :receivingmodeSet.name,
          code :receivingmodeSet.code,
          description :receivingmodeSet.description,
-          active :receivingmodeSet.active,
+         active :receivingmodeSet.active?receivingmodeSet.active:false,
          tenantId :localStorage.getItem("tenantId"),
          channel :receivingmodeSet.channel
        }
     }
-      if (this.props.match.param.code) {
-        var code = this.props.match.param.code;
-            Api.commonApiPost("pgr-master/receivingmode/$code/_update", {},body).then(function(response) {
-            alert("ReceivingMode Type Created successfully");
+      if(this.props.match.params.id){
+
+            Api.commonApiPost("pgr-master/receivingmode/"+body.ReceivingModeType.code+"/_update", {},body).then(function(response) {
+            alert("ReceivingMode Type Update successfully");
+            console.log(response);
             receivingmodeSet:[]
           }).catch((error)=>{
             console.log(error);
@@ -126,6 +126,8 @@ class receivingModeCreate extends Component {
 
 
   render() {
+  let url = this.props.location.pathname;
+  var _this = this;
    let {search,addOrUpdate} = this;
    let {
      handleChange,
@@ -146,47 +148,46 @@ class receivingModeCreate extends Component {
                  <Grid>
                    <Row>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Name" errorText={fieldErrors.name} value={receivingmodeSet.name} onChange={(e) => {handleChange(e, "name", true, "")}}/>
+                     <TextField fullWidth={true} floatingLabelText="Name" id="name" errorText={fieldErrors.name} value={receivingmodeSet.name} onChange={(e) => {handleChange(e, "name", true, "")}}/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Code" errorText={fieldErrors.code} value={receivingmodeSet.code} onChange={(e) => {handleChange(e, "code", true, "")}}/>
+                     <TextField fullWidth={true} floatingLabelText="Code" id="code" errorText={fieldErrors.code} value={receivingmodeSet.code} onChange={(e) => {handleChange(e, "code", true, "")}} disabled={_this.state.id}/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Description" errorText={fieldErrors.description} value={receivingmodeSet.description} onChange={(e) => {handleChange(e, "description", true, "")}}/>
+                     <TextField fullWidth={true} floatingLabelText="Description" id="description" errorText={fieldErrors.description} value={receivingmodeSet.description} onChange={(e) => {handleChange(e, "description", true, "")}}/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <SelectField  value={receivingmodeSet.channel} onChange={(e, index, value) => {
+                     <SelectField  value={receivingmodeSet.channel} id="channel" onChange={(e, index, value) => {
                          var e = {
                            target: {
                              value: value
                            }
                          };
-                         handleChange(e, "channel", false, "")}} floatingLabelText="channel" >
-                       <MenuItem value={1} primaryText=""/>
+                         handleChange(e, "channel", true, "")}} floatingLabelText="channel" >
                        <MenuItem value={"WEB"} primaryText="WEB"/>
                        <MenuItem value={"MOBILE"} primaryText="MOBILE"/>
                      </SelectField>
                    </Col>
-
+                    <div className="clearfix"></div>
                     <Col xs={12} md={3}>
-                    <Checkbox label="Active" style={styles.checkbox}
-                    defaultChecked={true}
-                    value={receivingmodeSet.active} onCheck={(e,isInputChecked) => { var e={
+                    <Checkbox label="Active" id="active" style={styles.checkbox}
+                    defaultChecked ={receivingmodeSet.active}
+                     onCheck={(e,isInputChecked) => { var e={
                                             "target":{
                                               "value":isInputChecked
                                             }
                                           }
-                                          handleChange(e, "active", true, "")}}/>
+                                          handleChange(e, "active", false, "")}}/>
                     </Col>
                    </Row>
 
                  </Grid>
               </CardText>
            </Card>
-           <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label="Create" disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>
-             <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
-           </div>
+           <div style={{textAlign:'center'}}>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+              </div>
          </form>
         </div>
    );
@@ -211,6 +212,25 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
          current: [],
          required: []
        }
+      }
+    });
+  },
+
+  setForm: (data) => {
+    dispatch({
+      type: "SET_FORM",
+      data,
+      isFormValid:true,
+      fieldErrors: {},
+      validationData: {
+        required: {
+          current: ["name","code","description","channel"],
+          required: ["name","code","description","channel"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
       }
     });
   },

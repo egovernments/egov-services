@@ -67,7 +67,7 @@ class viewOrUpdateReceivingMode extends Component {
         var body = {}
         let  current = this;
         Api.commonApiPost("/pgr-master/receivingmode/_search",{},body).then(function(response){
-            //console.log(response);
+            console.log(response.ReceivingModeType);
             current.setState({data:response.ReceivingModeType});
         }).catch((error)=>{
             console.log(error);
@@ -97,8 +97,6 @@ class viewOrUpdateReceivingMode extends Component {
         buttonText
       } = this.props;
 
-
-
       let url = this.props.location.pathname;
 
       return(
@@ -118,6 +116,7 @@ class viewOrUpdateReceivingMode extends Component {
                                           <th>Description</th>
                                           <th>Channel</th>
                                           <th>Active</th>
+                                          <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -130,8 +129,8 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.channel}</td>
                                               <td>{e.active}</td>
-                                              {url == '/receivingModeCreate/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
-                                              {url == '/receivingModeCreate/edit' && <td><Link  to={`/receivingModeCreate/${e.code}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/viewOrUpdateReceivingMode/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
+                                              {url == '/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/receivingModeCreate/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}
@@ -158,7 +157,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["name","code","channel", "description"]
+          required: ["name","code","channel","description"]
         },
         pattern: {
           current: [],

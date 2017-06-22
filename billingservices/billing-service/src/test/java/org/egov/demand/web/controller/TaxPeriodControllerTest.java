@@ -47,6 +47,7 @@ import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodResponse;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -77,6 +78,9 @@ public class TaxPeriodControllerTest {
 
     @MockBean
     private TaxPeriodService taxPeriodService;
+
+    @MockBean
+    private ResponseFactory responseFactory;
 
     @Test
     public void shouldSearchTaxPeriods() throws Exception {

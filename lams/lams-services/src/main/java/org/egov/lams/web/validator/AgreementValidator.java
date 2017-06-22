@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 @Component
@@ -284,5 +285,11 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		lamsConfigurationGetRequest.setName(keyName);
 		logger.info("the asset category names found ::: " + lamsConfigurationGetRequest);
 		return lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest).get(keyName);
+	}
+
+	public void validateUpdate(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
+		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+		
 	}
 }

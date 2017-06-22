@@ -40,30 +40,39 @@
 
 package org.egov.demand.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandCriteria;
+import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class BillService {
-	
-	private static final Logger logger = LoggerFactory.getLogger(BillService.class);
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -80,47 +89,99 @@ public class BillService {
 	@Autowired
 	private BillHelper billHelper;
 	
+	@Autowired
+	private DemandService demandService;
+
 	public BillResponse createAsync(BillRequest billRequest) { 
 		
 		billHelper.getBillRequestWithIds(billRequest);
 		
 		try {
-			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),
-								objectMapper.writeValueAsString(billRequest));
+			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),billRequest);
 		} catch (Exception e) {
-			logger.info("BillService createAsync:"+e);
-			e.printStackTrace();
+			log.info("BillService createAsync:"+e);
 			throw new RuntimeException(e);
 			
 		}
-		return getBillResponse(billRequest.getBillInfos());
+		return getBillResponse(billRequest.getBills());
 	}
 	
 	public void create(BillRequest billRequest){		
 		billRepository.saveBill(billRequest);
 	}
 	
-	public BillResponse generateBill(GenerateBillCriteria generateBillCriteria) {
-		List<DemandResponse> demandResponses = null;
-		List<Bill> bills = null;
-		return null;
+	public BillResponse generateBill(GenerateBillCriteria billCriteria, RequestInfo requestInfo) {
+		
+		Set<String> ids = new HashSet<>();
+		ids.add(billCriteria.getDemandId());
+		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
+				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
+				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
+				tenantId(billCriteria.getTenantId()).build();
+		
+		log.info("generateBill demandCriteria: "+demandCriteria);
+		DemandResponse demandResponse = demandService.getDemands(demandCriteria,requestInfo);
+		log.info("generateBill demandResponse: "+demandResponse);
+		List<Demand> demands = demandResponse.getDemands();
+		
+		List<Bill> bills = null; 
+		
+		if(!demands.isEmpty())
+			bills = prepareBill(demands, billCriteria.getTenantId());
+		else 
+			throw new RuntimeException("Invalid demand criteria");
+			
+		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 	
-	/*public List<Bill> prepareBill(List<Demand> demands,String tenantId){
-		List<Bill> bills = null;
+	private List<Bill> prepareBill(List<Demand> demands,String tenantId){
+		List<Bill> bills = new ArrayList<Bill>();
 		
-		for(Demand demand : demands){
+		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
+		
+		log.info("prepareBill map:" +map);
+		Demand demand = demands.get(0);
+		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
+				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
+		
+		List<BillDetail> billDetails = new ArrayList<>(); 
+		
+		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
+			List<Demand> demands2 = entry.getValue();
+			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+			Demand demand3 = demands2.get(0);
+			BigDecimal totalTaxAmount = BigDecimal.ZERO;
+			BigDecimal totalMinAmount = BigDecimal.ZERO;
+			BigDecimal totalCollectedAmount = BigDecimal.ZERO;
+	
+			for(Demand demand2 : demands2){
+				List<DemandDetail> demandDetails = demand2.getDemandDetails();
+				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
+				for(DemandDetail demandDetail : demandDetails) {
+					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
+					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
+					BillAccountDetail billAccountDetail = BillAccountDetail.builder().
+							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).build();
+					billAccountDetails.add(billAccountDetail);
+				}
+			}
 			
-			BillDetail billDetail = BillDetail.builder().businessService(demand.getBusinessService()).consumerType(demand.getConsumerType()).
-			consumerCode(demand.getConsumerCode()).displayMessage(null).minimumAmount(null).
-			totalAmount(null).tenantId(tenantId).build();
+			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).consumerType(demand3.getConsumerType()).
+					consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
+					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
+			
+			billDetails.add(billDetail);
 			
 		}
-	}*/
+		bill.setBillDetails(billDetails);
+		bills.add(bill);
+		
+		return bills;
+	}
 	
 	public BillResponse getBillResponse(List<Bill> bills) {
 		BillResponse billResponse = new BillResponse();
-		billResponse.setBillInfos(bills);
+		billResponse.setBill(bills);
 		return billResponse;
 	}
 	

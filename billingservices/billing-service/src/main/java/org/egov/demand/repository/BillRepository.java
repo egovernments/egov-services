@@ -38,7 +38,7 @@ public class BillRepository {
 	public void saveBill(BillRequest billRequest){
 		
 		RequestInfo requestInfo = billRequest.getRequestInfo();
-		List<Bill> bills = billRequest.getBillInfos();
+		List<Bill> bills = billRequest.getBills();
 		
 		log.info("saveBill requestInfo:"+requestInfo);
 		log.info("saveBill bills:"+bills);
@@ -72,7 +72,7 @@ public class BillRepository {
 	public void saveBillDeails(BillRequest billRequest){
 		
 		RequestInfo requestInfo = billRequest.getRequestInfo();
-		List<Bill> bills = billRequest.getBillInfos();
+		List<Bill> bills = billRequest.getBills();
 		List<BillDetail> billDetails = new ArrayList<BillDetail>();
 		List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
 		for(Bill bill:bills){

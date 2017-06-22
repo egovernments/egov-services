@@ -164,6 +164,11 @@ paths:
           description: Name of the business service for which 'BusinessServiceDetails' to be returned.
           required: true
           type: string
+        - name: id
+          in: query
+          description: Id of the 'BusinessServiceDetails' which is to be returned.
+          required: false
+          type: string
       tags:
         - Master
       responses:
@@ -255,6 +260,11 @@ paths:
           in: query
           description: Name of the business service for which 'TaxPeriod' is to be returned.
           required: true
+          type: string
+        - name: id
+          in: query
+          description: Id of the 'TaxPeriod' which is to be returned.
+          required: false
           type: string
         - name: description
           in: query

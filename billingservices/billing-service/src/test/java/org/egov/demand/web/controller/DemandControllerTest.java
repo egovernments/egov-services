@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +20,14 @@ import org.egov.demand.model.enums.Type;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandRequest;
-import org.egov.demand.web.contract.factory.ResponseInfoFactory;
+import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +44,7 @@ public class DemandControllerTest {
 	private DemandService demandService;
 
 	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseFactory responseInfoFactory;
 
 	@Test
 	public void testShouldCreateDemands() throws IOException, Exception {
@@ -53,15 +54,11 @@ public class DemandControllerTest {
 		List<Demand> demands = new ArrayList<>();
 		demands.add(demand);
 		DemandRequest demandRequest = new DemandRequest(requestInfo, demands);
-		System.err.println(demandRequest);
-
 		//when(demandService.create(any(DemandRequest.class))).thenReturn(demands);
 		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class)))
 		//.thenReturn(getResponseInfo(requestInfo));
 
-		 when(demandService.create(demandRequest)).thenReturn(demands);
-		 when(responseInfoFactory.getResponseInfo(requestInfo,HttpStatus.CREATED))
-		 	.thenReturn(getResponseInfo(requestInfo));
+		 when(demandService.create(demandRequest)).thenReturn(new DemandResponse( getResponseInfo(requestInfo),demands));
 
 		mockMvc.perform(post("/demand/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
@@ -77,7 +74,6 @@ public class DemandControllerTest {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
-		responseInfo.setVer(requestInfo.getVer());
 		return responseInfo;
 	}
 
@@ -91,7 +87,7 @@ public class DemandControllerTest {
 		demand.setBusinessService("businessservice");
 		demand.setConsumerType("consumertype");
 		demand.setOwner(owner);
-		demand.setMinimumAmountPayable(200d);
+		demand.setMinimumAmountPayable(BigDecimal.valueOf(200));
 		demand.setTaxPeriodFrom(12345l);
 		demand.setTaxPeriodTo(1234567890l);
 		demand.setType(Type.DUES);
@@ -105,12 +101,12 @@ public class DemandControllerTest {
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		DemandDetail demandDetail = new DemandDetail();
 		
-		demandDetail.setTaxAmount(100d);
-		demandDetail.setCollectionAmount(0d);
+		demandDetail.setTaxAmount(BigDecimal.valueOf(100));
+		demandDetail.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail.setTaxHeadCode("0002");
 		DemandDetail demandDetail1 = new DemandDetail();
-		demandDetail1.setTaxAmount(200d);
-		demandDetail1.setCollectionAmount(0d);
+		demandDetail1.setTaxAmount(BigDecimal.valueOf(200));
+		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail1.setTaxHeadCode("0003");
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);

@@ -1,4 +1,3 @@
-var $ = require('jquery');
 var axios = require('axios');
 // var store = require('configureStore').configure();
 
@@ -27,11 +26,11 @@ var requestInfo = {
   "key": "xyz",
   "msgId": "654654",
   "requesterId": "61",
-  "authToken": "036bff4a-abab-4d2c-bd72-20d8f956dd6c"
+  "authToken": authToken
 };
-//uncomment for ap
-// var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
-var tenantId = "default" //localStorage.getItem("tenantId");
+
+
+var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
   commonApiPost: (context, queryObject = {}, body = {}) => {

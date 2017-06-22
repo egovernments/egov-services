@@ -1,0 +1,12 @@
+{
+    "RequestInfo": {
+        "apiId": "1",
+        "ver": "1",
+        "action": "create",
+        "did": "",
+        "key": "",
+        "msgId": "",
+        "requesterId": "",
+        "authToken": "authToken"
+    }
+}

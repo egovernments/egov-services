@@ -3,7 +3,7 @@ package org.egov.pgrrest.common.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowed;
+import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +47,7 @@ public class AuthenticatedUser {
     public void validateUpdateEligibility() {
         boolean isRoleMatching = roleCodes.stream().anyMatch(getRoleCodes()::contains);
         if (isRoleMatching == false)
-            throw new UpdateComplaintNotAllowed();
+            throw new UpdateComplaintNotAllowedException();
     }
 
     private List<String> getRoleCodes() {

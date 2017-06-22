@@ -2,7 +2,7 @@ package org.egov.pgrrest.read.domain.model;
 
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowed;
+import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowedException;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class AuthenticatedUserTest {
         assertFalse(user.isCitizen());
     }
 
-    @Test(expected = UpdateComplaintNotAllowed.class)
+    @Test(expected = UpdateComplaintNotAllowedException.class)
     public void test_to_check_any_role_doesnt_matche_to_userroles() {
         final AuthenticatedUser authenticatedUser = AuthenticatedUser.builder()
             .type(UserType.EMPLOYEE)

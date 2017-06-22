@@ -1,6 +1,6 @@
 FROM nginx:1.11.10-alpine
 
-ENV WEB_DIR=/var/web/wcms-web
+ENV WEB_DIR=/var/web/react-pgr-web
 RUN mkdir -p ${WEB_DIR}
 COPY ./build/asset-manifest.json ${WEB_DIR}/asset-manifest.json
 COPY ./build/static ${WEB_DIR}/static

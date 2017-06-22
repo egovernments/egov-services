@@ -23,6 +23,7 @@ import ShowPropertyCategory from './components/contents/ShowPropertyCategory';
 import ShowPropertyUsage from './components/contents/ShowPropertyUsage';
 import AcknowledgementSlip from './components/contents/AcknowledgementSlip';
 import DocumentType from './components/contents/masters/DocumentType';
+import Donation from './components/contents/masters/Donation';
 
 
 
@@ -35,6 +36,7 @@ const Main = () => (
     <Switch>
     <Route exact path='/' component={WaterSupplyType}/>
     <Route exact path='/masters/DocumentTypeApplicationType' component={DocumentTypeApplicationType}/>
+    <Route exact path='/masters/Donation' component={Donation}/>
     <Route exact path='/masters/PropertyPipeSize' component={PropertyPipeSize}/>
     <Route exact path='/masters/CategoryType' component={CategoryType}/>
     <Route exact path='/ShowCategoryType' component={ShowCategoryType}/>

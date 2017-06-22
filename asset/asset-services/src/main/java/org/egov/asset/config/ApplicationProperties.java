@@ -78,6 +78,27 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.disposal}")
 	private String createAssetDisposalTopicName;
 
+	@Value("${egov.services.egf_service.hostname}")
+	private String egfServiceHostName;
+
+	@Value("${egov.services.egf_service.chartofaccounts.searchpath}")
+	private String egfServiceChartOfAccountsSearchPath;
+
+	@Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
+	private String egfServiceChartOfAccountsDetailsSearchPath;
+
+	@Value("${egov.services.egf_service.voucher.createpath}")
+	private String egfServiceVoucherCreatePath;
+
+	@Value("${egov.services.reevaluation.voucher.name}")
+	private String reevaluationVoucherName;
+
+	@Value("${egov.services.reevaluation.voucher.description}")
+	private String reevaluationVoucherDescription;
+
+	@Value("${egov.municipality.host}")
+	private String municipalityHostName;
+
 	@Autowired
 	private Environment environment;
 
@@ -119,6 +140,34 @@ public class ApplicationProperties {
 
 	public String getCreateAssetDisposalTopicName() {
 		return createAssetDisposalTopicName;
+	}
+
+	public String getEgfServiceHostName() {
+		return egfServiceHostName;
+	}
+
+	public String getEgfServiceVoucherCreatePath() {
+		return egfServiceVoucherCreatePath;
+	}
+
+	public String getEgfServiceChartOfAccountsSearchPath() {
+		return egfServiceChartOfAccountsSearchPath;
+	}
+
+	public String getReevaluationVoucherName() {
+		return reevaluationVoucherName;
+	}
+
+	public String getReevaluationVoucherDescription() {
+		return reevaluationVoucherDescription;
+	}
+
+	public String getEgfServiceChartOfAccountsDetailsSearchPath() {
+		return egfServiceChartOfAccountsDetailsSearchPath;
+	}
+
+	public String getMunicipalityHostName() {
+		return municipalityHostName;
 	}
 
 }

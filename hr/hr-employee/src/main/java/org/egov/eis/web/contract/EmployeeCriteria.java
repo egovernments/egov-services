@@ -78,6 +78,8 @@ public class EmployeeCriteria implements Cloneable {
 
 	private List<Long> employeeStatus;
 
+	private Boolean active;
+
 	private List<String> roleCodes;
 
 	private List<String> sort = Collections.singletonList("name");

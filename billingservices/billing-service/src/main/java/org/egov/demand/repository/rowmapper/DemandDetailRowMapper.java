@@ -17,16 +17,8 @@ public class DemandDetailRowMapper implements RowMapper<DemandDetail>{
 		demandDetail.setTaxHeadCode(rs.getString("dltaxheadcode"));
 		demandDetail.setTenantId(rs.getString("dltenantid"));
 
-		Double dlTaxAmount = rs.getDouble("dltaxamount");
-		Double dlcollectionamount = rs.getDouble("dlcollectionamount");
-		if (dlTaxAmount == 0)
-			demandDetail.setTaxAmount(null);
-		else
-			demandDetail.setTaxAmount(dlTaxAmount);
-		if (dlcollectionamount == 0)
-			demandDetail.setCollectionAmount(null);
-		else
-			demandDetail.setCollectionAmount(dlcollectionamount);
+		demandDetail.setTaxAmount(rs.getBigDecimal("dltaxamount"));
+		demandDetail.setCollectionAmount(rs.getBigDecimal("dlcollectionamount"));
 
 		AuditDetail dlauditDetail = new AuditDetail();
 		dlauditDetail.setCreatedBy(rs.getString("dlcreatedby"));

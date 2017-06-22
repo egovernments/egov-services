@@ -41,11 +41,11 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.wcms.model.PropertyTypePipeSizeType;
+import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeGetRequest;
-import org.egov.wcms.web.contract.PropertyTypePipeSizeTypeRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
+import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,16 +66,16 @@ public class PropertyTypePipeSizeTypeService {
     private WaterMasterProducer waterMasterProducer;
    
 
-    public PropertyTypePipeSizeTypeRequest create(final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
+    public PropertyTypePipeSizeRequest create(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistCreatePropertyPipeSize(propertyPipeSizeRequest);
     }
 
-    public PropertyTypePipeSizeTypeRequest update(final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
+    public PropertyTypePipeSizeRequest update(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistUpdatePropertyPipeSize(propertyPipeSizeRequest);
     }
 
-    public PropertyTypePipeSizeType createPropertyPipeSize(final String topic, final String key,
-            final PropertyTypePipeSizeTypeRequest propertyPipeSizeRequest) {
+    public PropertyTypePipeSize createPropertyPipeSize(final String topic, final String key,
+            final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String propertyPipeSizeValue = null;
         try {
@@ -98,8 +98,8 @@ public class PropertyTypePipeSizeTypeService {
         return propertyPipeSizeRepository.checkPropertyByPipeSize(id, properyTypeId, pipeSizeId, tenantId);
     }
 
-    public List<PropertyTypePipeSizeType> getPropertyPipeSizes(
-            final PropertyTypePipeSizeTypeGetRequest propertyPipeSizeGetRequest) {
+    public List<PropertyTypePipeSize> getPropertyPipeSizes(
+            final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         return propertyPipeSizeRepository.findForCriteria(propertyPipeSizeGetRequest);
 
     }

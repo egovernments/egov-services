@@ -1,5 +1,7 @@
 package org.egov.demand.model;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -19,10 +21,10 @@ public class DemandDetail {
 	private String taxHeadCode;
 
 	@NotNull
-	private Double taxAmount;
+	private BigDecimal taxAmount;
 	
 	@NotNull
-	private Double collectionAmount = 0.0d;
+	private BigDecimal collectionAmount = BigDecimal.valueOf(0d);
 
 	private AuditDetail auditDetail;
 

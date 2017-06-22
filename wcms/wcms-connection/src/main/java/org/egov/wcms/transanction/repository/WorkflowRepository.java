@@ -181,7 +181,7 @@ public class WorkflowRepository {
                 + waterConnectionRequest.getConnection().getWorkflowDetails());
         final Connection connection = waterConnectionRequest.getConnection();
         final RequestInfo requestInfo = waterConnectionRequest.getRequestInfo();
-        final RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        RequestInfoWrapper requestInfoWrapper = org.egov.wcms.transanction.web.contract.RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         requestInfoWrapper.setRequestInfo(requestInfo);
         WorkflowDetails workflowDetails = null;
         final TaskRequest taskRequest = new TaskRequest();

@@ -99,7 +99,7 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq) {
 		final Object[] obj = new Object[] {persistRouter.getPosition(),0,
 				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(),
 				Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()),new Date(),
-				persistRouter.getTenantId(), persistRouter.getBoundary(),persistRouter.getService(),persistRouter.getId() };
+				persistRouter.getBoundary(),persistRouter.getService(),persistRouter.getTenantId() };
 		
 		jdbcTemplate.update(routerUpdate, obj);
 		return routerReq;
@@ -111,7 +111,7 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 		PersistRouter persistRouter = new PersistRouter();
 		try{
 		persistRouter = jdbcTemplate.queryForObject(
-				validateQuery, new Object[] { routerReq.getRouterType().getService(),routerReq.getRouterType().getBoundary()}, new PersistRouteRowMapper());
+				validateQuery, new Object[] { routerReq.getRouterType().getService(),routerReq.getRouterType().getBoundary(),routerReq.getRouterType().getTenantId()}, new PersistRouteRowMapper());
 		LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
 		}
 		catch (EmptyResultDataAccessException e) {

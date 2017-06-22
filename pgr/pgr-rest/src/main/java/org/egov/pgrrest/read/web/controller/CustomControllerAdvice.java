@@ -58,7 +58,7 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UpdateComplaintNotAllowed.class)
+    @ExceptionHandler(UpdateComplaintNotAllowedException.class)
     public ErrorResponse handleUpdateComplaintException() {
         return new UpdateComplaintNotAllowedExceptionAdapter().adapt(null);
     }

@@ -104,7 +104,7 @@ add(e)
       tenantId:'default'
     }
     if(type == "Update"){
-      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_update/"+id, {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
+      let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype/"+id, "_update", {},{documentTypeApplicationType:documentTypeApplicationType}).then(function(response)
       {
     },function(err) {
         alert(err);
@@ -115,6 +115,7 @@ add(e)
   else{
     let response=Api.commonApiPost("wcms-masters", "documenttype-applicationtype", "_create", {},{DocumentTypeApplicationType:documentTypeApplicationType}).then(function(response)
     {
+      alert("Document Type Application Type Create successfully");
   },function(err) {
     if(!documentTypeApplicationType.applicationType && documentTypeApplicationType.documentTypeId){
       alert("Please Select Application type and Document Type");

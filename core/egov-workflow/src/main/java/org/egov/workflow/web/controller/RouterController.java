@@ -49,7 +49,6 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.workflow.config.ApplicationProperties;
 import org.egov.workflow.domain.service.RouterService;
 import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
@@ -77,8 +76,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/router")
-public class RouterController {
-	
+public class RouterController{
+
 	@Autowired
     private ErrorHandler errHandler;
 	
@@ -90,8 +89,7 @@ public class RouterController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+	
 
 	@PostMapping(value = "/_create")
 	@ResponseBody
@@ -107,9 +105,8 @@ public class RouterController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final RouterType routerType = routerService.createRouter(
-				applicationProperties.getCreateRouterTopicName(),
-				applicationProperties.getCreateRouterTopicKey(), routerTypeReq);
+		final RouterType routerType = routerTypeReq.getRouterType();
+		routerService.create(routerTypeReq);
 		final List<RouterType> routerTypes = new ArrayList<>();
 		routerTypes.add(routerType);
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
@@ -130,9 +127,8 @@ public class RouterController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final RouterType routerType = routerService.createRouter(
-				applicationProperties.getCreateRouterTopicName(),
-				applicationProperties.getCreateRouterTopicKey(), routerTypeReq);
+		final RouterType routerType = routerTypeReq.getRouterType();
+		routerService.create(routerTypeReq);
 		final List<RouterType> routerTypes = new ArrayList<>();
 		routerTypes.add(routerType);
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
@@ -198,7 +194,8 @@ public class RouterController {
 					.field(PgrMasterConstants.ROUTER_SERVICE_MANADATORY_ERROR_MESSAGE).build();
 			errorFields.add(errorField);
 		}
-		if (routerType.getPosition() == 0) {
+		
+		if (routerType.getPosition() == null || routerType.getPosition() == 0) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_POSITION_MANDATORY_CODE)
 					.message(PgrMasterConstants.ROUTER_POSITION_MANADATORY_FIELD_NAME)
 					.field(PgrMasterConstants.ROUTER_POSITION_MANADATORY_ERROR_MESSAGE).build();

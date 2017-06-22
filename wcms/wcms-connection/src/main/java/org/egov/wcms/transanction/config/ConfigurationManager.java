@@ -83,4 +83,21 @@ public class ConfigurationManager {
 
     @Value("${kafka.topics.update.wcms}")
     private String kafkaUpdateWaterConnectionTopic;
+
+    @Value("${egov.services.wcms_masters_sourcetype.searchpath}")
+    private String waterMasterServiceSourceSearchPathTopic;
+
+    @Value("${egov.services.wcms_masters_supplytype.searchpath}")
+    private String waterMasterServiceSupplySearchPathTopic;
+    
+    @Value("${egov.services.wcms_masters_pipesize.searchpath}")
+    private String waterMasterServicePipesizeSearchPathTopic;
+    
+    @Value("${egov.services.wcms_masters_categoryType.searchpath}")
+    private String waterMasterServiceCategorySearchPathTopic;
+
+    @Value("${egov.services.wcms_masters.hostname}")
+    private String waterMasterServiceBasePathTopic;
+    
+    
 }

@@ -1,6 +1,7 @@
 package org.egov.demand.repository.querybuilder;
 
 import java.util.List;
+import java.util.Set;
 
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
@@ -73,8 +74,7 @@ public class DemandQueryBuilder {
 
 		if (demandCriteria.getDemandId() != null) {
 			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.id=?");
-			preparedStatementValues.add(demandCriteria.getDemandId());
+			demandQueryBuilder.append("demand.id IN ("+getIdQuery(demandCriteria.getDemandId()));
 		}
 		if (demandCriteria.getBusinessService() != null) {
 			addAndClause(demandQueryBuilder);
@@ -154,5 +154,19 @@ public class DemandQueryBuilder {
 	private static boolean addAndClause(StringBuilder queryString) {
 		queryString.append(" AND ");
 		return true;
+	}
+	
+	private static String getIdQuery(Set<String> idList) {
+
+		StringBuilder query = null;
+		if (!idList.isEmpty()) {
+
+			String[] list = idList.toArray(new String[idList.size()]);
+			query = new StringBuilder("'"+list[0]+"'");
+			for (int i = 1; i < idList.size(); i++) {
+				query.append("," + "'"+list[i]+"'");
+			}
+		}
+		return query.append(")").toString();
 	}
 }

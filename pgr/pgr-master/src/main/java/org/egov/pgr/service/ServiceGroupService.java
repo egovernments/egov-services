@@ -39,9 +39,13 @@
  */
 package org.egov.pgr.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.pgr.model.ServiceGroup;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceGroupRepository;
+import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +117,24 @@ public class ServiceGroupService {
 		}
 		logger.error("Producer successfully posted the request to Queue");
 		return serviceGroupRequest.getServiceGroup();
+	}
+	
+	public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest){
+		return categoryRepository.getAllServiceGroup(serviceGroupGetRequest);
+	}
+	
+	private List<org.egov.pgr.web.contract.ServiceGroup> convertModelToContract(List<ServiceGroup> modelList) {
+		List<org.egov.pgr.web.contract.ServiceGroup> contractList = new ArrayList<>();
+		for (int i = 0; i < modelList.size(); i++) {
+			org.egov.pgr.web.contract.ServiceGroup group = new org.egov.pgr.web.contract.ServiceGroup();
+			group.setCode(modelList.get(i).getCode());
+			group.setDescription(modelList.get(i).getDescription());
+			group.setId(modelList.get(i).getId());
+			group.setName(modelList.get(i).getName());
+			group.setTenantId(modelList.get(i).getTenantId());
+			contractList.add(group);
+		}
+		return contractList; 
 	}
 	
 	

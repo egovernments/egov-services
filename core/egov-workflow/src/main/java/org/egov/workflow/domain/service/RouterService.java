@@ -87,7 +87,6 @@ import org.egov.workflow.domain.model.PersistRouter;
 import org.egov.workflow.domain.model.PersistRouterReq;
 import org.egov.workflow.domain.model.ServiceType;
 import org.egov.workflow.persistence.repository.RouterRepository;
-import org.egov.workflow.producers.PGRProducer;
 import org.egov.workflow.web.contract.BoundaryIdType;
 import org.egov.workflow.web.contract.RouterType;
 import org.egov.workflow.web.contract.RouterTypeGetReq;
@@ -96,9 +95,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class RouterService {
@@ -114,9 +110,7 @@ public class RouterService {
 	@Autowired
 	private RouterRepository routerRepository;
 
-	@Autowired
-	private PGRProducer pgrProducer;
-
+	
 	
 	public PersistRouterReq create(final RouterTypeReq routerRequests) {
 		List<ServiceType> serviceTypes = new ArrayList<ServiceType>();
@@ -173,7 +167,7 @@ public class RouterService {
 	}
 	
 
-	public RouterType createRouter(final String topic, final String key,
+	/*public RouterType createRouter(final String topic, final String key,
 			final RouterTypeReq routerTypeReq) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String routerValue = null;
@@ -192,7 +186,7 @@ public class RouterService {
 		}
 		logger.error("Producer successfully posted the request to Queue");
 		return routerTypeReq.getRouterType();
-	}
+	}*/
 	
 	
 	

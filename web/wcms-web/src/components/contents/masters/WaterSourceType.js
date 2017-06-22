@@ -61,7 +61,7 @@ class WaterSourceType extends Component {
 
   componentDidMount()
   {
-    let {initForm} = this.props;
+    let {initForm,setForm} = this.props;
     initForm();
     var _this=this;
 
@@ -77,11 +77,14 @@ class WaterSourceType extends Component {
 
           if(type==="Update"||type==="View")
           {
-            let response=Api.commonApiPost("wcms-masters", "sourcetype/"+id, "_update", {},{}).then((res)=>
+            let response=Api.commonApiPost("wcms-masters", "sourcetype", "_search", {id},{}).then((res)=>
            {
-              this.setState({
-                list: res.waterSourceType
-            });
+            //   this.setState({
+            //     list: res.waterSourceType
+            // });
+              console.log(res.waterSourceType[0]);
+              setForm(res.waterSourceType[0]);
+
 
         },  (err)=> {
             alert(err);
@@ -241,6 +244,22 @@ const mapDispatchToProps = dispatch => ({
         pattern: {
           current: [],
           required: ["ownerName",]
+        }
+      }
+    });
+  },
+  setForm: (form) => {
+    dispatch({
+      type: "SET_FORM",
+      data:form,
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: ["ownerName"]
         }
       }
     });

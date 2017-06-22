@@ -27,9 +27,6 @@ public class ReceivingMode extends AbstractPersistable<Long> {
 
     private String code;
 
-    @Column(name = "visible")
-    private boolean visible;
-    
     @Column(name = "tenantid")
     private String tenantId;
 
@@ -51,6 +48,6 @@ public class ReceivingMode extends AbstractPersistable<Long> {
    public org.egov.pgrrest.common.model.ReceivingMode toDomain()
          {
            return  org.egov.pgrrest.common.model.ReceivingMode.builder().id(id)
-                 .name(name).code(code).visible(visible).tenantId(tenantId).build();
+                 .name(name).code(code).tenantId(tenantId).build();
          }
 }

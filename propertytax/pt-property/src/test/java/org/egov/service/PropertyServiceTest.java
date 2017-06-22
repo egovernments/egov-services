@@ -35,8 +35,10 @@ import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.services.Masterservice;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -46,6 +48,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = { PtPropertyApplication.class })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PropertyServiceTest {
 
 	@Autowired
@@ -106,7 +109,7 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void updateRoofType() {
+	public void modifyRoofType() {
 		String tenantId = "123";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<RoofType> roofTypes = new ArrayList<>();
@@ -214,34 +217,7 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void searchWoodType() {
-
-		String tenantId = "1234";
-		String name = "Maple Wood Type";
-		String code = "256";
-		String nameLocal = "Maple";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
-		RequestInfo requestInfo = getRequestInfoObject();
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		try {
-			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
-					new Integer[] { woodId }, name, code, nameLocal, pageSize, offset);
-
-			if (woodTypeResponse.getWoodTypes().size() == 0)
-				assertTrue(false);
-
-			assertTrue(true);
-
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-
-	}
-
-	@Test
-	public void updateWoodType() {
+	public void modifyWoodType() {
 
 		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -283,6 +259,35 @@ public class PropertyServiceTest {
 
 	}
 
+	
+	@Test
+	public void searchWoodType() {
+
+		String tenantId = "1234";
+		String name = "Maple Wood Type";
+		String code = "256";
+		String nameLocal = "Maple";
+		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+		RequestInfo requestInfo = getRequestInfoObject();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		try {
+			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
+					new Integer[] { woodId }, name, code, nameLocal, pageSize, offset);
+
+			if (woodTypeResponse.getWoodTypes().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	
 	@Test
 	public void createFloorTypeTest() {
 
@@ -324,37 +329,9 @@ public class PropertyServiceTest {
 		}
 
 	}
-
+	
 	@Test
-	public void searchFloorType() {
-
-		String tenantId = "1234";
-		String name = "Tile Flooring";
-		String code = "256";
-		String nameLocal = "Tile";
-		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
-
-		RequestInfo requestInfo = getRequestInfoObject();
-
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-
-		try {
-			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
-					new Integer[] { floorId }, name, code, nameLocal, pageSize, offset);
-
-			if (floorTypeResponse.getFloorTypes().size() == 0)
-				assertTrue(false);
-			assertTrue(true);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-
-	}
-
-	@Test
-	public void updateFloorType() {
+	public void modifyFloorType() {
 		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<FloorType> floorTypes = new ArrayList<>();
@@ -395,6 +372,36 @@ public class PropertyServiceTest {
 		}
 
 	}
+
+	@Test
+	public void searchFloorType() {
+
+		String tenantId = "1234";
+		String name = "Tile Flooring";
+		String code = "256";
+		String nameLocal = "Tile";
+		Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+		Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+
+		RequestInfo requestInfo = getRequestInfoObject();
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		try {
+			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
+					new Integer[] { floorId }, name, code, nameLocal, pageSize, offset);
+
+			if (floorTypeResponse.getFloorTypes().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	
 
 	/**
 	 * Description : Test case for creating Occuapancy master
@@ -456,7 +463,7 @@ public class PropertyServiceTest {
 	 */
 
 	@Test
-	public void updateOccuapancyMaster() throws Exception {
+	public void modifyOccuapancyMaster() throws Exception {
 		try {
 
 			String tenantId = "default";
@@ -595,7 +602,7 @@ public class PropertyServiceTest {
 	 */
 
 	@Test
-	public void updatePropertyTypeMaster() throws Exception {
+	public void modifyPropertyTypeMaster() throws Exception {
 		try {
 
 			String tenantId = "default";
@@ -732,7 +739,7 @@ public class PropertyServiceTest {
 	 */
 
 	@Test
-	public void updateDepartmentMaster() throws Exception {
+	public void modifyDepartmentMaster() throws Exception {
 		try {
 
 			String tenantId = "default";
@@ -769,6 +776,46 @@ public class PropertyServiceTest {
 			assertTrue(false);
 		}
 	}
+	
+	/**
+	 * * Description : test case for searching department master api
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param category
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @throws Exception
+	 */
+	@Test
+	public void searchDepartmentMaster() throws Exception {
+		try {
+
+			String tenantId = "default";
+			Integer[] ids = new Integer[] { Integer.valueOf(departmentId.toString()) };
+			String category = "software engineer";
+			String name = "anil";
+			String code = "testcode";
+			String nameLocal = "kumar";
+			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
+
+			DepartmentResponseInfo departmentResponse = masterService.getDepartmentMaster(getRequestInfoObject(),
+					tenantId, ids, category, name, code, nameLocal, pageSize, offset);
+			if (departmentResponse.getDepartments().size() == 0) {
+				assertTrue(false);
+			}
+			assertTrue(true);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
 
 	@Test
 	public void createUsageMasterTest() {
@@ -822,7 +869,7 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void updateUsageMasterTest() throws Exception {
+	public void modifyUsageMasterTest() throws Exception {
 		try {
 			String tenantId = "default";
 			RequestInfo requestInfo = new RequestInfo();
@@ -870,45 +917,7 @@ public class PropertyServiceTest {
 		}
 	}
 
-	/**
-	 * * Description : test case for searching department master api
-	 * 
-	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param category
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
-	 * @throws Exception
-	 */
-	@Test
-	public void searchDepartmentMaster() throws Exception {
-		try {
-
-			String tenantId = "default";
-			Integer[] ids = new Integer[] { Integer.valueOf(departmentId.toString()) };
-			String category = "software engineer";
-			String name = "anil";
-			String code = "testcode";
-			String nameLocal = "kumar";
-			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
-			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
-
-			DepartmentResponseInfo departmentResponse = masterService.getDepartmentMaster(getRequestInfoObject(),
-					tenantId, ids, category, name, code, nameLocal, pageSize, offset);
-			if (departmentResponse.getDepartments().size() == 0) {
-				assertTrue(false);
-			}
-			assertTrue(true);
-
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-	}
-
+	
 	@Test
 	public void createWallTypeTest() {
 		try {
@@ -956,7 +965,7 @@ public class PropertyServiceTest {
 	}
 
 	@Test
-	public void updateWallTypeTest() {
+	public void modifyWallTypeTest() {
 
 		try {
 			long id = 1;
@@ -1010,9 +1019,9 @@ public class PropertyServiceTest {
 		try {
 			String tenantId = "default";
 			Integer[] ids = new Integer[] { 1 };
-			String name = "create_walltype";
-			String code = "12345";
-			String nameLocal = "search_nameLocal";
+			String name = "Yoyo";
+			String code = "1234";
+			String nameLocal = "test_namelocal";
 			Integer pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
 			Integer offset = Integer.valueOf(environment.getProperty("default.offset"));
 			RequestInfo requestInfo = new RequestInfo();

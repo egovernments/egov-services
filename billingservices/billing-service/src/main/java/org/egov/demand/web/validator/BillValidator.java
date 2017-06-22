@@ -14,7 +14,7 @@ public class BillValidator {
 	}
 	
 	private void validateBill(BillRequest billRequest) {
-		List<Bill> bills = billRequest.getBillInfos();
+		List<Bill> bills = billRequest.getBills();
 		
 		for(Bill bill : bills){
 			
@@ -30,7 +30,7 @@ public class BillValidator {
 	
 	private void validateBillDetails(BillRequest billRequest) {
 		
-		List<Bill> bills = billRequest.getBillInfos();
+		List<Bill> bills = billRequest.getBills();
 		
 		for(Bill bill : bills){
 			

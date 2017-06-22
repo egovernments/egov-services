@@ -96,10 +96,10 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-       /* final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);*/
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         // Call to service.
         final Connection connection = waterConnectionService.createWaterConnection(

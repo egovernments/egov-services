@@ -200,9 +200,9 @@ public class ServiceTypeQueryBuilder {
     
     public static String getAllServiceTypes(){
     	return "select comp.tenantid, comp.code, comp.name, comp.description, adef.code attributecode, " 
-    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name "   
+    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "   
     			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
-    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode " ;
+    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode WHERE comp.tenantid = 'blrrural'" ;
     }
 
 }

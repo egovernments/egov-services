@@ -82,7 +82,7 @@ public class UserService {
 		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
 
 		UserGetRequest userGetRequest = getUserGetRequest(employeeCriteria, requestInfo);
-		LOGGER.debug("UserGetRequest : " + userGetRequest);
+		LOGGER.debug("\nUserGetRequest : " + userGetRequest);
 
 		UserResponse userResponse = null;
 		List<User> users = null;
@@ -90,12 +90,11 @@ public class UserService {
 			userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
 		} catch (Exception e) {
-			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			LOGGER.debug("\n\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
-		LOGGER.debug("UserResponse : " + users);
+		LOGGER.debug("\n\nUserResponse : " + users);
 
 		return users;
 	}
@@ -106,7 +105,7 @@ public class UserService {
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
 		LOGGER.debug("\n\n\n\n\n" + "User create url : " + url);
-		LOGGER.debug("UserRequest : " + userRequest);
+		LOGGER.debug("\nUserRequest : " + userRequest);
 
 		UserResponse userResponse = null;
 		try {
@@ -118,26 +117,25 @@ public class UserService {
 			try {
 				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
 			} catch (JsonMappingException jme) {
-				LOGGER.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
+				LOGGER.debug("\nFollowing Exception Occurred While Mapping JSON Response From User Service : "
 						+ jme.getMessage());
 				jme.printStackTrace();
 			} catch (JsonProcessingException jpe) {
-				LOGGER.debug("Following Exception Occurred While Processing JSON Response From User Service : "
+				LOGGER.debug("\nFollowing Exception Occurred While Processing JSON Response From User Service : "
 						+ jpe.getMessage());
 				jpe.printStackTrace();
 			} catch (IOException ioe) {
-				LOGGER.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				LOGGER.debug("\nFollowing Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
 			throw new UserException(userErrorResponse, userRequest.getRequestInfo());
 		} catch (Exception e) {
-			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			LOGGER.debug("\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 			throw new UserException(null, userRequest.getRequestInfo());
 		}
-		
-		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
-		LOGGER.debug("UserResponse : " + userResponse);
+
+		LOGGER.debug("\n\nUserResponse : " + userResponse);
 
 		return userResponse;
 	}
@@ -147,7 +145,7 @@ public class UserService {
 				+ getUserUpdatePath(userId);
 
 		LOGGER.debug("\n\n\n\n\n" + "User update url : " + url);
-		LOGGER.debug("UserRequest : " + userRequest);
+		LOGGER.debug("\nUserRequest : " + userRequest);
 
 		UserResponse userResponse = null;
 		try {
@@ -159,26 +157,25 @@ public class UserService {
 			try {
 				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
 			} catch (JsonMappingException jme) {
-				LOGGER.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
+				LOGGER.debug("\nFollowing Exception Occurred While Mapping JSON Response From User Service : "
 						+ jme.getMessage());
 				jme.printStackTrace();
 			} catch (JsonProcessingException jpe) {
-				LOGGER.debug("Following Exception Occurred While Processing JSON Response From User Service : "
+				LOGGER.debug("\nFollowing Exception Occurred While Processing JSON Response From User Service : "
 						+ jpe.getMessage());
 				jpe.printStackTrace();
 			} catch (IOException ioe) {
-				LOGGER.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				LOGGER.debug("\nFollowing Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
 			throw new UserException(userErrorResponse, userRequest.getRequestInfo());
 		} catch (Exception e) {
-			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			LOGGER.debug("\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 			throw new UserException(null, userRequest.getRequestInfo());
 		}
-		
-		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
-		LOGGER.debug("UserResponse : " + userResponse);
+
+		LOGGER.debug("\n\nUserResponse : " + userResponse);
 
 		return userResponse;
 	}
@@ -196,6 +193,7 @@ public class UserService {
 		userGetRequest.setTenantId(employeeCriteria.getTenantId());
 		userGetRequest.setPageNumber(employeeCriteria.getPageNumber());
 		userGetRequest.setRequestInfo(requestInfo);
+		userGetRequest.setActive(employeeCriteria.getActive());
 
 		if(!isEmpty(employeeCriteria.getId())) {
 			userGetRequest.setPageSize(employeeCriteria.getId().size());
@@ -204,7 +202,6 @@ public class UserService {
 			userGetRequest.getRoleCodes().add("EMPLOYEE");
 			userGetRequest.setPageSize(500);
 		}
-
 
 		return userGetRequest;
     }

@@ -2,6 +2,8 @@ package org.egov.demand.web.contract;
 
 import org.egov.common.contract.request.RequestInfo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestInfoWrapper {
-	private RequestInfo RequestInfo;
+	
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 }

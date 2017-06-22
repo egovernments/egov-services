@@ -458,7 +458,7 @@ paths:
         - name: code
           in: query
           description: code for the tax period
-          required: true
+          required: false
           type: string
       tags:
         - Master

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { withRouter } from 'react-router';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 // import {Switch,Route} from 'react-router-dom';
@@ -16,7 +15,7 @@ var axios = require('axios');
 class App extends Component {
 
   componentWillReceiveProps(nextProps) {
-    
+
   }
   componentDidMount(){
 

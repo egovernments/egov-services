@@ -98,8 +98,6 @@ class ViewEditReceivingCenter extends Component {
         buttonText
       } = this.props;
 
-
-
       let url = this.props.location.pathname;
 
       return(
@@ -136,8 +134,8 @@ class ViewEditReceivingCenter extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/receivingCenter/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
-                                              {url == '/receivingCenter/edit' && <td><Link  to={`/createReceivingCenter/${e.code}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/receivingCenter/view' && <td><Link to={`/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
+                                              {url == '/receivingCenter/edit' && <td><Link to={`/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}

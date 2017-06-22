@@ -54,50 +54,83 @@ const styles = {
 
 var _this;
 
-class ReceivingCenterCreate extends Component {
+class CreateReceivingCenter extends Component {
     constructor(props) {
       super(props);
-      this.create = this.create.bind();
+      this.state = {
+          id:'',
+          data:''
+      }
     }
 
     componentWillMount() {
+        if(this.props.match.params.id) {
+
+            this.setState({id:this.props.match.params.id});
+            var body = {}
+            let  current = this;
+            let {setForm} = this.props;
+
+            Api.commonApiPost("/pgr-master/receivingcenter/_search",{id:this.props.match.params.id},body).then(function(response){
+                console.log(response);
+                current.setState({data:response.ReceivingCenterType})
+                setForm(response.ReceivingCenterType[0])
+            }).catch((error)=>{
+                console.log(error);
+            })
+        } else {
+          let {initForm}=this.props;
+          initForm();
+        }
     }
 
     componentDidMount() {
-     let {initForm}=this.props;
-     initForm();
+
     }
 
+    componentDidUpdate() {
 
-    create = (e) => {
+
+    }
+
+    submitForm = (e) => {
 
       e.preventDefault()
 
       var body = {
-
           "ReceivingCenterType":{
-           "name" :this.props.receivingCenterCreate.name,
-           "code" :this.props.receivingCenterCreate.code,
-           "description" :this.props.receivingCenterCreate.description,
-           "active" :this.props.receivingCenterCreate.active,
-           "iscrnrequired" :this.props.receivingCenterCreate.iscrnrequired,
-           "orderno" :this.props.receivingCenterCreate.orderno,
+            "id": this.props.createReceivingCenter.id,
+           "name" :this.props.createReceivingCenter.name,
+           "code" :this.props.createReceivingCenter.code,
+           "description" :this.props.createReceivingCenter.description,
+           "active" : !this.props.createReceivingCenter.active ? false : this.props.createReceivingCenter.active,
+           "iscrnrequired" : !this.props.createReceivingCenter.iscrnrequired ? false : this.props.createReceivingCenter.iscrnrequired,
+           "orderno" :this.props.createReceivingCenter.orderno,
            "tenantId":"default"
           }
       }
 
-      Api.commonApiPost("/pgr-master/receivingcenter/_create",{},body).then(function(response){
-          console.log(response);
-      }).catch((error)=>{
-          console.log(error);
-      })
+      if(this.props.match.params.id){
+          Api.commonApiPost("/pgr-master/receivingcenter/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
+              console.log(response);
+          }).catch((error)=>{
+              console.log(error);
+          })
+      } else {
+          Api.commonApiPost("/pgr-master/receivingcenter/_create",{},body).then(function(response){
+              console.log(response);
+          }).catch((error)=>{
+              console.log(error);
+          })
+      }
+
 
     }
 
     render() {
 
       let {
-        receivingCenterCreate,
+        createReceivingCenter ,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -109,10 +142,14 @@ class ReceivingCenterCreate extends Component {
         handleChangeNextTwo,
         buttonText
       } = this.props;
-      let {create} = this;
+
+      let {submitForm} = this;
+
+      console.log(isFormValid);
+
       return(
-        <div className="receivingCenterCreate">
-          <form autoComplete="off" onSubmit={(e) => {create(e)}}>
+        <div className="createReceivingCenter">
+          <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
                   <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>} />
                   <CardText style={{padding:0}}>
@@ -122,7 +159,7 @@ class ReceivingCenterCreate extends Component {
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Name"
-                                      value={receivingCenterCreate.name? receivingCenterCreate.name : ""}
+                                      value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       onChange={(e) => handleChange(e, "name", true, '')}
                                       id="name"
@@ -132,19 +169,20 @@ class ReceivingCenterCreate extends Component {
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Code"
-                                      value={receivingCenterCreate.code? receivingCenterCreate.code : ""}
+                                      value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       onChange={(e) => handleChange(e, "code", true, '')}
                                       id="code"
+                                      disabled={this.state.id ? true : false }
                                   />
                               </Col>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Description"
-                                      value={receivingCenterCreate.description? receivingCenterCreate.description : ""}
+                                      value={createReceivingCenter.description? createReceivingCenter.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", true, '')}
+                                      onChange={(e) => handleChange(e, "description", false, '')}
                                       multiLine={true}
                                       id="description"
                                   />
@@ -153,7 +191,7 @@ class ReceivingCenterCreate extends Component {
                                   <Checkbox
                                     label="Active"
                                     style={styles.checkbox}
-                                    defaultChecked ={receivingCenterCreate.active}
+                                    defaultChecked ={createReceivingCenter.active}
                                     onCheck = {(e, i, v) => {
                                       var e = {
                                         target: {
@@ -170,7 +208,7 @@ class ReceivingCenterCreate extends Component {
                                   <Checkbox
                                     label="CRN"
                                     style={styles.checkbox}
-                                    defaultChecked ={receivingCenterCreate.iscrnrequired}
+                                    defaultChecked ={createReceivingCenter.iscrnrequired}
                                     onCheck = {(e, i, v) => {
                                       var e = {
                                         target: {
@@ -186,7 +224,7 @@ class ReceivingCenterCreate extends Component {
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Order No"
-                                      value={receivingCenterCreate.orderno ? receivingCenterCreate.orderno : ""}
+                                      value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
                                       onChange={(e) => handleChange(e, "orderno", true, '')}
                                       id="orderno"
@@ -198,7 +236,7 @@ class ReceivingCenterCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
                 <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
           </form>
@@ -208,7 +246,7 @@ class ReceivingCenterCreate extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({receivingCenterCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({createReceivingCenter : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -218,7 +256,26 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["name","code","orderno", "description"]
+          required: ["name","code","orderno"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
+
+  setForm: (data) => {
+    dispatch({
+      type: "SET_FORM",
+      data,
+      isFormValid:true,
+      fieldErrors: {},
+      validationData: {
+        required: {
+          current: ["name","code","orderno"],
+          required: ["name","code","orderno"]
         },
         pattern: {
           current: [],
@@ -240,4 +297,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReceivingCenterCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateReceivingCenter);

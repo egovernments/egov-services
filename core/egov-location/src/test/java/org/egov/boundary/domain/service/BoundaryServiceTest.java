@@ -1,5 +1,7 @@
 package org.egov.boundary.domain.service;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import javax.persistence.EntityManager;
@@ -52,6 +54,22 @@ public class BoundaryServiceTest {
 	}
 
 	@Test
+	public void test_should_check_shapefileexist() {
+
+		assertTrue(boundaryService.checkTenantShapeFileExistOrNot("ap.addanki"));
+
+	}
+
+	@Test
+	public void test_should_check_shapefileNotexist() {
+
+		assertFalse(boundaryService.checkTenantShapeFileExistOrNot("maharashtra.addanki"));
+
+	}
+	
+	
+
+	@Test
 	@Transactional
 	public void test_should_fetch_boundaries_for_boundarytype_and_tenantid() {
 
@@ -59,8 +77,7 @@ public class BoundaryServiceTest {
 
 		verify(boundaryRepository).getAllBoundariesByBoundaryTypeIdAndTenantId(1l, "tenantId");
 	}
-	
-	
+
 	@Test
 	@Transactional
 	public void test_should_fetch_boundaries_for_id_and_tenantid() {

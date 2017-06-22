@@ -32,7 +32,7 @@ public class CollectionConsumer {
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		try {
 			if (topic.equals(applicationProperties.getCreateReceiptTopicName())) {
-				logger.info("Consuming create ReceiptDetails request");
+				logger.info("Consuming create Receipt request");
 				recieptService.create(objectMapper.readValue(record, Receipt.class));
 			}
 		} catch (final Exception e) {

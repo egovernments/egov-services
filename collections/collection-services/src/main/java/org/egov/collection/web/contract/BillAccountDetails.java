@@ -23,5 +23,8 @@ public class BillAccountDetails   {
   private String functionCode;
 
   private Boolean isActualDemand;
+  
+  private String purpose;
+  
 }
 

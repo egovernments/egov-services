@@ -129,7 +129,7 @@ public class ReceiptController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		
-		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest.getReceiptInfo());
+		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest.getReceipt());
 		
 		if(null == receiptInfo){
 			Error error = new Error();

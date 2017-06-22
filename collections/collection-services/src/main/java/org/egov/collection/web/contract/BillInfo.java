@@ -1,6 +1,5 @@
 package org.egov.collection.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,16 +17,12 @@ public class BillInfo   {
 
   private String payeeAddress;
 
-  @JsonProperty("payeeEmail")
-  private String payeeEmail = null;
+  private String payeeEmail;
 
-  @JsonProperty("displayMessage")
-  private String displayMessage = null;
+  private String displayMessage;
 
-  @JsonProperty("paidBy")
-  private String paidBy = null;
+  private String paidBy;
 
-  @JsonProperty("billDetails")
   private List<BillDetails> billDetails = new ArrayList<BillDetails>();
 
 }

@@ -33,6 +33,34 @@ public class BillDetails   {
   private Double totalAmount;
 
   private List<String> collectionModesNotAllowed = new ArrayList<String>();
+  
+  private String event;
+
+  private String receiptNumber;
+
+  private LocalDate receiptDate;
+
+  private String channel;
+  
+  private String voucherHeader;
+  
+  private String receiptType;
+  
+  private String collectionType;
+  
+  private String fundSource;
+  
+  private String department;
+
+  private String boundary;
+
+  private String reasonForCancellation;
+  
+  @JsonProperty("Fund")
+  private Fund fund;
+  
+  @JsonProperty("Function")
+  private Function function;
 
   @JsonProperty("BillAccountDetails")
   private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();

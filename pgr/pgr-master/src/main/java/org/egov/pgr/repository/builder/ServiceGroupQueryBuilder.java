@@ -41,7 +41,6 @@ package org.egov.pgr.repository.builder;
 
 import java.util.List;
 
-import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -51,36 +50,34 @@ public class ServiceGroupQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT id, code, description, tenantId "
+	private static final String BASE_QUERY = "SELECT id, code, name, description, tenantId "
 			+ " FROM egpgr_complainttype_category ";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(final ServiceGroupGetRequest categoryGetRequest, final List preparedStatementValues) {
+	public static String getQuery(final String tenantId, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
-		addOrderByClause(selectQuery, categoryGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, tenantId);
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final ServiceGroupGetRequest serviceGroupRequest) {
+	private static void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final String tenantId) {
 
-		if (serviceGroupRequest.getId() == null && serviceGroupRequest.getName() == null
-				&& serviceGroupRequest.getTenantId() == null)
+		if (tenantId == null)
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (serviceGroupRequest.getTenantId() != null) {
+		if (tenantId != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(serviceGroupRequest.getTenantId());
+			preparedStatementValues.add(tenantId);
 		}
 
-		if (serviceGroupRequest.getId() != null) {
+		/*if (serviceGroupRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" id IN " + getIdQuery(serviceGroupRequest.getId()));
 		}
@@ -89,18 +86,10 @@ public class ServiceGroupQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" name = ?");
 			preparedStatementValues.add(serviceGroupRequest.getName());
-		}
+		}*/
 
 	}
-
-	private void addOrderByClause(final StringBuilder selectQuery, final ServiceGroupGetRequest serviceGroupRequest) {
-		final String sortBy = serviceGroupRequest.getSortBy() == null ? "category.code"
-				: "category." + serviceGroupRequest.getSortBy();
-		final String sortOrder = serviceGroupRequest.getSortOrder() == null ? "DESC"
-				: serviceGroupRequest.getSortOrder();
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
-
+	
 	/**
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.

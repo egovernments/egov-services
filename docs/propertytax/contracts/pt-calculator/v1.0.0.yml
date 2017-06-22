@@ -89,7 +89,7 @@ paths:
         - name: code
           in: query
           description: code for the factor type
-          required: true
+          required: false
           type: string
       tags:
         - Master

@@ -6,6 +6,8 @@ import ViewEditReceivingCenter from './components/contents/master/receivingCente
 import grievanceCreateSD from './components/contents/grievanceCreateSD';
 import grievanceView from './components/contents/grievanceView';
 import grievanceSearch from './components/contents/grievanceSearch';
+import receivingModeCreate from './components/contents/master/receivingMode/receivingModeCreate';
+import viewOrUpdateReceivingMode from './components/contents/master/receivingMode/viewOrUpdateReceivingMode';
 
 const Main = () => (
   <main>
@@ -16,6 +18,8 @@ const Main = () => (
       <Route exact name="createReceivingCenter" path='/createReceivingCenter/:code' component={ReceivingCenterCreate}/>
       <Route exact path='/receivingCenter/view' component={ViewEditReceivingCenter}/>
       <Route exact path='/receivingCenter/edit' component={ViewEditReceivingCenter}/>
+      <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>
+      <Route exact path='/viewOrUpdateReceivingMode' component={viewOrUpdateReceivingMode}/>
     </Switch>
   </main>
 )

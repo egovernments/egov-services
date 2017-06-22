@@ -1,5 +1,6 @@
 package org.egov.demand.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -33,9 +34,9 @@ public class BillDetail {
 
 	private String displayMessage;
 
-	private Double minimumAmount;
+	private BigDecimal minimumAmount;
 
-	private Double totalAmount;
+	private BigDecimal totalAmount;
 
 	private List<String> collectionModesNotAllowed = new ArrayList<>();
 

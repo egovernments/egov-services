@@ -40,9 +40,12 @@
 
 package org.egov.demand.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -109,8 +112,10 @@ public class BillService {
 	
 	public BillResponse generateBill(GenerateBillCriteria billCriteria, RequestInfo requestInfo) {
 		
+		Set<String> ids = new HashSet<>();
+		ids.add(billCriteria.getDemandId());
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
-				consumerCode(billCriteria.getConsumerCode()).demandId(billCriteria.getDemandId()).
+				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
 		
@@ -136,31 +141,31 @@ public class BillService {
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
 				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
 		
-		List<BillDetail> billDetails = new ArrayList<BillDetail>(); 
+		List<BillDetail> billDetails = new ArrayList<>(); 
 		
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
 			List<Demand> demands2 = entry.getValue();
-			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
+			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 			Demand demand3 = demands2.get(0);
-			Double tatalTaxAmount = 0.0;
-			Double tatalMinAmount = 0.0;
-			Double tatalCollectedAmount = 0.0;
+			BigDecimal totalTaxAmount = BigDecimal.ZERO;
+			BigDecimal totalMinAmount = BigDecimal.ZERO;
+			BigDecimal totalCollectedAmount = BigDecimal.ZERO;
 	
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
-				tatalMinAmount = tatalMinAmount + demand2.getMinimumAmountPayable();
+				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
-					tatalTaxAmount = tatalTaxAmount + demandDetail.getTaxAmount();
-					tatalCollectedAmount = tatalCollectedAmount + demandDetail.getCollectionAmount();
+					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
+					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().
-							creditAmount(demandDetail.getTaxAmount() - demandDetail.getCollectionAmount()).build();
+							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).build();
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
 			
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).consumerType(demand3.getConsumerType()).
-					consumerCode(demand3.getConsumerCode()).minimumAmount(tatalMinAmount).
-					totalAmount(tatalTaxAmount - tatalCollectedAmount).tenantId(tenantId).build();
+					consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
+					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
 			
 			billDetails.add(billDetail);
 			

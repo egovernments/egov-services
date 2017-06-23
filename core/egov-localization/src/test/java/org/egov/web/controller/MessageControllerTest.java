@@ -105,7 +105,7 @@ public class MessageControllerTest {
         mockMvc.perform(post("/messages/v1/_create")
             .content(getFileContents("createMessageRequest.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isCreated())
+            .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("messagesResponse.json")));
 

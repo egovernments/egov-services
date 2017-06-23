@@ -44,7 +44,6 @@ public class MessageController {
     }
 
     @PostMapping("/v1/_create")
-    @ResponseStatus(HttpStatus.CREATED)
     public MessagesResponse createMessages(@Valid @RequestBody CreateMessagesRequest messageRequest,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors())

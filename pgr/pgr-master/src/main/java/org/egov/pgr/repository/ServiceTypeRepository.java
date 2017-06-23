@@ -71,9 +71,6 @@ public class ServiceTypeRepository {
     @Autowired
     private ServiceTypeQueryBuilder serviceTypeQueryBuilder;
 
-    @Autowired
-    private ServiceTypeRowMapper serviceTypeRowMapper;
-
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
 		final String complaintInsert = ServiceTypeQueryBuilder.insertComplaintTypeQuery();
@@ -160,8 +157,9 @@ public class ServiceTypeRepository {
 
     public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = serviceTypeQueryBuilder.getAllServiceTypes();
-        final List<ServiceType> serviceTypes = jdbcTemplate.query(queryStr, serviceTypeRowMapper);
+        String queryStr = serviceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);
+        ServiceTypeRowMapper serviceTypeRowMapper = new ServiceTypeRowMapper();
+        jdbcTemplate.query(queryStr,preparedStatementValues.toArray(),  serviceTypeRowMapper);
         return assembleServiceTypeObject(serviceTypeRowMapper);
     }
     

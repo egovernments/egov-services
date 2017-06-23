@@ -58,9 +58,9 @@ import org.springframework.stereotype.Component;
 public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceTypeRowMapper.class);
-	public static Map<String, List<Value>> attribValue = new HashMap<>();
-	public static Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
-	public static Map<String, ServiceType> serviceMap = new HashMap<>();
+	public Map<String, List<Value>> attribValue = new HashMap<>();
+	public Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
+	public Map<String, ServiceType> serviceMap = new HashMap<>();
 	public static final String separator = ">";
 
 	@Override
@@ -132,6 +132,7 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 	private ServiceType createServiceTypeObjectForMe(ResultSet rs) {
 		ServiceType serviceType = new ServiceType();
 		try { 
+			serviceType.setId(rs.getLong("id"));
 			serviceType.setServiceName(rs.getString("name"));
 			serviceType.setServiceCode(rs.getString("code"));
 			serviceType.setTenantId(rs.getString("tenantid"));

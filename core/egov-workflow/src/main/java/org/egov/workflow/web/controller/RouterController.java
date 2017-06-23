@@ -134,7 +134,7 @@ public class RouterController{
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
 
 	}
-	@PostMapping("_search")
+	@PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final RouterTypeGetReq routerTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

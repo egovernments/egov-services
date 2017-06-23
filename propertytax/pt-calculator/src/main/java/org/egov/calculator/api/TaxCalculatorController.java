@@ -1,5 +1,7 @@
 package org.egov.calculator.api;
 
+import java.io.IOException;
+
 import org.egov.calculator.service.TaxCalculatorService;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
@@ -248,7 +250,7 @@ public class TaxCalculatorController {
 	}
 
 	@RequestMapping(path = "", method = RequestMethod.POST)
-	public CalculationResponse calculatePropertyTax(@RequestBody CalculationRequest calculationRequest) {
+	public CalculationResponse calculatePropertyTax(@RequestBody CalculationRequest calculationRequest) throws Exception {
 
 		return calculatorService.calculatePropertyTax(calculationRequest);
 	}

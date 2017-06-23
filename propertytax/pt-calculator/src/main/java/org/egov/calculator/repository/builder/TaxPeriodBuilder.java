@@ -29,5 +29,13 @@ public class TaxPeriodBuilder {
 
 		return searchSql.toString();
 	}
+	
+	public static String getTaxperiodsByDateAndTenantId(String tenantId, String validDate) {
+	        // TODO Auto-generated method stub
+	        StringBuffer searchSql = new StringBuffer();
+	        searchSql.append("SELECT * FROM egpt_mstr_taxperiods WHERE tenantId = '" + tenantId + "'");
+	        searchSql.append(" AND ('" + validDate + "' BETWEEN fromdate AND  todate )");
+	        return searchSql.toString();
+	    }
 
 }

@@ -55,12 +55,8 @@ class receivingModeCreate extends Component {
   constructor(props) {
        super(props);
        this.state = {
-         list:[],
-         list2:[],
-         open: false,
        }
        this.addOrUpdate=this.addOrUpdate.bind(this);
-       this.handleOpenNClose = this.handleOpenNClose.bind(this);
    }
 
 
@@ -87,13 +83,6 @@ class receivingModeCreate extends Component {
            initForm();
          }
      }
-
-
-   handleOpenNClose() {
-     this.setState({
-     	open: !this.state.open
-     });
-   };
 
   addOrUpdate(e) {
     e.preventDefault();
@@ -133,8 +122,7 @@ class receivingModeCreate extends Component {
   render() {
   let url = this.props.location.pathname;
   var _this = this;
-   let {addOrUpdate,handleOpenNClose} = this;
-   let {open} =this.state;
+   let {addOrUpdate} = this;
    let {
      handleChange,
      handleChangeNextOne,

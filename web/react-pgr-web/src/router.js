@@ -13,6 +13,7 @@ import ServiceGroupCreate from './components/contents/master/serviceGroup/servic
 import ViewEditServiceGroup from './components/contents/master/serviceGroup/viewEditServiceGroup';
 import viewReceivingMode from './components/contents/master/receivingMode/viewReceivingMode';
 import createRouter from './components/contents/master/router/create';
+import searchRouter from './components/contents/master/router/search';
 import routerGeneration from './components/contents/master/router/routerGeneration';
 import BulkEscalationGeneration from './components/contents/master/escalation/bulkEscalationGeneration';
 import serviceTypeCreate from './components/contents/master/serviceType/serviceTypeCreate';
@@ -32,7 +33,7 @@ const Main = () => (
       <Route exact path='/viewReceivingCenter/:id' component={ViewReceivingCenter}/>
       <Route exact path='/createRouter' component={createRouter}/>
       <Route exact path='/routerGeneration' component={routerGeneration}/>
-
+      <Route exact path='/searchRouter/:type' component={searchRouter}/>
       <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>
       <Route exact name='receivingModeCreate' path='/receivingModeCreate/:id' component={receivingModeCreate}/>
       <Route exact path='/viewOrUpdateReceivingMode/view' component={viewOrUpdateReceivingMode}/>

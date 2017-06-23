@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>pgr-common</artifactId>
-			<version>0.8.0</version>
+			<version>0.18.1</version>
 		</dependency>
 
 		<dependency>

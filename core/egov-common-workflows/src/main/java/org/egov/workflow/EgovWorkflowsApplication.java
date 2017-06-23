@@ -5,12 +5,15 @@ import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 
+import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.workflow.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.workflow.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +25,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
+@Import({ TracerConfiguration.class })
 public class EgovWorkflowsApplication {
 
 	@Value("${app.timezone}")
@@ -51,11 +55,6 @@ public class EgovWorkflowsApplication {
 			}
 
 		};
-	}
-
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new CorrelationIdAwareRestTemplate();
 	}
 
 	@Bean

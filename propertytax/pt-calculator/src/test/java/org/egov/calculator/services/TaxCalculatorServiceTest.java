@@ -20,6 +20,9 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxRates;
+import org.egov.models.TaxRatesRequest;
+import org.egov.models.TaxRatesResponse;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +46,8 @@ public class TaxCalculatorServiceTest {
 	Environment environment;
 
 	public Long factorId = 1l;
+
+	public Long taxRatesId = 1l;
 
 	@Test
 	public void createFactor() {
@@ -185,8 +190,8 @@ public class TaxCalculatorServiceTest {
 			master.setSubUsage("propertyusage");
 			master.setOccupancy("anil");
 			master.setValue((double) 252);
-			master.setFromDate("25/10/2016");
-			master.setToDate("25/10/2016");
+			master.setFromDate("25/10/2016 00:00:00");
+			master.setToDate("25/10/2016 00:00:00");
 
 			master.setAuditDetails(auditDetails);
 			guidanceValue.add(master);
@@ -235,8 +240,8 @@ public class TaxCalculatorServiceTest {
 			master.setSubUsage("propertyusage");
 			master.setOccupancy("anil");
 			master.setValue((double) 252);
-			master.setFromDate("25/10/2016");
-			master.setToDate("25/10/2016");
+			master.setFromDate("25/10/2016 00:00:00");
+			master.setToDate("25/10/2016 00:00:00");
 			master.setAuditDetails(auditDetails);
 			guidanceValue.add(master);
 
@@ -393,6 +398,124 @@ public class TaxCalculatorServiceTest {
 				assertTrue(false);
 			assertTrue(true);
 		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+	}
+
+	@Test
+	public void createTaxRateServiceTest() {
+
+		String tenantId = "default";
+		RequestInfo requestInfo = getRequestInfoObject();
+		List<TaxRates> listOfTaxRates = new ArrayList<>();
+
+		TaxRates taxRates = new TaxRates();
+		taxRates.setTenantId("default");
+		taxRates.setTaxHead("taxHead-C");
+		taxRates.setDependentTaxHead("dependentTaxHead-C");
+		taxRates.setFromDate("03/06/2017 00:00:00");
+		taxRates.setToDate("10/06/2017 00:00:00");
+		taxRates.setFromValue(1000.0);
+		taxRates.setToValue(1500.0);
+		taxRates.setRatePercentage(33.0);
+		taxRates.setTaxFlatValue(2222.0);
+
+		long createdTime = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("yosadhara");
+		auditDetails.setLastModifiedBy("yosadhara");
+		auditDetails.setCreatedTime(createdTime);
+		auditDetails.setLastModifiedTime(createdTime);
+
+		taxRates.setAuditDetails(auditDetails);
+		listOfTaxRates.add(taxRates);
+
+		TaxRatesRequest taxRatesRequest = new TaxRatesRequest();
+		taxRatesRequest.setTaxRates(listOfTaxRates);
+		taxRatesRequest.setRequestInfo(requestInfo);
+
+		try {
+			TaxRatesResponse taxRatesResponse = taxCalculatorService.createTaxRate(tenantId, taxRatesRequest);
+
+			if (taxRatesResponse.getTaxRates().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+		} catch (Exception e) {
+
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void updateTaxRateServiceTest() {
+
+		String tenantId = "default";
+		RequestInfo requestInfo = getRequestInfoObject();
+		List<TaxRates> listOfTaxRates = new ArrayList<>();
+
+		TaxRates taxRates = new TaxRates();
+		taxRates.setTenantId("default");
+		taxRates.setTaxHead("taxHead-UU");
+		taxRates.setDependentTaxHead("dependentTaxHead-UU");
+		taxRates.setFromDate("03/06/2017 00:00:00");
+		taxRates.setToDate("10/06/2017 00:00:00");
+		taxRates.setFromValue(1000.0);
+		taxRates.setToValue(1500.0);
+		taxRates.setRatePercentage(33.0);
+		taxRates.setTaxFlatValue(2222.0);
+		taxRates.setId(taxRatesId);
+
+		long updatedTime = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("yosadhara");
+		auditDetails.setLastModifiedBy("yosadhara");
+		auditDetails.setCreatedTime(updatedTime);
+		auditDetails.setLastModifiedTime(updatedTime);
+
+		taxRates.setAuditDetails(auditDetails);
+		listOfTaxRates.add(taxRates);
+
+		TaxRatesRequest taxRatesRequest = new TaxRatesRequest();
+		taxRatesRequest.setTaxRates(listOfTaxRates);
+		taxRatesRequest.setRequestInfo(requestInfo);
+
+		try {
+			TaxRatesResponse taxRatesResponse = taxCalculatorService.updateTaxRate(tenantId, taxRatesRequest);
+
+			if (taxRatesResponse.getTaxRates().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void getTaxRateServiceTest() {
+
+		String tenantId = "default";
+		String taxHead = "taxHead-C";
+		String validDate = "04/06/2017";
+		Double validARVAmount = 1100.0;
+		String parentTaxHead = "null";
+
+		TaxRatesResponse taxRatesResponse = null;
+		try {
+			taxRatesResponse = taxCalculatorService.getTaxRate(getRequestInfoObject(), tenantId, taxHead, validDate,
+					validARVAmount, parentTaxHead);
+
+			if (taxRatesResponse.getTaxRates().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+		} catch (Exception e) {
+
 			assertTrue(false);
 		}
 

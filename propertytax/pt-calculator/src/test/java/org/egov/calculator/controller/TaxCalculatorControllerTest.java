@@ -29,6 +29,9 @@ import org.egov.models.ResponseInfo;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxRates;
+import org.egov.models.TaxRatesRequest;
+import org.egov.models.TaxRatesResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,7 +257,7 @@ public class TaxCalculatorControllerTest {
 		List<GuidanceValue> guidanceValues = new ArrayList<>();
 		GuidanceValue guidanceValue = new GuidanceValue();
 		guidanceValue.setTenantId("default");
-		guidanceValue.setName("anil");
+		guidanceValue.setName("kumar");
 		guidanceValue.setBoundary("b2");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -271,7 +274,10 @@ public class TaxCalculatorControllerTest {
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class)))
 							.thenReturn(guidanceValueResponse);
 
-			mockMvc.perform(post("/properties/taxes/guidancevalue/_search").param("tenantId", "default")
+			mockMvc.perform(post("/properties/taxes/guidancevalue/_search")
+					.param("tenantId", "default")
+					.param("boundary", "b2")
+					.param("validDate", "15/06/2017")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchguidancevaluerequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -391,6 +397,122 @@ public class TaxCalculatorControllerTest {
 			assertTrue(false);
 
 		}
+	}
+	
+	/**
+	 * This test will test whether the tax rate will be  created successfully or not
+	 * 
+	 */
+	@Test
+	public void testShouldCreateTaxRates() throws Exception {
+
+		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
+		TaxRates taxRates = new TaxRates();
+		taxRates.setTenantId("default");
+		List<TaxRates> listOfTaxRates = new ArrayList<>();
+		AuditDetails auditDetails = new AuditDetails();
+		taxRates.setAuditDetails(auditDetails);
+		listOfTaxRates.add(taxRates);
+		taxRatesResponse.setResponseInfo(new ResponseInfo());
+		taxRatesResponse.setTaxRates(listOfTaxRates);
+		
+		try {
+
+			when(taxCalculatorService.createTaxRate(any(String.class), 
+					any(TaxRatesRequest.class)))
+					.thenReturn(taxRatesResponse);
+			
+			mockMvc.perform(post("/properties/taxes/taxrates/_create")
+					.param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("taxratesCreateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("taxratesCreateResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	/**
+	 * This test will test whether the tax rate will be  updated successfully or not
+	 * 
+	 */
+	@Test
+	public void testShouldUpdateTaxRates() throws Exception {
+
+		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
+		TaxRates taxRates = new TaxRates();
+		List<TaxRates> listOfTaxRates = new ArrayList<>();
+		taxRates.setTenantId("default");
+		AuditDetails auditDetails = new AuditDetails();
+		taxRates.setAuditDetails(auditDetails);
+		listOfTaxRates.add(taxRates);
+		taxRatesResponse.setResponseInfo(new ResponseInfo());
+		taxRatesResponse.setTaxRates(listOfTaxRates);
+
+		try {
+
+			when(taxCalculatorService.updateTaxRate(any(String.class), any(TaxRatesRequest.class)))
+					.thenReturn(taxRatesResponse);
+			mockMvc.perform(post("/properties/taxes/taxrates/_update")
+					.param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("taxratesUpdateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("taxratesUpdateResponse.json")));
+			
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	/**
+	 * This test will test whether the tax rate search searching
+	 * 
+	 */
+	@Test
+	public void testShouldSearchTaxRates() throws Exception {
+
+		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
+		TaxRates taxRates = new TaxRates();
+		taxRates.setTenantId("default");
+		List<TaxRates> listOfTaxRates = new ArrayList<>();
+		listOfTaxRates.add(taxRates);
+		taxRatesResponse.setResponseInfo(new ResponseInfo());
+		taxRatesResponse.setTaxRates(listOfTaxRates);
+
+		try {
+
+			when(taxCalculatorService.getTaxRate(any(RequestInfo.class), 
+					any(String.class), any(String.class),
+					any(String.class), any(Double.class), 
+					any(String.class))).thenReturn(taxRatesResponse);
+			
+			mockMvc.perform(post("/properties/taxes/taxrates/_search")
+					.param("tenantId", "default")
+					.param("taxHead", "taxHead-C")
+					.param("validDate", "04/06/2017")
+					.param("validARVAmount", "1100")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("taxratesSearchRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("taxratesSearchResponse.json")));
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
 	}
 
 	/**

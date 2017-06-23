@@ -3,14 +3,16 @@ package org.egov.calculator.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.calculator.repository.builder.TaxPeriodBuilder;
 import org.egov.calculator.util.TimeStampUtil;
+import org.egov.models.AuditDetails;
 import org.egov.models.TaxPeriod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -121,7 +123,6 @@ public class TaxPeriodRespository {
 	 * @param code
 	 * @return {@link TaxPeriod} List of taxPeriods
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Transactional
 	public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code) {
 
@@ -129,10 +130,49 @@ public class TaxPeriodRespository {
 
 		List<TaxPeriod> taxPeriods = null;
 		try {
-			taxPeriods = jdbcTemplate.query(searchQuery, new BeanPropertyRowMapper(TaxPeriod.class));
+			// taxPeriods = jdbcTemplate.query(searchQuery, new
+			// BeanPropertyRowMapper(TaxPeriod.class));
+			taxPeriods = geTaxPeriods(searchQuery);
 		} catch (Exception e) {
 
 		}
+		return taxPeriods;
+	}
+
+	/**
+	 * This method will execute the given query & will build the TaxPeriod
+	 * object
+	 * 
+	 * @param query
+	 *            String that need to be executed
+	 * @return {@link TaxPeriod} List of TaxPeriod
+	 */
+	@SuppressWarnings("rawtypes")
+	public List<TaxPeriod> geTaxPeriods(String query) {
+
+		List<TaxPeriod> taxPeriods = new ArrayList<>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
+		for (Map row : rows) {
+			TaxPeriod taxPeriod = new TaxPeriod();
+			taxPeriod.setCode(row.get("code").toString());
+			taxPeriod.setId(Long.valueOf(row.get("id").toString()));
+			taxPeriod.setFinancialYear(row.get("financialYear").toString());
+			taxPeriod.setFromDate(row.get("fromdate").toString());
+			taxPeriod.setToDate(row.get("todate").toString());
+			taxPeriod.setPeriodType(row.get("periodtype").toString());
+			taxPeriod.setTenantId(row.get("tenantid").toString());
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(row.get("createdby").toString());
+			auditDetails.setLastModifiedBy(row.get("lastmodifiedby").toString());
+			auditDetails.setCreatedTime(Long.valueOf(row.get("createdtime").toString()));
+			auditDetails.setLastModifiedTime(Long.valueOf(row.get("lastmodifiedtime").toString()));
+			taxPeriod.setAuditDetails(auditDetails);
+
+			taxPeriods.add(taxPeriod);
+
+		}
+
 		return taxPeriods;
 	}
 }

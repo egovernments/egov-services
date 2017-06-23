@@ -1,0 +1,20 @@
+{	
+	"responseInfo": {},
+    "taxRates": [{
+            "tenantId": "default",
+            "taxHead": null,
+            "dependentTaxHead": null,
+            "fromDate": null,
+            "toDate": null,
+            "fromValue": null,
+            "toValue": null,
+            "ratePercentage": null,
+            "taxFlatValue": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime":null
+            }
+        }]
+}

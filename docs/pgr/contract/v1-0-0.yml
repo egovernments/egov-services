@@ -618,20 +618,13 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
    # Bulk Router Type API
-    /router/{id}/_update:
+    /router/_update:
       post:
         summary: updates router
         description: updates router
         tags:
           - router
         parameters:
-          - name: id
-            in: path
-            description: escalation id.
-            required: true
-            type: number
-            format: int64
-            
           - name: Router
             in: body
             description: required parameters have to be populated
@@ -668,7 +661,7 @@ paths:
           200: 
             description: Successful response
             schema:
-              $ref: '#/definitions/RouterTypeRes'
+              $ref: '#/definitions/RouterSearchRes'
           400:
             description: Invalid input
             schema:
@@ -1412,7 +1405,43 @@ definitions:
           maximum: 20
           items:
             $ref: '#/definitions/RouterType'
-            
+  
+  RouterSearchRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        RouterTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/RouterRes'          
+  
+  RouterRes:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        grievancetype:
+           $ref: '#/definitions/Service'
+        boundary:
+           $ref: "#/definitions/BoundaryIdType"
+        position: 
+          type: integer
+          description: position id.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - grievancetype
+        - boundary
+        - position
+        - tenantId 
+        
   RouterType:
       type: object
       properties:
@@ -1537,6 +1566,3 @@ definitions:
         - noofhours
         - designation
         - tenantId      
-    
-
-              

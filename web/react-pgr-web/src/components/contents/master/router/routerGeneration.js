@@ -289,7 +289,8 @@ class routerGeneration extends Component {
    	resultList,
    	isSearchClicked,
    	open,
-   	open2
+   	open2,
+    positionSource
    } = this.state;
 
    const showSaveButton = function() {

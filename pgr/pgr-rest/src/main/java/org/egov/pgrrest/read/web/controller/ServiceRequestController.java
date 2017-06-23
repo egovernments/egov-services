@@ -184,7 +184,7 @@ public class ServiceRequestController {
         return ResponseInfo.builder()
             .apiId(requestInfo.getApiId())
             .ver(requestInfo.getVer())
-            .ts(requestInfo.getTs())
+            .ts(new Date().toString())
             .msgId(requestInfo.getMsgId())
             .resMsgId("placeholder")
             .status("placeholder")

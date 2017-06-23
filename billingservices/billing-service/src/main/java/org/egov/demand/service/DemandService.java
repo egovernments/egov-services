@@ -14,6 +14,8 @@ import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.TaxHeadMaster;
+import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -54,6 +56,9 @@ public class DemandService {
 	
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
+	
+	@Autowired
+	private TaxHeadMasterService taxHeadMasterService;
 
 	public DemandResponse create(DemandRequest demandRequest) {
 
@@ -125,6 +130,17 @@ public class DemandService {
 		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 		List<Demand> demands = demandRepository.getDemands(demandCriteria,ownerIds);
 		demands = demandEnrichmentUtil.enrichOwners(demands, owners);
+		List<DemandDetail> demandDetails = new ArrayList<>();
+		for (Demand demand : demands) {
+			for (DemandDetail demandDetail : demand.getDemandDetails()) {
+				demandDetails.add(demandDetail);
+			}
+		}
+		List<TaxHeadMaster> taxHeadMAsters = taxHeadMasterService.getTaxHeads(
+				TaxHeadMasterCriteria.builder().tenantId(demandCriteria.getTenantId())
+				.code(demandDetails.stream().map(ddl -> ddl.getTaxHeadMaster().getCode())
+				.collect(Collectors.toSet())).build(),requestInfo).getTaxHeadMasters();
+		demandEnrichmentUtil.enrichTaxHeadMAsters(demandDetails, taxHeadMAsters);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

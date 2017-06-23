@@ -338,12 +338,19 @@ public class WorkflowMatrixImpl implements Workflow {
 	public TaskResponse getTasks(TaskRequest taskRequest) {
 		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
 		if (LOG.isTraceEnabled())
-		LOG.trace("Received task parameters " + taskRequest );
-		
+			LOG.trace("Received task parameters " + taskRequest);
+
 		final List<Task> tasks = new ArrayList<Task>();
 		RequestInfo requestInfo = taskRequest.getRequestInfo();
-		UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
-		final Long userId = userResponse.getUsers().get(0).getId();
+		Long userId;
+		if (requestInfo.getUserInfo().getTenantId() != null && !requestInfo.getUserInfo().getTenantId().isEmpty()) {
+			// TO-DO We need to remove this call to user service for user
+			// details, once erp is sending userinfo from user microservice.
+			UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
+			userId = userResponse.getUsers().get(0).getId();
+		} else {
+			userId = requestInfo.getUserInfo().getId();
+		}
 		final List<String> types = workflowTypeService.getEnabledWorkflowType(true,
 				taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		final List<Long> ownerIds = assignmentRepository

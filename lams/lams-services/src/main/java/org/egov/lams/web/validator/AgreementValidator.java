@@ -191,7 +191,9 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
 		validateRentIncrementType(agreement, errors);
+		if(agreement.getSource().equals(Source.SYSTEM)){
 		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+		}
 	}
 
 	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {

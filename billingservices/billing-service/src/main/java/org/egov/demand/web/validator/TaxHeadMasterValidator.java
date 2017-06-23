@@ -10,16 +10,16 @@ import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Component
+@Slf4j
 public class TaxHeadMasterValidator {
 
-	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterValidator.class);
 	
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
@@ -28,7 +28,7 @@ public class TaxHeadMasterValidator {
 	private TaxPeriodService taxPeriodService;
 	
 	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest) {
-		System.out.println(":::::in validator class:::::::");
+		log.info(":::::in validator class:::::::");
 		TaxHeadMasterCriteria taxHeadMasterCriteria=new TaxHeadMasterCriteria();
 		List<TaxHeadMaster> taxHeads = taxHeadsRequest.getTaxHeadMasters();
 		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();

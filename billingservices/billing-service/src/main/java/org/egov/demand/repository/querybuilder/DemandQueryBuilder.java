@@ -22,7 +22,7 @@ public class DemandQueryBuilder {
 			+ "demand.taxperiodfrom AS dtaxperiodfrom,demand.taxperiodto AS dtaxperiodto,"
 			+ "demand.minimumamountpayable AS dminimumamountpayable,demand.createdby AS dcreatedby,"
 			+ "demand.lastmodifiedby AS dlastmodifiedby,demand.createdtime AS dcreatedtime,"
-			+ "demand.lastmodifiedtime AS dlastmodifiedtime,demand.tenantid AS dtenantid,demand.type AS dtype,"
+			+ "demand.lastmodifiedtime AS dlastmodifiedtime,demand.tenantid AS dtenantid,"
 
 			+ "demanddetail.id AS dlid,demanddetail.demandid AS dldemandid,demanddetail.taxheadcode AS dltaxheadcode,"
 			+ "demanddetail.taxamount AS dltaxamount,demanddetail.collectionamount AS dlcollectionamount,"
@@ -47,8 +47,8 @@ public class DemandQueryBuilder {
 
 	public static final String DEMAND_INSERT_QUERY = "INSERT INTO egbs_demand "
 			+ "(id,consumerCode,consumerType,businessService,owner,taxPeriodFrom,taxPeriodTo,"
-			+ "minimumAmountPayable,type,createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid) "
-			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+			+ "minimumAmountPayable,createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid) "
+			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
 	public static final String DEMAND_DETAIL_INSERT_QUERY = "INSERT INTO egbs_demanddetail "
 			+ "(id,demandid,taxHeadCode,taxamount,collectionamount,"
@@ -58,7 +58,7 @@ public class DemandQueryBuilder {
 	// FIX ME REMOVE CREATED BY FROM UPDATE
 	public static final String DEMAND_UPDATE_QUERY = "UPDATE TABLE egbs_demand SET "
 			+ "id=?,consumerCode=?,consumerType=?,businessService=?,owner=?,taxPeriodFrom=?,"
-			+ "taxPeriodTo=?,minimumAmountPayable=?,type=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?) "
+			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?) "
 			+ "WHERE id=? AND tenantid=?;";
 
 	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE TABLE egbs_demanddetail SET "

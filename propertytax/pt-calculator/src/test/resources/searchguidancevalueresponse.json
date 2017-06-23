@@ -8,13 +8,6 @@
             "tenantId": "default",
             "name": "kumar",
             "boundary": "b2",
-            "structure": "square",
-            "usage": "propertyuse1",
-            "subUsage": "propertyusage1",
-            "occupancy": "kumar",
-            "value": 252,
-            "fromDate": "2016-10-25 00:00:00+05:30",
-            "toDate": "2016-10-25 00:00:00+05:30",
             "auditDetails": {
                 "createdBy": null,
                 "lastModifiedBy": null,

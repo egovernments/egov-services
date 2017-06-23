@@ -776,11 +776,8 @@ definitions:
         type: integer
         format: int64
         description: primary key of a DemandDetails.
-      taxHeadCode:
-        type: string
-        description: Tax Head code for this tax applicable
-        maxLength: 128
-        minLength: 4
+      taxHead:
+        $ref: "#/definitions/TaxHeadMaster"
       taxAmount:
         type: number
         format: double
@@ -799,7 +796,7 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - taxHeadCode
+      - taxHead
       - taxAmount
       - collectionAmount
       - tenantId

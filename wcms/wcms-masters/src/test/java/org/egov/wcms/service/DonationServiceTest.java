@@ -56,6 +56,7 @@ import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DonationRepository;
+import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.DonationResponse;
 import org.junit.Test;
@@ -119,9 +120,9 @@ public class DonationServiceTest {
         final List<Donation> donationList = new ArrayList<>();
         final Donation donation = Mockito.mock(Donation.class);
         donationList.add(donation);
-        when(donationRepository.getDonationList(any(Donation.class))).thenReturn(donationList);
+        when(donationRepository.getDonationList(any(DonationGetRequest.class))).thenReturn(donationList);
 
-        assertTrue(donationList.equals(donationRepository.getDonationList(any(Donation.class))));
+        assertTrue(donationList.equals(donationRepository.getDonationList(any(DonationGetRequest.class))));
     }
 
     @Test
@@ -130,8 +131,8 @@ public class DonationServiceTest {
         final Donation donation = Mockito.mock(Donation.class);
         donationList.add(donation);
 
-        when(donationRepository.getDonationList(any(Donation.class))).thenReturn(donationList);
-        assertNotNull(donationRepository.getDonationList(any(Donation.class)));
+        when(donationRepository.getDonationList(any(DonationGetRequest.class))).thenReturn(donationList);
+        assertNotNull(donationRepository.getDonationList(any(DonationGetRequest.class)));
     }
 
     @Test
@@ -140,8 +141,8 @@ public class DonationServiceTest {
         final Donation donation = Mockito.mock(Donation.class);
         donationList.add(donation);
 
-        when(donationRepository.getDonationList(any(Donation.class))).thenReturn(null);
-        assertNull(donationRepository.getDonationList(any(Donation.class)));
+        when(donationRepository.getDonationList(any(DonationGetRequest.class))).thenReturn(null);
+        assertNull(donationRepository.getDonationList(any(DonationGetRequest.class)));
     }
 
     @Test(expected = Exception.class) // Please revisit this test case
@@ -172,5 +173,4 @@ public class DonationServiceTest {
 
         assertNotNull(donationResult);
     }
-
 }

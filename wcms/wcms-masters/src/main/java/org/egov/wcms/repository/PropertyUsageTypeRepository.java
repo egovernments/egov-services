@@ -57,7 +57,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PropertyUsageTypeRepository {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(UsageTypeRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(PropertyUsageTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -29,9 +29,8 @@ public class MessageJpaRepositoryTest {
     @Test
     @Sql(scripts = {"/sql/clearMessages.sql", "/sql/createMessages.sql"})
     public void shouldFetchMessagesForGivenTenantAndLocale() {
-
         final List<Message> actualMessages = messageJpaRepository
-            .findByTenantIdAndLocale("tenant1", "en_US");
+            .find("tenant1", "en_US");
 
         assertEquals(2, actualMessages.size());
     }
@@ -59,6 +58,6 @@ public class MessageJpaRepositoryTest {
 
         assertTrue("Id generated for message1", message1.getId() > 0);
         assertTrue("Id generated for message2", message2.getId() > 0);
-        assertEquals(2, messageJpaRepository.findByTenantIdAndLocale(tenant, locale).size());
+        assertEquals(2, messageJpaRepository.find(tenant, locale).size());
     }
 }

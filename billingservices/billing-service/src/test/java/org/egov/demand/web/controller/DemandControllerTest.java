@@ -16,6 +16,7 @@ import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.enums.Type;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
@@ -54,6 +55,7 @@ public class DemandControllerTest {
 		List<Demand> demands = new ArrayList<>();
 		demands.add(demand);
 		DemandRequest demandRequest = new DemandRequest(requestInfo, demands);
+		System.err.println(demandRequest);
 		//when(demandService.create(any(DemandRequest.class))).thenReturn(demands);
 		//when(responseInfoFactory.getResponseInfo(any(RequestInfo.class), any(HttpStatus.class)))
 		//.thenReturn(getResponseInfo(requestInfo));
@@ -90,7 +92,6 @@ public class DemandControllerTest {
 		demand.setMinimumAmountPayable(BigDecimal.valueOf(200));
 		demand.setTaxPeriodFrom(12345l);
 		demand.setTaxPeriodTo(1234567890l);
-		demand.setType(Type.DUES);
 		demand.setTenantId("ap.kurnool");
 		demand.setDemandDetails(getDemandDetails());
 		return demand;
@@ -103,11 +104,16 @@ public class DemandControllerTest {
 		
 		demandDetail.setTaxAmount(BigDecimal.valueOf(100));
 		demandDetail.setCollectionAmount(BigDecimal.ZERO);
-		demandDetail.setTaxHeadCode("0002");
+		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
+		taxHeadMaster.setCode("0002");
+		demandDetail.setTaxHeadMaster(taxHeadMaster);
 		DemandDetail demandDetail1 = new DemandDetail();
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
-		demandDetail1.setTaxHeadCode("0003");
+		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
+		TaxHeadMaster taxHeadMaster1 = new TaxHeadMaster();
+		taxHeadMaster1.setCode("0003");
+		demandDetail1.setTaxHeadMaster(taxHeadMaster1);
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;

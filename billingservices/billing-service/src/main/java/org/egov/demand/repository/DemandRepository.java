@@ -46,7 +46,7 @@ public class DemandRepository {
 			AuditDetail auditDetail = demand.getAuditDetail();
 			Object[] demandRecord = { demand.getId(), demand.getConsumerCode(), demand.getConsumerType(),
 					demand.getBusinessService(), demand.getOwner().getId(), demand.getTaxPeriodFrom(),
-					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(), demand.getType().toString(),
+					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(),
 					auditDetail.getCreatedBy(), auditDetail.getLastModifiedBy(), auditDetail.getCreatedTime(),
 					auditDetail.getLastModifiedTime(),	demand.getTenantId() };
 			demandBatchArgs.add(demandRecord);
@@ -65,7 +65,7 @@ public class DemandRepository {
 
 			AuditDetail auditDetail = demandDetail.getAuditDetail();
 			Object[] demandDetailRecord = { demandDetail.getId(), demandDetail.getDemandId(),
-					demandDetail.getTaxHeadCode(), demandDetail.getTaxAmount(), demandDetail.getCollectionAmount(),
+					demandDetail.getTaxHeadMaster().getCode(), demandDetail.getTaxAmount(), demandDetail.getCollectionAmount(),
 					auditDetail.getCreatedBy(), auditDetail.getLastModifiedBy(), auditDetail.getCreatedTime(),
 					auditDetail.getLastModifiedTime(), demandDetail.getTenantId() };
 			demandDetailBatchArgs.add(demandDetailRecord);
@@ -97,7 +97,7 @@ public class DemandRepository {
 
 			Object[] demandRecord = { demandId, demand.getConsumerCode(), demand.getConsumerType(),
 					demand.getBusinessService(), demand.getOwner().getId(), demand.getTaxPeriodFrom(),
-					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(), demand.getType().toString(),
+					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(), 
 					auditDetail.getLastModifiedBy(), auditDetail.getLastModifiedTime(), demandtenantId, demandId,
 					demandtenantId };
 			demandBatchArgs.add(demandRecord);

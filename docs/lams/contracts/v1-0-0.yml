@@ -741,6 +741,10 @@ definitions:
       tenantId:
         type: string
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+      isAdvancePaid:
+       description: parameter to indicate whether advance amount is collected or not, updated in DCB back update on collection.
+       type: boolean
+       default: false
     required:
       - id
       - agreementNumber

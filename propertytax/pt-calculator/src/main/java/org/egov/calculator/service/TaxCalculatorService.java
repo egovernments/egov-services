@@ -11,6 +11,7 @@ import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+
 /**
  * 
  * @author Pavan Kumar Kamma
@@ -28,8 +29,8 @@ public interface TaxCalculatorService {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-	public CalculationFactorResponse createFactor(String tenantId,
-			CalculationFactorRequest calculationFactorRequest) throws Exception;
+	public CalculationFactorResponse createFactor(String tenantId, CalculationFactorRequest calculationFactorRequest)
+			throws Exception;
 
 	/**
 	 * Description : This service to Update any of the factor
@@ -39,8 +40,8 @@ public interface TaxCalculatorService {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-	public CalculationFactorResponse updateFactor(String tenantId,
-			CalculationFactorRequest calculationFactorRequest) throws Exception;
+	public CalculationFactorResponse updateFactor(String tenantId, CalculationFactorRequest calculationFactorRequest)
+			throws Exception;
 
 	/**
 	 * Description : This service for search factor details
@@ -53,9 +54,8 @@ public interface TaxCalculatorService {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-	public CalculationFactorResponse getFactor(RequestInfo requestInfo,
-			String tenantId, String factorType, String validDate, String code)
-			throws Exception;
+	public CalculationFactorResponse getFactor(RequestInfo requestInfo, String tenantId, String factorType,
+			String validDate, String code) throws Exception;
 
 	/**
 	 * Description: create guidance
@@ -65,8 +65,8 @@ public interface TaxCalculatorService {
 	 * @return
 	 * @throws Exception
 	 */
-	public GuidanceValueResponse createGuidanceValue(String tenantId,
-			GuidanceValueRequest guidanceValueRequest) throws Exception;
+	public GuidanceValueResponse createGuidanceValue(String tenantId, GuidanceValueRequest guidanceValueRequest)
+			throws Exception;
 
 	/**
 	 * Description: update guidance
@@ -76,8 +76,8 @@ public interface TaxCalculatorService {
 	 * @return
 	 * @throws Exception
 	 */
-	public GuidanceValueResponse updateGuidanceValue(String tenantId,
-			GuidanceValueRequest guidanceValueRequest) throws Exception;
+	public GuidanceValueResponse updateGuidanceValue(String tenantId, GuidanceValueRequest guidanceValueRequest)
+			throws Exception;
 
 	/**
 	 * Description: search guidance
@@ -92,10 +92,8 @@ public interface TaxCalculatorService {
 	 * @param validDate
 	 * @return GuidanceValueResponse
 	 */
-	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo,
-			String tenantId, String boundary, String structure, String usage,
-			String subUsage, String occupancy, String validDate)
-			throws Exception;
+	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo, String tenantId, String boundary,
+			String structure, String usage, String subUsage, String occupancy, String validDate) throws Exception;
 
 	/**
 	 * Description : This service for creating new taxRate(s)
@@ -105,8 +103,7 @@ public interface TaxCalculatorService {
 	 * @return TaxRatesResponse
 	 * @throws Exception
 	 */
-	public TaxRatesResponse createTaxRate(String tenantId,
-			TaxRatesRequest taxRatesRequest) throws Exception;
+	public TaxRatesResponse createTaxRate(String tenantId, TaxRatesRequest taxRatesRequest) throws Exception;
 
 	/**
 	 * Description : This service for updating taxRate(s)
@@ -116,8 +113,7 @@ public interface TaxCalculatorService {
 	 * @return TaxRatesResponse
 	 * @throws Exception
 	 */
-	public TaxRatesResponse updateTaxRate(String tenantId,
-			TaxRatesRequest taxRatesRequest) throws Exception;
+	public TaxRatesResponse updateTaxRate(String tenantId, TaxRatesRequest taxRatesRequest) throws Exception;
 
 	/**
 	 * Description : This service for search taxRate details
@@ -131,21 +127,46 @@ public interface TaxCalculatorService {
 	 * @return TaxRatesResponse
 	 * @throws Exception
 	 */
-	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, String tenantId,
-			String taxHead, String validDate, Double validARVAmount,
-			String parentTaxHead) throws Exception;
+	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, String tenantId, String taxHead, String validDate,
+			Double validARVAmount, String parentTaxHead) throws Exception;
 
-	// taxperiod
-	public TaxPeriodResponse createTaxPeriod(String tenantId,
-			TaxPeriodRequest taxPeriodRequest) throws Exception;
+	/**
+	 * This will create the tax period
+	 * 
+	 * @author Prasad
+	 * @param tenantId
+	 * @param taxPeriodRequest
+	 * @return {@link TaxPeriodResponse}
+	 * @throws Exception
+	 */
+	public TaxPeriodResponse createTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception;
 
-	public TaxPeriodResponse updateTaxPeriod(String tenantId,
-			TaxPeriodRequest taxPeriodRequest) throws Exception;
+	/**
+	 * This will update the tax period with the given reuquest for the given
+	 * tenantId
+	 * 
+	 * @author Prasad
+	 * @param tenantId
+	 * @param taxPeriodRequest
+	 * @return {@link TaxPeriodResponse}
+	 * @throws Exception
+	 */
+	public TaxPeriodResponse updateTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception;
 
-	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo,
-			String tenantId, String validDate, String code) throws Exception;
+	/**
+	 * This will search the tax periods based on the given parameter
+	 * 
+	 * @author Prasad
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param validDate
+	 * @param code
+	 * @return {@link TaxPeriodResponse}
+	 * @throws Exception
+	 */
+	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code)
+			throws Exception;
 
-	public CalculationResponse calculatePropertyTax(
-			CalculationRequest calculationRequest);
+	public CalculationResponse calculatePropertyTax(CalculationRequest calculationRequest);
 
 }

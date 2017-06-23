@@ -2,7 +2,9 @@ package org.egov.calculator.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.calculator.exception.InvalidInputException;
 import org.egov.calculator.repository.GuidanceValueRepostory;
@@ -17,18 +19,25 @@ import org.egov.models.CalculationResponse;
 import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.models.StructureClassResponse;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.UsageMasterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Description : CalculatorService interface implementation class
@@ -51,9 +60,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
 	@Autowired
 	TaxRatesRepository taxRatesRepository;
-	
+
 	@Autowired
 	private TaxPeriodRespository taxPeriodRespository;
+
+	@Autowired
+	private Environment environment;
 
 	@Override
 	@Transactional
@@ -62,6 +74,8 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
 		for (CalculationFactor calculationFactor : calculationFactorRequest
 				.getCalculationFactors()) {
+
+			validateFactorCode(calculationFactor, calculationFactorRequest);
 
 			try {
 
@@ -87,6 +101,88 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		calculationFactorResponse.setResponseInfo(responseInfo);
 
 		return calculationFactorResponse;
+	}
+
+	private void validateFactorCode(CalculationFactor calculationFactor,
+			CalculationFactorRequest calculationFactorRequest) {
+		
+		if (calculationFactor.getFactorType() != null
+				&& !calculationFactor.getFactorType().isEmpty()) {
+
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper
+					.setRequestInfo(calculationFactorRequest.getRequestInfo());
+			RestTemplate restTemplate = new RestTemplate();
+			StringBuilder uri = new StringBuilder();
+			Map<String, String> params = new HashMap<String, String>();
+			uri.append(environment.getProperty(
+					"egov.services.property_master_service.hostname"));
+			uri.append(environment.getProperty(
+					"egov.services.property_master_service.basepath"));
+			uri.append(environment.getProperty(
+					"egov.services.property_master_service.search"));
+			params.put("tenantId", calculationFactor.getTenantId());
+			params.put("code", calculationFactor.getFactorCode());
+
+			switch (calculationFactor.getFactorType()) {
+
+				case "occupancy" :
+
+					params.put("factorType", "occuapancies");
+					OccuapancyMasterResponse occuapancyMasterResponse = restTemplate
+							.postForObject(uri.toString(), requestInfoWrapper,
+									OccuapancyMasterResponse.class, params);
+					if (occuapancyMasterResponse.getOccuapancyMasters()
+							.size() == 0) {
+						throw new InvalidInputException(
+								calculationFactorRequest.getRequestInfo());
+					}
+					break;
+				case "usage" :
+
+					params.put("factorType", "usages");
+					UsageMasterResponse usageMasterResponse = restTemplate
+							.postForObject(uri.toString(), requestInfoWrapper,
+									UsageMasterResponse.class, params);
+					if (usageMasterResponse.getUsageMasters().size() == 0) {
+						throw new InvalidInputException(
+								calculationFactorRequest.getRequestInfo());
+					}
+					break;
+				case "structure" :
+
+					params.put("factorType", "structureclasses");
+					StructureClassResponse structureClassResponse = restTemplate
+							.postForObject(uri.toString(), requestInfoWrapper,
+									StructureClassResponse.class, params);
+					if (structureClassResponse.getStructureClasses()
+							.size() == 0) {
+						throw new InvalidInputException(
+								calculationFactorRequest.getRequestInfo());
+					}
+					break;
+				case "propertytype" :
+
+					params.put("factorType", "propertytypes");
+					PropertyTypeResponse propertyTypeResponse = restTemplate
+							.postForObject(uri.toString(), requestInfoWrapper,
+									PropertyTypeResponse.class, params);
+					if (propertyTypeResponse.getPropertyTypes().size() == 0) {
+						throw new InvalidInputException(
+								calculationFactorRequest.getRequestInfo());
+					}
+					break;
+				case "age" :
+
+					params.put("factorType", "age");
+					restTemplate.getForObject(uri.toString(), String.class,
+							params);
+					break;
+				default :
+					break;
+
+			}
+		}
 	}
 
 	@Override
@@ -209,26 +305,27 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 	}
 
 	@Override
-    public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo,
-            String tenantId, String boundary, String structure, String usage,
-            String subUsage, String occupancy, String validDate)
-            throws Exception {
-        GuidanceValueResponse guidanceValueResponse = new GuidanceValueResponse();
+	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo,
+			String tenantId, String boundary, String structure, String usage,
+			String subUsage, String occupancy, String validDate)
+			throws Exception {
+		GuidanceValueResponse guidanceValueResponse = new GuidanceValueResponse();
 
-        try {
+		try {
 
-            List<GuidanceValue> guidanceValues = calculatorRepository
-                    .searchGuidanceValue(tenantId, boundary, structure, usage, subUsage, occupancy, validDate);
-            ResponseInfo responseInfo = responseInfoFactory
-                    .createResponseInfoFromRequestInfo(requestInfo, true);
+			List<GuidanceValue> guidanceValues = calculatorRepository
+					.searchGuidanceValue(tenantId, boundary, structure, usage,
+							subUsage, occupancy, validDate);
+			ResponseInfo responseInfo = responseInfoFactory
+					.createResponseInfoFromRequestInfo(requestInfo, true);
 
-            guidanceValueResponse.setGuidanceValues(guidanceValues);
-            guidanceValueResponse.setResponseInfo(responseInfo);
-        } catch (Exception e) {
-            throw new InvalidInputException(requestInfo);
-        }
-        return guidanceValueResponse;
-    }
+			guidanceValueResponse.setGuidanceValues(guidanceValues);
+			guidanceValueResponse.setResponseInfo(responseInfo);
+		} catch (Exception e) {
+			throw new InvalidInputException(requestInfo);
+		}
+		return guidanceValueResponse;
+	}
 
 	@Override
 	@Transactional
@@ -314,23 +411,27 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 	};
 
 	@Override
-	public TaxPeriodResponse createTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
+	public TaxPeriodResponse createTaxPeriod(String tenantId,
+			TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
 
 			try {
 
-				Long id = taxPeriodRespository.saveTaxPeriod(taxPeriod, tenantId);
+				Long id = taxPeriodRespository.saveTaxPeriod(taxPeriod,
+						tenantId);
 				taxPeriod.setId(id);
 			} catch (Exception e) {
-				throw new InvalidInputException(taxPeriodRequest.getRequestInfo());
+				throw new InvalidInputException(
+						taxPeriodRequest.getRequestInfo());
 			}
 
 		}
 
 		TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
 		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(taxPeriodRequest.getRequestInfo(), true);
+				.createResponseInfoFromRequestInfo(
+						taxPeriodRequest.getRequestInfo(), true);
 		taxPeriodResponse.setResponseInfo(responseInfo);
 		taxPeriodResponse.setTaxPeriods(taxPeriodRequest.getTaxPeriods());
 
@@ -338,21 +439,24 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 	};
 
 	@Override
-	public TaxPeriodResponse updateTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
+	public TaxPeriodResponse updateTaxPeriod(String tenantId,
+			TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
 
 			try {
 				taxPeriodRespository.updateTaxPeriod(taxPeriod, tenantId);
 			} catch (Exception e) {
-				throw new InvalidInputException(taxPeriodRequest.getRequestInfo());
+				throw new InvalidInputException(
+						taxPeriodRequest.getRequestInfo());
 			}
 
 		}
 
 		TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
 		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(taxPeriodRequest.getRequestInfo(), true);
+				.createResponseInfoFromRequestInfo(
+						taxPeriodRequest.getRequestInfo(), true);
 		taxPeriodResponse.setResponseInfo(responseInfo);
 		taxPeriodResponse.setTaxPeriods(taxPeriodRequest.getTaxPeriods());
 
@@ -360,18 +464,20 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 	};
 
 	@Override
-	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code)
-			throws Exception {
+	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo,
+			String tenantId, String validDate, String code) throws Exception {
 
 		List<TaxPeriod> taxPeriods = null;
 		try {
-			taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code);
+			taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId,
+					validDate, code);
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
 
 		TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(requestInfo, true);
 		taxPeriodResponse.setResponseInfo(responseInfo);
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 

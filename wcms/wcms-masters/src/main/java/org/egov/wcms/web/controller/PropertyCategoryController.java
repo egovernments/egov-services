@@ -45,19 +45,18 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.service.PropertyCategoryService;
-import org.egov.wcms.util.WcmsConstants;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -66,7 +65,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,23 +91,26 @@ public class PropertyCategoryController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    @Autowired
+    private ValidatorUtils validatorUtils;
+
     @PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final PropertyTypeCategoryTypeReq propertyCategoryRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyCategoryRequest::" + propertyCategoryRequest);
 
-        final List<ErrorResponse> errorResponses = validatePropertyCategoryRequest(propertyCategoryRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validatePropertyCategoryRequest(propertyCategoryRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
                 applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create", propertyCategoryRequest);
-        return getSuccessResponse(propertyCategory, propertyCategoryRequest.getRequestInfo());
+        return getSuccessResponse(propertyCategory, "created", propertyCategoryRequest.getRequestInfo());
 
     }
 
@@ -119,19 +120,19 @@ public class PropertyCategoryController {
             final BindingResult errors,
             @PathVariable("propertyCategoryId") final Long propertyCategoryId) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyCategoryRequest::" + propertyCategoryRequest);
         propertyCategoryRequest.getPropertyTypeCategoryType().setId(propertyCategoryId);
 
-        final List<ErrorResponse> errorResponses = validatePropertyCategoryRequest(propertyCategoryRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validatePropertyCategoryRequest(propertyCategoryRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
                 applicationProperties.getUpdatePropertyCategoryTopicName(), "property-category-update", propertyCategoryRequest);
-        return getSuccessResponse(propertyCategory, propertyCategoryRequest.getRequestInfo());
+        return getSuccessResponse(propertyCategory, null, propertyCategoryRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
@@ -162,70 +163,16 @@ public class PropertyCategoryController {
 
     }
 
-    private List<ErrorResponse> validatePropertyCategoryRequest(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(propertyCategoryRequest);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
-    }
-
-    private Error getError(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        if (propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() == null
-                || propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName() == null
-                || propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTY_TYPE_MANDATORY_CODE)
-                    .message(WcmsConstants.PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTY_TYPE_MANDATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId() == null
-                || propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.TENANTID_MANDATORY_CODE)
-                    .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        }
-
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE)
-                .errorFields(errorFields)
-                .build();
-    }
-
-    private ErrorResponse populateErrors(final BindingResult errors) {
-        final ErrorResponse errRes = new ErrorResponse();
-
-        final Error error = new Error();
-        error.setCode(1);
-        error.setDescription("Error while binding request");
-        if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-        errRes.setError(error);
-        return errRes;
-    }
-
     private ResponseEntity<?> getSuccessResponse(final PropertyTypeCategoryTypeReq propertyCategoryRequest,
-            final RequestInfo requestInfo) {
+            final String mode, final RequestInfo requestInfo) {
         final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
         final List<PropertyTypeCategoryType> propertyCategories = new ArrayList<>();
         propertyCategories.add(propertyCategoryRequest.getPropertyTypeCategoryType());
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+        if (StringUtils.isNotBlank(mode))
+            responseInfo.setStatus(HttpStatus.CREATED.toString());
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
         propertyCategoryResponse.setResponseInfo(responseInfo);
         propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);
 

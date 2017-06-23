@@ -54,21 +54,18 @@ import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.controller.PropertyCategoryController;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PropertyCategoryController.class)
 @WebAppConfiguration
 public class PropertyTypeCategoryTypeRepositoryTest {
 

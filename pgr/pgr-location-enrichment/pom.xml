@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.17.6</version>
+            <version>0.18.1</version>
         </dependency>
 
         <!--Test dependencies-->
@@ -106,12 +106,12 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <excludes>
-                                        <exclude>org.egov.pgr.PgrLocationEnrichmentApplication</exclude>
-                                        <exclude>org.egov.pgr.contract.*</exclude>
-                                        <exclude>org.egov.pgr.model.RequestContext</exclude>
-                                        <exclude>org.egov.pgr.model.SevaRequest</exclude>
+                                        <exclude>org.egov.pgr.location.PgrLocationEnrichmentApplication</exclude>
+                                        <exclude>org.egov.pgr.location.contract.*</exclude>
+                                        <exclude>org.egov.pgr.location.model.RequestContext</exclude>
+                                        <exclude>org.egov.pgr.location.model.SevaRequest</exclude>
                                         <exclude>org.egov.pgr.http.CorrelationIdAwareRestTemplate</exclude>
-                                        <exclude>org.egov.pgr.json.ObjectMapperFactory</exclude>
+                                        <exclude>org.egov.pgr.location.json.ObjectMapperFactory</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

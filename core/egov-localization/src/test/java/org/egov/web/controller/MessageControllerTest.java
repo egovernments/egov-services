@@ -1,20 +1,9 @@
 package org.egov.web.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.egov.TestConfiguration;
 import org.egov.domain.model.Message;
+import org.egov.domain.model.MessageIdentity;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 import org.junit.Test;
@@ -27,13 +16,26 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(MessageController.class)
 @Import(TestConfiguration.class)
 public class MessageControllerTest {
 
-    private static final String TENANT_ID = "tenant123";
-    private static final String LOCALE = "mr_IN";
+    private static final String TENANT_ID = "default";
+    private static final String LOCALE = "kn_IN";
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,11 +44,24 @@ public class MessageControllerTest {
     private MessageService messageService;
 
     @Test
-    public void test_should_fetch_messages_for_given_locale() throws Exception {
+    public void test_should_fetch_messages_for_given_locale_via_get_endpoint() throws Exception {
         final List<Message> modelMessages = getModelMessages();
         when(messageService.getMessages(LOCALE, new Tenant(TENANT_ID)))
             .thenReturn(modelMessages);
-         mockMvc.perform(get("/messages")
+        mockMvc.perform(get("/messages")
+            .param("tenantId", TENANT_ID)
+            .param("locale", LOCALE))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("messagesResponse.json")));
+    }
+
+    @Test
+    public void test_should_fetch_messages_for_given_locale_via_search_endpoint() throws Exception {
+        final List<Message> modelMessages = getModelMessages();
+        when(messageService.getMessages(LOCALE, new Tenant(TENANT_ID)))
+            .thenReturn(modelMessages);
+        mockMvc.perform(post("/messages/v1/_search")
             .param("tenantId", TENANT_ID)
             .param("locale", LOCALE))
             .andExpect(status().isOk())
@@ -56,79 +71,69 @@ public class MessageControllerTest {
 
     @Test
     public void test_should_save_new_messages() throws Exception {
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("wcms.create.connection.login")
+            .locale("kr_IN")
+            .module("wcms")
+            .tenant(new Tenant("default"))
+            .build();
         final Message message1 = Message.builder()
-          	.code("code1")
-            .message("message1")
-            .locale(LOCALE)
-            .tenant(new Tenant(TENANT_ID))
+            .messageIdentity(messageIdentity1)
+            .message("kannada message for login")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("wcms.create.connection.logout")
+            .locale("kr_IN")
+            .module("wcms")
+            .tenant(new Tenant("default"))
             .build();
         final Message message2 = Message.builder()
-            .code("code2")
-            .message("message2")
-            .locale(LOCALE)
-            .tenant(new Tenant(TENANT_ID))
+            .messageIdentity(messageIdentity2)
+            .message("kannada message for logout")
             .build();
         List<Message> expectedMessages = Arrays.asList(message1, message2);
-        mockMvc.perform(post("/messages")
-            .content(getFileContents("newMessagesRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(post("/messages/v1/_create")
+            .content(getFileContents("createMessageRequest.json"))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isCreated())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("messagesResponse.json")));
-        verify(messageService).createMessages(expectedMessages);
+
+        verify(messageService).create(anyList());
     }
 
     @Test
-    public void
-    test_should_return_bad_request_with_error_response_when_create_message_request_does_not_have_mandatory_parameters
-        () throws Exception {
-        mockMvc.perform(post("/messages")
-            .content(getFileContents("newMessagesRequestWithMissingMandatoryParameters.json"))
+    public void test_should_return_bad_request_when_mandatory_fields_are_not_present_when_creating_messages()
+        throws Exception {
+        mockMvc.perform(post("/messages/v1/_create").content(getFileContents
+            ("createNewMessageRequestMissingMandatoryFields.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(content().json(getFileContents("mandatoryFieldsMissingErrorResponse.json")));
+            .andExpect(content().json(getFileContents("createMessageRequestWithMissingMandatoryFieldsResponse.json")));
     }
-    
-    @SuppressWarnings("unchecked")
-	@Test
-	public void test_should_create_messages() throws Exception {
-		mockMvc.perform(post("/messages/_create").content(getFileContents("createNewMessageRequest.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("createNewMessageResponse.json")));
-		verify(messageService).createMessage(any(String.class), any(String.class), any(List.class));
-	}
-    
+
     @Test
-	public void test_should_give_bad_request_message_when_mandatory_fields_not_available_create_messages() throws Exception {
-		mockMvc.perform(post("/messages/_create").content(getFileContents("createNewMessageRequestMissingMandatoryFields.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("createNewMessageRequestMissingMandatoryFieldsResponse.json")));
-	}
-    
-    @SuppressWarnings("unchecked")
-	@Test
-	public void test_should_update_messages() throws Exception {
-		mockMvc.perform(post("/messages/_update").content(getFileContents("createNewMessageRequest.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("createNewMessageResponse.json")));
-		verify(messageService).createMessage(any(String.class), any(String.class), any(List.class));
-	}
-    
+    public void test_should_update_messages() throws Exception {
+        mockMvc.perform(post("/messages/v1/_update")
+            .content(getFileContents("updateMessageRequest.json"))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("createNewMessageResponse.json")));
+        verify(messageService).update(anyListOf(Message.class));
+    }
+
     @Test
-	public void test_should_give_bad_request_message_when_mandatory_fields_not_available_update_messages() throws Exception {
-		mockMvc.perform(post("/messages/_update").content(getFileContents("createNewMessageRequestMissingMandatoryFields.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("createNewMessageRequestMissingMandatoryFieldsResponse.json")));
-	}
-    
+    public void test_should_give_bad_request_message_when_mandatory_fields_not_available_update_messages()
+        throws Exception {
+        mockMvc.perform(post("/messages/v1/_update")
+            .content(getFileContents("updateMessageRequestWithMissingMandatoryFields.json"))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("updateMessageRequestWithMissingMandatoryFieldsResponse.json")));
+    }
 
     private String getFileContents(String fileName) {
         try {
@@ -140,17 +145,25 @@ public class MessageControllerTest {
     }
 
     private List<Message> getModelMessages() {
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("wcms.create.connection.login")
+            .locale("kn_IN")
+            .module("wcms")
+            .tenant(new Tenant(TENANT_ID))
+            .build();
         final Message message1 = Message.builder()
-            .code("code1")
-            .message("message1")
-            .tenant(new Tenant("tenant123"))
-            .locale(LOCALE)
+            .messageIdentity(messageIdentity1)
+            .message("kannada message for login")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("wcms.create.connection.logout")
+            .locale("kn_IN")
+            .module("wcms")
+            .tenant(new Tenant(TENANT_ID))
             .build();
         final Message message2 = Message.builder()
-            .code("code2")
-            .message("message2")
-            .tenant(new Tenant("tenant123"))
-            .locale(LOCALE)
+            .messageIdentity(messageIdentity2)
+            .message("kannada message for logout")
             .build();
         return Arrays.asList(message1, message2);
     }

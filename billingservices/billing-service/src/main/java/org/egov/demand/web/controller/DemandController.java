@@ -34,10 +34,12 @@ public class DemandController {
 	@Autowired
 	private ResponseFactory responseFactory;
 
+	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
+
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
-
+		//TODO: try to give debug loggers instead info, this applied across the code base.
 		log.info("the demand request object : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {

@@ -54,6 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.util.FileUtils;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -82,6 +83,9 @@ public class PropertyTypeUsageTypeControllerTest {
 
     @MockBean
     private ErrorHandler errHandler;
+    
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
     @MockBean
     private ResponseInfoFactory responseInfoFactory;

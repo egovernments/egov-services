@@ -90,10 +90,10 @@ public class WaterConnectionRepository {
                 statement.setString(1, waterConnectionRequest.getConnection().getTenantId());
                 statement.setString(2, waterConnectionRequest.getConnection().getConnectionType());
                 statement.setString(3, waterConnectionRequest.getConnection().getBillingType());
-                statement.setString(4,  waterConnectionRequest.getConnection().getCategoryType());
-                statement.setString(5, waterConnectionRequest.getConnection().getHscPipeSizeType());
-                statement.setString(6, waterConnectionRequest.getConnection().getSupplyType());
-                statement.setString(7,  waterConnectionRequest.getConnection().getSourceType());
+                statement.setString(4,  waterConnectionRequest.getConnection().getCategoryId());
+                statement.setString(5, waterConnectionRequest.getConnection().getPipesizeId());
+                statement.setString(6, waterConnectionRequest.getConnection().getSupplyTypeId());
+                statement.setString(7,  waterConnectionRequest.getConnection().getSourceTypeId());
                 statement.setString(8, waterConnectionRequest.getConnection().getConnectionStatus());
                 statement.setDouble(9, waterConnectionRequest.getConnection().getSumpCapacity());
                 statement.setInt(10, waterConnectionRequest.getConnection().getNumberOfTaps());

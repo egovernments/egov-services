@@ -45,19 +45,18 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.service.PropertyUsageTypeService;
-import org.egov.wcms.util.WcmsConstants;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypesRes;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -66,7 +65,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,17 +91,20 @@ public class PropertyTypeUsageTypeController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    @Autowired
+    private ValidatorUtils validatorUtils;
+
     @PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final PropertyTypeUsageTypeReq propUsageTypeRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Property Usage Type Request::" + propUsageTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateUsageTypeRequest(propUsageTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -111,7 +112,7 @@ public class PropertyTypeUsageTypeController {
                 applicationProperties.getCreatePropertyUsageTopicName(), "propertyusage-create", propUsageTypeRequest);
         final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
         propUsageTypes.add(propUsageType);
-        return getSuccessResponse(propUsageTypes, propUsageTypeRequest.getRequestInfo());
+        return getSuccessResponse(propUsageTypes, "created", propUsageTypeRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/{propertyUsageId}/_update")
@@ -120,13 +121,13 @@ public class PropertyTypeUsageTypeController {
             final BindingResult errors,
             @PathVariable("propertyUsageId") final Long propertyUsageId) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Property Usage Type Request::" + propUsageTypeRequest);
         propUsageTypeRequest.getPropertyTypeUsageType().setId(propertyUsageId);
 
-        final List<ErrorResponse> errorResponses = validateUsageTypeRequest(propUsageTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -134,7 +135,7 @@ public class PropertyTypeUsageTypeController {
                 applicationProperties.getUpdatePropertyUsageTopicName(), "propertyusage-update", propUsageTypeRequest);
         final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
         propUsageTypes.add(propUsageType);
-        return getSuccessResponse(propUsageTypes, propUsageTypeRequest.getRequestInfo());
+        return getSuccessResponse(propUsageTypes, null, propUsageTypeRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/_search")
@@ -161,99 +162,19 @@ public class PropertyTypeUsageTypeController {
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponse(propUsageTypes, requestInfo);
+        return getSuccessResponse(propUsageTypes, null, requestInfo);
 
-    }
-
-    private ErrorResponse populateErrors(final BindingResult errors) {
-        final ErrorResponse errRes = new ErrorResponse();
-
-        final Error error = new Error();
-        error.setCode(1);
-        error.setDescription("Error while binding request");
-        if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-        errRes.setError(error);
-        return errRes;
-    }
-
-    private List<ErrorResponse> validateUsageTypeRequest(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(propUsageTypeRequest);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-
-        return errorResponses;
-    }
-
-    private Error getError(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        final PropertyTypeUsageType propUsageType = propUsageTypeRequest.getPropertyTypeUsageType();
-        final List<ErrorField> errorFields = new ArrayList<>();
-        validatePropertyTypeValue(errorFields, propUsageType);
-        validateUsageTypeValue(errorFields, propUsageType);
-        validateTenantValue(errorFields, propUsageType);
-        if (errorFields.size() <= 0 && !(propUsageType.getTenantId() == null || propUsageType.getTenantId().isEmpty()))
-            if (propUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest)) {
-                final ErrorField errorField = ErrorField.builder()
-                        .code(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNIQUE_CODE)
-                        .message(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNQ_ERROR_MESSAGE)
-                        .field(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNQ_FIELD_NAME)
-                        .build();
-                errorFields.add(errorField);
-            }
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_PROPERTYUSAGETYPE_REQUEST_MESSAGE)
-                .errorFields(errorFields)
-                .build();
-    }
-
-    private List<ErrorField> validatePropertyTypeValue(final List<ErrorField> errorFields,
-            final PropertyTypeUsageType propUsageType) {
-        if (propUsageType.getPropertyType() == null || propUsageType.getPropertyType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTYTYPE_MANDATORY_CODE)
-                    .message(WcmsConstants.PROPERTYTYPE_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTYTYPE_MANDATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        }
-        return errorFields;
-    }
-
-    private List<ErrorField> validateUsageTypeValue(final List<ErrorField> errorFields,
-            final PropertyTypeUsageType propUsageType) {
-        if (propUsageType.getUsageType() == null || propUsageType.getUsageType().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        }
-        return errorFields;
-    }
-
-    private List<ErrorField> validateTenantValue(final List<ErrorField> errorFields, final PropertyTypeUsageType propUsageType) {
-        if (propUsageType.getTenantId() == null || propUsageType.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.TENANTID_MANDATORY_CODE)
-                    .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        }
-        return errorFields;
     }
 
     private ResponseEntity<?> getSuccessResponse(final List<PropertyTypeUsageType> propertyUsageTypes,
-            final RequestInfo requestInfo) {
+            final String mode, final RequestInfo requestInfo) {
         final PropertyTypeUsageTypesRes propUsageTypeResponse = new PropertyTypeUsageTypesRes();
         propUsageTypeResponse.setPropertyTypeUsageTypes(propertyUsageTypes);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+        if (StringUtils.isNotBlank(mode))
+            responseInfo.setStatus(HttpStatus.CREATED.toString());
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
         propUsageTypeResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<>(propUsageTypeResponse, HttpStatus.OK);
 

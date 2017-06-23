@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.TaxHeadMaster;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,5 +31,22 @@ public class DemandEnrichmentUtil {
 			}
 		}
 	return rsDemands;
+	}
+
+	public void enrichTaxHeadMAsters(List<DemandDetail> demandDetails, List<TaxHeadMaster> taxHeadMAsters) {
+
+		System.err.println("taxheadmaster list : "+taxHeadMAsters);
+		System.err.println("demanddetails list : "+demandDetails);
+
+		Map<String,TaxHeadMaster> map = new HashMap<>();
+		for (TaxHeadMaster taxHeadMaster : taxHeadMAsters) {
+			map.put(taxHeadMaster.getCode(), taxHeadMaster);
+		}
+		
+		for (DemandDetail demandDetail : demandDetails) {
+			String code = demandDetail.getTaxHeadMaster().getCode();
+			if(map.containsKey(code))
+				demandDetail.setTaxHeadMaster(map.get(code));
+		}
 	}
 }

@@ -91,6 +91,7 @@ class routerGeneration extends Component {
     	boundaryTypeList: [],
     	boundariesList: [],
     	positionSource: [],
+      boundaryInitialList: [],
     	positionSourceConfig: {
           text: 'name',
           value: 'id',
@@ -170,7 +171,7 @@ class routerGeneration extends Component {
   }
 
   componentDidMount() {
-  	var self = this, count = 3, _state = {};
+  	var self = this, count = 4, _state = {};
   	self.props.initForm();
   	const checkCountAndCall = function(key, res) {
   		_state[key] = res;
@@ -197,16 +198,22 @@ class routerGeneration extends Component {
     }, function(err) {
         checkCountAndCall("positionSource", []);
     });
+
+    Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+       checkCountAndCall("boundaryInitialList", response.Boundary);
+    },function(err) {
+       checkCountAndCall("boundaryInitialList", []);
+    });
   }
 
   search(e) {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
-  	Api.commonApiPost("/pgr/router/_search", searchSet).then(function(response) {
+  	Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
-  			resultList: response.data,
+  			resultList: response.RouterTypes,
   			isSearchClicked: true
   		})
   	}, function(err) {
@@ -259,9 +266,8 @@ class routerGeneration extends Component {
 		  }, function(err) {
 
 		  })
-	 });
-  	}
-
+	   });
+    }
   }
 
   render() {
@@ -290,7 +296,8 @@ class routerGeneration extends Component {
    	isSearchClicked,
    	open,
    	open2,
-    positionSource
+    positionSource,
+    boundaryInitialList
    } = this.state;
 
    const showSaveButton = function() {
@@ -310,9 +317,9 @@ class routerGeneration extends Component {
    			return (
    				<tr key={i}>
    					<td>{i+1}</td>
-   					<td>{val.serviceName}</td>
-   					<td>{val.boundaryType}</td>
-   					<td>{val.boundary}</td>
+   					<td>{val.grievancetype.serviceName}</td>
+   					<td>{getNameById(boundaryTypeList, val.boundaryType)}</td>
+   					<td>{getNameById(boundaryInitialList, val.boundary)}</td>
    					<td>{getNameById(positionSource, val.position)}</td>
    				</tr>
    			)

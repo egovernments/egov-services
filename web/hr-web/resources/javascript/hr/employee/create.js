@@ -1654,7 +1654,7 @@ function printValue(object = "", values) {
                 if (key == "documents") return;
                 if (typeof values[key] === "object" && key == "user") {
                     for (ckey in values[key]) {
-                        if (values[key][ckey]) {
+                        if (typeof values[key][ckey] != "undefined" || values[key][ckey]) {
                             if (["signature", "photo"].indexOf(ckey) > -1) continue;
                             //Get description
                             if (ckey == "dob") {

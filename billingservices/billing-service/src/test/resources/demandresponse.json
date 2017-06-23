@@ -20,20 +20,25 @@
             },
             "taxPeriodFrom": 12345,
             "taxPeriodTo": 1234567890,
-            "type": "DUES",
 
             "demandDetails": [
                 {
                     "id": null,
                     "demandId": null,
-                    "taxHeadCode": "0002",
+                    "taxHeadMaster": {
+                    "code" : "0002",
+                    "isDebit" : false
+                    },
                     "taxAmount": 100,
                     "collectionAmount": 0
                },
                 {
                     "id": null,
                     "demandId": null,
-                    "taxHeadCode": "0003",
+                   "taxHeadMaster": {
+                    "code" : "0003",
+                    "isDebit" : false
+                    },
                     "taxAmount": 200,
                     "collectionAmount": 0
                 }

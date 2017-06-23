@@ -14,6 +14,7 @@ import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.enums.Type;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.util.SequenceGenService;
@@ -102,7 +103,6 @@ public class DemandServiceTest {
 		demand.setMinimumAmountPayable(BigDecimal.valueOf(200d));
 		demand.setTaxPeriodFrom(12345l);
 		demand.setTaxPeriodTo(1234567890l);
-		demand.setType(Type.DUES);
 		demand.setTenantId("ap.kurnool");
 		demand.setDemandDetails(getDemandDetails());
 		return demand;
@@ -115,11 +115,15 @@ public class DemandServiceTest {
 		
 		demandDetail.setTaxAmount(BigDecimal.valueOf(100d));
 		demandDetail.setCollectionAmount(BigDecimal.ZERO);
-		demandDetail.setTaxHeadCode("0002");
+		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
+		taxHeadMaster.setCode("0002");
+		demandDetail.setTaxHeadMaster(taxHeadMaster);
 		DemandDetail demandDetail1 = new DemandDetail();
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200d));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
-		demandDetail1.setTaxHeadCode("0003");
+		TaxHeadMaster taxHeadMaster1 = new TaxHeadMaster();
+		taxHeadMaster1.setCode("0003");
+		demandDetail1.setTaxHeadMaster(taxHeadMaster1);
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;

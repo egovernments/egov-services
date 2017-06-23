@@ -40,11 +40,7 @@ public class OwnerRepository {
 		UserResponse userResponse = null;
 		try {
 			userResponse = restTemplate.postForObject(url, userSearchRequest, UserResponse.class);
-		/*} catch (HttpClientErrorException e) {
-
-			log.error("Following exception occurred: " + e.getResponseBodyAsString());
-			throw e;
-		}*/} catch (HttpClientErrorException e) {
+		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
 			log.error("Following exception occurred: " + e.getResponseBodyAsString());
 			ErrorResponse userErrorResponse = null;
@@ -69,7 +65,7 @@ public class OwnerRepository {
 			log.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			throw new RuntimeException(e);
 		}
-		
+		System.err.println(userResponse);
 		List<Owner> owners = new ArrayList<>();
 		if (userResponse != null && !userResponse.getUser().isEmpty())
 			for (User userRequest : userResponse.getUser())

@@ -27,7 +27,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/billingService/v1'
+basePath: '/billingservice/v1'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
@@ -72,6 +72,16 @@ paths:
           description: isActualDemand value of the tax head for which 'TaxHeadMaster' to be returned.
           required: false
           type: boolean
+        - name: validFrom
+          in: query
+          description: period from date
+          required: false
+          type: integer
+        - name: validTo
+          in: query
+          description: period to.
+          required: false
+          type: integer
       tags:
         - Master
       responses:
@@ -357,7 +367,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /_search:
+  /demand/_search:
   ######################################################
   # Will be synchronous.
   # tenantId should be passed in query param.
@@ -432,7 +442,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /_create:
+  /demand/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -462,7 +472,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /_update:
+  /demand/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -840,6 +850,10 @@ definitions:
         description: Tax Head code.
         maxLength: 64
         minLength: 2
+      oder:
+        type: integer
+        format: int64
+        description: Order of the tax heads in which the collection has to be done.
       glCode:
         type: string
         minLength: 1

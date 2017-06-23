@@ -16,7 +16,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
-
+import Snackbar from 'material-ui/Snackbar';
 import {Redirect} from 'react-router-dom'
 import Api from '../../api/commonAPIS';
 var axios = require('axios');
@@ -95,7 +95,8 @@ class Login extends Component {
            pwdErrorMsg: "",
            newPwd: "",
            pwd: "",
-           uuid: ""
+           uuid: "",
+           open2: false
        }
        this.loginRequest = this.loginRequest.bind(this);
        this.showPasswordModal = this.showPasswordModal.bind(this);
@@ -218,7 +219,7 @@ class Login extends Component {
     } else {
       var rqst = {
           "identity": self.state.mobNo,
-          "tenantId": localStorage.getItem("tenantId")
+          "tenantId": localStorage.getItem("tenantId") || "default"
       }
 
       Api.commonApiPost("otp/v1/_create", {}, {otp: rqst}).then(function(response) {
@@ -244,7 +245,7 @@ class Login extends Component {
    validateOTP() {
       var self = this;
       if(!self.state.otp) {
-        return self.state({
+        return self.setState({
           otpErrorMsg: "OTP is required."
         })
       } else {
@@ -254,17 +255,17 @@ class Login extends Component {
       }
 
       var rqst = {
-        tenantId: localStorage.getItem("tenantId"),
+        tenantId: localStorage.getItem("tenantId") || "default",
         otp: self.state.otp,
         identity: self.state.mobNo
       };
       Api.commonApiPost("otp/v1/_validate", {}, {otp: rqst}).then(function(response) {
           self.setState({
             hideOtp: true,
-            uuid: response.otp.uuid
+            uuid: response.otp.UUID
           })
       }, function(err) {
-          
+
       });
    }
 
@@ -288,15 +289,17 @@ class Login extends Component {
         var rqst = {
           userName: self.state.mobNo,
           newPassword: self.state.newPwd,
-          tenantId: localStorage.getItem("tenantId"),
+          tenantId: localStorage.getItem("tenantId") || "default",
           otpReference: self.state.uuid
         };
-        Api.commonApiPost("/user/password/nologin/_update", {}, {...rqst}).then(function(response) {
+
+        Api.commonApiPost("user/password/nologin/_update", {}, {...rqst}, true).then(function(response) {
           self.setState({
             open1: false,
             mobNo: "",
             pwd: "",
-            newPwd: ""
+            newPwd: "",
+            open2: true
           });
         }, function(err) {
             
@@ -333,6 +336,7 @@ class Login extends Component {
         otp,
         otpErrorMsg,
         open1,
+        open2,
         hideOtp,
         pwdErrorMsg,
         pwd,
@@ -559,6 +563,11 @@ class Login extends Component {
               {showForOTP()}
               {showForPwd()}
             </Dialog>
+            <Snackbar
+              open={this.state.open2}
+              message="Password changed successfully."
+              autoHideDuration={4000}
+            />
           </div>
         )
       // }

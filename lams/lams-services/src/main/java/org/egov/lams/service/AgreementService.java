@@ -397,4 +397,10 @@ public class AgreementService {
 			}
 		}
 	}
+
+	public void updateAdvanceFlag(Agreement agreement) {
+		if (agreement.getAcknowledgementNumber() != null)
+			agreementRepository.updateAgreementAdvance(agreement.getAcknowledgementNumber());
+
+	}
 }

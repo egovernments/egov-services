@@ -44,6 +44,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.egov.lams.model.enums.Action;
 
 @Service
 public class PaymentService {
@@ -282,6 +283,7 @@ public class PaymentService {
 
 		// / FIXME put update workflow here here
 		updateWorkflow(billInfo.getConsumerCode(), requestInfo);
+		isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
 		LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
 		return receiptAmountBifurcation(billReceiptInfo, billInfo);
 	}
@@ -423,5 +425,34 @@ public class PaymentService {
 		}
 		LOGGER.info("the response from boundary ::"+boundaryResponse);
 		return boundaryResponse;
+	}
+	
+	private void isAdvanceCollection(String acknowledgementno, Demand demand) {
+		boolean isAdvancePaid = false;
+		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
+				+ acknowledgementno + "'";
+		List<Agreement> agreements = null;
+		Agreement agreement;
+		try {
+			agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
+		} catch (DataAccessException e) {
+			LOGGER.info("exception while fetching agreemment to update advance" + e);
+		}
+		LOGGER.info("the result form jdbc query ::: " + agreements);
+		if (agreements != null && !agreements.isEmpty()) {
+			agreement = agreements.get(0);
+
+			for (DemandDetails demandDetail : demand.getDemandDetails()) {
+				LOGGER.info("the reason for demanddetail : " + demandDetail.getTaxReason());
+				if ("ADVANCE TAX".equalsIgnoreCase(demandDetail.getTaxReason())) {
+					isAdvancePaid = true;
+				}
+
+			}
+			if (isAdvancePaid && agreement.getAction().equals(Action.CREATE)) {
+				agreementService.updateAdvanceFlag(agreement);
+			}
+		}
+
 	}
 }

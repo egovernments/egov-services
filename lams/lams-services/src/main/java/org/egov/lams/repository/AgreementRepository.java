@@ -431,4 +431,16 @@ public class AgreementRepository {
 			throw new RuntimeException(ex.getMessage());
 		}
 	}
+	
+	public void updateAgreementAdvance(String acknowledgementNumber) {
+		String sql = "UPDATE eglams_agreement set is_advancepaid = true where acknowledgementnumber = '"
+				+ acknowledgementNumber + "'";
+		logger.info("advance paid update query :" , sql);
+		try {
+
+			jdbcTemplate.update(sql);
+		} catch (DataAccessException ex) {
+			logger.info("exception while updating is_advancepaid flag" + ex);
+		}
+	}
 }

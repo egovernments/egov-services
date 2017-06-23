@@ -119,6 +119,7 @@ public class ReceiptController {
 		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
 	}
 
+
 	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(
@@ -129,7 +130,10 @@ public class ReceiptController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		
-		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest.getReceipt());
+		/*receiptRequest.getReceipt().getAuditDetails().setCreatedBy(receiptRequest.getRequestInfo().getUserInfo().getName());
+		receiptRequest.getReceipt().getAuditDetails().setLastModifiedBy(receiptRequest.getRequestInfo().getUserInfo().getName()); */
+		
+		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
 		
 		if(null == receiptInfo){
 			Error error = new Error();

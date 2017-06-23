@@ -40,6 +40,8 @@
 
 package org.egov.collection.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -52,15 +54,15 @@ import lombok.ToString;
 public class AuditDetails {
 	
 	  @JsonProperty("createdBy")
-	  private String createdBy = null;
+	  private Long createdBy = null;
 	  
 	  @JsonProperty("createdDate")
-	  private Long createdDate = null;
+	  private Date createdDate = null;
 	  
 	  @JsonProperty("lastModifiedBy")
-	  private String lastModifiedBy = null;
+	  private Long lastModifiedBy = null;
 	  
 	  @JsonProperty("lastModifiedDate")
-	  private Long lastModifiedDate = null;
+	  private Date lastModifiedDate = null;
 
 }

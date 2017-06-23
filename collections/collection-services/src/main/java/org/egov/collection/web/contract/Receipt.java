@@ -1,5 +1,7 @@
 package org.egov.collection.web.contract;
 
+import org.egov.collection.model.AuditDetails;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -26,6 +28,8 @@ public class Receipt   {
   
   @JsonProperty("BankAccount")
   private BankAccount bankAccount;  
+  
+  private AuditDetails auditDetails;
 
   }
 

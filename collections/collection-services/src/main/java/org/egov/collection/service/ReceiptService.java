@@ -46,6 +46,7 @@ import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +67,9 @@ public class ReceiptService {
 		return receiptRepository.find(receiptSearchCriteria);
 	}
 	
-	public Receipt pushToQueue(Receipt receiptInfo){
+	public Receipt pushToQueue(ReceiptReq receiptReq){
 		logger.info("Pushing recieptdetail to kafka queue");
-		return receiptRepository.pushToQueue(receiptInfo);
+		return receiptRepository.pushToQueue(receiptReq);
 	}
 	
 	public Receipt create(Receipt receiptInfo){

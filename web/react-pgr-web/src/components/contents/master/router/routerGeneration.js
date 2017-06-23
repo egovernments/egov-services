@@ -191,13 +191,13 @@ class routerGeneration extends Component {
       	checkCountAndCall("boundaryTypeList", response.BoundaryType);
     }, function(err) {
     	checkCountAndCall("boundaryTypeList", []);
-    });   
+    });
 
     Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
         checkCountAndCall("positionSource", response.Position);
     }, function(err) {
         checkCountAndCall("positionSource", []);
-    }); 
+    });
 
     Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
        checkCountAndCall("boundaryInitialList", response.Boundary);
@@ -210,7 +210,7 @@ class routerGeneration extends Component {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
-  	Api.commonApiPost("/pgr/router/_search", searchSet).then(function(response) {
+  	Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
   			resultList: response.RouterTypes,
@@ -299,7 +299,7 @@ class routerGeneration extends Component {
     positionSource,
     boundaryInitialList
    } = this.state;
-   
+
    const showSaveButton = function() {
    		if(resultList && resultList.length) {
    			return (
@@ -472,10 +472,10 @@ class routerGeneration extends Component {
 
 
 
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
 	return ({routerCreateSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
-const mapDispatchToProps = dispatch => ({ 
+const mapDispatchToProps = dispatch => ({
 	initForm: (type) => {
         dispatch({
 	      type: "RESET_STATE",

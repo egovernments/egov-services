@@ -31,7 +31,7 @@ const Main = () => (
       <Route exact path='/receivingCenter/view' component={ViewEditReceivingCenter}/>
       <Route exact path='/receivingCenter/edit' component={ViewEditReceivingCenter}/>
       <Route exact path='/viewReceivingCenter/:id' component={ViewReceivingCenter}/>
-      <Route exact path='/createRouter' component={createRouter}/>
+      <Route exact path='/createRouter/:type/:id' component={createRouter}/>
       <Route exact path='/routerGeneration' component={routerGeneration}/>
       <Route exact path='/searchRouter/:type' component={searchRouter}/>
       <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>

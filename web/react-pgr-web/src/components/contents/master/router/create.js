@@ -67,6 +67,8 @@ class createRouter extends Component {
 
   componentDidMount() {
   	var self = this;
+    var type = this.props.match.params.type;
+    console.log(type);
   	this.props.initForm();
   	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
       	self.setState({
@@ -97,6 +99,18 @@ class createRouter extends Component {
           complaintSource: []
         })
     });
+
+    if(type==="edit" || type==="view") {
+      
+      var id=this.props.match.params.id;
+      Api.commonApiPost("/workflow/router/_search",{id}).then(function(response) {
+        self.setState({
+          routerCreateSet: response.RouterTypes,
+        })
+      }, function(err) {
+
+      })
+    }
   }
 
   loadBoundaries(value) {
@@ -286,10 +300,10 @@ class createRouter extends Component {
   }
 }
 
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
 	return ({routerCreateSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
-const mapDispatchToProps = dispatch => ({ 
+const mapDispatchToProps = dispatch => ({
 	initForm: (type) => {
         dispatch({
 	      type: "RESET_STATE",

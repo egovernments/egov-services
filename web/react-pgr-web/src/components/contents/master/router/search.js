@@ -138,7 +138,7 @@ class searchRouter extends Component {
         self.setState({
           boundaryTypeList: []
         })
-    }); 
+    });
 
     Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
         self.setState({
@@ -148,7 +148,7 @@ class searchRouter extends Component {
         self.setState({
           boundaryInitialList: []
         })
-    }); 
+    });
 
     Api.commonApiPost("/pgr/services/_search", {type:'all'}).then(function(response) {
        self.setState({
@@ -174,7 +174,7 @@ class searchRouter extends Component {
     e.preventDefault();
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
-    Api.commonApiPost("/pgr/router/_search", searchSet).then(function(response) {
+    Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.RouterTypes,
@@ -323,10 +323,10 @@ class searchRouter extends Component {
   }
 }
 
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
   return ({routerSearchSet: state.form.form});
 };
-const mapDispatchToProps = dispatch => ({ 
+const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
         dispatch({
         type: "RESET_STATE",

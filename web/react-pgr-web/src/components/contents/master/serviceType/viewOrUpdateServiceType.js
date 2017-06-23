@@ -84,7 +84,7 @@ class viewOrUpdateServiceType extends Component {
     render() {
 
       let {
-        receivingCenterCreate,
+        serviceTypeCreate,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -100,9 +100,9 @@ class viewOrUpdateServiceType extends Component {
       let url = this.props.location.pathname;
 
       return(
-        <div className="receivingModeCreate">
+        <div className="serviceTypeCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Mode</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Type</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>
@@ -151,7 +151,7 @@ class viewOrUpdateServiceType extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({receivingCenterCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({serviceTypeCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({

@@ -189,7 +189,8 @@ class createRouter extends Component {
                         dataSourceConfig={this.state.allSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         disabled={readonly}
-                        errorText={fieldErrors.complaintType || ""} value={routerCreateSet.complaintType}
+                        errorText={fieldErrors.complaintType || ""}
+                        value={routerCreateSet.complaintType}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
                         onNewRequest={(chosenRequest, index) => {
 	                        var e = {
@@ -286,10 +287,10 @@ class createRouter extends Component {
   }
 }
 
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
 	return ({routerCreateSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
-const mapDispatchToProps = dispatch => ({ 
+const mapDispatchToProps = dispatch => ({
 	initForm: (type) => {
         dispatch({
 	      type: "RESET_STATE",

@@ -190,13 +190,13 @@ class routerGeneration extends Component {
       	checkCountAndCall("boundaryTypeList", response.BoundaryType);
     }, function(err) {
     	checkCountAndCall("boundaryTypeList", []);
-    });   
+    });
 
     Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
         checkCountAndCall("positionSource", response.Position);
     }, function(err) {
         checkCountAndCall("positionSource", []);
-    }); 
+    });
   }
 
   search(e) {
@@ -465,10 +465,10 @@ class routerGeneration extends Component {
 
 
 
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
 	return ({routerCreateSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
-const mapDispatchToProps = dispatch => ({ 
+const mapDispatchToProps = dispatch => ({
 	initForm: (type) => {
         dispatch({
 	      type: "RESET_STATE",

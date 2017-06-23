@@ -137,11 +137,11 @@ class grievanceSearch extends Component {
 		      			pageCount: Math.ceil(response.count / 10)
 		      		});
 			    }, function(err) {
-			    	
+
 			    });
   			}
   		}, function(err) {
-	    	
+
 	    });
   	}
   }
@@ -210,20 +210,20 @@ class grievanceSearch extends Component {
   render() {
   	let {search, resetAndSearch, handlePageClick} = this;
   	let {
-  		complaintTypeList, 
-  		statusList, 
-  		receiveingModeList, 
-  		locationList, 
-  		departmentList, 
-  		boundaryList, 
-  		isSearchClicked, 
-  		resultList, 
+  		complaintTypeList,
+  		statusList,
+  		receiveingModeList,
+  		locationList,
+  		departmentList,
+  		boundaryList,
+  		isSearchClicked,
+  		resultList,
   		pageCount
   	} = this.state;
   	let {
 		handleChange,
-		buttonText, 
-		grievanceSearchSet, 
+		buttonText,
+		grievanceSearchSet,
 		changeButtonText,
 		isFormValid,
 		fieldErrors
@@ -319,11 +319,21 @@ class grievanceSearch extends Component {
                 		</SelectField>
         			</Col>
         			<Col xs={12} md={3}>
-	                	<SelectField maxHeight={200} fullWidth={true} floatingLabelText="Status" value={grievanceSearchSet.status} onChange={(e, i, val) => {
+	                	<SelectField
+                        multiple={true}
+                        fullWidth={true}
+                        floatingLabelText="Status"
+                        value={grievanceSearchSet.status}
+                        onChange={(e, i, val) => {
 	                		var e = {target: {value: val}};
-	                		handleChange(e, "status", false, "")}} multiple>
+	                		handleChange(e, "status", false, "")}} >
                     		{statusList.map((stat, index) => (
-                                <MenuItem value={stat.code} key={index} primaryText={stat.name} />
+                                <MenuItem
+                                    value={stat.code}
+                                    insetChildren={true}
+                                    key={index} primaryText={stat.name}
+                                    checked={grievanceSearchSet.status && grievanceSearchSet.status.indexOf(stat.code) > -1}
+                                />
                             ))}
                     	</SelectField>
                 	</Col>
@@ -393,7 +403,7 @@ class grievanceSearch extends Component {
               </div>
 	        </form>
 	        {displayTableCard()}
-	        
+
 	        <Dialog
 	          title="Atleast one search criteria is required"
 	          open={this.state.open}

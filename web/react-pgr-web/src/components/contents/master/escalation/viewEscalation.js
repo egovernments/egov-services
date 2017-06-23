@@ -4,10 +4,6 @@ import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'r
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
-import DatePicker from 'material-ui/DatePicker';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -62,30 +58,18 @@ const styles = {
   }
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
-class BulkEscalationGeneration extends Component {
+class ViewEscalation extends Component {
     constructor(props) {
       super(props)
       this.state = {
-              fromPositionSource: [],
-              toPositionSource: [],
+              positionSource:[],
+              grievanceTypeSource:[],
               dataSourceConfig : {
                 text: 'textKey',
                 value: 'valueKey',
               },
-              values: [],
+              isSearchClicked: false,
+              resultList: [],
             };
     }
 
@@ -94,15 +78,15 @@ class BulkEscalationGeneration extends Component {
       initForm()
 
       this.setState({
-        fromPositionSource: [
+        grievanceTypeSource:[
           {textKey: 'From Position Source', valueKey: 'someFirstValue'},
           {textKey: 'From Position Source', valueKey: 'someSecondValue'},
         ],
-        toPositionSource: [
-          {textKey: 'To Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'To Position Source', valueKey: 'someSecondValue'},
+        positionSource: [
+          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
+          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
         ]
-      })
+      });
 
       $('#searchTable').DataTable({
            dom: 'lBfrtip',
@@ -125,23 +109,12 @@ class BulkEscalationGeneration extends Component {
       }
     }
 
+
     componentWillUnmount(){
        $('#searchTable')
        .DataTable()
        .destroy(true);
     }
-
-    menuItems = (values) => {
-    return names.map((name) => (
-      <MenuItem
-        key={name}
-        insetChildren={true}
-        checked={values && values.indexOf(name) > -1}
-        value={name}
-        primaryText={name}
-      />
-    ));
-  }
 
   submitForm = (e) => {
       e.preventDefault()
@@ -154,11 +127,9 @@ class BulkEscalationGeneration extends Component {
 
     render() {
 
-     const {values} = this.state;
-
       let {
         isFormValid,
-        bulkEscalationGeneration,
+        viewEscalation,
         fieldErrors,
         handleChange,
         handleAutoCompleteKeyUp
@@ -204,75 +175,55 @@ class BulkEscalationGeneration extends Component {
    		)
       }
 
-
-      return(<div className="bulkEscalationGeneration">
+      return(<div className="viewEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Bulk Escalation Generation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Escalation < /div>} />
               <CardText>
                   <Card>
                       <CardText>
                           <Grid>
                               <Row>
-                                  <Col xs={12} md={4}>
+                                  <Col xs={12} md={6}>
                                         <AutoComplete
-                                          floatingLabelText="From Position"
+                                          hintText="Grievance Type"
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.fromPositionSource}
+                                          dataSource={this.state.grievanceTypeSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "fromPosition")}}
-                                          value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ""}
+                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "grievanceType")}}
+                                          value={viewEscalation.grievanceType ? viewEscalation.grievanceType : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
                   	                            value: chosenRequest
                   	                          }
                   	                        };
-                  	                        handleChange(e, "fromPosition", true, "");
+                  	                        handleChange(e, "grievanceType", true, "");
                   	                       }}
                                         />
                                   </Col>
-                                  <Col xs={12} md={4}>
-                                        <SelectField
-                                           multiple={true}
-                                           floatingLabelText="Grievance Type"
-                                           fullWidth={true}
-                                           value={bulkEscalationGeneration.grievanceType ? bulkEscalationGeneration.grievanceType : ""}
-                                           onChange= {(e, index ,values) => {
-                                             var e = {
-                                               target: {
-                                                 value: values
-                                               }
-                                             };
-                                             this.setState({values})
-                                             handleChange(e, "grievanceType", true, "");
-                                            }}
-                                         >
-                                            {this.menuItems(values)}
-                                         </SelectField>
-                                  </Col>
-                                  <Col xs={12} md={4}>
-                                      <AutoComplete
-                                          floatingLabelText="To Position"
+                                  <Col xs={12} md={6}>
+                                        <AutoComplete
+                                          hintText="Position"
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.toPositionSource}
+                                          dataSource={this.state.positionSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "toPosition")}}
-                                          value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ""}
+                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
+                                          value={viewEscalation.position ? viewEscalation.position : ""}
                                           onNewRequest={(chosenRequest, index) => {
-                                            var e = {
-                                              target: {
-                                                value: chosenRequest
-                                              }
-                                            };
-                                            handleChange(e, "toPosition", true, "");
-                                           }}
+                  	                        var e = {
+                  	                          target: {
+                  	                            value: chosenRequest
+                  	                          }
+                  	                        };
+                  	                        handleChange(e, "position", true, "");
+                  	                       }}
                                         />
                                   </Col>
                               </Row>
@@ -293,7 +244,7 @@ class BulkEscalationGeneration extends Component {
 
 
 const mapStateToProps = state => {
-  return ({bulkEscalationGeneration : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({viewEscalation : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -303,26 +254,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["fromPosition","grievanceType" ,"toPosition"]
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
-
-  setForm: (data) => {
-    dispatch({
-      type: "SET_FORM",
-      data,
-      isFormValid:true,
-      fieldErrors: {},
-      validationData: {
-        required: {
-          current: [],
-          required: []
+          required: ["position", "grievanceType"]
         },
         pattern: {
           current: [],
@@ -354,4 +286,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(BulkEscalationGeneration);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEscalation);

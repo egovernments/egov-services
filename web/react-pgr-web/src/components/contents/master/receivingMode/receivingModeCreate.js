@@ -151,7 +151,7 @@ class receivingModeCreate extends Component {
                      <TextField fullWidth={true} floatingLabelText="Name" id="name" errorText={fieldErrors.name} value={receivingmodeSet.name} onChange={(e) => {handleChange(e, "name", true, "")}}/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Code" id="code" errorText={fieldErrors.code} value={receivingmodeSet.code} onChange={(e) => {handleChange(e, "code", true, "")}} disabled={_this.state.id}/>
+                     <TextField fullWidth={true} floatingLabelText="Code" id="code" errorText={fieldErrors.code} value={receivingmodeSet.code} onChange={(e) => {handleChange(e, "code", true, "")}} disabled={this.state.id ? true : false }/>
                     </Col>
                     <Col xs={12} md={3}>
                      <TextField fullWidth={true} floatingLabelText="Description" id="description" errorText={fieldErrors.description} value={receivingmodeSet.description} onChange={(e) => {handleChange(e, "description", true, "")}}/>
@@ -180,7 +180,6 @@ class receivingModeCreate extends Component {
                                           handleChange(e, "active", false, "")}}/>
                     </Col>
                    </Row>
-
                  </Grid>
               </CardText>
            </Card>

@@ -113,6 +113,7 @@ public class BillService {
 	public BillResponse generateBill(GenerateBillCriteria billCriteria, RequestInfo requestInfo) {
 		
 		Set<String> ids = new HashSet<>();
+		if(billCriteria.getDemandId()!=null)
 		ids.add(billCriteria.getDemandId());
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
 				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
@@ -148,6 +149,7 @@ public class BillService {
 		
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
 			List<Demand> demands2 = entry.getValue();
+			log.info("prepareBill demands2:" +demands2);
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 			Demand demand3 = demands2.get(0);
 			BigDecimal totalTaxAmount = BigDecimal.ZERO;
@@ -156,8 +158,10 @@ public class BillService {
 	
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
+				log.info("prepareBill demandDetails:" +demandDetails);
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
+					log.info("prepareBill demandDetail:" +demandDetail);
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().
@@ -166,7 +170,8 @@ public class BillService {
 				}
 			}
 			
-			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).consumerType(demand3.getConsumerType()).
+			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).
+					billAccountDetails(billAccountDetails).consumerType(demand3.getConsumerType()).
 					consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
 					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
 			

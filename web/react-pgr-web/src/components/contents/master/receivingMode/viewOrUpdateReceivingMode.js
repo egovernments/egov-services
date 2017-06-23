@@ -110,7 +110,7 @@ class viewOrUpdateReceivingMode extends Component {
                                 <Table>
                                     <thead>
                                         <tr>
-                                          <th>ID</th>
+                                          <th>Sl No</th>
                                           <th>Name</th>
                                           <th>Code</th>
                                           <th>Description</th>
@@ -123,13 +123,13 @@ class viewOrUpdateReceivingMode extends Component {
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
                                             <tr key={i}>
-                                              <td>{e.id}</td>
+                                              <td>{i+1}</td>
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
                                               <td>{e.channel}</td>
-                                              <td>{e.active}</td>
-                                              {url == '/viewOrUpdateReceivingMode/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
+                                              <td>{e.active?"True":"False"}</td>
+                                              {url == '/viewOrUpdateReceivingMode/view' && <td><Link to={`/viewReceivingMode/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
                                               {url == '/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/receivingModeCreate/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )

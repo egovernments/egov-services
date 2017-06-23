@@ -22,7 +22,7 @@ public class UserSearchCriteria {
     private String pan;
     private String emailId;
     private boolean fuzzyLogic;
-    private boolean active;
+    private Boolean active;
     private int pageSize;
     private int pageNumber;
     private List<String> sort;

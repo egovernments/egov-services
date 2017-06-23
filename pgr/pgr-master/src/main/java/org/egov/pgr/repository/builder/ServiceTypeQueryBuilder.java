@@ -51,56 +51,54 @@ public class ServiceTypeQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceTypeQueryBuilder.class);
 
-    private static final String BASE_QUERY = "SELECT * FROM egpgr_grievancetype";
+    private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, adef.code attributecode, " 
+    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "   
+    			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
+    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode ";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final ServiceGetRequest categoryGetRequest, final List preparedStatementValues) {
+    public String getQuery(final ServiceGetRequest serviceGetRequest, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
-        addOrderByClause(selectQuery, categoryGetRequest);
-        addPagingClause(selectQuery, preparedStatementValues, categoryGetRequest);
+        addWhereClause(selectQuery, preparedStatementValues, serviceGetRequest);
+        // addOrderByClause(selectQuery, serviceGetRequest);
+        // addPagingClause(selectQuery, preparedStatementValues, serviceGetRequest);
         logger.debug("Query : " + selectQuery);
+        logger.info("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final ServiceGetRequest categoryGetRequest) {
+            final ServiceGetRequest serviceGetRequest) {
 
-        if (categoryGetRequest.getId() == null && categoryGetRequest.getName() == null && categoryGetRequest.getActive() == null
-                && categoryGetRequest.getTenantId() == null)
+        if (serviceGetRequest.getId() == null && serviceGetRequest.getName() == null && serviceGetRequest.getCode() == null
+                && serviceGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
 
-        if (categoryGetRequest.getTenantId() != null) {
+        if (serviceGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
-            selectQuery.append(" category.tenantId = ?");
-            preparedStatementValues.add(categoryGetRequest.getTenantId());
+            selectQuery.append(" comp.tenantId = ?");
+            preparedStatementValues.add(serviceGetRequest.getTenantId());
         }
 
-        if (categoryGetRequest.getId() != null) {
+        if (serviceGetRequest.getId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" category.id IN " + getIdQuery(categoryGetRequest.getId()));
+            selectQuery.append(" comp.id IN " + getIdQuery(serviceGetRequest.getId()));
         }
 
-        if (categoryGetRequest.getName() != null) {
+        if (serviceGetRequest.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" category.name = ?");
-            preparedStatementValues.add(categoryGetRequest.getName());
+            selectQuery.append(" comp.name = ?");
+            preparedStatementValues.add(serviceGetRequest.getName());
         }
 
-        if (categoryGetRequest.getCode() != null) {
+        if (serviceGetRequest.getCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" category.code = ?");
-            preparedStatementValues.add(categoryGetRequest.getCode());
-        }
-
-        if (categoryGetRequest.getActive() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" category.active = ?");
-            preparedStatementValues.add(categoryGetRequest.getActive());
+            selectQuery.append(" comp.code = ?");
+            preparedStatementValues.add(serviceGetRequest.getCode());
         }
     }
 
@@ -200,9 +198,9 @@ public class ServiceTypeQueryBuilder {
     
     public static String getAllServiceTypes(){
     	return "select comp.tenantid, comp.code, comp.name, comp.description, adef.code attributecode, " 
-    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name "   
+    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "   
     			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
-    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode " ;
+    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode WHERE comp.tenantid = 'blrrural'" ;
     }
 
 }

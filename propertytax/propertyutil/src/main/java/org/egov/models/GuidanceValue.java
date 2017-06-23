@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GuidanceValue {
 
-	private Integer id;
+	private Long id;
 
 	@NotNull
 	@Size(min=4,max=128)

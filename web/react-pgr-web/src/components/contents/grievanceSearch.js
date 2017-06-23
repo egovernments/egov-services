@@ -121,6 +121,11 @@ class grievanceSearch extends Component {
   		if(searchSet.endDate) {
   			searchSet.endDate = searchSet.endDate.getDate() + "-" + (searchSet.endDate.getMonth() + 1) + "-" + searchSet.endDate.getFullYear();
   		}
+
+  		if(searchSet.status) {
+  			searchSet.status = searchSet.status.join(",");
+  		}
+
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
   		Api.commonApiPost("/pgr/seva/_count", searchSet).then(function(response) {

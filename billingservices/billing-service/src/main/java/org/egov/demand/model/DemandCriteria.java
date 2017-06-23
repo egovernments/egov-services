@@ -21,6 +21,8 @@ public class DemandCriteria {
 	
 	private Set<String> demandId;
 	
+	//private Set<String> owner;
+	
 	private String consumerCode;
 	
 	private String businessService;

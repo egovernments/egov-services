@@ -1,0 +1,24 @@
+{
+    "taxRates": [
+        {
+            "tenantId": "default",
+            "taxHead": "taxHead-C",
+            "dependentTaxHead": "dependentTaxHead-C",
+            "fromDate": "03/06/2017 00:00:00",
+            "toDate": "10/06/2017 00:00:00",
+            "fromValue": 1000,
+            "toValue": 1500,
+            "ratePercentage": 33,
+            "taxFlatValue": 2222,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ],
+    "responseInfo": {
+    
+    }
+}

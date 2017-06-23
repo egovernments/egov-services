@@ -65,16 +65,20 @@ public class DemandQueryBuilder {
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?,tenantid=? WHERE id=? AND tenantid=?;";
 
-	public static String getDemandQuery(DemandCriteria demandCriteria, List<Object> preparedStatementValues) {
+	public static String getDemandQuery(DemandCriteria demandCriteria,Set<String> ownerIds, List<Object> preparedStatementValues) {
 
 		StringBuilder demandQueryBuilder = new StringBuilder(BASE_DEMAND_QUERY);
 
 		demandQueryBuilder.append("demand.tenantid=?");
 		preparedStatementValues.add(demandCriteria.getTenantId());
 
-		if (demandCriteria.getDemandId() != null) {
+		if (demandCriteria.getDemandId() != null && !demandCriteria.getDemandId().isEmpty()) {
 			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.id IN ("+getIdQuery(demandCriteria.getDemandId()));
+			demandQueryBuilder.append("demand.id IN ("+getIdQueryForStrings(demandCriteria.getDemandId()));
+		}
+		if (ownerIds != null && !ownerIds.isEmpty()) {
+			addAndClause(demandQueryBuilder);
+			demandQueryBuilder.append("demand.owner IN ("+getIdQueryForStrings(ownerIds));
 		}
 		if (demandCriteria.getBusinessService() != null) {
 			addAndClause(demandQueryBuilder);
@@ -156,13 +160,13 @@ public class DemandQueryBuilder {
 		return true;
 	}
 	
-	private static String getIdQuery(Set<String> idList) {
+	private static String getIdQueryForStrings(Set<String> idList) {
 
-		StringBuilder query = null;
+		StringBuilder query = new StringBuilder();
 		if (!idList.isEmpty()) {
 
 			String[] list = idList.toArray(new String[idList.size()]);
-			query = new StringBuilder("'"+list[0]+"'");
+			query.append("'"+list[0]+"'");
 			for (int i = 1; i < idList.size(); i++) {
 				query.append("," + "'"+list[i]+"'");
 			}

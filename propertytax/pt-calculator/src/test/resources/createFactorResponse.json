@@ -1,0 +1,20 @@
+{
+    "responseInfo": {
+    },
+    "calculationFactors": [
+        {
+            "tenantId": "default",
+            "factorCode": null,
+            "factorType": null,
+            "factorValue": null,
+            "fromDate": null,
+            "toDate": null,
+            "auditDetails": {
+		        "createdBy": null,
+		        "lastModifiedBy": null,
+		        "createdTime": null,
+		        "lastModifiedTime": null
+		     }
+        }
+    ]
+}

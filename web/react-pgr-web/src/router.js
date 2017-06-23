@@ -12,7 +12,8 @@ import viewOrUpdateReceivingMode from './components/contents/master/receivingMod
 import ServiceGroupCreate from './components/contents/master/serviceGroup/serviceGroupCreate';
 import ViewEditServiceGroup from './components/contents/master/serviceGroup/viewEditServiceGroup';
 import viewReceivingMode from './components/contents/master/receivingMode/viewReceivingMode';
-
+import createRouter from './components/contents/master/router/create';
+import routerGeneration from './components/contents/master/router/routerGeneration';
 
 const Main = () => (
   <main>
@@ -25,8 +26,8 @@ const Main = () => (
       <Route exact path='/receivingCenter/view' component={ViewEditReceivingCenter}/>
       <Route exact path='/receivingCenter/edit' component={ViewEditReceivingCenter}/>
       <Route exact path='/viewReceivingCenter/:id' component={ViewReceivingCenter}/>
-
-
+      <Route exact path='/createRouter' component={createRouter}/>
+      <Route exact path='/routerGeneration' component={routerGeneration}/>
 
       <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>
       <Route exact name='receivingModeCreate' path='/receivingModeCreate/:id' component={receivingModeCreate}/>

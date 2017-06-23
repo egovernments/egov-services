@@ -85,13 +85,15 @@ class Login extends Component {
            errorMsg: "",
            open: false,
            mobNo: "",
-           mobErrorMsg: ""
+           mobErrorMsg: "",
+           srn: ""
        }
        this.loginRequest = this.loginRequest.bind(this);
        this.showPasswordModal = this.showPasswordModal.bind(this);
        this.handleClose = this.handleClose.bind(this);
        this.handleStateChange = this.handleStateChange.bind(this);
        this.sendRecovery = this.sendRecovery.bind(this);
+       this.searchGrievance = this.searchGrievance.bind(this);
    }
 
    componentWillMount() {
@@ -180,10 +182,10 @@ class Login extends Component {
     })
    }
 
-   handleStateChange(e) {
+   handleStateChange(e, name) {
     this.setState({
       mobErrorMsg: "",
-      mobNo: e.target.value
+      [name]: e.target.value
     })
    }
 
@@ -205,6 +207,12 @@ class Login extends Component {
     }
    }
 
+   searchGrievance(e) {
+      if(this.state.srn) {
+        window.open("/searchGrievance?srn=" + this.state.srn, '_blank');
+      }
+   }
+
    render() {
       // console.log();
       let {
@@ -220,13 +228,15 @@ class Login extends Component {
         showPasswordModal,
         handleClose,
         handleStateChange,
-        sendRecovery
+        sendRecovery,
+        searchGrievance
       } = this;
       let {
         errorMsg,
         open,
         mobErrorMsg,
-        mobNo
+        mobNo,
+        srn
       } = this.state;
       // if (token) {
       //     return (
@@ -323,8 +333,10 @@ class Login extends Component {
                           <h4>Check your grievance status</h4>
                           <TextField
                             hintText="Search Text"
+                            value={srn}
+                            onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label="Search" backgroundColor={"#354f57"} labelColor={white}/>
+                          <RaisedButton label="Search" backgroundColor={"#354f57"} labelColor={white} onClick={(e)=>{searchGrievance(e)}}/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -394,7 +406,7 @@ class Login extends Component {
                   floatingLabelText="Mobile Number/Login ID"
                   type="password"
                   style={styles.fullWidth}
-                  errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e)} hintText="eg:-*******"
+                  errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e, "mobNo")} hintText="eg:-*******"
               />
               <div style={{textAlign: "right", fontSize: "12px"}}>
                 Recovery link or OTP will be sent to your registered email / mobile

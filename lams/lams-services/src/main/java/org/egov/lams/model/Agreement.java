@@ -12,7 +12,6 @@ import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -132,5 +131,5 @@ public class Agreement {
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date lastmodifiedDate;
 	private String lastmodifiedBy;
-	
+	private Boolean isAdvancePaid;
 }

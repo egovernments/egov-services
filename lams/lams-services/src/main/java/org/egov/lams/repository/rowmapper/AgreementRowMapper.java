@@ -106,6 +106,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setSolvencyCertificateDate(rs.getTimestamp("solvency_certificate_date"));
 					agreement.setSolvencyCertificateNo(rs.getString("solvency_certificate_no"));
 					agreement.setTradelicenseNumber(rs.getString("trade_license_number"));
+					agreement.setIsAdvancePaid(rs.getBoolean("is_advancepaid"));
 
 					RentIncrementType rentIncrementType = new RentIncrementType();
 					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));

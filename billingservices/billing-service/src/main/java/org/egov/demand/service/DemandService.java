@@ -137,7 +137,7 @@ public class DemandService {
 			}
 		}
 		List<TaxHeadMaster> taxHeadMAsters = taxHeadMasterService.getTaxHeads(
-				TaxHeadMasterCriteria.builder().tenantId(demandDetails.get(0).getTenantId())
+				TaxHeadMasterCriteria.builder().tenantId(demandCriteria.getTenantId())
 				.code(demandDetails.stream().map(ddl -> ddl.getTaxHeadMaster().getCode())
 				.collect(Collectors.toSet())).build(),requestInfo).getTaxHeadMasters();
 		demandEnrichmentUtil.enrichTaxHeadMAsters(demandDetails, taxHeadMAsters);

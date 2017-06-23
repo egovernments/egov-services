@@ -15,9 +15,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
+import Dialog from 'material-ui/Dialog';
 
 import {Redirect} from 'react-router-dom'
-
+var axios = require('axios');
 
 const styles = {
     errorStyle: {
@@ -77,13 +78,20 @@ class Login extends Component {
   constructor(props) {
        super(props);
        this.state = {
-
            isActive: {
              checked: false
            },
-           dataSource: []
+           dataSource: [],
+           errorMsg: "",
+           open: false,
+           mobNo: "",
+           mobErrorMsg: ""
        }
-
+       this.loginRequest = this.loginRequest.bind(this);
+       this.showPasswordModal = this.showPasswordModal.bind(this);
+       this.handleClose = this.handleClose.bind(this);
+       this.handleStateChange = this.handleStateChange.bind(this);
+       this.sendRecovery = this.sendRecovery.bind(this);
    }
 
    componentWillMount() {
@@ -115,25 +123,89 @@ class Login extends Component {
 
    }
 
+   loginRequest () {
+      var self = this, props = this.props;
+      self.setState({
+          errorMsg: ""
+      })
+      var instance = axios.create({
+        baseURL: window.location.origin,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0',
+        }
+      });
 
+      var params = new URLSearchParams();
+      params.append('username', props.credential.username);
+      params.append('password', props.credential.password);
+      params.append('grant_type', 'password');
+      params.append('scope', 'read');
+      params.append('tenantId', 'default');
+
+      instance.post('/user/oauth/token', params).then(function(response) {
+        localStorage.setItem("token", response.data.access_token);
+        localStorage.setItem("", response.data.UserRequest);
+        props.login(false, response.data.access_token, response.data.UserRequest);
+      }).catch(function(response) {
+        self.setState({
+          errorMsg: "Please check your username and password"
+        })
+      });
+   }
 
    handleCheckBoxChange = (prevState) => {
-       this.setState((prevState) => {prevState.isActive.checked = !prevState.isActive.checked})
+      this.setState((prevState) => {prevState.isActive.checked = !prevState.isActive.checked})
    }
+
    handleUpdateInput = (value) => {
-   this.setState({
-     dataSource: [
-       value,
-       value + value,
-       value + value + value,
-     ],
-   });
- };
+     this.setState({
+       dataSource: [
+         value,
+         value + value,
+         value + value + value,
+       ],
+     });
+   };
 
+   showPasswordModal() {
+    this.setState({
+      open: true
+    })
+   }
 
+   handleClose() {
+    this.setState({
+      open: false
+    })
+   }
 
-    render()
-    {
+   handleStateChange(e) {
+    this.setState({
+      mobErrorMsg: "",
+      mobNo: e.target.value
+    })
+   }
+
+   sendRecovery(type) {
+    if(!this.state.mobNo)
+      return this.setState({
+        mobErrorMsg: "Mobile Number / Login ID is required"
+      })
+
+    else 
+      this.setState({
+        mobErrorMsg: ""
+      });      
+
+    if(type == "link") {
+
+    } else {
+
+    }
+   }
+
+   render() {
       // console.log();
       let {
         login,
@@ -143,11 +215,30 @@ class Login extends Component {
         fieldErrors,
         history
       }=this.props;
+      let {
+        loginRequest,
+        showPasswordModal,
+        handleClose,
+        handleStateChange,
+        sendRecovery
+      } = this;
+      let {
+        errorMsg,
+        open,
+        mobErrorMsg,
+        mobNo
+      } = this.state;
       // if (token) {
       //     return (
       //       <Redirect to="/dashboard"/>
       //     )
       // } else {
+      const showError = function() {
+        if(errorMsg) {
+          return (<p className="text-danger">{errorMsg}</p>)
+        }
+      }
+
         return(
           <div className="Login">
             <Grid>
@@ -191,11 +282,13 @@ class Login extends Component {
                                 />
                                 </Col>
                                 <Col lg={12}>
+                                  {showError()}
+                                </Col>
+                                <Col lg={12}>
                                   <RaisedButton disabled={!isFormValid}  label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
-                                    login(e,false,"adasdsa3435",[]);
-                                    window.localStorage.setItem("token","adasdsa3435");
+                                    loginRequest()
                                   }}/>
-                                  <FlatButton label="Forgot Password?" style={styles.buttonTopMargin} />
+                                  <FlatButton label="Forgot Password ?" style={styles.buttonTopMargin} onClick={showPasswordModal}/>
                                 </Col>
                               </Col>
                           </Row>
@@ -274,6 +367,39 @@ class Login extends Component {
                   </Col>
               </Row>
             </Grid>
+            <Dialog
+              title="Recover Password"
+              actions={[
+                <FlatButton
+                  label="Cancel"
+                  primary={false}
+                  onTouchTap={handleClose}
+                />,
+                <FlatButton
+                  label="Send Recovery Link"
+                  secondary={true}
+                  onTouchTap={(e)=>{sendRecovery("link")}}
+                />,
+                <FlatButton
+                  label="Send Recovery OTP"
+                  secondary={true}
+                  onTouchTap={(e)=>{sendRecovery("otp")}}
+                />
+              ]}
+              modal={false}
+              open={open}
+              onRequestClose={handleClose}
+            >
+              <TextField
+                  floatingLabelText="Mobile Number/Login ID"
+                  type="password"
+                  style={styles.fullWidth}
+                  errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e)} hintText="eg:-*******"
+              />
+              <div style={{textAlign: "right", fontSize: "12px"}}>
+                Recovery link or OTP will be sent to your registered email / mobile
+              </div>
+            </Dialog>
           </div>
         )
       // }
@@ -292,18 +418,17 @@ const mapDispatchToProps = dispatch => ({
           current: [],
           required: ["username","password"]
         }
-
       }
     });
   },
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
-  login:(e,error,token,userRequest) =>{
-    let payload={
-      "access_token":token,"UserRequest":userRequest
+  login: (error, token, userRequest) =>{
+    let payload = {
+      "access_token": token, "UserRequest": userRequest
     };
-    dispatch({type:"LOGIN",error,payload})
+    dispatch({type: "LOGIN", error, payload})
   }
 
 

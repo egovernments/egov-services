@@ -35,6 +35,9 @@ public class DemandEnrichmentUtil {
 
 	public void enrichTaxHeadMAsters(List<DemandDetail> demandDetails, List<TaxHeadMaster> taxHeadMAsters) {
 
+		System.err.println("taxheadmaster list : "+taxHeadMAsters);
+		System.err.println("demanddetails list : "+demandDetails);
+
 		Map<String,TaxHeadMaster> map = new HashMap<>();
 		for (TaxHeadMaster taxHeadMaster : taxHeadMAsters) {
 			map.put(taxHeadMaster.getCode(), taxHeadMaster);

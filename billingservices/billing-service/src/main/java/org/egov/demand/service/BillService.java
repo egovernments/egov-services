@@ -48,12 +48,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
@@ -61,7 +64,10 @@ import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.controller.BusinessServiceDetailController;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,6 +97,9 @@ public class BillService {
 	
 	@Autowired
 	private DemandService demandService;
+	
+	@Autowired
+	private BusinessServDetailService businessServDetailService;
 
 	public BillResponse createAsync(BillRequest billRequest) { 
 		
@@ -115,6 +124,7 @@ public class BillService {
 		Set<String> ids = new HashSet<>();
 		if(billCriteria.getDemandId()!=null)
 		ids.add(billCriteria.getDemandId());
+		
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
 				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
@@ -128,14 +138,15 @@ public class BillService {
 		List<Bill> bills = null; 
 		
 		if(!demands.isEmpty())
-			bills = prepareBill(demands, billCriteria.getTenantId());
+			bills = prepareBill(demands, billCriteria.getTenantId(), requestInfo);
 		else 
 			throw new RuntimeException("Invalid demand criteria");
 			
 		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 	
-	private List<Bill> prepareBill(List<Demand> demands,String tenantId){
+	private List<Bill> prepareBill(List<Demand> demands,String tenantId,RequestInfo requestInfo){
+		
 		List<Bill> bills = new ArrayList<Bill>();
 		
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
@@ -148,6 +159,7 @@ public class BillService {
 		List<BillDetail> billDetails = new ArrayList<>(); 
 		
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
+			String businessService = entry.getKey();
 			List<Demand> demands2 = entry.getValue();
 			log.info("prepareBill demands2:" +demands2);
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
@@ -161,6 +173,7 @@ public class BillService {
 				log.info("prepareBill demandDetails:" +demandDetails);
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
+					
 					log.info("prepareBill demandDetail:" +demandDetail);
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
@@ -169,10 +182,17 @@ public class BillService {
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
+		
+			BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder().
+					businessService(businessService).tenantId(tenantId).build();
+			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
+			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
 			
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).
-					billAccountDetails(billAccountDetails).consumerType(demand3.getConsumerType()).
-					consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
+					billAccountDetails(billAccountDetails).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
+					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
+					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
+					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
 					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
 			
 			billDetails.add(billDetail);

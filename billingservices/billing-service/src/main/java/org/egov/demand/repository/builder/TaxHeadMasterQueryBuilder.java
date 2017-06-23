@@ -97,7 +97,7 @@ public class TaxHeadMasterQueryBuilder {
 	}
 	
 	public String getUpdateQuery() {
-		return "UPDATE public.egbs_taxheadmaster SET "
+		return "UPDATE egbs_taxheadmaster SET "
 				+ "category=?, service=?, name=?, code=?, glcode=?,isdebit=?, isactualdemand=?,"
 				+ "lastmodifiedby=?, taxperiod=?, lastmodifiedtime=? "
 				+ "WHERE tenantid=?";
@@ -105,7 +105,7 @@ public class TaxHeadMasterQueryBuilder {
 	}
 	
 	public String getInsertQuery() {
-		return "INSERT INTO public.egbs_taxheadmaster(id, tenantid, category,"
+		return "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
 				+ "service, name, code, glcode, isdebit,isactualdemand, createdby, createdtime,"
 				+ "lastmodifiedby, lastmodifiedtime,taxperiod) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";

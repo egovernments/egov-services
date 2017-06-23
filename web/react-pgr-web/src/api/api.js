@@ -33,9 +33,10 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-  commonApiPost: (context, queryObject = {}, body = {}) => {
+  commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false) => {
     var url = context;
-    url += "?tenantId=" + tenantId;
+    if(!doNotOverride)
+      url += "?tenantId=" + tenantId;
     for (var variable in queryObject) {
       if (queryObject[variable]) {
         url += "&" + variable + "=" + queryObject[variable];
@@ -48,9 +49,10 @@ module.exports = {
       throw new Error(response.data.message);
     });
   },
-  commonApiGet: (context, queryObject = {}) => {
-    var url = context ;
-    url += "?tenantId=" + tenantId;
+  commonApiGet: (context, queryObject = {}, doNotOverride = false) => {
+    var url = context;
+    if(!doNotOverride)
+      url += "?tenantId=" + tenantId;
     for (var variable in queryObject) {
       if (queryObject[variable]) {
         url += "&" + variable + "=" + queryObject[variable];

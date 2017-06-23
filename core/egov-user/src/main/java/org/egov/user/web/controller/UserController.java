@@ -43,13 +43,16 @@ public class UserController {
 
 	@PostMapping("/_search")
 	public UserSearchResponse get(@RequestBody UserSearchRequest request) {
-		List<org.egov.user.domain.model.User> userModels = userService.searchUsers(request.toDomain());
+		if(request.getActive() == null) {
+			request.setActive(true);
+		}
+		return searchUsers(request);
+	}
 
-		List<UserSearchResponseContent> userContracts = userModels.stream()
-				.map(UserSearchResponseContent::new)
-				.collect(Collectors.toList());
-		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
-		return new UserSearchResponse(responseInfo, userContracts);
+
+	@PostMapping("/v1/_search")
+	public UserSearchResponse getV1(@RequestBody UserSearchRequest request) {
+		return searchUsers(request);
 	}
 
 	@PostMapping("/_details")
@@ -80,6 +83,17 @@ public class UserController {
 				.status(String.valueOf(HttpStatus.OK.value()))
 				.build();
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
+	}
+
+
+	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request) {
+		List<User> userModels = userService.searchUsers(request.toDomain());
+
+		List<UserSearchResponseContent> userContracts = userModels.stream()
+				.map(UserSearchResponseContent::new)
+				.collect(Collectors.toList());
+		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
+		return new UserSearchResponse(responseInfo, userContracts);
 	}
 
 }

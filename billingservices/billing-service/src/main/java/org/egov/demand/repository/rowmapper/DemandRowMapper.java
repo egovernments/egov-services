@@ -11,7 +11,7 @@ import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.enums.Type;
+import org.egov.demand.model.TaxHeadMaster;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -43,13 +43,11 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 					demand.setTaxPeriodFrom(rs.getLong("dtaxPeriodFrom"));
 					demand.setTaxPeriodTo(rs.getLong("dtaxPeriodTo"));
 					demand.setTenantId(rs.getString("dtenantid"));
-					String type = rs.getString("dtype");
-					demand.setType(Type.fromValue(type));
 
 					demand.setMinimumAmountPayable(rs.getBigDecimal("dminimumAmountPayable"));
 
 					Owner owner = new Owner();
-					owner.setId(rs.getLong("downer"));
+					owner.setId(Long.valueOf(rs.getString("downer")));
 					demand.setOwner(owner);
 
 					AuditDetail auditDetail = new AuditDetail();
@@ -66,7 +64,10 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				DemandDetail demandDetail = new DemandDetail();
 				demandDetail.setId(rs.getString("dlid"));
 				demandDetail.setDemandId(rs.getString("dldemandid"));
-				demandDetail.setTaxHeadCode(rs.getString("dltaxheadcode"));
+				
+				TaxHeadMaster headMaster = new TaxHeadMaster();
+				headMaster.setCode(rs.getString("dltaxheadcode"));
+				demandDetail.setTaxHeadMaster(headMaster);
 				demandDetail.setTenantId(rs.getString("dltenantid"));
 				demandDetail.setTaxAmount(rs.getBigDecimal("dltaxamount"));
 				demandDetail.setCollectionAmount(rs.getBigDecimal("dlcollectionamount"));

@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
+import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,15 +96,16 @@ public class DonationRepository {
         return donationRequest;
     }
 
-    public List<Donation> getDonationList(final Donation donation) {
+    public List<Donation> getDonationList(final DonationGetRequest donation) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(2L);
-        preparedStatementValues.add(3L);
-        preparedStatementValues.add(3L);
-        preparedStatementValues.add(1L);
-        preparedStatementValues.add(2L);
+        preparedStatementValues.add(Long.valueOf(donation.getPropertyType()));
+        preparedStatementValues.add(Long.valueOf(donation.getUsageType()));
+        preparedStatementValues.add(Long.valueOf(donation.getCategoryType()));
+        preparedStatementValues.add(donation.getMaxHSCPipeSize());
+        preparedStatementValues.add(donation.getMinHSCPipeSize());
+        preparedStatementValues.add(donation.getTenantId());
         final String queryStr = "SELECT * FROM egwtr_donation WHERE property_type = ? AND usage_type = ? "
-                + " AND category = ? AND hsc_pipesize_max = ? AND hsc_pipesize_min = ? AND  "
+                + " AND category = ? AND hsc_pipesize_max <= ? AND hsc_pipesize_min >= ? AND tenantid = ? AND  "
                 + "  active IS TRUE";
         final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), donationRowMapper);
         return donationList;

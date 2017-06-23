@@ -1654,7 +1654,7 @@ function printValue(object = "", values) {
                 if (key == "documents") return;
                 if (typeof values[key] === "object" && key == "user") {
                     for (ckey in values[key]) {
-                        if (values[key][ckey]) {
+                        if (typeof values[key][ckey] != "undefined" || values[key][ckey]) {
                             if (["signature", "photo"].indexOf(ckey) > -1) continue;
                             //Get description
                             if (ckey == "dob") {
@@ -1663,8 +1663,10 @@ function printValue(object = "", values) {
                             } else if (ckey == "active") {
                                 if ([true, "true"].indexOf(values[key][ckey]) > -1) {
                                     $('[data-active="yes"]').prop("checked", true);
-                                } else {
                                     $('[data-active="no"]').prop("checked", false);
+                                } else {
+                                    $('[data-active="no"]').prop("checked", true);
+                                    $('[data-active="yes"]').prop("checked", false);
                                 }
                             } else {
                                 $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");

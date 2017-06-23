@@ -1,8 +1,10 @@
 package org.egov.demand.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Owner;
 import org.egov.demand.web.contract.User;
@@ -12,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +30,9 @@ public class OwnerRepository {
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private ObjectMapper  objectMapper;
 
 	public List<Owner> getOwners(UserSearchRequest userSearchRequest) {
 
@@ -32,13 +41,35 @@ public class OwnerRepository {
 		try {
 			userResponse = restTemplate.postForObject(url, userSearchRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
+			String errorResponseBody = e.getResponseBodyAsString();
 			log.error("Following exception occurred: " + e.getResponseBodyAsString());
-			throw e;
+			ErrorResponse userErrorResponse = null;
+			try {
+				userErrorResponse = objectMapper.readValue(errorResponseBody, ErrorResponse.class);
+			} catch (JsonMappingException jme) {
+				log.error("Following Exception Occurred While Mapping JSON Response From User Service : "
+						+ jme.getMessage());
+				throw new RuntimeException(jme);
+			} catch (JsonProcessingException jpe) {
+				log.error("Following Exception Occurred While Processing JSON Response From User Service : "
+						+ jpe.getMessage());
+				throw new RuntimeException(jpe);
+			} catch (IOException ioe) {
+				log.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				throw new RuntimeException(ioe);
+			}
+			 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
+				log.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
+				throw new RuntimeException(e);
+		} catch (Exception e) {
+			log.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			throw new RuntimeException(e);
 		}
+		System.err.println(userResponse);
 		List<Owner> owners = new ArrayList<>();
-		for (User userRequest : userResponse.getUser()) {
-			owners.add(userRequest.toOwner());
-		}
+		if (userResponse != null && !userResponse.getUser().isEmpty())
+			for (User userRequest : userResponse.getUser())
+				owners.add(userRequest.toOwner());
 		return owners;
 	}
 }

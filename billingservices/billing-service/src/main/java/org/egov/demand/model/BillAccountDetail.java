@@ -33,5 +33,5 @@ public class BillAccountDetail {
 
 	private Boolean isActualDemand;
 
-	private Purpose purpose ;
+	private Purpose purpose;
 }

@@ -1,5 +1,7 @@
 package org.egov.demand.model;
 
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +25,7 @@ public class TaxHeadMasterCriteria {
 	private String service;
 	private String category;
 	private String name;
-	private String code;
+	private Set<String> code;
 	private String glCode;
 	private Boolean isDebit;
 	private Boolean isActualDemand;

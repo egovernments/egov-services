@@ -2,6 +2,8 @@ package org.egov.demand.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -44,7 +46,7 @@ public class DemandRepository {
 			AuditDetail auditDetail = demand.getAuditDetail();
 			Object[] demandRecord = { demand.getId(), demand.getConsumerCode(), demand.getConsumerType(),
 					demand.getBusinessService(), demand.getOwner().getId(), demand.getTaxPeriodFrom(),
-					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(), demand.getType().toString(),
+					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(),
 					auditDetail.getCreatedBy(), auditDetail.getLastModifiedBy(), auditDetail.getCreatedTime(),
 					auditDetail.getLastModifiedTime(),	demand.getTenantId() };
 			demandBatchArgs.add(demandRecord);
@@ -63,7 +65,7 @@ public class DemandRepository {
 
 			AuditDetail auditDetail = demandDetail.getAuditDetail();
 			Object[] demandDetailRecord = { demandDetail.getId(), demandDetail.getDemandId(),
-					demandDetail.getTaxHeadCode(), demandDetail.getTaxAmount(), demandDetail.getCollectionAmount(),
+					demandDetail.getTaxHeadMaster().getCode(), demandDetail.getTaxAmount(), demandDetail.getCollectionAmount(),
 					auditDetail.getCreatedBy(), auditDetail.getLastModifiedBy(), auditDetail.getCreatedTime(),
 					auditDetail.getLastModifiedTime(), demandDetail.getTenantId() };
 			demandDetailBatchArgs.add(demandDetailRecord);
@@ -95,7 +97,7 @@ public class DemandRepository {
 
 			Object[] demandRecord = { demandId, demand.getConsumerCode(), demand.getConsumerType(),
 					demand.getBusinessService(), demand.getOwner().getId(), demand.getTaxPeriodFrom(),
-					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(), demand.getType().toString(),
+					demand.getTaxPeriodTo(), demand.getMinimumAmountPayable(), 
 					auditDetail.getLastModifiedBy(), auditDetail.getLastModifiedTime(), demandtenantId, demandId,
 					demandtenantId };
 			demandBatchArgs.add(demandRecord);
@@ -130,10 +132,10 @@ public class DemandRepository {
 
 	}
 
-	public List<Demand> getDemands(DemandCriteria demandCriteria) {
+	public List<Demand> getDemands(DemandCriteria demandCriteria,Set<String> ownerIds) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String searchDemandQuery = DemandQueryBuilder.getDemandQuery(demandCriteria, preparedStatementValues);
+		String searchDemandQuery = DemandQueryBuilder.getDemandQuery(demandCriteria,ownerIds, preparedStatementValues);
 		List<Demand> demands = new ArrayList<>();
 		try {
 			demands.addAll(

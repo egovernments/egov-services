@@ -195,6 +195,9 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setActive(employeeCriteria.getActive());
 
+		if(!isEmpty(employeeCriteria.getUserName())) {
+			userGetRequest.setUserName(employeeCriteria.getUserName());
+		}
 		if(!isEmpty(employeeCriteria.getId())) {
 			userGetRequest.setPageSize(employeeCriteria.getId().size());
 		}

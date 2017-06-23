@@ -195,12 +195,9 @@ public class AgreementService {
 								agreementRequest.getRequestInfo());
 					}
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
-					if (agreement.getStatus().equals(Status.REJECTED)){
-						agreement.setStatus(Status.CANCELLED);
-						workFlowDetails.setAction(propertiesManager.getCommonsWorkflowCancelAction());
-					}
-					else
-						agreement.setStatus(Status.REJECTED);
+					agreement.setStatus(Status.REJECTED);
+				} else if ("Cancel".equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setStatus(Status.CANCELLED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					// no action for print notice
 				}
@@ -399,5 +396,11 @@ public class AgreementService {
 						+ workFlowDetails.getInitiatorPosition());
 			}
 		}
+	}
+
+	public void updateAdvanceFlag(Agreement agreement) {
+		if (agreement.getAcknowledgementNumber() != null)
+			agreementRepository.updateAgreementAdvance(agreement.getAcknowledgementNumber());
+
 	}
 }

@@ -64,7 +64,7 @@ public class DonationResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-
+    @JsonProperty("donations")
     private List<Donation> donations = new ArrayList<>();
 
 }

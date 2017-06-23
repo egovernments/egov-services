@@ -41,7 +41,8 @@ public class UserSearchRequest {
 	private boolean fuzzyLogic;
 
 	@JsonProperty("active")
-	private boolean active = true;
+	@Setter
+	private Boolean active;
 
 	@JsonProperty("tenantId")
 	private String tenantId;

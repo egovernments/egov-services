@@ -424,6 +424,10 @@ definitions:
        type: integer
        format: int64
        description : Unique identifier of the meter.
+      connectionId:
+        type: integer
+        format: int64
+        description: unique identifier of connection object
       meterMake:
         type: string
         description: company name of the meter.
@@ -431,10 +435,14 @@ definitions:
         type: integer
         format : int64
         description: company name of the meter.  
-      meterReading: 
+      initialMeterReading: 
         type: string
         description: intial reading of the meter.
         readOnly: true
+      meterReadings:
+        type: array
+        items:
+          $ref: "#/definitions/MeterReading"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       tenantId:
@@ -450,15 +458,14 @@ definitions:
        type: integer
        format: int64
        description : Unique identifier of the meter.
-      connectionId:
+      meterId:
         type: integer
         format: int64
-        description: unique identifier of connection object
+        description: unique identifier of Meter object
       meterSlNo:
         type: integer
         format: int64
         description: Meter SerialNumber.
-        
       reading:
         type: integer
         format: long
@@ -494,6 +501,16 @@ definitions:
       categoryType:
         type: string
         description: This field holds the pre-defined value of supported category. Check master API to look at supported values for your ULB.
+      applicationType:
+        type: string
+        description: This field holds the pre-defined value of supported applicationType.
+        enum: 
+          - NEWCONNECTION
+          - ADDITIONALCONNECTION
+          - CHANGEOFUSE
+          - CLOSINGCONNECTION
+          - HOLDINGCONNECTION
+          - REGULARIZATIONCONNECTION
       hscPipeSizeType:
         type: string
         description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.
@@ -551,16 +568,16 @@ definitions:
           $ref: "#/definitions/Timeline"
       property:
         $ref: '#/definitions/Property'
-      meter:
-        $ref: '#/definitions/Meter'
-      estimationCharge:
-        $ref: "#/definitions/EstimationCharge"
-      workOrder:
-        $ref: "#/definitions/WorkOrder"
-      meterReadings:
+      estimationCharge: 
         type: array
         items:
-          $ref: "#/definitions/MeterReading"
+          $ref: "#/definitions/EstimationCharge"
+      workOrder:
+        $ref: "#/definitions/WorkOrder"
+      meter:
+        type: array
+        items:
+          $ref: "#/definitions/Meter"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -572,6 +589,7 @@ definitions:
       - hscPipeSizeType
       - supplyType
       - sourceType
+      - applicationType
   
   WaterConnectionReq:
     type: object

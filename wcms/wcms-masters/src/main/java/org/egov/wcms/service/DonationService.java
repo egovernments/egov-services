@@ -97,7 +97,7 @@ public class DonationService {
     }
 
     public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {
-        return donationRepository.getDonationList(getIdForRequestCodes(donationGetRequest));
+        return donationRepository.getDonationList(donationGetRequest);
     }
 
     private Donation getIdForRequestCodes(final DonationRequest donationRequest) {

@@ -18,7 +18,7 @@ public class DemandDetail {
 	private String demandId;	
 
 	@NotNull
-	private String taxHeadCode;
+	private TaxHeadMaster taxHeadMaster;
 
 	@NotNull
 	private BigDecimal taxAmount;
@@ -28,6 +28,5 @@ public class DemandDetail {
 
 	private AuditDetail auditDetail;
 
-	@NotNull
 	private String tenantId;
 }

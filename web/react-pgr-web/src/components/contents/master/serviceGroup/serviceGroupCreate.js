@@ -57,44 +57,80 @@ var _this;
 class ServiceGroupCreate extends Component {
     constructor(props) {
       super(props);
-      this.create = this.create.bind();
+      this.state = {
+          id:'',
+          data:''
+      }
     }
 
     componentWillMount() {
+
+        if(this.props.match.params.id) {
+          console.log();
+            this.setState({id:this.props.match.params.id});
+            var body = {}
+            let  current = this;
+            let {setForm} = this.props;
+
+            Api.commonApiPost("/pgr-master/serviceGroup/_search",{id:this.props.match.params.id},body).then(function(response){
+                console.log("response",response);
+                  console.log("response object",response.ServiceGroups[0]);
+                current.setState({data:response.ServiceGroups})
+                setForm(response.ServiceGroups[0])
+            }).catch((error)=>{
+                console.log(error);
+            })
+        } else {
+          let {initForm}=this.props;
+          initForm();
+        }
     }
 
     componentDidMount() {
-     let {initForm}=this.props;
-     initForm();
+
     }
 
+    componentDidUpdate() {
 
-    create = (e) => {
+
+    }
+
+    submitForm = (e) => {
 
       e.preventDefault()
 
       var body = {
-
           "ServiceGroup":{
-           "name" :this.props.serviceGroupCreate.name,
-           "code" :this.props.serviceGroupCreate.code,
-           "description" :this.props.serviceGroupCreate.description,
+           "id": this.props.createServiceGroup.id,
+           "name" :this.props.createServiceGroup.name,
+           "code" :this.props.createServiceGroup.code,
+           "description" :this.props.createServiceGroup.description,
            "tenantId":"default"
           }
       }
 
-      Api.commonApiPost("/pgr-master/serviceGroup/_create",{},body).then(function(response){
-          console.log(response);
-      }).catch((error)=>{
-          console.log(error);
-      })
+      if(this.props.match.params.id){
+        console.log("hi");
+          Api.commonApiPost("/pgr-master/serviceGroup/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
+              console.log(response);
+          }).catch((error)=>{
+              console.log(error);
+          })
+      } else {
+          Api.commonApiPost("/pgr-master/serviceGroup/_create",{},body).then(function(response){
+              console.log(response);
+          }).catch((error)=>{
+              console.log(error);
+          })
+      }
+
 
     }
 
     render() {
 
       let {
-        serviceGroupCreate,
+        createServiceGroup ,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -106,12 +142,16 @@ class ServiceGroupCreate extends Component {
         handleChangeNextTwo,
         buttonText
       } = this.props;
-      let {create} = this;
+
+      let {submitForm} = this;
+
+      console.log(isFormValid);
+
       return(
-        <div className="serviceGroupCreate">
-          <form autoComplete="off" onSubmit={(e) => {create(e)}}>
+        <div className="createServiceGroup">
+          <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Add Service Group < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -119,9 +159,9 @@ class ServiceGroupCreate extends Component {
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Name"
-                                      value={serviceGroupCreate.name? serviceGroupCreate.name : ""}
+                                      value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
-                                      onChange={(e) => handleChange(e, "name", true, '')}
+                                        onChange={(e) => handleChange(e, "name", true, '')}
                                       id="name"
                                   />
                               </Col>
@@ -129,31 +169,31 @@ class ServiceGroupCreate extends Component {
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Code"
-                                      value={serviceGroupCreate.code? serviceGroupCreate.code : ""}
+                                      value={createServiceGroup.code? createServiceGroup.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       onChange={(e) => handleChange(e, "code", true, '')}
                                       id="code"
+                                      disabled={this.state.id ? true : false }
                                   />
                               </Col>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Description"
-                                      value={serviceGroupCreate.description? serviceGroupCreate.description : ""}
+                                      value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", true, '')}
+                                      onChange={(e) => handleChange(e, "description", false, '')}
                                       multiLine={true}
                                       id="description"
                                   />
                               </Col>
-
-
                           </Row>
                       </Grid>
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
           </form>
         </div>)
@@ -162,7 +202,7 @@ class ServiceGroupCreate extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({serviceGroupCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({createServiceGroup : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -172,7 +212,26 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["name","code","description"]
+          required: ["name","code"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
+
+  setForm: (data) => {
+    dispatch({
+      type: "SET_FORM",
+      data,
+      isFormValid:true,
+      fieldErrors: {},
+      validationData: {
+        required: {
+          current: ["name","code"],
+          required: ["name","code"]
         },
         pattern: {
           current: [],

@@ -105,7 +105,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
 			"/sql/createUsers.sql"})
-	public void fuzzy_name_matching_query_test() {
+	public void should_return_active_users_for_given_tenant_and_name_containing() {
 		UserSearchCriteria searchCriteria = UserSearchCriteria.builder()
 				.name("Ram")
 				.tenantId("ap.public")
@@ -121,6 +121,49 @@ public class UserJpaRepositoryTest {
 		assertThat(userList.get(0).getId().getId()).isEqualTo(3);
 		assertThat(userList.get(1).getId().getId()).isEqualTo(4);
 		assertThat(userList.get(2).getId().getId()).isEqualTo(5);
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void should_return_in_active_users_for_given_tenant_and_name_containing() {
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder()
+				.name("Ram")
+				.tenantId("ap.public")
+				.fuzzyLogic(true)
+				.active(false)
+				.build();
+		FuzzyNameMatchingSpecification fuzzyNameMatchingSpecification =
+				new FuzzyNameMatchingSpecification(searchCriteria);
+
+		List<User> userList = userJpaRepository.findAll(fuzzyNameMatchingSpecification);
+
+		assertEquals(1, userList.size());
+		assertThat(userList.get(0).getId().getId()).isEqualTo(7);
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void should_return_both_active_and_in_active_users_for_given_tenant_and_name_containing() {
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder()
+				.name("Ram")
+				.tenantId("ap.public")
+				.fuzzyLogic(true)
+				.active(null)
+				.build();
+		FuzzyNameMatchingSpecification fuzzyNameMatchingSpecification =
+				new FuzzyNameMatchingSpecification(searchCriteria);
+
+		List<User> userList = userJpaRepository.findAll(fuzzyNameMatchingSpecification);
+
+		assertEquals(4, userList.size());
 	}
 
 	@Test
@@ -200,6 +243,64 @@ public class UserJpaRepositoryTest {
 		assertThat(users.get(1).getType()).isEqualTo(UserType.CITIZEN);
 		assertThat(users.get(1).getBloodGroup()).isEqualTo(BloodGroup.AB_POSITIVE);
 	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void multi_field_matching_query_should_return_all_active_users_for_given_tenant() {
+		UserSearchCriteria userSearch = UserSearchCriteria.builder()
+				.active(true)
+				.tenantId("ap.public")
+				.build();
+		MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
+				new MultiFieldsMatchingSpecification(userSearch);
+
+		List<User> users = userJpaRepository.findAll(multiFieldsMatchingSpecification);
+
+		assertEquals(5, users.size());
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void multi_field_matching_query_should_return_all_in_active_users_for_given_tenant() {
+		UserSearchCriteria userSearch = UserSearchCriteria.builder()
+				.active(false)
+				.tenantId("ap.public")
+				.build();
+		MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
+				new MultiFieldsMatchingSpecification(userSearch);
+
+		List<User> users = userJpaRepository.findAll(multiFieldsMatchingSpecification);
+
+		assertEquals(1, users.size());
+	}
+
+	@Test
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
+	public void multi_field_matching_query_should_return_both_active_and_in_active_users_for_given_tenant() {
+		UserSearchCriteria userSearch = UserSearchCriteria.builder()
+				.active(null)
+				.tenantId("ap.public")
+				.build();
+		MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
+				new MultiFieldsMatchingSpecification(userSearch);
+
+		List<User> users = userJpaRepository.findAll(multiFieldsMatchingSpecification);
+
+		assertEquals(6, users.size());
+	}
+
 
 	@Test
 	@Sql(scripts = {"/sql/clearUserRoles.sql",

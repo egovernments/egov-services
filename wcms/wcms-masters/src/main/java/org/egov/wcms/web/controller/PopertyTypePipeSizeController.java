@@ -44,19 +44,18 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
-import org.egov.wcms.util.WcmsConstants;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
@@ -65,7 +64,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,7 +73,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/propertytype-pipesizetype")
+@RequestMapping("/propertytype-pipesize")
 public class PopertyTypePipeSizeController {
 
     private static final Logger logger = LoggerFactory.getLogger(PopertyTypePipeSizeController.class);
@@ -92,17 +90,20 @@ public class PopertyTypePipeSizeController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    @Autowired
+    private ValidatorUtils validatorUtils;
+
     @PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
 
-        final List<ErrorResponse> errorResponses = validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -110,7 +111,7 @@ public class PopertyTypePipeSizeController {
                 applicationProperties.getCreatePropertyPipeSizeTopicName(), "propertypipesize-create", propertyPipeSizeRequest);
         final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         propertyPipeSizes.add(propertyPipeSize);
-        return getSuccessResponse(propertyPipeSizes, propertyPipeSizeRequest.getRequestInfo());
+        return getSuccessResponse(propertyPipeSizes, "created", propertyPipeSizeRequest.getRequestInfo());
 
     }
 
@@ -120,13 +121,13 @@ public class PopertyTypePipeSizeController {
             final BindingResult errors,
             @PathVariable("propertyPipeSizeId") final Long propertyPipeSizeId) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = populateErrors(errors);
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
         propertyPipeSizeRequest.getPropertyPipeSize().setId(propertyPipeSizeId);
 
-        final List<ErrorResponse> errorResponses = validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -134,7 +135,7 @@ public class PopertyTypePipeSizeController {
                 applicationProperties.getUpdatePropertyPipeSizeTopicName(), "propertypipesize-update", propertyPipeSizeRequest);
         final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         propertyPipeSizes.add(propertyPipeSize);
-        return getSuccessResponse(propertyPipeSizes, propertyPipeSizeRequest.getRequestInfo());
+        return getSuccessResponse(propertyPipeSizes, null, propertyPipeSizeRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
@@ -161,123 +162,19 @@ public class PopertyTypePipeSizeController {
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponse(propertyPipeSizeList, requestInfo);
+        return getSuccessResponse(propertyPipeSizeList, null, requestInfo);
 
-    }
-
-    private List<ErrorResponse> validatePropertyPipeSizeRequest(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(propertyPipeSizeRequest);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-
-        return errorResponses;
-    }
-
-    private Error getError(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        propertyPipeSizeRequest.getPropertyPipeSize();
-        final List<ErrorField> errorFields = getErrorFields(propertyPipeSizeRequest);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE)
-                .errorFields(errorFields)
-                .build();
-    }
-
-    private List<ErrorField> getErrorFields(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        addPropertyPipeSizeValidationErrors(propertyPipeSizeRequest, errorFields);
-        addTeanantIdValidationErrors(propertyPipeSizeRequest, errorFields);
-        addActiveValidationErrors(propertyPipeSizeRequest, errorFields);
-        return errorFields;
-    }
-
-    private void addPropertyPipeSizeValidationErrors(final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
-            final List<ErrorField> errorFields) {
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
-        if (propertyPipeSize.getPropertyTypeName() == null && !propertyPipeSize.getPropertyTypeName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE)
-                    .message(WcmsConstants.PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTY_PIPESIZE_PROPERTYTYPE_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (propertyPipeSize.getPipeSizeType() == null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_MANDATORY_CODE)
-                    .message(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else if (propertPipeSizeService.checkPipeSizeExists(propertyPipeSize.getPipeSizeType(),
-                propertyPipeSize.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_CODE)
-                    .message(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-
-        } else if (!propertPipeSizeService.checkPropertyByPipeSize(propertyPipeSize.getId(), propertyPipeSize.getPropertyTypeId(),
-                propertyPipeSize.getPipeSizeId(), propertyPipeSize.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.PROPERTY_PIPESIZE_SIZEINMM_UNIQUE_CODE)
-                    .message(WcmsConstants.PROPERTY_PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE)
-                    .field(WcmsConstants.PROPERTY_PIPESIZE_SIZEINMM_UNQ_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
-
-    private void addTeanantIdValidationErrors(final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
-            final List<ErrorField> errorFields) {
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
-        if (propertyPipeSize.getTenantId() == null || propertyPipeSize.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.TENANTID_MANDATORY_CODE)
-                    .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
-
-    private void addActiveValidationErrors(final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
-            final List<ErrorField> errorFields) {
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
-        if (propertyPipeSize.getActive() == null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.ACTIVE_MANDATORY_CODE)
-                    .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
-
-    private ErrorResponse populateErrors(final BindingResult errors) {
-        final ErrorResponse errRes = new ErrorResponse();
-
-        final Error error = new Error();
-        error.setCode(1);
-        error.setDescription("Error while binding request");
-        if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-        errRes.setError(error);
-        return errRes;
     }
 
     private ResponseEntity<?> getSuccessResponse(final List<PropertyTypePipeSize> propertyPipeSizeList,
-            final RequestInfo requestInfo) {
+            final String mode, final RequestInfo requestInfo) {
         final PropertyTypePipeSizeResponse propertyPipeSizeResponse = new PropertyTypePipeSizeResponse();
         propertyPipeSizeResponse.setPropertyPipeSizes(propertyPipeSizeList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+        if (StringUtils.isNotBlank(mode))
+            responseInfo.setStatus(HttpStatus.CREATED.toString());
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
         propertyPipeSizeResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<>(propertyPipeSizeResponse, HttpStatus.OK);
 

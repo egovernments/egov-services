@@ -1,7 +1,8 @@
 package org.egov.user.web.contract;
 
 import lombok.*;
-import org.omg.PortableInterceptor.RequestInfo;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 
 /*
 	Update password request by non logged in user
@@ -13,6 +14,8 @@ import org.omg.PortableInterceptor.RequestInfo;
 @Builder
 @EqualsAndHashCode
 public class NonLoggedInUserUpdatePasswordRequest {
+
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 	private String otpReference;
 	private String userName;
@@ -20,11 +23,7 @@ public class NonLoggedInUserUpdatePasswordRequest {
 	private String tenantId;
 
 	public org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest toDomain() {
-		return org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest.builder()
-				.otpReference(otpReference)
-				.userName(userName)
-				.newPassword(newPassword)
-				.tenantId(tenantId)
-				.build();
+		return org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest.builder().otpReference(otpReference)
+				.userName(userName).newPassword(newPassword).tenantId(tenantId).build();
 	}
 }

@@ -95,6 +95,9 @@ public class ConfigurationManager {
     
     @Value("${egov.services.wcms_masters_categoryType.searchpath}")
     private String waterMasterServiceCategorySearchPathTopic;
+    
+    @Value("${egov.services.wcms_masters_donation.searchpath}")
+    private String waterMasterServiceDonationSearchPathTopic;
 
     @Value("${egov.services.wcms_masters.hostname}")
     private String waterMasterServiceBasePathTopic;

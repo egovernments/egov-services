@@ -68,6 +68,86 @@ public class UserControllerTest {
 
 	@Test
 	@WithMockUser
+	public void test_should_search_for_active_users() throws Exception {
+		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
+				.active(true)
+				.build();
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+				.thenReturn(getUserModels());
+
+		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("getAllActiveUsersForGivenTenant.json"))).andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userSearchResponse.json")));
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_search_for_in_active_users() throws Exception {
+		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
+				.active(false)
+				.build();
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+				.thenReturn(getUserModels());
+
+		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("getAllInActiveUsersForGivenTenant.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userSearchResponse.json")));
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_search_for_active_and_in_active_users_via_v1_endpoint() throws Exception {
+		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
+				.active(null)
+				.build();
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+				.thenReturn(getUserModels());
+
+		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("getAllActiveAndInActiveUsersForGivenTenantV1.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userSearchResponse.json")));
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_search_for_in_active_users_via_v1_endpoint() throws Exception {
+		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
+				.active(false)
+				.build();
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+				.thenReturn(getUserModels());
+
+		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("getAllInActiveUsersForGivenTenantV1.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userSearchResponse.json")));
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_search_for_active_users_via_v1_endpoint() throws Exception {
+		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
+				.active(true)
+				.build();
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+				.thenReturn(getUserModels());
+
+		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("getAllActiveUsersForGivenTenantV1.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userSearchResponse.json")));
+	}
+
+
+	@Test
+	@WithMockUser
 	public void test_should_return_error_response_when_user_search_is_invalid() throws Exception {
 		final UserSearchCriteria invalidSearchCriteria = UserSearchCriteria.builder().build();
 		when(userService.searchUsers(any())).thenThrow(new InvalidUserSearchCriteriaException(invalidSearchCriteria));
@@ -279,12 +359,27 @@ public class UserControllerTest {
 					userSearch.getPan().equals(expectedUserSearch.getPan()) &&
 					userSearch.getEmailId().equals(expectedUserSearch.getEmailId()) &&
 					userSearch.isFuzzyLogic() == expectedUserSearch.isFuzzyLogic() &&
-					userSearch.isActive() == expectedUserSearch.isActive() &&
+					userSearch.getActive() == expectedUserSearch.getActive() &&
 					isEquals(userSearch.getRoleCodes(), expectedUserSearch.getRoleCodes()) &&
 					userSearch.getPageSize() == expectedUserSearch.getPageSize() &&
 					userSearch.getPageNumber() == expectedUserSearch.getPageNumber() &&
 					userSearch.getSort().equals(expectedUserSearch.getSort()) &&
 					userSearch.getType().equals(expectedUserSearch.getType());
+		}
+	}
+
+	class UserSearchActiveFlagMatcher extends ArgumentMatcher<UserSearchCriteria> {
+
+		private UserSearchCriteria expectedUserSearch;
+
+		public UserSearchActiveFlagMatcher(UserSearchCriteria expectedUserSearch) {
+			this.expectedUserSearch = expectedUserSearch;
+		}
+
+		@Override
+		public boolean matches(Object o) {
+			UserSearchCriteria userSearch = (UserSearchCriteria) o;
+			return userSearch.getActive() == expectedUserSearch.getActive();
 		}
 	}
 

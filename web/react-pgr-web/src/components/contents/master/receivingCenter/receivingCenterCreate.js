@@ -123,8 +123,6 @@ class CreateReceivingCenter extends Component {
               console.log(error);
           })
       }
-
-
     }
 
     render() {
@@ -151,7 +149,7 @@ class CreateReceivingCenter extends Component {
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>} />
+                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>

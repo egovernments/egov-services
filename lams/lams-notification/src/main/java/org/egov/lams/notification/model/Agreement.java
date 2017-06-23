@@ -130,4 +130,6 @@ public class Agreement {
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date lastmodifiedDate;
 	private String lastmodifiedBy;
+	private Boolean isAdvancePaid;
+
 }

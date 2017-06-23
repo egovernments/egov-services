@@ -51,12 +51,10 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.SourceType;
 import org.egov.wcms.model.SupplyType;
-import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.util.FileUtils;
-import org.egov.wcms.web.contract.SourceTypeGetRequest;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.SupplyTypeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -85,6 +83,9 @@ public class SupplyTypeControllerTest {
     private ErrorHandler errHandler;
 
     @MockBean
+    private ValidatorUtils validatorUtils;
+
+    @MockBean
     private ResponseInfoFactory responseInfoFactory;
 
     @MockBean
@@ -94,7 +95,7 @@ public class SupplyTypeControllerTest {
     private SupplyTypeController supplyTypeController;
 
     @Test(expected = Exception.class)
-    public void test_Should_Search_WaterSource() throws Exception {
+    public void test_Should_Search_WaterSupplyType() throws Exception {
 
         final List<SupplyType> supplyTypes = new ArrayList<>();
         final RequestInfo requestInfo = new RequestInfo();
@@ -104,7 +105,7 @@ public class SupplyTypeControllerTest {
         supplyType.setCode("2");
         supplyType.setName("Test");
         supplyType.setActive(true);
-        supplyType.setDescription("testeeeeeee");
+        supplyType.setDescription("test");
 
         supplyTypes.add(supplyType);
 

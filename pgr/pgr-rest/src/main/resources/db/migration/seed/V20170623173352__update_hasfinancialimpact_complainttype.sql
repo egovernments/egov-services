@@ -1,0 +1,1 @@
+UPDATE egpgr_complainttype SET hasfinancialimpact=FALSE where hasfinancialimpact is NULL;

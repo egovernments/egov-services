@@ -54,6 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.util.FileUtils;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
@@ -86,6 +87,9 @@ public class PropertyCategoryControllerTest {
 
     @MockBean
     private ErrorHandler errHandler;
+    
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
     @MockBean
     private ResponseInfoFactory responseInfoFactory;
@@ -113,7 +117,7 @@ public class PropertyCategoryControllerTest {
         when(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)).thenReturn(propertyCategoryResponse);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/property/category/_search")
+        mockMvc.perform(post("/propertytype-categorytype/_search")
                 .param("tenantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))

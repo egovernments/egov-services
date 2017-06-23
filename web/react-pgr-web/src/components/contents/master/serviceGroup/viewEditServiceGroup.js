@@ -132,8 +132,8 @@ class ViewEditReceivingCenter extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label="View"/></td>}
-                                              {url == '/serviceGroup/edit' && <td><Link  to={`/createServiceGroup/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/serviceGroup/view' && <td><Link to={`/viewServiceGroup/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
+                                              {url == '/serviceGroup/edit' && <td><Link to={`/createServiceGroup/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}

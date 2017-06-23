@@ -663,6 +663,11 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 	.form-section-inner{padding: 0;}
 }
 
+.selectStyle {
+	background: #fff;
+	border: 1px solid #aaa !important;
+}
+
 @media screen and (max-width: 640px){
 	.view-chart-ui span:nth-child(1), .view-chart-ui span:nth-child(2),
 	.view-chart-ui, .view-chart-ui:nth-child(even){

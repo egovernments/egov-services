@@ -10,7 +10,7 @@ import static java.lang.String.format;
 @Service
 public class OtpSMSRepository {
     private static final String SMS_REGISTER_OTP_MESSAGE =
-        "Dear Citizen, to register the complaint, the OTP is %s.";
+        "Dear Citizen, to register the complaint, the OTP is %s.\nPowered by www.egovernments.org";
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
     private String smsTopic;
 

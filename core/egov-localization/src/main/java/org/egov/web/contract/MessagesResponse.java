@@ -10,4 +10,3 @@ import java.util.List;
 public class MessagesResponse {
     private List<Message> messages;
 }
-

@@ -1,0 +1,19 @@
+{
+    "responseInfo": {
+      
+    },
+    "guidanceValues": [
+        {
+            "id": 1,
+            "tenantId": "default",
+            "name": "kumar",
+            "boundary": "b2",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

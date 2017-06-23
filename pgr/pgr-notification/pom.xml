@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>pgr-common</artifactId>
-            <version>0.17.6</version>
+            <version>0.18.1</version>
         </dependency>
 
         <!--Test dependencies-->
@@ -110,18 +110,18 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <excludes>
-                                        <exclude>org.egov.PgrNotificationApplication</exclude>
-                                        <exclude>org.egov.domain.model.SevaRequest</exclude>
-                                        <exclude>org.egov.domain.model.Tenant</exclude>
-                                        <exclude>org.egov.domain.model.NotificationContext</exclude>
-                                        <exclude>org.egov.domain.exception.TenantDoesNotExistException</exclude>
-                                        <exclude>org.egov.domain.service.smsstrategy.*</exclude>
-                                        <exclude>org.egov.domain.service.emailstrategy.*</exclude>
-                                        <exclude>org.egov.domain.service.contextenricher.*</exclude>
-                                        <exclude>org.egov.domain.service.NotificationContextFactory</exclude>
-                                        <exclude>org.egov.domain.service.NotificationService</exclude>
-                                        <exclude>org.egov.consumer.HashMapDeserializer</exclude>
-                                        <exclude>org.egov.persistence.dto.*</exclude>
+                                        <exclude>org.egov.pgr.notification.PgrNotificationApplication</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.model.SevaRequest</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.model.Tenant</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.model.NotificationContext</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.exception.TenantDoesNotExistException</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.service.smsstrategy.*</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.service.emailstrategy.*</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.service.contextenricher.*</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.service.NotificationContextFactory</exclude>
+                                        <exclude>org.egov.pgr.notification.domain.service.NotificationService</exclude>
+                                        <exclude>org.egov.pgr.notification.consumer.HashMapDeserializer</exclude>
+                                        <exclude>org.egov.pgr.notification.persistence.dto.*</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

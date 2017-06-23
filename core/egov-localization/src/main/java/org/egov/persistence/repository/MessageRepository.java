@@ -3,6 +3,7 @@ package org.egov.persistence.repository;
 
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -28,7 +29,11 @@ public class MessageRepository {
         final List<org.egov.persistence.entity.Message> entityMessages = messages.stream()
             .map(org.egov.persistence.entity.Message::new)
             .collect(Collectors.toList());
-        messageJpaRepository.save(entityMessages);
+        try {
+            messageJpaRepository.save(entityMessages);
+        } catch (DataIntegrityViolationException ex) {
+            new DataIntegrityViolationExceptionTransformer(ex).transform();
+        }
     }
 
     public void delete(String tenant, String locale, String module, List<String> codes) {

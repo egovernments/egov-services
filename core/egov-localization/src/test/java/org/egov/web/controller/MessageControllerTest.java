@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.egov.TestConfiguration;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.MessageIdentity;
+import org.egov.domain.model.MessageSearchCriteria;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 import org.junit.Test;
@@ -46,8 +47,12 @@ public class MessageControllerTest {
     @Test
     public void test_should_fetch_messages_for_given_locale_via_get_endpoint() throws Exception {
         final List<Message> modelMessages = getModelMessages();
-        when(messageService.getMessages(LOCALE, new Tenant(TENANT_ID)))
-            .thenReturn(modelMessages);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(LOCALE)
+            .tenantId(new Tenant(TENANT_ID))
+            .module(null)
+            .build();
+        when(messageService.getFilteredMessages(searchCriteria)).thenReturn(modelMessages);
         mockMvc.perform(get("/messages")
             .param("tenantId", TENANT_ID)
             .param("locale", LOCALE))
@@ -58,11 +63,16 @@ public class MessageControllerTest {
 
     @Test
     public void test_should_fetch_messages_for_given_locale_via_search_endpoint() throws Exception {
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(LOCALE)
+            .tenantId(new Tenant(TENANT_ID))
+            .module("CS")
+            .build();
         final List<Message> modelMessages = getModelMessages();
-        when(messageService.getMessages(LOCALE, new Tenant(TENANT_ID)))
-            .thenReturn(modelMessages);
+        when(messageService.getFilteredMessages(searchCriteria)).thenReturn(modelMessages);
         mockMvc.perform(post("/messages/v1/_search")
             .param("tenantId", TENANT_ID)
+            .param("module", "CS")
             .param("locale", LOCALE))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

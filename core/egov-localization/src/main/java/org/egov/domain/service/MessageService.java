@@ -2,6 +2,7 @@ package org.egov.domain.service;
 
 import org.egov.domain.model.Message;
 import org.egov.domain.model.MessageIdentity;
+import org.egov.domain.model.MessageSearchCriteria;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
@@ -40,13 +41,26 @@ public class MessageService {
         messageCacheRepository.bustCache();
     }
 
-    public List<Message> getMessages(String locale, Tenant tenant) {
-        final List<Message> cachedMessages = messageCacheRepository.getComputedMessages(locale, tenant);
+    public List<Message> getFilteredMessages(MessageSearchCriteria searchCriteria) {
+        final List<Message> messages = getMessages(searchCriteria);
+        if (searchCriteria.isModuleAbsent()) {
+            return messages;
+        }
+        return messages.stream()
+            .filter(message -> searchCriteria.getModule().equals(message.getModule()))
+            .collect(Collectors.toList());
+    }
+
+    private List<Message> getMessages(MessageSearchCriteria searchCriteria) {
+        final List<Message> cachedMessages = messageCacheRepository
+            .getComputedMessages(searchCriteria.getLocale(), searchCriteria.getTenantId());
         if (cachedMessages != null) {
             return cachedMessages;
         }
-        final List<Message> computedMessages = computeMessageList(locale, tenant);
-        messageCacheRepository.cacheComputedMessages(locale, tenant, computedMessages);
+        final List<Message> computedMessages =
+            computeMessageList(searchCriteria.getLocale(), searchCriteria.getTenantId());
+        messageCacheRepository
+            .cacheComputedMessages(searchCriteria.getLocale(), searchCriteria.getTenantId(), computedMessages);
         return computedMessages;
     }
 

@@ -3,6 +3,7 @@ package org.egov.domain.service;
 
 import org.egov.domain.model.Message;
 import org.egov.domain.model.MessageIdentity;
+import org.egov.domain.model.MessageSearchCriteria;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
@@ -70,8 +71,12 @@ public class MessageServiceTest {
             .thenReturn(marathiMessagesForGivenTenant);
         when(messageCacheRepository.getMessages(anyString(), any())).thenReturn(null);
         when(messageCacheRepository.getComputedMessages(anyString(), any())).thenReturn(null);
-
-        List<Message> actualMessages = messageService.getMessages(MR_IN, new Tenant(tenantId));
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module")
+            .build();
+        List<Message> actualMessages = messageService.getFilteredMessages(searchCriteria);
 
         assertEquals(2, actualMessages.size());
         assertEquals("code1", actualMessages.get(0).getCode());
@@ -100,8 +105,13 @@ public class MessageServiceTest {
             .thenReturn(Collections.emptyList());
         when(messageCacheRepository.getMessages(anyString(), any())).thenReturn(null);
         when(messageCacheRepository.getComputedMessages(anyString(), any())).thenReturn(null);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module")
+            .build();
 
-        messageService.getMessages(MR_IN, new Tenant(tenantId));
+        messageService.getFilteredMessages(searchCriteria);
 
         verify(messageCacheRepository).cacheComputedMessages(MR_IN, new Tenant(tenantId), defaultEnglishMessages);
     }
@@ -129,8 +139,12 @@ public class MessageServiceTest {
             .thenReturn(tenantSpecificMessages);
         when(messageCacheRepository.getMessages(anyString(), any())).thenReturn(null);
         when(messageCacheRepository.getComputedMessages(anyString(), any())).thenReturn(null);
-
-        messageService.getMessages(MR_IN, new Tenant(tenantId));
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module")
+            .build();
+        messageService.getFilteredMessages(searchCriteria);
 
         verify(messageCacheRepository).cacheMessages(ENGLISH_INDIA, new Tenant("default"), defaultEnglishMessages);
         verify(messageCacheRepository).cacheMessages(MR_IN, new Tenant("default"), tenantSpecificMessages);
@@ -226,8 +240,13 @@ public class MessageServiceTest {
             .thenReturn(Collections.emptyList());
         when(messageCacheRepository.getMessages(anyString(), any())).thenReturn(null);
         when(messageCacheRepository.getComputedMessages(anyString(), any())).thenReturn(null);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module")
+            .build();
 
-        List<Message> actualMessages = messageService.getMessages(MR_IN, new Tenant(tenantId));
+        List<Message> actualMessages = messageService.getFilteredMessages(searchCriteria);
 
         assertEquals(5, actualMessages.size());
         assertEquals("code1", actualMessages.get(0).getCode());
@@ -269,8 +288,89 @@ public class MessageServiceTest {
         List<Message> expectedMessages = Arrays.asList(defaultMessage1, defaultMessage2);
         when(messageCacheRepository.getComputedMessages(MR_IN, new Tenant(tenantId)))
             .thenReturn(expectedMessages);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module")
+            .build();
 
-        List<Message> actualMessages = messageService.getMessages(MR_IN, new Tenant(tenantId));
+        List<Message> actualMessages = messageService.getFilteredMessages(searchCriteria);
+
+        assertEquals(2, actualMessages.size());
+    }
+
+    @Test
+    public void test_should_return_messages_filtered_by_module_name() {
+        String tenantId = "a.b.c";
+        final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("code1")
+            .locale(ENGLISH_INDIA)
+            .module("module1")
+            .tenant(defaultTenant)
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("default message1")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .locale(ENGLISH_INDIA)
+            .module("module2")
+            .tenant(defaultTenant)
+            .build();
+        Message defaultMessage2 = Message.builder()
+            .messageIdentity(messageIdentity2)
+            .message("default message2")
+            .build();
+        List<Message> expectedMessages = Arrays.asList(defaultMessage1, defaultMessage2);
+        when(messageCacheRepository.getComputedMessages(MR_IN, new Tenant(tenantId)))
+            .thenReturn(expectedMessages);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module1")
+            .build();
+
+        List<Message> actualMessages = messageService.getFilteredMessages(searchCriteria);
+
+        assertEquals(1, actualMessages.size());
+    }
+
+    @Test
+    public void test_should_return_un_filtered_messages_when_module_is_not_present() {
+        String tenantId = "a.b.c";
+        final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("code1")
+            .locale(ENGLISH_INDIA)
+            .module("module1")
+            .tenant(defaultTenant)
+            .build();
+        Message defaultMessage1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("default message1")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .locale(ENGLISH_INDIA)
+            .module("module2")
+            .tenant(defaultTenant)
+            .build();
+        Message defaultMessage2 = Message.builder()
+            .messageIdentity(messageIdentity2)
+            .message("default message2")
+            .build();
+        List<Message> expectedMessages = Arrays.asList(defaultMessage1, defaultMessage2);
+        when(messageCacheRepository.getComputedMessages(MR_IN, new Tenant(tenantId)))
+            .thenReturn(expectedMessages);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module(null)
+            .build();
+
+        List<Message> actualMessages = messageService.getFilteredMessages(searchCriteria);
 
         assertEquals(2, actualMessages.size());
     }
@@ -306,8 +406,13 @@ public class MessageServiceTest {
         when(messageCacheRepository.getMessages(ENGLISH_INDIA, new Tenant("default")))
             .thenReturn(defaultEnglishMessages);
         when(messageCacheRepository.getComputedMessages(anyString(), any())).thenReturn(null);
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(MR_IN)
+            .tenantId(new Tenant(tenantId))
+            .module("module")
+            .build();
 
-        List<Message> actualMessages = messageService.getMessages(MR_IN, new Tenant(tenantId));
+        List<Message> actualMessages = messageService.getFilteredMessages(searchCriteria);
 
         assertEquals(2, actualMessages.size());
         assertEquals("code1", actualMessages.get(0).getCode());
@@ -322,7 +427,7 @@ public class MessageServiceTest {
 
         verify(messageRepository).save(modelMessages);
     }
-    
+
     private List<Message> getMessages() {
         final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("core.msg.OTPvalidated")

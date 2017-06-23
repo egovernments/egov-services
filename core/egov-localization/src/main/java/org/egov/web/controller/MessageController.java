@@ -1,5 +1,6 @@
 package org.egov.web.controller;
 
+import org.egov.domain.model.MessageSearchCriteria;
 import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 import org.egov.web.contract.*;
@@ -24,17 +25,21 @@ public class MessageController {
 
     @GetMapping()
     public MessagesResponse getMessagesForLocale(@RequestParam("locale") String locale,
+                                                 @RequestParam(value = "module", required = false) String module,
                                                  @RequestParam("tenantId") String tenantId) {
-        List<org.egov.domain.model.Message> domainMessages =
-            messageService.getMessages(locale, new Tenant(tenantId));
-        return createResponse(domainMessages);
+        return getMessages(locale, module, tenantId);
     }
 
     @PostMapping("/v1/_search")
     public MessagesResponse getMessages(@RequestParam("locale") String locale,
-                                                 @RequestParam("tenantId") String tenantId) {
-        List<org.egov.domain.model.Message> domainMessages =
-            messageService.getMessages(locale, new Tenant(tenantId));
+                                        @RequestParam(value = "module", required = false) String module,
+                                        @RequestParam("tenantId") String tenantId) {
+        final MessageSearchCriteria searchCriteria = MessageSearchCriteria.builder()
+            .locale(locale)
+            .tenantId(new Tenant(tenantId))
+            .module(module)
+            .build();
+        List<org.egov.domain.model.Message> domainMessages = messageService.getFilteredMessages(searchCriteria);
         return createResponse(domainMessages);
     }
 
@@ -73,7 +78,7 @@ public class MessageController {
 
     @PostMapping(value = "/v1/_delete")
     public DeleteMessagesResponse delete(@RequestBody @Valid final DeleteMessagesRequest deleteMessagesRequest,
-                                    final BindingResult bindingResult) {
+                                         final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidMessageRequest(bindingResult.getFieldErrors());
         }

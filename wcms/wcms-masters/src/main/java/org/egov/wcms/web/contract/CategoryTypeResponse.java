@@ -65,6 +65,6 @@ public class CategoryTypeResponse {
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("Category")
+    @JsonProperty("CategoryTypes")
     private List<CategoryType> categories = new ArrayList<>();
 }

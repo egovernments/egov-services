@@ -47,6 +47,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenericQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(UsageTypeQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(GenericQueryBuilder.class);
 
 }

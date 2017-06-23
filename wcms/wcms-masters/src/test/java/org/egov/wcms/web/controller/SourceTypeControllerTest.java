@@ -54,6 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.SourceType;
 import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.util.FileUtils;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -89,6 +90,9 @@ public class SourceTypeControllerTest {
 
     @InjectMocks
     private SourceTypeController waterSourceTypeController;
+    
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
     @Test(expected = Exception.class)
     public void test_Should_Search_WaterSource() throws Exception {

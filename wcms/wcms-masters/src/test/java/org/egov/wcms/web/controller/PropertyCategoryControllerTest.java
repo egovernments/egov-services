@@ -54,6 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.util.FileUtils;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
@@ -86,6 +87,9 @@ public class PropertyCategoryControllerTest {
 
     @MockBean
     private ErrorHandler errHandler;
+    
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
     @MockBean
     private ResponseInfoFactory responseInfoFactory;

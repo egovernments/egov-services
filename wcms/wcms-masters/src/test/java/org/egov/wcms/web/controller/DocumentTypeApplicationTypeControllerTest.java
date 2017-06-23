@@ -54,6 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.util.FileUtils;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -87,9 +88,12 @@ public class DocumentTypeApplicationTypeControllerTest {
 
     @MockBean
     private ResponseInfoFactory responseInfoFactory;
+    
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
     @Test(expected = Exception.class)
-    public void test_Should_Search_PropertyCategory() throws Exception {
+    public void test_Should_Search_ApplicationDocument() throws Exception {
 
         final List<DocumentTypeApplicationType> docNames = new ArrayList<>();
         final RequestInfo requestInfo = Mockito.mock(RequestInfo.class);

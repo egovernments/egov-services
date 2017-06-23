@@ -65,6 +65,6 @@ public class CategoryTypeRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("Category")
+    @JsonProperty("CategoryType")
     private CategoryType category;
 }

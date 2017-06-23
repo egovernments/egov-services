@@ -54,6 +54,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
 import org.egov.wcms.util.FileUtils;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
@@ -86,6 +87,9 @@ public class PropertyTypePipeSizeTypeControllerTest {
 
     @MockBean
     private ApplicationProperties applicationProperties;
+    
+    @MockBean
+    private ValidatorUtils validatorUtils;
 
     @InjectMocks
     private PopertyTypePipeSizeController popertyPipeSizeController;

@@ -29,6 +29,17 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 var _this = 0;
 var flag = 0;
 
+const getNameByBoundary = function(object, id) {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+            if (object[i].id == id) {
+                return object[i].boundaryType.name;
+            }
+        }
+}
+
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
         return "";
@@ -110,6 +121,8 @@ class routerGeneration extends Component {
     this.handleOpenNClose = this.handleOpenNClose.bind(this);
     this.handleOpenNClose2 = this.handleOpenNClose2.bind(this);
   }
+
+
 
   setInitialState(_state) {
   	this.setState(_state);
@@ -213,7 +226,7 @@ class routerGeneration extends Component {
   	Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
-  			resultList: response.RouterTypes,
+  			resultList: response.RouterTypRes,
   			isSearchClicked: true
   		})
   	}, function(err) {
@@ -317,10 +330,10 @@ class routerGeneration extends Component {
    			return (
    				<tr key={i}>
    					<td>{i+1}</td>
-   					<td>{val.grievancetype.serviceName}</td>
-   					<td>{getNameById(boundaryTypeList, val.boundaryType)}</td>
-   					<td>{getNameById(boundaryInitialList, val.boundary)}</td>
-   					<td>{getNameById(positionSource, val.position)}</td>
+            <td>{val.services.serviceName}</td>
+            <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>
+            <td>{getNameById(boundaryInitialList, val.boundary.boundaryType)}</td>
+            <td>{getNameById(positionSource, val.position)}</td>
    				</tr>
    			)
    		})
@@ -335,7 +348,7 @@ class routerGeneration extends Component {
 		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
 		            <tr>
-		              <th>#</th>
+		              <th>Sl No</th>
 		              <th>Grievance Type</th>
 		              <th>Boundary Type</th>
 		              <th>Boundary</th>
@@ -374,7 +387,7 @@ class routerGeneration extends Component {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "complaintTypes", true, "")}} multiple>
 	                					{typeList.map((item, index) => (
-			                                <MenuItem value={item.code} key={index} primaryText={item.name} />
+			                                <MenuItem value={item.serviceName} key={index} primaryText={item.serviceName} />
 			                            ))}
                     </SelectField>
                    </Col>

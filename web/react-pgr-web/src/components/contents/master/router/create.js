@@ -101,11 +101,11 @@ class createRouter extends Component {
     });
 
     if(type==="edit" || type==="view") {
-      
+
       var id=this.props.match.params.id;
       Api.commonApiPost("/workflow/router/_search",{id}).then(function(response) {
         self.setState({
-          routerCreateSet: response.RouterTypes,
+          routerCreateSet: response.RouterTypRes,
         })
       }, function(err) {
 

@@ -50,6 +50,16 @@ const getNameById = function(object, id, property = "") {
     }
     return "";
 }
+const getNameByBoundary = function(object, id) {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+            if (object[i].id == id) {
+                return object[i].boundaryType.name;
+            }
+        }
+}
 
 const styles = {
   headerStyle : {
@@ -97,7 +107,8 @@ class searchRouter extends Component {
           isSearchClicked: false,
           resultList: [],
           boundariesList: [],
-          boundaryInitialList: []
+          boundaryInitialList: [],
+          positionSource:[]
        }
       this.loadBoundaries = this.loadBoundaries.bind(this);
       this.search = this.search.bind(this);
@@ -149,6 +160,15 @@ class searchRouter extends Component {
           boundaryInitialList: []
         })
     });
+    Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+      self.setState({
+        positionSource: response.Position
+      })
+    }, function(err) {
+        self.setState({
+          positionSource: []
+        })
+    });
 
     Api.commonApiPost("/pgr/services/_search", {type:'all'}).then(function(response) {
        self.setState({
@@ -177,7 +197,7 @@ class searchRouter extends Component {
     Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
       flag = 1;
       self.setState({
-        resultList: response.RouterTypes,
+        resultList: response.RouterTypRes,
         isSearchClicked: true
       })
     }, function(err) {
@@ -211,12 +231,15 @@ class searchRouter extends Component {
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
+
+        console.log(boundaryInitialList);
+
         return (
           <tr key={i}>
             <td>{i+1}</td>
-            <td>{val.grievancetype.serviceName}</td>
-            <td>{getNameById(boundaryTypeList, val.boundaryType)}</td>
-            <td>{getNameById(boundaryInitialList, val.boundary)}</td>
+            <td>{val.services.serviceName}</td>
+            <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>
+            <td>{getNameById(boundaryInitialList, val.boundary.boundaryType)}</td>
             <td>{getNameById(positionSource, val.position)}</td>
           </tr>
         )
@@ -232,7 +255,7 @@ class searchRouter extends Component {
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
               <thead style={{backgroundColor:"#f2851f",color:"white"}}>
                 <tr>
-                  <th>#</th>
+                  <th>Sl No.</th>
                   <th>Grievance Type</th>
                   <th>Boundary Type</th>
                   <th>Boundary</th>

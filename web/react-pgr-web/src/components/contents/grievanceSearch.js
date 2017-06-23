@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
+import {Grid, Row, Col, DropdownButton, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
@@ -12,14 +12,6 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
 import Api from '../../api/api';
 
 const getNameByProperty = function(object, key) {
@@ -87,6 +79,11 @@ class grievanceSearch extends Component {
        this.handleOpenNClose = this.handleOpenNClose.bind(this);
        this.resetAndSearch = this.resetAndSearch.bind(this);
        this.handlePageClick = this.handlePageClick.bind(this);
+       this.handleNavigation = this.handleNavigation.bind(this);
+  }
+
+  handleNavigation(serviceId) {
+    window.open('/grievanceView/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   handleOpenNClose() {
@@ -208,7 +205,7 @@ class grievanceSearch extends Component {
   };
 
   render() {
-  	let {search, resetAndSearch, handlePageClick} = this;
+  	let {search, resetAndSearch, handlePageClick, handleNavigation} = this;
   	let {
   		complaintTypeList,
   		statusList,
@@ -233,15 +230,15 @@ class grievanceSearch extends Component {
   		if(resultList.length) {
   			return resultList.map(function(val, i) {
   				return (
-  					<TableRow key={i}>
-  						<TableRowColumn>{val.serviceRequestId}</TableRowColumn>
-  						<TableRowColumn>{val.serviceName}</TableRowColumn>
-  						<TableRowColumn>{val.firstName}</TableRowColumn>
-  						<TableRowColumn>{(getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</TableRowColumn>
-  						<TableRowColumn>{getNameByProperty(val.attribValues, "status")}</TableRowColumn>
-  						<TableRowColumn>{getNameByProperty(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</TableRowColumn>
-  						<TableRowColumn>{val.requestedDatetime}</TableRowColumn>
-  					</TableRow>
+  					<tr key={i} onClick={()=>{handleNavigation(val.serviceRequestId)}} style={{"cursor": "pointer"}}>
+  						<td>{val.serviceRequestId}</td>
+  						<td>{val.serviceName}</td>
+  						<td>{val.firstName}</td>
+  						<td>{(getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
+  						<td>{getNameByProperty(val.attribValues, "status")}</td>
+  						<td>{getNameByProperty(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
+  						<td>{val.requestedDatetime}</td>
+  					</tr>
   				)
   			})
   		}
@@ -260,21 +257,21 @@ class grievanceSearch extends Component {
   	}
   	const showTable = function() {
 			return (
-				<Table>
-			    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-			      <TableRow>
-			        <TableHeaderColumn>Application No.</TableHeaderColumn>
-			        <TableHeaderColumn>Grivience/Service Type</TableHeaderColumn>
-			        <TableHeaderColumn>Name</TableHeaderColumn>
-			        <TableHeaderColumn>Location</TableHeaderColumn>
-			        <TableHeaderColumn>Status</TableHeaderColumn>
-			        <TableHeaderColumn>Department</TableHeaderColumn>
-			        <TableHeaderColumn>Registered Date</TableHeaderColumn>
-			      </TableRow>
-			    </TableHeader>
-			    <TableBody displayRowCheckbox={false}>
+				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive>
+			    <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+			      <tr>
+			        <th>Application No.</th>
+			        <th>Grivience/Service Type</th>
+			        <th>Name</th>
+			        <th>Location</th>
+			        <th>Status</th>
+			        <th>Department</th>
+			        <th>Registered Date</th>
+			      </tr>
+			    </thead>
+			    <tbody>
 			    	{renderBody()}
-			    </TableBody>
+			    </tbody>
 		    </Table>
 			)
   	}

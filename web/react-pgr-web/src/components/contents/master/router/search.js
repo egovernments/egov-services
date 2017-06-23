@@ -112,6 +112,7 @@ class searchRouter extends Component {
        }
       this.loadBoundaries = this.loadBoundaries.bind(this);
       this.search = this.search.bind(this);
+      this.handleNavigation = this.handleNavigation.bind(this);
   }
 
   componentWillUpdate() {
@@ -205,6 +206,10 @@ class searchRouter extends Component {
     })
   }
 
+  handleNavigation(id) {
+    window.open("/createRouter/" + this.props.match.params.type + "/" + id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+  }
+
   render() {
     _this = this;
     let {
@@ -214,7 +219,8 @@ class searchRouter extends Component {
     } = this.props;
     let {
       loadBoundaries,
-      search
+      search,
+      handleNavigation
     } = this;
     let {
         allSourceConfig,
@@ -231,11 +237,8 @@ class searchRouter extends Component {
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
-
-        console.log(boundaryInitialList);
-
         return (
-          <tr key={i}>
+          <tr key={i} onClick={() => {handleNavigation(val.id)}}>
             <td>{i+1}</td>
             <td>{val.services.serviceName}</td>
             <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>

@@ -373,7 +373,7 @@ class routerGeneration extends Component {
                  <Grid>
                    <Row>
                    <Col xs={12} md={8}>
-                     <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Grievance Category" errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true} floatingLabelText="Grievance Category" errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
 	                					handleChange(e, "complaintTypeCategory", true, "")}}>
@@ -383,16 +383,27 @@ class routerGeneration extends Component {
                      </SelectField>
                    </Col>
                    <Col xs={12} md={8}>
-                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Grievance Type" errorText={fieldErrors.complaintTypes} value={routerCreateSet.complaintTypes} onChange={(e, i, val) => {
+                    <SelectField 
+                      fullWidth={true} 
+                      floatingLabelText="Grievance Type" 
+                      errorText={fieldErrors.complaintTypes} 
+                      value={routerCreateSet.complaintTypes} 
+                      onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "complaintTypes", true, "")}} multiple>
 	                					{typeList.map((item, index) => (
-			                                <MenuItem value={item.serviceName} key={index} primaryText={item.serviceName} />
-			                            ))}
+			                                <MenuItem 
+                                        value={item.serviceCode} 
+                                        key={index} 
+                                        insetChildren={true}
+                                        primaryText={item.serviceName}
+                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.serviceName) > -1}
+                                      />
+			                       ))}
                     </SelectField>
                    </Col>
                    <Col xs={12} md={8}>
-                     <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Boundary Type" errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true} floatingLabelText="Boundary Type" errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
 	                					handleChange(e, "boundaryType", true, "")}}>
@@ -402,12 +413,23 @@ class routerGeneration extends Component {
                      </SelectField>
                    </Col>
                    <Col xs={12} md={8}>
-                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Boundary" errorText={fieldErrors.boundaries || ""} value={routerCreateSet.boundaries} onChange={(e, i, val) => {
+                    <SelectField 
+                      fullWidth={true} 
+                      floatingLabelText="Boundary" 
+                      errorText={fieldErrors.boundaries || ""} 
+                      value={routerCreateSet.boundaries} 
+                      onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "boundaries", true, "")}} multiple>
 	                					{boundariesList.map((item, index) => (
-			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
-			                            ))}
+			                                <MenuItem 
+                                        value={item.id} 
+                                        key={index} 
+                                        primaryText={item.name}
+                                        insetChildren={true}
+                                        checked={routerCreateSet.boundaries && routerCreateSet.boundaries.indexOf(item.id) > -1}
+                                      />
+			                      ))}
                     </SelectField>
                    </Col>
                    </Row>

@@ -71,15 +71,22 @@ public class Connection {
 
     @NotNull
     private String categoryType;
+    
+    private String categoryId;
 
     @NotNull
     private String hscPipeSizeType;
+    
+    private String pipesizeId;
 
     @NotNull
     private String supplyType;
+    
+    private String supplyTypeId;
 
     @NotNull
     private String sourceType;
+    private String sourceTypeId;
 
     @NotNull
     private String connectionStatus;

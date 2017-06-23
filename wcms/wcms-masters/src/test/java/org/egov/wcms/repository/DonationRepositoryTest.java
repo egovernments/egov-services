@@ -54,6 +54,7 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
+import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,17 +93,29 @@ public class DonationRepositoryTest {
     @Test
     public void test_Should_Find_Donation_Valid() {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final DonationRequest donationRequest = getDonationRequest();
-        final Donation donation = donationRequest.getDonation();
+        final DonationGetRequest donationRequest = getDonationvalidaRequest();
         final String queryString = "MyQuery";
         final List<Donation> donations = new ArrayList<>();
         when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), donationRowMapper))
                 .thenReturn(donations);
 
         assertTrue(
-                donations.equals(donationRepository.getDonationList(donation)));
+                donations.equals(donationRepository.getDonationList(donationRequest)));
     }
+    private DonationGetRequest getDonationvalidaRequest() {
+        final DonationGetRequest donation = new DonationGetRequest();
+        donation.setCategoryType("1");
+        donation.setPropertyType("2");
+        donation.setUsageType("3");
+        donation.setMaxHSCPipeSize(123);
+        donation.setMinHSCPipeSize(12);
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
 
+        donation.setActive(true);
+      
+        return donation;
+    }
     private DonationRequest getDonationRequest() {
         final DonationRequest donationReq = new DonationRequest();
         final Donation donation = new Donation();

@@ -47,15 +47,16 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transanction.config.ConfigurationManager;
 import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
 import org.egov.wcms.transanction.web.contract.CategoryResponseInfo;
+import org.egov.wcms.transanction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transanction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transanction.web.contract.SupplyResponseInfo;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.contract.WaterSourceResponseInfo;
+import org.egov.wcms.transanction.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
-import org.egov.wcms.transanction.web.contract.factory.ResponseInfoFactory;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -120,7 +121,7 @@ public class ConnectionMasterValidator {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         CategoryResponseInfo positions = restTemplate.postForObject(url.toString(), request,CategoryResponseInfo.class,waterConnectionRequest.getConnection().getCategoryType(),waterConnectionRequest.getConnection().getTenantId());
         if(positions!=null){
-        waterConnectionRequest.getConnection().setCategoryType(positions.getCategory()!=null && positions.getCategory().get(0)!=null?positions.getCategory().get(0).getId():"");
+        waterConnectionRequest.getConnection().setCategoryId(positions.getCategory()!=null && positions.getCategory().get(0)!=null?positions.getCategory().get(0).getId():"");
         }
         return positions;
     }
@@ -134,7 +135,7 @@ public class ConnectionMasterValidator {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         PipeSizeResponseInfo pipesize = restTemplate.postForObject(url.toString(), request,PipeSizeResponseInfo.class,Double.parseDouble(waterConnectionRequest.getConnection().getHscPipeSizeType()),waterConnectionRequest.getConnection().getTenantId());
         if(pipesize!=null){
-        waterConnectionRequest.getConnection().setHscPipeSizeType(pipesize.getPipeSize()!=null && pipesize.getPipeSize().get(0)!=null?pipesize.getPipeSize().get(0).getId():"");
+        waterConnectionRequest.getConnection().setPipesizeId(pipesize.getPipeSize()!=null && pipesize.getPipeSize().get(0)!=null?pipesize.getPipeSize().get(0).getId():"");
         }
         return pipesize;
     }
@@ -148,7 +149,7 @@ public class ConnectionMasterValidator {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         WaterSourceResponseInfo sourcetype = restTemplate.postForObject(url.toString(), request,WaterSourceResponseInfo.class,waterConnectionRequest.getConnection().getSourceType(),waterConnectionRequest.getConnection().getTenantId());
         if(sourcetype!=null){
-        waterConnectionRequest.getConnection().setSourceType(sourcetype.getWaterSourceType()!=null
+        waterConnectionRequest.getConnection().setSourceTypeId(sourcetype.getWaterSourceType()!=null
                 && sourcetype.getWaterSourceType().get(0)!=null?sourcetype.getWaterSourceType().get(0).getId():"");
         }
         return sourcetype;
@@ -163,10 +164,30 @@ public class ConnectionMasterValidator {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         SupplyResponseInfo supplytype = restTemplate.postForObject(url.toString(), request,SupplyResponseInfo.class,waterConnectionRequest.getConnection().getSupplyType(),waterConnectionRequest.getConnection().getTenantId());
         if(supplytype!=null){
-        waterConnectionRequest.getConnection().setSupplyType(supplytype.getSupplytypes()!=null
+        waterConnectionRequest.getConnection().setSupplyTypeId(supplytype.getSupplytypes()!=null
                 && supplytype.getSupplytypes().get(0)!=null?supplytype.getSupplytypes().get(0).getId():"");
         }
         return supplytype;
+    }
+    
+    public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        RequestInfoWrapper wrapper = new RequestInfoWrapper(requestInfo);
+        String url1 = configurationManager.getWaterMasterServiceBasePathTopic()
+                + configurationManager.getWaterMasterServiceDonationSearchPathTopic() + "?propertyType=2"
+                + "&usageType=3" + "&categoryType="  + waterConnectionRequest.getConnection().getCategoryId() +
+                 "&maxHSCPipeSize=" +  waterConnectionRequest.getConnection().getPipesizeId()
+                + "&minHSCPipeSize=" +waterConnectionRequest.getConnection().getPipesizeId() +
+                 "&tenantId=" + waterConnectionRequest.getConnection().getTenantId();
+        //TODO:waterConnectionRequest.getConnection().getProperty().getPropertyType() and waterConnectionRequest.getConnection().getProperty().getUsageType()
+        //need to get From PTIS TEAM:usageType ,propertyType
+        DonationResponseInfo donation1 = new RestTemplate().postForObject(url1, wrapper,
+                DonationResponseInfo.class);
+        if(donation1!=null){
+        waterConnectionRequest.getConnection().setDonationCharge(donation1.getDonations()!=null
+                && donation1.getDonations().get(0)!=null?donation1.getDonations().get(0).getDonationAmount():"");
+        }
+        return donation1;
     }
     
 }

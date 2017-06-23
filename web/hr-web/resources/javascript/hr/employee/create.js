@@ -1663,8 +1663,10 @@ function printValue(object = "", values) {
                             } else if (ckey == "active") {
                                 if ([true, "true"].indexOf(values[key][ckey]) > -1) {
                                     $('[data-active="yes"]').prop("checked", true);
-                                } else {
                                     $('[data-active="no"]').prop("checked", false);
+                                } else {
+                                    $('[data-active="no"]').prop("checked", true);
+                                    $('[data-active="yes"]').prop("checked", false);
                                 }
                             } else {
                                 $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");

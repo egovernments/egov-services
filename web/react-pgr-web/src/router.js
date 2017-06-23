@@ -11,6 +11,7 @@ import receivingModeCreate from './components/contents/master/receivingMode/rece
 import viewOrUpdateReceivingMode from './components/contents/master/receivingMode/viewOrUpdateReceivingMode';
 import ServiceGroupCreate from './components/contents/master/serviceGroup/serviceGroupCreate';
 import ViewEditServiceGroup from './components/contents/master/serviceGroup/viewEditServiceGroup';
+import BulkEscalationGeneration from './components/contents/master/escalation/bulkEscalationGeneration';
 
 
 const Main = () => (
@@ -35,6 +36,7 @@ const Main = () => (
       <Route exact path='/createServiceGroup' component={ServiceGroupCreate}/>
       <Route exact path='/serviceGroup/view' component={ViewEditServiceGroup}/>
       <Route exact path='/serviceGroup/edit' component={ViewEditServiceGroup}/>
+      <Route exact path='/bulkEscalationGeneration' component={BulkEscalationGeneration}/>
     </Switch>
   </main>
 )

@@ -73,7 +73,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/propertytype-pipesizetype")
+@RequestMapping("/propertytype-pipesize")
 public class PopertyTypePipeSizeController {
 
     private static final Logger logger = LoggerFactory.getLogger(PopertyTypePipeSizeController.class);

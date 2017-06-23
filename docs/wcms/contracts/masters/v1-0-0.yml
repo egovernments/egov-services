@@ -16,7 +16,7 @@
         - Search for ConnectionType
         - Search for ApplicationType
         - Create, Update and Search for mapping between PropertyType-CategoryType
-        - Create, Update and Search for mapping between PropertyType-PipeSizeType
+        - Create, Update and Search for mapping between PropertyType-PipeSize
         - Create, Update and Search for mapping between PropertyType-UsageType
         - Create, Update and Search for mapping between DocumentType-ApplicationType
     contact:
@@ -491,70 +491,70 @@
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
   # Property Type PipeSize Type API
-    /propertytype-pipesizetype/_create:
+    /propertytype-pipesize/_create:
       post:
-        summary: creates mapping between property type and pipe size type
+        summary: creates mapping between property type and pipe size 
         description: allows mapping between two types.
         tags:
-          - PropertyTypePipeSizeType
+          - PropertyTypePipeSize
         parameters:
-          - name: PropertyTypePipeSizeType
+          - name: PropertyTypePipeSize
             in: body
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/PropertyTypePipeSizeTypeReq'
+              $ref: '#/definitions/PropertyTypePipeSizeReq'
         responses:
           '201':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
+              $ref: "#/definitions/PropertyTypePipeSizeRes"
           '400':
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /propertytype-pipesizetype/{id}/_update:
+    /propertytype-pipesize/{id}/_update:
       parameters:
       - $ref: "#/parameters/updateId"
       post:
         summary: updates existing values
         description: updates existing values
         tags:
-          - PropertyTypePipeSizeType
+          - PropertyTypePipeSize
         parameters:
-          - name: PropertyTypePipeSizeType
+          - name: PropertyTypePipeSize
             in: body
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/PropertyTypePipeSizeTypeReq'
+              $ref: '#/definitions/PropertyTypePipeSizeReq'
         responses:
           '200':
             description: Request acknowledged sucessfully
             schema:
-              $ref: "#/definitions/PropertyTypePipeSizeTypesRes"
+              $ref: "#/definitions/PropertyTypePipeSizeRes"
           '400':
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /propertytype-pipesizetype/_search:
+    /propertytype-pipesize/_search:
       post:
         summary: searches existing values
         tags:
-          - PropertyTypePipeSizeType
+          - PropertyTypePipeSize
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/propertyTypeCode"
-          - $ref: "#/parameters/pipeSizeTypeCode"
+          - $ref: "#/parameters/pipeSizeCode"
         responses:
           200: 
             description: Successful response
             schema:
-              $ref: '#/definitions/PropertyTypePipeSizeTypesRes'
+              $ref: '#/definitions/PropertyTypePipeSizeRes'
           400:
             description: Invalid input
             schema:
@@ -767,7 +767,7 @@
       required: false
       type: string
       
-    pipeSizeTypeCode:
+    pipeSizeCode:
       name: pipeSizeTypeCode
       in: query
       description: unique code of pipe size type
@@ -846,29 +846,29 @@
         - tenantId
           
   # Proprty Type and PipeSize Type mapping definition
-    PropertyTypePipeSizeTypeReq:
+    PropertyTypePipeSizeReq:
       type: object
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        propertyTypePipeSizeType:
-          $ref: '#/definitions/PropertyTypePipeSizeType'
+        PropertyTypePipeSize:
+          $ref: '#/definitions/PropertyTypePipeSize'
       required:
         - RequestInfo
-        - propertyTypePipeSizeType
+        - PropertyTypePipeSize
     
-    PropertyTypePipeSizeTypesRes:
+    PropertyTypePipeSizeRes:
       type: object
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeCategoryTypes:
+        PropertyTypePipeSizes:
           type: array
           maximum: 20
           items:
-            $ref: '#/definitions/PropertyTypePipeSizeType'
+            $ref: '#/definitions/PropertyTypePipeSize'
     
-    PropertyTypePipeSizeType:
+    PropertyTypePipeSize:
       type: object
       properties:
         id:
@@ -879,7 +879,7 @@
           type: integer
           format: int64
           description: Unique identifier of property type object
-        pipeSizeTypeId:
+        pipeSizeId:
           type: integer
           format: int64
           description: unique identifier of pipe size type object
@@ -890,7 +890,7 @@
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - propertyTypeId
-        - pipeSizeTypeId
+        - pipeSizeId
         - tenantId
 
   # Proprty Type and Usage Type mapping definition

@@ -74,7 +74,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/property/category")
+@RequestMapping("/propertytype-categorytype")
 public class PropertyCategoryController {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyCategoryController.class);

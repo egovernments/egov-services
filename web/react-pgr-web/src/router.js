@@ -14,7 +14,14 @@ import ViewEditServiceGroup from './components/contents/master/serviceGroup/view
 import viewReceivingMode from './components/contents/master/receivingMode/viewReceivingMode';
 import createRouter from './components/contents/master/router/create';
 import routerGeneration from './components/contents/master/router/routerGeneration';
+<<<<<<< 97448c810200952139ab3ae55e77f2c011cb7fd7
 import BulkEscalationGeneration from './components/contents/master/escalation/bulkEscalationGeneration';
+=======
+import ServiceGroupCreate from './components/contents/master/serviceType/serviceTypeCreate';
+import viewOrUpdateServiceType from './components/contents/master/serviceType/viewOrUpdateServiceType';
+import viewServiceType from './components/contents/master/serviceType/viewServiceType';
+
+>>>>>>> add new folder serviceType master
 
 const Main = () => (
   <main>
@@ -40,6 +47,11 @@ const Main = () => (
       <Route exact path='/serviceGroup/view' component={ViewEditServiceGroup}/>
       <Route exact path='/serviceGroup/edit' component={ViewEditServiceGroup}/>
       <Route exact path='/bulkEscalationGeneration' component={BulkEscalationGeneration}/>
+      <Route exact path='/serviceTypeCreate' component={serviceTypeCreate}/>
+      <Route exact name="serviceTypeCreate" path='/serviceTypeCreate/:id' component={serviceTypeCreate}/>
+      <Route exact path='/viewOrUpdateServiceType/view' component={viewOrUpdateServiceType}/>
+      <Route exact path='/viewOrUpdateServiceType/edit' component={viewOrUpdateServiceType}/>
+      <Route exact path='/viewServiceType/:id' component={viewServiceType}/>
     </Switch>
   </main>
 )

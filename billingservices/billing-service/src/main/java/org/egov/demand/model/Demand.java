@@ -44,7 +44,7 @@ public class Demand {
 	@NotNull
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 
-	private AuditDetail auditDetail;
-
 	private BigDecimal minimumAmountPayable = new BigDecimal(0.0d);
+
+	private AuditDetail auditDetail;
 }

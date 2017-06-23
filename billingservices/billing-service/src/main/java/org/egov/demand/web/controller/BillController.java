@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+//TODO path not defined
 public class BillController {
 	
 	@Autowired
@@ -31,11 +32,13 @@ public class BillController {
 	
 	@Autowired
 	private ResponseFactory responseFactory;
-	
+
+	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
+
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody BillRequest billRequest, BindingResult bindingResult){
-		
+		//TODO: try to give debug loggers instead info, this applied across the code base.
 		log.info("create billRequest:"+billRequest);
 		
 		if (bindingResult.hasErrors()) {

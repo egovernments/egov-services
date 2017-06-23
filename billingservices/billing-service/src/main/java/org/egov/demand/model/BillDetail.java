@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class BillDetail {
 
 	private String id;
-	
+	//TODO do we need to tenantId in child when parent is having?
 	private String tenantId;
 	
 	private String bill;

@@ -165,7 +165,7 @@ class receivingModeCreate extends Component {
                     <div className="clearfix"></div>
                     <Col xs={12} md={3}>
                     <Checkbox label="Active" id="active" style={styles.checkbox}
-                    defaultChecked ={receivingmodeSet.active}
+                      checked ={receivingmodeSet.active}
                      onCheck={(e,isInputChecked) => { var e={
                                             "target":{
                                               "value":isInputChecked

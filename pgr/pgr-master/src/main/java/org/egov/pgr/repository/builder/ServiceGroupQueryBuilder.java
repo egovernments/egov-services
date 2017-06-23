@@ -41,6 +41,7 @@ package org.egov.pgr.repository.builder;
 
 import java.util.List;
 
+import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -54,34 +55,34 @@ public class ServiceGroupQueryBuilder {
 			+ " FROM egpgr_complainttype_category ";
 
 	@SuppressWarnings("rawtypes")
-	public static String getQuery(final String tenantId, final List preparedStatementValues) {
+	public  String getQuery(final ServiceGroupGetRequest serviceGroupGetRequest, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		addWhereClause(selectQuery, preparedStatementValues, tenantId);
+		addWhereClause(selectQuery, preparedStatementValues, serviceGroupGetRequest);
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final String tenantId) {
+	private  void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final ServiceGroupGetRequest serviceGroupGetRequest) {
 
-		if (tenantId == null)
+		if (serviceGroupGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (tenantId != null) {
+		if (serviceGroupGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(tenantId);
+			preparedStatementValues.add(serviceGroupGetRequest.getTenantId());
 		}
 
-		/*if (serviceGroupRequest.getId() != null) {
+		if (serviceGroupGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(serviceGroupRequest.getId()));
+			selectQuery.append(" id IN " + getIdQuery(serviceGroupGetRequest.getId()));
 		}
-
+/*
 		if (serviceGroupRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" name = ?");

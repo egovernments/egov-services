@@ -165,6 +165,8 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
+		
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
 
 		if (!(code.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
 				|| code.equals(agreementRequest.getAgreement().getAgreementNumber())

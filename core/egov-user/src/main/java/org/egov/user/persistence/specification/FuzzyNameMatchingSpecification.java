@@ -8,6 +8,8 @@ import org.egov.user.persistence.entity.User_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FuzzyNameMatchingSpecification implements Specification<User> {
 
@@ -25,10 +27,15 @@ public class FuzzyNameMatchingSpecification implements Specification<User> {
 		Path<UserKey> userKey = root.get(User_.userKey);
 		Path<String> tenantId = userKey.get(UserKey_.tenantId);
 
-        return criteriaBuilder.and(
-                criteriaBuilder.like(criteriaBuilder.lower(name), QUERY),
-                criteriaBuilder.equal(active, userSearchCriteria.isActive()),
-				criteriaBuilder.equal(tenantId, userSearchCriteria.getTenantId())
-        );
-    }
+		List<Predicate> predicates = new ArrayList<>();
+
+		predicates.add(criteriaBuilder.equal(tenantId, userSearchCriteria.getTenantId()));
+		predicates.add(criteriaBuilder.like(criteriaBuilder.lower(name), QUERY));
+
+		if (userSearchCriteria.getActive() != null) {
+			predicates.add(criteriaBuilder.equal(active, userSearchCriteria.getActive().booleanValue()));
+		}
+
+		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+	}
 }

@@ -1,0 +1,20 @@
+{
+	"responseInfo": {
+		
+	},
+	"taxPeriods": [{
+			"tenantId": "1234",
+			"fromDate": "02/02/2017",
+			"toDate": "02/02/2017",
+			"code": "ganesha",
+			"periodType": "MONTH",
+			"financialYear": "2017-18",
+			"auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+		}
+	]
+}

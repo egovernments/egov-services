@@ -3,6 +3,8 @@ package org.egov.demand.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
@@ -11,11 +13,15 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
+import org.egov.demand.repository.OwnerRepository;
+import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DemandService {
+	
+	@Autowired
+	private OwnerRepository ownerRepository;
 
 	@Autowired
 	private SequenceGenService sequenceGenService;
@@ -42,6 +51,9 @@ public class DemandService {
 
 	@Autowired
 	private ResponseFactory responseInfoFactory;
+	
+	@Autowired
+	private DemandEnrichmentUtil demandEnrichmentUtil;
 
 	public DemandResponse create(DemandRequest demandRequest) {
 
@@ -106,9 +118,14 @@ public class DemandService {
 	}
 
 	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
-		
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),
-				demandRepository.getDemands(demandCriteria));
+
+		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).tenantId(demandCriteria.getTenantId())
+				.emailId(demandCriteria.getEmail()).mobileNumber(demandCriteria.getMobileNumber()).build();
+		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
+		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
+		List<Demand> demands = demandRepository.getDemands(demandCriteria,ownerIds);
+		demands = demandEnrichmentUtil.enrichOwners(demands, owners);
+		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 
 	public DemandDetailResponse getDemandDetails(DemandDetailCriteria demandDetailCriteria, RequestInfo requestInfo) {

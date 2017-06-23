@@ -11,6 +11,7 @@ import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 @Component
@@ -189,6 +191,13 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
 		validateRentIncrementType(agreement, errors);
+		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+	}
+
+	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
+		if(workflowDetails.getAssignee() == null)
+			errors.rejectValue("Agreement.workflowDetails.assignee", "",
+					"Approver assignee details has to be filled");
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {
@@ -276,5 +285,11 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		lamsConfigurationGetRequest.setName(keyName);
 		logger.info("the asset category names found ::: " + lamsConfigurationGetRequest);
 		return lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest).get(keyName);
+	}
+
+	public void validateUpdate(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
+		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+		
 	}
 }

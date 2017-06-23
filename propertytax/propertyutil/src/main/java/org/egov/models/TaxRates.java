@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaxRates {
 	
-	private Integer id;
+	private Long id;
 
 	@NotNull
 	@Size(min=4,max=128)
@@ -38,5 +38,7 @@ public class TaxRates {
 	private Double	ratePercentage;
 
 	private Double	taxFlatValue;
+	
+	private AuditDetails auditDetails;
 
 }

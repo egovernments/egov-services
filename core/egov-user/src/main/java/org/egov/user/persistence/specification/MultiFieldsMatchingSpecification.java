@@ -73,6 +73,10 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
             predicates.add(criteriaBuilder.equal(type, UserType.valueOf(searchCriteria.getType())));
         }
 
+		if (isActiveFlagSet(searchCriteria)) {
+			predicates.add(criteriaBuilder.equal(active, searchCriteria.getActive().booleanValue()));
+		}
+
         if(isRolesPresent(searchCriteria)) {
 			searchCriteria.getRoleCodes().forEach(roleCode -> {
 				final SetJoin<User, Role> rolesJoin = root.join(User_.roles);
@@ -80,10 +84,12 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
 			});
 		}
 
-        predicates.add(criteriaBuilder.equal(active, searchCriteria.isActive()));
-
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
+
+	private boolean isActiveFlagSet(UserSearchCriteria searchCriteria) {
+		return searchCriteria.getActive() != null;
+	}
 
 	private boolean isRolesPresent(UserSearchCriteria searchCriteria) {
 		return !CollectionUtils.isEmpty(searchCriteria.getRoleCodes());

@@ -46,6 +46,7 @@ import java.util.List;
 import org.egov.pgr.model.ServiceGroup;
 import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
 import org.egov.pgr.repository.rowmapper.ServiceGroupRowMapper;
+import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 //import org.egov.pgrrest.master.repository.rowmapper.CategoryTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.slf4j.Logger;
@@ -64,6 +65,9 @@ public class ServiceGroupRepository {
 	
 	@Autowired
 	private ServiceGroupRowMapper serviceGroupMapper; 
+	
+	@Autowired
+	private ServiceGroupQueryBuilder serviceGroupQueryBuilder; 
 
 	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
 		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
@@ -91,11 +95,10 @@ public class ServiceGroupRepository {
 		return serviceGroupRequest;
 	}
 	
-	public List<ServiceGroup> getAllServiceGroup(String tenantId){
-		LOGGER.info("Requesting the Service Group List for the tenant ID :" + tenantId);
+	public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest){
+		LOGGER.info("Requesting the Service Group List for the tenant ID :" + serviceGroupGetRequest.getTenantId());
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		final String getQuery = ServiceGroupQueryBuilder.getQuery(tenantId, preparedStatementValues);
-		
+		String getQuery = serviceGroupQueryBuilder.getQuery(serviceGroupGetRequest, preparedStatementValues);
 		final List<ServiceGroup> serviceGroupTypes = jdbcTemplate.query(getQuery,
 				preparedStatementValues.toArray(), serviceGroupMapper);
 		return serviceGroupTypes;

@@ -1,0 +1,25 @@
+{
+    "taxRates": [
+        {
+            "id": 1,
+            "tenantId": "default",
+            "taxHead": "taxHead-UU",
+            "dependentTaxHead": "dependentTaxHead-UU",
+            "fromDate": "03/06/2017 00:00:00",
+            "toDate": "10/06/2017 00:00:00",
+            "fromValue": 1000,
+            "toValue": 1500,
+            "ratePercentage": 33,
+            "taxFlatValue": 2222,
+            "auditDetails": {
+                "createdBy": "yosadhara",
+                "lastModifiedBy": "yosadhara",
+                "createdTime": 0,
+                "lastModifiedTime": 1498131386130
+            }
+        }
+    ],
+    "responseInfo": {
+    
+    }
+}

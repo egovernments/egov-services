@@ -46,5 +46,5 @@ public class Demand {
 
 	private AuditDetail auditDetail;
 
-	private BigDecimal minimumAmountPayable;
+	private BigDecimal minimumAmountPayable = new BigDecimal(0.0d);
 }

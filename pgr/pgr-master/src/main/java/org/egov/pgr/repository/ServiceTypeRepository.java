@@ -41,8 +41,11 @@ package org.egov.pgr.repository;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.egov.pgr.model.Attribute;
 import org.egov.pgr.model.ServiceType;
@@ -67,9 +70,6 @@ public class ServiceTypeRepository {
 
     @Autowired
     private ServiceTypeQueryBuilder serviceTypeQueryBuilder;
-
-    @Autowired
-    private ServiceTypeRowMapper serviceTypeRowMapper;
 
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
@@ -157,9 +157,51 @@ public class ServiceTypeRepository {
 
     public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = serviceTypeQueryBuilder.getAllServiceTypes();
-        final List<ServiceType> serviceTypes = jdbcTemplate.query(queryStr, serviceTypeRowMapper);
-        return serviceTypes;
+        String queryStr = serviceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);
+        ServiceTypeRowMapper serviceTypeRowMapper = new ServiceTypeRowMapper();
+        jdbcTemplate.query(queryStr,preparedStatementValues.toArray(),  serviceTypeRowMapper);
+        return assembleServiceTypeObject(serviceTypeRowMapper);
     }
+    
+	private List<ServiceType> assembleServiceTypeObject(ServiceTypeRowMapper rowMapper) {
+		final String separator = ">";
+		List<ServiceType> serviceTypeList = new ArrayList<>();
+		Set<Entry<String, ServiceType>> sMapEntrySet = rowMapper.serviceMap.entrySet();
+		Iterator<Entry<String, ServiceType>> sMapItr = sMapEntrySet.iterator();
+		Set<Entry<String, Map<String, Attribute>>> sAttrEntrySet = rowMapper.serviceAttrib.entrySet();
+		Iterator<Entry<String, Map<String, Attribute>>> sAttrItr = sAttrEntrySet.iterator();
+		Set<Entry<String, List<Value>>> attrValueEntrySet = rowMapper.attribValue.entrySet();
+		while (sMapItr.hasNext()) {
+			Entry<String, ServiceType> srvEntry = sMapItr.next();
+			ServiceType serviceType = srvEntry.getValue();
+			serviceTypeList.add(serviceType);
+		}
+		for (int i = 0; i < serviceTypeList.size(); i++) {
+			while (sAttrItr.hasNext()) {
+				Entry<String, Map<String, Attribute>> attrEntry = sAttrItr.next();
+				List<Attribute> attributeList = new ArrayList<>();
+				if (serviceTypeList.get(i).getServiceCode().equals(attrEntry.getKey())) {
+					Iterator<Entry<String, Attribute>> attrInnerItr = attrEntry.getValue().entrySet().iterator();
+					while (attrInnerItr.hasNext()) {
+						Entry<String, Attribute> attrInnerEntry = attrInnerItr.next();
+						Attribute attribute = attrInnerEntry.getValue();
+						Iterator<Entry<String, List<Value>>> attrValueItr = attrValueEntrySet.iterator();
+						while (attrValueItr.hasNext()) {
+							Entry<String, List<Value>> valueEntry = attrValueItr.next();
+							if (serviceTypeList.get(i).getServiceCode().concat(separator + attribute.getCode())
+									.equals(valueEntry.getKey())) {
+								attribute.setAttributes(valueEntry.getValue());
+							}
+						}
+						attributeList.add(attribute);
+					}
+				}
+				serviceTypeList.get(i).setAttributes(attributeList);
+			}
+		}
+		return serviceTypeList;
+	}
 
 }
+
+

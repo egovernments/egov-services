@@ -1,0 +1,20 @@
+{
+    "taxRates": [
+        {
+            "id": 1,
+            "tenantId": "default",
+            "taxHead": "taxHead-UU",
+            "dependentTaxHead": "dependentTaxHead-UU",
+            "fromDate": "2017-06-03 00:00:00+05:30",
+            "toDate": "2017-06-10 00:00:00+05:30",
+            "fromValue": 1000,
+            "toValue": 1500,
+            "ratePercentage": 33,
+            "taxFlatValue": 2222,
+            "auditDetails": null
+        }
+    ],
+    "responseInfo": {
+    
+    }
+}

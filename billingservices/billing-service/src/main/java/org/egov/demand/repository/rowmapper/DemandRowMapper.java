@@ -49,7 +49,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 					demand.setMinimumAmountPayable(rs.getBigDecimal("dminimumAmountPayable"));
 
 					Owner owner = new Owner();
-					owner.setId(rs.getLong("downer"));
+					owner.setId(Long.valueOf(rs.getString("downer")));
 					demand.setOwner(owner);
 
 					AuditDetail auditDetail = new AuditDetail();

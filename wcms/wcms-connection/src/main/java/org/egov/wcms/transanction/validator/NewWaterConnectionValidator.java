@@ -101,7 +101,14 @@ public class NewWaterConnectionValidator {
                     .message(WcmsTranasanctionConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsTranasanctionConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (waterConnectionRequest.getConnection().getConnectionType() == null
+        } 
+        else if (waterConnectionRequest.getConnection().getApplicationType() == null) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.APPLICATIONTYPE_MANDATORY_CODE)
+                    .message(WcmsTranasanctionConstants.APPLICATIONTYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsTranasanctionConstants.APPLICATIONTYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+        else if (waterConnectionRequest.getConnection().getConnectionType() == null
                 || waterConnectionRequest.getConnection().getConnectionType().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.CONNECTION_TYPE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.CONNECTION_INVALID_ERROR_MESSAGE)

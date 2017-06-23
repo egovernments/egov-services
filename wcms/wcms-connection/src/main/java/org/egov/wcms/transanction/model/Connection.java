@@ -65,6 +65,9 @@ public class Connection {
 
     @NotNull
     private String connectionType;
+    
+    @NotNull
+    private String applicationType;
 
     @NotNull
     private String billingType;
@@ -128,16 +131,13 @@ public class Connection {
     private Property property;
 
     @NotNull
-    private Meter meter;
+    private List<Meter> meter;
 
     @NotNull
-    private EstimationCharge estimationCharge;
+    private List<EstimationCharge> estimationCharge;
 
     @NotNull
     private WorkOrder workOrder;
-
-    @NotNull
-    private List<MeterReading> meterReadings;
 
     @NotNull
     private AuditDetails auditDetails;

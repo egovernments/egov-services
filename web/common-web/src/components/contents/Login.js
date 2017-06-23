@@ -18,6 +18,7 @@ import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
 
 import {Redirect} from 'react-router-dom'
+import Api from '../../api/commonAPIS';
 var axios = require('axios');
 
 const styles = {
@@ -84,9 +85,17 @@ class Login extends Component {
            dataSource: [],
            errorMsg: "",
            open: false,
+           open1: false,
            mobNo: "",
            mobErrorMsg: "",
-           srn: ""
+           srn: "",
+           otp: "",
+           otpErrorMsg: "",
+           hideOtp: false,
+           pwdErrorMsg: "",
+           newPwd: "",
+           pwd: "",
+           uuid: ""
        }
        this.loginRequest = this.loginRequest.bind(this);
        this.showPasswordModal = this.showPasswordModal.bind(this);
@@ -94,6 +103,8 @@ class Login extends Component {
        this.handleStateChange = this.handleStateChange.bind(this);
        this.sendRecovery = this.sendRecovery.bind(this);
        this.searchGrievance = this.searchGrievance.bind(this);
+       this.validateOTP = this.validateOTP.bind(this);
+       this.generatePassword = this.generatePassword.bind(this);
    }
 
    componentWillMount() {
@@ -172,13 +183,14 @@ class Login extends Component {
 
    showPasswordModal() {
     this.setState({
-      open: true
+      open: true,
+      hideOtp: false
     })
    }
 
-   handleClose() {
+   handleClose(name) {
     this.setState({
-      open: false
+      [name]: false
     })
    }
 
@@ -190,26 +202,105 @@ class Login extends Component {
    }
 
    sendRecovery(type) {
-    if(!this.state.mobNo)
-      return this.setState({
+    var self = this;
+    if(!self.state.mobNo)
+      return self.setState({
         mobErrorMsg: "Mobile Number / Login ID is required"
       })
 
     else 
-      this.setState({
+      self.setState({
         mobErrorMsg: ""
       });      
 
     if(type == "link") {
 
     } else {
+      var rqst = {
+          "identity": self.state.mobNo,
+          "tenantId": localStorage.getItem("tenantId")
+      }
 
+      Api.commonApiPost("otp/v1/_create", {}, {otp: rqst}).then(function(response) {
+          self.setState({
+            open: false
+          }, function() {
+            self.setState({
+              open1: true
+            })
+          })
+      }, function(err) {
+          
+      });
     }
    }
 
    searchGrievance(e) {
       if(this.state.srn) {
         window.open("/searchGrievance?srn=" + this.state.srn, '_blank');
+      }
+   }
+
+   validateOTP() {
+      var self = this;
+      if(!self.state.otp) {
+        return self.state({
+          otpErrorMsg: "OTP is required."
+        })
+      } else {
+        self.setState({
+          otpErrorMsg: ""
+        });
+      }
+
+      var rqst = {
+        tenantId: localStorage.getItem("tenantId"),
+        otp: self.state.otp,
+        identity: self.state.mobNo
+      };
+      Api.commonApiPost("otp/v1/_validate", {}, {otp: rqst}).then(function(response) {
+          self.setState({
+            hideOtp: true,
+            uuid: response.otp.uuid
+          })
+      }, function(err) {
+          
+      });
+   }
+
+   generatePassword() {
+      var self = this;
+      if(!self.state.pwd || !self.state.newPwd) {
+        return self.setState({
+          pwdErrorMsg: "Password field is required."
+        })
+      } else {
+        self.setState({
+          pwdErrorMsg: ""
+        })
+      }
+
+      if(self.state.pwd != self.state.newPwd) {
+        return self.setState({
+          pwdErrorMsg: "Passwords do not match."
+        })
+      } else {
+        var rqst = {
+          userName: self.state.mobNo,
+          newPassword: self.state.newPwd,
+          tenantId: localStorage.getItem("tenantId"),
+          otpReference: self.state.uuid
+        };
+        Api.commonApiPost("/user/password/nologin/_update", {}, {...rqst}).then(function(response) {
+          self.setState({
+            open1: false,
+            mobNo: "",
+            pwd: "",
+            newPwd: ""
+          });
+        }, function(err) {
+            
+        });
       }
    }
 
@@ -229,15 +320,25 @@ class Login extends Component {
         handleClose,
         handleStateChange,
         sendRecovery,
-        searchGrievance
+        searchGrievance,
+        validateOTP,
+        generatePassword
       } = this;
       let {
         errorMsg,
         open,
         mobErrorMsg,
         mobNo,
-        srn
+        srn,
+        otp,
+        otpErrorMsg,
+        open1,
+        hideOtp,
+        pwdErrorMsg,
+        pwd,
+        newPwd
       } = this.state;
+
       // if (token) {
       //     return (
       //       <Redirect to="/dashboard"/>
@@ -246,6 +347,37 @@ class Login extends Component {
       const showError = function() {
         if(errorMsg) {
           return (<p className="text-danger">{errorMsg}</p>)
+        }
+      }
+
+      const showForOTP = function() {
+        if(!hideOtp) {
+          return (
+            <TextField
+                  floatingLabelText="Enter OTP"
+                  style={styles.fullWidth}
+                  errorText={otpErrorMsg} id="otp" value={otp} onChange={(e) => handleStateChange(e, "otp")}
+              />
+          )
+        }
+      }
+
+      const showForPwd = function() {
+        if(hideOtp) {
+          return (
+            <div>
+              <TextField
+                    floatingLabelText="New Password"
+                    style={styles.fullWidth}
+                    errorText={pwdErrorMsg} id="otp" value={pwd} onChange={(e) => handleStateChange(e, "pwd")}
+                />
+              <TextField
+                    floatingLabelText="Confirm Password"
+                    style={styles.fullWidth}
+                    errorText={pwdErrorMsg} id="otp" value={newPwd} onChange={(e) => handleStateChange(e, "newPwd")}
+                />
+            </div>
+          )
         }
       }
 
@@ -385,12 +517,7 @@ class Login extends Component {
                 <FlatButton
                   label="Cancel"
                   primary={false}
-                  onTouchTap={handleClose}
-                />,
-                <FlatButton
-                  label="Send Recovery Link"
-                  secondary={true}
-                  onTouchTap={(e)=>{sendRecovery("link")}}
+                  onTouchTap={() => {handleClose("open")}}
                 />,
                 <FlatButton
                   label="Send Recovery OTP"
@@ -400,17 +527,37 @@ class Login extends Component {
               ]}
               modal={false}
               open={open}
-              onRequestClose={handleClose}
+              onRequestClose={(e) => {handleClose("open")}}
             >
               <TextField
                   floatingLabelText="Mobile Number/Login ID"
-                  type="password"
                   style={styles.fullWidth}
-                  errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e, "mobNo")} hintText="eg:-*******"
+                  errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e, "mobNo")}
               />
               <div style={{textAlign: "right", fontSize: "12px"}}>
                 Recovery link or OTP will be sent to your registered email / mobile
               </div>
+            </Dialog>
+            <Dialog
+              title={!hideOtp ? "Enter OTP Sent To Your Mobile Number" : "New Password"}
+              actions={[
+                <FlatButton
+                  label="Cancel"
+                  primary={false}
+                  onTouchTap={(e) => {handleClose("open1")}}
+                />,
+                <FlatButton
+                  label={!hideOtp ? "Verify" : "Submit"}
+                  secondary={true}
+                  onTouchTap={(e)=>{!hideOtp ? validateOTP() : generatePassword()}}
+                />
+              ]}
+              modal={false}
+              open={open1}
+              onRequestClose={(e) => {handleClose("open1")}}
+            >
+              {showForOTP()}
+              {showForPwd()}
             </Dialog>
           </div>
         )

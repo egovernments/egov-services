@@ -2,16 +2,19 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import FontIcon from 'material-ui/FontIcon';
 import {Table,TableBody,TableRow,TableRowColumn} from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import Api from '../../api/api';
 import {translate} from '../common/common';
 import Fields from '../common/Fields';
+import LoadingIndicator from '../common/LoadingIndicator';
 var Rating = require('react-rating');
 
 const styles = {
@@ -54,27 +57,39 @@ var currentThis;
 class grievanceView extends Component{
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      loadingstatus: 'loading',
+      open: false
+    };
   }
-  componentWillMount(){
+  handleOpen = () => {
+    this.setState({open: true});
+  };
 
-  }
+  handleClose = () => {
+    this.setState({
+      open: false,
+      loadingstatus:'loading'
+    });
+    this.loadSRN();
+  };
+
   componentDidMount(){
-
     currentThis = this;
+    this.loadSRN();
+  }
+
+  loadSRN = () =>{
+
     let {initForm, addMandatory} = this.props;
     initForm();
 
-    let service = [];
-    service = [ { "variable": true, "code": "PRIORITY", "dataType": "singlevaluelist", "required": true, "dataTypeDescription": null, "description": "pgr.priority", "url": null, "roles": [ "EMPLOYEE" ], "actions": [ "UPDATE" ], "attribValues": [ { "key": "PRIORITY-1", "name": "pgr.priority.one", "isActive": true }, { "key": "PRIORITY-2", "name": "pgr.priority.two", "isActive": true }, { "key": "PRIORITY-3", "name": "pgr.priority.three", "isActive": true } ] } ];
-    currentThis.setState({SD : service});
-    // Api.commonApiPost("/pgr/servicedefinition/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
-    // {
-    //   console.log(JSON.stringify(response.attributes));
-    // currentThis.setState({SD : response.attributes})
-    // },function(err) {
-    //
-    // });
+    Api.commonApiPost("/pgr/servicedefinition/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
+    {
+      currentThis.setState({SD : response.attributes})
+    },function(err) {
+
+    });
 
     Api.commonApiPost("/pgr/seva/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
@@ -127,13 +142,17 @@ class grievanceView extends Component{
     });
   }
   getReceivingCenter(){
-    Api.commonApiPost("/pgr/receivingcenter/_search", {id:this.state.receivingCenter}).then(function(response)
-    {
-      currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
-      currentThis.getLocation();
-    },function(err) {
+    if(this.state.receivingCenter){
+      Api.commonApiPost("/pgr/receivingcenter/_search", {id:this.state.receivingCenter}).then(function(response)
+      {
+        currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
+        currentThis.getLocation();
+      },function(err) {
 
-    });
+      });
+    }else {
+      currentThis.getLocation();
+    }
   }
   getLocation(){
     Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
@@ -145,13 +164,17 @@ class grievanceView extends Component{
     });
   }
   nextStatus = () => {
-    Api.commonApiPost("/workflow/v1/nextstatuses/_search", {currentStatusCode:this.state.status}).then(function(response)
-    {
-      currentThis.setState({nextStatus : response.statuses});
-      currentThis.allServices();
-    },function(err) {
+    if(localStorage.getItem('type')){
+      Api.commonApiPost("/workflow/v1/nextstatuses/_search", {currentStatusCode:this.state.status}).then(function(response)
+      {
+        currentThis.setState({nextStatus : response.statuses});
+        currentThis.allServices();
+      },function(err) {
 
-    });
+      });
+    }else {
+      currentThis.setState({loadingstatus:'hide'});
+    }
   }
   allServices = () => {
     Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
@@ -184,6 +207,7 @@ class grievanceView extends Component{
     Api.commonApiPost("/egov-common-masters/departments/_search").then(function(response)
     {
       currentThis.setState({department : response.Department});
+      currentThis.setState({loadingstatus:'hide'});
     },function(err) {
 
     });
@@ -230,8 +254,9 @@ class grievanceView extends Component{
               href={files.url}
               download
               label={"File " + (index+1)}
-              secondary={true}
-              style={styles.button}
+              primary={true}
+              fullWidth = {true}
+              style={styles.marginStyle}
               icon={<FontIcon className="muidocs-icon-custom-github" />}
             />
           </Col>
@@ -241,10 +266,11 @@ class grievanceView extends Component{
   }
   search = (e) => {
     e.preventDefault();
+    this.setState({loadingstatus:'loading'});
     let update = [...currentThis.state.srn];
     let req_obj = {};
     req_obj['serviceRequest'] = update[0];
-    console.log(JSON.stringify(req_obj));
+    //console.log(JSON.stringify(req_obj));
 
     var dat = new Date().toLocaleDateString();
     var time = new Date().toLocaleTimeString();
@@ -275,14 +301,27 @@ class grievanceView extends Component{
         currentThis.chckkey('rating', req_obj);
     }
 
-    console.log(JSON.stringify(req_obj));
+    if(currentThis.props.files.length > 0){
+      for(let i=0; i<currentThis.props.files.length; i++){
+        let formData = new FormData();
+        formData.append("tenantId", localStorage.getItem('tenantId'));
+        formData.append("module", "PGR");
+        formData.append("file", currentThis.props.files[i]);
+        Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+        {
+          var obj = {
+    				key: 'employeeDocs_'+currentThis.props.files[i]['name'],
+    				name: response.files[0].fileStoreId
+    			}
+  			  req_obj.serviceRequest.attribValues.push(obj);
+          currentThis.updateSeva(req_obj);
+        },function(err) {
 
-    Api.commonApiPost("/pgr/seva/_update",{},req_obj).then(function(updateResponse)
-    {
-      console.log(JSON.stringify(updateResponse));
-    },function(err) {
-
-    });
+        });
+      }
+    }else{
+      currentThis.updateSeva(req_obj);
+    }
 
   }
   chckkey = (key, req_obj) =>{
@@ -305,6 +344,40 @@ class grievanceView extends Component{
   		req_obj.serviceRequest.attribValues.push(finobj);
   	}
   }
+  updateSeva = (req_obj) =>{
+    console.log('Before Submit',JSON.stringify(req_obj));
+    Api.commonApiPost("/pgr/seva/_update",{},req_obj).then(function(updateResponse)
+    {
+      console.log('After submit',JSON.stringify(updateResponse));
+      currentThis.setState({loadingstatus:'hide'});
+      {currentThis.handleOpen()}
+    },function(err) {
+
+    });
+  }
+  employeesDocs = () =>{
+    if(this.state.srn != undefined){
+      return this.state.srn.map((values, index) => {
+        return values.attribValues.map((attrib, aindex) =>{
+            if(attrib['key'].indexOf('employeeDocs') !== -1){
+              return (
+                <Col xs={6} md={3} key={aindex}>
+                  <RaisedButton
+                    href={'/filestore/v1/files/id?fileStoreId=' + attrib['name']+'&tenantId='+localStorage.getItem('tenantId')}
+                    download
+                    label={attrib['key'].split(/_(.+)/)[1]}
+                    primary={true}
+                    fullWidth = {true}
+                    style={styles.marginStyle}
+                    icon={<FontIcon className="muidocs-icon-custom-github" />}
+                  />
+                </Col>
+              )
+						}
+        })
+      });
+    }
+  }
   render(){
     let
     {
@@ -319,14 +392,24 @@ class grievanceView extends Component{
       handleDesignation,
       handlePosition,
       grievanceView,
+      files,
       fieldErrors,
       isFormValid,
-      loadServiceDefinition
+      loadServiceDefinition,
+      handleUpload
     } = this.props;
     currentThis = this;
+    const actions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />
+    ];
     return(
       <div>
       <form autoComplete="off" onSubmit={(e) => { search(e) }}>
+      <LoadingIndicator status={this.state.loadingstatus}/>
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
@@ -352,13 +435,13 @@ class grievanceView extends Component{
                   Email
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.email}
+                  {this.state.email ? this.state.email : 'N/A'}
                 </Col>
                 <Col xs={6} md={3}>
                   Address
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.requesterAddress}
+                  {this.state.requesterAddress ? this.state.requesterAddress : 'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
@@ -414,7 +497,7 @@ class grievanceView extends Component{
                   Receiving Center
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.receivingCenterName}
+                  {this.state.receivingCenterName ? this.state.receivingCenterName :'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
@@ -428,7 +511,7 @@ class grievanceView extends Component{
                   Landmark
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.address}
+                  {this.state.address ? this.state.address : 'N/A'}
                 </Col>
               </Row>
               <Row style={{padding:'10px'}}>
@@ -438,6 +521,18 @@ class grievanceView extends Component{
                 {this.filesUploaded()}
               </Row>
            </CardText>
+        </Card>
+      </Grid>
+      <Grid style={{width:'100%'}}>
+        <Card style={{margin:'15px 0'}}>
+        <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+         Document Reference
+        < /div>}/>
+        <CardText style={{padding:'8px 16px 0'}}>
+          <Row>
+            {this.employeesDocs()}
+          </Row>
+        </CardText>
         </Card>
       </Grid>
       <Grid style={{width:'100%'}}>
@@ -559,7 +654,7 @@ class grievanceView extends Component{
             <Row>
               {loadServiceDefinition()}
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Priority Color" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText="Priority Color *" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
                   handleChange(value, "priorityColor", true, ""); }}>
                   <MenuItem value="red" primaryText="Red" />
                   <MenuItem value="green" primaryText="Green" />
@@ -567,17 +662,28 @@ class grievanceView extends Component{
                 </SelectField>
               </Col>
             </Row> : ''}
-            { localStorage.getItem('type') == 'CITIZEN' ?
+            { localStorage.getItem('type') == 'CITIZEN' && (this.state.status == 'COMPLETED' || currentThis.state.status == 'REJECTED') ?
             <Row>
               <Col xs={12} md={3}>
-                <h4>Rating</h4>
+                <h4>Feedback</h4>
                 <Rating initialRate={grievanceView.rating ? grievanceView.rating : this.state.rating } onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
               </Col>
             </Row> : ''}
             <Row>
               <Col xs={12} md={12}>
-                <TextField floatingLabelText="Comments" fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
+                <TextField floatingLabelText="Comments *" fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
                   handleChange(newValue, "approvalComments", true, "") }} />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} md={3}>
+                <h4>Document reference for approval</h4>
+              </Col>
+              <Col xs={12} md={3}>
+                <div className="input-group">
+                    <input type="file" className="form-control" ref="file" onChange={(e)=>handleUpload(e)}/>
+                    <span className="input-group-addon" onClick={() => this.refs.file.value = ''}><i className="glyphicon glyphicon-trash specific"></i></span>
+                </div>
               </Col>
             </Row>
             <Row>
@@ -592,6 +698,14 @@ class grievanceView extends Component{
       : ''
       }
       </form>
+      <Dialog
+        actions={actions}
+        modal={false}
+        open={this.state.open}
+        onRequestClose={this.handleClose}
+      >
+        Grievance updated successfully
+      </Dialog>
       </div>
     )
   }
@@ -599,7 +713,7 @@ class grievanceView extends Component{
 
 const mapStateToProps = state => {
   //console.log(state.form.form);
-  return ({grievanceView: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({grievanceView: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -683,7 +797,10 @@ const mapDispatchToProps = dispatch => ({
         })
       }
     }
-  }
+  },
+  handleUpload: (e) => {
+    dispatch({type: 'FILE_UPLOAD', files: e.target.files})
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(grievanceView);

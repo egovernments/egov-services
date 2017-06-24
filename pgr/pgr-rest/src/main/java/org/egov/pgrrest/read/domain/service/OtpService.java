@@ -48,7 +48,7 @@ public class OtpService {
     }
 
     private boolean isOtpValidationMandatory(ServiceRequest serviceRequest) {
-        return serviceRequest.isComplaintType() &&
+        return serviceRequest.isAnonymous() && serviceRequest.isComplaintType() &&
             complaintConfigurationRepository.isOtpEnabledForAnonymousComplaint(serviceRequest.getTenantId());
     }
 

@@ -63,19 +63,19 @@ public class OTPConfigRepository {
 	
 	public OTPConfig persistOTPConfig(final OTPConfig otpConfig) {
 		LOGGER.info("OTP Config Create Object :" + otpConfig);
-		String query = "INSERT into egpgr_otp_config (tenantid, enabled, createdby, createddate) values (?,?,?,?)";
+		String query = "INSERT into egpgr_otp_config (tenantid, enabled, createddate) values (?,?,?)";
 		final Object[] obj = new Object[] { otpConfig.getTenantId(), otpConfig.isOtpConfigEnabled()? "Y" : "N", 
-				otpConfig.getAuditDetails().getCreatedBy(), new Date(new java.util.Date().getTime()) };
+		new Date(new java.util.Date().getTime()) };
 		jdbcTemplate.update(query,obj);
 		return otpConfig;
 	}
 	
 	public boolean updateOTPConfig(final OTPConfig otpConfig) {
 		LOGGER.info("OTP Config Update Object: " + otpConfig);
-		String query = "UPDATE egpgr_otp_config SET enabled = ?, lastmodifiedby = ?, lastmodifieddate = ? "
+		String query = "UPDATE egpgr_otp_config SET enabled = ?, lastmodifieddate = ? "
 				+ "WHERE tenantid = ? " ; 
 		final Object[] obj = new Object[] { otpConfig.isOtpConfigEnabled()? "Y" : "N", 
-				otpConfig.getAuditDetails().getLastModifiedBy(), new Date(new java.util.Date().getTime()), otpConfig.getTenantId() };
+			new Date(new java.util.Date().getTime()), otpConfig.getTenantId() };
 		int updateStatus = jdbcTemplate.update(query,obj);
 		LOGGER.info("Status of Updated : " + updateStatus);
 		if(updateStatus > 0){

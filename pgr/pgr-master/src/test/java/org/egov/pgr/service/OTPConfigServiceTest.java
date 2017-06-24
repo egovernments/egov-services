@@ -113,7 +113,6 @@ public class OTPConfigServiceTest {
 		OTPConfig otpConfig = new OTPConfig();
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(1L);
-		otpConfig.setAuditDetails(auditDetails);
 		otpConfig.setOtpConfigEnabled(true);
 		otpConfig.setTenantId("default");
 		return otpConfig;

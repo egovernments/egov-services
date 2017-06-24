@@ -126,20 +126,20 @@ public class OTPConfigController {
 	
 	@PostMapping("/_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final OTPConfigGetReq otpConfigGetRequest,
+    public OTPConfigRes search(@ModelAttribute @Valid final OTPConfigGetReq otpConfigGetRequest,
             final BindingResult modelAttributeBindingResult,
             final BindingResult requestBodyBindingResult) {
 
         // Call service
-        List<org.egov.pgr.web.contract.OTPConfig> otpConfigList = null;
+        List<org.egov.pgr.web.contract.OTPConfig> otpConfigList = new ArrayList<>();
         try {
         	otpConfigList = otpConfigService.getAllOtpConfig(otpConfigGetRequest.getTenantId());
         } catch (final Exception exception) {
             logger.error("Error while processing request " + otpConfigGetRequest, exception);
-            return getSuccessResponse(otpConfigList);
+            return createResponse(otpConfigList);
         }
 
-        return getSuccessResponse(otpConfigList);
+        return createResponse(otpConfigList);
 
     }
 	
@@ -181,6 +181,12 @@ public class OTPConfigController {
 		final OTPConfigRes otpConfigRes = new OTPConfigRes();
 		otpConfigRes.setOtgConfigs(otpConfigList);
 		return new ResponseEntity<>(otpConfigRes, HttpStatus.OK);
+	}
+	
+	private OTPConfigRes createResponse(final List<OTPConfig> otpConfigList) {
+		final OTPConfigRes otpConfigRes = new OTPConfigRes();
+		otpConfigRes.setOtgConfigs(otpConfigList);
+		return otpConfigRes;
 	}
 	
 	private org.egov.pgr.model.OTPConfig contractToModel(OTPConfigReq otpConfigRequest){

@@ -82,6 +82,13 @@ paths:
           description: period to.
           required: false
           type: integer
+        - name: id
+          in: query
+          description: Id(s) of the TaxHeadMaster(s) to be returned
+          required: false
+          type: array
+          items: 
+            type: string
       tags:
         - Master
       responses:
@@ -176,9 +183,11 @@ paths:
           type: string
         - name: id
           in: query
-          description: Id of the 'BusinessServiceDetails' which is to be returned.
+          description: Id(s) of the BusinessServiceDetail(s) to be returned
           required: false
-          type: string
+          type: array
+          items: 
+            type: string
       tags:
         - Master
       responses:
@@ -273,9 +282,11 @@ paths:
           type: string
         - name: id
           in: query
-          description: Id of the 'TaxPeriod' which is to be returned.
+          description: Id(s) of the TaxPeriod(s) to be returned
           required: false
-          type: string
+          type: array
+          items: 
+            type: string
         - name: description
           in: query
           description: description of the tax period for which 'TaxPeriod' is to be returned.
@@ -380,9 +391,11 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: demandId
           in: query
-          description: Primary key of Demand object.
+          description: Id(s) of the Demand(s) to be returned
           required: false
-          type: integer
+          type: array
+          items: 
+            type: string
         - name: consumerCode
           in: query
           description: Unique identification provided by business details.
@@ -514,7 +527,7 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - name: dmenadId
+        - name: demandId
           in: query
           description: Primary key of Demand object.
           required: false
@@ -535,6 +548,13 @@ paths:
           description: tax period to.
           required: false
           type: integer
+        - name: id
+          in: query
+          description: Id(s) of the DemandDetail(s) to be returned
+          required: false
+          type: array
+          items: 
+            type: string
       tags:
         - Demand
       responses:
@@ -569,10 +589,11 @@ paths:
           format: int64
         - name: billId
           in: query
-          description: Primary key of Bill object.
+          description: Id(s) of the Bill(s) to be returned
           required: false
-          type: integer
-          format: int64
+          type: array
+          items: 
+            type: string
         - name: isActive
           in: query
           description: true when active bill required,  when inactive bill required.
@@ -907,15 +928,15 @@ definitions:
         type: integer
         format: int64
         description: Time in epoch, End date for tax period
-      module:
+      service:
         type: string
         description: Name of the module this period belongs to.
-      description:
+      code:
         type: string
-        description: Description of a tax period.
+        description: Description/Code of a tax period.
       financialYear:
         type: string
-        description: financial year for which this period belongs.
+        description: Financial year for which this period belongs.
       auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -923,7 +944,8 @@ definitions:
       - tenantId
       - fromDate
       - toDate
-      - description
+      - service
+      - code
       
   Bill:
     type: object
@@ -1067,7 +1089,7 @@ definitions:
       
   BusinessServiceDetails:
     type: object
-    description: The object holds the configuration details for each business service.
+    description: The object holds the configuration details for each business service. If callBackForApportioning is true, then value for callBackApportionURL should be sent mandatorily.
     properties:
       id:
         type: integer
@@ -1090,16 +1112,27 @@ definitions:
       callBackForApportioning:
         type: boolean
         description: true if call back for apportioning is required, false if call back for apportioning is not required.
+      callBackApportionURL:
+        type: string
+        description: Provides the URL for Apportioning
       partPaymentAllowed:
         type: boolean
         description: true if part payment allowed, false if part payment is not allowed.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - id
+      - tenantId
+      - businessService
       
   CollectedReceipts:
     type: object
     description: A object holds a payment information against a demand.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Id of the bill
       businessService:
         type: string
         description: BusinessService code.

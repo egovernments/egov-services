@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
+
 @Service
 public class DepartmentRepository {
 
@@ -25,7 +27,9 @@ public class DepartmentRepository {
     }
 
     public DepartmentRes getDepartmentById(final Long departmentId, final String tenantId) {
-        final RequestInfo requestInfo = RequestInfo.builder().build();
+        final RequestInfo requestInfo = RequestInfo.builder()
+            .ts(new Date())
+            .build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().RequestInfo(requestInfo).build();
         return restTemplate.postForObject(departmentByIdUrl, wrapper, DepartmentRes.class, departmentId, tenantId);
     }

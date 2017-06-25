@@ -62,19 +62,6 @@ const styles = {
   }
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 class BulkEscalationGeneration extends Component {
     constructor(props) {
       super(props)
@@ -84,7 +71,7 @@ class BulkEscalationGeneration extends Component {
                 text: 'name',
                 value: 'id',
               },
-              values: [],
+              grievanceType:[]
             };
     }
 
@@ -113,6 +100,17 @@ class BulkEscalationGeneration extends Component {
             positionSource: []
           })
       });
+
+
+        Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+            self.setState({
+              grievanceType: response.complaintTypes
+            })
+        }, function(err) {
+          self.setState({
+              grievanceType: []
+            })
+        });
     }
 
     componentWillUpdate() {
@@ -128,18 +126,6 @@ class BulkEscalationGeneration extends Component {
        .destroy(true);
     }
 
-    menuItems = (values) => {
-    return names.map((name) => (
-      <MenuItem
-        key={name}
-        insetChildren={true}
-        checked={values && values.indexOf(name) > -1}
-        value={name}
-        primaryText={name}
-      />
-    ));
-  }
-
   submitForm = (e) => {
       e.preventDefault()
       flag = 1;
@@ -150,10 +136,6 @@ class BulkEscalationGeneration extends Component {
   }
 
     render() {
-
-     const {values} = this.state;
-
-     console.log(this.state.positionSource);
 
       let {
         isFormValid,
@@ -166,6 +148,8 @@ class BulkEscalationGeneration extends Component {
       let {submitForm} = this;
 
       let {isSearchClicked, resultList} = this.state;
+
+      console.log(bulkEscalationGeneration);
 
       const renderBody = function() {
       	  if(resultList && resultList.length)
@@ -190,8 +174,8 @@ class BulkEscalationGeneration extends Component {
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
    		              <th>Grievance Type</th>
-   		              <th>Boundary Type</th>
-   		              <th>Boundary</th>
+   		              <th>From Position</th>
+   		              <th>To Position</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -246,12 +230,19 @@ class BulkEscalationGeneration extends Component {
                                                  value: values
                                                }
                                              };
-                                             this.setState({values})
                                              handleChange(e, "grievanceType", true, "");
                                             }}
                                          >
-                                            {this.menuItems(values)}
-                                         </SelectField>
+                                         {this.state.grievanceType.map((item, index) => (
+                                                   <MenuItem
+                                                     value={item.serviceCode}
+                                                     key={index}
+                                                     insetChildren={true}
+                                                     primaryText={item.serviceName}
+                                                     checked={bulkEscalationGeneration.grievanceType && bulkEscalationGeneration.grievanceType.indexOf(item.serviceCode) > -1}
+                                                   />
+                                          ))}
+                                          </SelectField>
                                   </Col>
                                   <Col xs={12} md={4}>
                                       <AutoComplete
@@ -332,7 +323,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

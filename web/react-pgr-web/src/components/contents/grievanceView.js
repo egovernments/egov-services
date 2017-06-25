@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import FileDownload from 'material-ui/svg-icons/action/get-app';
 import {Table,TableBody,TableRow,TableRowColumn} from 'material-ui/Table';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
@@ -262,6 +263,7 @@ class grievanceView extends Component{
               fullWidth = {true}
               style={styles.marginStyle}
               labelPosition="before"
+              icon={<FileDownload />}
             />
           </Col>
         );
@@ -364,15 +366,18 @@ class grievanceView extends Component{
       return this.state.srn.map((values, index) => {
         return values.attribValues.map((attrib, aindex) =>{
             if(attrib['key'].indexOf('employeeDocs') !== -1){
+              let key = (attrib['key'].split(/_(.+)/)[1]).length > 15 ? (attrib['key'].split(/_(.+)/)[1]).substr(0, 12)+'...' : attrib['key'].split(/_(.+)/)[1];
               return (
                 <Col xs={6} md={3} key={aindex}>
                   <RaisedButton
                     href={'/filestore/v1/files/id?fileStoreId=' + attrib['name']+'&tenantId='+localStorage.getItem('tenantId')}
                     download
-                    label={attrib['key'].split(/_(.+)/)[1]}
+                    label={key}
                     primary={true}
                     fullWidth = {true}
                     style={styles.marginStyle}
+                    labelPosition="before"
+                    icon={<FileDownload />}
                   />
                 </Col>
               )

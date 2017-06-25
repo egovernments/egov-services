@@ -20,8 +20,8 @@ import serviceTypeCreate from './components/contents/master/serviceType/serviceT
 import viewOrUpdateServiceType from './components/contents/master/serviceType/viewOrUpdateServiceType';
 import viewServiceType from './components/contents/master/serviceType/viewServiceType';
 import ViewServiceGroup from './components/contents/master/serviceGroup/viewServiceGroup';
-import ViewEscalation from './components/contents/master/escalation/ViewEscalation';
-import DefineEscalation from './components/contents/master/escalation/DefineEscalation';
+import ViewEscalation from './components/contents/master/escalation/viewEscalation';
+import DefineEscalation from './components/contents/master/escalation/defineEscalation';
 
 const Main = () => (
   <main>

@@ -25,7 +25,7 @@ class App extends Component {
     });
 
     var params = new URLSearchParams();
-    params.append('username', '9999999999');
+    params.append('username', 'narasappa');
     params.append('password', 'demo');
     params.append('grant_type', 'password');
     params.append('scope', 'read');
@@ -62,7 +62,6 @@ class App extends Component {
           <Header/>
               {router}
           <Footer/>
-
           <Dialog
             actions={actions}
             modal={true}
@@ -71,15 +70,10 @@ class App extends Component {
             >
             {msg}
           </Dialog>
-
-
-
-
       </div>
     );
   }
 }
-
 
 const mapStateToProps = state => ({isDialogOpen: state.form.dialogOpen, msg: state.form.msg});
 

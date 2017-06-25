@@ -177,13 +177,17 @@ class grievanceView extends Component{
     }
   }
   allServices = () => {
-    Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
-    {
-      currentThis.setState({complaintTypes : response.complaintTypes});
-      currentThis.getWard();
-    },function(err) {
+    if(localStorage.getItem('type') == 'EMPLOYEE'){
+      Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
+      {
+        currentThis.setState({complaintTypes : response.complaintTypes});
+        currentThis.getWard();
+      },function(err) {
 
-    });
+      });
+    }else{
+      currentThis.setState({loadingstatus:'hide'});
+    }
   }
   getWard = () => {
     Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName:'Ward',hierarchyTypeName:'Administration'}).then(function(response)
@@ -399,7 +403,7 @@ class grievanceView extends Component{
     } = this.props;
     currentThis = this;
     const actions = [
-      <RaisedButton
+      <FlatButton
         label="Ok"
         primary={true}
         onTouchTap={this.handleClose}
@@ -426,7 +430,7 @@ class grievanceView extends Component{
                   Mobile Number
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.phone}
+                  {this.state.phone ? this.state.phone : 'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
@@ -665,7 +669,7 @@ class grievanceView extends Component{
             <Row>
               <Col xs={12} md={3}>
                 <h4>Feedback</h4>
-                <Rating initialRate={grievanceView.rating ? grievanceView.rating : this.state.rating } onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
+                <Rating initialRate={grievanceView.rating} onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
               </Col>
             </Row> : ''}
             <Row>
@@ -689,7 +693,6 @@ class grievanceView extends Component{
             <Row>
               <div style={{textAlign: 'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
             </Row>
           </CardText>
@@ -697,6 +700,9 @@ class grievanceView extends Component{
       </Grid>
       : ''
       }
+      <div style={{textAlign: 'center'}}>
+        <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+      </div>
       </form>
       <Dialog
         actions={actions}

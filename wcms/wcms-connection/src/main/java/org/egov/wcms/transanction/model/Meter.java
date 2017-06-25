@@ -76,7 +76,7 @@ public class Meter {
     private String meterSlNo;
 
     @NotNull
-    private String meterReading;
+    private String initialMeterReading;
 
     @NotNull
     private AuditDetails auditDetails;

@@ -5,7 +5,7 @@ export default (props) => {
     let renderImage = () =>
     {
       if(files && files.length>0){
-        let parent = document.getElementById("imgParent");
+        var parent = document.getElementById("imgParent");
         parent.innerHTML = "";
         for(let i=0; i<files.length; i++) {
           let div = document.createElement("div");
@@ -34,6 +34,9 @@ export default (props) => {
     			}
           reader.readAsDataURL(file);
         }
+      }else{
+        if(document.getElementById("imgParent"))
+          document.getElementById("imgParent").innerHTML = "";
       }
     }
 

@@ -117,7 +117,7 @@ public class PropertyCategoryControllerTest {
         when(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest)).thenReturn(propertyCategoryResponse);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/property/category/_search")
+        mockMvc.perform(post("/propertytype-categorytype/_search")
                 .param("tenantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))

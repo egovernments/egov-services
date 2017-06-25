@@ -114,7 +114,7 @@ public class PropertyTypePipeSizeTypeControllerTest {
         when(propertyPipeSizeService.getPropertyPipeSizes(propertyCategoryGetRequest)).thenReturn(propertyPipeSizes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/propertytype-pipesizetype/_search")
+        mockMvc.perform(post("/propertytype-pipesize/_search")
                 .param("tenantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))

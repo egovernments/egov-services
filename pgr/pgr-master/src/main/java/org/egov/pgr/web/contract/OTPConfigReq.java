@@ -39,10 +39,6 @@
  */
 package org.egov.pgr.web.contract;
 
-import javax.validation.constraints.NotNull;
-
-import org.egov.common.contract.request.RequestInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -60,10 +56,6 @@ import lombok.ToString;
 @ToString
 public class OTPConfigReq {
 	
-	@NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-
     @JsonProperty("otpConfig")
     private OTPConfig otpConfig;
 

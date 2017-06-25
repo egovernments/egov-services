@@ -44,6 +44,37 @@ const styles = {
     width:100
   }
 };
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+const getNameByBoundary = function(object, id) {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+            if (object[i].id == id) {
+                return object[i].boundaryType.name;
+            }
+        }
+}
 
 class createRouter extends Component {
   constructor(props) {
@@ -57,6 +88,7 @@ class createRouter extends Component {
        	complaintSource: [],
        	boundarySource: [],
        	boundaryTypeList: [],
+        boundaryInitialList: [],
        	open: false,
        	readonly: false
        }
@@ -68,25 +100,93 @@ class createRouter extends Component {
   componentDidMount() {
   	var self = this;
     var type = this.props.match.params.type;
-    console.log(type);
+    var routerType = {}, count = 3;
+    let {setForm}= this.props;
+    let {
+        allSourceConfig,
+        complaintSource,
+        boundarySource,
+        boundaryTypeList,
+        open,
+        resultList,
+        isSearchClicked,
+        boundaryInitialList,
+        positionSource
+    } = this.state;
+
   	this.props.initForm();
+    const checkIfUpdateOrView = function() {
+      if(type==="edit" || type==="view") {
+        var id=self.props.match.params.id;
+        Api.commonApiPost("/workflow/router/_search",{id}).then(function(response) {
+          var routerType = {
+            position: getNameById(self.state.positionSource, response.RouterTypRes[0].position),
+         		complaintType: response.RouterTypRes[0].services[0].serviceCode,
+         		boundary: getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType),
+            boundaryType:getNameByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType)
+        	}
+          console.log(routerType);
+          setForm(routerType);
+        }, function(err) {
+
+        })
+    }
+  }
+
   	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
       	self.setState({
       		boundaryTypeList: response.BoundaryType
-      	})
+      	}, function(){
+          count--;
+          if(count == 0)
+            checkIfUpdateOrView();
+        });
+
     }, function(err) {
     	self.setState({
       		boundaryTypeList: []
-      	})
+      	}, function(){
+          count--;
+          if(count == 0)
+            checkIfUpdateOrView();
+        });
     });
 
     Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+
         self.setState({
           positionSource: response.Position
+        }, function(){
+          count--;
+          if(count == 0)
+            checkIfUpdateOrView();
         })
     }, function(err) {
       self.setState({
           positionSource: []
+        }, function(){
+          count--;
+          if(count == 0)
+            checkIfUpdateOrView();
+        })
+    });
+
+
+    Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+        self.setState({
+          boundaryInitialList: response.Boundary
+        }, function(){
+          count--;
+          if(count == 0)
+            checkIfUpdateOrView();
+        })
+    }, function(err) {
+        self.setState({
+          boundaryInitialList: []
+        }, function(){
+          count--;
+          if(count == 0)
+            checkIfUpdateOrView();
         })
     });
 
@@ -99,18 +199,6 @@ class createRouter extends Component {
           complaintSource: []
         })
     });
-
-    if(type==="edit" || type==="view") {
-      
-      var id=this.props.match.params.id;
-      Api.commonApiPost("/workflow/router/_search",{id}).then(function(response) {
-        self.setState({
-          routerCreateSet: response.RouterTypes,
-        })
-      }, function(err) {
-
-      })
-    }
   }
 
   loadBoundaries(value) {
@@ -134,7 +222,7 @@ class createRouter extends Component {
   	var routerType = {
   		position: self.props.routerCreateSet.position,
    		id: "",
-   		grievancetype: [{
+   		services: [{
    				serviceCode: self.props.routerCreateSet.complaintType
    	    }],
    		boundary: [{
@@ -143,7 +231,7 @@ class createRouter extends Component {
    		tenantId: localStorage.getItem("tenantId")
   	};
 
-  	Api.commonApiPost("/pgr/router/_create", {}, {routertype: routerType}).then(function(response) {
+  	Api.commonApiPost("/workflow/router/_create", {}, {routertype: routerType}).then(function(response) {
   		self.props.initForm();
   		self.setState({
   			open: true
@@ -173,6 +261,7 @@ class createRouter extends Component {
        	complaintSource,
        	boundarySource,
        	boundaryTypeList,
+        boundaryInitialList,
        	open,
        	readonly
   	} = this.state;
@@ -209,7 +298,7 @@ class createRouter extends Component {
                         onNewRequest={(chosenRequest, index) => {
 	                        var e = {
 	                          target: {
-	                            value: chosenRequest
+	                            value: chosenRequest.id
 	                          }
 	                        };
 	                        handleChange(e, "complaintType", true, "");
@@ -243,7 +332,7 @@ class createRouter extends Component {
                         onNewRequest={(chosenRequest, index) => {
 	                        var e = {
 	                          target: {
-	                            value: chosenRequest
+	                            value: chosenRequest.id
 	                          }
 	                        };
 	                        handleChange(e, "boundary", true, "");
@@ -265,9 +354,10 @@ class createRouter extends Component {
                         errorText={fieldErrors.position || ""} value={routerCreateSet.position}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
                         onNewRequest={(chosenRequest, index) => {
+
 	                        var e = {
 	                          target: {
-	                            value: chosenRequest
+	                            value: chosenRequest.id
 	                          }
 	                        };
 	                        handleChange(e, "position", true, "");
@@ -326,6 +416,24 @@ const mapDispatchToProps = dispatch => ({
   handleAutoCompleteKeyUp : (e, type) => {
     var currentThis = _this;
     dispatch({type: "HANDLE_CHANGE", property: type, value: e.target.value, isRequired : true, pattern: ''});
+  },
+  setForm: (data) => {
+    dispatch({
+      type: "SET_FORM",
+      data,
+      isFormValid:true,
+      fieldErrors: {},
+      validationData: {
+        required: {
+          current: ["complaintType", "boundaryType", "boundary", "position"],
+          required: ["complaintType", "boundaryType", "boundary", "position"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
   }
 });
 

@@ -5,10 +5,7 @@ var instance = axios.create({
   baseURL: window.location.origin,
   // timeout: 5000,
   headers: {
-    "Content-Type": "application/json",
-    // "SESSIONID":"75dedd21-1145-4745-a8aa-1790a737b7c5",
-    // "JSESSIONID":"Nw2kKeNF6Eu42vtXypb3kP4fER1ghjXNMNISiIF5.ip-10-0-0-100",
-    // "Authorization":"Basic Og=="
+    "Content-Type": "application/json"
   }
 });
 

@@ -55,8 +55,6 @@ class receivingModeCreate extends Component {
   constructor(props) {
        super(props);
        this.state = {
-         list:[],
-         list2:[]
        }
        this.addOrUpdate=this.addOrUpdate.bind(this);
    }
@@ -65,7 +63,7 @@ class receivingModeCreate extends Component {
 
 
    componentWillMount() {
-     console.log(this.props.match.params.id);
+
          if(this.props.match.params.id) {
 
              this.setState({id:this.props.match.params.id});
@@ -74,7 +72,7 @@ class receivingModeCreate extends Component {
              let {setForm} = this.props;
 
              Api.commonApiPost("/pgr-master/receivingmode/_search",{id:this.props.match.params.id},body).then(function(response){
-                 console.log(response.ReceivingModeType);
+
                  current.setState({data:response.ReceivingModeType})
                  setForm(response.ReceivingModeType[0])
              }).catch((error)=>{
@@ -86,11 +84,9 @@ class receivingModeCreate extends Component {
          }
      }
 
-
-
-
   addOrUpdate(e) {
     e.preventDefault();
+    var _this = this;
 
     let {changeButtonText,receivingmodeSet}=this.props;
     var body ={
@@ -103,22 +99,20 @@ class receivingModeCreate extends Component {
          channel :receivingmodeSet.channel
        }
     }
-      if(this.props.match.params.id){
+      if(_this.props.match.params.id){
 
             Api.commonApiPost("pgr-master/receivingmode/"+body.ReceivingModeType.code+"/_update", {},body).then(function(response) {
-            alert("ReceivingMode Type Update successfully");
-            console.log(response);
-            receivingmodeSet:[]
+            _this.props.toggleDailogAndSetText(true,"Receiving Mode is updated succesfully")
+
           }).catch((error)=>{
             console.log(error);
           })
       } else {
           Api.commonApiPost("pgr-master/receivingmode/_create", {},body).then(function(response) {
-          alert("ReceivingMode Type Created successfully");
-          receivingmodeSet:[]
-        }).catch((error)=>{
-          console.log(error);
-        })
+        		_this.props.toggleDailogAndSetText(true,"Receiving Mode is created succesfully")
+        }, function(err) {
+
+      	})
       }
 
 
@@ -128,7 +122,7 @@ class receivingModeCreate extends Component {
   render() {
   let url = this.props.location.pathname;
   var _this = this;
-   let {search,addOrUpdate} = this;
+   let {addOrUpdate} = this;
    let {
      handleChange,
      handleChangeNextOne,
@@ -136,7 +130,7 @@ class receivingModeCreate extends Component {
      isFormValid,
      isTableShow,
      receivingmodeSet,
-     fieldErrors} = this.props;
+     fieldErrors,isDialogOpen,msg} = this.props;
 
 
    return (
@@ -171,7 +165,7 @@ class receivingModeCreate extends Component {
                     <div className="clearfix"></div>
                     <Col xs={12} md={3}>
                     <Checkbox label="Active" id="active" style={styles.checkbox}
-                    defaultChecked ={receivingmodeSet.active}
+                      checked ={receivingmodeSet.active}
                      onCheck={(e,isInputChecked) => { var e={
                                             "target":{
                                               "value":isInputChecked
@@ -196,7 +190,7 @@ class receivingModeCreate extends Component {
 
 
 const mapStateToProps = state => {
-  return ({receivingmodeSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({receivingmodeSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,isDialogOpen: state.form.dialogOpen, msg: state.form.msg});
 }
 
 const mapDispatchToProps = dispatch => ({  initForm: (type) => {
@@ -232,6 +226,11 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
         }
       }
     });
+  },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT",
+    dailogState,
+    msg});
   },
 
    handleChange: (e, property, isRequired, pattern) => {

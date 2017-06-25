@@ -54,6 +54,10 @@ public class ServiceRequest {
         return serviceRequestType.isComplaintType();
     }
 
+    public boolean isAnonymous() {
+        return authenticatedUser.isAnonymousUser();
+    }
+
     public List<AttributeEntry> getAttributeEntries() {
         return attributeEntries == null ? Collections.emptyList() : attributeEntries;
     }

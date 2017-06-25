@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>tracer</artifactId>
-			<version>0.14.0</version>
+			<version>0.16.0</version>
 		</dependency>
 
 		<dependency>
@@ -79,12 +79,6 @@
 			<artifactId>spring-kafka</artifactId>
 			<version>1.1.2.RELEASE</version>
 		</dependency>
-		
-		<dependency>
-            <groupId>org.egov.services</groupId>
-            <artifactId>tracer</artifactId>
-            <version>0.14.0</version>
-        </dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>

@@ -151,10 +151,9 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 			while (innerItr.hasNext()) {
 				Entry<String, List<ServiceType>> innerEntry = innerItr.next();
 				serviceTypeList = innerEntry.getValue();
-				List<ServiceType> finalServiceList = new ArrayList<>();
 				Iterator<ServiceType> serviceItr = serviceTypeList.iterator();
+				ServiceType serviceType = new ServiceType();
 				while (serviceItr.hasNext()) {
-					ServiceType serviceType = new ServiceType();
 					serviceType = serviceItr.next();
 					Map<String, Attribute> innerAttrMap = serviceAttrib.get(serviceType.getServiceCode());
 					Iterator<Entry<String, Attribute>> innerAttrItr = innerAttrMap.entrySet().iterator();
@@ -166,9 +165,8 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 						finalAttributeList.add(attrEntry.getValue());
 					}
 					serviceType.setAttributes(finalAttributeList);
-					finalServiceList.add(serviceType);
 				}
-				routerType.setServices(finalServiceList);
+				routerType.setService(serviceType);
 				routerTypes.add(routerType);
 			}
 		}

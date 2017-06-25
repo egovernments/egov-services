@@ -167,6 +167,6 @@ public interface TaxCalculatorService {
 	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code)
 			throws Exception;
 
-	public CalculationResponse calculatePropertyTax(CalculationRequest calculationRequest);
+	public CalculationResponse calculatePropertyTax(CalculationRequest calculationRequest) throws Exception;
 
 }

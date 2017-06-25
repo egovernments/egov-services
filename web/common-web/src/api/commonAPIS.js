@@ -54,7 +54,7 @@ var requestInfo = {
 var tenantId = "default";
 
 module.exports = {
-  commonApiPost: (context, queryObject = {}, body = {}) => {
+  commonApiPost: (context, queryObject = {}, body = {}, dontSendRqstInfo) => {
     var url = "/" + context;
     url += "?tenantId=" + tenantId;
     for (var variable in queryObject) {
@@ -62,7 +62,7 @@ module.exports = {
         url += "&" + variable + "=" + queryObject[variable];
       }
     }
-    body["RequestInfo"] = requestInfo;
+    if(!dontSendRqstInfo) body["RequestInfo"] = requestInfo;
     console.log(body);
     if (authToken) {
       return instance.post(url, body).then(function(response) {

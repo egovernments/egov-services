@@ -94,11 +94,13 @@
 		
 		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
 		
-	<dependency>
+	<!-- https://mvnrepository.com/artifact/org.kie/kie-internal -->
+<dependency>
     <groupId>org.kie</groupId>
-    <artifactId>kie-api</artifactId>
+    <artifactId>kie-internal</artifactId>
     <version>7.0.0.Final</version>
-  </dependency>
+</dependency>
+
   
 	</dependencies>
 

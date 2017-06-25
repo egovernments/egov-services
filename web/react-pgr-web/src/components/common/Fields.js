@@ -10,7 +10,10 @@ import areIntlLocalesSupported from 'intl-locales-supported';
 export default class Fields extends Component{
   renderFields = (obj) =>{
     //console.log('came to renderfields',obj.code);
-    let description = translate(obj.description);
+    let des = translate(obj.description);
+    let mandatory = (obj.required == true) ? " *" : ""
+    let description = des + mandatory;
+
     let DateTimeFormat;
     if (areIntlLocalesSupported(['fr', 'fa-IR'])) {
       DateTimeFormat = global.Intl.DateTimeFormat;

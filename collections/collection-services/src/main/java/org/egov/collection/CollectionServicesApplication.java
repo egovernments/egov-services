@@ -51,14 +51,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
-@Import(TracerConfiguration.class)
+@Import({TracerConfiguration.class})
 public class CollectionServicesApplication {
 
 	@Value("${app.timezone}")
@@ -69,10 +68,10 @@ public class CollectionServicesApplication {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
 	}
 
-	@Bean
+/*	@Bean
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
-	}
+	} */
 
 	public static void main(String[] args) {
 		SpringApplication.run(CollectionServicesApplication.class, args);

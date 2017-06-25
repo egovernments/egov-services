@@ -157,7 +157,8 @@ public class EmployeeService {
 	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
 		List<User> usersList = null;
 		List<Long> ids = null;
-		if (!isEmpty(employeeCriteria.getRoleCodes())) {
+		// If roleCodes or userName is present, get users first, as there will be very limited results
+		if (!isEmpty(employeeCriteria.getRoleCodes()) || !isEmpty(employeeCriteria.getUserName())) {
 			// FIXME : Right now we've to hit user service twice for active & inactive users.
 			// Remove this work around once the user service is updated.
 			employeeCriteria.setActive(true);
@@ -176,7 +177,8 @@ public class EmployeeService {
 		if (isEmpty(employeeInfoList))
 			return Collections.EMPTY_LIST;
 
-		if (isEmpty(employeeCriteria.getRoleCodes())) {
+		// If roleCodes or userName is not present, get employees first
+		if (isEmpty(employeeCriteria.getRoleCodes()) || isEmpty(employeeCriteria.getUserName())) {
 			ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
 			LOGGER.debug("Employee ids " + ids);
 			employeeCriteria.setId(ids);
@@ -339,5 +341,19 @@ public class EmployeeService {
 		technicalQualificationService.update(employee);
 		educationalQualificationService.update(employee);
 		employeeDocumentsService.update(employee);
+	}
+
+	public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {
+		UserInfo userInfo = requestInfo.getUserInfo();
+		EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+		employeeCriteria.setUserName(userInfo.getUserName());
+		employeeCriteria.setTenantId(userInfo.getTenantId());
+		employeeCriteria.setActive(true);
+
+		List<User> users = userService.getUsers(employeeCriteria, requestInfo);
+		List<Long> userIds = users.stream().map(user -> user.getId()).collect(Collectors.toList());
+		employeeCriteria.setId(userIds);
+
+		return getEmployees(employeeCriteria, requestInfo);
 	}
 }

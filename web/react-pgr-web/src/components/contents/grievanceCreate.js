@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import ImagePreview from '../common/ImagePreview.js';
 import SimpleMap from '../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -15,6 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import LoadingIndicator from '../common/LoadingIndicator';
 import Api from '../../api/api';
 
 var flag = 0;
@@ -55,6 +55,7 @@ class grievanceCreate extends Component {
   constructor(props) {
        super(props);
        this.state = {
+         loadingstatus: 'loading',
          type:'',
          receivingModes : [],
          receivingCenter:[],
@@ -79,9 +80,9 @@ class grievanceCreate extends Component {
   };
 
   handleClose = () => {
-    let {initForm} = this.props;
-    initForm(localStorage.getItem('type'));
     this.setState({open: false});
+    let {initForm, history} = this.props;
+    initForm(localStorage.getItem('type'));
   };
 
   handleView = () => {
@@ -115,17 +116,25 @@ class grievanceCreate extends Component {
      });
    }
 
-  componentWillMount()
+  componentDidMount()
   {
-    //ReceivingMode
+    this.setState({type:localStorage.getItem('type')});
+    let {initForm} = this.props;
+    initForm(localStorage.getItem('type'));
+
+    //let {toggleDailogAndSetText}=this.props;
+
     var currentThis = this;
-    Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
-    {
 
-      currentThis.setState({receivingModes : response.ReceivingModeType});
-    },function(err) {
+    //ReceivingMode
+    if(localStorage.getItem('type') == 'EMPLOYEE'){
+      Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
+      {
+        currentThis.setState({receivingModes : response.ReceivingModeType});
+      },function(err) {
 
-    });
+      });
+    }
 
     //Top ComplaintTypes
     Api.commonApiPost("/pgr/services/_search", {type: 'frequency', count: 5}).then(function(response)
@@ -142,22 +151,15 @@ class grievanceCreate extends Component {
     });
 
     //Grievance Category
-    Api.commonApiPost("/pgr/servicecategories/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/serviceGroup/_search").then(function(response)
     {
-      currentThis.setState({grievanceCategory : response.serviceTypeCategories});
+      currentThis.setState({grievanceCategory : response.ServiceGroups});
     },function(err) {
 
     });
 
-  }
+    this.setState({loadingstatus:'hide'});
 
-  componentDidMount()
-  {
-    this.setState({type:localStorage.getItem('type')});
-    let {initForm} = this.props;
-    initForm(localStorage.getItem('type'));
-
-    //let {toggleDailogAndSetText}=this.props;
   }
 
   search(e)
@@ -189,6 +191,9 @@ class grievanceCreate extends Component {
   }
 
   createGrievance(userName='',userMobile='',userEmail=''){
+
+    this.setState({loadingstatus:'loading'});
+
     var data={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
     data['description']=this.props.grievanceCreate.description;
@@ -248,11 +253,12 @@ class grievanceCreate extends Component {
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});
-      var ack = 'Service Request is received and is under process. SRN (Service Request No.) is '+srn+'. Please use this for all your future references'
+      var ack = 'Service Request is received and is under process. SRN (Service Request No.) is '+srn+'. Please use this for all your future references.'
       currentThis.setState({srn:'SRN (Service Request No.): '+srn});
       currentThis.setState({acknowledgement:ack});
 
       if(!currentThis.props.files){
+        currentThis.setState({loadingstatus:'hide'});
         {currentThis.handleOpen()}
       }
       console.log('create succesfully done');
@@ -260,18 +266,20 @@ class grievanceCreate extends Component {
         for(let i=0;i<currentThis.props.files.length;i++){
           //this.props.files.length[i]
           let formData = new FormData();
-          formData.append("tenantId", "default");
+          formData.append("tenantId", localStorage.getItem('tenantId'));
           formData.append("module", "PGR");
           formData.append("tag", createresponse.serviceRequests[0].serviceRequestId);
           formData.append("file", currentThis.props.files[i]);
           Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
           {
-            {currentThis.handleOpen()}
+
           },function(err) {
 
           });
         }
         console.log('file succesfully uploaded');
+        currentThis.setState({loadingstatus:'hide'});
+        {currentThis.handleOpen()}
       }
     },function(err) {
 
@@ -311,6 +319,7 @@ class grievanceCreate extends Component {
     let {search, createGrievance} = this;
     return (
       <div className="grievanceCreate">
+        <LoadingIndicator status={this.state.loadingstatus}/>
         <form autoComplete="off" onSubmit={(e) => {
           search(e)
         }}>
@@ -322,7 +331,7 @@ class grievanceCreate extends Component {
                     <Row>
                       {this.state.type == 'EMPLOYEE' ?
                         <Col xs={12} md={3}>
-                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Receiving Mode"  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
+                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Receiving Mode *"  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
                             var e = {
                               target: {
                                 value: value
@@ -330,9 +339,10 @@ class grievanceCreate extends Component {
                             };
                             this.loadReceivingCenter(e.target.value)
                             handleChange(e, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
-                            {this.state.receivingModes.map((receivingmode, index) => (
+                            {this.state.receivingModes !== undefined ?
+                            this.state.receivingModes.map((receivingmode, index) => (
                                 <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} />
-                            ))}
+                            )) : ''}
                           </SelectField>
                         </Col> : ''
                       }
@@ -341,11 +351,11 @@ class grievanceCreate extends Component {
                          : ''
                       }
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Name" value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
+                        <TextField fullWidth={true} floatingLabelText="Name *" value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
                         />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Mobile number" errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
+                        <TextField fullWidth={true} floatingLabelText="Mobile number *" errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
                       </Col>
                     </Row>
                     <Row>
@@ -386,7 +396,7 @@ class grievanceCreate extends Component {
                   </Row>
                   <Row>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText="Grievance Category" maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
+                      <SelectField fullWidth={true} floatingLabelText="Grievance Category *" maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
                         var e = {
                           target: {
                             value: value
@@ -394,13 +404,14 @@ class grievanceCreate extends Component {
                         };
                         this.loadGrievanceType(e.target.value),
                         handleChange(e, "serviceCategory", true, "")}}>
-                      {this.state.grievanceCategory.map((grievanceCategory, index) => (
+                        {this.state.grievanceCategory !== undefined ?
+                        this.state.grievanceCategory.map((grievanceCategory, index) => (
                           <MenuItem value={grievanceCategory.id} key={index} primaryText={grievanceCategory.name} />
-                      ))}
+                        )) : ''}
                       </SelectField>
                     </Col>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText="Grievance Type" maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
+                      <SelectField fullWidth={true} floatingLabelText="Grievance Type *" maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
                         var e = {
                           target: {
                             value: value
@@ -422,7 +433,7 @@ class grievanceCreate extends Component {
                 <Grid>
                   <Row>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText="Grievance Details" multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
+                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText="Grievance Details *" multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
                     </Col>
                     <Col xs={12} md={3}>
                       <TextField fullWidth={true} floatingLabelText="Landmark" multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
@@ -430,14 +441,14 @@ class grievanceCreate extends Component {
                     <Col xs={12} md={6}>
                       <AutoComplete
                         hintText="Type your location or select it from maps"
-                        floatingLabelText="Grievance Location"
+                        floatingLabelText="Grievance Location *"
                         filter={AutoComplete.noFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.boundarySourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={handleAutoCompleteKeyUp}
-                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""} value={grievanceCreate.addressId?grievanceCreate.addressId:""}
+                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""} value={grievanceCreate.addressId ? grievanceCreate.addressId : ""}
                         onNewRequest={(chosenRequest, index) => {
                         var e = {
                           target: {
@@ -473,15 +484,15 @@ class grievanceCreate extends Component {
           </div>
         </form>
         <div>
-          <Dialog
-            title={this.state.srn}
-            actions={actions}
-            modal={true}
-            open={this.state.open}
-            onRequestClose={this.handleClose}
-          >
-          {this.state.acknowledgement}
-          </Dialog>
+        <Dialog
+          title={this.state.srn}
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+        {this.state.acknowledgement}
+        </Dialog>
         </div>
       </div>
     );
@@ -525,7 +536,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "ADD_MANDATORY", property: name, value: '', isRequired : true, pattern: ''});
     return (
       <Col xs={12} md={3}>
-        <SelectField floatingLabelText="Receiving Center" value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
+        <SelectField maxHeight={200} floatingLabelText="Receiving Center *" value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
           var e = {
             target: {
               value: value
@@ -593,31 +604,6 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '0.0', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '0.0', isRequired : false, pattern: ''});
     }
-  },
-  handleChangeNextOne: (e, property, propertyOne, isRequired, pattern) => {
-    dispatch({
-      type: "HANDLE_CHANGE_NEXT_ONE",
-      property,
-      propertyOne,
-      value: e.target.value,
-      isRequired,
-      pattern
-    })
-  },
-  handleChangeNextTwo: (e, property, propertyOne, propertyTwo, isRequired, pattern) => {
-    dispatch({
-      type: "HANDLE_CHANGE_NEXT_ONE",
-      property,
-      propertyOne,
-      propertyTwo,
-      value: e.target.value,
-      isRequired,
-      pattern
-    })
-  },
-  showTable:(state)=>
-  {
-    dispatch({type:"SHOW_TABLE",state});
   },
   changeButtonText:(text)=>
   {

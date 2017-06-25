@@ -20,6 +20,9 @@ import serviceTypeCreate from './components/contents/master/serviceType/serviceT
 import viewOrUpdateServiceType from './components/contents/master/serviceType/viewOrUpdateServiceType';
 import viewServiceType from './components/contents/master/serviceType/viewServiceType';
 import ViewServiceGroup from './components/contents/master/serviceGroup/viewServiceGroup';
+import ViewEscalation from './components/contents/master/escalation/ViewEscalation';
+import DefineEscalation from './components/contents/master/escalation/DefineEscalation';
+
 
 const Main = () => (
   <main>
@@ -52,6 +55,9 @@ const Main = () => (
       <Route exact path='/viewOrUpdateServiceType/edit' component={viewOrUpdateServiceType}/>
       <Route exact path='/viewServiceType/:id' component={viewServiceType}/>
       <Route exact path='/viewServiceGroup/:id' component={ViewServiceGroup}/>
+      <Route exact path='/viewEscalation' component={ViewEscalation}/>
+      <Route exact path='/defineEscalation' component={DefineEscalation}/>
+
     </Switch>
   </main>
 )

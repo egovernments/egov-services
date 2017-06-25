@@ -50,7 +50,7 @@ public class MessageController {
             throw new InvalidMessageRequest(bindingResult.getFieldErrors());
 
         final List<org.egov.domain.model.Message> messages = messageRequest.toDomainMessages();
-        messageService.create(messages);
+        messageService.create(messageRequest.getTenant(), messages);
         return createResponse(messages);
     }
 
@@ -65,13 +65,13 @@ public class MessageController {
     }
 
     @PostMapping(value = "/v1/_update")
-    public MessagesResponse update(@RequestBody @Valid final UpdateMessageRequest updateMessagesRequest,
+    public MessagesResponse update(@RequestBody @Valid final UpdateMessageRequest messageRequest,
                                    final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidMessageRequest(bindingResult.getFieldErrors());
         }
-        final List<org.egov.domain.model.Message> messages = updateMessagesRequest.toDomainMessages();
-        messageService.update(messages);
+        final List<org.egov.domain.model.Message> messages = messageRequest.toDomainMessages();
+        messageService.updateMessagesForModule(messageRequest.getTenant(), messages);
         return createResponse(messages);
     }
 

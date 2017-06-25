@@ -3,6 +3,7 @@ package org.egov.web.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.egov.domain.model.Tenant;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -30,8 +31,12 @@ public class CreateMessagesRequest {
     private org.egov.domain.model.Message toDomainMessage(Message contractMessage) {
         return org.egov.domain.model.Message.builder()
                 .message(contractMessage.getMessage())
-                .messageIdentity(contractMessage.getMessageIdentity(tenantId))
+                .messageIdentity(contractMessage.getMessageIdentity(getTenant()))
                 .build();
+    }
+
+    public Tenant getTenant() {
+        return new Tenant(tenantId);
     }
 }
 

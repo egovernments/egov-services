@@ -34,7 +34,7 @@ public class UpdateMessageRequest {
                     .code(message.getCode())
                     .module(module)
                     .locale(locale)
-                    .tenant(new Tenant(tenantId))
+                    .tenant(getTenant())
                     .build();
                 return org.egov.domain.model.Message.builder()
                     .message(message.getMessage())
@@ -42,6 +42,10 @@ public class UpdateMessageRequest {
                     .build();
             })
             .collect(Collectors.toList());
+    }
+
+    public Tenant getTenant() {
+        return new Tenant(tenantId);
     }
 
 }

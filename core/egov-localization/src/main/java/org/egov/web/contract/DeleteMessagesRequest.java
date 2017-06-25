@@ -25,7 +25,7 @@ public class DeleteMessagesRequest {
 
     @Valid
     @Size(min = 1)
-    private List<Message> messages;
+    private List<DeleteMessage> messages;
 
     public List<MessageIdentity> getMessageIdentities() {
         return messages.stream()
@@ -33,8 +33,12 @@ public class DeleteMessagesRequest {
                 .code(message.getCode())
                 .module(message.getModule())
                 .locale(message.getLocale())
-                .tenant(new Tenant(tenantId))
+                .tenant(getTenant())
                 .build())
             .collect(Collectors.toList());
+    }
+
+    public Tenant getTenant() {
+        return new Tenant(tenantId);
     }
 }

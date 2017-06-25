@@ -79,11 +79,10 @@ class BulkEscalationGeneration extends Component {
     constructor(props) {
       super(props)
       this.state = {
-              fromPositionSource: [],
-              toPositionSource: [],
+              positionSource: [],
               dataSourceConfig : {
-                text: 'textKey',
-                value: 'valueKey',
+                text: 'name',
+                value: 'id',
               },
               values: [],
             };
@@ -92,17 +91,6 @@ class BulkEscalationGeneration extends Component {
     componentWillMount() {
       let{initForm} = this.props;
       initForm()
-
-      this.setState({
-        fromPositionSource: [
-          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
-        ],
-        toPositionSource: [
-          {textKey: 'To Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'To Position Source', valueKey: 'someSecondValue'},
-        ]
-      })
 
       $('#searchTable').DataTable({
            dom: 'lBfrtip',
@@ -115,7 +103,16 @@ class BulkEscalationGeneration extends Component {
     }
 
     componentDidMount() {
-
+      let self = this;
+      Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+          self.setState({
+            positionSource: response.Position
+          })
+      }, function(err) {
+        self.setState({
+            positionSource: []
+          })
+      });
     }
 
     componentWillUpdate() {
@@ -155,6 +152,8 @@ class BulkEscalationGeneration extends Component {
     render() {
 
      const {values} = this.state;
+
+     console.log(this.state.positionSource);
 
       let {
         isFormValid,
@@ -221,14 +220,14 @@ class BulkEscalationGeneration extends Component {
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.fromPositionSource}
+                                          dataSource={this.state.positionSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "fromPosition")}}
                                           value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
                   	                        handleChange(e, "fromPosition", true, "");
@@ -261,14 +260,14 @@ class BulkEscalationGeneration extends Component {
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.toPositionSource}
+                                          dataSource={this.state.positionSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "toPosition")}}
                                           value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ""}
                                           onNewRequest={(chosenRequest, index) => {
                                             var e = {
                                               target: {
-                                                value: chosenRequest
+                                                value: chosenRequest.id
                                               }
                                             };
                                             handleChange(e, "toPosition", true, "");

@@ -65,8 +65,8 @@ class ViewEscalation extends Component {
               positionSource:[],
               grievanceTypeSource:[],
               dataSourceConfig : {
-                text: 'textKey',
-                value: 'valueKey',
+                text: 'name',
+                value: 'id',
               },
               isSearchClicked: false,
               resultList: [],
@@ -79,10 +79,6 @@ class ViewEscalation extends Component {
 
       this.setState({
         grievanceTypeSource:[
-          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
-        ],
-        positionSource: [
           {textKey: 'From Position Source', valueKey: 'someFirstValue'},
           {textKey: 'From Position Source', valueKey: 'someSecondValue'},
         ]
@@ -99,7 +95,16 @@ class ViewEscalation extends Component {
     }
 
     componentDidMount() {
-
+      let self = this;
+      Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+          self.setState({
+            positionSource: response.Position
+          })
+      }, function(err) {
+        self.setState({
+            positionSource: []
+          })
+      });
     }
 
     componentWillUpdate() {
@@ -178,7 +183,7 @@ class ViewEscalation extends Component {
       return(<div className="viewEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Escalation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -198,7 +203,7 @@ class ViewEscalation extends Component {
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
                   	                        handleChange(e, "grievanceType", true, "");

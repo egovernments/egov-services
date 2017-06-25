@@ -1,9 +1,6 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.Message;
-import org.egov.domain.model.MessageIdentity;
-import org.egov.domain.model.MessageSearchCriteria;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
 import org.springframework.stereotype.Service;
@@ -25,17 +22,17 @@ public class MessageService {
         this.messageCacheRepository = messageCacheRepository;
     }
 
-    public void create(Tenant tenant, List<Message> messages) {
-        messageRepository.save(messages);
+    public void create(Tenant tenant, List<Message> messages, AuthenticatedUser user) {
+        messageRepository.save(messages, user);
         bustCacheEntriesForMessages(tenant, messages);
     }
 
-    public void updateMessagesForModule(Tenant tenant, List<Message> messages) {
+    public void updateMessagesForModule(Tenant tenant, List<Message> messages, AuthenticatedUser user) {
         if (CollectionUtils.isEmpty(messages)) {
             throw new IllegalArgumentException("update message list cannot be empty");
         }
         final Message message = messages.get(0);
-        messageRepository.update(message.getTenant(), message.getLocale(), message.getModule(), messages);
+        messageRepository.update(message.getTenant(), message.getLocale(), message.getModule(), messages, user);
         bustCacheEntriesForMessages(tenant, messages);
     }
 

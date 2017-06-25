@@ -1,12 +1,14 @@
 package org.egov.persistence.repository;
 
 
+import org.egov.domain.model.AuthenticatedUser;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,10 +27,11 @@ public class MessageRepository {
             .map(org.egov.persistence.entity.Message::toDomain).collect(Collectors.toList());
     }
 
-    public void save(List<Message> messages) {
+    public void save(List<Message> messages, AuthenticatedUser authenticatedUser) {
         final List<org.egov.persistence.entity.Message> entityMessages = messages.stream()
             .map(org.egov.persistence.entity.Message::new)
             .collect(Collectors.toList());
+        setAuditFieldsForCreate(authenticatedUser, entityMessages);
         try {
             messageJpaRepository.save(entityMessages);
         } catch (DataIntegrityViolationException ex) {
@@ -45,11 +48,20 @@ public class MessageRepository {
         messageJpaRepository.delete(messages);
     }
 
-    public void update(String tenant, String locale, String module, List<Message> domainMessages) {
+    public void update(String tenant, String locale, String module, List<Message> domainMessages,
+                       AuthenticatedUser authenticatedUser) {
         final List<String> codes = getCodes(domainMessages);
         final List<org.egov.persistence.entity.Message> entityMessages =
             fetchMatchEntityMessages(tenant, locale, module, codes);
-        updateMessages(domainMessages, entityMessages);
+        updateMessages(domainMessages, entityMessages, authenticatedUser);
+    }
+
+    private void setAuditFieldsForCreate(AuthenticatedUser authenticatedUser,
+                                         List<org.egov.persistence.entity.Message> entityMessages) {
+        entityMessages.forEach(message -> {
+            message.setCreatedDate(new Date());
+            message.setCreatedBy(authenticatedUser.getUserId());
+        });
     }
 
     private List<org.egov.persistence.entity.Message> fetchMatchEntityMessages(String tenant, String locale,
@@ -58,13 +70,21 @@ public class MessageRepository {
     }
 
     private void updateMessages(List<Message> domainMessages,
-                                List<org.egov.persistence.entity.Message> entityMessages) {
+                                List<org.egov.persistence.entity.Message> entityMessages, AuthenticatedUser
+                                    authenticatedUser) {
         final Map<String, Message> codeToMessageMap = getCodeToMessageMap(domainMessages);
         entityMessages.forEach(entityMessage -> {
             final Message matchingMessage = codeToMessageMap.get(entityMessage.getCode());
             entityMessage.update(matchingMessage);
+            setAuditFieldsForUpdate(authenticatedUser, entityMessage);
             messageJpaRepository.save(entityMessage);
         });
+    }
+
+    private void setAuditFieldsForUpdate(AuthenticatedUser authenticatedUser, org.egov.persistence.entity.Message
+        entityMessage) {
+        entityMessage.setLastModifiedBy(authenticatedUser.getUserId());
+        entityMessage.setLastModifiedDate(new Date());
     }
 
     private Map<String, Message> getCodeToMessageMap(List<Message> messages) {

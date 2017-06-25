@@ -2,10 +2,7 @@ package org.egov.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.TestConfiguration;
-import org.egov.domain.model.Message;
-import org.egov.domain.model.MessageIdentity;
-import org.egov.domain.model.MessageSearchCriteria;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.egov.domain.service.MessageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -111,7 +108,7 @@ public class MessageControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("messagesResponse.json")));
 
-        verify(messageService).create(eq(defaultTenant), anyList());
+        verify(messageService).create(eq(defaultTenant), anyListOf(Message.class), eq(new AuthenticatedUser(1L)));
     }
 
     @Test
@@ -133,7 +130,9 @@ public class MessageControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("createNewMessageResponse.json")));
-        verify(messageService).updateMessagesForModule(eq(new Tenant("default")), anyListOf(Message.class));
+        verify(messageService)
+            .updateMessagesForModule(eq(new Tenant("default")), anyListOf(Message.class),
+                eq(new AuthenticatedUser(1L)));
     }
 
     @Test

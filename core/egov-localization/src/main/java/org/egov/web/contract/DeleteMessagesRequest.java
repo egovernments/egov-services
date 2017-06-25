@@ -1,17 +1,17 @@
 package org.egov.web.contract;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.domain.model.MessageIdentity;
+import org.egov.domain.model.Tenant;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.egov.domain.model.MessageIdentity;
-import org.egov.domain.model.Tenant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -41,4 +41,5 @@ public class DeleteMessagesRequest {
     public Tenant getTenant() {
         return new Tenant(tenantId);
     }
+
 }

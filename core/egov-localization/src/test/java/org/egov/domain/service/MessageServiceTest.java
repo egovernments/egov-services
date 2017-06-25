@@ -1,10 +1,7 @@
 package org.egov.domain.service;
 
 
-import org.egov.domain.model.Message;
-import org.egov.domain.model.MessageIdentity;
-import org.egov.domain.model.MessageSearchCriteria;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
 import org.junit.Test;
@@ -422,18 +419,20 @@ public class MessageServiceTest {
     public void test_should_save_messages() {
         List<Message> modelMessages = getMessages();
         final Tenant tenant = new Tenant(TENANT_ID);
+        final AuthenticatedUser user = new AuthenticatedUser(1L);
 
-        messageService.create(tenant, modelMessages);
+        messageService.create(tenant, modelMessages, user);
 
-        verify(messageRepository).save(modelMessages);
+        verify(messageRepository).save(modelMessages, user);
     }
 
     @Test
     public void test_should_bust_cache_for_newly_persisted_messages() {
         List<Message> modelMessages = getMessages();
         final Tenant tenant = new Tenant(TENANT_ID);
+        final AuthenticatedUser user = new AuthenticatedUser(1L);
 
-        messageService.create(tenant, modelMessages);
+        messageService.create(tenant, modelMessages, user);
 
         verify(messageCacheRepository, times(1)).bustCacheEntry(MR_IN, tenant);
         verify(messageCacheRepository, times(1)).bustCacheEntry(ENGLISH_INDIA, tenant);
@@ -443,6 +442,7 @@ public class MessageServiceTest {
     public void test_should_update_messages() {
         final Tenant tenant = new Tenant(TENANT_ID);
         final String module = "module";
+        final AuthenticatedUser user = new AuthenticatedUser(1L);
         final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("core.msg.OTPvalidated")
             .locale(MR_IN)
@@ -466,15 +466,16 @@ public class MessageServiceTest {
 
         List<Message> modelMessages = Arrays.asList(message1, message2);
 
-        messageService.updateMessagesForModule(tenant, modelMessages);
+        messageService.updateMessagesForModule(tenant, modelMessages, user);
 
-        verify(messageRepository).update(TENANT_ID, MR_IN, module, modelMessages);
+        verify(messageRepository).update(TENANT_ID, MR_IN, module, modelMessages, user);
     }
 
     @Test
     public void test_should_bust_cache_entries_for_update_messages() {
         final Tenant tenant = new Tenant(TENANT_ID);
         final String module = "module";
+        final AuthenticatedUser user = new AuthenticatedUser(1L);
         final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("core.msg.OTPvalidated")
             .locale(MR_IN)
@@ -498,7 +499,7 @@ public class MessageServiceTest {
 
         List<Message> modelMessages = Arrays.asList(message1, message2);
 
-        messageService.updateMessagesForModule(tenant, modelMessages);
+        messageService.updateMessagesForModule(tenant, modelMessages, user);
 
         verify(messageCacheRepository, times(1)).bustCacheEntry(MR_IN, tenant);
     }

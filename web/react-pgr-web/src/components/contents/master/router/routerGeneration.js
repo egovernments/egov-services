@@ -248,13 +248,13 @@ class routerGeneration extends Component {
   	 	var routerType = {
   	 		position: self.props.routerCreateSet.position,
   	 		id: "",
-  	 		grievancetype: [],
+  	 		services: [],
   	 		boundary: [],
   	 		tenantId: localStorage.getItem("tenantId")
   	 	};
 
   	 	for(var i=0; i<self.props.routerCreateSet.complaintTypes.length; i++) {
-  	 		routerType.grievancetype.push({
+  	 		routerType.services.push({
   	 			serviceCode: self.props.routerCreateSet.complaintTypes[i]
   	 		});
   	 	}
@@ -265,8 +265,8 @@ class routerGeneration extends Component {
   	 		});
   	 	}
 
-  	 	Api.commonApiPost("/pgr/router/_create", {}, {routertype: routerType}).then(function(response) {
-	  		self.props.routerCreateSet = {};
+  	 	Api.commonApiPost("/workflow/router/_create", {}, {routertype: routerType}).then(function(response) {
+	  		self.props.initForm();
 	  		self.setState({
 	  			resultList: [],
 	  			isSearchClicked: false,
@@ -397,7 +397,7 @@ class routerGeneration extends Component {
                                         key={index} 
                                         insetChildren={true}
                                         primaryText={item.serviceName}
-                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.serviceName) > -1}
+                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.serviceCode) > -1}
                                       />
 			                       ))}
                     </SelectField>
@@ -438,9 +438,7 @@ class routerGeneration extends Component {
                     	<AutoComplete
                         hintText=""
                         floatingLabelText="Position"
-                        filter={function filter(searchText, key) {
-                                  return key.toLowerCase().includes(searchText.toLowerCase());
-                               }}
+                        filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.positionSource}
                         dataSourceConfig={this.state.positionSourceConfig}
@@ -450,7 +448,7 @@ class routerGeneration extends Component {
                         onNewRequest={(chosenRequest, index) => {
 	                        var e = {
 	                          target: {
-	                            value: chosenRequest
+	                            value: chosenRequest.id
 	                          }
 	                        };
 	                        handleChange(e, "position", true, "");
@@ -478,7 +476,7 @@ class routerGeneration extends Component {
 				      />, <FlatButton
 				        label="Yes"
 				        primary={true}
-				        onTouchTap={search}
+				        onTouchTap={() => {save()}}
 				      />]}
           modal={false}
           open={open}

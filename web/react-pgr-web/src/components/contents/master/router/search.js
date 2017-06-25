@@ -240,7 +240,7 @@ class searchRouter extends Component {
         return (
           <tr key={i} onClick={() => {handleNavigation(val.id)}}>
             <td>{i+1}</td>
-            <td>{val.services.serviceName}</td>
+            <td>{val.service ? val.service.serviceName : ""}</td>
             <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>
             <td>{getNameById(boundaryInitialList, val.boundary.boundaryType)}</td>
             <td>{getNameById(positionSource, val.position)}</td>

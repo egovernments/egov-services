@@ -17,7 +17,6 @@ import FlatButton from 'material-ui/FlatButton';
 import LoadingIndicator from '../common/LoadingIndicator';
 import Api from '../../api/api';
 
-var flag = 0;
 const styles = {
   headerStyle : {
     color: 'rgb(90, 62, 27)',
@@ -164,6 +163,8 @@ class grievanceCreate extends Component {
 
   search(e)
   {
+      e.preventDefault();
+      this.setState({loadingstatus:'loading'});
       let type = this.state.type;
       if(type == 'CITIZEN'){
         var userArray = [], userRequest={};
@@ -184,15 +185,12 @@ class grievanceCreate extends Component {
       }else{
         _this.createGrievance();
       }
-      e.preventDefault();
       let {showTable,changeButtonText}=this.props;
       //console.log(this.props.grievanceCreate);
 
   }
 
   createGrievance(userName='',userMobile='',userEmail=''){
-
-    this.setState({loadingstatus:'loading'});
 
     var data={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
@@ -257,29 +255,32 @@ class grievanceCreate extends Component {
       currentThis.setState({srn:'SRN (Service Request No.): '+srn});
       currentThis.setState({acknowledgement:ack});
 
-      if(!currentThis.props.files){
-        currentThis.setState({loadingstatus:'hide'});
-        {currentThis.handleOpen()}
-      }
-      console.log('create succesfully done');
       if(currentThis.props.files){
-        for(let i=0;i<currentThis.props.files.length;i++){
-          //this.props.files.length[i]
-          let formData = new FormData();
-          formData.append("tenantId", localStorage.getItem('tenantId'));
-          formData.append("module", "PGR");
-          formData.append("tag", createresponse.serviceRequests[0].serviceRequestId);
-          formData.append("file", currentThis.props.files[i]);
-          Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-          {
+        if(currentThis.props.files.length === 0){
+          console.log('create succesfully done. No file uploads');
+          currentThis.setState({loadingstatus:'hide'});
+          {currentThis.handleOpen()}
+        }else{
+          console.log('create succesfully done. still file upload pending');
+          for(let i=0;i<currentThis.props.files.length;i++){
+            //this.props.files.length[i]
+            let formData = new FormData();
+            formData.append("tenantId", localStorage.getItem('tenantId'));
+            formData.append("module", "PGR");
+            formData.append("tag", createresponse.serviceRequests[0].serviceRequestId);
+            formData.append("file", currentThis.props.files[i]);
+            Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+            {
+              if(i === (currentThis.props.files.length - 1)){
+                console.log('All files succesfully uploaded');
+                currentThis.setState({loadingstatus:'hide'});
+                {currentThis.handleOpen()}
+              }
+            },function(err) {
 
-          },function(err) {
-
-          });
+            });
+          }
         }
-        console.log('file succesfully uploaded');
-        currentThis.setState({loadingstatus:'hide'});
-        {currentThis.handleOpen()}
       }
     },function(err) {
 
@@ -288,11 +289,6 @@ class grievanceCreate extends Component {
 
   render() {
     const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
       <FlatButton
         label="Proceed to view"
         primary={true}
@@ -385,15 +381,16 @@ class grievanceCreate extends Component {
                       </div>
                     </Col>
                   </Row>
+                  {this.state.topComplaintTypes.length > 0 ?
                   <Row>
                     <Col xs={12} md={12} style={{textAlign:'center'}}>
                       <FlatButton
-                        backgroundColor="#a4c639"
-                        hoverColor="#8AA62F"
+                        primary= {true}
                         label="OR"
+                        disabled = {true}
                       />
                     </Col>
-                  </Row>
+                  </Row> : ''}
                   <Row>
                     <Col xs={12} md={3}>
                       <SelectField fullWidth={true} floatingLabelText="Grievance Category *" maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
@@ -487,7 +484,7 @@ class grievanceCreate extends Component {
         <Dialog
           title={this.state.srn}
           actions={actions}
-          modal={false}
+          modal={true}
           open={this.state.open}
           onRequestClose={this.handleClose}
         >

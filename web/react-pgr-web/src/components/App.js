@@ -5,7 +5,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Header from './common/Header';
 import Footer from './common/Footer';
-// import PropertyTaxSearch from "./contents/PropertyTaxSearch";
 
 import router from "../router";
 var axios = require('axios');
@@ -26,7 +25,7 @@ class App extends Component {
     });
 
     var params = new URLSearchParams();
-    params.append('username', 'narasappa');
+    params.append('username', '9999999999');
     params.append('password', 'demo');
     params.append('grant_type', 'password');
     params.append('scope', 'read');
@@ -66,7 +65,7 @@ class App extends Component {
 
           <Dialog
             actions={actions}
-            modal={false}
+            modal={true}
             open={isDialogOpen}
             onRequestClose={toggleDailogAndSetText(false,"")}
             >

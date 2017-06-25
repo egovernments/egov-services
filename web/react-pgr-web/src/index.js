@@ -3,20 +3,14 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-// import {blue500} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import App from "./components/App"
+import App from "./components/App";
 
-import './styles/application.css';
-import './styles/vistyle.css';
 import './styles/bootstrap.min.css';
-import './styles/bootstrap-theme.min.css';
-import './styles/jquery.dataTables.min.css';
-import './styles/buttons.dataTables.min.css';
 
 // import router from "./router";
 
@@ -26,9 +20,9 @@ injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: "#5a3e1b",
-    primary2Color: "#5a3e1b",
-    textColor:"#5a3e1b"
+    primary1Color: "#354f57",
+    primary2Color: "#0277bd",
+    textColor:"#333"
   }
 });
 

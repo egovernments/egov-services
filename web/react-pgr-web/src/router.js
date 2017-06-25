@@ -1,12 +1,12 @@
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
 import grievanceCreate from './components/contents/grievanceCreate';
-import ReceivingCenterCreate from './components/contents/master/receivingCenter/receivingCenterCreate';
-import ViewEditReceivingCenter from './components/contents/master/receivingCenter/viewEditReceivingCenter';
-import ViewReceivingCenter from './components/contents/master/receivingCenter/viewReceivingCenter';
 import grievanceCreateSD from './components/contents/grievanceCreateSD';
 import grievanceView from './components/contents/grievanceView';
 import grievanceSearch from './components/contents/grievanceSearch';
+import ReceivingCenterCreate from './components/contents/master/receivingCenter/receivingCenterCreate';
+import ViewEditReceivingCenter from './components/contents/master/receivingCenter/viewEditReceivingCenter';
+import ViewReceivingCenter from './components/contents/master/receivingCenter/viewReceivingCenter';
 import receivingModeCreate from './components/contents/master/receivingMode/receivingModeCreate';
 import viewOrUpdateReceivingMode from './components/contents/master/receivingMode/viewOrUpdateReceivingMode';
 import ServiceGroupCreate from './components/contents/master/serviceGroup/serviceGroupCreate';
@@ -20,15 +20,15 @@ import serviceTypeCreate from './components/contents/master/serviceType/serviceT
 import viewOrUpdateServiceType from './components/contents/master/serviceType/viewOrUpdateServiceType';
 import viewServiceType from './components/contents/master/serviceType/viewServiceType';
 import ViewServiceGroup from './components/contents/master/serviceGroup/viewServiceGroup';
-import ViewEscalation from './components/contents/master/escalation/ViewEscalation';
-import DefineEscalation from './components/contents/master/escalation/DefineEscalation';
-
+import ViewEscalation from './components/contents/master/escalation/viewEscalation';
+import DefineEscalation from './components/contents/master/escalation/defineEscalation';
 
 const Main = () => (
   <main>
     <Switch>
       <Route exact path='/'/>
       <Route exact path='/createGrievance' component={grievanceCreate}/>
+      <Route exact path='/viewGrievance/:srn' component={grievanceView}/>
       <Route exact path='/searchGrievance' component={grievanceSearch}/>
       <Route exact name="createReceivingCenter" path='/createReceivingCenter/:id?' component={ReceivingCenterCreate}/>
       <Route exact path='/createReceivingCenter' component={ReceivingCenterCreate}/>
@@ -57,7 +57,6 @@ const Main = () => (
       <Route exact path='/viewServiceGroup/:id' component={ViewServiceGroup}/>
       <Route exact path='/viewEscalation' component={ViewEscalation}/>
       <Route exact path='/defineEscalation' component={DefineEscalation}/>
-
     </Switch>
   </main>
 )

@@ -117,6 +117,10 @@ public class ServiceRequestService {
     }
 
     private void validateUpdateEligibility(ServiceRequest complaint) {
+        if (complaint.getAuthenticatedUser().isCitizen()) {
+            //TODO: Temporary fix - discuss and fix this
+            return;
+        }
         Long assignmentIdDB = getAssignmentId(complaint.getCrn(), complaint.getTenantId());
         Employee employee = getEmployeeByAssignee(complaint.getAuthenticatedUser().getId(), complaint.getTenantId());
         if (assignmentIdDB.equals(employee.getPrimaryPosition())) {

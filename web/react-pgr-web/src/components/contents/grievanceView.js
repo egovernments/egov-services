@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import FontIcon from 'material-ui/FontIcon';
+import FileDownload from 'material-ui/svg-icons/action/get-app';
 import {Table,TableBody,TableRow,TableRowColumn} from 'material-ui/Table';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
@@ -15,6 +15,7 @@ import Api from '../../api/api';
 import {translate} from '../common/common';
 import Fields from '../common/Fields';
 import LoadingIndicator from '../common/LoadingIndicator';
+import  '../../styles/custom.css';
 var Rating = require('react-rating');
 
 const styles = {
@@ -177,13 +178,17 @@ class grievanceView extends Component{
     }
   }
   allServices = () => {
-    Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
-    {
-      currentThis.setState({complaintTypes : response.complaintTypes});
-      currentThis.getWard();
-    },function(err) {
+    if(localStorage.getItem('type') == 'EMPLOYEE'){
+      Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
+      {
+        currentThis.setState({complaintTypes : response.complaintTypes});
+        currentThis.getWard();
+      },function(err) {
 
-    });
+      });
+    }else{
+      currentThis.setState({loadingstatus:'hide'});
+    }
   }
   getWard = () => {
     Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName:'Ward',hierarchyTypeName:'Administration'}).then(function(response)
@@ -257,7 +262,8 @@ class grievanceView extends Component{
               primary={true}
               fullWidth = {true}
               style={styles.marginStyle}
-              icon={<FontIcon className="muidocs-icon-custom-github" />}
+              labelPosition="before"
+              icon={<FileDownload />}
             />
           </Col>
         );
@@ -345,10 +351,10 @@ class grievanceView extends Component{
   	}
   }
   updateSeva = (req_obj) =>{
-    console.log('Before Submit',JSON.stringify(req_obj));
+    //console.log('Before Submit',JSON.stringify(req_obj));
     Api.commonApiPost("/pgr/seva/_update",{},req_obj).then(function(updateResponse)
     {
-      console.log('After submit',JSON.stringify(updateResponse));
+      //console.log('After submit',JSON.stringify(updateResponse));
       currentThis.setState({loadingstatus:'hide'});
       {currentThis.handleOpen()}
     },function(err) {
@@ -360,16 +366,18 @@ class grievanceView extends Component{
       return this.state.srn.map((values, index) => {
         return values.attribValues.map((attrib, aindex) =>{
             if(attrib['key'].indexOf('employeeDocs') !== -1){
+              let key = (attrib['key'].split(/_(.+)/)[1]).length > 15 ? (attrib['key'].split(/_(.+)/)[1]).substr(0, 12)+'...' : attrib['key'].split(/_(.+)/)[1];
               return (
                 <Col xs={6} md={3} key={aindex}>
                   <RaisedButton
                     href={'/filestore/v1/files/id?fileStoreId=' + attrib['name']+'&tenantId='+localStorage.getItem('tenantId')}
                     download
-                    label={attrib['key'].split(/_(.+)/)[1]}
+                    label={key}
                     primary={true}
                     fullWidth = {true}
                     style={styles.marginStyle}
-                    icon={<FontIcon className="muidocs-icon-custom-github" />}
+                    labelPosition="before"
+                    icon={<FileDownload />}
                   />
                 </Col>
               )
@@ -427,7 +435,7 @@ class grievanceView extends Component{
                   Mobile Number
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.phone}
+                  {this.state.phone ? this.state.phone : 'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
@@ -666,7 +674,7 @@ class grievanceView extends Component{
             <Row>
               <Col xs={12} md={3}>
                 <h4>Feedback</h4>
-                <Rating initialRate={grievanceView.rating ? grievanceView.rating : this.state.rating } onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
+                <Rating initialRate={grievanceView.rating} onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
               </Col>
             </Row> : ''}
             <Row>
@@ -675,6 +683,7 @@ class grievanceView extends Component{
                   handleChange(newValue, "approvalComments", true, "") }} />
               </Col>
             </Row>
+            { localStorage.getItem('type') == 'EMPLOYEE' ?
             <Row>
               <Col xs={12} md={3}>
                 <h4>Document reference for approval</h4>
@@ -685,11 +694,10 @@ class grievanceView extends Component{
                     <span className="input-group-addon" onClick={() => this.refs.file.value = ''}><i className="glyphicon glyphicon-trash specific"></i></span>
                 </div>
               </Col>
-            </Row>
+            </Row> : ""}
             <Row>
               <div style={{textAlign: 'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
             </Row>
           </CardText>
@@ -697,10 +705,13 @@ class grievanceView extends Component{
       </Grid>
       : ''
       }
+      <div style={{textAlign: 'center'}}>
+        <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+      </div>
       </form>
       <Dialog
         actions={actions}
-        modal={false}
+        modal={true}
         open={this.state.open}
         onRequestClose={this.handleClose}
       >

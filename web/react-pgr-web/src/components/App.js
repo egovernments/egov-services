@@ -5,7 +5,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Header from './common/Header';
 import Footer from './common/Footer';
-// import PropertyTaxSearch from "./contents/PropertyTaxSearch";
 
 import router from "../router";
 var axios = require('axios');
@@ -63,24 +62,18 @@ class App extends Component {
           <Header/>
               {router}
           <Footer/>
-
           <Dialog
             actions={actions}
-            modal={false}
+            modal={true}
             open={isDialogOpen}
             onRequestClose={toggleDailogAndSetText(false,"")}
             >
             {msg}
           </Dialog>
-
-
-
-
       </div>
     );
   }
 }
-
 
 const mapStateToProps = state => ({isDialogOpen: state.form.dialogOpen, msg: state.form.msg});
 

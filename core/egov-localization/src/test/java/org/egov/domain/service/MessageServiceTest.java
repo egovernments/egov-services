@@ -20,6 +20,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +38,6 @@ public class MessageServiceTest {
 
     @InjectMocks
     private MessageService messageService;
-
 
     @Test
     public void test_should_augment_messages_for_given_tenant_with_non_overridden_default_messages() {
@@ -378,7 +378,6 @@ public class MessageServiceTest {
     @Test
     public void test_should_return_messages_from_cache_when_present() {
         String tenantId = "a";
-        final Tenant defaultTenant = new Tenant(Tenant.DEFAULT_TENANT);
         final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("code1")
             .locale(ENGLISH_INDIA)
@@ -422,11 +421,152 @@ public class MessageServiceTest {
     @Test
     public void test_should_save_messages() {
         List<Message> modelMessages = getMessages();
+        final Tenant tenant = new Tenant(TENANT_ID);
 
-        messageService.create(modelMessages);
+        messageService.create(tenant, modelMessages);
 
         verify(messageRepository).save(modelMessages);
     }
+
+    @Test
+    public void test_should_bust_cache_for_newly_persisted_messages() {
+        List<Message> modelMessages = getMessages();
+        final Tenant tenant = new Tenant(TENANT_ID);
+
+        messageService.create(tenant, modelMessages);
+
+        verify(messageCacheRepository, times(1)).bustCacheEntry(MR_IN, tenant);
+        verify(messageCacheRepository, times(1)).bustCacheEntry(ENGLISH_INDIA, tenant);
+    }
+
+    @Test
+    public void test_should_update_messages() {
+        final Tenant tenant = new Tenant(TENANT_ID);
+        final String module = "module";
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("core.msg.OTPvalidated")
+            .locale(MR_IN)
+            .module(module)
+            .tenant(tenant)
+            .build();
+        Message message1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("OTP यशस्वीपणे प्रमाणित")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("core.lbl.imageupload")
+            .locale(MR_IN)
+            .module(module)
+            .tenant(tenant)
+            .build();
+        Message message2 = Message.builder()
+            .messageIdentity(messageIdentity2)
+            .message("प्रतिमा यशस्वीरित्या अपलोड")
+            .build();
+
+        List<Message> modelMessages = Arrays.asList(message1, message2);
+
+        messageService.updateMessagesForModule(tenant, modelMessages);
+
+        verify(messageRepository).update(TENANT_ID, MR_IN, module, modelMessages);
+    }
+
+    @Test
+    public void test_should_bust_cache_entries_for_update_messages() {
+        final Tenant tenant = new Tenant(TENANT_ID);
+        final String module = "module";
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("core.msg.OTPvalidated")
+            .locale(MR_IN)
+            .module(module)
+            .tenant(tenant)
+            .build();
+        Message message1 = Message.builder()
+            .messageIdentity(messageIdentity1)
+            .message("OTP यशस्वीपणे प्रमाणित")
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("core.lbl.imageupload")
+            .locale(MR_IN)
+            .module(module)
+            .tenant(tenant)
+            .build();
+        Message message2 = Message.builder()
+            .messageIdentity(messageIdentity2)
+            .message("प्रतिमा यशस्वीरित्या अपलोड")
+            .build();
+
+        List<Message> modelMessages = Arrays.asList(message1, message2);
+
+        messageService.updateMessagesForModule(tenant, modelMessages);
+
+        verify(messageCacheRepository, times(1)).bustCacheEntry(MR_IN, tenant);
+    }
+
+    @Test
+    public void test_should_delete_messages() {
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("code1")
+            .locale(MR_IN)
+            .module("module1")
+            .tenant(new Tenant("tenant1"))
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .locale(ENGLISH_INDIA)
+            .module("module2")
+            .tenant(new Tenant("tenant1"))
+            .build();
+        final MessageIdentity messageIdentity3 = MessageIdentity.builder()
+            .code("code3")
+            .locale(ENGLISH_INDIA)
+            .module("module3")
+            .tenant(new Tenant("tenant2"))
+            .build();
+
+        List<MessageIdentity> messageIdentities = Arrays.asList(messageIdentity1, messageIdentity2, messageIdentity3);
+
+        messageService.delete(messageIdentities);
+
+        verify(messageRepository, times(1))
+            .delete("tenant1", MR_IN, "module1", Collections.singletonList("code1"));
+        verify(messageRepository, times(1))
+            .delete("tenant1", ENGLISH_INDIA, "module2", Collections.singletonList("code2"));
+        verify(messageRepository, times(1))
+            .delete("tenant2", ENGLISH_INDIA, "module3", Collections.singletonList("code3"));
+    }
+
+    @Test
+    public void test_should_delete_cache_for_deleted_messages() {
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("code1")
+            .locale(MR_IN)
+            .module("module1")
+            .tenant(new Tenant("tenant1"))
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .locale(ENGLISH_INDIA)
+            .module("module2")
+            .tenant(new Tenant("tenant1"))
+            .build();
+        final MessageIdentity messageIdentity3 = MessageIdentity.builder()
+            .code("code3")
+            .locale(ENGLISH_INDIA)
+            .module("module3")
+            .tenant(new Tenant("tenant2"))
+            .build();
+
+        List<MessageIdentity> messageIdentities = Arrays.asList(messageIdentity1, messageIdentity2, messageIdentity3);
+
+        messageService.delete(messageIdentities);
+
+        verify(messageCacheRepository, times(1))
+            .bustCacheEntry(MR_IN, new Tenant("tenant1"));
+        verify(messageCacheRepository, times(1))
+            .bustCacheEntry(ENGLISH_INDIA, new Tenant("tenant2"));
+    }
+
 
     private List<Message> getMessages() {
         final MessageIdentity messageIdentity1 = MessageIdentity.builder()

@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -81,11 +82,12 @@ public class MessageControllerTest {
 
     @Test
     public void test_should_save_new_messages() throws Exception {
+        final Tenant defaultTenant = new Tenant("default");
         final MessageIdentity messageIdentity1 = MessageIdentity.builder()
             .code("wcms.create.connection.login")
             .locale("kr_IN")
             .module("wcms")
-            .tenant(new Tenant("default"))
+            .tenant(defaultTenant)
             .build();
         final Message message1 = Message.builder()
             .messageIdentity(messageIdentity1)
@@ -95,7 +97,7 @@ public class MessageControllerTest {
             .code("wcms.create.connection.logout")
             .locale("kr_IN")
             .module("wcms")
-            .tenant(new Tenant("default"))
+            .tenant(defaultTenant)
             .build();
         final Message message2 = Message.builder()
             .messageIdentity(messageIdentity2)
@@ -109,7 +111,7 @@ public class MessageControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("messagesResponse.json")));
 
-        verify(messageService).create(anyList());
+        verify(messageService).create(eq(defaultTenant), anyList());
     }
 
     @Test
@@ -131,7 +133,7 @@ public class MessageControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("createNewMessageResponse.json")));
-        verify(messageService).update(anyListOf(Message.class));
+        verify(messageService).updateMessagesForModule(eq(new Tenant("default")), anyListOf(Message.class));
     }
 
     @Test
@@ -143,6 +145,30 @@ public class MessageControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("updateMessageRequestWithMissingMandatoryFieldsResponse.json")));
+    }
+
+    @Test
+    public void test_should_delete_messages() throws Exception {
+        mockMvc.perform(post("/messages/v1/_delete")
+            .content(getFileContents("deleteMessageRequest.json"))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("deleteMessagesResponse.json")));
+        final MessageIdentity messageIdentity1 = MessageIdentity.builder()
+            .code("code1")
+            .module("module1")
+            .locale("locale1")
+            .tenant(new Tenant("tenant1"))
+            .build();
+        final MessageIdentity messageIdentity2 = MessageIdentity.builder()
+            .code("code2")
+            .module("module2")
+            .locale("locale2")
+            .tenant(new Tenant("tenant1"))
+            .build();
+        final List<MessageIdentity> expectedMessageIdentities = Arrays.asList(messageIdentity1, messageIdentity2);
+        verify(messageService).delete(expectedMessageIdentities);
     }
 
     private String getFileContents(String fileName) {

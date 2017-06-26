@@ -4,7 +4,7 @@ import FileDownload from 'material-ui/svg-icons/action/get-app';
 import {Table,TableBody,TableRow,TableRowColumn} from 'material-ui/Table';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
+import {white} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -29,27 +29,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -397,6 +376,7 @@ class grievanceView extends Component{
        } = this;
     let{
       handleChange,
+      handleWard,
       handleDesignation,
       handlePosition,
       grievanceView,
@@ -421,7 +401,7 @@ class grievanceView extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             SRN(Service Request No.): {this.state.serviceRequestId}
+             SRN (Service Request No.): {this.state.serviceRequestId}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
               <Row style={styles.addBorderBottom}>
@@ -582,7 +562,7 @@ class grievanceView extends Component{
           <CardText style={{padding:'8px 16px 0'}}>
             <Row>
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Change Status" maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText="Change Status *" maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
                   handleChange(value, "status", false, "")
                 }}>
                   {this.state.nextStatus !== undefined ?
@@ -593,7 +573,7 @@ class grievanceView extends Component{
               </Col>
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Change Grievance Type" maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText="Change Grievance Type *" maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
                   handleChange(value, "serviceCode", false, "")}}>
                   {this.state.complaintTypes !== undefined ?
                   this.state.complaintTypes.map((ctype, index) => (
@@ -603,8 +583,8 @@ class grievanceView extends Component{
               </Col> : "" }
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Ward" maxHeight={200} value={grievanceView.locationId ? grievanceView.locationId : this.state.locationId}  onChange={(event, key, value) => {
-                  handleChange(value, "locationId", false, "")}}>
+                <SelectField fullWidth={true} floatingLabelText="Ward *" maxHeight={200} value={grievanceView.locationId ? grievanceView.locationId : this.state.locationId}  onChange={(event, key, value) => {
+                  handleWard(value, "locationId", false, "")}}>
                   {this.state.ward !== undefined ?
                   this.state.ward.map((ward, index) => (
                       <MenuItem value={ward.id} key={index} primaryText={ward.name} />
@@ -613,8 +593,8 @@ class grievanceView extends Component{
               </Col>: ""}
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Location" maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
-                  handleChange(value, "childLocationId", false, "")}}>
+                <SelectField fullWidth={true} floatingLabelText="Location *" maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
+                  handleChange(value, "childLocationId", true, "")}}>
                   {this.state.locality !== undefined ?
                   this.state.locality.map((locality, index) => (
                       <MenuItem value={locality.id} key={index} primaryText={locality.name} />
@@ -663,10 +643,10 @@ class grievanceView extends Component{
               {loadServiceDefinition()}
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText="Priority Color *" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
-                  handleChange(value, "priorityColor", true, ""); }}>
-                  <MenuItem value="red" primaryText="Red" />
-                  <MenuItem value="green" primaryText="Green" />
-                  <MenuItem value="yellow" primaryText="Yellow" />
+                  handleChange(value, "priorityColor", true, ""); }} errorText={fieldErrors.priorityColor ? fieldErrors.priorityColor : ""}>
+                  <MenuItem value="#F44336" primaryText="Red" />
+                  <MenuItem value="#4CAF50" primaryText="Green" />
+                  <MenuItem value="#FFEB3B" primaryText="Yellow" />
                 </SelectField>
               </Col>
             </Row> : ''}
@@ -680,7 +660,7 @@ class grievanceView extends Component{
             <Row>
               <Col xs={12} md={12}>
                 <TextField floatingLabelText="Comments *" fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
-                  handleChange(newValue, "approvalComments", true, "") }} />
+                  handleChange(newValue, "approvalComments", true, "") }} errorText={fieldErrors.approvalComments ? fieldErrors.approvalComments : ""}/>
               </Col>
             </Row>
             { localStorage.getItem('type') == 'EMPLOYEE' ?
@@ -749,6 +729,18 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange: (value, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  },
+  handleWard : (value, property, isRequired, pattern) => {
+    Api.commonApiPost("/egov-location/boundarys/childLocationsByBoundaryId",{boundaryId : value}).then(function(response)
+    {
+      currentThis.setState({locality : response.Boundary});
+      currentThis.setState({childLocationId : ''});
+      dispatch({type: "ADD_MANDATORY", property: "childLocationId", value: '', isRequired : true, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property: "childLocationId", value:'', isRequired:true, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+    },function(err) {
+
+    });
   },
   handleDesignation: (value, property, isRequired, pattern) => {
     if(property == 'departmentId' && value == 0)

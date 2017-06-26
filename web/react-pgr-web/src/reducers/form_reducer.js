@@ -276,8 +276,8 @@ function validate(isRequired, pattern, name, value, validationData) {
   if (!isRequired && value == "") {
     errorText = "";
   }
-  //console.log(validationData.required.required)
-  //console.log(validationData.required.current)
+  // console.log(validationData.required.required)
+  // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
   return {

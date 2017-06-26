@@ -38,7 +38,7 @@ public interface Masterservice {
 	 * @param id
 	 * @param DepartmentRequest
 	 */
-	public DepartmentResponseInfo updateDepartmentMaster(String tenantId, Long id, DepartmentRequest departmentRequest);
+	public DepartmentResponseInfo updateDepartmentMaster(DepartmentRequest departmentRequest);
 
 	/**
 	 * Description: search for deparment
@@ -90,8 +90,7 @@ public interface Masterservice {
 	 * @param id
 	 * @return {@link FloorTypeRequest}
 	 */
-	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest, String tenantId, Integer id)
-			throws Exception;
+	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest) throws Exception;
 
 	/**
 	 * <P>
@@ -134,8 +133,7 @@ public interface Masterservice {
 	 * @param id
 	 * @return {@link WoodTypeResponse}
 	 */
-	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest, String tenantId, Integer id)
-			throws Exception;
+	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest) throws Exception;
 
 	/**
 	 * 
@@ -179,8 +177,7 @@ public interface Masterservice {
 	 * @param id
 	 * @return {@link RoofTypeResponse}
 	 */
-	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest, String tenantId, Integer id)
-			throws Exception;
+	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest) throws Exception;
 
 	/**
 	 * Description : This api for creating strctureClass master
@@ -201,8 +198,7 @@ public interface Masterservice {
 	 * @return structureClassResponse
 	 * @throws Exception
 	 */
-	public StructureClassResponse updateStructureClassMaster(String tenantId, Long id,
-			StructureClassRequest structureClassRequest);
+	public StructureClassResponse updateStructureClassMaster(StructureClassRequest structureClassRequest);
 
 	/**
 	 * Description : This api for searching strctureClass master
@@ -240,8 +236,7 @@ public interface Masterservice {
 	 * @param propertyTypeResponse
 	 * @return
 	 */
-	public PropertyTypeResponse updatePropertyTypeMaster(String tenantId, Long id,
-			PropertyTypeRequest propertyTypeRequest);
+	public PropertyTypeResponse updatePropertyTypeMaster(PropertyTypeRequest propertyTypeRequest);
 
 	/**
 	 * Description : This api for searching propertyType master
@@ -280,8 +275,7 @@ public interface Masterservice {
 	 * @param occuapancyRequest
 	 * @return
 	 */
-	public OccuapancyMasterResponse updateOccuapancyMaster(String tenantId, Long id,
-			OccuapancyMasterRequest occuapancyRequest);
+	public OccuapancyMasterResponse updateOccuapancyMaster(OccuapancyMasterRequest occuapancyRequest);
 
 	/**
 	 * Description: search occupancy query formation and used in
@@ -333,8 +327,7 @@ public interface Masterservice {
 	 * @param id
 	 * @return
 	 */
-	public WallTypeResponse updateWallTypeMaster(String tenantId, Long id, WallTypeRequest wallTypeRequest)
-			throws Exception;
+	public WallTypeResponse updateWallTypeMaster(WallTypeRequest wallTypeRequest) throws Exception;
 
 	/**
 	 * Description : This method for getting usage master details
@@ -368,7 +361,6 @@ public interface Masterservice {
 	 * @return masterModel
 	 * @throws Exception
 	 */
-	public UsageMasterResponse updateUsageMaster(String tenantId, Long id, UsageMasterRequest usageMasterRequest)
-			throws Exception;
+	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) throws Exception;
 
 }

@@ -57,13 +57,13 @@ public class PropertyServiceTest {
 	@Autowired
 	Environment environment;
 
-	public Integer floorId = 1;
-	public Integer roofId = 1;
-	public Integer woodId = 1;
+	public Long floorId = 1l;
+	public Long roofId = 1l;
+	public Long woodId = 1l;
 	public Long departmentId = 1l;
 	public Long occupancyId = 1l;
 	public Integer structureId = 1;
-	public Integer usageId = 1;
+	public Long usageId = 1l;
 	public Integer wallTypeId = 1;
 	public Long propertyTypeId = 1l;
 
@@ -110,11 +110,11 @@ public class PropertyServiceTest {
 
 	@Test
 	public void modifyRoofType() {
-		String tenantId = "123";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<RoofType> roofTypes = new ArrayList<>();
 
 		RoofType roofType = new RoofType();
+		roofType.setId(roofId);
 		roofType.setTenantId("1234");
 		roofType.setName("Mansard  Roof");
 		roofType.setCode("256");
@@ -136,7 +136,7 @@ public class PropertyServiceTest {
 		roofTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			RoofTypeResponse roofTypeResponse = masterService.updateRoofType(roofTypeRequest, tenantId, roofId);
+			RoofTypeResponse roofTypeResponse = masterService.updateRoofType(roofTypeRequest);
 
 			if (roofTypeResponse.getRoofTypes().size() == 0)
 				assertTrue(false);
@@ -165,7 +165,7 @@ public class PropertyServiceTest {
 
 		try {
 			RoofTypeResponse roofTypeResponse = masterService.getRoofypes(requestInfo, tenantId,
-					new Integer[] { roofId }, name, code, nameLocal, pageSize, offset);
+					new Integer[] { roofId.intValue() }, name, code, nameLocal, pageSize, offset);
 			if (roofTypeResponse.getRoofTypes().size() == 0)
 				assertTrue(false);
 
@@ -219,12 +219,12 @@ public class PropertyServiceTest {
 	@Test
 	public void modifyWoodType() {
 
-		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
 
 		List<WoodType> woodTypes = new ArrayList<>();
 
 		WoodType woodType = new WoodType();
+		woodType.setId(woodId);
 		woodType.setTenantId("1234");
 		woodType.setName("Maple Wood Type");
 		woodType.setCode("256");
@@ -246,7 +246,7 @@ public class PropertyServiceTest {
 		woodTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			WoodTypeResponse woodTypeResponse = masterService.updateWoodType(woodTypeRequest, tenantId, woodId);
+			WoodTypeResponse woodTypeResponse = masterService.updateWoodType(woodTypeRequest);
 
 			if (woodTypeResponse.getWoodTypes().size() == 0)
 				assertTrue(false);
@@ -259,7 +259,6 @@ public class PropertyServiceTest {
 
 	}
 
-	
 	@Test
 	public void searchWoodType() {
 
@@ -274,7 +273,7 @@ public class PropertyServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		try {
 			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
-					new Integer[] { woodId }, name, code, nameLocal, pageSize, offset);
+					new Integer[] { woodId.intValue() }, name, code, nameLocal, pageSize, offset);
 
 			if (woodTypeResponse.getWoodTypes().size() == 0)
 				assertTrue(false);
@@ -287,7 +286,6 @@ public class PropertyServiceTest {
 
 	}
 
-	
 	@Test
 	public void createFloorTypeTest() {
 
@@ -329,14 +327,14 @@ public class PropertyServiceTest {
 		}
 
 	}
-	
+
 	@Test
 	public void modifyFloorType() {
-		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<FloorType> floorTypes = new ArrayList<>();
 
 		FloorType floorType = new FloorType();
+		floorType.setId(floorId);
 		floorType.setTenantId("1234");
 		floorType.setName("Tile Flooring");
 		floorType.setCode("256");
@@ -361,7 +359,7 @@ public class PropertyServiceTest {
 		FloorTypeResponse floorTypeResponse = null;
 
 		try {
-			floorTypeResponse = masterService.updateFloorType(floorTypeRequest, tenantId, floorId);
+			floorTypeResponse = masterService.updateFloorType(floorTypeRequest);
 			if (floorTypeResponse.getFloorTypes().size() == 0)
 				assertTrue(false);
 
@@ -390,7 +388,7 @@ public class PropertyServiceTest {
 
 		try {
 			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
-					new Integer[] { floorId }, name, code, nameLocal, pageSize, offset);
+					new Integer[] { floorId.intValue() }, name, code, nameLocal, pageSize, offset);
 
 			if (floorTypeResponse.getFloorTypes().size() == 0)
 				assertTrue(false);
@@ -400,8 +398,6 @@ public class PropertyServiceTest {
 		}
 
 	}
-
-	
 
 	/**
 	 * Description : Test case for creating Occuapancy master
@@ -466,8 +462,6 @@ public class PropertyServiceTest {
 	public void modifyOccuapancyMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
-
 			List<OccuapancyMaster> occuapancyMaster = new ArrayList<OccuapancyMaster>();
 
 			OccuapancyMaster master = new OccuapancyMaster();
@@ -477,7 +471,8 @@ public class PropertyServiceTest {
 			auditDetails.setLastModifiedBy("anil");
 			auditDetails.setLastModifiedTime((long) 123456);
 
-			master.setId((long) 4);
+			// master.setId((long) 4);
+			master.setId(occupancyId);
 			master.setTenantId("default");
 			master.setName("anil");
 			master.setCode("testcode");
@@ -493,8 +488,8 @@ public class PropertyServiceTest {
 			occuapancyMasterRequest.setRequestInfo(getRequestInfoObject());
 			occuapancyMasterRequest.setOccuapancyMasters(occuapancyMaster);
 
-			OccuapancyMasterResponse occuapancyMasterResponse = masterService.updateOccuapancyMaster(tenantId,
-					occupancyId, occuapancyMasterRequest);
+			OccuapancyMasterResponse occuapancyMasterResponse = masterService
+					.updateOccuapancyMaster(occuapancyMasterRequest);
 			if (occuapancyMasterResponse.getOccuapancyMasters().size() == 0) {
 				assertTrue(false);
 			}
@@ -605,7 +600,6 @@ public class PropertyServiceTest {
 	public void modifyPropertyTypeMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
 			List<PropertyType> propertyType = new ArrayList<PropertyType>();
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy("Anil");
@@ -614,7 +608,7 @@ public class PropertyServiceTest {
 			auditDetails.setLastModifiedTime((long) 564644560);
 
 			PropertyType master = new PropertyType();
-			master.setId((long) 1);
+			master.setId(propertyTypeId);
 			master.setTenantId("default");
 			master.setName("anil");
 			master.setCode("testingcode");
@@ -629,8 +623,7 @@ public class PropertyServiceTest {
 			propertyTypeRequest.setRequestInfo(getRequestInfoObject());
 			propertyTypeRequest.setPropertyTypes(propertyType);
 
-			PropertyTypeResponse propertyTypeResponse = masterService.updatePropertyTypeMaster(tenantId, propertyTypeId,
-					propertyTypeRequest);
+			PropertyTypeResponse propertyTypeResponse = masterService.updatePropertyTypeMaster(propertyTypeRequest);
 			if (propertyTypeResponse.getPropertyTypes().size() == 0) {
 				assertTrue(false);
 			}
@@ -742,7 +735,6 @@ public class PropertyServiceTest {
 	public void modifyDepartmentMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
 			List<Department> department = new ArrayList<Department>();
 			Department master = new Department();
 			AuditDetails auditDetails = new AuditDetails();
@@ -752,7 +744,7 @@ public class PropertyServiceTest {
 			auditDetails.setCreatedTime((long) 564644560);
 			auditDetails.setLastModifiedTime((long) 564644560);
 
-			master.setId((long) 1);
+			master.setId(departmentId);
 			master.setTenantId("default");
 			master.setCategory("software engineer");
 			master.setName("anil");
@@ -765,8 +757,7 @@ public class PropertyServiceTest {
 			departmentRequest.setRequestInfo(getRequestInfoObject());
 			departmentRequest.setDepartments(department);
 
-			DepartmentResponseInfo departmentResponse = masterService.updateDepartmentMaster(tenantId, departmentId,
-					departmentRequest);
+			DepartmentResponseInfo departmentResponse = masterService.updateDepartmentMaster(departmentRequest);
 			if (departmentResponse.getDepartments().size() == 0) {
 				assertTrue(false);
 			}
@@ -776,7 +767,7 @@ public class PropertyServiceTest {
 			assertTrue(false);
 		}
 	}
-	
+
 	/**
 	 * * Description : test case for searching department master api
 	 * 
@@ -816,7 +807,6 @@ public class PropertyServiceTest {
 		}
 	}
 
-
 	@Test
 	public void createUsageMasterTest() {
 
@@ -841,6 +831,7 @@ public class PropertyServiceTest {
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("test_namelocal");
 			usageMaster.setDescription("test_description");
+			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -871,7 +862,6 @@ public class PropertyServiceTest {
 	@Test
 	public void modifyUsageMasterTest() throws Exception {
 		try {
-			String tenantId = "default";
 			RequestInfo requestInfo = new RequestInfo();
 			requestInfo.setApiId("emp");
 			requestInfo.setVer("1.0");
@@ -885,11 +875,13 @@ public class PropertyServiceTest {
 			List<UsageMaster> usageMasters = new ArrayList<>();
 
 			UsageMaster usageMaster = new UsageMaster();
+			usageMaster.setId(usageId);
 			usageMaster.setTenantId("default");
 			usageMaster.setName("Yoyo");
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("update_namelocal");
 			usageMaster.setDescription("update_description");
+			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -906,8 +898,7 @@ public class PropertyServiceTest {
 			usageMasterRequest.setUsageMasters(usageMasters);
 			usageMasterRequest.setRequestInfo(requestInfo);
 
-			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(tenantId, Long.valueOf(usageId),
-					usageMasterRequest);
+			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(usageMasterRequest);
 
 			if (usageMasterResponse.getUsageMasters().size() == 0)
 				assertTrue(false);
@@ -917,7 +908,6 @@ public class PropertyServiceTest {
 		}
 	}
 
-	
 	@Test
 	public void createWallTypeTest() {
 		try {
@@ -969,7 +959,6 @@ public class PropertyServiceTest {
 
 		try {
 			long id = 1;
-			String tenantId = "default";
 			RequestInfo requestInfo = new RequestInfo();
 			requestInfo.setApiId("emp");
 			requestInfo.setVer("1.0");
@@ -983,6 +972,7 @@ public class PropertyServiceTest {
 			List<WallType> wallTypes = new ArrayList<>();
 
 			WallType wallType = new WallType();
+			wallType.setId(id);
 			wallType.setTenantId("default");
 			wallType.setName("Yoyo");
 			wallType.setCode("1234");
@@ -1003,7 +993,7 @@ public class PropertyServiceTest {
 			WallTypeRequest wallTypeRequest = new WallTypeRequest();
 			wallTypeRequest.setWallTypes(wallTypes);
 			wallTypeRequest.setRequestInfo(requestInfo);
-			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(tenantId, id, wallTypeRequest);
+			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(wallTypeRequest);
 			if (wallTypeResponse.getWallTypes().size() == 0)
 				assertTrue(false);
 			assertTrue(true);

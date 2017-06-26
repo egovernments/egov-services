@@ -27,17 +27,11 @@ public class ServiceRequestRecord {
     private String requesterEmail;
     private String requesterAddress;
     private Long loggedInRequesterUserId;
-    private String receivingMode;
-    private Long receivingCenter;
     private String serviceRequestTypeCode;
     private String serviceRequestStatus;
     private Long assigneeId;
-    private Long location;
-    private Long childLocation;
     private Date escalationDate;
-    private Long workflowStateId;
     private Long department;
     private String tenantId;
-    private String citizenFeedback;
     private List<AttributeEntry> attributeEntries;
 }

@@ -401,18 +401,18 @@ class grievanceView extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             SRN (Service Request No.): {this.state.serviceRequestId}
+             {translate('pgr.lbl.srn')} : {this.state.serviceRequestId}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Name
+                  {translate('core.lbl.add.name')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.firstName}
                 </Col>
                 <Col xs={6} md={3}>
-                  Mobile Number
+                  {translate('core.lbl.mobilenumber')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.phone ? this.state.phone : 'N/A'}
@@ -420,13 +420,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Email
+                  {translate('core.lbl.email.compulsory')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.email ? this.state.email : 'N/A'}
                 </Col>
                 <Col xs={6} md={3}>
-                  Address
+                  {translate('core.lbl.address')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.requesterAddress ? this.state.requesterAddress : 'N/A'}
@@ -434,13 +434,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Aadhaar No.
+                  {translate('core.lbl.enter.aadharcard.number')}
                 </Col>
                 <Col xs={6} md={3}>
                   N/A
                 </Col>
                 <Col xs={6} md={3}>
-                  Description
+                  {translate('core.lbl.description')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.description}
@@ -448,13 +448,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Grievance Type
+                  {translate('pgr.lbl.grievance.type')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.serviceName}
                 </Col>
                 <Col xs={6} md={3}>
-                  Department
+                  {translate('core.lbl.department')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.departmentName}
@@ -462,13 +462,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Registered Date
+                  {translate('pgr.lbl.registered.date')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.requestedDatetime}
                 </Col>
                 <Col xs={6} md={3}>
-                  Next Escalation Date
+                  {translate('pgr.lbl.nextescalation.date')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.expectedDatetime}
@@ -476,13 +476,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Filed Via
+                  {translate('pgr.lbl.filedvia')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.receivingMode}
                 </Col>
                 <Col xs={6} md={3}>
-                  Receiving Center
+                  {translate('pgr.lbl.receivingcenter')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.receivingCenterName ? this.state.receivingCenterName :'N/A'}
@@ -490,13 +490,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Location
+                  {translate('core.lbl.location')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.childLocationName + " - " + this.state.locationName}
                 </Col>
                 <Col xs={6} md={3}>
-                  Landmark
+                  {translate('core.lbl.landmark')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.address ? this.state.address : 'N/A'}
@@ -514,7 +514,7 @@ class grievanceView extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
         <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-         Document Reference
+         {translate('core.documents')}
         < /div>}/>
         <CardText style={{padding:'8px 16px 0'}}>
           <Row>
@@ -526,7 +526,7 @@ class grievanceView extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-           Workflow History
+           {translate('core.lbl.history')}
           < /div>}/>
           <CardText style={{padding:'8px 16px 0'}}>
             <Row style={styles.addBorderBottom}>
@@ -534,19 +534,19 @@ class grievanceView extends Component{
                 Date
               </Col>
               <Col xs={12} md={2}>
-                Updated By
+                {translate('pgr.lbl.updatedby')}
               </Col>
               <Col xs={12} md={2}>
-                Status
+                {translate('core.lbl.status')}
               </Col>
               <Col xs={12} md={2}>
-                Current Owner/Officer Responsible
+                {translate('pgr.lbl.currentowner')}
               </Col>
               <Col xs={12} md={2}>
-                Department
+                {translate('core.lbl.department')}
               </Col>
               <Col xs={12} md={2}>
-                Comments
+                {translate('core.lbl.comments')}
               </Col>
             </Row>
             {this.renderWorkflow()}
@@ -557,12 +557,12 @@ class grievanceView extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-           Actions
+           {translate('pgr.lbl.actions')}
           < /div>}/>
           <CardText style={{padding:'8px 16px 0'}}>
             <Row>
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Change Status *" maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
                   handleChange(value, "status", false, "")
                 }}>
                   {this.state.nextStatus !== undefined ?
@@ -573,7 +573,7 @@ class grievanceView extends Component{
               </Col>
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Change Grievance Type *" maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
                   handleChange(value, "serviceCode", false, "")}}>
                   {this.state.complaintTypes !== undefined ?
                   this.state.complaintTypes.map((ctype, index) => (
@@ -593,7 +593,7 @@ class grievanceView extends Component{
               </Col>: ""}
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Location *" maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
                   handleChange(value, "childLocationId", true, "")}}>
                   {this.state.locality !== undefined ?
                   this.state.locality.map((locality, index) => (
@@ -659,14 +659,14 @@ class grievanceView extends Component{
             </Row> : ''}
             <Row>
               <Col xs={12} md={12}>
-                <TextField floatingLabelText="Comments *" fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
+                <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
                   handleChange(newValue, "approvalComments", true, "") }} errorText={fieldErrors.approvalComments ? fieldErrors.approvalComments : ""}/>
               </Col>
             </Row>
             { localStorage.getItem('type') == 'EMPLOYEE' ?
             <Row>
               <Col xs={12} md={3}>
-                <h4>Document reference for approval</h4>
+                <h4>{translate('core.documents')}</h4>
               </Col>
               <Col xs={12} md={3}>
                 <div className="input-group">
@@ -695,7 +695,7 @@ class grievanceView extends Component{
         open={this.state.open}
         onRequestClose={this.handleClose}
       >
-        Grievance updated successfully
+        {translate('pgr.msg.success.grievanceupdated')}
       </Dialog>
       </div>
     )

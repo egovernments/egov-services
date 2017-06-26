@@ -16,6 +16,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import LoadingIndicator from '../common/LoadingIndicator';
 import Api from '../../api/api';
+import {translate} from '../common/common';
 
 const styles = {
   headerStyle : {
@@ -24,27 +25,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -251,8 +231,8 @@ class grievanceCreate extends Component {
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});
-      var ack = 'Service Request is received and is under process. SRN (Service Request No.) is '+srn+'. Please use this for all your future references.'
-      currentThis.setState({srn:'SRN (Service Request No.): '+srn});
+      var ack = translate('pgr.msg.servicerequest.underprocess')+'. '+translate('pgr.lbl.srn')+' is '+srn+'. '+translate('pgr.msg.future.reference')+'.';
+      currentThis.setState({srn:translate('pgr.lbl.srn')+' : '+srn});
       currentThis.setState({acknowledgement:ack});
 
       if(currentThis.props.files){
@@ -321,13 +301,13 @@ class grievanceCreate extends Component {
         }}>
           {this.state.type == 'EMPLOYEE' || this.state.type == null ?
             <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.contact.information')}< /div>}/>
                 <CardText style={{padding:0}}>
                   <Grid>
                     <Row>
                       {this.state.type == 'EMPLOYEE' ?
                         <Col xs={12} md={3}>
-                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Receiving Mode *"  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
+                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
                             var e = {
                               target: {
                                 value: value
@@ -347,19 +327,19 @@ class grievanceCreate extends Component {
                          : ''
                       }
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Name *" value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
                         />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Mobile number *" errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
                       </Col>
                     </Row>
                     <Row>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Email" errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Address" multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(e) => handleChange(e, "requesterAddress", false, '')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(e) => handleChange(e, "requesterAddress", false, '')} />
                       </Col>
                     </Row>
                   </Grid>
@@ -367,7 +347,7 @@ class grievanceCreate extends Component {
             </Card> : ''
           }
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Grievance Information < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.grievence.information')} < /div>}/>
               <CardText style={{padding:0}}>
                 <Grid>
                   <Row>
@@ -393,7 +373,7 @@ class grievanceCreate extends Component {
                   </Row> : ''}
                   <Row>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText="Grievance Category *" maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
+                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
                         var e = {
                           target: {
                             value: value
@@ -408,7 +388,7 @@ class grievanceCreate extends Component {
                       </SelectField>
                     </Col>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText="Grievance Type *" maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
+                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
                         var e = {
                           target: {
                             value: value
@@ -425,20 +405,20 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > More Details < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.moredetails')} < /div>}/>
               <CardText style={{padding:0}}>
                 <Grid>
                   <Row>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText="Grievance Details *" multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
+                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
                     </Col>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} floatingLabelText="Landmark" multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
+                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
                     </Col>
                     <Col xs={12} md={6}>
                       <AutoComplete
                         hintText="Type your location or select it from maps"
-                        floatingLabelText="Grievance Location *"
+                        floatingLabelText={translate('pgr.lbl.grievance.location')+' *'}
                         filter={AutoComplete.noFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
@@ -459,7 +439,7 @@ class grievanceCreate extends Component {
                   </Row>
                   <Row>
                     <Col xs={12} md={3}>
-                      <RaisedButton label="Select Photo" containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
+                      <RaisedButton label={translate('core.lbl.select.photo')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
                           <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUpload(e)}/>
                       </RaisedButton>
                     </Col>
@@ -533,7 +513,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "ADD_MANDATORY", property: name, value: '', isRequired : true, pattern: ''});
     return (
       <Col xs={12} md={3}>
-        <SelectField maxHeight={200} floatingLabelText="Receiving Center *" value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
+        <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
           var e = {
             target: {
               value: value

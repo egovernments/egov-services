@@ -28,7 +28,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class TaxFactorRepository {
+public class FactorRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -54,7 +54,7 @@ public class TaxFactorRepository {
 
 				ps.setString(1, calculationFactor.getTenantId());
 				ps.setString(2, calculationFactor.getFactorCode());
-				ps.setString(3, calculationFactor.getFactorType());
+				ps.setString(3, calculationFactor.getFactorType().toString());
 				ps.setDouble(4, calculationFactor.getFactorValue());
 				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(calculationFactor.getFromDate()));
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(calculationFactor.getToDate()));
@@ -95,7 +95,7 @@ public class TaxFactorRepository {
 
 				ps.setString(1, calculationFactor.getTenantId());
 				ps.setString(2, calculationFactor.getFactorCode());
-				ps.setObject(3, calculationFactor.getFactorType());
+				ps.setObject(3, calculationFactor.getFactorType().toString());
 				ps.setDouble(4, calculationFactor.getFactorValue());
 				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(calculationFactor.getFromDate()));
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(calculationFactor.getToDate()));
@@ -121,7 +121,6 @@ public class TaxFactorRepository {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-
 	public List<CalculationFactor> searchFactor(String tenantId, String factorType, String validDate, String code) {
 
 		String factorSearchSql = FactorQueryBuilder.getFactorSearchQuery(tenantId, factorType, validDate, code);
@@ -143,7 +142,6 @@ public class TaxFactorRepository {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-
 	public List<CalculationFactor> getFactorsByTenantIdAndValidDate(String tenantId, String validDate) {
 
 		String factorSearchSql = FactorQueryBuilder.getFactorSearchQueryByTenantIdAndValidDate(tenantId, validDate);
@@ -165,7 +163,6 @@ public class TaxFactorRepository {
 	 *            String that need to be executed
 	 * @return {@link CalculationFactor} List of calculation factor
 	 */
-
 	private List<CalculationFactor> geCalculationFactors(String query) {
 
 		List<CalculationFactor> calculationFactors = new ArrayList<>();

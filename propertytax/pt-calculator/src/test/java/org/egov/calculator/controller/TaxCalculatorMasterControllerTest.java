@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.calculator.PtCalculatorApplication;
-import org.egov.calculator.api.TaxCalculatorController;
-import org.egov.calculator.service.TaxCalculatorService;
+import org.egov.calculator.api.TaxCalculatorMasterController;
+import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationFactorTypeEnum;
 import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
@@ -43,12 +44,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TaxCalculatorController.class)
+@WebMvcTest(TaxCalculatorMasterController.class)
 @ContextConfiguration(classes = { PtCalculatorApplication.class })
-public class TaxCalculatorControllerTest {
+public class TaxCalculatorMasterControllerTest {
 
 	@MockBean
-	private TaxCalculatorService taxCalculatorService;
+	private TaxCalculatorMasterService taxCalculatorMasterService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -70,7 +71,7 @@ public class TaxCalculatorControllerTest {
 		calculationFactorResponse.setCalculationFactors(calculationFactors);
 
 		try {
-			when(taxCalculatorService.createFactor(any(String.class), any(CalculationFactorRequest.class)))
+			when(taxCalculatorMasterService.createFactor(any(String.class), any(CalculationFactorRequest.class)))
 					.thenReturn(calculationFactorResponse);
 
 			mockMvc.perform(post("/properties/taxes/factor/_create").param("tenantId", "default")
@@ -95,7 +96,7 @@ public class TaxCalculatorControllerTest {
 		calculationFactor.setId(1l);
 		calculationFactor.setTenantId("default");
 		calculationFactor.setFactorCode("propertytax");
-		calculationFactor.setFactorType("occupancy");
+		calculationFactor.setFactorType(CalculationFactorTypeEnum.OCCUPANCY);
 		calculationFactor.setFactorValue(1234.12);
 		calculationFactor.setFromDate("10/06/2007  00:00:00");
 		calculationFactor.setToDate("25/06/2017  00:00:00");
@@ -111,7 +112,7 @@ public class TaxCalculatorControllerTest {
 
 		try {
 
-			when(taxCalculatorService.updateFactor(any(String.class), any(CalculationFactorRequest.class)))
+			when(taxCalculatorMasterService.updateFactor(any(String.class), any(CalculationFactorRequest.class)))
 					.thenReturn(calculationFactorResponse);
 
 			mockMvc.perform(post("/properties/taxes/factor/_update").param("tenantId", "default")
@@ -136,7 +137,7 @@ public class TaxCalculatorControllerTest {
 		CalculationFactor calculationFactor = new CalculationFactor();
 		calculationFactor.setTenantId("default");
 		calculationFactor.setFactorCode("propertytax");
-		calculationFactor.setFactorType("occupancy");
+		calculationFactor.setFactorType(CalculationFactorTypeEnum.OCCUPANCY);
 		calculationFactor.setFactorValue(1234.12);
 		calculationFactor.setFromDate("10/06/2007  00:00:00");
 		calculationFactor.setToDate("25/06/2017  00:00:00");
@@ -152,7 +153,7 @@ public class TaxCalculatorControllerTest {
 
 		try {
 
-			when(taxCalculatorService.getFactor(any(RequestInfo.class), any(String.class), any(String.class),
+			when(taxCalculatorMasterService.getFactor(any(RequestInfo.class), any(String.class), any(String.class),
 					any(String.class), any(String.class))).thenReturn(calculationFactorResponse);
 
 			mockMvc.perform(post("/properties/taxes/factor/_search").param("tenantId", "default")
@@ -192,7 +193,7 @@ public class TaxCalculatorControllerTest {
 		guidanceValueResponse.setGuidanceValues(guidanceValues);
 
 		try {
-			when(taxCalculatorService.createGuidanceValue(any(String.class), any(GuidanceValueRequest.class)))
+			when(taxCalculatorMasterService.createGuidanceValue(any(String.class), any(GuidanceValueRequest.class)))
 					.thenReturn(guidanceValueResponse);
 			mockMvc.perform(post("/properties/taxes/guidancevalue/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -215,30 +216,30 @@ public class TaxCalculatorControllerTest {
 	@Test
 	public void testShouldUpdateGuidanceValue() {
 
-		GuidanceValueResponse guidanceValueResponse = new GuidanceValueResponse();
 		List<GuidanceValue> guidanceValues = new ArrayList<>();
 		GuidanceValue guidanceValue = new GuidanceValue();
 		guidanceValue.setTenantId("default");
-		guidanceValue.setName("anil");
+		guidanceValue.setName("kumar");
 		guidanceValue.setBoundary("b2");
 
 		AuditDetails auditDetails = new AuditDetails();
 		guidanceValue.setAuditDetails(auditDetails);
 
+		GuidanceValueResponse guidanceValueResponse = new GuidanceValueResponse();
 		guidanceValues.add(guidanceValue);
 
 		guidanceValueResponse.setResponseInfo(new ResponseInfo());
 		guidanceValueResponse.setGuidanceValues(guidanceValues);
 
 		try {
-			when(taxCalculatorService.updateGuidanceValue(any(String.class), any(GuidanceValueRequest.class)))
+			when(taxCalculatorMasterService.updateGuidanceValue(any(String.class), any(GuidanceValueRequest.class)))
 					.thenReturn(guidanceValueResponse);
 
 			mockMvc.perform(post("/properties/taxes/guidancevalue/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("updateguidancevaluerequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-					.andExpect(content().json(getFileContents("updateguidancevlaueresponse.json")));
+					.andExpect(content().json(getFileContents("updateguidancevalueresponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -270,18 +271,15 @@ public class TaxCalculatorControllerTest {
 
 		try {
 
-			when(taxCalculatorService.getGuidanceValue(any(RequestInfo.class), any(String.class), any(String.class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class)))
-							.thenReturn(guidanceValueResponse);
+			when(taxCalculatorMasterService.getGuidanceValue(any(RequestInfo.class), any(String.class),
+					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
+					any(String.class))).thenReturn(guidanceValueResponse);
 
-			mockMvc.perform(post("/properties/taxes/guidancevalue/_search")
-					.param("tenantId", "default")
-					.param("boundary", "b2")
-					.param("validDate", "15/06/2017")
-					.contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/properties/taxes/guidancevalue/_search").param("tenantId", "default")
+					.param("boundary", "b2").param("validDate", "15/06/2017").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchguidancevaluerequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-					.andExpect(content().json(getFileContents("searchguidancevlaueresponse.json")));
+					.andExpect(content().json(getFileContents("searchguidancevalueresponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -309,7 +307,7 @@ public class TaxCalculatorControllerTest {
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 
 		try {
-			when(taxCalculatorService.createTaxPeriod(anyString(), any(TaxPeriodRequest.class)))
+			when(taxCalculatorMasterService.createTaxPeriod(anyString(), any(TaxPeriodRequest.class)))
 					.thenReturn(taxPeriodResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxperiods/_create").param("tenantId", "1234")
@@ -346,7 +344,7 @@ public class TaxCalculatorControllerTest {
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 
 		try {
-			when(taxCalculatorService.updateTaxPeriod(anyString(), any(TaxPeriodRequest.class)))
+			when(taxCalculatorMasterService.updateTaxPeriod(anyString(), any(TaxPeriodRequest.class)))
 					.thenReturn(taxPeriodResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxperiods/_update").param("tenantId", "1234")
@@ -385,7 +383,7 @@ public class TaxCalculatorControllerTest {
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 
 		try {
-			when(taxCalculatorService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString()))
+			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString()))
 					.thenReturn(taxPeriodResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxperiods/_search").param("tenantId", "1234")
@@ -398,9 +396,10 @@ public class TaxCalculatorControllerTest {
 
 		}
 	}
-	
+
 	/**
-	 * This test will test whether the tax rate will be  created successfully or not
+	 * This test will test whether the tax rate will be created successfully or
+	 * not
 	 * 
 	 */
 	@Test
@@ -415,17 +414,14 @@ public class TaxCalculatorControllerTest {
 		listOfTaxRates.add(taxRates);
 		taxRatesResponse.setResponseInfo(new ResponseInfo());
 		taxRatesResponse.setTaxRates(listOfTaxRates);
-		
+
 		try {
 
-			when(taxCalculatorService.createTaxRate(any(String.class), 
-					any(TaxRatesRequest.class)))
+			when(taxCalculatorMasterService.createTaxRate(any(String.class), any(TaxRatesRequest.class)))
 					.thenReturn(taxRatesResponse);
-			
-			mockMvc.perform(post("/properties/taxes/taxrates/_create")
-					.param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("taxratesCreateRequest.json")))
+
+			mockMvc.perform(post("/properties/taxes/taxrates/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("taxratesCreateResponse.json")));
@@ -439,7 +435,8 @@ public class TaxCalculatorControllerTest {
 	}
 
 	/**
-	 * This test will test whether the tax rate will be  updated successfully or not
+	 * This test will test whether the tax rate will be updated successfully or
+	 * not
 	 * 
 	 */
 	@Test
@@ -457,16 +454,14 @@ public class TaxCalculatorControllerTest {
 
 		try {
 
-			when(taxCalculatorService.updateTaxRate(any(String.class), any(TaxRatesRequest.class)))
+			when(taxCalculatorMasterService.updateTaxRate(any(String.class), any(TaxRatesRequest.class)))
 					.thenReturn(taxRatesResponse);
-			mockMvc.perform(post("/properties/taxes/taxrates/_update")
-					.param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("taxratesUpdateRequest.json")))
+			mockMvc.perform(post("/properties/taxes/taxrates/_update").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("taxratesUpdateResponse.json")));
-			
+
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -492,18 +487,12 @@ public class TaxCalculatorControllerTest {
 
 		try {
 
-			when(taxCalculatorService.getTaxRate(any(RequestInfo.class), 
-					any(String.class), any(String.class),
-					any(String.class), any(Double.class), 
-					any(String.class))).thenReturn(taxRatesResponse);
-			
-			mockMvc.perform(post("/properties/taxes/taxrates/_search")
-					.param("tenantId", "default")
-					.param("taxHead", "taxHead-C")
-					.param("validDate", "04/06/2017")
-					.param("validARVAmount", "1100")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("taxratesSearchRequest.json")))
+			when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(String.class), any(String.class),
+					any(String.class), any(Double.class), any(String.class))).thenReturn(taxRatesResponse);
+
+			mockMvc.perform(post("/properties/taxes/taxrates/_search").param("tenantId", "default")
+					.param("taxHead", "taxHead-C").param("validDate", "04/06/2017").param("validARVAmount", "1100")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("taxratesSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("taxratesSearchResponse.json")));

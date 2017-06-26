@@ -14,7 +14,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.3.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -91,17 +91,41 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-		
-		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
-		
-	<!-- https://mvnrepository.com/artifact/org.kie/kie-internal -->
-<dependency>
-    <groupId>org.kie</groupId>
-    <artifactId>kie-internal</artifactId>
-    <version>7.0.0.Final</version>
-</dependency>
 
-  
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+
+		<!-- https://mvnrepository.com/artifact/org.kie/kie-internal -->
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-spring</artifactId>
+			<version>7.0.0.Final</version>
+			<!-- Sadly kie-spring depends upon spring 3.2, but we need 4x to run smoothly 
+				with spring boot and while http://books.sonatype.com/mvnref-book/reference/pom-relationships-sect-project-dependencies.html 
+				is not working for us, we need to exclude the 3.2-dependencies -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-tx</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>6.4.0.Final</version>
+		</dependency>
 	</dependencies>
 
 

@@ -16,7 +16,7 @@ public class UserBuilder {
 
 		StringBuffer userUpdateSQL = new StringBuffer();
 
-		userUpdateSQL.append("UPDATE egpt_property_owner").append(" SET property_Id = ?, owner= ?, isPrimaryOwner = ?,")
+		userUpdateSQL.append("UPDATE egpt_property_owner").append(" SET property = ?, owner= ?, isPrimaryOwner = ?,")
 				.append(" isSecondaryOwner = ?, ownerShipPercentage = ?, ownerType = ?,")
 				.append(" lastModifiedBy = ?, lastModifiedTime = ?").append(" WHERE id = ?");
 

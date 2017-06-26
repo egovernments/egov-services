@@ -4,12 +4,13 @@ import lombok.Getter;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 
 @Getter
-public class InvalidComplaintException extends RuntimeException {
+public class InvalidServiceRequestException extends RuntimeException {
 
     private static final long serialVersionUID = -761312648494992125L;
     private ServiceRequest complaint;
 
-    public InvalidComplaintException(ServiceRequest complaint) {
+    public InvalidServiceRequestException(ServiceRequest complaint) {
         this.complaint = complaint;
     }
 }
+

@@ -7,7 +7,7 @@ import org.egov.common.contract.response.ResponseInfo;
 
 @Getter
 @AllArgsConstructor
-public class UpdateEligibiltyResponse {
+public class SevaResponse {
 
     private ResponseInfo responseInfo;
 

@@ -7,10 +7,12 @@ import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
-import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
-import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowedException;
+import org.egov.pgrrest.read.domain.exception.ServiceRequestIdMandatoryException;
+import org.egov.pgrrest.read.domain.exception.TenantIdMandatoryException;
+import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
+import org.egov.pgrrest.read.domain.service.UpdateServiceRequestEligibilityService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -52,30 +52,30 @@ public class ServiceRequestControllerTest {
     @MockBean
     private ServiceRequestService serviceRequestService;
 
+    @MockBean
+    private UpdateServiceRequestEligibilityService updateEligibilityService;
+
     @Test
     public void test_should_return_error_response_when_tenant_id_is_not_present_on_creating_a_complaint()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
-        ServiceRequest invalidComplaint = getComplaintWithNoTenantId();
-        doThrow(new InvalidComplaintException(invalidComplaint)).when(serviceRequestService).save(any(ServiceRequest
-                .class),
-            any(SevaRequest.class));
+        doThrow(new TenantIdMandatoryException()).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
 
         mockMvc.perform(post("/seva/_create")
             .param("foo", "b1", "b2")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isBadRequest())
-            .andExpect(content().json(resources.getFileContents("createComplaintErrorResponse.json")));
+            .andExpect(content().json(resources.getFileContents("tenantIdMandatoryErrorResponse.json")));
     }
 
     @Test
     public void test_for_updating_a_complaint_not_assigned_to_redresal_officer()
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
-        doThrow(new UpdateComplaintNotAllowedException()).when(serviceRequestService).update(any(ServiceRequest
-                .class),
-            any(SevaRequest.class));
+        doThrow(new UpdateServiceRequestNotAllowedException()).when(serviceRequestService)
+            .update(any(ServiceRequest.class), any(SevaRequest.class));
         mockMvc.perform(post("/seva/_update")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateComplaintRequestRedresalOfficer.json")))
@@ -108,9 +108,23 @@ public class ServiceRequestControllerTest {
     }
 
     @Test
-    public void test_for_update_eligibility()
+    public void test_update_request_should_return_error_when_service_request_is_not_present()
         throws Exception {
-        when(serviceRequestService.validateUpdateEligibilityUI(eq("crn"), eq("tenantId"), any())).thenReturn(Boolean.TRUE);
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new ServiceRequestIdMandatoryException()).when(serviceRequestService)
+            .update(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/_update")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("updateComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("serviceRequestIdMandatoryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_update_eligibility_returns_true_when_eligible() throws Exception {
+        doNothing()
+            .when(updateEligibilityService).validate(eq("crn"), eq("tenantId"), any());
         mockMvc.perform(post("/seva/v1/_get?tenantId=tenantId&crn=crn")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateComplaintRequestEligibility.json")))
@@ -119,9 +133,9 @@ public class ServiceRequestControllerTest {
     }
 
     @Test
-    public void test_for_update_eligibility_returns_false_when_not_eligible()
-        throws Exception {
-        when(serviceRequestService.validateUpdateEligibilityUI(eq("crn"), eq("tenantId"), any())).thenReturn(Boolean.FALSE);
+    public void test_update_eligibility_returns_false_when_not_eligible() throws Exception {
+        doThrow(new UpdateServiceRequestNotAllowedException())
+            .when(updateEligibilityService).validate(eq("crn"), eq("tenantId"), any());
         mockMvc.perform(post("/seva/v1/_get?tenantId=tenantId&crn=crn")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateComplaintRequestEligibility.json")))
@@ -279,27 +293,6 @@ public class ServiceRequestControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(content().json(resources.getFileContents("getServiceRequestCount.json")));
-    }
-
-    private ServiceRequest getComplaintWithNoTenantId() {
-        final ServiceRequestLocation serviceRequestLocation = ServiceRequestLocation.builder()
-            .coordinates(new Coordinates(11.22d, 12.22d)).build();
-        final Requester complainant = Requester.builder()
-            .userId("userId")
-            .firstName("first name")
-            .mobile("mobile number")
-            .build();
-        final ServiceRequestType serviceRequestType =
-            new ServiceRequestType(null, "complaintCode", null, null);
-        return ServiceRequest.builder()
-            .requester(complainant)
-            .authenticatedUser(getCitizen())
-            .serviceRequestLocation(serviceRequestLocation)
-            .tenantId(null)
-            .description("description")
-            .serviceRequestType(serviceRequestType)
-            .attributeEntries(new ArrayList<>())
-            .build();
     }
 
     private ServiceRequest getServiceRequestForSearch() {

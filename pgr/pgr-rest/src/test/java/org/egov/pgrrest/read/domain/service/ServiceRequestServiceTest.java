@@ -4,15 +4,17 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.model.Employee;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.*;
+import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.egov.pgrrest.read.web.contract.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -44,7 +46,6 @@ public class ServiceRequestServiceTest {
     @Mock
     private OtpService otpService;
 
-    @InjectMocks
     private ServiceRequestService serviceRequestService;
 
     @Mock
@@ -53,29 +54,42 @@ public class ServiceRequestServiceTest {
     @Mock
     private SubmissionRepository submissionRepository;
 
-    @Test
-    public void testShouldValidateComplaintOnSave() {
-        final ServiceRequest complaint = mock(ServiceRequest.class);
-        when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
-        final SevaRequest sevaRequest = getSevaRequest();
-        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
-        serviceRequestService.save(complaint, sevaRequest);
+    @Mock
+    private ServiceRequestValidator serviceRequestValidator;
 
-        verify(complaint, times(1)).validate();
+    @Before
+    public void before() {
+        when(serviceRequestValidator.canValidate(any())).thenReturn(true);
+        final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
+        serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
+            userRepository, otpService, serviceRequestTypeService, validators);
     }
 
     @Test
-    public void testShouldValidateComplaintOnUpdate() {
-        final ServiceRequest complaint = mock(ServiceRequest.class);
-        when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
-        when(complaint.getTenantId()).thenReturn("tenantId");
+    public void test_should_validate_service_request_on_save() {
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getAuthenticatedUser()).thenReturn(getCitizen());
+        final SevaRequest sevaRequest = getSevaRequest();
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+        serviceRequestService.save(serviceRequest, sevaRequest);
+
+        verify(serviceRequestValidator, times(1)).validate(serviceRequest);
+    }
+
+    @Test
+    public void test_should_validate_service_request_on_update() {
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getAuthenticatedUser()).thenReturn(getCitizen());
+        when(serviceRequest.getTenantId()).thenReturn("tenantId");
         final SevaRequest sevaRequest = getSevaRequest();
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId())).thenReturn(1L);
-        serviceRequestService.update(complaint, sevaRequest);
+        when(submissionRepository.getAssignmentByCrnAndTenantId(serviceRequest.getCrn(), serviceRequest.getTenantId()))
+            .thenReturn(1L);
 
-        verify(complaint, times(1)).validate();
+        serviceRequestService.update(serviceRequest, sevaRequest);
+
+        verify(serviceRequestValidator, times(1)).validate(serviceRequest);
     }
 
     @Test
@@ -84,18 +98,6 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = mock(SevaRequest.class);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         serviceRequestService.save(complaint, sevaRequest);
-
-        verify(sevaRequest).update(complaint);
-    }
-
-    @Test
-    public void testShouldUpdateSevaRequestWithDomainComplaintOnUpdate() {
-        final ServiceRequest complaint = getComplaint();
-        final SevaRequest sevaRequest = mock(SevaRequest.class);
-        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
-        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId())).thenReturn(1L);
-        serviceRequestService.update(complaint, sevaRequest);
 
         verify(sevaRequest).update(complaint);
     }
@@ -166,7 +168,8 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId())).thenReturn(1L);
+        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId()))
+            .thenReturn(1L);
         serviceRequestService.update(complaint, sevaRequest);
 
         verify(complaintRepository).update(sevaRequest);
@@ -184,22 +187,7 @@ public class ServiceRequestServiceTest {
         assertEquals(expectedComplaint, actualComplaints.get(0));
     }
 
-    @Test
-    public void testShouldReturnTrueIfEligible() {
-        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployeeEligible());
-        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
-        final AuthenticatedUser authenticatedUser = AuthenticatedUser.builder().id(1L).build();
-        boolean isValidateEligible = serviceRequestService.validateUpdateEligibilityUI("crn", "tenantId", authenticatedUser);
-        assertTrue(isValidateEligible);
-    }
 
-    @Test
-    public void testShouldReturnFalseIfEligible() {
-        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
-        boolean isValidateEligible = serviceRequestService.validateUpdateEligibilityUI("crn", "tenantId", getRedressalRole());
-        assertFalse(isValidateEligible);
-    }
 
     private ServiceRequest getComplaint() {
         final Coordinates coordinates = new Coordinates(0d, 0d);
@@ -251,20 +239,8 @@ public class ServiceRequestServiceTest {
         return Employee.builder().primaryPosition(2L).build();
     }
 
-    private Employee getEmployeeEligible() {
-        return Employee.builder().primaryPosition(1L).build();
-    }
-
     private List<String> getUserRoles() {
         return Arrays.asList("GRO");
-    }
-
-    private AuthenticatedUser getRedressalRole() {
-        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).roleCodes(getRoles()).build();
-    }
-
-    private List<String> getRoles() {
-        return Arrays.asList("RO");
     }
 
 }

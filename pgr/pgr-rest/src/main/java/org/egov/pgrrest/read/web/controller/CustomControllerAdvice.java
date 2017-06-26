@@ -28,8 +28,8 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidComplaintException.class)
-    public ErrorResponse handleInvalidComplaintException(InvalidComplaintException ex) {
+    @ExceptionHandler(InvalidServiceRequestException.class)
+    public ErrorResponse handleInvalidComplaintException(InvalidServiceRequestException ex) {
         return new SevaRequestErrorAdapter().adapt(ex.getComplaint());
     }
 
@@ -58,8 +58,20 @@ public class CustomControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UpdateComplaintNotAllowedException.class)
+    @ExceptionHandler(UpdateServiceRequestNotAllowedException.class)
     public ErrorResponse handleUpdateComplaintException() {
         return new UpdateComplaintNotAllowedExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TenantIdMandatoryException.class)
+    public ErrorResponse handleTenantIdMandatoryException() {
+        return new TenantIdMandatoryExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ServiceRequestIdMandatoryException.class)
+    public ErrorResponse handleServiceRequestIdMandatoryException() {
+        return new ServiceRequestIdMandatoryExceptionAdapter().adapt(null);
     }
 }

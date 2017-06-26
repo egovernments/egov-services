@@ -103,7 +103,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<ServiceRequest> {
     }
 
     private void addProcessingFeeError(ServiceRequest model, List<ErrorField> errorFields) {
-        if (!model.isProcessingFeePresentForCreation()) {
+        if (!model.isProcessingFeePresent()) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()

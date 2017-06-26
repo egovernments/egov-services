@@ -4,13 +4,15 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgrrest.common.contract.SevaRequest;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
+import org.egov.pgrrest.read.domain.service.UpdateServiceRequestEligibilityService;
 import org.egov.pgrrest.read.web.contract.CountResponse;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
-import org.egov.pgrrest.read.web.contract.UpdateEligibiltyResponse;
+import org.egov.pgrrest.read.web.contract.SevaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -26,10 +28,13 @@ import java.util.stream.Collectors;
 public class ServiceRequestController {
 
     private ServiceRequestService serviceRequestService;
+    private UpdateServiceRequestEligibilityService updateEligibilityService;
 
     @Autowired
-    public ServiceRequestController(ServiceRequestService serviceRequestService) {
+    public ServiceRequestController(ServiceRequestService serviceRequestService,
+                                    UpdateServiceRequestEligibilityService updateEligibilityService) {
         this.serviceRequestService = serviceRequestService;
+        this.updateEligibilityService = updateEligibilityService;
     }
 
     @PostMapping(value = "/_create")
@@ -164,12 +169,22 @@ public class ServiceRequestController {
     }
 
     @PostMapping(value = "/v1/_get")
-    public UpdateEligibiltyResponse getUpdateEligibity(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
-                                                       @RequestParam(value = "crn", required = false) String crn,
-                                                       @RequestBody RequestInfoBody requestInfoBody) {
+    public SevaResponse getUpdateEligibity(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                           @RequestParam(value = "crn", required = false) String crn,
+                                           @RequestBody RequestInfoBody requestInfoBody) {
         AuthenticatedUser authenticatedUser = requestInfoBody.toAuthenticatedUser();
-        boolean isUpdateEligible = serviceRequestService.validateUpdateEligibilityUI(crn, tenantId, authenticatedUser);
-        return new UpdateEligibiltyResponse(null, isUpdateEligible);
+        boolean isUpdateEligible = isEligibleToUpdate(crn, tenantId, authenticatedUser);
+        return new SevaResponse(null, isUpdateEligible);
+    }
+
+    private boolean isEligibleToUpdate(String serviceRequestId, String tenantId,
+                                       AuthenticatedUser authenticatedUser) {
+        try {
+            updateEligibilityService.validate(serviceRequestId, tenantId, authenticatedUser);
+            return true;
+        } catch (UpdateServiceRequestNotAllowedException ex) {
+            return false;
+        }
     }
 
     private ServiceResponse createResponse(List<ServiceRequest> submissions) {

@@ -32,17 +32,20 @@ public class Requester {
     public boolean isFirstNameAbsent() {
         return isEmpty(firstName);
     }
-    
-     public boolean isValidEmailAddress() {
-         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-         Pattern p = Pattern.compile(ePattern);
-         Matcher m = p.matcher(email);
-         return m.matches();
-  }
 
-  //This method is used to mask citizens mobile number and email
-  public void maskMobileAndEmailDetails(){
-      this.mobile = null;
-      this.email = null;
-  }
+    public boolean isValidEmailAddress() {
+        if (isEmpty(email)) {
+            return true;
+        }
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1," +
+            "3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        Pattern p = Pattern.compile(ePattern);
+        Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    public void maskMobileAndEmailDetails() {
+        this.mobile = null;
+        this.email = null;
+    }
 }

@@ -8,12 +8,11 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvalidOtpValidationRequestExceptionAdapter implements ErrorAdapter<Void> {
+public class TenantIdMandatoryExceptionAdapter implements ErrorAdapter<Void> {
 
-    private static final String OTP_VALIDATION_NOT_COMPLETE_MESSAGE =
-        "OTP validation request is invalid. Mandatory field 'otpReference' is missing.";
-    private static final String MANDATORY_CRN_CODE = "PGR.OTP_VALIDATION_REQUEST_INVALID";
-    private static final String FIELD_NAME = "PGR.OTP_VALIDATION_REQUEST_INVALID";
+    private static final String MESSAGE = "Tenant id is mandatory";
+    private static final String CODE = "PGR.TENANT_ID_MANDATORY";
+    private static final String FIELD_NAME = "serviceRequest.tenantId";
 
     @Override
     public ErrorResponse adapt(Void model) {
@@ -24,10 +23,10 @@ public class InvalidOtpValidationRequestExceptionAdapter implements ErrorAdapter
     private Error getError() {
         List<ErrorField> errorFields = getErrorFields();
         return Error.builder()
-                .code(HttpStatus.BAD_REQUEST.value())
-                .message(OTP_VALIDATION_NOT_COMPLETE_MESSAGE)
-                .fields(errorFields)
-                .build();
+            .code(HttpStatus.BAD_REQUEST.value())
+            .message(MESSAGE)
+            .fields(errorFields)
+            .build();
     }
 
     private List<ErrorField> getErrorFields() {
@@ -38,13 +37,12 @@ public class InvalidOtpValidationRequestExceptionAdapter implements ErrorAdapter
 
     private void addCRNValidationErrors(List<ErrorField> errorFields) {
         final ErrorField errorField = ErrorField.builder()
-                .code(MANDATORY_CRN_CODE)
-                .message(OTP_VALIDATION_NOT_COMPLETE_MESSAGE)
-                .field(FIELD_NAME)
-                .build();
+            .code(CODE)
+            .message(MESSAGE)
+            .field(FIELD_NAME)
+            .build();
         errorFields.add(errorField);
     }
 
 }
-
 

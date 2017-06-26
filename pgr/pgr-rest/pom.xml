@@ -156,10 +156,13 @@
                                         <exclude>org.egov.pgrrest.common.model.AttributeDefinition</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ServiceDefinition</exclude>
                                         <exclude>org.egov.pgrrest.common.model.ValueDefinition</exclude>
+                                        <exclude>org.egov.pgrrest.common.model.Requester</exclude>
                                         <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.InvalidOtpRequestException</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.OtpValidationNotCompleteException</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException</exclude>
+                                        <exclude>org.egov.pgrrest.read.domain.exception.InvalidServiceRequestException</exclude>
                                         <exclude>org.egov.pgrrest.PgrRestSpringBootApplication</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.entity.*</exclude>
                                         <exclude>org.egov.pgrrest.common.contract.*</exclude>

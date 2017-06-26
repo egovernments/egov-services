@@ -25,7 +25,7 @@ public class CalculationFactor {
 	private String	factorCode;
 		 
 	@NotNull
-	private String	factorType;
+	private CalculationFactorTypeEnum factorType;
 	
 	@NotNull	
 	private Double	factorValue;	

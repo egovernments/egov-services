@@ -30,14 +30,14 @@ public class SevaRequestTest {
         assertEquals("18", workFlowRequest.getValueForKey(BOUNDARY_ID));
         assertEquals("EMPLOYEE", workFlowRequest.getValueForKey(USER_ROLE));
         assertEquals("this is approved", workFlowRequest.getValueForKey(VALUES_APPROVAL_COMMENT));
-        assertEquals(Long.valueOf(23), workFlowRequest.getAssignee());
+        assertEquals(Long.valueOf(23), workFlowRequest.getPositionId());
     }
 
     @Test
     public void test_should_return_assignee_id() {
         final SevaRequest sevaRequest = createSevaRequest();
 
-        assertEquals(Long.valueOf(23), sevaRequest.getAssignee());
+        assertEquals(Long.valueOf(23), sevaRequest.getPositionId());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class SevaRequestTest {
         commentEntry.put("name", "this is approved");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "23");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();

@@ -69,7 +69,7 @@ public class WorkflowRequest {
     private String businessKey;
 
     @JsonProperty("assignee")
-    private Long assignee;
+    private Long positionId;
 
     @JsonProperty("group")
     private String group;

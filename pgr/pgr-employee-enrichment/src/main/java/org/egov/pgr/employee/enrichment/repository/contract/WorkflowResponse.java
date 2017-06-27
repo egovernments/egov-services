@@ -14,7 +14,7 @@ public class WorkflowResponse {
     public static final String STATE_ID = "stateId";
 
     @JsonProperty("assignee")
-    private String assignee;
+    private String positionId;
 
     @JsonProperty("values")
     private Map<String, Attribute> values;

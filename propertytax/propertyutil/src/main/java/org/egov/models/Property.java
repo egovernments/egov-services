@@ -53,7 +53,7 @@ public class Property {
 	@JsonProperty("owners")
 	@Valid
 	@NotNull
-	private List<OwnerInfo> owners = new ArrayList<OwnerInfo>();
+	private List<User> owners = new ArrayList<User>();
 
 	@JsonProperty("propertyDetail")
 	@Valid

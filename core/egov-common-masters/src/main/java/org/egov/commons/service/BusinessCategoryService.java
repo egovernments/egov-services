@@ -85,6 +85,11 @@ public class BusinessCategoryService {
 		
 		return businessCategoryRepository.checkCategoryByCodeAndTenantIdExists(code,tenantId);
 	}
+	
+	public BusinessCategory getBusinessCategoryByIdAndTenantId(Long id,String tenantId){
+		
+		return businessCategoryRepository.getByIdAndTenantId(id,tenantId);
+	}
 
 
 }

@@ -3,7 +3,6 @@ package org.egov.property.services;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
@@ -11,7 +10,6 @@ import org.egov.models.Floor;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
 import org.egov.models.IdRequest;
-import org.egov.models.OwnerInfo;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
@@ -19,6 +17,7 @@ import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
+import org.egov.models.User;
 import org.egov.property.propertyConsumer.Producer;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.util.PropertyValidator;
@@ -51,7 +50,7 @@ public class PersisterService {
 
 	@Autowired
 	Producer producer;
-	
+
 	@Autowired
 	PropertyValidator propertyValidator;
 
@@ -108,7 +107,7 @@ public class PersisterService {
 
 			propertyRepository.saveBoundary(property, propertyId);
 
-			for (OwnerInfo owner : property.getOwners()) {
+			for (User owner : property.getOwners()) {
 
 				propertyRepository.saveUser(owner, propertyId);
 
@@ -188,31 +187,30 @@ public class PersisterService {
 
 	}
 
+	/**
+	 * For each property, it validate Property Boundary,workflow details, check
+	 * acknowledgement number send the PropertyRequest to Kafka server
+	 * 
+	 * @param propertyRequest
+	 * @return propertyResponse
+	 */
+	public PropertyResponse validateProperty(PropertyRequest propertyRequest) {
 
-/**
-     * For each property, it validate Property Boundary,workflow details, 
-     * check acknowledgement number
-     * send the PropertyRequest to Kafka server
-     * @param propertyRequest
-     * @return propertyResponse
-     */
-    public PropertyResponse validateProperty(PropertyRequest propertyRequest) {
-        
-        for (Property property : propertyRequest.getProperties()) {
-            
-            propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
-            propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
-            sendToKafka(environment.getProperty("user.update"), propertyRequest);
-        }
-        
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
-        PropertyResponse propertyResponse = new PropertyResponse();
-        propertyResponse.setResponseInfo(responseInfo);
-        propertyResponse.setProperties(propertyRequest.getProperties());
-        return propertyResponse;
-    }
-	
-	
+		for (Property property : propertyRequest.getProperties()) {
+
+			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
+			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
+			sendToKafka(environment.getProperty("user.update"), propertyRequest);
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
+		PropertyResponse propertyResponse = new PropertyResponse();
+		propertyResponse.setResponseInfo(responseInfo);
+		propertyResponse.setProperties(propertyRequest.getProperties());
+		return propertyResponse;
+	}
+
 	/**
 	 * update method
 	 * 
@@ -222,40 +220,36 @@ public class PersisterService {
 	 *             Document type 7. User 8. Boundary
 	 **/
 
-    @Transactional
-    public void updateProperty(List<Property> properties) throws SQLException {
+	@Transactional
+	public void updateProperty(List<Property> properties) throws SQLException {
 
-        for (Property property : properties) {
+		for (Property property : properties) {
 
-            propertyRepository.updateProperty(property);
-            propertyRepository.updateAddress(property.getAddress(),
-                    property.getAddress().getId(),
-                    property.getId());
-            propertyRepository.updatePropertyDetail(property.getPropertyDetail(),
-                    property.getId());
-            propertyRepository.updateVacantLandDetail(property.getVacantLand(),
-                    property.getVacantLand().getId(),
-                    property.getId());
-            for (Floor floor : property.getPropertyDetail().getFloors()) {
-                propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
-                
-                for (Unit unit : floor.getUnits()) {
-                    propertyRepository.updateUnit(unit);
-                }
-            }
+			propertyRepository.updateProperty(property);
+			propertyRepository.updateAddress(property.getAddress(), property.getAddress().getId(), property.getId());
 
-            for (Document document : property.getPropertyDetail().getDocuments()) {
+			propertyRepository.updatePropertyDetail(property.getPropertyDetail(), property.getId());
+			propertyRepository.updateVacantLandDetail(property.getVacantLand(), property.getVacantLand().getId(),
+					property.getId());
+			for (Floor floor : property.getPropertyDetail().getFloors()) {
+				propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
 
-                propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
-                propertyRepository.updateDocumentType(document.getDocumentType(),
-                        document.getId());
-            }
+				for (Unit unit : floor.getUnits()) {
+					propertyRepository.updateUnit(unit);
+				}
+			}
 
-            for (OwnerInfo owner : property.getOwners()) {
-                propertyRepository.updateUser(owner, property.getId());
-            }
+			for (Document document : property.getPropertyDetail().getDocuments()) {
 
-            propertyRepository.updateBoundary(property.getBoundary(), property.getId());
-        }
-    }
+				propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
+				propertyRepository.updateDocumentType(document.getDocumentType(), document.getId());
+			}
+
+			for (User owner : property.getOwners()) {
+				propertyRepository.updateUser(owner, property.getId());
+			}
+
+			propertyRepository.updateBoundary(property.getBoundary(), property.getId());
+		}
+	}
 }

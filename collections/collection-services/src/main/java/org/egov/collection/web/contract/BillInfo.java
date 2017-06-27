@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @ToString
 public class BillInfo   {
-  private Object payeeName;
+  private String payeeName;
 
   private String payeeAddress;
 

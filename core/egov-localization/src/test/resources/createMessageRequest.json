@@ -1,5 +1,8 @@
 {
-    "requestInfo": {
+    "RequestInfo": {
+        "userInfo": {
+            "id": "1"
+        }
     },
     "tenantId": "default",
     "messages": [

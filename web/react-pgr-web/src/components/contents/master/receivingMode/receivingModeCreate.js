@@ -55,25 +55,31 @@ class receivingModeCreate extends Component {
   constructor(props) {
        super(props);
        this.state = {
+          open: false,
        }
        this.addOrUpdate=this.addOrUpdate.bind(this);
+       this.handleOpenNClose=this.handleOpenNClose.bind(this);
    }
 
+   handleOpenNClose() {
+     this.setState({
+     	open: !this.state.open
+     });
+   };
 
 
 
    componentWillMount() {
 
          if(this.props.match.params.id) {
-
              this.setState({id:this.props.match.params.id});
              var body = {}
-             let  current = this;
+             let  _this = this;
              let {setForm} = this.props;
 
              Api.commonApiPost("/pgr-master/receivingmode/_search",{id:this.props.match.params.id},body).then(function(response){
 
-                 current.setState({data:response.ReceivingModeType})
+                 _this.setState({data:response.ReceivingModeType})
                  setForm(response.ReceivingModeType[0])
              }).catch((error)=>{
                  console.log(error);
@@ -83,6 +89,12 @@ class receivingModeCreate extends Component {
            initForm();
          }
      }
+
+     close(){
+
+      window.open(window.location, '_self').close();
+  }
+
 
   addOrUpdate(e) {
     e.preventDefault();
@@ -102,14 +114,20 @@ class receivingModeCreate extends Component {
       if(_this.props.match.params.id){
 
             Api.commonApiPost("pgr-master/receivingmode/"+body.ReceivingModeType.code+"/_update", {},body).then(function(response) {
-            _this.props.toggleDailogAndSetText(true,"Receiving Mode is updated succesfully")
 
-          }).catch((error)=>{
-            console.log(error);
-          })
+              _this.setState({
+          			open: true
+          		});
+              _this.props.resetObject('receivingmodeSet');
+          }, function(err) {
+
+        	})
       } else {
           Api.commonApiPost("pgr-master/receivingmode/_create", {},body).then(function(response) {
-        		_this.props.toggleDailogAndSetText(true,"Receiving Mode is created succesfully")
+            _this.setState({
+              open: true
+            });
+            _this.props.resetObject('receivingmodeSet');
         }, function(err) {
 
       	})
@@ -122,7 +140,8 @@ class receivingModeCreate extends Component {
   render() {
   let url = this.props.location.pathname;
   var _this = this;
-   let {addOrUpdate} = this;
+   let {addOrUpdate,handleOpenNClose} = this;
+   let {open} =this.state;
    let {
      handleChange,
      handleChangeNextOne,
@@ -137,7 +156,7 @@ class receivingModeCreate extends Component {
     <div className="receivingModeCreate">
          <form autoComplete="off" onSubmit={(e) => {addOrUpdate(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Create ReceivingMode </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {(this.props.match.params && this.props.match.params.type == "edit" ? "Edit " : "Create ") + "Receiving Mode"} </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
@@ -179,9 +198,22 @@ class receivingModeCreate extends Component {
            </Card>
            <div style={{textAlign:'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={(e)=>{this.close()}}/>
               </div>
          </form>
+         <Dialog
+          title="Success"
+          actions={[<FlatButton
+				        label="Close"
+				        primary={true}
+				        onTouchTap={handleOpenNClose}
+				      />]}
+          modal={false}
+          open={open}
+          onRequestClose={handleOpenNClose}
+        >
+        Receiving Mode {this.props.match.params && this.props.match.params.type == "edit" ? "updated" : "created"} successfully.
+        </Dialog>
         </div>
    );
   }
@@ -218,7 +250,7 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       validationData: {
         required: {
           current: ["name","code","description","channel"],
-          required: ["name","code","description","channel"]
+          required:["name","code","description","channel"]
         },
         pattern: {
           current: [],
@@ -227,12 +259,13 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       }
     });
   },
-  toggleDailogAndSetText: (dailogState,msg) => {
-    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT",
-    dailogState,
-    msg});
+  resetObject: (object) => {
+    console.log(object);
+   dispatch({
+     type: "RESET_OBJECT",
+     object
+   })
   },
-
    handleChange: (e, property, isRequired, pattern) => {
      dispatch({
        type: "HANDLE_CHANGE",

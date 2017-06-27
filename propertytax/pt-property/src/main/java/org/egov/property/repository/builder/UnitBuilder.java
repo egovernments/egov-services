@@ -20,7 +20,7 @@ public class UnitBuilder {
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
 				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?")
-				.append(" WHERE id = ");
+				.append(" WHERE id = ?");
 
 		return unitSql.toString();
 	}

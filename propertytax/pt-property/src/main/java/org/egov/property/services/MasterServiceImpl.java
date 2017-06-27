@@ -103,8 +103,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest, String tenantId, Integer id)
-			throws Exception {
+	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest) throws Exception {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
 
@@ -112,7 +111,7 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(floorType);
 			try {
 				long updatedTime = new Date().getTime();
-				propertyMasterRepository.updateFloorType(floorType, data, id);
+				propertyMasterRepository.updateFloorType(floorType, data);
 				floorType.getAuditDetails().setLastModifiedTime(updatedTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(floorTypeRequest.getRequestInfo());
@@ -173,14 +172,13 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest, String tenantId, Integer id)
-			throws Exception {
+	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest) throws Exception {
 
 		for (WoodType woodType : woodTypeRequest.getWoodTypes()) {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(woodType);
 			try {
-				propertyMasterRepository.updateWoodType(woodType, data, id);
+				propertyMasterRepository.updateWoodType(woodType, data);
 			} catch (Exception e) {
 				throw new InvalidInputException(woodTypeRequest.getRequestInfo());
 			}
@@ -237,13 +235,12 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest, String tenantId, Integer id)
-			throws Exception {
+	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest) throws Exception {
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(roofType);
 			try {
-				propertyMasterRepository.updateRoofType(roofType, data, id);
+				propertyMasterRepository.updateRoofType(roofType, data);
 			} catch (Exception e) {
 				throw new InvalidInputException(roofTypeRequest.getRequestInfo());
 			}
@@ -295,8 +292,7 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Override
 	@Transactional
-	public DepartmentResponseInfo updateDepartmentMaster(String tenantId, Long id,
-			DepartmentRequest departmentRequest) {
+	public DepartmentResponseInfo updateDepartmentMaster(DepartmentRequest departmentRequest) {
 		Long modifiedTime = new Date().getTime();
 
 		for (Department department : departmentRequest.getDepartments()) {
@@ -305,7 +301,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			String data = gson.toJson(department);
 
-			propertyMasterRepository.updateDepartment(department, data, id);
+			propertyMasterRepository.updateDepartment(department, data, department.getId());
 			department.getAuditDetails().setLastModifiedTime(modifiedTime);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
@@ -372,8 +368,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public OccuapancyMasterResponse updateOccuapancyMaster(String tenantId, Long id,
-			OccuapancyMasterRequest occuapancyRequest) {
+	public OccuapancyMasterResponse updateOccuapancyMaster(OccuapancyMasterRequest occuapancyRequest) {
 
 		Long modifiedTime = new Date().getTime();
 
@@ -383,7 +378,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			String data = gson.toJson(occuapancyMaster);
 
-			propertyMasterRepository.updateOccuapancy(tenantId, id, occuapancyMaster, data);
+			propertyMasterRepository.updateOccuapancy(occuapancyMaster, data);
 
 			occuapancyMaster.getAuditDetails().setLastModifiedTime(modifiedTime);
 
@@ -448,8 +443,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public PropertyTypeResponse updatePropertyTypeMaster(String tenantId, Long id,
-			PropertyTypeRequest propertyTypeRequest) {
+	public PropertyTypeResponse updatePropertyTypeMaster(PropertyTypeRequest propertyTypeRequest) {
 
 		Long modifiedTime = new Date().getTime();
 
@@ -459,7 +453,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			String data = gson.toJson(propertyType);
 
-			propertyMasterRepository.updatePropertyType(tenantId, id, propertyType, data);
+			propertyMasterRepository.updatePropertyType(propertyType, data);
 
 			propertyType.getAuditDetails().setCreatedTime(modifiedTime);
 
@@ -527,7 +521,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public UsageMasterResponse updateUsageMaster(String tenantId, Long id, UsageMasterRequest usageMasterRequest) {
+	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) {
 
 		for (UsageMaster usageMaster : usageMasterRequest.getUsageMasters()) {
 
@@ -538,7 +532,7 @@ public class MasterServiceImpl implements Masterservice {
 
 				long updatedTime = new Date().getTime();
 
-				propertyMasterRepository.updateUsageMaster(tenantId, id, usageMaster, data);
+				propertyMasterRepository.updateUsageMaster(usageMaster, data);
 
 				usageMaster.getAuditDetails().setLastModifiedTime(updatedTime);
 
@@ -608,8 +602,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public WallTypeResponse updateWallTypeMaster(String tenantId, Long id, WallTypeRequest wallTypeRequest)
-			throws Exception {
+	public WallTypeResponse updateWallTypeMaster(WallTypeRequest wallTypeRequest) throws Exception {
 
 		for (WallType wallType : wallTypeRequest.getWallTypes()) {
 
@@ -620,7 +613,7 @@ public class MasterServiceImpl implements Masterservice {
 
 				long updatedTime = new Date().getTime();
 
-				propertyMasterRepository.updateWallTypes(tenantId, id, wallType, data);
+				propertyMasterRepository.updateWallTypes(wallType, data);
 
 				wallType.getAuditDetails().setLastModifiedTime(updatedTime);
 
@@ -696,8 +689,7 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Override
 	@Transactional
-	public StructureClassResponse updateStructureClassMaster(String tenantId, Long id,
-			StructureClassRequest structureClassRequest) {
+	public StructureClassResponse updateStructureClassMaster(StructureClassRequest structureClassRequest) {
 
 		for (StructureClass structureClass : structureClassRequest.getStructureClasses()) {
 
@@ -708,7 +700,7 @@ public class MasterServiceImpl implements Masterservice {
 
 				long updatedTime = new Date().getTime();
 
-				propertyMasterRepository.updateStructureClsses(tenantId, id, structureClass, data);
+				propertyMasterRepository.updateStructureClsses(structureClass, data);
 
 				structureClass.getAuditDetails().setLastModifiedTime(updatedTime);
 

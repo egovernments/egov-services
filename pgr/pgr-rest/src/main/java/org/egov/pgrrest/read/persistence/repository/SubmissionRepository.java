@@ -85,7 +85,7 @@ public class SubmissionRepository {
             .collect(Collectors.groupingBy(SubmissionAttribute::getCrn));
     }
 
-    public Long getAssignmentByCrnAndTenantId(String serviceRequestId, String tenantId) {
-        return submissionJpaRepository.findAssigneeByCrnAndTenantId(serviceRequestId, tenantId);
+    public Long getPositionByCrnAndTenantId(String serviceRequestId, String tenantId) {
+        return submissionJpaRepository.findPositionByCrnAndTenantId(serviceRequestId, tenantId);
     }
 }

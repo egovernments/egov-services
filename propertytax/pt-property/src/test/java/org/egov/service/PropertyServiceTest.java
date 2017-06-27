@@ -1,39 +1,59 @@
 package org.egov.service;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import org.egov.models.Address;
+import org.egov.models.ApplicationEnum;
 import org.egov.models.AuditDetails;
+import org.egov.models.Boundary;
+import org.egov.models.ChannelEnum;
+import org.egov.models.CreationReasonEnum;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.Document;
+import org.egov.models.DocumentType;
+import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
+import org.egov.models.PropertyLocation;
+import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyType;
 import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.models.Role;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
+import org.egov.models.SourceEnum;
+import org.egov.models.StatusEnum;
+import org.egov.models.Unit;
+import org.egov.models.UnitTypeEnum;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
+import org.egov.models.User;
+import org.egov.models.UserDetails;
+import org.egov.models.VacantLandDetail;
 import org.egov.models.WallType;
 import org.egov.models.WallTypeRequest;
 import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.models.WorkFlowDetails;
 import org.egov.property.PtPropertyApplication;
+import org.egov.property.propertyConsumer.Producer;
 import org.egov.property.services.Masterservice;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -49,6 +69,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ContextConfiguration(classes = { PtPropertyApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@SuppressWarnings("static-access")
 public class PropertyServiceTest {
 
 	@Autowired
@@ -57,13 +78,16 @@ public class PropertyServiceTest {
 	@Autowired
 	Environment environment;
 
-	public Integer floorId = 1;
-	public Integer roofId = 1;
-	public Integer woodId = 1;
+	@Autowired
+	Producer producer;
+
+	public Long floorId = 1l;
+	public Long roofId = 1l;
+	public Long woodId = 1l;
 	public Long departmentId = 1l;
 	public Long occupancyId = 1l;
 	public Integer structureId = 1;
-	public Integer usageId = 1;
+	public Long usageId = 1l;
 	public Integer wallTypeId = 1;
 	public Long propertyTypeId = 1l;
 
@@ -110,11 +134,11 @@ public class PropertyServiceTest {
 
 	@Test
 	public void modifyRoofType() {
-		String tenantId = "123";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<RoofType> roofTypes = new ArrayList<>();
 
 		RoofType roofType = new RoofType();
+		roofType.setId(roofId);
 		roofType.setTenantId("1234");
 		roofType.setName("Mansard  Roof");
 		roofType.setCode("256");
@@ -136,7 +160,7 @@ public class PropertyServiceTest {
 		roofTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			RoofTypeResponse roofTypeResponse = masterService.updateRoofType(roofTypeRequest, tenantId, roofId);
+			RoofTypeResponse roofTypeResponse = masterService.updateRoofType(roofTypeRequest);
 
 			if (roofTypeResponse.getRoofTypes().size() == 0)
 				assertTrue(false);
@@ -165,7 +189,7 @@ public class PropertyServiceTest {
 
 		try {
 			RoofTypeResponse roofTypeResponse = masterService.getRoofypes(requestInfo, tenantId,
-					new Integer[] { roofId }, name, code, nameLocal, pageSize, offset);
+					new Integer[] { roofId.intValue() }, name, code, nameLocal, pageSize, offset);
 			if (roofTypeResponse.getRoofTypes().size() == 0)
 				assertTrue(false);
 
@@ -219,12 +243,12 @@ public class PropertyServiceTest {
 	@Test
 	public void modifyWoodType() {
 
-		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
 
 		List<WoodType> woodTypes = new ArrayList<>();
 
 		WoodType woodType = new WoodType();
+		woodType.setId(woodId);
 		woodType.setTenantId("1234");
 		woodType.setName("Maple Wood Type");
 		woodType.setCode("256");
@@ -246,7 +270,7 @@ public class PropertyServiceTest {
 		woodTypeRequest.setRequestInfo(requestInfo);
 
 		try {
-			WoodTypeResponse woodTypeResponse = masterService.updateWoodType(woodTypeRequest, tenantId, woodId);
+			WoodTypeResponse woodTypeResponse = masterService.updateWoodType(woodTypeRequest);
 
 			if (woodTypeResponse.getWoodTypes().size() == 0)
 				assertTrue(false);
@@ -259,7 +283,6 @@ public class PropertyServiceTest {
 
 	}
 
-	
 	@Test
 	public void searchWoodType() {
 
@@ -274,7 +297,7 @@ public class PropertyServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		try {
 			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
-					new Integer[] { woodId }, name, code, nameLocal, pageSize, offset);
+					new Integer[] { woodId.intValue() }, name, code, nameLocal, pageSize, offset);
 
 			if (woodTypeResponse.getWoodTypes().size() == 0)
 				assertTrue(false);
@@ -287,7 +310,6 @@ public class PropertyServiceTest {
 
 	}
 
-	
 	@Test
 	public void createFloorTypeTest() {
 
@@ -329,14 +351,14 @@ public class PropertyServiceTest {
 		}
 
 	}
-	
+
 	@Test
 	public void modifyFloorType() {
-		String tenantId = "1234";
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<FloorType> floorTypes = new ArrayList<>();
 
 		FloorType floorType = new FloorType();
+		floorType.setId(floorId);
 		floorType.setTenantId("1234");
 		floorType.setName("Tile Flooring");
 		floorType.setCode("256");
@@ -361,7 +383,7 @@ public class PropertyServiceTest {
 		FloorTypeResponse floorTypeResponse = null;
 
 		try {
-			floorTypeResponse = masterService.updateFloorType(floorTypeRequest, tenantId, floorId);
+			floorTypeResponse = masterService.updateFloorType(floorTypeRequest);
 			if (floorTypeResponse.getFloorTypes().size() == 0)
 				assertTrue(false);
 
@@ -390,7 +412,7 @@ public class PropertyServiceTest {
 
 		try {
 			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
-					new Integer[] { floorId }, name, code, nameLocal, pageSize, offset);
+					new Integer[] { floorId.intValue() }, name, code, nameLocal, pageSize, offset);
 
 			if (floorTypeResponse.getFloorTypes().size() == 0)
 				assertTrue(false);
@@ -400,8 +422,6 @@ public class PropertyServiceTest {
 		}
 
 	}
-
-	
 
 	/**
 	 * Description : Test case for creating Occuapancy master
@@ -466,8 +486,6 @@ public class PropertyServiceTest {
 	public void modifyOccuapancyMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
-
 			List<OccuapancyMaster> occuapancyMaster = new ArrayList<OccuapancyMaster>();
 
 			OccuapancyMaster master = new OccuapancyMaster();
@@ -477,7 +495,8 @@ public class PropertyServiceTest {
 			auditDetails.setLastModifiedBy("anil");
 			auditDetails.setLastModifiedTime((long) 123456);
 
-			master.setId((long) 4);
+			// master.setId((long) 4);
+			master.setId(occupancyId);
 			master.setTenantId("default");
 			master.setName("anil");
 			master.setCode("testcode");
@@ -493,8 +512,8 @@ public class PropertyServiceTest {
 			occuapancyMasterRequest.setRequestInfo(getRequestInfoObject());
 			occuapancyMasterRequest.setOccuapancyMasters(occuapancyMaster);
 
-			OccuapancyMasterResponse occuapancyMasterResponse = masterService.updateOccuapancyMaster(tenantId,
-					occupancyId, occuapancyMasterRequest);
+			OccuapancyMasterResponse occuapancyMasterResponse = masterService
+					.updateOccuapancyMaster(occuapancyMasterRequest);
 			if (occuapancyMasterResponse.getOccuapancyMasters().size() == 0) {
 				assertTrue(false);
 			}
@@ -605,7 +624,6 @@ public class PropertyServiceTest {
 	public void modifyPropertyTypeMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
 			List<PropertyType> propertyType = new ArrayList<PropertyType>();
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy("Anil");
@@ -614,7 +632,7 @@ public class PropertyServiceTest {
 			auditDetails.setLastModifiedTime((long) 564644560);
 
 			PropertyType master = new PropertyType();
-			master.setId((long) 1);
+			master.setId(propertyTypeId);
 			master.setTenantId("default");
 			master.setName("anil");
 			master.setCode("testingcode");
@@ -629,8 +647,7 @@ public class PropertyServiceTest {
 			propertyTypeRequest.setRequestInfo(getRequestInfoObject());
 			propertyTypeRequest.setPropertyTypes(propertyType);
 
-			PropertyTypeResponse propertyTypeResponse = masterService.updatePropertyTypeMaster(tenantId, propertyTypeId,
-					propertyTypeRequest);
+			PropertyTypeResponse propertyTypeResponse = masterService.updatePropertyTypeMaster(propertyTypeRequest);
 			if (propertyTypeResponse.getPropertyTypes().size() == 0) {
 				assertTrue(false);
 			}
@@ -742,7 +759,6 @@ public class PropertyServiceTest {
 	public void modifyDepartmentMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
 			List<Department> department = new ArrayList<Department>();
 			Department master = new Department();
 			AuditDetails auditDetails = new AuditDetails();
@@ -752,7 +768,7 @@ public class PropertyServiceTest {
 			auditDetails.setCreatedTime((long) 564644560);
 			auditDetails.setLastModifiedTime((long) 564644560);
 
-			master.setId((long) 1);
+			master.setId(departmentId);
 			master.setTenantId("default");
 			master.setCategory("software engineer");
 			master.setName("anil");
@@ -765,8 +781,7 @@ public class PropertyServiceTest {
 			departmentRequest.setRequestInfo(getRequestInfoObject());
 			departmentRequest.setDepartments(department);
 
-			DepartmentResponseInfo departmentResponse = masterService.updateDepartmentMaster(tenantId, departmentId,
-					departmentRequest);
+			DepartmentResponseInfo departmentResponse = masterService.updateDepartmentMaster(departmentRequest);
 			if (departmentResponse.getDepartments().size() == 0) {
 				assertTrue(false);
 			}
@@ -776,7 +791,7 @@ public class PropertyServiceTest {
 			assertTrue(false);
 		}
 	}
-	
+
 	/**
 	 * * Description : test case for searching department master api
 	 * 
@@ -816,7 +831,6 @@ public class PropertyServiceTest {
 		}
 	}
 
-
 	@Test
 	public void createUsageMasterTest() {
 
@@ -841,6 +855,7 @@ public class PropertyServiceTest {
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("test_namelocal");
 			usageMaster.setDescription("test_description");
+			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -871,7 +886,6 @@ public class PropertyServiceTest {
 	@Test
 	public void modifyUsageMasterTest() throws Exception {
 		try {
-			String tenantId = "default";
 			RequestInfo requestInfo = new RequestInfo();
 			requestInfo.setApiId("emp");
 			requestInfo.setVer("1.0");
@@ -885,11 +899,13 @@ public class PropertyServiceTest {
 			List<UsageMaster> usageMasters = new ArrayList<>();
 
 			UsageMaster usageMaster = new UsageMaster();
+			usageMaster.setId(usageId);
 			usageMaster.setTenantId("default");
 			usageMaster.setName("Yoyo");
 			usageMaster.setCode("1234");
 			usageMaster.setNameLocal("update_namelocal");
 			usageMaster.setDescription("update_description");
+			usageMaster.setParent(new Long(1));
 
 			long createdTime = new Date().getTime();
 
@@ -906,8 +922,7 @@ public class PropertyServiceTest {
 			usageMasterRequest.setUsageMasters(usageMasters);
 			usageMasterRequest.setRequestInfo(requestInfo);
 
-			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(tenantId, Long.valueOf(usageId),
-					usageMasterRequest);
+			UsageMasterResponse usageMasterResponse = masterService.updateUsageMaster(usageMasterRequest);
 
 			if (usageMasterResponse.getUsageMasters().size() == 0)
 				assertTrue(false);
@@ -917,7 +932,6 @@ public class PropertyServiceTest {
 		}
 	}
 
-	
 	@Test
 	public void createWallTypeTest() {
 		try {
@@ -969,7 +983,6 @@ public class PropertyServiceTest {
 
 		try {
 			long id = 1;
-			String tenantId = "default";
 			RequestInfo requestInfo = new RequestInfo();
 			requestInfo.setApiId("emp");
 			requestInfo.setVer("1.0");
@@ -983,6 +996,7 @@ public class PropertyServiceTest {
 			List<WallType> wallTypes = new ArrayList<>();
 
 			WallType wallType = new WallType();
+			wallType.setId(id);
 			wallType.setTenantId("default");
 			wallType.setName("Yoyo");
 			wallType.setCode("1234");
@@ -1003,7 +1017,7 @@ public class PropertyServiceTest {
 			WallTypeRequest wallTypeRequest = new WallTypeRequest();
 			wallTypeRequest.setWallTypes(wallTypes);
 			wallTypeRequest.setRequestInfo(requestInfo);
-			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(tenantId, id, wallTypeRequest);
+			WallTypeResponse wallTypeResponse = masterService.updateWallTypeMaster(wallTypeRequest);
 			if (wallTypeResponse.getWallTypes().size() == 0)
 				assertTrue(false);
 			assertTrue(true);
@@ -1061,5 +1075,523 @@ public class PropertyServiceTest {
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 
 		return requestInfo;
+	}
+
+	@Test
+	public void testCreatingProperty() throws Exception {
+		try {
+			PropertyRequest propertyRequest = new PropertyRequest();
+			List<Property> properties = new ArrayList<Property>();
+
+			Property property = new Property();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("Anil");
+			auditDetails.setLastModifiedBy("Anil");
+			auditDetails.setCreatedTime((long) 564644560);
+			auditDetails.setLastModifiedTime((long) 564644560);
+
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs((long) 20171205);
+			requestInfo.setAction("create");
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("rajesh");
+			requestInfo.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
+
+			property.setTenantId("default");
+			property.setUpicNumber("test123");
+			property.setVltUpicNumber("vltUpicNumber1");
+			property.setCreationReason(CreationReasonEnum.NEWPROPERTY.valueOf("NEWPROPERTY"));
+
+			Address address = new Address();
+			address.setTenantId("default");
+			address.setLatitude((double) 11);
+			address.setLongitude((double) 20);
+			address.setAddressNumber("1-2-3");
+			address.setAddressLine1("acgaurds");
+			address.setAddressLine2("khirathabad");
+			address.setLandmark("noori");
+			address.setCity("hyderabad");
+			address.setPincode("500004");
+			address.setDetail("Testing");
+
+			address.setAuditDetails(auditDetails);
+
+			property.setAddress(address);
+
+			List<User> owners = new ArrayList<User>();
+			User owner = new User();
+			owner.setTenantId("default");
+			owner.setUserName("Anil");
+			owner.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
+			owner.setSalutation("testing");
+			owner.setName("anil");
+			owner.setGender("male");
+			owner.setMobileNumber("9333555666");
+			owner.setEmailId("anil@wtc.com");
+			owner.setAadhaarNumber("123456789123");
+			owner.setActive(true);
+			owner.setLocale("no");
+			owner.setType("house");
+			owner.setAccountLocked(true);
+			property.getOwners().add(owner);
+			List<Role> roles = new ArrayList<Role>();
+
+			Role role = new Role();
+
+			role.setName("kumar");
+			role.setDescription("Testing");
+			owner.getRoles().add(role);
+			owner.setRoles(roles);
+
+			owner.setAuditDetails(auditDetails);
+
+			UserDetails userDetails = new UserDetails();
+
+			userDetails.setFirstName("Anil");
+			userDetails.setMiddleName("Kumar");
+			userDetails.setLastName("Sandrapati");
+			userDetails.setDob("25/09/1989");
+			userDetails.setAltContactNumber("9874562134");
+			userDetails.setFatherName("svs");
+			userDetails.setHusbandName("not applicable");
+			userDetails.setBloodGroup("O+");
+			userDetails.setPan("stvt5854k");
+			userDetails.setPermanentAddress("eluru");
+			userDetails.setPermanentCity("eluru");
+			userDetails.setPermanentPincode("534001");
+			userDetails.setCorrespondenceCity("Hyderabad");
+			userDetails.setCorrespondencePincode("500004");
+			userDetails.setCorrespondenceAddress("Khirathabad");
+			userDetails.setSignature("S Anilkumar");
+			userDetails.setIdentificationMark("mole on right hand");
+			userDetails.setPhoto("anil.png");
+
+			owner.setIsPrimaryOwner(true);
+			owner.setIsSecondaryOwner(true);
+			owner.setOwnerShipPercentage((double) 10);
+			owner.setOwnerType("Sandrapati Anilkumar");
+
+			owner.setUserDetails(userDetails);
+
+			property.setOwners(owners);
+
+			PropertyDetail propertyDetail = new PropertyDetail();
+			propertyDetail.setSource(SourceEnum.MUNICIPAL_RECORDS.valueOf("MUNICIPAL_RECORDS"));
+			propertyDetail.setRegdDocNo("regdoc1");
+			propertyDetail.setRegdDocDate("25/05/2017");
+			propertyDetail.setReason("testing");
+			propertyDetail.setStatus(StatusEnum.ACTIVE.valueOf("ACTIVE"));
+			propertyDetail.setIsVerified(true);
+			propertyDetail.setVerificationDate("25/05/2017");
+			propertyDetail.setIsExempted(true);
+			propertyDetail.setExemptionReason("Testing");
+			propertyDetail.setPropertyType("Land");
+			propertyDetail.setCategory("Land");
+			propertyDetail.setUsage("Anil");
+			propertyDetail.setDepartment("Land department");
+			propertyDetail.setApartment("apartment");
+			propertyDetail.setSiteLength((double) 10);
+			propertyDetail.setSiteBreadth((double) 15);
+			propertyDetail.setSitalArea((double) 10);
+			propertyDetail.setTotalBuiltupArea((double) 20);
+			propertyDetail.setUndividedShare((double) 5);
+			propertyDetail.setNoOfFloors((long) 1);
+			propertyDetail.setIsSuperStructure(true);
+			propertyDetail.setLandOwner("Anil");
+			propertyDetail.setFloorType("normal");
+			propertyDetail.setWoodType("normal");
+			propertyDetail.setRoofType("normal");
+			propertyDetail.setWallType("normal");
+			propertyDetail.setAuditDetails(auditDetails);
+
+			List<Floor> floors = propertyDetail.getFloors();
+
+			Floor floor = new Floor();
+
+			floor.setFloorNo("1");
+			floor.setAuditDetails(auditDetails);
+
+			List<Unit> units = new ArrayList<Unit>();
+
+			Unit unit = new Unit();
+
+			unit.setUnitNo(1);
+			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
+			unit.setLength((double) 10);
+			unit.setWidth((double) 15);
+			unit.setBuiltupArea((double) 15);
+			unit.setAssessableArea((double) 25);
+			unit.setBpaBuiltupArea((double) 35);
+			unit.setBpaNo("bpa1");
+			unit.setBpaDate("25/05/2017");
+			unit.setUsage("construction");
+			unit.setOccupancyType("business");
+			unit.setOccupierName("Anil");
+			unit.setFirmName("wtc");
+			unit.setRentCollected((double) 12);
+			unit.setStructure("rectangle");
+			unit.setAge("27");
+			unit.setExemptionReason("new property purchase");
+			unit.setIsStructured(true);
+			unit.setOccupancyDate("25/05/2017");
+			unit.setConstCompletionDate("25/05/2017");
+			unit.setManualArv((double) 5);
+			unit.setArv((double) 10);
+			unit.setElectricMeterNo("emno1");
+			unit.setWaterMeterNo("waterno1");
+			unit.setAuditDetails(auditDetails);
+			floor.getUnits().add(unit);
+			floor.setUnits(units);
+			propertyDetail.getFloors().add(floor);
+
+			propertyDetail.setFloors(floors);
+
+			List<Document> documents = propertyDetail.getDocuments();
+			Document document = new Document();
+
+			DocumentType documentType = new DocumentType();
+			documentType.setName("Testoc");
+			documentType.setApplication(ApplicationEnum.CREATE.valueOf("CREATE"));
+			documentType.setAuditDetails(auditDetails);
+			document.setFileStore("filestoredoc");
+			document.setAuditDetails(auditDetails);
+			propertyDetail.getDocuments().add(document);
+			document.setDocumentType(documentType);
+			propertyDetail.setDocuments(documents);
+
+			propertyDetail.setStateId("stateId1");
+			propertyDetail.setApplicationNo("appno1");
+
+			WorkFlowDetails workFlowDetails = new WorkFlowDetails();
+			workFlowDetails.setDepartment("IT");
+			workFlowDetails.setDesignation("se");
+			workFlowDetails.setAssignee((long) 10);
+			workFlowDetails.setAction("working");
+			workFlowDetails.setStatus("processing");
+
+			propertyDetail.setWorkFlowDetails(workFlowDetails);
+
+			property.setPropertyDetail(propertyDetail);
+
+			VacantLandDetail vacantLandDetails = new VacantLandDetail();
+			vacantLandDetails.setSurveyNumber("sn1");
+			vacantLandDetails.setPattaNumber("pt1");
+			vacantLandDetails.setMarketValue((double) 150000);
+			vacantLandDetails.setCapitalValue((double) 100000);
+			vacantLandDetails.setLayoutApprovedAuth("approved");
+			vacantLandDetails.setLayoutPermissionNo("pn1");
+			vacantLandDetails.setLayoutPermissionDate("25/05/2017");
+			vacantLandDetails.setResdPlotArea((double) 152);
+			vacantLandDetails.setNonResdPlotArea((double) 154);
+			vacantLandDetails.setAuditDetails(auditDetails);
+
+			property.setVacantLand(vacantLandDetails);
+
+			property.setAssessmentDate("25/05/2017");
+			property.setOccupancyDate("25/05/2017");
+			property.setGisRefNo("gf10");
+			property.setIsAuthorised(true);
+			property.setIsUnderWorkflow(true);
+
+			PropertyLocation propertyLocation = new PropertyLocation();
+
+			Boundary adminBoundary = new Boundary();
+			Boundary locationBoundary = new Boundary();
+			Boundary revenueBoundary = new Boundary();
+
+			adminBoundary.setName("testing");
+			locationBoundary.setName("testing");
+			revenueBoundary.setName("testing");
+
+			propertyLocation.setAdminBoundary(adminBoundary);
+			propertyLocation.setLocationBoundary(locationBoundary);
+			propertyLocation.setRevenueBoundary(revenueBoundary);
+
+			propertyLocation.setNorthBoundedBy("north");
+			propertyLocation.setSouthBoundedBy("south");
+			propertyLocation.setWestBoundedBy("west");
+			propertyLocation.setEastBoundedBy("east");
+			propertyLocation.setAuditDetails(auditDetails);
+			property.setBoundary(propertyLocation);
+
+			property.setActive(true);
+			property.setChannel(ChannelEnum.SYSTEM.valueOf("SYSTEM"));
+			property.setAuditDetails(auditDetails);
+			properties.add(property);
+
+			propertyRequest.setProperties(properties);
+			propertyRequest.setRequestInfo(requestInfo);
+
+			producer.send(environment.getProperty("property.create"), propertyRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testUpdateProperty() throws Exception {
+		try {
+			PropertyRequest propertyRequest = new PropertyRequest();
+			List<Property> properties = new ArrayList<Property>();
+
+			Property property = new Property();
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy("Sandrapati");
+			auditDetails.setLastModifiedBy("sandrapati");
+			auditDetails.setCreatedTime((long) 123456);
+			auditDetails.setLastModifiedTime((long) 987654);
+
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setApiId("emp");
+			requestInfo.setVer("1.0");
+			requestInfo.setTs((long) 20171205);
+			requestInfo.setAction("create");
+			requestInfo.setDid("1");
+			requestInfo.setKey("abcdkey");
+			requestInfo.setMsgId("20170310130900");
+			requestInfo.setRequesterId("rajesh");
+			requestInfo.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
+
+			property.setId((long) 1);
+			property.setTenantId("default");
+			property.setUpicNumber("anil123");
+			property.setVltUpicNumber("vltUpicNumberupdate2");
+			property.setCreationReason(CreationReasonEnum.NEWPROPERTY.valueOf("NEWPROPERTY"));
+
+			Address address = new Address();
+			address.setId((long) 1);
+			address.setTenantId("default");
+			address.setLatitude((double) 12);
+			address.setLongitude((double) 20);
+			address.setAddressNumber("1-2-3");
+			address.setAddressLine1("acgaurds");
+			address.setAddressLine2("khirathabad");
+			address.setLandmark("noori");
+			address.setCity("hyderabad");
+			address.setPincode("500004");
+			address.setDetail("Testing");
+
+			address.setAuditDetails(auditDetails);
+
+			property.setAddress(address);
+
+			List<User> owners = new ArrayList<User>();
+			User owner = new User();
+			owner.setId((long) 1);
+			owner.setTenantId("default");
+			owner.setUserName("Anilkumar");
+			owner.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
+			owner.setSalutation("testing");
+			owner.setName("anil");
+			owner.setGender("male");
+			owner.setMobileNumber("9333555666");
+			owner.setEmailId("anil@wtc.com");
+			owner.setAadhaarNumber("123456789123");
+			owner.setActive(true);
+			owner.setLocale("no");
+			owner.setType("house");
+			owner.setAccountLocked(true);
+			property.getOwners().add(owner);
+			List<Role> roles = new ArrayList<Role>();
+
+			Role role = new Role();
+			role.setName("ANil");
+			role.setDescription("Testing");
+			owner.getRoles().add(role);
+			owner.setRoles(roles);
+
+			owner.setAuditDetails(auditDetails);
+
+			UserDetails userDetails = new UserDetails();
+
+			userDetails.setFirstName("Anil Kumar");
+			userDetails.setMiddleName("Kumar");
+			userDetails.setLastName("Sandrapati");
+			userDetails.setDob("25/09/1989");
+			userDetails.setAltContactNumber("9874562134");
+			userDetails.setFatherName("svs");
+			userDetails.setHusbandName("not applicable");
+			userDetails.setBloodGroup("O+");
+			userDetails.setPan("stvt5854k");
+			userDetails.setPermanentAddress("eluru");
+			userDetails.setPermanentCity("eluru");
+			userDetails.setPermanentPincode("534001");
+			userDetails.setCorrespondenceCity("Hyderabad");
+			userDetails.setCorrespondencePincode("500004");
+			userDetails.setCorrespondenceAddress("Khirathabad");
+			userDetails.setSignature("S Anilkumar");
+			userDetails.setIdentificationMark("mole on right hand");
+			userDetails.setPhoto("anil.png");
+
+			owner.setIsPrimaryOwner(true);
+			owner.setIsSecondaryOwner(true);
+			owner.setOwnerShipPercentage((double) 10);
+			owner.setOwnerType("Sandrapati Anilkumar");
+
+			owner.setUserDetails(userDetails);
+
+			property.setOwners(owners);
+
+			PropertyDetail propertyDetail = new PropertyDetail();
+			propertyDetail.setId((long) 1);
+			propertyDetail.setSource(SourceEnum.MUNICIPAL_RECORDS.valueOf("MUNICIPAL_RECORDS"));
+			propertyDetail.setRegdDocNo("regdocupdate1");
+			propertyDetail.setRegdDocDate("25/05/2017");
+			propertyDetail.setReason("testing");
+			propertyDetail.setStatus(StatusEnum.ACTIVE.valueOf("ACTIVE"));
+			propertyDetail.setIsVerified(true);
+			propertyDetail.setVerificationDate("25/05/2017");
+			propertyDetail.setIsExempted(true);
+			propertyDetail.setExemptionReason("Testing");
+			propertyDetail.setPropertyType("Land");
+			propertyDetail.setCategory("Land");
+			propertyDetail.setUsage("Anil");
+			propertyDetail.setDepartment("Land department");
+			propertyDetail.setApartment("apartment");
+			propertyDetail.setSiteLength((double) 10);
+			propertyDetail.setSiteBreadth((double) 15);
+			propertyDetail.setSitalArea((double) 10);
+			propertyDetail.setTotalBuiltupArea((double) 20);
+			propertyDetail.setUndividedShare((double) 5);
+			propertyDetail.setNoOfFloors((long) 1);
+			propertyDetail.setIsSuperStructure(true);
+			propertyDetail.setLandOwner("Anil");
+			propertyDetail.setFloorType("normal");
+			propertyDetail.setWoodType("normal");
+			propertyDetail.setRoofType("normal");
+			propertyDetail.setWallType("normal");
+			propertyDetail.setAuditDetails(auditDetails);
+
+			List<Floor> floors = propertyDetail.getFloors();
+
+			Floor floor = new Floor();
+			floor.setId((long) 1);
+			floor.setFloorNo("f1");
+			floor.setAuditDetails(auditDetails);
+
+			List<Unit> units = new ArrayList<Unit>();
+
+			Unit unit = new Unit();
+			unit.setId((long) 1);
+			unit.setUnitNo(1);
+			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
+			unit.setLength((double) 15);
+			unit.setWidth((double) 15);
+			unit.setBuiltupArea((double) 15);
+			unit.setAssessableArea((double) 25);
+			unit.setBpaBuiltupArea((double) 35);
+			unit.setBpaNo("bpa1");
+			unit.setBpaDate("25/05/2017");
+			unit.setUsage("construction");
+			unit.setOccupancyType("business");
+			unit.setOccupierName("Anil");
+			unit.setFirmName("wtc");
+			unit.setRentCollected((double) 12);
+			unit.setStructure("rectangle");
+			unit.setAge("27");
+			unit.setExemptionReason("new property purchase");
+			unit.setIsStructured(true);
+			unit.setOccupancyDate("25/05/2017");
+			unit.setConstCompletionDate("25/05/2017");
+			unit.setManualArv((double) 5);
+			unit.setArv((double) 10);
+			unit.setElectricMeterNo("emno1");
+			unit.setWaterMeterNo("waterno1");
+			unit.setAuditDetails(auditDetails);
+			floor.getUnits().add(unit);
+			floor.setUnits(units);
+			propertyDetail.getFloors().add(floor);
+
+			propertyDetail.setFloors(floors);
+
+			List<Document> documents = propertyDetail.getDocuments();
+			Document document = new Document();
+
+			DocumentType documentType = new DocumentType();
+			documentType.setId((long) 1);
+			documentType.setName("Testocupdate");
+			documentType.setApplication(ApplicationEnum.CREATE.valueOf("CREATE"));
+			documentType.setAuditDetails(auditDetails);
+			document.setId((long) 1);
+			document.setFileStore("filestoredoc1");
+			document.setAuditDetails(auditDetails);
+			propertyDetail.getDocuments().add(document);
+			document.setDocumentType(documentType);
+			propertyDetail.setDocuments(documents);
+
+			propertyDetail.setStateId("stateId1");
+			propertyDetail.setApplicationNo("appno1");
+
+			WorkFlowDetails workFlowDetails = new WorkFlowDetails();
+			workFlowDetails.setDepartment("IT");
+			workFlowDetails.setDesignation("se");
+			workFlowDetails.setAssignee((long) 10);
+			workFlowDetails.setAction("working");
+			workFlowDetails.setStatus("processing");
+
+			propertyDetail.setWorkFlowDetails(workFlowDetails);
+
+			property.setPropertyDetail(propertyDetail);
+
+			VacantLandDetail vacantLandDetails = new VacantLandDetail();
+			vacantLandDetails.setId((long) 1);
+			vacantLandDetails.setSurveyNumber("snupdate1");
+			vacantLandDetails.setPattaNumber("pt1");
+			vacantLandDetails.setMarketValue((double) 150000);
+			vacantLandDetails.setCapitalValue((double) 100000);
+			vacantLandDetails.setLayoutApprovedAuth("approved");
+			vacantLandDetails.setLayoutPermissionNo("pn1");
+			vacantLandDetails.setLayoutPermissionDate("25/05/2017");
+			vacantLandDetails.setResdPlotArea((double) 152);
+			vacantLandDetails.setNonResdPlotArea((double) 154);
+			vacantLandDetails.setAuditDetails(auditDetails);
+
+			property.setVacantLand(vacantLandDetails);
+
+			property.setAssessmentDate("25/05/2017");
+			property.setOccupancyDate("25/05/2017");
+			property.setGisRefNo("gf10");
+			property.setIsAuthorised(true);
+			property.setIsUnderWorkflow(true);
+
+			PropertyLocation propertyLocation = new PropertyLocation();
+
+			Boundary adminBoundary = new Boundary();
+			Boundary locationBoundary = new Boundary();
+			Boundary revenueBoundary = new Boundary();
+
+			adminBoundary.setName("test");
+			locationBoundary.setName("testing");
+			revenueBoundary.setName("testing");
+			propertyLocation.setId((long) 5);
+			propertyLocation.setAdminBoundary(adminBoundary);
+			propertyLocation.setLocationBoundary(locationBoundary);
+			propertyLocation.setRevenueBoundary(revenueBoundary);
+
+			propertyLocation.setNorthBoundedBy("north");
+			propertyLocation.setSouthBoundedBy("south");
+			propertyLocation.setWestBoundedBy("west");
+			propertyLocation.setEastBoundedBy("east");
+			propertyLocation.setAuditDetails(auditDetails);
+			property.setBoundary(propertyLocation);
+
+			property.setActive(true);
+			property.setChannel(ChannelEnum.SYSTEM.valueOf("SYSTEM"));
+			property.setAuditDetails(auditDetails);
+			properties.add(property);
+
+			propertyRequest.setProperties(properties);
+			propertyRequest.setRequestInfo(requestInfo);
+
+			producer.send(environment.getProperty("property.update"), propertyRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

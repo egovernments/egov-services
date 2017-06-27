@@ -14,6 +14,7 @@ import javax.validation.constraints.Null;
 @ToString
 public class Message {
     private String message;
+
     @Null
     private MessageIdentity messageIdentity;
 

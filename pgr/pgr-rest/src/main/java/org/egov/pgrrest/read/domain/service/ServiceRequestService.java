@@ -1,15 +1,10 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgr.common.model.Employee;
-import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.repository.UserRepository;
-import org.egov.pgrrest.read.domain.exception.UpdateComplaintNotAllowedException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
-import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +21,7 @@ public class ServiceRequestService {
     private SevaNumberGeneratorService sevaNumberGeneratorService;
     private OtpService otpService;
     private ServiceRequestTypeService serviceRequestTypeService;
-    private SubmissionRepository submissionRepository;
-    private EmployeeRepository employeeRepository;
+    private List<ServiceRequestValidator> validators;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
@@ -35,17 +29,14 @@ public class ServiceRequestService {
                                  UserRepository userRepository,
                                  OtpService otpService,
                                  ServiceRequestTypeService serviceRequestTypeService,
-                                 SubmissionRepository submissionRepository,
-                                 EmployeeRepository employeeRepository) {
+                                 List<ServiceRequestValidator> validators) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
         this.otpService = otpService;
         this.serviceRequestTypeService = serviceRequestTypeService;
-        this.submissionRepository = submissionRepository;
-        this.employeeRepository = employeeRepository;
+        this.validators = validators;
     }
-
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         List<ServiceRequest> serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
@@ -53,24 +44,36 @@ public class ServiceRequestService {
         return serviceRequestList;
     }
 
-    private void maskCitizenDetailsForAnonymousRequest(ServiceRequestSearchCriteria serviceRequestSearchCriteria,
-                                                       List<ServiceRequest> serviceRequestList) {
-        if (serviceRequestSearchCriteria.isAnonymous())
-            serviceRequestList.forEach(ServiceRequest::maskUserDetails);
+    public Long getCount(ServiceRequestSearchCriteria searchCriteria) {
+        return serviceRequestRepository.getCount(searchCriteria);
     }
 
-    public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-        return serviceRequestRepository.getCount(serviceRequestSearchCriteria);
-    }
-
-    public void save(ServiceRequest serviceRequest, SevaRequest sevaRequest) {
-        serviceRequest.validate();
+    public void save(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
+        validate(serviceRequest);
         enrichWithServiceType(serviceRequest);
         otpService.validateOtp(serviceRequest);
         enrichWithCRN(serviceRequest);
-        sevaRequest.update(serviceRequest);
-        setUserIdForAnonymousUser(sevaRequest);
-        serviceRequestRepository.save(sevaRequest);
+        contractSevaRequest.update(serviceRequest);
+        setUserIdForAnonymousUser(contractSevaRequest);
+        serviceRequestRepository.save(contractSevaRequest);
+    }
+
+    public void update(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
+        validate(serviceRequest);
+        setUserIdForAnonymousUser(contractSevaRequest);
+        serviceRequestRepository.update(contractSevaRequest);
+    }
+
+    private void maskCitizenDetailsForAnonymousRequest(ServiceRequestSearchCriteria searchCriteria,
+                                                       List<ServiceRequest> serviceRequestList) {
+        if (searchCriteria.isAnonymous())
+            serviceRequestList.forEach(ServiceRequest::maskUserDetails);
+    }
+
+    private void validate(ServiceRequest serviceRequest) {
+        validators.stream()
+            .filter(v -> v.canValidate(serviceRequest))
+            .forEach(validator -> validator.validate(serviceRequest));
     }
 
     private void enrichWithCRN(ServiceRequest serviceRequest) {
@@ -99,48 +102,4 @@ public class ServiceRequestService {
         return userRepository.getUserByUserName(ANONYMOUS_USER_NAME, tenantId);
     }
 
-    public void update(ServiceRequest complaint, SevaRequest sevaRequest) {
-        complaint.validate();
-        validateUpdateEligibility(complaint);
-        sevaRequest.update(complaint);
-        setUserIdForAnonymousUser(sevaRequest);
-        serviceRequestRepository.update(sevaRequest);
-    }
-
-    public Long getAssignmentId(String crn, String tenantId) {
-        return submissionRepository.getAssignmentByCrnAndTenantId(crn, tenantId);
-
-    }
-
-    private Employee getEmployeeByAssignee(Long assigneeId, String tenantId) {
-        return employeeRepository.getEmployeeById(assigneeId, tenantId);
-    }
-
-    private void validateUpdateEligibility(ServiceRequest complaint) {
-        if (complaint.getAuthenticatedUser().isCitizen()) {
-            //TODO: Temporary fix - discuss and fix this
-            return;
-        }
-        Long assignmentIdDB = getAssignmentId(complaint.getCrn(), complaint.getTenantId());
-        Employee employee = getEmployeeByAssignee(complaint.getAuthenticatedUser().getId(), complaint.getTenantId());
-        if (assignmentIdDB.equals(employee.getPrimaryPosition())) {
-            return;
-        }
-        complaint.getAuthenticatedUser().validateUpdateEligibility();
-    }
-
-
-    public boolean validateUpdateEligibilityUI(String crn, String tenantId, AuthenticatedUser authenticatedUser) {
-        Long assignmentIdDB = getAssignmentId(crn, tenantId);
-        Employee employee = getEmployeeByAssignee(authenticatedUser.getId(), tenantId);
-        if (assignmentIdDB.equals(employee.getPrimaryPosition())) {
-            return true;
-        }
-        try {
-            authenticatedUser.validateUpdateEligibility();
-            return true;
-        } catch (UpdateComplaintNotAllowedException ue) {
-            return false;
-        }
-    }
 }

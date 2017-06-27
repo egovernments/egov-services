@@ -1,29 +1,42 @@
 {
-    "errors": [
-        {
-            "code": "NotEmpty",
-            "field": "messages[1].message",
-            "message": "may not be empty"
-        },
-        {
-            "code": "NotEmpty",
-            "field": "module",
-            "message": "may not be empty"
-        },
-        {
-            "code": "NotEmpty",
-            "field": "messages[1].code",
-            "message": "may not be empty"
-        },
-        {
-            "code": "NotEmpty",
-            "field": "tenantId",
-            "message": "may not be empty"
-        },
-        {
-            "code": "NotEmpty",
-            "field": "locale",
-            "message": "may not be empty"
-        }
-    ]
+    "responseInfo": {
+        "apiId": null,
+        "ver": null,
+        "ts": null,
+        "resMsgId": null,
+        "msgId": null,
+        "status": null
+    },
+    "error": {
+        "code": 400,
+        "message": null,
+        "description": null,
+        "fields": [
+            {
+                "code": "NotEmpty",
+                "message": "may not be empty",
+                "field": "messages[1].message"
+            },
+            {
+                "code": "NotEmpty",
+                "message": "may not be empty",
+                "field": "messages[1].code"
+            },
+            {
+                "code": "NotEmpty",
+                "message": "may not be empty",
+                "field": "module"
+            },
+            {
+                "code": "NotEmpty",
+                "message": "may not be empty",
+                "field": "tenantId"
+            },
+            {
+                "code": "NotEmpty",
+                "message": "may not be empty",
+                "field": "locale"
+            }
+        ]
+    }
 }

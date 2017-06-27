@@ -36,7 +36,6 @@ public class GlobalExceptionHandler {
 	 * @param ex
 	 * @return
 	 */
-
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
@@ -45,8 +44,8 @@ public class GlobalExceptionHandler {
 			errors.put(error.getField(), error.getDefaultMessage());
 		}
 
-		Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-				environment.getProperty("invalid.input"), null, errors);
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+				errors);
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -61,28 +60,23 @@ public class GlobalExceptionHandler {
 	 * @param req
 	 * @return
 	 */
-
-	@ExceptionHandler(value = {Exception.class})
-
+	@ExceptionHandler(value = { Exception.class })
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
 		if (ex instanceof InvalidInputException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					environment.getProperty("invalid.input"), null, null);
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+					null);
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setApiId(
-					((InvalidInputException) ex).getRequestInfo().getApiId());
-			responseInfo.setVer(
-					((InvalidInputException) ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(
-					((InvalidInputException) ex).getRequestInfo().getMsgId());
+			responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else {
-			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-					ex.getMessage(), null, new HashMap<String, String>());
+			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
+					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList = new ArrayList<Error>();

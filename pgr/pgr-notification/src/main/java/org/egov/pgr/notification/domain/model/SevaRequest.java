@@ -35,7 +35,7 @@ public class SevaRequest {
     private static final String USER_TYPE_KEY = "type";
     private static final String USER_INFO_KEY = "userInfo";
     private static final String IN_PROGRESS_STATUS = "IN PROGRESS";
-    private static final String VALUES_ASSIGNEE_ID = "assignmentId";
+    private static final String VALUES_POSITION_ID = "positionId";
     private static final String VALUES_ESCALATED_FLAG = "isEscalated";
     private static final String TRUE = "true";
     private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
@@ -128,9 +128,9 @@ public class SevaRequest {
         return EMPLOYEE_TYPE.equals(userInfo.get(USER_TYPE_KEY));
     }
 
-    public Long getAssigneeId() {
-        final String assigneeId = getDynamicSingleValue(VALUES_ASSIGNEE_ID);
-        return Long.valueOf(assigneeId);
+    public Long getPositionId() {
+        final String positionId = getDynamicSingleValue(VALUES_POSITION_ID);
+        return Long.valueOf(positionId);
     }
 
     public boolean isEscalated() {

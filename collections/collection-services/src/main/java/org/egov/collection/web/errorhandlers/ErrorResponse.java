@@ -47,8 +47,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
+import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
@@ -64,5 +68,10 @@ public class ErrorResponse {
 
 	@JsonProperty("Error")
 	private Error error;
+	
+	@JsonIgnore
+	public List<ErrorField> getErrorFields() {
+		return error.getErrorFields();
+	}
 
 }

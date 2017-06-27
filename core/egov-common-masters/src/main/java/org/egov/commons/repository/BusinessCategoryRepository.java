@@ -20,23 +20,25 @@ import org.springframework.stereotype.Repository;
 public class BusinessCategoryRepository {
     public static final Logger LOGGER = LoggerFactory.getLogger(BusinessCategoryRepository.class);
 
-	public static final String INSERT_SERVICECATEGORY_QUERY="INSERT INTO eg_servicecategory"
+	public static final String INSERT_SERVICECATEGORY_QUERY="INSERT INTO eg_businesscategory"
 			+"(id,name,code,active,tenantId,createdBy,createdDate,lastModifiedBy,lastModifiedDate)"
-			+" VALUES(nextval('seq_eg_servicecategory'),?,?,?,?,?,?,?,?)";
+			+" VALUES(?,?,?,?,?,?,?,?,?)";
 	
-	public static final String GET_SERVICECATEGORY_BY_CODE_AND_TENANTID="Select * from eg_servicecategory"
+	public static final String GET_SERVICECATEGORY_BY_CODE_AND_TENANTID="Select * from eg_businesscategory"
 			+" Where code=? and tenantId=?";
 	
-	public static final String UPDATE_SERVICECATEGORY="Update eg_servicecategory"
+	public static final String UPDATE_SERVICECATEGORY="Update eg_businesscategory"
 			+" set name=?,code=?,active=?,tenantId=?,lastModifiedBy=?,lastModifiedDate=?"
 			+ " where id=?";
 	
-	public static final String GET_CATEGORY_BY_NAME_AND_TENANTID="Select * from eg_servicecategory"
+	public static final String GET_CATEGORY_BY_NAME_AND_TENANTID="Select * from eg_businesscategory"
 			+" where name=? and tenantId=?";
 	
-	public static final String GET_CATEGORY_BY_CODE_AND_TENANTID="Select * from eg_servicecategory"
+	public static final String GET_CATEGORY_BY_CODE_AND_TENANTID="Select * from eg_businesscategory"
 			+" where code=? and tenantId=?";
 	
+	public static final String GET_CATEGORY_BY_ID_AND_TENANTID="Select * from eg_businesscategory"
+			+" where id=? and tenantId=?";
 	
     @Autowired 
     private JdbcTemplate jdbcTemplate;
@@ -51,7 +53,7 @@ public class BusinessCategoryRepository {
 	public BusinessCategory create(BusinessCategory category,AuthenticatedUser user) {
 	
 
-		Object[] obj=new Object[]{category.getName(),category.getCode()
+		Object[] obj=new Object[]{generateSequence("seq_eg_businesscategory"),category.getName(),category.getCode()
 				,category.getIsactive(),category.getTenantId(),user.getId()
 				,new Date(new java.util.Date().getTime()),
 				user.getId(),new Date(new java.util.Date().getTime())};
@@ -60,6 +62,9 @@ public class BusinessCategoryRepository {
 	}
 	
 	
+	public Long generateSequence(String sequenceName) {
+		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
+	}
 
 	public BusinessCategory update(String businessCategoryCode, BusinessCategory category,AuthenticatedUser user) {
 		
@@ -107,5 +112,15 @@ public class BusinessCategoryRepository {
       return false;
       else
     	  return true;
+	}
+
+
+
+	public BusinessCategory getByIdAndTenantId(Long id, String tenantId) {
+		 final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(id);
+		preparedStatementValues.add(tenantId);
+		List<BusinessCategory> categoryFromDb=jdbcTemplate.query(GET_CATEGORY_BY_ID_AND_TENANTID,preparedStatementValues.toArray(),businessCategoryRowMapper);
+		return categoryFromDb.get(0);
 	}
 }

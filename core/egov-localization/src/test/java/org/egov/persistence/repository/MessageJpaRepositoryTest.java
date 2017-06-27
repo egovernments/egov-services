@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +46,8 @@ public class MessageJpaRepositoryTest {
             .locale(locale)
             .message("New message1")
             .module("module")
+            .createdBy(1L)
+            .createdDate(new Date())
             .build();
         final Message message2 = Message.builder()
             .tenantId(tenant)
@@ -52,6 +55,8 @@ public class MessageJpaRepositoryTest {
             .locale(locale)
             .message("New message2")
             .module("module")
+            .createdBy(1L)
+            .createdDate(new Date())
             .build();
 
         messageJpaRepository.save(Arrays.asList(message1, message2));

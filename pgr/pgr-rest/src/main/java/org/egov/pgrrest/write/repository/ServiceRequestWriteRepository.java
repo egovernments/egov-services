@@ -113,7 +113,7 @@ public class ServiceRequestWriteRepository {
     }
 
     private void setAssigneeId(ServiceRequestRecord serviceRequestRecord, Submission submission) {
-        submission.setAssignee(serviceRequestRecord.getAssigneeId());
+        submission.setPosition(serviceRequestRecord.getPositionId());
     }
 
     private void setComplaintStatus(ServiceRequestRecord serviceRequestRecord, Submission submission) {

@@ -13,7 +13,7 @@ public class ComplaintSpecificDocumentEnricher implements ServiceRequestDocument
 
     @Override
     public boolean matches(ServiceType serviceType, SevaRequest sevaRequest) {
-        return true;
+        return serviceType.isComplaintType();
     }
 
     @Override

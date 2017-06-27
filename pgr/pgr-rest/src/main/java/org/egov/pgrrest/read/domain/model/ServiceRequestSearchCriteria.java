@@ -20,7 +20,7 @@ public class ServiceRequestSearchCriteria {
 	private List <String> status;
 	private Date lastModifiedDatetime;
 	private Long userId;
-	private Long assignmentId;
+	private Long positionId;
 	private String name;
 	private String mobileNumber;
 	private String emailId;

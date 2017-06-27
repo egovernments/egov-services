@@ -5,3 +5,4 @@ public class DuplicateMessageIdentityException extends RuntimeException {
         super(cause);
     }
 }
+

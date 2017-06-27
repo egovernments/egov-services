@@ -57,10 +57,10 @@ public class Unit {
 	@Size(min = 1, max = 16)
 	private String usage = null;
 
-	@JsonProperty("occupancy")
+	@JsonProperty("occupancyType")
 	@NotNull
 	@Size(min = 1, max = 16)
-	private String occupancy = null;
+	private String occupancyType = null;
 
 	@JsonProperty("occupierName")
 	@Size(min = 1, max = 128)

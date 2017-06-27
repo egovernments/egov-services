@@ -17,7 +17,7 @@ public class BusinessCategoryQueryBuilder {
 	private static final Logger logger = LoggerFactory.getLogger(BusinessCategoryQueryBuilder.class);
 	
 	private static final String BASE_QUERY ="select id,name,code,active,tenantId,createdBy,"
-			+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_servicecategory";
+			+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_businesscategory";
 	
 	@SuppressWarnings("rawtypes")
 	public String getQuery(BusinessCategoryCriteria criteria, List preparedStatementValues) {

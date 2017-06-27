@@ -21,7 +21,6 @@ import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.property.services.Masterservice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,11 +49,10 @@ public class PropertyMasterController {
 
 	}
 
-	@RequestMapping(path = "/departments/{id}/_update", method = RequestMethod.POST)
-	public DepartmentResponseInfo updateDepartmentMaster(@RequestParam String tenantId, @PathVariable Long id,
-			@RequestBody DepartmentRequest departmentRequest) {
+	@RequestMapping(path = "/departments/_update", method = RequestMethod.POST)
+	public DepartmentResponseInfo updateDepartmentMaster(@RequestBody DepartmentRequest departmentRequest) {
 
-		return masterService.updateDepartmentMaster(tenantId, id, departmentRequest);
+		return masterService.updateDepartmentMaster(departmentRequest);
 
 	}
 
@@ -98,7 +96,7 @@ public class PropertyMasterController {
 	 * 
 	 * @param floorTypeRequest
 	 * @param tenantId
-	 * @return
+	 * @return {@link FloorTypeResponse}
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/floortypes/_create", method = RequestMethod.POST)
@@ -113,16 +111,13 @@ public class PropertyMasterController {
 	 * <p>
 	 * 
 	 * @param floorTypeRequest
-	 * @param tenantId
-	 * @param id
-	 * @return
+	 * @return {@link FloorTypeResponse}
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "floortypes/{id}/_update")
-	public FloorTypeResponse updateFloorType(@RequestBody FloorTypeRequest floorTypeRequest,
-			@RequestParam(required = true) String tenantId, @PathVariable Integer id) throws Exception {
+	@RequestMapping(path = "floortypes/_update")
+	public FloorTypeResponse updateFloorType(@RequestBody FloorTypeRequest floorTypeRequest) throws Exception {
 
-		return masterService.updateFloorType(floorTypeRequest, tenantId, id);
+		return masterService.updateFloorType(floorTypeRequest);
 	}
 
 	/**
@@ -160,7 +155,7 @@ public class PropertyMasterController {
 	 * 
 	 * @param woodTypeRequest
 	 * @param tenantId
-	 * @return
+	 * @return {@link WoodTypeResponse}
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/woodtypes/_create", method = RequestMethod.POST)
@@ -176,16 +171,13 @@ public class PropertyMasterController {
 	 * <p>
 	 * 
 	 * @param woodTypeRequest
-	 * @param tenantId
-	 * @param id
-	 * @return
+	 * @return {@link WoodTypeResponse}
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/woodtypes/{id}/_update")
-	public WoodTypeResponse updateWoodType(@RequestBody WoodTypeRequest woodTypeRequest,
-			@RequestParam(required = true) String tenantId, @PathVariable Integer id) throws Exception {
+	@RequestMapping(path = "/woodtypes/_update")
+	public WoodTypeResponse updateWoodType(@RequestBody WoodTypeRequest woodTypeRequest) throws Exception {
 
-		return masterService.updateWoodType(woodTypeRequest, tenantId, id);
+		return masterService.updateWoodType(woodTypeRequest);
 	}
 
 	// Roof types
@@ -217,6 +209,15 @@ public class PropertyMasterController {
 
 	}
 
+	/**
+	 * This Api will create the roof type
+	 * 
+	 * @param roofTypeRequest
+	 * @param tenantId
+	 * @return {@link RoofTypeResponse}
+	 * @throws Exception
+	 */
+
 	@RequestMapping(path = "/rooftypes/_create", method = RequestMethod.POST)
 	public RoofTypeResponse createRoofType(@RequestBody RoofTypeRequest roofTypeRequest,
 			@RequestParam(required = true) String tenantId) throws Exception {
@@ -224,11 +225,17 @@ public class PropertyMasterController {
 		return masterService.createRoofype(roofTypeRequest, tenantId);
 	}
 
-	@RequestMapping(path = "/rooftypes/{id}/_update", method = RequestMethod.POST)
-	public RoofTypeResponse updateRoofType(@RequestBody RoofTypeRequest roofTypeRequest,
-			@RequestParam(required = true) String tenantId, @PathVariable Integer id) throws Exception {
+	/**
+	 * This API will update the roof type
+	 * 
+	 * @param roofTypeRequest
+	 * @return {@link RoofTypeResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/rooftypes/_update", method = RequestMethod.POST)
+	public RoofTypeResponse updateRoofType(@RequestBody RoofTypeRequest roofTypeRequest) throws Exception {
 
-		return masterService.updateRoofType(roofTypeRequest, tenantId, id);
+		return masterService.updateRoofType(roofTypeRequest);
 	}
 
 	/**
@@ -241,7 +248,7 @@ public class PropertyMasterController {
 	 */
 
 	@RequestMapping(path = "structureclasses/_create", method = RequestMethod.POST)
-	public StructureClassResponse craeateStructureClassMaster(@RequestParam String tenantId,
+	public StructureClassResponse craeateStructureClassMaster(@RequestParam(required = true) String tenantId,
 			@RequestBody StructureClassRequest structureClassRequest) {
 
 		return masterService.craeateStructureClassMaster(tenantId, structureClassRequest);
@@ -251,16 +258,15 @@ public class PropertyMasterController {
 	/**
 	 * Description : This api for updating strctureClass master
 	 * 
-	 * @param tenantId
+	 * 
 	 * @param StructureClassRequest
 	 * @return structureClassResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "structureclasses/{id}/_update", method = RequestMethod.POST)
-	public StructureClassResponse updateStructureClassMaster(@RequestParam String tenantId, @PathVariable Long id,
-			@RequestBody StructureClassRequest structureClassRequest) {
+	@RequestMapping(path = "structureclasses/_update", method = RequestMethod.POST)
+	public StructureClassResponse updateStructureClassMaster(@RequestBody StructureClassRequest structureClassRequest) {
 
-		return masterService.updateStructureClassMaster(tenantId, id, structureClassRequest);
+		return masterService.updateStructureClassMaster(structureClassRequest);
 
 	}
 
@@ -302,7 +308,7 @@ public class PropertyMasterController {
 	 */
 
 	@RequestMapping(path = "/propertytypes/_create", method = RequestMethod.POST)
-	public PropertyTypeResponse createPropertyTypeMaster(@RequestParam String tenantId,
+	public PropertyTypeResponse createPropertyTypeMaster(@RequestParam(required = true) String tenantId,
 			@RequestBody PropertyTypeRequest propertyTypeRequest) {
 
 		return masterService.createPropertyTypeMaster(tenantId, propertyTypeRequest);
@@ -312,17 +318,16 @@ public class PropertyMasterController {
 	/**
 	 * Description : This api for updating propertyType master
 	 * 
-	 * @param tenantId
-	 * @param id
+	 * 
+	 * 
 	 * @param propertyTypeRequest
 	 * @return
 	 */
 
-	@RequestMapping(path = "/propertytypes/{id}/_update", method = RequestMethod.POST)
-	public PropertyTypeResponse updatePropertyTypeMaster(@RequestParam String tenantId, @PathVariable Long id,
-			@RequestBody PropertyTypeRequest propertyTypeRequest) {
+	@RequestMapping(path = "/propertytypes/_update", method = RequestMethod.POST)
+	public PropertyTypeResponse updatePropertyTypeMaster(@RequestBody PropertyTypeRequest propertyTypeRequest) {
 
-		return masterService.updatePropertyTypeMaster(tenantId, id, propertyTypeRequest);
+		return masterService.updatePropertyTypeMaster(propertyTypeRequest);
 
 	}
 
@@ -364,7 +369,7 @@ public class PropertyMasterController {
 	 */
 
 	@RequestMapping(path = "/occuapancies/_create", method = RequestMethod.POST)
-	public OccuapancyMasterResponse createOccuapancyMaster(@RequestParam String tenantId,
+	public OccuapancyMasterResponse createOccuapancyMaster(@RequestParam(required = true) String tenantId,
 			@RequestBody OccuapancyMasterRequest occuapancyMasterRequest) {
 
 		return masterService.createOccuapancyMaster(tenantId, occuapancyMasterRequest);
@@ -374,17 +379,14 @@ public class PropertyMasterController {
 	/**
 	 * Description : This api for updating occupancyType master
 	 * 
-	 * @param tenantId
-	 * @param id
 	 * @param occuapancyRequest
 	 * @return
 	 */
 
-	@RequestMapping(path = "/occuapancies/{id}/_update", method = RequestMethod.POST)
-	public OccuapancyMasterResponse updateOccuapancyMaster(@RequestParam String tenantId, @PathVariable Long id,
-			@RequestBody OccuapancyMasterRequest occuapancyRequest) {
+	@RequestMapping(path = "/occuapancies/_update", method = RequestMethod.POST)
+	public OccuapancyMasterResponse updateOccuapancyMaster(@RequestBody OccuapancyMasterRequest occuapancyRequest) {
 
-		return masterService.updateOccuapancyMaster(tenantId, id, occuapancyRequest);
+		return masterService.updateOccuapancyMaster(occuapancyRequest);
 
 	}
 
@@ -450,7 +452,7 @@ public class PropertyMasterController {
 	 */
 
 	@RequestMapping(path = "/walltypes/_create", method = RequestMethod.POST)
-	public WallTypeResponse createWallTypeMaster(@RequestParam String tenantId,
+	public WallTypeResponse createWallTypeMaster(@RequestParam(required = true) String tenantId,
 			@RequestBody WallTypeRequest wallTypeRequest) throws Exception {
 
 		return masterService.createWallTypeMaster(tenantId, wallTypeRequest);
@@ -459,18 +461,15 @@ public class PropertyMasterController {
 	/**
 	 * Description : Update any of the walltypes
 	 * 
-	 * @param tenantId
-	 * @param id
 	 * @param wallTypeRequest
 	 * @return WallTypeResponse
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path = "/walltypes/{id}/_update", method = RequestMethod.POST)
-	public WallTypeResponse updateWallTypeMaster(@RequestParam String tenantId, @PathVariable Long id,
-			@RequestBody WallTypeRequest wallTypeRequest) throws Exception {
+	@RequestMapping(path = "/walltypes/_update", method = RequestMethod.POST)
+	public WallTypeResponse updateWallTypeMaster(@RequestBody WallTypeRequest wallTypeRequest) throws Exception {
 
-		return masterService.updateWallTypeMaster(tenantId, id, wallTypeRequest);
+		return masterService.updateWallTypeMaster(wallTypeRequest);
 
 	}
 
@@ -507,7 +506,7 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/usages/_create", method = RequestMethod.POST)
-	public UsageMasterResponse createUsageMaster(@RequestParam String tenantId,
+	public UsageMasterResponse createUsageMaster(@RequestParam(required = true) String tenantId,
 			@RequestBody UsageMasterRequest usageMasterRequest) throws Exception {
 
 		return masterService.createUsageMaster(tenantId, usageMasterRequest);
@@ -516,17 +515,15 @@ public class PropertyMasterController {
 	/**
 	 * Description : This api to Update any of the usagemasters
 	 * 
-	 * @param tenantId
 	 * @param usageMasterRequest
 	 * @return masterResponse
 	 * @throws Exception
 	 */
 
-	@RequestMapping(path = "/usages/{id}/_update", method = RequestMethod.POST)
-	public UsageMasterResponse updateUsageMaster(@RequestParam String tenantId, @PathVariable Long id,
-			@RequestBody UsageMasterRequest usageMasterRequest) throws Exception {
+	@RequestMapping(path = "/usages/_update", method = RequestMethod.POST)
+	public UsageMasterResponse updateUsageMaster(@RequestBody UsageMasterRequest usageMasterRequest) throws Exception {
 
-		return masterService.updateUsageMaster(tenantId, id, usageMasterRequest);
+		return masterService.updateUsageMaster(usageMasterRequest);
 	}
 
 }

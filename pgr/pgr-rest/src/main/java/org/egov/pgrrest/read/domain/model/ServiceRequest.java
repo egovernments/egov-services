@@ -8,7 +8,6 @@ import org.egov.pgr.common.model.OtpValidationRequest;
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.read.domain.exception.InvalidComplaintException;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,7 +19,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Builder
 @Getter
 public class ServiceRequest {
-    public static final String PROCESSINGFEE = "PROCESSINGFEE";
+    private static final String PROCESSING_FEE = "PROCESSING_FEE";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -44,7 +43,7 @@ public class ServiceRequest {
     private String receivingCenter;
     private Long department;
     private String childLocation;
-    private Long assignee;
+    private Long position;
     private String state;
     private String citizenFeedback;
     private String otpReference;
@@ -62,6 +61,13 @@ public class ServiceRequest {
         return attributeEntries == null ? Collections.emptyList() : attributeEntries;
     }
 
+    public void validateAttributeEntries() {
+        if (attributeEntries == null) {
+            return;
+        }
+        attributeEntries.forEach(AttributeEntry::validate);
+    }
+
     public boolean isRequesterAbsent() {
         return requester.isAbsent();
     }
@@ -72,6 +78,10 @@ public class ServiceRequest {
 
     public boolean isComplainantFirstNameAbsent() {
         return requester.isFirstNameAbsent();
+    }
+
+    public boolean isNewServiceRequest() {
+        return !isModifyServiceRequest();
     }
 
     public boolean isLocationAbsent() {
@@ -89,19 +99,6 @@ public class ServiceRequest {
         return serviceRequestLocation.isRawLocationAbsent();
     }
 
-    public void validate() {
-        if (isRequesterAbsent()
-            || isTenantIdAbsent()
-            || isServiceRequestTypeAbsent()
-            || isDescriptionAbsent()
-            || isCrnAbsent()
-            || descriptionLength()
-            || isProcessingFeePresentForCreation()
-        	|| !emailValidate()) {
-            throw new InvalidComplaintException(this);
-        }
-    }
-
     public boolean isTenantIdAbsent() {
         return isEmpty(tenantId);
     }
@@ -115,33 +112,31 @@ public class ServiceRequest {
     }
 
     public boolean isCrnAbsent() {
-        return isModifyServiceRequest() && isEmpty(crn);
+        return isEmpty(crn);
     }
 
     public void setCrn(String crn) {
         this.crn = crn;
     }
 
-    public boolean isProcessingFeePresentForCreation(){
-        return !modifyServiceRequest && attributeEntries.stream().anyMatch(a -> PROCESSINGFEE.equals(a.getKey()));
+    public boolean isProcessingFeePresent() {
+        return attributeEntries.stream().anyMatch(a -> PROCESSING_FEE.equals(a.getKey()));
     }
 
-	public boolean descriptionLength() {
-		return description.length() < 10 || description.length() >500;
-	}
-    public boolean emailValidate(){
-        if(requester.getEmail() == null || requester.getEmail().isEmpty()) {
-            return  true;
-        }
+    public boolean descriptionLength() {
+        return description.length() < 10 || description.length() > 500;
+    }
+
+    public boolean isEmailValid() {
         return requester.isValidEmailAddress();
     }
 
-	public void maskUserDetails(){
+    public void maskUserDetails() {
         getRequester().maskMobileAndEmailDetails();
     }
 
     public OtpValidationRequest getOtpValidationRequest() {
-	    return OtpValidationRequest.builder()
+        return OtpValidationRequest.builder()
             .mobileNumber(requester.getMobile())
             .otpReference(otpReference)
             .tenantId(tenantId)

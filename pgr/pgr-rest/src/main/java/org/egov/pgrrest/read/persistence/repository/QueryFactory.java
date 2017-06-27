@@ -65,8 +65,8 @@ public class QueryFactory {
 
     private BoolQueryBuilder addAssignmentFilter(ServiceRequestSearchCriteria criteria,
                                                  BoolQueryBuilder boolQueryBuilder) {
-        if (criteria.getAssignmentId() != null) {
-            boolQueryBuilder = boolQueryBuilder.filter(termQuery("assigneeId", criteria.getAssignmentId()));
+        if (criteria.getPositionId() != null) {
+            boolQueryBuilder = boolQueryBuilder.filter(termQuery("assigneeId", criteria.getPositionId()));
         }
         return boolQueryBuilder;
     }

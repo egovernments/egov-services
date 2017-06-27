@@ -1,8 +1,15 @@
 package org.egov.workflow.persistence.repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.egov.workflow.domain.model.EscalationHoursSearchCriteria;
 import org.egov.workflow.domain.model.EscalationTimeType;
 import org.egov.workflow.persistence.QueryBuilder.EscalationTimeTypeQueryBuilder;
+import org.egov.workflow.persistence.repository.rowmapper.EscalationTimeTypeRowMapper;
+import org.egov.workflow.web.contract.EscalationTimeTypeGetReq;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
-import java.util.Optional;
 
 @Service
 public class EscalationRepository {
@@ -24,6 +28,9 @@ public class EscalationRepository {
 	
     private int defaultEscalationHours;
     private EscalationJpaRepository escalationJpaRepository;
+    
+    @Autowired
+	private EscalationTimeTypeRowMapper escalationRowMapper;
     
     @Autowired
     private EscalationTimeTypeQueryBuilder escalationTimeTypeQueryBuilder;
@@ -66,6 +73,14 @@ public class EscalationRepository {
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), ecalationTimeType.getId()};
 		jdbcTemplate.update(escalationTimeTypeInsert, obj);
 		return escalationTimeTypeRequest;
+	}
+	public List<EscalationTimeType> getAllEscalationTimeTypes(final EscalationTimeTypeGetReq escalationGetRequest) {
+		logger.info("EscalationTimeType search Request::" + escalationGetRequest);
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final String queryStr = escalationTimeTypeQueryBuilder.getQuery(escalationGetRequest, preparedStatementValues);
+		final List<EscalationTimeType> escalationTypes = jdbcTemplate.query(queryStr,
+				preparedStatementValues.toArray(), escalationRowMapper);
+		return escalationTypes;
 	}
     
 }

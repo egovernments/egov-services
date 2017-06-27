@@ -40,6 +40,9 @@
 package org.egov.workflow.persistence.QueryBuilder;
 
 
+import java.util.List;
+
+import org.egov.workflow.web.contract.EscalationTimeTypeGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -49,6 +52,7 @@ public class EscalationTimeTypeQueryBuilder {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EscalationTimeTypeQueryBuilder.class);
 	
+	private static final String BASE_QUERY = "SELECT escalation.id,escalation.complaint_type_id,escalation.designation_id,escalation.no_of_hrs,escalation.tenantId from egpgr_escalation escalation";
 	
 	public String insertEscalationTimeType(){
 		logger.info("Returning insertEscalationTimeType query from builder");
@@ -62,7 +66,7 @@ public class EscalationTimeTypeQueryBuilder {
 				+ "createdby = ?, lastmodifiedby = ?, createddate = ?, lastmodifieddate = ? where id = ?";
 	}
 	
-/*	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes")
 	public String getQuery(final EscalationTimeTypeGetReq centerTypeRequest, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		addWhereClause(selectQuery, preparedStatementValues, centerTypeRequest);
@@ -120,18 +124,18 @@ public class EscalationTimeTypeQueryBuilder {
 			preparedStatementValues.add(escalationRequest.getActive());
 		}*/
 
-/*	}
+	}
 
 	
 	
-	*//**
+	/**
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.
 	 *
 	 * @param appendAndClauseFlag
 	 * @param queryString
 	 * @return boolean indicates if the next predicate should append an "AND"
-	 *//*
+	 */
 	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
@@ -176,5 +180,11 @@ public class EscalationTimeTypeQueryBuilder {
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
 		// pageNo * pageSize
 	}
-*/
+
+	
+
+	
+	
+	
+	
 }

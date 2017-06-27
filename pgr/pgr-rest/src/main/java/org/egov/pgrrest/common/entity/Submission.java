@@ -44,6 +44,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
     @Column(name = "requesteraddress")
     private String requesterAddress;
 
+    @Column(name = "positionid")
     private Long position;
 
     @Column(name = "status")

@@ -1,1 +1,1 @@
-ALTER TABLE submission RENAME COLUMN assignee TO position;
+ALTER TABLE submission RENAME COLUMN assignee TO positionid;

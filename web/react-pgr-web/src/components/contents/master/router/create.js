@@ -14,6 +14,9 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
 
 var _this;
+let searchTextCom = "",
+    searchTextBoun = "",
+    searchTextPos = "";
 
 const styles = {
   headerStyle : {
@@ -126,11 +129,16 @@ class createRouter extends Component {
         Api.commonApiPost("/workflow/router/_search", {id}).then(function(response) {
           var routerType = {
             id: response.RouterTypRes[0].id,
-            position: getNameById(self.state.positionSource, response.RouterTypRes[0].position),
-         		complaintType: response.RouterTypRes[0].service.serviceName,
-         		boundary: getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType),
+            position: response.RouterTypRes[0].position,
+         		complaintType: response.RouterTypRes[0].service.serviceCode,
+         		boundary: response.RouterTypRes[0].boundary[0].boundaryType,
             boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType)
         	}
+
+          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType));
+          searchTextCom = routerType.complaintType || "";
+          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType) || "";
+          searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
 
           setForm(routerType);
           if(type == "view")
@@ -276,7 +284,7 @@ class createRouter extends Component {
        	open,
        	readonly
   	} = this.state;
-
+    console.log(this.props.routerCreateSet);
   	const showBtn = function() {
   		if(!readonly) {
   			return (<RaisedButton style={{margin:'15px 5px'}} type="submit" label={match.params && match.params.type == "edit" ? "Update" : "Create"} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>);
@@ -302,9 +310,11 @@ class createRouter extends Component {
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         disabled={readonly}
                         errorText={fieldErrors.complaintType || ""}
+                        searchText={searchTextCom}
                         value={routerCreateSet.complaintType || ""}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
                         onNewRequest={(chosenRequest, index) => {
+                          searchTextCom = chosenRequest.serviceName
 	                        var e = {
 	                          target: {
 	                            value: chosenRequest.id
@@ -324,6 +334,7 @@ class createRouter extends Component {
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
+                            searchTextBoun = "";
 	                					handleChange(e, "boundaryType", true, "")}}>
 	                					{boundaryTypeList.map((item, index) => (
 			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
@@ -343,7 +354,9 @@ class createRouter extends Component {
                         errorText={fieldErrors.boundary || ""} 
                         value={routerCreateSet.boundary || ""}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
+                        searchText={searchTextBoun}
                         onNewRequest={(chosenRequest, index) => {
+                          searchTextBoun = chosenRequest.name;
 	                        var e = {
 	                          target: {
 	                            value: chosenRequest.id
@@ -366,8 +379,9 @@ class createRouter extends Component {
                         errorText={fieldErrors.position || ""} 
                         value={routerCreateSet.position || ""}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
+                        searchText={searchTextPos}
                         onNewRequest={(chosenRequest, index) => {
-
+                          searchTextPos = chosenRequest.name;
 	                        var e = {
 	                          target: {
 	                            value: chosenRequest.id

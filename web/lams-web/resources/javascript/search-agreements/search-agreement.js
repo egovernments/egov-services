@@ -307,6 +307,7 @@ class AgreementSearch extends React.Component {
   render() {
     //console.log(this.state.searchSet);
     let {handleChange,search,updateTable,handleSelectChange, handleMobileValidation}=this;
+    var self = this;
     let {isSearchClicked,agreements,assetCategories, hideCollectTaxOption}=this.state;
     let {locality,
     agreementNumber,
@@ -391,7 +392,7 @@ class AgreementSearch extends React.Component {
                                   <td>{item.agreementNumber} </td>
                                   <td>{item.allottee.name}</td>
                                   <td>{item.allottee.mobileNumber}</td>
-                                  <td>{item.asset.locationDetails && item.asset.locationDetails.locality ? getNameById(this.state.locality, item.asset.locationDetails.locality) : ""}</td>
+                                  <td>{item.asset.locationDetails && item.asset.locationDetails.locality ? getNameById(self.state.locality, item.asset.locationDetails.locality) : ""}</td>
                                   <td>{item.asset.assetCategory.id?category_name:"-"}</td>
                                   <td>{item.asset.code}</td>
                                   <td>{item.createdDate}</td>

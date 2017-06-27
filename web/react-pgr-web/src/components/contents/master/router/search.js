@@ -101,12 +101,15 @@ class searchRouter extends Component {
             text: 'name',
             value: 'id'
           },
+          complaintSourceConfig: {
+            text: 'serviceName',
+            value: 'serviceCode'
+          },
           complaintSource: [],
           boundarySource: [],
           boundaryTypeList: [],
           isSearchClicked: false,
           resultList: [],
-          boundariesList: [],
           boundaryInitialList: [],
           positionSource:[]
        }
@@ -185,7 +188,7 @@ class searchRouter extends Component {
   loadBoundaries(value) {
      var self = this;
      Api.commonApiGet("/egov-location/boundarys", {"Boundary.id": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
-       self.setState({boundariesList : response.Boundary});
+       self.setState({boundarySource : response.Boundary});
      },function(err) {
 
      });
@@ -224,6 +227,7 @@ class searchRouter extends Component {
     } = this;
     let {
         allSourceConfig,
+        complaintSourceConfig,
         complaintSource,
         boundarySource,
         boundaryTypeList,
@@ -286,17 +290,17 @@ class searchRouter extends Component {
                     <AutoComplete
                         hintText=""
                         floatingLabelText="Grievance Type"
-                        filter={AutoComplete.noFilter}
+                        filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.complaintSource}
-                        dataSourceConfig={this.state.allSourceConfig}
+                        dataSourceConfig={this.state.complaintSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
                         value={routerSearchSet.complaintType}
                         onNewRequest={(chosenRequest, index) => {
                           var e = {
                             target: {
-                              value: chosenRequest
+                              value: chosenRequest.serviceCode
                             }
                           };
                           handleChange(e, "complaintType", true, "");
@@ -317,7 +321,7 @@ class searchRouter extends Component {
                     <AutoComplete
                         hintText=""
                         floatingLabelText="Boundary"
-                        filter={AutoComplete.noFilter}
+                        filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.allSourceConfig}
@@ -327,7 +331,7 @@ class searchRouter extends Component {
                         onNewRequest={(chosenRequest, index) => {
                           var e = {
                             target: {
-                              value: chosenRequest
+                              value: chosenRequest.id
                             }
                           };
                           handleChange(e, "boundary", true, "");

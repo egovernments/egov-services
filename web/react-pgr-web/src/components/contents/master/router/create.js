@@ -103,6 +103,7 @@ class createRouter extends Component {
        this.loadBoundaries = this.loadBoundaries.bind(this);
        this.create = this.create.bind(this);
        this.handleOpenNClose = this.handleOpenNClose.bind(this);
+       this.close = this.close.bind(this);
   }
 
   componentDidMount() {
@@ -136,7 +137,7 @@ class createRouter extends Component {
         	}
 
           self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType));
-          searchTextCom = routerType.complaintType || "";
+          searchTextCom = response.RouterTypRes[0].service.serviceName;
           searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType) || "";
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
 
@@ -234,6 +235,10 @@ class createRouter extends Component {
     });
   };
 
+  close() {
+    window.open(window.location, "_self").close();
+  }
+
   create(e) {
   	e.preventDefault();
   	var self = this;
@@ -272,7 +277,8 @@ class createRouter extends Component {
   	let {
   		loadBoundaries,
   		create,
-  		handleOpenNClose
+  		handleOpenNClose,
+      close
   	} = this;
   	let {
   		allSourceConfig,
@@ -397,7 +403,7 @@ class createRouter extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              {showBtn()}
-             <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+             <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={close}/>
            </div>
          </form>
          <Dialog
@@ -451,11 +457,11 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "SET_FORM",
       data,
-      isFormValid:true,
+      isFormValid: true,
       fieldErrors: {},
       validationData: {
         required: {
-          current: [],
+          current: ["complaintType", "boundaryType", "boundary", "position"],
           required: ["complaintType", "boundaryType", "boundary", "position"]
         },
         pattern: {

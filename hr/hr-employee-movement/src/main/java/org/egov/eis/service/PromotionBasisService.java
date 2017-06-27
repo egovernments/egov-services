@@ -38,30 +38,24 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.service;
 
+import org.egov.eis.model.PromotionBasis;
+import org.egov.eis.repository.PromotionBasisRepository;
+import org.egov.eis.web.contract.PromotionBasisGetRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import lombok.*;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Service
+public class PromotionBasisService {
 
+    @Autowired
+    private PromotionBasisRepository promotionBasisRepository;
 
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class PromotionBasis {
-
-    @NotNull
-    private Long id;
-
-    @Size(max = 250)
-    private String description;
-
-    @NotNull
-    private String tenantId;
+    public List<PromotionBasis> getPromotionBasis(PromotionBasisGetRequest promotionBasisGetRequest) {
+        return promotionBasisRepository.findForCriteria(promotionBasisGetRequest);
+    }
 
 }

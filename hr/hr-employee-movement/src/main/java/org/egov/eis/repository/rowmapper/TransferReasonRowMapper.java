@@ -38,30 +38,24 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
+import org.egov.eis.model.TransferReason;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import lombok.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Component
+public class TransferReasonRowMapper implements RowMapper<TransferReason> {
 
-
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class PromotionBasis {
-
-    @NotNull
-    private Long id;
-
-    @Size(max = 250)
-    private String description;
-
-    @NotNull
-    private String tenantId;
-
+    @Override
+    public TransferReason mapRow(ResultSet rs, int rowNum) throws SQLException {
+        TransferReason transferReason = new TransferReason();
+        transferReason.setId(rs.getLong("id"));
+        transferReason.setDescription(rs.getString("description"));
+        transferReason.setTenantId(rs.getString("tenantId"));
+        return transferReason;
+    }
 }

@@ -38,30 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository;
 
+import org.egov.eis.model.TransferReason;
+import org.egov.eis.repository.builder.TransferReasonQueryBuilder;
+import org.egov.eis.repository.rowmapper.TransferReasonRowMapper;
+import org.egov.eis.web.contract.TransferReasonGetRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Repository
+public class TransferReasonRepository {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class PromotionBasis {
+    @Autowired
+    private TransferReasonRowMapper transferReasonRowMapper;
 
-    @NotNull
-    private Long id;
+    @Autowired
+    private TransferReasonQueryBuilder transferReasonQueryBuilder;
 
-    @Size(max = 250)
-    private String description;
-
-    @NotNull
-    private String tenantId;
-
+    public List<TransferReason> findForCriteria(TransferReasonGetRequest transferReasonGetRequest) {
+        List<Object> preparedStatementValues = new ArrayList<Object>();
+        String queryStr = transferReasonQueryBuilder.getQuery(transferReasonGetRequest, preparedStatementValues);
+        List<TransferReason> transferReasons = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), transferReasonRowMapper);
+        return transferReasons;
+    }
 }

@@ -38,30 +38,37 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
-
+package org.egov.eis.web.contract;
 
 import lombok.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-
-@AllArgsConstructor
-@Builder
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class PromotionBasis {
+@EqualsAndHashCode
+public class TransferTypeGetRequest {
 
-    @NotNull
     private Long id;
 
-    @Size(max = 250)
-    private String description;
+    private String typeOfMovement;
+
+    private String sortBy;
+
+    private String sortOrder;
 
     @NotNull
     private String tenantId;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

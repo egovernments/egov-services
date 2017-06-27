@@ -38,30 +38,24 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
+import org.egov.eis.model.PromotionBasis;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import lombok.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Component
+public class PromotionBasisRowMapper implements RowMapper<PromotionBasis> {
 
-
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class PromotionBasis {
-
-    @NotNull
-    private Long id;
-
-    @Size(max = 250)
-    private String description;
-
-    @NotNull
-    private String tenantId;
-
+    @Override
+    public PromotionBasis mapRow(ResultSet rs, int rowNum) throws SQLException {
+        PromotionBasis promotionBasis = new PromotionBasis();
+        promotionBasis.setId(rs.getLong("id"));
+        promotionBasis.setDescription(rs.getString("description"));
+        promotionBasis.setTenantId(rs.getString("tenantId"));
+        return promotionBasis;
+    }
 }

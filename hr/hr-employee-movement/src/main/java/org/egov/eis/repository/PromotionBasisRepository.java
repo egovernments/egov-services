@@ -38,30 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository;
 
+import org.egov.eis.model.PromotionBasis;
+import org.egov.eis.repository.builder.PromotionBasisQueryBuilder;
+import org.egov.eis.repository.rowmapper.PromotionBasisRowMapper;
+import org.egov.eis.web.contract.PromotionBasisGetRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Repository
+public class PromotionBasisRepository {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class PromotionBasis {
+    @Autowired
+    private PromotionBasisRowMapper promotionBasisRowMapper;
 
-    @NotNull
-    private Long id;
+    @Autowired
+    private PromotionBasisQueryBuilder promotionBasisQueryBuilder;
 
-    @Size(max = 250)
-    private String description;
-
-    @NotNull
-    private String tenantId;
-
+    public List<PromotionBasis> findForCriteria(PromotionBasisGetRequest promotionBasisGetRequest) {
+        List<Object> preparedStatementValues = new ArrayList<Object>();
+        String queryStr = promotionBasisQueryBuilder.getQuery(promotionBasisGetRequest, preparedStatementValues);
+        List<PromotionBasis> promotionBasis = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), promotionBasisRowMapper);
+        return promotionBasis;
+    }
 }

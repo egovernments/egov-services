@@ -38,30 +38,26 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
-@Builder
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class PromotionBasis {
+public class TransferTypeResponse {
 
-    @NotNull
-    private Long id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @Size(max = 250)
-    private String description;
-
-    @NotNull
-    private String tenantId;
+    @JsonProperty("TransferType")
+    private List<String> transferTypes = new ArrayList<String>();
 
 }

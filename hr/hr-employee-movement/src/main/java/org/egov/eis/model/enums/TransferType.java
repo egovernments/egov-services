@@ -44,6 +44,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum TransferType {
 
     TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB("Transfer within department/Corporation/ULB"),
@@ -60,6 +63,16 @@ public enum TransferType {
     public String toString() {
         return StringUtils.capitalize(name());
     }
+
+    @JsonCreator
+    public static List<String> getAllObjectValues() {
+        List<String> allObjectValues = new ArrayList<>();
+        for (TransferType obj : TransferType.values()) {
+            allObjectValues.add(obj.value);
+        }
+        return allObjectValues;
+    }
+
 
     @JsonCreator
     public static TransferType fromValue(String passedValue) {

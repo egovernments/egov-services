@@ -90,6 +90,12 @@ class receivingModeCreate extends Component {
          }
      }
 
+     close(){
+
+      window.open(window.location, '_self').close();
+  }
+
+
   addOrUpdate(e) {
     e.preventDefault();
     var _this = this;
@@ -112,6 +118,7 @@ class receivingModeCreate extends Component {
           			open: true
           		});
 
+
           }, function(err) {
 
         	})
@@ -120,6 +127,7 @@ class receivingModeCreate extends Component {
             _this.setState({
               open: true
             });
+            _this.props.receivingmodeSet="";
             _this.props.resetObject('receivingmodeSet');
         }, function(err) {
 
@@ -191,7 +199,7 @@ class receivingModeCreate extends Component {
            </Card>
            <div style={{textAlign:'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={(e)=>{this.close()}}/>
               </div>
          </form>
          <Dialog

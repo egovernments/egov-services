@@ -16,10 +16,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class VoucherRequest {
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo = null;
 
-	@JsonProperty("vouchers")
+	@JsonProperty("Vouchers")
 	private List<Voucher> vouchers = new ArrayList<>();
 
 }

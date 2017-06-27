@@ -27,7 +27,7 @@ public class RevaluationQueryBuilder {
 	public String BASE_QUERY = "SELECT "
 			+ "id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
 			+ "revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,"
-			+ "function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate FROM"
+			+ "function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM"
 			+ " egasset_revalution as revalution";
 
 	@SuppressWarnings("rawtypes")

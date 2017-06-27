@@ -295,7 +295,7 @@ public class TaxCalculatorMasterServiceTest {
 	 * This will test whether the tax period will be created successfully or not
 	 */
 	@Test
-	public void testShouldcreateTaxPeriod() {
+	public void createTaxPeriod() {
 		List<TaxPeriod> taxPeriods = new ArrayList<>();
 		TaxPeriod taxPeriod = new TaxPeriod();
 
@@ -338,7 +338,7 @@ public class TaxCalculatorMasterServiceTest {
 	 * This will test whether the tax period will update successfully or not
 	 */
 	@Test
-	public void testShouldUpdateTaxPeriod() {
+	public void modifyTaxPeriod() {
 
 		List<TaxPeriod> taxPeriods = new ArrayList<>();
 		TaxPeriod taxPeriod = new TaxPeriod();
@@ -385,7 +385,7 @@ public class TaxCalculatorMasterServiceTest {
 	 * periods
 	 */
 	@Test
-	public void testShouldSearchTaxPeriod() {
+	public void searchTaxPeriod() {
 
 		String tenantId = "1234";
 		String validDate = "03/02/2017";
@@ -452,7 +452,7 @@ public class TaxCalculatorMasterServiceTest {
 	}
 
 	@Test
-	public void updateTaxRateServiceTest() {
+	public void modifyTaxRateServiceTest() {
 
 		String tenantId = "default";
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -499,7 +499,7 @@ public class TaxCalculatorMasterServiceTest {
 	}
 
 	@Test
-	public void getTaxRateServiceTest() {
+	public void searchTaxRateServiceTest() {
 
 		String tenantId = "default";
 		String taxHead = "taxHead-UU";

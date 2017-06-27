@@ -78,7 +78,7 @@ private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQuer
 		if (criteria.getBusinessDetailsCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" bd.code = ?");
-			preparedStatementValues.add(criteria.getActive());
+			preparedStatementValues.add(criteria.getBusinessDetailsCode());
 		}
 	}
 

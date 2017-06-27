@@ -8,6 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
 public class VoucherRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo = null;

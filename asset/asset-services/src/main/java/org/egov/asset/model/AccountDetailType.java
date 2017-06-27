@@ -22,7 +22,7 @@ import lombok.ToString;
 @ToString
 public class AccountDetailType {
 
-	private List<Long> ids = new ArrayList<Long>();
+	private Long id;
 
 	@NotNull
 	@Length(max = 50, min = 1)

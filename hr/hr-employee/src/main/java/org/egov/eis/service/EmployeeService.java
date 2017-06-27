@@ -159,13 +159,8 @@ public class EmployeeService {
 		List<Long> ids = null;
 		// If roleCodes or userName is present, get users first, as there will be very limited results
 		if (!isEmpty(employeeCriteria.getRoleCodes()) || !isEmpty(employeeCriteria.getUserName())) {
-			// FIXME : Right now we've to hit user service twice for active & inactive users.
-			// Remove this work around once the user service is updated.
-			employeeCriteria.setActive(true);
 			usersList = userService.getUsers(employeeCriteria, requestInfo);
-			employeeCriteria.setActive(false);
-			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
-			LOGGER.debug("userService: " + usersList);
+			LOGGER.debug("usersList returned by UsersService is :: " + usersList);
 			if(isEmpty(usersList))
 				return Collections.EMPTY_LIST;
 			ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
@@ -180,15 +175,10 @@ public class EmployeeService {
 		// If roleCodes or userName is not present, get employees first
 		if (isEmpty(employeeCriteria.getRoleCodes()) || isEmpty(employeeCriteria.getUserName())) {
 			ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
-			LOGGER.debug("Employee ids " + ids);
+			LOGGER.debug("Employee ids are :: " + ids);
 			employeeCriteria.setId(ids);
-			// FIXME : Right now we've to hit user service twice for active & inactive users.
-			// Remove this work around once the user service is updated.
-			employeeCriteria.setActive(true);
 			usersList = userService.getUsers(employeeCriteria, requestInfo);
-			employeeCriteria.setActive(false);
-			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
-			LOGGER.debug("userService: " + usersList);
+			LOGGER.debug("usersList returned by UsersService is :: " + usersList);
 		}
 		employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
@@ -209,20 +199,9 @@ public class EmployeeService {
 			throw new EmployeeIdNotFoundException(employeeId);
 
 		EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
-		// FIXME : Right now we've to hit user service twice for inactive user.
-		// Remove this work around once the user service is updated.
-		employeeCriteria.setActive(true);
-		List<User> users = userService.getUsers(employeeCriteria, requestInfo);
-		User user = null;
-		if(users.size() == 1) {
-			user = users.get(0);
-		} else {
-			employeeCriteria.setActive(false);
-			user = userService.getUsers(employeeCriteria, requestInfo).get(0);
-		}
+		User user = userService.getUsers(employeeCriteria, requestInfo).get(0);
 
-		user.setBloodGroup(
-				isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
+		user.setBloodGroup(isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
 		employee.setUser(user);
 
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));

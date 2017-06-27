@@ -67,6 +67,8 @@ class receivingModeCreate extends Component {
      });
    };
 
+
+
    componentWillMount() {
 
          if(this.props.match.params.id) {
@@ -147,7 +149,7 @@ class receivingModeCreate extends Component {
     <div className="receivingModeCreate">
          <form autoComplete="off" onSubmit={(e) => {addOrUpdate(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Create ReceivingMode </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {(this.props.match.params && this.props.match.params.type == "edit" ? "Edit " : "Create ") + "Receiving Mode"} </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
@@ -203,6 +205,7 @@ class receivingModeCreate extends Component {
           open={open}
           onRequestClose={handleOpenNClose}
         >
+        Receiving Mode {this.props.match.params && this.props.match.params.type == "edit" ? "updated" : "created"} successfully.
         </Dialog>
         </div>
    );
@@ -240,7 +243,7 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       validationData: {
         required: {
           current: ["name","code","description","channel"],
-          required: ["name","code","description","channel"]
+          required:["name","code","description","channel"]
         },
         pattern: {
           current: [],

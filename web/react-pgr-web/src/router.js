@@ -40,10 +40,9 @@ const Main = () => (
       <Route exact path='/routerGeneration' component={routerGeneration}/>
       <Route exact path='/searchRouter/:type' component={searchRouter}/>
       <Route exact path='/receivingModeCreate' component={receivingModeCreate}/>
-      <Route exact name='receivingModeCreate' path='/receivingModeCreate/:id' component={receivingModeCreate}/>
-      <Route exact path='/viewOrUpdateReceivingMode/view' component={viewOrUpdateReceivingMode}/>
-      <Route exact path='/viewOrUpdateReceivingMode/edit' component={viewOrUpdateReceivingMode}/>
-      <Route exact path='/viewReceivingMode/:id' component={viewReceivingMode}/>
+      <Route exact name='receivingModeCreate' path='/receivingModeCreate/:type/:id' component={receivingModeCreate}/>
+      <Route exact path='/viewOrUpdateReceivingMode/:type' component={viewOrUpdateReceivingMode}/>
+      <Route exact path='/viewReceivingMode/:type/:id' component={viewReceivingMode}/>
       <Route exact name="createServiceGroup" path='/createServiceGroup/:id?' component={ServiceGroupCreate}/>
       <Route exact path='/createServiceGroup' component={ServiceGroupCreate}/>
       <Route exact path='/serviceGroup/view' component={ViewEditServiceGroup}/>

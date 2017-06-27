@@ -1,10 +1,9 @@
 package org.egov.commons.model;
 
+
+
 import java.util.Date;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -35,11 +34,13 @@ public class BusinessCategory {
     @NotNull
 	private String tenantId;
     
+    @NotNull
 	private Long createdBy;
 	
 
 	private Date createdDate;
 	
+	@NotNull
 	private Long lastModifiedBy;
 	
 

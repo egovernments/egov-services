@@ -47,6 +47,9 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
     @Column(name = "url")
     private String url;
 
+    @Column(name = "groupcode")
+    private String groupCode;
+
     public String getCode() {
         return id.getCode();
     }

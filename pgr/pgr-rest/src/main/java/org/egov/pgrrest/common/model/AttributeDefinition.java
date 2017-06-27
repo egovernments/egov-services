@@ -19,6 +19,7 @@ public class AttributeDefinition {
     private String description;
     private String code;
     private String url;
+    private String groupCode;
     private List<AttributeRolesDefinition> roles;
     private List<AttributeActionsDefinition> actions;
     private List<ValueDefinition> values;

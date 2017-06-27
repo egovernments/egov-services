@@ -325,12 +325,12 @@ class createRouter extends Component {
 	                      />
                    </Col>
                    <Col xs={12} md={8}>
-                   	<SelectField 
+                   	<SelectField
                       disabled={readonly}
-                      fullWidth={true} 
-                      floatingLabelText="Boundary Type" 
-                      errorText={fieldErrors.boundaryType || ""} 
-                      value={(routerCreateSet.boundaryType + "") || ""} 
+                      fullWidth={true}
+                      floatingLabelText="Boundary Type"
+                      errorText={fieldErrors.boundaryType || ""}
+                      value={(routerCreateSet.boundaryType + "") || ""}
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
@@ -351,7 +351,7 @@ class createRouter extends Component {
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.allSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        errorText={fieldErrors.boundary || ""} 
+                        errorText={fieldErrors.boundary || ""}
                         value={routerCreateSet.boundary || ""}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
                         searchText={searchTextBoun}
@@ -376,7 +376,7 @@ class createRouter extends Component {
                         dataSource={this.state.positionSource}
                         dataSourceConfig={this.state.allSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        errorText={fieldErrors.position || ""} 
+                        errorText={fieldErrors.position || ""}
                         value={routerCreateSet.position || ""}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
                         searchText={searchTextPos}
@@ -441,7 +441,7 @@ const mapDispatchToProps = dispatch => ({
 	    dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
 
       if(property == "boundaryType")
-        dispatch({type: "HANDLE_CHANGE", property: "boundary", value: "", isRequired: true, pattern: ""});        
+        dispatch({type: "HANDLE_CHANGE", property: "boundary", value: "", isRequired: true, pattern: ""});
 	},
   handleAutoCompleteKeyUp : (e, type) => {
     var currentThis = _this;

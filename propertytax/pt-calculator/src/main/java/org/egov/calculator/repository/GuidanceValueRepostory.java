@@ -173,5 +173,9 @@ public class GuidanceValueRepostory {
 
 		return guidanceValues;
 	}
+	
+	public String getString(Object object){
+	    return object == null ? "" : object.toString();
+	}
 
 }

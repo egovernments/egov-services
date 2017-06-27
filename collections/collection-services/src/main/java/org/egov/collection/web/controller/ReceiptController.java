@@ -48,6 +48,7 @@ import javax.validation.Valid;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
@@ -77,6 +78,9 @@ public class ReceiptController {
 
 	@Autowired
 	private ReceiptService receiptService;
+	
+	@Autowired 
+	private ReceiptReqValidator receiptReqValidator;
 
 	private ResponseInfoFactory responseInfoFactory;
 
@@ -110,8 +114,9 @@ public class ReceiptController {
 
 	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
 			RequestInfo requestInfo) {
+		LOGGER.info("Building success response.");
 		ReceiptRes receiptResponse = new ReceiptRes();
-		// receiptResponse.setReceiptInfo(receipts);
+		receiptResponse.setReceipts(receipts);
 		receiptResponse.setResponseInfo(responseInfoFactory
 				.createResponseInfoFromRequestInfo(requestInfo, true));
 		System.err.println("before returning from getsucces resposne ::"
@@ -129,13 +134,15 @@ public class ReceiptController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		
-		/*receiptRequest.getReceipt().getAuditDetails().setCreatedBy(receiptRequest.getRequestInfo().getUserInfo().getName());
-		receiptRequest.getReceipt().getAuditDetails().setLastModifiedBy(receiptRequest.getRequestInfo().getUserInfo().getName()); */
+				
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		
 		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
 		
 		if(null == receiptInfo){
+			LOGGER.info("Service returned null");
 			Error error = new Error();
 			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);
 			

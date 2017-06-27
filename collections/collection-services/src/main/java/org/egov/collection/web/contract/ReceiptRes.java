@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 import org.egov.common.contract.response.ResponseInfo;
 
 @Setter
@@ -19,7 +21,7 @@ public class ReceiptRes   {
   private ResponseInfo responseInfo;
   
   @JsonProperty("Receipt")
-  private Receipt receipt;
+  private List<Receipt> receipts;
 
 
 }

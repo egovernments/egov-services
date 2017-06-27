@@ -31,7 +31,6 @@ import java.util.List;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -150,7 +149,7 @@ public class ServiceRequestControllerTest {
         ServiceRequest complaint = getServiceRequestForSearch();
 
         ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
-            .assignmentId(10L)
+            .positionId(10L)
             .endDate(null)
             .escalationDate(null)
             .lastModifiedDatetime(null)
@@ -180,7 +179,7 @@ public class ServiceRequestControllerTest {
                 .param("serviceCode", "serviceCode_123")
                 .param("status", "REGISTERED")
                 .param("status", "FORWARDED")
-                .param("assignmentId", "10")
+                .param("positionId", "10")
                 .param("userId", "10")
                 .param("name", "kumar")
                 .param("emailId", "abc@gmail.com")
@@ -204,7 +203,7 @@ public class ServiceRequestControllerTest {
         ServiceRequest complaint = getServiceRequestForSearch();
 
         ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
-            .assignmentId(10L)
+            .positionId(10L)
             .endDate(null)
             .escalationDate(null)
             .lastModifiedDatetime(null)
@@ -234,7 +233,7 @@ public class ServiceRequestControllerTest {
                 .param("serviceCode", "serviceCode_123")
                 .param("status", "REGISTERED")
                 .param("status", "FORWARDED")
-                .param("assignmentId", "10")
+                .param("positionId", "10")
                 .param("userId", "10")
                 .param("name", "kumar")
                 .param("emailId", "abc@gmail.com")
@@ -254,7 +253,7 @@ public class ServiceRequestControllerTest {
     @Test
     public void test_should_return_count_of_matching_service_requests_for_given_search_criteria() throws Exception {
         ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
-            .assignmentId(10L)
+            .positionId(10L)
             .endDate(null)
             .escalationDate(null)
             .lastModifiedDatetime(null)
@@ -280,7 +279,7 @@ public class ServiceRequestControllerTest {
                 .param("serviceCode", "serviceCode_123")
                 .param("status", "REGISTERED")
                 .param("status", "FORWARDED")
-                .param("assignmentId", "10")
+                .param("positionId", "10")
                 .param("userId", "10")
                 .param("name", "kumar")
                 .param("emailId", "abc@gmail.com")
@@ -300,7 +299,7 @@ public class ServiceRequestControllerTest {
         String receivingMode = "MANUAL";
         String receivingCenter = "Commissioner Office";
         String stateId = "1";
-        Long assigneeId = 2L;
+        Long positionId = 2L;
         String address = null;
         List<String> mediaUrls = new ArrayList<>();
         mediaUrls.add(null);
@@ -339,7 +338,7 @@ public class ServiceRequestControllerTest {
             .tenantId(jurisdictionId)
             .description(description)
             .state(stateId)
-            .assignee(assigneeId)
+            .position(positionId)
             .receivingCenter(receivingCenter)
             .receivingMode(receivingMode)
             .serviceRequestStatus("FORWARDED")
@@ -352,7 +351,10 @@ public class ServiceRequestControllerTest {
     }
 
     private AuthenticatedUser getCitizen() {
-        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).build();
+        return AuthenticatedUser.builder()
+            .id(1L)
+            .type(UserType.CITIZEN)
+            .build();
     }
 
 

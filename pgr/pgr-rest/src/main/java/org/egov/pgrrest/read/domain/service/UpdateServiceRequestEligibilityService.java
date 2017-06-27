@@ -29,9 +29,9 @@ public class UpdateServiceRequestEligibilityService {
         if (!authenticatedUser.isEmployee()) {
             return;
         }
-        Long assignmentIdDB = getAssignmentId(serviceRequestId, tenantId);
+        Long positionIdFromDB = getPositionId(serviceRequestId, tenantId);
         Employee employee = getEmployeeByAssignee(authenticatedUser.getId(), tenantId);
-        if (assignmentIdDB.equals(employee.getPrimaryPosition())) {
+        if (positionIdFromDB.equals(employee.getPrimaryPosition())) {
             return;
         }
         authenticatedUser.validateUpdateEligibility();
@@ -43,8 +43,8 @@ public class UpdateServiceRequestEligibilityService {
         }
     }
 
-    private Long getAssignmentId(String serviceRequestId, String tenantId) {
-        return submissionRepository.getAssignmentByCrnAndTenantId(serviceRequestId, tenantId);
+    private Long getPositionId(String serviceRequestId, String tenantId) {
+        return submissionRepository.getPositionByCrnAndTenantId(serviceRequestId, tenantId);
 
     }
 

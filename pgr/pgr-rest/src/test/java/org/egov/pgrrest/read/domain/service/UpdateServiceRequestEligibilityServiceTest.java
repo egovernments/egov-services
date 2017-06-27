@@ -32,7 +32,7 @@ public class UpdateServiceRequestEligibilityServiceTest {
     @Test
     public void test_should_not_throw_exception_when_employee_eligible_to_update_request() {
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployeeEligible());
-        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
+        when(submissionRepository.getPositionByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
         final AuthenticatedUser user = AuthenticatedUser.builder()
             .type(UserType.EMPLOYEE)
             .id(1L)
@@ -57,7 +57,7 @@ public class UpdateServiceRequestEligibilityServiceTest {
             .roleCodes(roleCodes).build();
         when(employeeRepository.getEmployeeById(1L, "tenantId"))
             .thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId"))
+        when(submissionRepository.getPositionByCrnAndTenantId("crn", "tenantId"))
             .thenReturn(1L);
 
         service.validate("crn", "tenantId", user);

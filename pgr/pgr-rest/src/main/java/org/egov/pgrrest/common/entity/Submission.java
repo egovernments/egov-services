@@ -44,7 +44,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
     @Column(name = "requesteraddress")
     private String requesterAddress;
 
-    private Long assignee;
+    private Long position;
 
     @Column(name = "status")
     private String status;
@@ -91,7 +91,7 @@ public class Submission extends AbstractAuditable<SubmissionKey> {
             .escalationDate(getEscalationDate())
             .closed(isCompleted())
             .department(getDepartment())
-            .assignee(getAssignee())
+            .position(position)
             .tenantId(id.getTenantId())
             .serviceRequestStatus(status)
             .attributeEntries(getAttributeEntries())

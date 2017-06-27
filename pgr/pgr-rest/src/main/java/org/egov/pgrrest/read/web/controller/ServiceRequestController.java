@@ -71,8 +71,7 @@ public class ServiceRequestController {
                                               @RequestParam(value = "status", required = false) List<String> status,
                                               @RequestParam(value = "lastModifiedDatetime", required = false)
                                               @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
-                                              @RequestParam(value = "assignmentId", required = false) Long
-                                                  assignmentId,
+                                              @RequestParam(value = "positionId", required = false) Long positionId,
                                               @RequestParam(value = "userId", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
                                               @RequestParam(value = "mobileNumber", required = false) String
@@ -89,7 +88,7 @@ public class ServiceRequestController {
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
-            .assignmentId(assignmentId)
+            .positionId(positionId)
             .endDate(endDate)
             .lastModifiedDatetime(lastModifiedDate)
             .serviceCode(serviceCode)
@@ -130,8 +129,7 @@ public class ServiceRequestController {
                                                 @RequestParam(value = "status", required = false) List<String> status,
                                                 @RequestParam(value = "lastModifiedDatetime", required = false)
                                                 @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
-                                                @RequestParam(value = "assignmentId", required = false) Long
-                                                    assignmentId,
+                                                @RequestParam(value = "positionId", required = false) Long positionId,
                                                 @RequestParam(value = "userId", required = false) Long userId,
                                                 @RequestParam(value = "name", required = false) String name,
                                                 @RequestParam(value = "mobileNumber", required = false) String
@@ -146,7 +144,7 @@ public class ServiceRequestController {
                                                 @RequestBody RequestInfoBody requestInfoBody) {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
-            .assignmentId(assignmentId)
+            .positionId(positionId)
             .endDate(endDate)
             .lastModifiedDatetime(lastModifiedDate)
             .serviceCode(serviceCode)

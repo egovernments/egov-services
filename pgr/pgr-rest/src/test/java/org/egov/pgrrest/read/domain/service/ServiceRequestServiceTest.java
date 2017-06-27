@@ -84,7 +84,7 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = getSevaRequest();
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(serviceRequest.getCrn(), serviceRequest.getTenantId()))
+        when(submissionRepository.getPositionByCrnAndTenantId(serviceRequest.getCrn(), serviceRequest.getTenantId()))
             .thenReturn(1L);
 
         serviceRequestService.update(serviceRequest, sevaRequest);
@@ -168,7 +168,7 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId()))
+        when(submissionRepository.getPositionByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId()))
             .thenReturn(1L);
         serviceRequestService.update(complaint, sevaRequest);
 

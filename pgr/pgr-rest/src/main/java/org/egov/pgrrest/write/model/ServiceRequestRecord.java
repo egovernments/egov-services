@@ -29,7 +29,7 @@ public class ServiceRequestRecord {
     private Long loggedInRequesterUserId;
     private String serviceRequestTypeCode;
     private String serviceRequestStatus;
-    private Long assigneeId;
+    private Long positionId;
     private Date escalationDate;
     private Long department;
     private String tenantId;

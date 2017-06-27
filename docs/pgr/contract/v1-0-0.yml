@@ -1078,7 +1078,7 @@ definitions:
           **locationId:string --location id based on cross hierarchy id or lat/lng,
           **childLocationId:string--child location id based on cross hierarchy id,
           **locationName :string--name of the location,
-          **assignmentId:string--Id of the assignee,
+          **positionId:string--Id of the position,
           **stateId:string--workflow id,
           **receivingMode:string--Originating channel for the request. Mobile, Desktop etc..,
           **userId:string--user id of the complainant. This can be different than logged in user,

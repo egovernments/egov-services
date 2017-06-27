@@ -917,9 +917,10 @@ finalValidatinRules["messages"] = {
     },
     solvencyCertificateDate: {
         required: "Enter Solvency certificate date"
+    },
+    approverPositionId: {
+        required: "Select approver name"
     }
-
-
 }
 
 // $("#"+name).val("murali");
